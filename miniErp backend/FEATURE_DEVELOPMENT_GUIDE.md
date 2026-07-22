@@ -150,6 +150,9 @@ Entity requiredness and input normalization follow these rules:
 - Every company-owned entity declares `int CompanyId` and a `Company`
   navigation property. Global entities must be explicitly identified as such.
 - Do not use the C# `required` keyword on entity or Identity properties.
+- Place each reference navigation property immediately below its foreign-key
+  property in Domain and Identity entity classes. Keep collection navigation
+  properties after the scalar and foreign-key/navigation pairs.
 - Initialize non-nullable entity strings with `string.Empty` when needed for
   CLR safety only.
 - Configure database requiredness in the EF Core configuration with
@@ -306,6 +309,80 @@ For create and update operations, confirm:
   frontend.
 - The duplicate check uses the same normalized value produced by Mapster and
   the update check excludes the current ID.
+
+### Global FluentValidation message configuration
+
+The API uses one global Arabic FluentValidation configuration. `Program.cs`
+must call the configuration once during startup, before request validation is
+executed:
+
+```csharp
+ArabicValidationConfiguration.Configure();
+```
+
+`AddValidatorsFromAssemblyContaining<ApplicationAssemblyMarker>()` discovers
+the feature validators, and SharpGrip automatic validation resolves and runs
+the matching `AbstractValidator<TRequest>` before the controller action. When
+a rule fails, FluentValidation reads `ValidatorOptions.Global` configured by
+`ArabicValidationConfiguration`:
+
+- `LanguageManager` maps the internal rule key, such as
+  `NotEmptyValidator` or `MaximumLengthValidator`, to the Arabic message
+  template.
+- `DisplayNameResolver` maps the request property name, such as `Name`, to its
+  Arabic display name from the shared `DisplayNames` dictionary.
+- FluentValidation replaces placeholders such as `{PropertyName}`,
+  `{MaxLength}`, `{ComparisonValue}`, `{From}`, and `{To}` at runtime.
+- A rule-level `.WithMessage(...)` overrides the global template and should be
+  used only for a clearer feature-specific or conditional business message.
+- `ArabicValidationResultFactory` controls the HTTP `400` ProblemDetails title
+  and detail; it is separate from the rule-message configuration.
+
+Example:
+
+```csharp
+RuleFor(request => request.Name)
+    .NotEmpty()
+    .MaximumLength(200);
+```
+
+With `DisplayNames["Name"] = "الاسم"`, the resulting messages include
+`حقل الاسم مطلوب.` and
+`يجب ألا يتجاوز طول الاسم عدد 200 حرفًا.`
+
+Whenever a new request property is introduced, add its Arabic display name to
+`ArabicValidationConfiguration.DisplayNames`. If it is omitted, validation
+still works, but the property name inside the message falls back to its CLR
+name in English. JSON property names and stable error codes remain unchanged;
+only the user-facing text is localized.
+
+Use the exact case-sensitive CLR property name as the dictionary key because
+the dictionary uses `StringComparer.Ordinal`:
+
+```csharp
+private static readonly IReadOnlyDictionary<string, string> DisplayNames =
+    new Dictionary<string, string>(StringComparer.Ordinal)
+    {
+        // Existing shared fields...
+        ["InvoiceNumber"] = "رقم الفاتورة",
+        ["InvoiceDate"] = "تاريخ الفاتورة",
+        ["StoreId"] = "المخزن",
+        ["DriverId"] = "السائق"
+    };
+```
+
+Do not add the JSON camel-case name, such as `invoiceNumber`, when the CLR
+property is `InvoiceNumber`. Reuse a shared translation when the property has
+the same meaning across features. If the same CLR property name needs a
+different meaning in one feature, keep the shared translation general or use
+`.WithName("...")` on that feature's rule instead of changing every feature.
+
+The global configuration runs only in hosts that call `Configure()`. Validator
+unit tests or other executables that instantiate validators without starting
+the API must call `ArabicValidationConfiguration.Configure()` once in their
+test or host setup. Verify at least one automatic API validation response, not
+only a direct validator call, so the rule text and Arabic ProblemDetails result
+factory are both covered.
 
 ## 7. Invoice and movement rules
 
@@ -595,6 +672,38 @@ For each endpoint:
   production.
 - Verify Swagger documents security requirements, anonymous operations,
   pagination parameters, and all declared response types.
+- Request enums are serialized as JSON names and documented automatically by
+  `EnumSchemaDocumentationFilter` as `Name = numeric value`. Clients must send
+  the name because numeric JSON enum values are rejected. Do not repeat enum
+  value lists in individual service Swagger documentation files.
+- `EnumRequestOperationDocumentationFilter` also adds the enum list directly
+  to the endpoint description so it is visible without expanding nested schema
+  controls. It recursively documents enum properties in nested request models
+  and collections.
+
+### Mandatory Swagger operation documentation
+
+Every operation in the feature-specific
+`FeatureNameSwaggerDocumentation.cs` file must document all of the following:
+
+- **Required fields:** Name required route, query, and request-body fields. State
+  required authorization or tenant context, but never document `CompanyId` as
+  a client request field when it comes from `ICurrentCompanyContext`.
+- **Validation:** Document numeric ranges, string lengths, formats, enum rules,
+  nullability, defaults, normalization, foreign-key state requirements, and
+  company ownership that the endpoint actually validates.
+- **Edge cases:** Document applicable empty-result, invalid-ID, not-found,
+  inactive, cross-company, duplicate, dependency, concurrency, token, and
+  repeated-operation behavior, including the expected `400`, `401`, `403`,
+  `404`, or `409` response.
+
+Use `SwaggerOperationDescription.Create` so the overview, required fields,
+validation, and edge cases have the same visible structure in Swagger UI.
+Documentation must match the request DTO, FluentValidation validator, service
+logic, authorization attributes, and declared response types. Do not document
+a planned rule as implemented. Update the Swagger text in the same change when
+any of those behaviors changes, and inspect the generated Swagger UI or JSON
+rather than relying on a successful build alone.
 
 ### Client sidebar and CRUD integration
 
