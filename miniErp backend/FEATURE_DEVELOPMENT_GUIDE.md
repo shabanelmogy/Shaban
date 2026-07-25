@@ -733,6 +733,31 @@ a planned rule as implemented. Update the Swagger text in the same change when
 any of those behaviors changes, and inspect the generated Swagger UI or JSON
 rather than relying on a successful build alone.
 
+### Mandatory Swagger re-review after every change
+
+Re-review Swagger whenever a change affects an API route, HTTP method, request
+or response model, enum, validation rule, authorization requirement, status
+code, `ProblemDetails` error, pagination rule, filter, default value, or field
+requiredness/nullability. This gate applies even when the feature previously
+had complete Swagger documentation.
+
+Before marking the change complete, confirm all of the following against the
+running API's generated Swagger UI or OpenAPI JSON:
+
+- Request and response schemas match the actual serialized JSON contract.
+- Required and optional fields, validation limits, defaults, and enum values
+  are current.
+- Examples and operation descriptions describe implemented behavior only.
+- Bearer security, anonymous access, and role restrictions match the endpoint.
+- Success and applicable `400`, `401`, `403`, `404`, and `409` responses are
+  declared and accurately described.
+- Pagination and filtering parameters match the controller and validator.
+- The changed contract has been delivered to every affected frontend or
+  external API consumer.
+
+A successful format, build, or test run does not replace this Swagger review.
+Record the Swagger UI or OpenAPI verification in the feature completion report.
+
 ### Client sidebar and CRUD integration
 
 For every API feature that users manage from the React client, update
