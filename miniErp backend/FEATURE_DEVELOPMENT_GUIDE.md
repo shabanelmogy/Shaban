@@ -140,6 +140,11 @@ Use the matching error type:
 - `Error.Conflict` for duplicate values, dependent records, or invalid state.
 - `Error.Unauthorized` and `Error.Forbidden` for access failures.
 
+Controllers must convert expected failures through the shared
+`ResultExtensions.ToActionResult` / `ToProblem` path. Do not construct
+`ProblemDetails`, `ValidationProblemDetails`, anonymous error objects, or
+feature-specific error response DTOs inside a controller.
+
 Unexpected database or infrastructure failures should remain exceptions and be
 handled by the global exception handler.
 
@@ -335,8 +340,9 @@ a rule fails, FluentValidation reads `ValidatorOptions.Global` configured by
   `{MaxLength}`, `{ComparisonValue}`, `{From}`, and `{To}` at runtime.
 - A rule-level `.WithMessage(...)` overrides the global template and should be
   used only for a clearer feature-specific or conditional business message.
-- `ArabicValidationResultFactory` controls the HTTP `400` ProblemDetails title
-  and detail; it is separate from the rule-message configuration.
+- `ArabicValidationResultFactory` passes the field messages to the shared
+  `ApiErrorResponseFactory`. It controls the HTTP `400` validation result but
+  does not introduce a separate response shape.
 
 Example:
 
@@ -381,7 +387,7 @@ The global configuration runs only in hosts that call `Configure()`. Validator
 unit tests or other executables that instantiate validators without starting
 the API must call `ArabicValidationConfiguration.Configure()` once in their
 test or host setup. Verify at least one automatic API validation response, not
-only a direct validator call, so the rule text and Arabic ProblemDetails result
+only a direct validator call, so the rule text and unified `ApiErrorResponse`
 factory are both covered.
 
 ## 7. Invoice and movement rules
@@ -667,8 +673,8 @@ For each endpoint:
 - Verify that authenticated requests work with `Authorization: Bearer {token}`.
 - Verify inherited authorization from `ApiControllerBase`, role restrictions,
   and `[AllowAnonymous]` exceptions explicitly.
-- Verify the global exception handler returns `ProblemDetails` with a trace ID
-  for unexpected request exceptions and does not expose internal details in
+- Verify the global exception handler returns `ApiErrorResponse` with the same
+  trace ID written to the server log and does not expose internal details in
   production.
 - Verify Swagger documents security requirements, anonymous operations,
   pagination parameters, and all declared response types.
@@ -709,7 +715,7 @@ rather than relying on a successful build alone.
 
 Re-review Swagger whenever a change affects an API route, HTTP method, request
 or response model, enum, validation rule, authorization requirement, status
-code, `ProblemDetails` error, pagination rule, filter, default value, or field
+code, `ApiErrorResponse`, pagination rule, filter, default value, or field
 requiredness/nullability. This gate applies even when the feature previously
 had complete Swagger documentation.
 
@@ -860,29 +866,71 @@ uses this shape:
 }
 ```
 
-Expected business failures use `ProblemDetails`, for example:
+All application JSON errors use `application/problem+json` and the same
+`ApiErrorResponse` contract. Expected business failures that belong to one
+request field place their message under that case-sensitive field name:
 
 ```json
 {
-  "title": "Entities.CodeExists",
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+  "title": "يوجد تعارض في البيانات.",
   "status": 409,
-  "detail": "An entity with the same code already exists.",
-  "errorType": "Conflict"
-}
-```
-
-Unexpected request exceptions return a generic production response with a
-trace ID:
-
-```json
-{
-  "title": "An unexpected error occurred.",
-  "status": 500,
-  "detail": "An unexpected error occurred while processing the request.",
+  "detail": "الكود مستخدم بالفعل في سجل نشط.",
   "instance": "/api/v1/Entities",
+  "errorCode": "Entities.CodeExists",
+  "errorType": "Conflict",
+  "errors": {
+    "Code": ["الكود مستخدم بالفعل في سجل نشط."]
+  },
   "traceId": "request-trace-id"
 }
 ```
+
+Field validation uses the identical outer contract and replaces `General`
+with one or more case-sensitive request-property keys:
+
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "فشل التحقق من صحة البيانات.",
+  "status": 400,
+  "detail": "يرجى مراجعة الحقول غير الصحيحة والمحاولة مرة أخرى.",
+  "instance": "/api/v1/Entities",
+  "errorCode": "Validation.Failed",
+  "errorType": "Validation",
+  "errors": {
+    "Name": ["حقل الاسم مطلوب."]
+  },
+  "traceId": "request-trace-id"
+}
+```
+
+The nine properties (`type`, `title`, `status`, `detail`, `instance`,
+`errorCode`, `errorType`, `errors`, and `traceId`) are always present.
+Validation errors and field-targeted business errors use request-property
+keys. Other business, authentication, authorization, routing, method,
+media-type, and unexpected errors use `errors.General`; `$` is reserved for
+malformed request-body JSON. When creating an `Error` for a field-targeted
+business rule, pass `nameof(RequestType.Property)` as its optional
+`fieldName`. Never infer a field by parsing an error-code string.
+
+Keep `detail` even when its message is repeated in `errors`: `detail`
+preserves the standard Problem Details contract, while `errors` gives every
+frontend one rendering path. Do not derive behavior from localized messages;
+use `errorCode`.
+
+`ApiErrorResponseFactory`, `ResultExtensions`,
+`ArabicValidationResultFactory`, `GlobalExceptionHandler`, and status-code
+pages jointly enforce this contract. `UnifiedErrorResponseSwaggerFilter` must
+remain the last Swagger operation filter so every declared `4xx`/`5xx`
+response advertises only `application/problem+json` with
+`ApiErrorResponse`. URL-segment API versioning is intentional; do not add a
+second query-string version reader without also preserving the unified error
+writer.
+
+Requests rejected before ASP.NET reaches the application, such as malformed
+TLS or reverse-proxy request-size limits, cannot be guaranteed to use this
+JSON contract.
 
 Changing a response model requires confirming all frontend or external API
 consumers before merging.
@@ -1087,6 +1135,40 @@ For a standard paginated `GetAll` endpoint:
 - Keep `select` or dropdown endpoints small and unpaginated when they return only `Id` and `Name`.
 - Verify the default page, an empty page, the maximum page size, and invalid page values.
 
+### Complete-set upsert endpoints
+
+When one screen edits an entire child-assignment collection, prefer one
+idempotent complete-set `PUT .../upsert` operation over separate create,
+update, and delete calls when the business workflow treats the collection as
+one unit.
+
+- The request contains the parent ID and the complete desired child-ID set,
+  not a delta.
+- A missing or null list is invalid. Explicitly decide whether an empty list
+  clears all current assignments and document that behavior.
+- Bound the list, require positive IDs, and reject duplicates instead of
+  silently removing them.
+- Validate the tenant-owned parent and every child in bulk. Never query once
+  per ID.
+- Load current non-deleted assignments once, calculate create/reactivate/keep/
+  soft-delete changes in memory, and save once.
+- Use a transaction when partial completion is invalid. Use serializable
+  isolation when concurrent complete-set replacements must not merge into an
+  unintended union.
+- Preserve soft-deleted history. Re-adding a child whose only prior assignment
+  is deleted creates a new row rather than clearing historical deletion audit
+  fields.
+- Repeating the same request must produce the same final set without changing
+  audit fields.
+- Return the complete final collection through server-side projection in
+  deterministic order.
+- Re-check incoming foreign-key protections: removing an active assignment may
+  still leave historical rows that intentionally block parent deletion.
+
+Replacing existing single-row write endpoints with a complete-set upsert is a
+breaking API contract. Update Swagger and the frontend integration guide in
+the same change and verify that the removed routes no longer appear.
+
 ### Query performance and projection
 
 Read endpoints should select only the columns required by their response. Use
@@ -1199,6 +1281,11 @@ A feature is complete only when:
 - [ ] Formatting checks pass.
 - [ ] Authorized, unauthorized, success, validation, not-found, and conflict
       scenarios have been verified.
+- [ ] Every exercised application error returns all nine `ApiErrorResponse`
+      fields, an appropriate `errors` key (`General`, a request field, or `$`),
+      and `application/problem+json`.
+- [ ] Generated Swagger declares `ApiErrorResponse` and only
+      `application/problem+json` for every documented `4xx`/`5xx` response.
 - [ ] Documentation and seed data are updated when behavior changes.
 
 When reporting completion, explicitly state:

@@ -14,6 +14,11 @@ The examples use neutral names such as `Entity`, `EntityService`, and `feature-n
 
 The pattern is suitable for Angular standalone components using the project's shared `table-list`, `action-button`, `buttons`, translation, and result-wrapper components.
 
+For a full-page Add/View/Edit workflow with a fixed header, clickable steps,
+internal scrolling, nested editable collections, live validation navigation,
+uploads, and date rules, also follow
+[`GENERIC_STEP_FORM_GUIDE.md`](./GENERIC_STEP_FORM_GUIDE.md).
+
 ## 1. Recommended feature structure
 
 ```text
@@ -220,27 +225,25 @@ getRowActions(row: EntityListDTO): GridAction<EntityListDTO>[] {
 }
 ```
 
-The shared action template should render any number of returned actions:
+The shared action template must call the original row action directly:
 
 ```html
 @for (action of getRowActions(row); track action.key) {
-  <li>
-    <button
-      type="button"
-      class="dropdown-item"
-      [disabled]="action.disabled?.(row, getActionContext(row)) ?? false"
-      (click)="runAction(action, row)">
-      <i [class]="action.icon"></i>
-      {{ action.title | translate }}
-    </button>
-  </li>
+  <button
+    type="button"
+    class="dropdown-item"
+    [disabled]="action.disabled?.(row, getActionContext(row)) ?? false"
+    (click)="runAction(action, row)">
+    <i [class]="action.icon"></i>
+    {{ action.title | translate }}
+  </button>
 }
 ```
 
-For a long menu, constrain the menu rather than hiding items. When this rule is in the feature list stylesheet, scope the deep selector to the feature panel:
+For a long menu, constrain the shared Bootstrap menu rather than hiding items:
 
 ```scss
-:host ::ng-deep .feature-table-panel .dropdown-menu {
+.dropdown-menu {
   max-height: min(70vh, 420px);
   overflow-y: auto;
 }
@@ -517,6 +520,69 @@ Define feature-level tokens once and consume them throughout the stylesheet:
 
 If the application already has global design tokens, consume those instead of defining duplicate colors. The important rule is consistency: one primary color, one focus color, one border color, and one disabled state.
 
+### Dark theme is a complete screen state
+
+A grid screen that supports theme switching must define a complete dark-mode surface hierarchy. Do not change only the browser canvas or shell while leaving the feature page, white card, filters, table, paginator, or action menu in light colors.
+
+The reusable `table-list` primitive must own the global dark styles for its card, built-in search, table, paginator, and row action dropdown. Define these once in the application stylesheet under `[data-bs-theme='dark'] table-list`; do not copy the same table-theme block into every feature stylesheet. This makes theme changes apply to all shared grids immediately.
+
+The shared global contract must also theme both containers outside the table:
+
+1. the feature page shell that owns the title and Add button;
+2. the panel/card that directly owns `table-list`.
+
+Existing grid screens can be covered with a guarded relational selector:
+
+```scss
+[data-bs-theme='dark'] :where(section, main, div):has(> table-list) {
+  border-color: #344758;
+  color: #e4edf5;
+  background: #19232d;
+}
+
+[data-bs-theme='dark'] :where(section, main, div)[class*='-page']:has(table-list) {
+  color: #e4edf5;
+  background: #111820;
+}
+```
+
+The `:has(table-list)` guard is mandatory. Do not apply dark backgrounds to every class containing `page` or `panel`, because that would change unrelated forms and dashboards. New reusable grid shells may additionally expose stable shared classes such as `.grid-screen` and `.grid-panel`, but they must keep the same global theme behavior.
+
+```scss
+[data-bs-theme='dark'] table-list .p-datatable,
+[data-bs-theme='dark'] table-list .p-datatable-wrapper {
+  color: #e4edf5;
+  background: #19232d;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-thead > tr > th {
+  border-color: #3b4d5d;
+  color: #d7e2eb;
+  background: #243441;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-tbody > tr {
+  color: #dce6ee;
+  background: #1d2a37;
+}
+```
+
+Feature styles still own custom filter controls and feature-specific dialogs. Override their tokens with `:host-context([data-bs-theme='dark'])`. Keep those selectors feature-scoped because they are not part of the shared grid primitive. A feature may define layout, padding, and height for its page shell/panel, but must not override the global dark surfaces with fixed light colors.
+
+If legacy feature selectors with fixed light colors override the shared dark theme, the global `table-list` dark rules may use `!important` temporarily so the active theme always wins. Document that reason and remove the legacy fixed colors as those screens are refactored.
+
+Dark-mode verification:
+
+- [ ] The page canvas and feature panel use related dark surfaces with a visible boundary.
+- [ ] The shell outside the table and the direct `table-list` panel/card are not white.
+- [ ] Titles, subtitles, labels, values, placeholders, and disabled text remain readable.
+- [ ] Inputs, selects, dropdown triggers, focus rings, and checkbox states are themed.
+- [ ] Table header, odd/even rows, hover state, empty area, and grid borders are themed.
+- [ ] Paginator, page-size selector, action dropdown, modal header, and modal body are themed.
+- [ ] Primary action icons stay white and secondary action icons have sufficient contrast.
+- [ ] No isolated white or light-gray block remains after switching to dark mode.
+- [ ] Switching light to dark and back updates the screen immediately without a refresh.
+
 ### Page shell and heading
 
 ```scss
@@ -577,6 +643,8 @@ Do not render another title inside the white grid card when using this layout.
 
 If the application has a global toolbar/page-title component, exclude this route from the global title when the feature owns the title in its page header. The title must have one owner; hiding the global title prevents a duplicate above the feature header.
 
+Apply the exclusion to the exact grid route, not every child route by prefix, unless the child pages also own their titles. The visible feature title stays in the feature header; the shell title above the feature card is the one that must be removed.
+
 Verification rule:
 
 - [ ] The page contains exactly one feature title.
@@ -633,7 +701,7 @@ Only when a screen explicitly requires a full-height grid with many rows should 
 
 For an explicitly approved full-height screen, use `100dvh` and verify the shell subtraction at desktop and mobile sizes. A table with many rows still needs one internal scroll owner; do not combine browser-page scrolling with a second independently growing table wrapper.
 
-If the grid contains row dropdown menus, an internal scrolling wrapper can clip the menu. In that case either render the menu in an overlay attached to `body`, or use the overflow-visible action-menu rules in the action dropdown section. Do not apply both strategies blindly.
+Use the shared Bootstrap action template for row menus. It preserves the original `ActionList.action(row)` callbacks and opens the menu downward. The shared `appDropdownPortal` directive temporarily moves the **same open menu DOM element** to `body`, positions it below the clicked button, then restores it when closed. This escapes table clipping without recreating menu items or breaking their Angular click handlers. Do not replace this shared callback path with another popup library at feature level.
 
 ### Simple grids with few columns
 
@@ -921,6 +989,88 @@ Use one consistent input style within the modal. Do not mix underlined inputs, B
 
 Use the application's shared validation translation keys for form errors. For a required field, render `validationMessages.required`; do not invent `general.required`, because a missing translation key is displayed literally to the user. Verify every validation key in both English and Arabic dictionaries.
 
+### Editable collection sections
+
+Forms that contain repeatable rows, such as documents, credit cards, contacts, or account mappings, should use one reusable editable-table pattern:
+
+- keep the section heading and helper text outside the table;
+- put horizontal overflow on a section-local wrapper, never on the page;
+- append dropdown, calendar, and autocomplete overlays to `body` when the section wrapper scrolls, so the overlay is not clipped and still opens for rows near an edge;
+- give body-appended calendar overlays a reusable `panelStyleClass` with explicit light/dark popup styles; component-scoped selectors cannot reliably theme an overlay after it is moved under `body`;
+- give the table a stable minimum width so controls do not collapse or overlap;
+- use the standard 36 px control height for row inputs and action buttons;
+- use an icon-only destructive action in each row and an icon-plus-label Add button below the rows;
+- keep the Actions column narrow and center its button;
+- use `type="button"` so row actions never submit the parent form accidentally;
+- provide translated `title` and `aria-label` text for every icon-only action;
+- disable or hide all mutating actions in View mode;
+- support the same hover, focus-visible, disabled, dark-theme, RTL, and reduced-motion states as the rest of the form.
+
+Use neutral reusable class names such as `.feature-editable-icon-button` and `.feature-editable-add-button`. Do not create a new set of identical Add/Delete button styles for every collection.
+
+Mirror the backend DTO validation on every nested row. A collection can be optional while each row, once added, still requires all non-nullable enum, date, and text fields. Mark those columns as required, add matching reactive-form validators, and include them in the clickable validation summary before allowing Save. Preserve numeric enum value `0` with nullish checks (`value ?? null`), not truthy fallbacks (`value || null`), because `0` is usually the first valid enum member. Convert dates and enum values only after the row is valid; do not let ASP.NET model binding become the first validation layer and return an avoidable HTTP 400. Enforce relationships such as `expiryDate > issueDate` with a form-group validator, show the translated error beside the dependent field, and include the range error in the validation summary.
+
+#### Reusable calendar controls
+
+Use the shared PrimeNG calendar treatment for dates in both editable tables and normal personal-information fields. Import `CalendarModule`, keep the form-control value as a `Date`, and convert it to the API's ISO format only when building the request. When filling Edit/View forms, use `new Date(apiValue)`; do not pass a `yyyy-MM-dd` string into a date-valued `p-calendar`.
+
+```html
+<p-calendar
+  class="feature-calendar"
+  inputId="birthDate"
+  formControlName="birthDate"
+  dateFormat="dd/mm/yy"
+  [readonlyInput]="true"
+  [showIcon]="true"
+  [showButtonBar]="true"
+  [maxDate]="today"
+  appendTo="body"
+  panelStyleClass="sigma-datepicker-panel">
+</p-calendar>
+```
+
+Calendar rules:
+
+- use `dd/mm/yy` for normal business dates;
+- use `view="month"` with `dateFormat="mm/yy"` for payment-card expiry;
+- use a stable `readonly today = new Date()` as the maximum Date of Birth so future dates are unavailable;
+- append table calendars to `body` and reuse the globally themed `panelStyleClass`;
+- keep popup styling in a global stylesheet because a body-appended overlay is outside component encapsulation;
+- style the input, calendar trigger, focus, invalid, disabled, dark, and RTL states together;
+- use `showClear` only for optional dates; required dates should remain visibly required after clearing;
+- use a group validator as the source of truth for related dates and use `minDate` only as an additional picker aid;
+- for a strict rule such as `expiryDate > issueDate`, set the picker minimum to the next calendar day, reject equal dates in the validator, and show the translated error beside Expiry Date.
+
+Do not return a newly constructed `Date` from a template-bound `minDate` or `maxDate` expression during every change-detection pass. PrimeNG can interpret the changing object reference as a new configuration and reinitialize the popup while the user is selecting. Store a stable property for fixed limits and memoize/cache row-dependent limits by form row and source timestamp. Recalculate only when the source date actually changes.
+
+When a row contains a file upload:
+
+- visually hide the native file input without removing it from the accessibility tree;
+- use a matching `for`/`id` pair for the styled picker;
+- show the selected file name and accepted file types;
+- distinguish **clear the selected file** from **delete the complete row** with separate controls and labels;
+- keep upload state per row; a global upload flag must not change unrelated profile or document controls;
+- update the form control that actually stores the file path after upload and clear that same control when removing the file;
+- stop loading state with `finalize`, including failed requests;
+- determine success from the API result and saved path, not from a loose `OR` condition that accepts partial failures.
+
+For payment-card rows, add the appropriate browser hints (`cc-number`, `cc-name`, and `cc-csc`), use a masked CVV field, and never include CVV in logs, exports, toast messages, or debug output. Persist sensitive card data only when the backend contract and security requirements explicitly permit it.
+
+Minimum interaction checks for every editable collection:
+
+- add a row;
+- remove the first, middle, and last row;
+- use the section with zero and one row;
+- tab to each control and activate icon buttons with the keyboard;
+- select Issue Date, then confirm the same day is invalid and the following day can be selected as Expiry Date;
+- change Issue Date after selecting Expiry Date and confirm the row validator updates;
+- verify Date of Birth accepts past/today values but rejects future dates;
+- verify card expiry uses month/year selection and serializes a valid API date;
+- verify calendar month navigation, Today/Clear actions, keyboard use, and prefilled Edit/View values;
+- verify long file names and narrow screens stay inside the section scroller;
+- verify View mode cannot add, clear, upload, or delete;
+- verify light mode, dark mode, LTR, and RTL.
+
 ### Action menu styling
 
 Keep the Actions column at content width. A Bootstrap `.dropdown` is a block element and can fill a wide table cell; if the menu uses `right: 0`, that makes its items appear far away from the Actions button. Constrain the first column before applying right-aligned menu positioning:
@@ -933,7 +1083,7 @@ Keep the Actions column at content width. A Bootstrap `.dropdown` is a block ele
 }
 ```
 
-When these rules live in the feature list stylesheet, use `:host ::ng-deep` so they reach the action template and menu rendered through shared child components. Keep every deep selector scoped under the feature table panel.
+The shared button and menu are rendered through the action template inside the grid. Keep styling scoped under the feature panel unless it is part of the shared action-button component itself.
 
 The action button should be compact but readable:
 
@@ -958,36 +1108,31 @@ The action button should be compact but readable:
   background: var(--feature-primary-hover);
 }
 
-:host ::ng-deep .feature-table-panel .dropdown-menu {
+```
+
+Keep the shared menu directly below its button:
+
+```scss
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-menu {
+  z-index: 1100;
+  top: calc(100% + 4px) !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: 0 !important;
   min-width: 170px;
   max-height: min(70vh, 420px);
   overflow-y: auto;
-  padding: 4px 0;
-  border: 1px solid #d6dfe8;
-  border-radius: 4px;
-  box-shadow: 0 5px 14px rgb(46 61 73 / 14%);
-}
-
-:host ::ng-deep .feature-table-panel .dropdown-item {
-  min-height: 34px;
-  padding: 7px 12px;
-  color: #4e5963;
-}
-
-:host ::ng-deep .feature-table-panel .dropdown-item:hover,
-:host ::ng-deep .feature-table-panel .dropdown-item:focus-visible {
-  color: #3f5568;
-  background: #f3f8fc;
-}
-
-:host ::ng-deep .feature-table-panel .dropdown-item:disabled {
-  color: #9aa3aa;
-  background: transparent;
-  cursor: not-allowed;
+  margin: 0 !important;
+  transform: none !important;
 }
 ```
 
-For a menu with many or dependent actions, keep icons aligned, use translated labels, and show disabled state without removing keyboard focus unexpectedly. Use separators or grouped labels only when they materially improve scanning.
+For a menu with many or dependent actions, keep icons aligned, use translated labels, and show disabled state without removing keyboard focus unexpectedly. Use separators or grouped labels only when they materially improve scanning. Verify light, dark, RTL, hover, focus, and disabled states.
 
 ### Responsive behavior
 
@@ -1065,7 +1210,7 @@ modal dialog        2000
 
 The exact values can follow the application's existing scale. The important rules are:
 
-- the table action menu must be above table rows and cells;
+- the open table action menu must be above table rows and cells;
 - the dialog must be above the page and table;
 - an autocomplete list must be above the form fields;
 - no component should use an arbitrary `999999` value;
@@ -1447,48 +1592,59 @@ On selection, patch all dependent form fields in one operation and close the lis
 
 ## 13. Action dropdown and table clipping
 
-The action menu can be hidden by the table wrapper, row, or cell overflow. Scope the overflow fix to the feature panel:
+Use the shared Bootstrap action template. The action item must invoke its original callback directly; this behavior is application-wide and must not be replaced from one feature.
 
-When the user clicks an Actions button, the dropdown must remain visually anchored to that exact button. It must not render behind the button or table rows, and it must not drift to the bottom of the table or another row. Keep the menu above the table content with scoped overflow and z-index rules. At a table boundary, position the open menu directly above its button.
+```html
+<div class="dropdown" appDropdownPortal>
+  <button
+    type="button"
+    class="action-button-toggle dropdown-toggle"
+    data-bs-toggle="dropdown"
+    data-bs-display="static"
+    aria-expanded="false">
+    {{ 'general.actions' | translate }}
+  </button>
 
-```scss
-.feature-table-panel {
-  position: relative;
-  z-index: 1;
-  overflow: visible;
-}
-
-:host ::ng-deep .feature-table-panel .p-datatable-wrapper,
-:host ::ng-deep .feature-table-panel .p-datatable-tbody,
-:host ::ng-deep .feature-table-panel .p-datatable-tbody > tr,
-:host ::ng-deep .feature-table-panel .p-datatable-tbody > tr > td {
-  overflow: visible !important;
-}
-
-:host ::ng-deep .feature-table-panel .dropdown {
-  position: relative;
-  z-index: 1000;
-}
-
-:host ::ng-deep .feature-table-panel .dropdown-menu {
-  z-index: 1100;
-}
+  <ul class="dropdown-menu">
+    @for (action of moreActions(); track action.title) {
+      @if (action.visible?.(row) ?? true) {
+      <li>
+        <button
+          type="button"
+          class="dropdown-item"
+          [disabled]="action.disabled?.(row) ?? false"
+          (click)="action.action(row)">
+          <i [class]="action.icon"></i>
+          {{ action.title | translate }}
+        </button>
+      </li>
+      }
+    }
+  </ul>
+</div>
 ```
 
-For a single-row or last-row table, an upward menu is predictable:
+`data-bs-display="static"` plus the shared menu positioning keeps the menu directly below the clicked button:
 
 ```scss
-:host ::ng-deep .feature-table-panel .dropdown-menu.show {
-  top: auto !important;
-  right: 0 !important;
-  bottom: calc(100% + 4px) !important;
-  left: auto !important;
+.dropdown-menu {
+  top: calc(100% + 4px) !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: 0 !important;
   margin: 0 !important;
   transform: none !important;
 }
+
+:host-context([dir='rtl']) .dropdown-menu {
+  right: 0 !important;
+  left: auto !important;
+}
 ```
 
-Test the first row, middle row, last row, and one-row grid. If a shared action component is changed instead, test every feature that uses it.
+Never force the menu above the button with `bottom: 100%`. If a table wrapper clips the downward menu, use the shared portal directive; do not change the callback markup. The directive must move and restore the existing menu node so `(click)="action.action(row)"` remains attached.
+
+Test the first row, middle row, last row, and one-row grid. For each displayed item, verify that clicking View, Edit, Delete, or another configured action actually runs its original row callback. Also verify downward placement, outside-click closing, keyboard focus, light mode, dark mode, LTR, and RTL. Any shared action component change requires smoke-testing every feature that consumes it.
 
 ## 14. Translation and accessibility
 
@@ -1620,12 +1776,13 @@ The feature specs should import and instantiate the actual feature components. D
 | Update jumps to another page | Add and Update use the same refresh behavior | Restore `dt.first` for Update |
 | Search disappears after refresh | Last filter is not stored | Reuse the stored list filter |
 | Fields overlap in Edit | Two controls use the same explicit grid row | Give each grid area one owner |
-| Action menu is hidden | Table wrappers clip overflow | Use scoped visible overflow and z-index |
+| Action menu is hidden | A table wrapper clips the shared Bootstrap menu | Apply the shared `appDropdownPortal` directive so the same open menu node is positioned below the button at body level |
 | Action item opens far away from its button | The Actions cell expands while the menu is aligned with `right: 0` | Set the first header and body cells to `width: 1%` and `white-space: nowrap` |
-| One-row action menu opens over button | Popper placement meets paginator/table boundary | Open above the button or use viewport boundary |
+| Action menu opens upward | Popper flips placement or feature CSS sets `bottom: 100%` | Use `data-bs-display="static"` and position the shared menu below with `top: calc(100% + 4px)` |
 | Conditional action appears for the wrong row | Action visibility is hard-coded or not re-evaluated | Use typed `visible`/`disabled` predicates and re-check before execution |
 | Dependent action remains available after a state change | The row/action state was not refreshed | Update action state and refresh the row/grid after success |
 | Duplicate title appears | Both the shell and feature render the title | Choose one title owner |
+| Dark mode leaves a white grid/card | The feature uses fixed light colors or themes only the shell | Override the full feature surface hierarchy under the active dark-theme selector |
 | Simple grid has an unwanted vertical scrollbar | A forced `100dvh` height or guessed shell offset makes the page too tall | Match Location: use natural page height and remove forced height/overflow rules |
 | View allows editing | Form was not disabled after load | Disable after `fillForm` in View |
 | Edit creates a new row | Save always calls POST | Select PUT when mode is Edit |
@@ -1651,6 +1808,7 @@ A generic grid screen is ready when:
 - actions support any number of menu items;
 - dependent actions correctly reflect row state, permissions, and previous action results;
 - the screen has one title owner and no unnecessary page-level vertical scroll;
+- dark mode covers the page, panel, filters, table, paginator, menus, and dialogs without isolated light surfaces;
 - simple grids expose one built-in Search input in the table header and no external Search form;
 - API requests match backend parameter names and wrappers;
 - page, table, modal, form, button, menu, responsive, RTL, focus, and disabled styles are scoped and consistent;
