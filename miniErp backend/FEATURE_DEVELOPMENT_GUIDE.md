@@ -43,6 +43,34 @@ architectural decision explicitly changes them:
   item and CRUD configuration in the separate client project. Backend Git
   operations do not include the client repository automatically.
 
+### Current simplified document policy
+
+For the current MiniErp scope, transaction documents are editable CRUD
+aggregates. This policy overrides lifecycle and movement guidance elsewhere in
+this guide unless the user separately approves a new requirement:
+
+- Do not add `DocumentStatus`, draft/posted/cancelled states, post or cancel
+  endpoints, reversal workflows, or posting/cancellation audit fields.
+- Use explicit transactions for aggregate create, update, and soft delete so
+  header and line changes are atomic.
+- Use a row-version token only on aggregate headers. Require the token returned
+  when the document was loaded and assign that client token as EF Core's
+  original value; never replace it with the latest database token before
+  saving. Update a header field such as `LastModifiedAt` for every aggregate
+  update, including line-only changes, so every successful update advances the
+  token. Catch `DbUpdateConcurrencyException` and return a clear conflict that
+  tells the user to reload the document and try again. Do not add row-version
+  tokens to child rows while children have no independent update workflow.
+- Keep audit population solely in `AuditableEntityInterceptor`.
+- Product-document `StoreId` values must reference an active store in the
+  selected company with `IsContainerStore = false`.
+- Do not generate movement or driver-trip records from document CRUD unless a
+  later, separately approved requirement explicitly introduces that behavior.
+- Paginated aggregate list responses include the complete deterministically
+  ordered child collections required by the frontend, not header-only rows.
+  Keep count fields when useful, but do not use a count as a replacement for
+  line or allocation details.
+
 ## 1. Define the feature before coding
 
 Write down the following:

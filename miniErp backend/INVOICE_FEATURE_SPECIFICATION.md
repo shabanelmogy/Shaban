@@ -13,16 +13,18 @@ standards that apply to every feature.
   invoice types.
 - `BusinessPartner` represents both customers and suppliers. The document type
   determines the partner's role.
-- Do not add a general ledger or journal vouchers. Operational movements are
-  the source of truth for stock, partner, and container balances.
+- Do not add a general ledger or journal vouchers.
 - Do not store mutable current-balance fields on `Item`, `Store`,
   `BusinessPartner`, or `Container`.
 - Use direct services with `ApplicationDbContext`. Do not add CQRS or repository
   classes.
 - Every tenant-owned record receives `CompanyId` from the authenticated
   `company_id` claim, never from a request DTO.
-- Posted documents and movements are immutable. Corrections use linked opposite
-  movements.
+- Documents use simple aggregate CRUD. They do not have status, posting,
+  cancellation, reversal, or movement side effects.
+- Aggregate create, update, and soft delete operations are atomic. Updates use
+  a header row-version token, including line-only updates.
+- `AuditableEntityInterceptor` owns audit field population.
 
 ## 2. Existing master-data impact
 
@@ -120,7 +122,6 @@ Main fields:
 - `InvoiceNumber`, generated on the server
 - `ExportInvoiceCode`, optional
 - `InvoiceType`
-- `Status`
 - `InvoiceDate`
 - `DueDate`, optional
 - `InvoiceId`, optional reference to the original invoice for a return
@@ -135,7 +136,7 @@ Main fields:
 - `VehicleNumber`, optional
 - `Total`, calculated on the server
 - `Notes`, optional
-- Posting and cancellation audit information
+- `LastModifiedAt`, updated for every aggregate update
 - Row-version concurrency value
 - Audit fields
 - Invoice lines and container lines
@@ -229,7 +230,8 @@ The invoice property is named `UsesExternalDriver`.
 - The container store must belong to the selected business partner and company.
 - Every selected container must be active and assigned to that store through
   `StoreContainer`.
-- Container movements are written only when the invoice is posted.
+- Container lines are saved only as part of the invoice aggregate. The current
+  scope does not generate container movements.
 
 The customer container balance is:
 
@@ -239,85 +241,71 @@ Customer container balance = SUM(OutgoingUnits - IncomingUnits)
 
 A positive result means the customer still holds containers.
 
-## 8. Movement entities
+## 8. Deferred movement entities
+
+Movement entity designs may remain as future placeholders, but current
+document tasks must not configure, seed, or write them unless a separate
+requirement is approved.
 
 ### ItemMovement
 
-Stores immutable stock effects from invoices, opening balances, adjustments,
-and future transfers.
-
-Exactly one of `QuantityIn` or `QuantityOut` must be positive for a normal
-movement.
+Reserved for a future stock-movement requirement. `ItemUnitId` and `ItemUnit`
+are nullable on movement records.
 
 ### BusinessPartnerMovement
 
-Stores immutable debit and credit effects from invoices, returns, partner
-opening balances, receipts, and payments.
-
-Balances must be calculated separately for each currency.
+Reserved for a future partner-movement requirement.
 
 ### ContainerMovement
 
-Stores container units delivered to or returned by a customer. It links the
-company, business partner, container store, container, and invoice.
+Reserved for a future container-movement requirement.
 
 ### DriverTrip
 
-Created automatically when a posted invoice uses an internal driver.
+Automatic creation is deferred because CRUD document saves have no posting
+side effects.
 
-It stores:
+## 9. Simplified invoice behavior
 
-- Driver
-- Invoice
-- Invoice number
-- Export invoice code
-- Business partner
-- Trip date
-- Nullable trip price
+- Invoices may be created, updated, queried, and soft-deleted.
+- Header, product lines, and container lines are one aggregate.
+- Create, update, and soft delete use explicit atomic transactions.
+- Update requires the current row-version token. A line-only update must also
+  call `Invoice.Touch(...)` to update `LastModifiedAt` so the header token
+  advances.
+- The update service assigns the row-version received from the client as EF
+  Core's original value. It must not replace that value with the latest token
+  loaded from the database before saving.
+- A stale token returns `Invoices.Concurrency` and tells the user that another
+  user modified the invoice and that the invoice must be reloaded.
+- `InvoiceLine` and `InvoiceContainerLine` do not have row-version properties
+  because they are not updated independently.
+- The audit interceptor records create, update, and delete information.
+- There is no document status, post, cancel, reversal, or movement operation.
 
-The trip price can be entered later without modifying the posted invoice.
-
-## 9. Invoice lifecycle
-
-### Draft
-
-- May be created, updated, and soft-deleted.
-- Stores header, product lines, and container lines.
-- Does not create movements or affect balances.
-
-### Posted
-
-- Cannot be edited or deleted.
-- Posting writes the invoice and all related movements atomically.
-- Posting uses a SQL Server `Serializable` transaction for stock protection.
-
-### Cancelled
-
-- Cannot be edited, deleted, or posted again.
-- Cancellation preserves original movements and writes opposite movements.
-- Cancellation requires a reason and concurrency check.
-
-## 10. Atomic posting workflow
+## 10. Atomic aggregate-save workflow
 
 1. Resolve the selected company from the authenticated claim.
-2. Load and validate the draft and its concurrency value.
-3. Validate the active partner, product store, country, and driver.
+2. For update, load the invoice aggregate and retain the row-version originally
+   supplied by the client as EF Core's original concurrency value.
+3. Validate the active partner, active product store, country, and driver.
 4. Load all requested items in one query and derive their units.
 5. Derive currency from the business partner.
 6. Recalculate quantities and totals on the server.
-7. Group repeated items before stock validation.
-8. Load all required stock balances in one query.
-9. Reject an outbound operation that would make stock negative.
-10. Validate the container store and assigned containers.
-11. Add item, partner, and container movements.
-12. Add a driver trip for an internal driver.
-13. Mark the invoice as posted.
-14. Save and commit once. Any failure rolls back the entire operation.
+7. Reject repeated item IDs.
+8. Validate the container store and assigned containers when container lines
+   are present.
+9. Replace the aggregate line sets in the change tracker.
+10. Call `Invoice.Touch(DateTime.UtcNow)` and explicitly mark
+    `LastModifiedAt` modified so line-only changes always update the header.
+11. Save once and catch `DbUpdateConcurrencyException` as
+    `Invoices.Concurrency`. Commit only on success; any failure rolls back the
+    entire operation.
 
 ## 11. Return rules
 
-- A sales return references a posted sales invoice.
-- A purchase return references a posted purchase invoice.
+- A sales return references an existing sales invoice.
+- A purchase return references an existing purchase invoice.
 - The original invoice must belong to the same company, partner, store, and
   currency.
 - Returned quantity cannot exceed the remaining unreturned quantity.
@@ -325,15 +313,10 @@ The trip price can be entered later without modifying the posted invoice.
   calculation.
 - Unlinked returns are not supported initially.
 
-## 12. Cancellation restrictions
+## 12. Lifecycle operations
 
-Block cancellation when:
-
-- The invoice is not posted.
-- It is already cancelled.
-- It has active voucher allocations.
-- It has posted return invoices.
-- The required outbound reversal would make stock negative.
+Status, posting, cancellation, and reversal operations are not part of the
+current application scope and must not be introduced implicitly.
 
 ## 13. Related document entities
 
@@ -345,17 +328,29 @@ These remain separate features and tables:
 - `BusinessPartnerVoucher`
 - `BusinessPartnerVoucherAllocation`
 
-Their posted effects use the same item and partner movement tables used by
-invoices.
+`StockOpeningBalanceLine` uses the same quantity and value fields as an invoice
+line: `ItemId`, nullable server-derived `ItemUnitId`/`ItemUnit`, `Count`,
+`Weight`, calculated `Quantity`, `Price`, calculated `Total`, and optional
+`Notes`. Clients send `Count`, `Weight`, and `Price`; they do not send
+`Quantity` or `Total`.
+
+They follow the same simplified aggregate CRUD, transaction, row-version, and
+audit-interceptor rules. They do not generate movement or reversal records.
 
 ## 14. Frontend contract rules
 
 - Reuse the existing select endpoints for drivers, stores, items, and business
   partners when their data is sufficient.
+- Paginated document list items return their complete ordered child details:
+  invoices return product and container lines, stock adjustments return their
+  lines, and vouchers return allocations. A `lineCount` or allocation count
+  may be included but does not replace the child collection.
+- Paginated Partner Opening Balance items return the complete detail fields,
+  including partner information, balance type, currency, amount, notes, and
+  row version; they must not use a reduced header-only response.
 - Add a specialized selector only when the frontend genuinely needs extra
   fields that the shared `Id` and `Name` response cannot supply.
 - Do not include `CompanyId` in tenant request DTOs.
 - Do not send calculated totals or item units from invoice forms.
 - Swagger is the authoritative API contract delivered to the frontend after
   each implementation step.
-

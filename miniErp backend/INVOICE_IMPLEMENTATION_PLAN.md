@@ -3,6 +3,32 @@
 Apply `FEATURE_DEVELOPMENT_GUIDE.md` completely to every step below. Complete
 and hand off one step to the frontend before starting the next step.
 
+## Simplified document policy
+
+The current application uses editable CRUD documents. Apply these rules to
+stock opening balances and every later document task:
+
+- Do not add `DocumentStatus`, draft/posted/cancelled states, post endpoints,
+  cancellation endpoints, reversal workflows, or posting/cancellation audit
+  fields.
+- Create, update, and soft-delete the complete aggregate atomically in an
+  explicit transaction.
+- Add a row-version token only to the document header and require the token
+  originally returned to the client for aggregate updates. Assign that token
+  as EF Core's original value; never replace it with a freshly loaded database
+  value before saving. Update the header's `LastModifiedAt` for every update,
+  including line-only changes, and translate `DbUpdateConcurrencyException`
+  into a clear reload-and-retry conflict. Do not add row-version tokens to
+  child rows.
+- Let `AuditableEntityInterceptor` populate create, update, and delete audit
+  fields; do not duplicate audit handling in a feature service.
+- A document `StoreId` used for item quantities must reference an active
+  product store (`IsContainerStore = false`) in the selected company.
+- Do not generate item, partner, container, driver-trip, or reversal movements
+  unless a later, separately approved requirement explicitly introduces them.
+- If item movements are introduced later, their `ItemUnitId` and `ItemUnit`
+  navigation are nullable.
+
 ## 0. Reference data and existing-feature preparation
 
 - Confirm the existing Store changes for product and container stores.
@@ -14,58 +40,70 @@ and hand off one step to the frontend before starting the next step.
 
 ## 1. Stock opening balances
 
-- Implement draft CRUD.
-- Implement post and cancel.
-- Generate inbound and reversal item movements.
+- Implement simple aggregate CRUD with atomic transactions and row-version
+  concurrency.
+- Require an active product store; reject container stores.
+- Model each line like an invoice line: the request supplies `ItemId`, `Count`,
+  `Weight`, and `Price`; use nullable `ItemUnitId`/`ItemUnit`, and derive
+  `Quantity = Count * Weight` and `Total = Quantity * Price` on the server.
+- Do not add status, post, cancel, reversal, or item-movement logic.
 - Hand off the opening-stock page contract to the frontend.
 
 ## 2. Partner opening balances
 
-- Implement draft CRUD.
+- Implement simple CRUD with atomic writes and row-version concurrency.
 - Implement receivable and payable types.
-- Implement post and cancel.
-- Generate partner movements.
+- Return the complete Partner Opening Balance detail fields in every paginated
+  list item; do not use a reduced header-only list response.
+- Do not add status, post, cancel, reversal, or partner-movement logic.
 - Hand off the partner-opening page contract to the frontend.
 
 ## 3. Invoices
 
 - Finalize invoice, line, container-line, and driver fields.
-- Implement paginated list, details, draft create, draft update, and draft delete.
+- Implement paginated list, details, create, update, and soft delete.
+- Include complete ordered product and container line details in every
+  paginated invoice item.
 - Implement sales, sales return, purchase, and purchase return.
 - Save an external driver name only on the invoice.
-- Implement atomic posting and stock validation.
-- Generate item, partner, container, and internal-driver-trip movements.
+- Save the complete invoice aggregate atomically and require row-version
+  concurrency for updates.
+- Configure `Invoice.RowVersion` with `.IsRowVersion()`. On every header,
+  product-line, or container-line update, call `Invoice.Touch(...)`, set the
+  client token as the tracked original row version, and return
+  `Invoices.Concurrency` when the token is stale.
 - Implement return limits and original-invoice validation.
-- Implement cancellation through opposite movements.
-- Hand off draft APIs first, then post, return, and cancellation APIs.
+- Do not add status, posting, cancellation, reversal, or movement generation.
+- Hand off the CRUD and return contracts to the frontend.
 
 ## 4. Stock adjustments
 
 - Implement increase and decrease documents.
-- Implement draft CRUD, post, and cancel.
-- Validate stock before posting a decrease.
-- Generate item movements.
+- Implement simple aggregate CRUD with atomic writes and row-version
+  concurrency.
+- Include complete ordered adjustment-line details in every paginated item.
+- Do not add status, posting, cancellation, reversal, or item movements.
 
 ## 5. Receipt and payment vouchers
 
-- Implement draft CRUD, post, and cancel.
+- Implement simple aggregate CRUD with atomic writes and row-version
+  concurrency.
 - Return unpaid and partially paid invoices.
 - Validate invoice allocations.
 - Preserve voucher amounts that remain unallocated.
-- Generate partner movements.
+- Include complete ordered allocation details in every paginated voucher item.
+- Do not add status, posting, cancellation, reversal, or partner movements.
 
 ## 6. Balance reports
 
-- Implement stock balance queries.
-- Implement partner balances by currency.
-- Implement customer container balances.
-- Keep movement tables read-only; do not add movement CRUD endpoints.
+- Defer balance reports until their source-of-truth calculation is separately
+  approved.
+- Do not introduce movement writes implicitly while implementing CRUD tasks.
 
 ## 7. Driver trips
 
-- List and get internal driver trips.
-- Update the nullable trip price.
-- Do not add manual create or delete endpoints.
+- Defer automatic driver trips because the simplified document workflow does
+  not generate movements or posting side effects.
 
 ## Completion requirements for every step
 
@@ -77,6 +115,9 @@ and hand off one step to the frontend before starting the next step.
 - Add Arabic validation and business messages.
 - Review the entity and EF design before creating a migration.
 - Add idempotent seed data for multiple companies when applicable.
-- Verify tenant isolation, expected failures, and atomic transactions.
+- Verify tenant isolation, expected failures, atomic transactions, and stale
+  row-version conflicts.
+- Confirm that no status, posting, cancellation, reversal, or movement logic
+  was introduced.
 - Run tests, the Release build, the pending-model check, and formatting checks.
 - Give the frontend exact requests, responses, enums, validation, and examples.
