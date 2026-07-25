@@ -8,11 +8,15 @@ Swagger remains the machine-readable API contract. This document explains how
 the frontend should use that contract and records behavior that a schema alone
 cannot describe.
 
-**Last updated:** 2026-07-22  
-**API version:** v1  
-**Canonical file:** `E:\Shaban Documents\Shaban\miniErp backend\FRONTEND_INTEGRATION_GUIDE.md`  
-**Current delivery scope:** Phase 1 backend ready; database deployment and
-frontend integration are still pending
+**Last updated:** 2026-07-25
+
+**API version:** v1
+
+**Canonical file:** `miniErp backend/FRONTEND_INTEGRATION_GUIDE.md`
+
+**Current delivery scope:** Reference/container data and Stock Opening
+Balances are implemented. Later document tasks follow
+`INVOICE_SIDEBAR_TASKS.md` sequentially.
 
 ## 1. How to use this document
 
@@ -37,13 +41,14 @@ disagree, stop integration and report the mismatch instead of guessing.
 
 | Phase | Backend | Database | Swagger | Frontend | Environment/contract summary |
 |---|---|---|---|---|---|
-| 0 - Existing-feature preparation | Ready | Migration pending | Verified locally | Pending | Not deployed by this task; Store rule documented below |
-| 1 - Country and container data | Backend ready | Migration pending | Verified locally | Pending | Countries, Containers, atomic StoreContainer upsert, and container-store selector implemented; not deployed by this task |
-| 2 - Item movements and stock balance | Planned | N/A | N/A | Not started | Internal ledger and balance behavior; no movement CRUD UI |
-| 3 - Opening balances | Planned | N/A | N/A | Not started | Final-create and read-only history screens |
-| 4 - Invoices | Planned | N/A | N/A | Not started | Final-create invoices; no Edit, Delete, or Post actions |
-| 5 - Stock adjustments | Planned | N/A | N/A | Not started | Final-create adjustments; no Edit, Delete, or Post actions |
-| 6 - Balance reports | Planned | N/A | N/A | Not started | Paginated read-only reports |
+| 0 - Reference/container data | Ready | Migrations present | Verified locally | Implemented/verify environment | Countries, Containers, atomic StoreContainer upsert, and partner/container workspace |
+| 1 - Stock Opening Balances | Ready | Migrations present | Verified locally | Contract delivered | Editable aggregate CRUD; no movements |
+| 2 - Partner Opening Balances | Waiting | N/A | N/A | Not started | Wait for explicit Step 1 completion confirmation |
+| 3 - Invoices | Waiting | N/A | N/A | Not started | Editable aggregate CRUD after Step 2 |
+| 4 - Stock Adjustments | Waiting | N/A | N/A | Not started | Editable aggregate CRUD after Step 3 |
+| 5 - Receipt/payment vouchers | Waiting | N/A | N/A | Not started | Editable aggregate CRUD after Step 4 |
+| 6 - Balance Reports | Deferred | N/A | N/A | Not started | Requires approved source of truth |
+| 7 - Driver Trips | Deferred | N/A | N/A | Not started | Requires separate approval |
 
 Do not infer endpoint names, enum numeric values, or JSON fields for planned
 phases. They become usable only after their exact generated Swagger contract is
@@ -279,11 +284,16 @@ Frontend handling:
 
 ## 4. Phase 0 handoff: Store preparation
 
-**Backend status:** Ready on 2026-07-22  
-**Database status:** Migration `20260722193932_EnforceUniqueActiveContainerStore` pending; not applied by this task  
-**Swagger status:** Verified locally  
-**Frontend status:** Integration/update pending  
-**Breaking API schema change:** No  
+**Backend status:** Ready on 2026-07-22
+
+**Database status:** Migration `20260722193932_EnforceUniqueActiveContainerStore` pending; not applied by this task
+
+**Swagger status:** Verified locally
+
+**Frontend status:** Integration/update pending
+
+**Breaking API schema change:** No
+
 **Behavior change:** Yes
 
 Phase 0 did not add a new route or change the `StoreRequest` or `StoreResponse`
@@ -488,14 +498,20 @@ Relevant backend contracts:
 
 ## 5. Phase 1 handoff: reference and container data
 
-**Backend status:** Backend ready / frontend pending on 2026-07-22  
+**Backend status:** Backend ready / frontend pending on 2026-07-22
+
 **Database status:** Migration
-`20260722202332_AddReferenceAndContainerData` pending; not applied by this task  
-**Swagger status:** Verified locally after the final API change  
-**Frontend status:** Integration pending  
-**Breaking API schema change:** No; all Phase 1 routes are additive  
+`20260722202332_AddReferenceAndContainerData` pending; not applied by this task
+
+**Swagger status:** Verified locally after the final API change
+
+**Frontend status:** Integration pending
+
+**Breaking API schema change:** No; all Phase 1 routes are additive
+
 **Existing behavior change:** Yes; Store assignment history now protects Store
-type, linked partner, and deletion  
+type, linked partner, and deletion
+
 **Seed status:** No Phase 1 Country, Container, or StoreContainer rows were
 added. Existing identity/catalog seed behavior is unchanged.
 
@@ -928,55 +944,52 @@ Relevant backend contracts:
 
 ## 6. Remaining planned frontend handoffs
 
-Everything in this section is informational until its status changes from
-**Planned**. Do not implement exact routes, fields, or enum values until their
-generated Swagger contract is recorded here.
+`INVOICE_SIDEBAR_TASKS.md` is authoritative for task order and approved scope.
+Do not implement exact routes, fields, or enums until generated Swagger and the
+step-specific frontend contract are delivered.
 
-### Phase 2 - Item movements and reusable stock balance
+### Step 2 - Partner Opening Balances
 
-Item movements are an internal, read-only ledger. Do not plan create, edit, or
-delete movement screens. Later stock-affecting commands can return
-`409 Inventory.InsufficientStock`; the exact error contract will be recorded
-when the first public stock command is implemented.
+Planned as editable receivable/payable CRUD with atomic writes, header
+row-version concurrency, and complete paginated detail fields. No status,
+posting, cancellation, reversal, or partner movements.
 
-### Phase 3 - Opening balances
+### Step 3 - Invoices
 
-The intended UX is final create plus list/details. Do not show Edit, Delete,
-Post, or Cancel actions. The exact stock-opening and partner-opening request
-and response contracts are not yet available.
+Planned as editable aggregate CRUD for Invoice, product lines, and container
+lines. The frontend submits the complete aggregate and retains the original
+base64 `RowVersion`. A stale conflict requires reloading the invoice. Do not
+show Post or Cancel actions, and do not expect movement side effects.
 
-### Phase 4 - Invoices
+### Step 4 - Stock Adjustments
 
-The intended UX is one final-create action that immediately validates and
-applies stock and partner movements atomically. Do not show separate Post,
-Edit, Delete, or Cancel actions in the current version.
+Planned as editable increase/decrease aggregate CRUD with header-only
+row-version concurrency and complete line collections. No posting,
+cancellation, reversal, or item movements.
 
-Invoice types, request fields, calculated response fields, list filters,
-return rules, container behavior, and driver behavior must not be implemented
-until their exact API contract is marked ready here.
+### Step 5 - Receipt and Payment Vouchers
 
-### Phase 5 - Stock adjustments
+Planned as editable voucher/allocation aggregate CRUD with header-only
+row-version concurrency and complete allocation collections. No posting,
+cancellation, reversal, or partner movements.
 
-The intended UX is final create plus list/details. Increase and decrease
-directions will be server-defined. Do not show Edit, Delete, Post, or Cancel
-actions.
+### Step 6 - Balance Reports
 
-### Phase 6 - Balance reports
+Deferred until the user approves a source of truth. The approved CRUD workflow
+does not generate movements, and mutable balance columns must not be inferred.
 
-The intended UX is paginated, read-only reports for item, partner, and
-container balances. Filters and response fields remain unconfirmed.
+### Step 7 - Driver Trips
 
-### Deferred UI actions
+Deferred pending separate approval. Invoice CRUD does not automatically create
+DriverTrip records.
 
-Do not add these actions unless a later approved phase explicitly implements
-them:
+### UI actions that must not be added
 
-- Editable transactional-document drafts.
-- Separate Post buttons.
-- Editing or deleting final documents.
-- Direct invoice cancellation.
-- Receipt/payment vouchers and allocations.
+- Post or Cancel buttons.
+- Document-status controls.
+- Reversal actions.
 - Manual movement editing.
+- Independent line, container-line, or allocation mutation screens.
 - Manual DriverTrip creation or deletion.
 
 ## 7. Documentation workflow for every backend step
@@ -1004,11 +1017,16 @@ use `N/A` with a reason instead of leaving a field blank.
 ```markdown
 ## Phase/step: <name>
 
-**Backend status:** <Ready | Backend ready / frontend pending>  
-**Database status:** <N/A | Migration pending | Deployed in environment>  
-**Swagger status:** <Not ready | Verified locally | Verified in environment>  
-**Verified date:** <YYYY-MM-DD>  
-**Breaking change:** <Yes/No and migration path>  
+**Backend status:** <Ready | Backend ready / frontend pending>
+
+**Database status:** <N/A | Migration pending | Deployed in environment>
+
+**Swagger status:** <Not ready | Verified locally | Verified in environment>
+
+**Verified date:** <YYYY-MM-DD>
+
+**Breaking change:** <Yes/No and migration path>
+
 **Frontend owner/status:** <owner and state>
 
 ### User-visible purpose
