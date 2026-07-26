@@ -104,13 +104,13 @@ development and verification policy.
 | Step | Sidebar task | Thread ID | Current state |
 |---:|---|---|---|
 | 0 | Invoice 0 – Reference Data | `019f97eb-c87d-7211-afbf-bc9bb1e69f96` | Implemented |
-| 1 | Invoice 1 – Stock Opening Balances | `019f97eb-f38e-7610-a2cf-8537d71a1238` | Implemented and verified; Step 2 still requires explicit user confirmation |
-| 2 | Invoice 2 – Partner Opening Balances | `019f97ec-202f-7563-9a7e-d0be18849b4a` | Waiting for Step 1 confirmation |
-| 3 | Invoice 3 – Invoice Workflow | `019f97ec-5302-7c20-9d9e-55719e500014` | Waiting for Step 2 completion |
-| 4 | Invoice 4 – Stock Adjustments | `019f97ec-7c06-7342-a0ce-2a8ed6273769` | Waiting for Step 3 completion |
-| 5 | Invoice 5 – Receipt and Payment Vouchers | `019f97ec-ada6-72b3-843b-4350de7c7c0e` | Waiting for Step 4 completion |
-| 6 | Invoice 6 – Balance Reports | `019f97ec-d7ae-79f0-a695-e3c5e1d1e962` | Deferred pending Step 5 and source-of-truth approval |
-| 7 | Invoice 7 – Driver Trips | `019f97ed-0535-7e53-94e9-43d9bfd00a7d` | Deferred pending Step 6 and separate approval |
+| 1 | Invoice 1 – Stock Opening Balances | `019f97eb-f38e-7610-a2cf-8537d71a1238` | Implemented and verified |
+| 2 | Invoice 2 – Partner Opening Balances | `019f97ec-202f-7563-9a7e-d0be18849b4a` | Implemented and verified; user confirmed completion on 2026-07-25 |
+| 3 | Invoice 3 – Invoice Workflow | `019f9a24-6614-7a60-8a5d-005dfda7be95` | Prepared; ready for explicit user start |
+| 4 | Invoice 4 – Stock Adjustments | `019f9a24-a593-7132-b593-e24af0742945` | Prepared; waiting for Step 3 completion |
+| 5 | Invoice 5 – Receipt and Payment Vouchers | `019f9a24-db3d-74f1-aa40-524268357b18` | Prepared; waiting for Step 4 completion |
+| 6 | Invoice 6 – Balance Reports | `019f9a25-1434-71c1-84de-40b14ad7a21e` | Prepared and deferred; waiting for Step 5 and source-of-truth approval |
+| 7 | Invoice 7 – Driver Trips | `019f9a25-f75d-7790-bffc-ca5812874fe7` | Prepared and deferred; waiting for Step 6 and separate approval |
 
 Only the user can confirm that a prerequisite task is complete and authorize
 the next task to start.
@@ -859,9 +859,9 @@ CompanyId / Company
 InvoiceNumber
 ExportInvoiceCode?
 InvoiceType
+PaymentTerm (`Cash = 1`, `Credit = 2`; defaults to `Cash`)
 InvoiceDate
 DueDate?
-OriginalInvoiceId? / OriginalInvoice?
 BusinessPartnerId / BusinessPartner
 StoreId / product Store
 ContainerStoreId? / ContainerStore?
@@ -886,7 +886,6 @@ Current InvoiceLine scaffold:
 Id
 CompanyId / Company
 InvoiceId / Invoice
-OriginalInvoiceLineId? / OriginalInvoiceLine?
 ItemId / Item
 ItemUnitId / ItemUnit (server-derived; not sent by client)
 Count
@@ -914,11 +913,13 @@ Audit fields
 
 - Paginated list, details, create, update, and soft delete.
 - Sales, purchase, sales-return, and purchase-return types.
+- Required `PaymentTerm` select: `Cash` is immediately paid; `Credit`
+  remains outstanding against the business-partner account.
 - Server-generated invoice number.
 - Server-derived currency and item units.
 - Request line fields: `ItemId`, `Count`, `Weight`, `Price`, and `Notes`.
 - Calculate line quantity, line total, and invoice total on the server.
-- Validate original-invoice relationships and remaining return quantities.
+- Treat sales and purchase returns as independent invoice documents.
 - Use an active product `StoreId`.
 - Keep partner `ContainerStoreId` on the invoice header when container lines
   are used.
@@ -926,8 +927,12 @@ Audit fields
   to that partner's active container store.
 - External driver name remains only on Invoice; `Driver` contains internal
   company drivers.
-- No status, posting, cancellation, reversal, movements, or DriverTrip
-  generation.
+- Invoice CRUD synchronizes product `ItemMovement`, container
+  `ContainerMovement`, `BusinessPartnerMovement` for Credit invoices, and
+  `DriverTrip` for internal drivers in the same transaction. Updates replace
+  active side-effect rows and deletes soft-delete them with the invoice.
+- There is no status, posting, cancellation, reversal, voucher, or allocation
+  workflow.
 
 Planned routes:
 
@@ -973,13 +978,13 @@ Driver validation:
 
 Return validation:
 
-- Sales return references a Sales invoice.
-- Purchase return references a Purchase invoice.
-- Original invoice must match company, partner, product store, and currency.
-- Returned quantities cannot exceed the remaining unreturned quantities.
+- Returns do not reference or allocate against an earlier invoice.
+- Validate the normal active partner, store, item, unit, container, driver,
+  quantity, price, and payment-term rules.
+- Purchase returns require sufficient stock.
+- Backdated additions or updates must not make any later historical stock
+  balance negative.
 - Repeated item IDs are rejected.
-- Concurrent return validation must not allow total returns above the original
-  quantity.
 
 ### Concurrency
 
@@ -1179,8 +1184,8 @@ pagination where applicable, Swagger, verification, and frontend contracts.
 
 ### Current decision
 
-Automatic DriverTrip creation is deferred because invoices have no posting
-side effects.
+An internal `DriverId` creates one `DriverTrip` during invoice save. The trip
+is synchronized on update and soft-deleted with the invoice.
 
 Do not:
 
@@ -1195,7 +1200,8 @@ read endpoints or nullable trip-price updates.
 
 Before declaring a document step complete:
 
-- Confirm no status/post/cancel/reversal/movement logic was added.
+- Confirm no status/post/cancel/reversal/voucher/allocation logic was added.
+- Confirm current invoice side-effect rows are synchronized atomically.
 - Confirm all company-owned reads and writes are tenant-filtered.
 - Confirm aggregate writes are atomic.
 - Confirm header-only concurrency and stale child-only conflicts.
@@ -1227,7 +1233,7 @@ Every applicable document feature must cover:
 - Company A cannot list or get Company B documents.
 - Company A cannot update or delete a Company B document.
 - Company A cannot reference Company B partner, store, item, unit, container,
-  driver, original invoice, or allocated invoice.
+  or driver.
 - Missing, inactive, and soft-deleted references return the documented error.
 - Product documents reject container stores.
 - Container references are assigned to the selected partner container store.
@@ -1304,8 +1310,12 @@ Do not silently decide these while implementing:
    always derived from the selected partner.
 2. Stock Adjustment line model: retain the current single `Quantity` scaffold
    versus adopt Invoice-style count/weight/value fields.
-3. Invoice number generation format and concurrency-safe sequence.
+3. Invoice number generation format and concurrency-safe sequence. **Resolved
+   for Step 3:** `INV-{CompanyId}-{UTC yyyyMMddHHmmssfff}-{8-char GUID
+   suffix}`, with a company-scoped unique filtered index.
 4. Exact decimal precision and rounding for Invoice and voucher money.
+   **Resolved for Step 3 invoices:** quantity `decimal(18,6)`, money
+   `decimal(18,2)`, line totals rounded away from zero to two decimals.
 5. Whether delete requests also require a row version. Update requests
    definitely require it.
 6. Balance-report source of truth after movements were removed.

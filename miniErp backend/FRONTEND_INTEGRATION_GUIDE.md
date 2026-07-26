@@ -44,7 +44,7 @@ disagree, stop integration and report the mismatch instead of guessing.
 | 0 - Reference/container data | Ready | Migrations present | Verified locally | Implemented/verify environment | Countries, Containers, atomic StoreContainer upsert, and partner/container workspace |
 | 1 - Stock Opening Balances | Ready | Migrations present | Verified locally | Contract delivered | Editable aggregate CRUD; no movements |
 | 2 - Partner Opening Balances | Waiting | N/A | N/A | Not started | Wait for explicit Step 1 completion confirmation |
-| 3 - Invoices | Waiting | N/A | N/A | Not started | Editable aggregate CRUD after Step 2 |
+| 3 - Invoices | Backend ready | Migration pending | Added/reviewed locally | Integrated/verify environment | Editable aggregate CRUD with PaymentTerm and no posting side effects |
 | 4 - Stock Adjustments | Waiting | N/A | N/A | Not started | Editable aggregate CRUD after Step 3 |
 | 5 - Receipt/payment vouchers | Waiting | N/A | N/A | Not started | Editable aggregate CRUD after Step 4 |
 | 6 - Balance Reports | Deferred | N/A | N/A | Not started | Requires approved source of truth |
@@ -956,10 +956,12 @@ posting, cancellation, reversal, or partner movements.
 
 ### Step 3 - Invoices
 
-Planned as editable aggregate CRUD for Invoice, product lines, and container
+Implemented as editable aggregate CRUD for Invoice, product lines, and container
 lines. The frontend submits the complete aggregate and retains the original
 base64 `RowVersion`. A stale conflict requires reloading the invoice. Do not
-show Post or Cancel actions, and do not expect movement side effects.
+show Post or Cancel actions. Create, update, and delete synchronize the current
+item, container, outstanding-credit partner, and internal-driver-trip side
+effects in the same transaction.
 
 ### Step 4 - Stock Adjustments
 
@@ -975,13 +977,14 @@ cancellation, reversal, or partner movements.
 
 ### Step 6 - Balance Reports
 
-Deferred until the user approves a source of truth. The approved CRUD workflow
-does not generate movements, and mutable balance columns must not be inferred.
+Deferred until the user approves a source of truth. No balance-report workflow
+is currently available, and mutable balance columns must not be inferred.
 
 ### Step 7 - Driver Trips
 
-Deferred pending separate approval. Invoice CRUD does not automatically create
-DriverTrip records.
+Standalone DriverTrip screens remain deferred pending separate approval.
+Invoice CRUD does create, replaces, and soft-deletes the current
+`DriverTrip` side effect when an internal driver is supplied.
 
 ### UI actions that must not be added
 
@@ -1084,6 +1087,36 @@ use `N/A` with a reason instead of leaving a field blank.
 - Backend build/tests and frontend build results recorded.
 - Known gaps and technical debt recorded.
 ```
+
+## Phase 3 handoff: Invoices
+
+**Backend status:** Backend ready / frontend integrated on 2026-07-25
+
+**Database status:** Migration `20260725170034_AddInvoiceWorkflow` generated
+and reviewed; apply only through the normal deployment migration process.
+
+**Swagger status:** Operation descriptions and enum schemas added; verify the
+generated OpenAPI document after deployment.
+
+**Frontend status:** Invoice sidebar page and aggregate form integrated.
+
+**Payment term:** `PaymentTerm` is serialized as the enum names `Cash` and
+`Credit` (`Cash = 1`, `Credit = 2`). The create/edit select is required and
+defaults to `Cash`. In the current no-posting workflow, Cash derives as paid
+immediately and Credit derives as outstanding. Invoice CRUD synchronizes item
+movements, container movements, outstanding Credit partner movements, and
+internal driver trips; it does not create journal entries, vouchers, posting,
+or reversal rows.
+
+**Invoice aggregate:** `Invoice`, `InvoiceLine`, and `InvoiceContainerLine`
+are created and updated atomically. The API returns complete ordered child
+collections, server-derived currency and item units, calculated totals, and a
+header-only base64 row version. A stale token returns
+`Invoices.Concurrency` and requires a reload.
+
+The exact request/response contract, selectors, validation, errors, and
+examples are in
+`docs/INVOICE_FRONTEND_CONTRACT.md`.
 
 ## 8. Contract change log
 

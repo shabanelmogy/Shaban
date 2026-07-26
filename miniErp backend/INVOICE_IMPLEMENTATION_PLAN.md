@@ -24,8 +24,9 @@ stock opening balances and every later document task:
   fields; do not duplicate audit handling in a feature service.
 - A document `StoreId` used for item quantities must reference an active
   product store (`IsContainerStore = false`) in the selected company.
-- Do not generate item, partner, container, driver-trip, or reversal movements
-  unless a later, separately approved requirement explicitly introduces them.
+- Invoice CRUD synchronizes current item, partner, container, and internal
+  driver-trip side effects in the same transaction. Updates replace active
+  side-effect rows and deletes soft-delete them with the invoice.
 - If item movements are introduced later, their `ItemUnitId` and `ItemUnit`
   navigation are nullable.
 
@@ -65,6 +66,12 @@ stock opening balances and every later document task:
 - Include complete ordered product and container line details in every
   paginated invoice item.
 - Implement sales, sales return, purchase, and purchase return.
+- Add required `PaymentTerm` (`Cash = 1`, `Credit = 2`) with a default of
+  `Cash`; derive immediate-paid versus outstanding response values. Credit
+  invoices create one partner movement; Cash invoices do not remain
+  outstanding.
+- Save item movements for product lines, container movements for container
+  lines, and one `DriverTrip` for an internal driver.
 - Save an external driver name only on the invoice.
 - Save the complete invoice aggregate atomically and require row-version
   concurrency for updates.
@@ -73,7 +80,8 @@ stock opening balances and every later document task:
   client token as the tracked original row version, and return
   `Invoices.Concurrency` when the token is stale.
 - Implement return limits and original-invoice validation.
-- Do not add status, posting, cancellation, reversal, or movement generation.
+- Do not add status, posting, cancellation, reversal, voucher, or allocation
+  logic.
 - Hand off the CRUD and return contracts to the frontend.
 
 ## 4. Stock adjustments
@@ -102,8 +110,8 @@ stock opening balances and every later document task:
 
 ## 7. Driver trips
 
-- Defer automatic driver trips because the simplified document workflow does
-  not generate movements or posting side effects.
+- Create one trip during invoice save when an internal driver is supplied.
+- Synchronize or soft-delete the trip with invoice update and delete.
 
 ## Completion requirements for every step
 

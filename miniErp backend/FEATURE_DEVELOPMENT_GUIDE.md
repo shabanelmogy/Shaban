@@ -1,829 +1,361 @@
 # MiniErp Feature Development Guide
 
-Use this guide whenever adding or changing a feature. The goal is to keep the
-Domain, Application, Infrastructure, and API layers consistent and to prevent a
-change in one feature from silently breaking another feature.
+- **Status:** canonical project-wide development and review guide
+- **Backend repository:** `E:\MiniErp`
+- **Frontend repository:** `E:\client\client`
 
-## MiniErp project baseline
+Use this guide whenever reviewing, adding, or changing a MiniErp feature. It
+describes the application as it exists now. Do not add hypothetical future
+requirements.
 
-Every feature should use the existing project conventions unless an
-architectural decision explicitly changes them:
+## 1. Authority and scope
 
-- Controllers inherit `ApiControllerBase`, which supplies the versioned route
+Apply requirements in this order:
+
+1. The user's latest explicit approval for the current task.
+2. A current feature specification or task section that reflects that latest
+   approval and the implemented contract.
+3. This project-wide guide.
+4. Existing conventions in the affected feature.
+
+If two sources conflict materially, stop and report the conflict before
+changing behavior. Update the affected documentation in the same change after
+the decision is confirmed.
+
+For invoices, section 8 of this guide is the current canonical behavior. It
+supersedes contradictory historical statements in
+`INVOICE_FEATURE_SPECIFICATION.md`, `INVOICE_IMPLEMENTATION_PLAN.md`,
+`INVOICE_SIDEBAR_TASKS.md`, and `FRONTEND_INTEGRATION_GUIDE.md`. Do not treat
+unimplemented voucher/allocation steps or older no-movement text in those
+documents as approved work.
+
+A request to review is read-only. Do not edit code, generate a migration, or
+change external state unless the user also asks for implementation.
+
+### Review and build modes
+
+Review mode:
+
+- Inspect the service, its interface, callers, mappings, validators, entities,
+  configurations, migrations, tests, Swagger, and frontend consumers.
+- Report only confirmed issues with file/line evidence, behavior impact, and
+  the smallest direct fix. Do not report hypothetical future problems.
+- Do not edit files or broaden the requested scope.
+
+Build mode:
+
+- Implement only the approved behavior and preserve unrelated working-tree
+  changes.
+- Check tenant filters, foreign keys, active state, cancellation tokens,
+  mapping, validation, error codes, query count, transaction need, soft-delete
+  history, Swagger, frontend impact, and tests.
+- Use a transaction only for required atomic multi-step writes. Obtain explicit
+  approval before generating a migration.
+- Run verification proportional to the affected layers and report any
+  untested or accepted edge case.
+
+### Current application boundaries
+
+- MiniErp is a small application. Prefer direct, readable code.
+- Do not add CQRS, MediatR, repositories, a unit-of-work wrapper, generic CRUD
+  services, factories, builders, strategies, or domain-service layers.
+- Do not add an abstraction for a hypothetical future need. Introduce one only
+  when it simplifies at least two current, concrete use cases.
+- Do not add raw SQL locking, `UPDLOCK`, `HOLDLOCK`, application locks, or
+  custom pessimistic-lock helpers. Keep the existing transaction boundary and
+  RowVersion behavior of the affected aggregate.
+- Do not add invoice status, posting, cancellation, reversal, journal entries,
+  vouchers, or allocations. They are not part of the current application.
+- Do not create duplicate Customer and Supplier entities.
+  `BusinessPartner` represents both roles.
+- Do not store mutable current-balance columns on `BusinessPartner`, `Item`,
+  `Store`, or `Container`.
+- Do not redesign working code solely to follow a pattern in this guide.
+  Change architecture only when the current requirement needs it.
+
+## 2. Project architecture
+
+| Layer | Responsibility |
+|---|---|
+| `MiniErp.Domain` | Entities, enums, and small business calculation rules |
+| `MiniErp.Application` | Request/response contracts, validators, mappings, and service interfaces |
+| `MiniErp.Infrastructure` | EF Core configuration, direct service implementations, Identity, and persistence |
+| `MiniErp.Api` | Controllers, authorization, HTTP results, Swagger, and application startup |
+| `E:\client\client` | React pages, navigation, forms, API integration, and production client build |
+
+Project conventions:
+
+- Controllers inherit `ApiControllerBase`, which supplies
   `/api/v{version}/[controller]` and the default `[Authorize]` policy.
-- Use `[Authorize(Roles = "...")]` for restricted operations and
-  `[AllowAnonymous]` only for intentionally public authentication endpoints.
-- Use direct application services with `ApplicationDbContext`; do not add
-  CQRS, MediatR, or repository classes for this small application.
-- Every tenant-owned entity inherits `AuditableEntity`, declares its own
-  integer `Id`, and contains `CompanyId`. The selected company comes from the
-  authenticated access token, never from a tenant CRUD request DTO.
-- Access tokens contain exactly one valid `company_id`. Authentication rejects
-  a missing, malformed, or repeated company claim before a controller or
-  tenant service runs.
-- Tenant services inject the scoped `ICurrentCompanyContext`, capture its
-  validated `CompanyId` once, and keep explicit company filters in all queries.
-- Implement service interfaces with `IScopedService`; Scrutor discovers and
-  registers them automatically.
-- Use `Result`/`Result<T>` for expected business failures and the global
-  exception handler for unexpected request exceptions.
-- `AuditableEntityInterceptor` populates audit information and converts
-  `Remove` operations for `AuditableEntity` records into soft deletes.
-- Normal queries use the global `IsDeleted` filter. Use `IgnoreQueryFilters()`
-  only when historical or administrative records must be included.
-- Use Mapster for command mapping and server-side projection for reads. Use the
-  shared pagination service for growing list endpoints.
-- Startup can apply pending migrations and run idempotent seed data according
-  to `Database:ApplyMigrationsOnStartup` and `Seed:Enabled`. Keep passwords,
-  connection strings, and JWT secrets in deployment configuration or a secret
-  store.
-- Swagger is configuration-controlled and the root URL redirects to the
-  Swagger UI when Swagger is enabled.
-- For every feature exposed in the React application, add a matching sidebar
-  item and CRUD configuration in the separate client project. Backend Git
-  operations do not include the client repository automatically.
+- Use `[Authorize(Roles = "...")]` for restricted operations.
+- Use `[AllowAnonymous]` only for intentionally public authentication
+  operations.
+- Services use `ApplicationDbContext` directly and implement their existing
+  interface plus `IScopedService`.
+- Scrutor discovers scoped services. Do not add manual DI registration when the
+  existing convention already covers the service.
+- Expected business failures use `Result` or `Result<T>`.
+- Unexpected database or infrastructure failures flow to the global exception
+  handler.
+- `AuditableEntityInterceptor` owns audit fields and converts `Remove` on
+  `AuditableEntity` records into soft deletion.
+- Normal queries use the global `IsDeleted` filter.
+- Use `IgnoreQueryFilters()` only when current and historical records must both
+  be considered, and always retain the explicit tenant filter.
+- Use Mapster for request mapping and server-side response projection where it
+  keeps the code direct.
+- Use `IPaginationService` for lists that can grow.
+- Keep secrets and production connection settings outside the repository.
 
-### Current simplified document policy
+Large services may use one `partial` service class split into cohesive files.
+This is file organization only; it must not introduce new services,
+interfaces, registrations, or business layers.
 
-For the current MiniErp scope, transaction documents are editable CRUD
-aggregates. This policy overrides lifecycle and movement guidance elsewhere in
-this guide unless the user separately approves a new requirement:
+## 3. Before changing a feature
 
-- Do not add `DocumentStatus`, draft/posted/cancelled states, post or cancel
-  endpoints, reversal workflows, or posting/cancellation audit fields.
-- Use explicit transactions for aggregate create, update, and soft delete so
-  header and line changes are atomic.
-- Use a row-version token only on aggregate headers. Require the token returned
-  when the document was loaded and assign that client token as EF Core's
-  original value; never replace it with the latest database token before
-  saving. Update a header field such as `LastModifiedAt` for every aggregate
-  update, including line-only changes, so every successful update advances the
-  token. Catch `DbUpdateConcurrencyException` and return a clear conflict that
-  tells the user to reload the document and try again. Do not add row-version
-  tokens to child rows while children have no independent update workflow.
-- Keep audit population solely in `AuditableEntityInterceptor`.
-- Product-document `StoreId` values must reference an active store in the
-  selected company with `IsContainerStore = false`.
-- Do not generate movement or driver-trip records from document CRUD unless a
-  later, separately approved requirement explicitly introduces that behavior.
-- Paginated aggregate list responses include the complete deterministically
-  ordered child collections required by the frontend, not header-only rows.
-  Keep count fields when useful, but do not use a count as a replacement for
-  line or allocation details.
+Write a short scope note covering:
 
-## 1. Define the feature before coding
+- Business purpose.
+- Operations in scope: list, select, get, create, update, and delete.
+- Roles allowed for each operation.
+- Entities and tables read or changed.
+- Global versus company-owned data.
+- Incoming and outgoing foreign keys.
+- Validation, uniqueness, active-state, and delete rules.
+- Request and response contract impact.
+- Migration, seed, Swagger, and frontend impact.
+- Explicit non-goals.
 
-Write down the following:
+Record `N/A` with a reason for concerns that do not apply.
 
-- Feature name and business purpose.
-- API operations: list, select, get, create, update, and delete.
-- Users or roles allowed to use each operation.
-- Entities and tables that will be read or changed.
-- Whether each entity is global or company-owned, including every query and
-  foreign key that must be restricted to the selected company.
-- Existing services, response models, or endpoints that may be affected.
-- Validation, uniqueness, and active/inactive rules.
-- Whether deletion is physical or soft deletion.
-- Which operations are intentionally public, authenticated, or role-restricted.
-- List sorting, pagination, selection behavior, and the exact response shape.
-- Audit, seed, migration, and deployment configuration impact.
+### Mandatory impact check
 
-Do not start implementation until the affected entities and relationships are
-known. Record `N/A` with a reason when an operation or concern does not apply.
+Answer these questions before implementation:
 
-## 2. Mandatory impact confirmation
+| Question | If yes, verify |
+|---|---|
+| Does another service read or write the changed entity? | Its service and integration behavior |
+| Does a shared request or response change? | Swagger and every frontend/API consumer |
+| Does the EF model change? | Migration approval, migration diff, and pending-model check |
+| Does another table reference this entity? | Foreign keys and delete behavior |
+| Does this entity reference another table? | Existence, active state, and company ownership |
+| Does tenant ownership change? | Cross-company read, write, and foreign-key cases |
+| Do authorization or claims change? | `401`, `403`, and role behavior |
+| Does filtering or active-state behavior change? | List and select endpoints |
+| Does seed data change? | Fresh and repeated startup |
+| Does the React contract change? | Page behavior and production client build |
 
-Before changing a feature, answer every question in this table. A `Yes` answer
-must include the affected component and the verification that will be run.
-
-| Question | Yes/No | Affected component | Required verification |
-|---|---|---|---|
-| Does this change another application service? | | | Service and integration tests |
-| Does it change a shared request or response model? | | | All API consumers and Swagger |
-| Does it change entity mapping or database schema? | | | Migration and pending-model check |
-| Does another table reference this entity? | | | Foreign-key and delete checks |
-| Does this entity reference another table? | | | Validate the referenced record |
-| Does it affect authentication, roles, or claims? | | | Authorized and unauthorized requests |
-| Does it affect company ownership or tenant isolation? | | | Cross-company read/write and foreign-key tests |
-| Does it affect seed data? | | | Fresh and existing database startup |
-| Does it affect audit fields or the current user? | | | Create/update/delete audit values |
-| Does it change filtering, selection, or active-state behavior? | | | List and select endpoints |
-| Does it require a client page or sidebar item? | | | Client navigation, CRUD flow, and production build |
-
-Search the repository before deciding that a change is isolated:
+Search the repository before concluding that a change is isolated:
 
 ```powershell
-rg -n "EntityName|EntityId|IEntityService|EntityResponse" src
+rg -n "EntityName|EntityNameId|IEntityNameService|EntityNameResponse" `
+  E:\MiniErp\src E:\MiniErp\tests
+
+rg -n "HasForeignKey|OnDelete|DeleteBehavior" `
+  E:\MiniErp\src\MiniErp.Infrastructure
 ```
 
-Check controllers, services, mappings, validators, configurations, migrations,
-seeders, and navigation properties. Do not confirm "no impact" from the service
-file alone.
+Inspect controllers, requests, validators, mappings, services, entity
+configurations, migrations, the model snapshot, tests, Swagger, and frontend
+consumers.
 
-## 3. Place code in the correct layer
+### Reverse dependency maintenance
 
-```text
-MiniErp.Domain
-  Entities and business rules
+A new entity or relationship also changes every existing entity that it
+references. For every new foreign key:
 
-MiniErp.Application
-  Requests, responses, validators, service interfaces, and mappings
+- Identify the existing principal entity and all services that read, update, or
+  delete it.
+- Review the principal's tenant rules, active-state rules, update restrictions,
+  delete dependency checks, Swagger, frontend consumers, and tests.
+- Decide whether current rows, historical rows, or neither should block
+  deletion. When they should block, update the existing principal's
+  `DeleteAsync` dependency check in the same change.
+- Add regression tests to the existing principal feature for the new current
+  and historical dependency behavior.
 
-MiniErp.Infrastructure
-  EF Core configurations, service implementations, Identity, and persistence
+Do not defer this work until the older entity is reviewed later. A new child
+table, movement, document, opening balance, assignment, or other reference is
+not complete until its effect on all current entities and workflows has been
+reviewed and the affected existing code has been updated.
 
-MiniErp.Api
-  Controllers, HTTP responses, authorization, and Swagger documentation
-```
+## 4. Domain and API contracts
 
-Recommended feature layout:
+### Entities and enums
 
-```text
-src/MiniErp.Application/Features/FeatureName/
-  IFeatureNameService.cs
-  FeatureNameRequest.cs
-  FeatureNameRequestValidator.cs
-  FeatureNameResponse.cs
-  FeatureNameMappingRegister.cs
+- Each entity declares its own integer `Id`.
+- Each company-owned entity declares `CompanyId` and its `Company` navigation.
+- Tenant request DTOs never contain a client-controlled `CompanyId`.
+- Do not use the C# `required` keyword on entities or Identity properties.
+- Initialize non-nullable entity strings with `string.Empty` only for CLR
+  safety.
+- Configure requiredness, lengths, precision, indexes, and delete behavior in
+  EF Core.
+- Use named Domain enums with explicit stable numeric values.
+- Never reorder, reuse, or silently change a persisted enum value.
+- API enum requests use enum names. Numeric JSON enum values are rejected.
 
-src/MiniErp.Infrastructure/Services/FeatureName/
-  FeatureNameService.cs
+### Request DTOs
 
-src/MiniErp.Api/Controllers/
-  FeatureNameController.cs
-
-src/MiniErp.Api/Swagger/
-  FeatureNameSwaggerDocumentation.cs
-
-G:/test/miniErp/client/src/components/
-  ErpShell.tsx (sidebar item and feature configuration)
-  EntityPage.tsx (shared CRUD behavior and reusable field types)
-```
-
-Application services should return `Result<T>` for expected business failures.
-Use the matching error type:
-
-- `Error.Validation` for invalid input or identifiers.
-- `Error.NotFound` when a requested or referenced record does not exist.
-- `Error.Conflict` for duplicate values, dependent records, or invalid state.
-- `Error.Unauthorized` and `Error.Forbidden` for access failures.
-
-Controllers must convert expected failures through the shared
-`ResultExtensions.ToActionResult` / `ToProblem` path. Do not construct
-`ProblemDetails`, `ValidationProblemDetails`, anonymous error objects, or
-feature-specific error response DTOs inside a controller.
-
-Unexpected database or infrastructure failures should remain exceptions and be
-handled by the global exception handler.
-
-Entity requiredness and input normalization follow these rules:
-
-- Every future entity declares its integer `Id` inside the entity class. Do not
-  move entity IDs into `AuditableEntity`.
-- Every company-owned entity declares `int CompanyId` and a `Company`
-  navigation property. Global entities must be explicitly identified as such.
-- Do not use the C# `required` keyword on entity or Identity properties.
-- Place each reference navigation property immediately below its foreign-key
-  property in Domain and Identity entity classes. Keep collection navigation
-  properties after the scalar and foreign-key/navigation pairs.
-- Initialize non-nullable entity strings with `string.Empty` when needed for
-  CLR safety only.
-- Configure database requiredness in the EF Core configuration with
-  `.IsRequired()`.
-- Validate API request required fields with FluentValidation (`NotEmpty`,
-  length, and other business rules).
-- Put string normalization such as `Trim()` in the feature's Mapster mapping
-  file. Services must use the mapped value and must not trim the same request
-  fields again.
-- Put bounded business values in a named Domain enum with explicit stable
-  numeric values, such as `CurrencyCode`. Confirm API serialization and EF
-  storage intentionally; never reorder or reuse a persisted enum value.
-- When only an entity design is requested for review, stop after the Domain
-  entity and related Domain enum. Do not add a `DbSet`, EF configuration,
-  service, endpoint, seed, or migration until the design is approved.
-
-Current master-data decision: `BusinessPartner` is shared by customers and
-suppliers. A sales or purchase invoice determines the partner's role; do not
-add duplicate Customer/Supplier entities or a type flag unless the business
-rule changes. Current balance is derived from opening entries, invoices,
-returns, and payments rather than stored as a mutable master-data value.
-
-For create and update commands, check duplicate normalized values with
-`AnyAsync` before calling `Add` or `SaveChangesAsync`. Keep the database unique
-index as the final protection, but do not wrap normal CRUD add, update, or
-delete operations in local `try/catch` blocks. Unexpected exceptions flow to
-the global exception handler.
-
-## 4. Foreign-key checks are required
-
-Before implementing create, update, or delete, inspect both directions of every
-relationship.
-
-### Outgoing foreign keys
-
-If the new or updated entity contains a foreign key, verify that the referenced
-record exists before saving. Also verify active state when inactive parent
-records must not be selected.
-
-For a company-owned entity, the foreign-key lookup must also use the selected
-`companyId`. An ID belonging to another company must behave as unavailable.
+Prefer simple positional records:
 
 ```csharp
-var parentExists = await dbContext.Parents.AnyAsync(
-    parent => parent.Id == request.ParentId && parent.IsActive,
-    cancellationToken);
+public sealed record FeatureRequest(
+    string Code,
+    string Name);
 
-if (!parentExists)
-{
-    return Result<FeatureResponse>.Failure(
-        Error.NotFound(
-            "Parents.NotFound",
-            $"Active parent with ID {request.ParentId} was not found."));
-}
+public sealed record FeatureUpdateRequest(
+    string Code,
+    string Name,
+    byte[]? RowVersion);
 ```
 
-### Incoming foreign keys
+Rules:
 
-Before deleting an entity, find every table that references it. Check:
+- Keep create and update request records separate.
+- Some clear duplication is preferable to an unnecessary abstraction.
+- Keep small nested request DTOs as positional records.
+- Do not introduce request interfaces, base request classes, inheritance,
+  generic request models, factories, or builders.
+- Do not add a default parameter in the middle of a positional record.
+- A frontend default does not remove a required backend request value.
+- Use property-based request models only when a real framework or binding
+  requirement makes positional records unsuitable.
 
-- Entity navigation properties.
-- `IEntityTypeConfiguration<T>` classes.
-- `HasForeignKey`, `OnDelete`, and `DeleteBehavior` calls.
-- Existing migrations and the model snapshot.
-- Services that query the entity ID without a navigation property.
+### Mapping and validation
 
-Useful searches:
+- FluentValidation handles request shape: required values, lengths, ranges,
+  precision, enum validity, and conditional field rules.
+- Service code handles database-backed business validation: duplicate values,
+  foreign keys, active state, tenant ownership, dependencies, stock, and
+  concurrency.
+- Put reusable string normalization in the feature's Mapster configuration.
+- Validate and save the same normalized value.
+- Mapping must not overwrite IDs, `CompanyId`, server-derived fields,
+  RowVersion, or creation/deletion audit fields.
+- Explicit tracked-entity assignment is acceptable when it is clearer for an
+  aggregate update.
+- Add each new CLR request-property name to
+  `ArabicValidationConfiguration.DisplayNames`.
+- `Program.cs` configures the shared Arabic validation behavior once. Feature
+  validators must not create a second global configuration.
+- Use a rule-specific Arabic message only when it is clearer than the shared
+  validator message.
+- A child validator attached with `SetValidator` is skipped when the property
+  is null. Put `NotNull()` on the parent property rule before `SetValidator`
+  when a request collection or nested object is required.
 
-```powershell
-rg -n "HasForeignKey|OnDelete|DeleteBehavior" src/MiniErp.Infrastructure
-rg -n "EntityNameId|EntityName" src -g "*.cs"
-```
+## Mapster Mapping Guidelines
 
-Never assume that the database will safely choose the intended delete behavior.
+### Convention-based mapping
 
-Global query filters also affect dependency checks. Explicitly decide whether
-soft-deleted dependents still count. Use a normal query when only current
-records should block deletion, or `IgnoreQueryFilters()` when current and
-historical records must both block deletion.
-
-If the entity has no incoming foreign keys, record that the repository search
-found none and still document the selected soft-delete or physical-delete
-behavior.
-
-## 5. Choose delete behavior explicitly
-
-Choose one of these behaviors for every relationship:
-
-| Behavior | Use when | Service behavior |
-|---|---|---|
-| Restrict | Dependent data must prevent deletion | Check dependents and return `409 Conflict` |
-| Cascade | Dependents have no meaning without the parent | Document and test all rows that will be deleted |
-| Set null | The relationship is optional after deletion | Confirm the foreign key is nullable |
-| Soft delete | Records must remain for history or auditing | Mark inactive/deleted and filter normal queries |
-
-Prefer `DeleteBehavior.Restrict` for ERP master data unless the business rule
-explicitly requires cascading deletion.
+Mapster automatically maps compatible properties with the same name:
 
 ```csharp
-builder.HasOne(entity => entity.Parent)
-    .WithMany(parent => parent.Children)
-    .HasForeignKey(entity => entity.ParentId)
-    .OnDelete(DeleteBehavior.Restrict);
+var invoice = request.Adapt<Invoice>();
+request.Adapt(existingInvoice);
 ```
 
-For restricted deletion, check dependencies in the service before calling
-`Remove`:
+Do not add an explicit `.Map(...)` for ordinary matching scalar properties
+such as `InvoiceType`, `DriverId`, `ActualDriverId`, `DiscountAmount`, or
+`PaidAmount`. If the source does not contain a matching member, Mapster cannot
+copy a value into that destination member, so an `.Ignore(...)` is usually
+unnecessary.
+
+### When Ignore is required
+
+Use `.Ignore(...)` when the source contains a matching member but that
+destination value is controlled elsewhere:
+
+- `Invoice.Lines` and `Invoice.ContainerLines` are synchronized explicitly by
+  `InvoiceService`.
+- An update request's `RowVersion` is used explicitly by EF Core optimistic
+  concurrency and must not be copied as an ordinary entity value.
+- A calculated value such as `Total` must be ignored only if a request
+  actually exposes a compatible `Total` member. Prefer not to expose
+  server-calculated values in request DTOs.
+
+Do not keep defensive ignores for database IDs, `CompanyId`, navigation
+properties, audit fields, or calculated fields when the source DTO has no
+matching member.
+
+### Custom mapping
+
+Use `.Map(...)` for a confirmed difference:
+
+- Different property names or nested navigation values.
+- Calculated response fields.
+- Normalized strings.
+- Child collections that require deterministic ordering.
 
 ```csharp
-var hasDependencies = await dbContext.Children.AnyAsync(
-    child => child.ParentId == id,
-    cancellationToken);
-
-if (hasDependencies)
-{
-    return Result.Failure(
-        Error.Conflict(
-            "Parents.HasDependencies",
-            "The parent cannot be deleted because dependent records exist."));
-}
+.Map(
+    response => response.BusinessPartnerName,
+    invoice => invoice.BusinessPartner.Name)
+.Map(
+    response => response.RemainingAmount,
+    invoice => invoice.Total - invoice.PaidAmount)
+.Map(
+    invoice => invoice.Notes,
+    request => Normalize(request.Notes))
 ```
 
-Do not rely on a `DbUpdateException` as normal delete validation. The service
-should return a clear business error before the database rejects the operation.
+Do not add an explicit identity mapping when the source and destination
+already contain compatible members with the same name.
 
-### Delete confirmation gate
+### Entity update behavior
 
-Do not complete a delete feature until all statements are true:
+`request.Adapt<Invoice>()` creates a new destination object.
+`request.Adapt(existingInvoice)` writes matching request values into the
+existing tracked entity. Review update mappings more carefully because every
+compatible source member can overwrite the entity's current value. Keep
+concurrency tokens and explicitly synchronized child collections out of the
+ordinary update mapping.
 
-- [ ] All incoming foreign keys have been identified.
-- [ ] Query-filter behavior for current and historical dependents is confirmed.
-- [ ] The EF Core delete behavior is explicitly configured.
-- [ ] The business owner has chosen restrict, cascade, set-null, or soft delete.
-- [ ] Restricted deletes return `409 Conflict` with a clear error code.
-- [ ] Cascade deletes have tests proving exactly which records are removed.
-- [ ] Soft-deleted records are excluded from normal list and select queries.
-- [ ] Delete behavior is tested with and without dependent records.
+### Child collections
 
-## 6. Create and update checks
-
-For create and update operations, confirm:
-
-- IDs are greater than zero when applicable.
-- Required strings are trimmed in Mapster mapping and validated with
-  FluentValidation.
-- Unique codes or names are checked with `AnyAsync` before saving, excluding
-  the current entity on update.
-- CRUD services do not use local `try/catch` around add, update, or delete;
-  unexpected failures are handled by the global exception handler.
-- Every foreign-key record exists.
-- Required parent records are active.
-- Mapping does not overwrite IDs or creation audit fields during update.
-- The returned response contains the saved relationship details expected by the
-  frontend.
-- The duplicate check uses the same normalized value produced by Mapster and
-  the update check excludes the current ID.
-
-### Global FluentValidation message configuration
-
-The API uses one global Arabic FluentValidation configuration. `Program.cs`
-must call the configuration once during startup, before request validation is
-executed:
+Mapster can map collections, but it must not synchronize invoice children.
+Invoice updates require explicit behavior to add, change, and remove lines,
+preserve EF Core tracking, recalculate quantities and totals, and run stock
+and container validation. Therefore these ignores are intentional:
 
 ```csharp
-ArabicValidationConfiguration.Configure();
+.Ignore(invoice => invoice.Lines)
+.Ignore(invoice => invoice.ContainerLines)
 ```
 
-`AddValidatorsFromAssemblyContaining<ApplicationAssemblyMarker>()` discovers
-the feature validators, and SharpGrip automatic validation resolves and runs
-the matching `AbstractValidator<TRequest>` before the controller action. When
-a rule fails, FluentValidation reads `ValidatorOptions.Global` configured by
-`ArabicValidationConfiguration`:
+### Separate invoice response mappings
 
-- `LanguageManager` maps the internal rule key, such as
-  `NotEmptyValidator` or `MaximumLengthValidator`, to the Arabic message
-  template.
-- `DisplayNameResolver` maps the request property name, such as `Name`, to its
-  Arabic display name from the shared `DisplayNames` dictionary.
-- FluentValidation replaces placeholders such as `{PropertyName}`,
-  `{MaxLength}`, `{ComparisonValue}`, `{From}`, and `{To}` at runtime.
-- A rule-level `.WithMessage(...)` overrides the global template and should be
-  used only for a clearer feature-specific or conditional business message.
-- `ArabicValidationResultFactory` passes the field messages to the shared
-  `ApiErrorResponseFactory`. It controls the HTTP `400` validation result but
-  does not introduce a separate response shape.
+Use separate, strongly typed mappings for `InvoiceListResponse` and
+`InvoiceResponse`. Do not hide these mappings behind a generic helper or
+string destination-member names. The small amount of duplication provides
+compile-time safety, makes each response contract visible in one place, and
+keeps list and details behavior easy to change independently.
 
-Example:
+List mappings configure list-specific values such as line counts. Details
+mappings configure the complete ordered child collections. When the list
+contract also returns child collections, map and order them explicitly there
+as required by that contract.
 
-```csharp
-RuleFor(request => request.Name)
-    .NotEmpty()
-    .MaximumLength(200);
-```
+### Projection mappings
 
-With `DisplayNames["Name"] = "الاسم"`, the resulting messages include
-`حقل الاسم مطلوب.` and
-`يجب ألا يتجاوز طول الاسم عدد 200 حرفًا.`
+Mappings used by `ProjectToType<TResponse>()` must remain translatable by EF
+Core. Keep nested navigation paths, calculations, and ordered collection
+expressions directly in the Mapster configuration. Do not call arbitrary
+helper methods that EF Core cannot translate inside projection expressions.
+Compile the registered Mapster configuration in tests and execute relational
+list/detail queries for mappings used by database projection.
 
-Whenever a new request property is introduced, add its Arabic display name to
-`ArabicValidationConfiguration.DisplayNames`. If it is omitted, validation
-still works, but the property name inside the message falls back to its CLR
-name in English. JSON property names and stable error codes remain unchanged;
-only the user-facing text is localized.
+### Practical rule
 
-Use the exact case-sensitive CLR property name as the dictionary key because
-the dictionary uses `StringComparer.Ordinal`:
+Use Mapster for ordinary same-name scalar properties. Write explicit mappings
+only for differences, calculations, normalization, navigation names,
+ordering, and protected members. Prefer clear response-specific mappings over
+generic abstractions.
 
-```csharp
-private static readonly IReadOnlyDictionary<string, string> DisplayNames =
-    new Dictionary<string, string>(StringComparer.Ordinal)
-    {
-        // Existing shared fields...
-        ["InvoiceNumber"] = "رقم الفاتورة",
-        ["InvoiceDate"] = "تاريخ الفاتورة",
-        ["StoreId"] = "المخزن",
-        ["DriverId"] = "السائق"
-    };
-```
+## 5. Tenant safety and relationships
 
-Do not add the JSON camel-case name, such as `invoiceNumber`, when the CLR
-property is `InvoiceNumber`. Reuse a shared translation when the property has
-the same meaning across features. If the same CLR property name needs a
-different meaning in one feature, keep the shared translation general or use
-`.WithName("...")` on that feature's rule instead of changing every feature.
-
-The global configuration runs only in hosts that call `Configure()`. Validator
-unit tests or other executables that instantiate validators without starting
-the API must call `ArabicValidationConfiguration.Configure()` once in their
-test or host setup. Verify at least one automatic API validation response, not
-only a direct validator call, so the rule text and unified `ApiErrorResponse`
-factory are both covered.
-
-## 7. Invoice and movement rules
-
-MiniErp does not use journal vouchers or a general ledger. Operational
-movements are the source of truth for partner balances and store stock. Do not
-store mutable current-balance columns on `BusinessPartner`, `Item`, or `Store`.
-
-### Shared business partner and invoice direction
-
-`BusinessPartner` represents both customers and suppliers. Do not add a
-customer/supplier discriminator to the partner. The document or movement type
-determines how the partner is being used:
-
-| Invoice type | Partner role | Store effect | Partner movement |
-|---|---|---|---|
-| Sales invoice | Customer | Quantity out | Debit |
-| Sales return | Customer | Quantity in | Credit |
-| Purchase invoice | Supplier | Quantity in | Credit |
-| Purchase return | Supplier | Quantity out | Debit |
-
-Other partner movements follow the same debit/credit convention:
-
-| Movement | Debit | Credit |
-|---|---:|---:|
-| Customer receipt | 0 | Amount |
-| Supplier payment | Amount | 0 |
-| Receivable opening balance | Amount | 0 |
-| Payable opening balance | 0 | Amount |
-
-The overall partner balance is:
-
-```text
-Partner balance = SUM(Debit - Credit)
-```
-
-Sales/customer reports may filter sales-related movement types and
-purchase/supplier reports may filter purchase-related movement types. The
-partner master record remains shared.
-
-### Currency rules
-
-- The invoice currency defaults to `BusinessPartner.Currency`.
-- While the application supports one default currency per partner, require the
-  invoice and partner currencies to match unless an explicit multi-currency
-  workflow is approved.
-- Calculate partner balances per `CompanyId`, `BusinessPartnerId`, and
-  `CurrencyCode`. Never add balances from different currencies directly.
-- If exchange rates are introduced later, store the document currency,
-  exchange rate, base-currency amounts, precision, and rounding rule on the
-  posted document or movement. Do not derive historical values using today's
-  exchange rate.
-- Use `decimal`, never `float` or `double`, for quantities, prices, discounts,
-  exchange rates, and amounts. Configure precision explicitly in EF Core.
-
-### Stock movement and balance
-
-Store stock is calculated only from item movements:
-
-```text
-Available quantity = SUM(QuantityIn - QuantityOut)
-```
-
-The calculation must filter by all of:
-
-```text
-CompanyId + StoreId + ItemId
-```
-
-An item uses its single configured `ItemUnit`; invoice and movement DTOs must
-not silently convert to another unit. Opening stock is an inbound movement, not
-a mutable opening-balance column on the item.
-
-A stock movement should retain enough immutable source information to audit
-the calculation, including:
-
-```text
-Id
-CompanyId
-StoreId
-ItemId
-MovementType
-ReferenceId
-ReferenceNumber
-MovementDate
-QuantityIn
-QuantityOut
-Description
-Auditable fields
-```
-
-Exactly one of `QuantityIn` or `QuantityOut` should be positive for a normal
-movement; both must never be positive on the same row. Quantities must be
-greater than zero after grouping and normalization.
-
-### Required invoice transaction workflow
-
-Creating or posting an invoice and its movements is one atomic operation:
-
-1. Resolve the validated `companyId` from `ICurrentCompanyContext`; never bind
-   it from the request.
-2. Validate the active business partner, store, items, and item units in the
-   same company.
-3. Validate positive quantities, allowed prices and discounts, currency, date,
-   and invoice type.
-4. Group repeated invoice lines by `ItemId` before calculating required stock.
-5. Calculate line totals, discounts, taxes if supported, and document totals on
-   the server. Never trust client-supplied calculated totals.
-6. For every outbound effect, calculate current store balance and reject the
-   operation when the requested grouped quantity exceeds availability.
-7. Save the invoice header, details, item movements, and partner movement in
-   one database transaction.
-8. Commit only after every row succeeds; any failure must roll back the entire
-   document and all movements.
-
-Do not issue one balance query per invoice line. Load or group balances for the
-bounded item-ID set in one database query to avoid N+1 round trips.
-
-### Insufficient stock and concurrency
-
-The stock check and outbound movement insert must execute inside the same SQL
-Server transaction using `IsolationLevel.Serializable`. A check performed
-before the transaction is unsafe because two concurrent sales can both observe
-the same available quantity and oversell it.
-
-Return a business conflict when stock is insufficient:
-
-```csharp
-return Result.Failure(
-    Error.Conflict(
-        "Inventory.InsufficientStock",
-        $"Available quantity is {availableQuantity}, but {requestedQuantity} was requested."));
-```
-
-The default rule is that stock cannot become negative. A future setting that
-allows negative stock must be an explicit company-level business decision and
-must not silently weaken the default check.
-
-A store transfer is also one serializable transaction:
-
-- Check available stock in the source store.
-- Add an outbound movement for the source store.
-- Add an inbound movement for the destination store.
-- Roll back both movements when either side fails.
-
-### Posted documents, corrections, and deletion
-
-- If drafts are supported, drafts do not affect partner or stock balances.
-- Once an invoice creates movements, treat the posted document and movements as
-  immutable business history.
-- Do not physically delete a posted movement and do not edit its quantities or
-  amounts to correct history.
-- Cancel or correct a posted invoice by creating linked opposite movements in
-  one transaction. These are operational reversal movements, not journal
-  vouchers.
-- A return must validate its allowed relationship and quantities. When it
-  references an original invoice, it must not return more than the remaining
-  unreturned quantity unless the business explicitly allows unlinked returns.
-- Soft deletion alone is not a financial reversal. Balance queries must include
-  every effective posted movement and its reversal according to the documented
-  status rule.
-
-### Invoice numbering and indexes
-
-- Generate invoice numbers on the server with concurrency protection; do not
-  use an unprotected `MAX(Number) + 1` sequence.
-- Define company-scoped uniqueness, normally using `CompanyId`, invoice type,
-  fiscal year or period, and document number.
-- Add an item-movement index beginning with
-  `(CompanyId, StoreId, ItemId)` so balance checks and serializable range locks
-  use the intended key range.
-- Add a partner-movement index beginning with
-  `(CompanyId, BusinessPartnerId, CurrencyCode)` for balance queries.
-- Add indexes for invoice references used by returns, reversals, and duplicate
-  request protection.
-
-### Mandatory invoice verification
-
-- [ ] Every referenced partner, store, item, and unit belongs to the selected
-      company and is active where required.
-- [ ] Server totals match line quantities, prices, discounts, and rounding.
-- [ ] Sales and purchase directions create the correct partner and stock
-      movement signs.
-- [ ] Empty stock, exact available stock, and insufficient stock were tested.
-- [ ] Repeated item lines are grouped before the stock check.
-- [ ] Two concurrent outbound requests cannot produce unintended negative
-      stock.
-- [ ] A failure after the header insert rolls back details and all movements.
-- [ ] Store transfer either writes both sides or writes neither side.
-- [ ] Posted correction creates opposite movements and preserves history.
-- [ ] Partner and stock balances are reproduced entirely from movements.
-- [ ] Currency filtering prevents totals from combining different currencies.
-- [ ] Tenant filters remain present even when `IgnoreQueryFilters()` is used.
-
-## 8. Database migration workflow
-
-Create a migration for every model change:
-
-```powershell
-dotnet ef migrations add MigrationName `
-  --project src/MiniErp.Infrastructure `
-  --startup-project src/MiniErp.Api
-```
-
-Inspect the generated migration before applying it. Confirm:
-
-- Column types, nullability, and maximum lengths.
-- Unique and lookup indexes.
-- Foreign-key names and delete behavior.
-- No unrelated table or column changes.
-- The `Down` method safely reverses the migration.
-
-Then verify the model and build:
-
-```powershell
-dotnet ef migrations has-pending-model-changes `
-  --project src/MiniErp.Infrastructure `
-  --startup-project src/MiniErp.Api
-
-dotnet build MiniErp.slnx
-```
-
-Do not manually edit the model snapshot unless a generated migration is being
-carefully repaired.
-
-### Migration deployment gate
-
-Do not deploy a migration until every item is confirmed:
-
-- [ ] The entity design and relationship behavior were approved before the
-      migration was generated.
-- [ ] Existing data was checked for nulls, duplicates, invalid foreign keys,
-      and values that exceed new column limits.
-- [ ] `Up`, `Down`, and the model snapshot contain only the intended changes.
-- [ ] Unique indexes use the intended case, whitespace, active, and soft-delete
-      rules.
-- [ ] The migration succeeds on both an empty database and a recent copy of an
-      existing database.
-- [ ] A backup and rollback plan exists for production data.
-- [ ] `has-pending-model-changes` reports no remaining model differences.
-- [ ] Startup migration behavior is understood before deployment.
-
-### Startup migration and seed behavior
-
-- `Database:ApplyMigrationsOnStartup=true` applies pending migrations before
-  the application starts serving requests.
-- Never deploy an unreviewed migration while startup migration is enabled; it
-  will be applied automatically during application startup.
-- `Seed:Enabled=true` runs the idempotent identity, catalog, and feature seed.
-- When seeding is enabled, `Seed:Password` must be present and must come from
-  deployment configuration rather than a committed secret.
-- Use deployment environment variables such as
-  `ConnectionStrings__DefaultConnection`, `Seed__Password`, and
-  `Jwt__SigningKey`; do not commit production secret values.
-- Seed logic must not delete non-seed users or existing business data by
-  default. A destructive reset/synchronization mode requires a separate,
-  explicit setting that is disabled in production.
-- Company-owned feature seed data must be generated inside the loop for every
-  intended seeded company. Set `CompanyId` explicitly, include it in every
-  idempotency lookup, and use deterministic company-scoped codes. Use visibly
-  company-labelled names when demo data should make tenant isolation easy to
-  verify after switching companies. Query with `IgnoreQueryFilters()` when a
-  soft-deleted seed record must remain deleted instead of being recreated on
-  the next startup. The Driver seed follows this rule by creating three
-  labelled drivers for each seeded company while allowing the same driver codes
-  to exist independently in different companies.
-- Verify both a fresh database and an existing database with data. Confirm
-  repeated startup does not duplicate or delete unintended records.
-- Migration and seed failures happen before the HTTP request pipeline, so the
-  global exception handler cannot handle them. Verify host startup logs and
-  fail with a clear configuration or migration error.
-
-## 9. API and authorization checks
-
-For each endpoint:
-
-- Use the versioned API controller base.
-- Add correct `ProducesResponseType` declarations.
-- Apply the required authorization or role policy.
-- Keep only intentionally public endpoints marked `AllowAnonymous`.
-- Update Swagger summaries and descriptions.
-- Verify `400`, `401`, `403`, `404`, and `409` responses where applicable.
-- Verify that authenticated requests work with `Authorization: Bearer {token}`.
-- Verify inherited authorization from `ApiControllerBase`, role restrictions,
-  and `[AllowAnonymous]` exceptions explicitly.
-- Verify the global exception handler returns `ApiErrorResponse` with the same
-  trace ID written to the server log and does not expose internal details in
-  production.
-- Verify Swagger documents security requirements, anonymous operations,
-  pagination parameters, and all declared response types.
-- Request enums are serialized as JSON names and documented automatically by
-  `EnumSchemaDocumentationFilter` as `Name = numeric value`. Clients must send
-  the name because numeric JSON enum values are rejected. Do not repeat enum
-  value lists in individual service Swagger documentation files.
-- `EnumRequestOperationDocumentationFilter` also adds the enum list directly
-  to the endpoint description so it is visible without expanding nested schema
-  controls. It recursively documents enum properties in nested request models
-  and collections.
-
-### Mandatory Swagger operation documentation
-
-Every operation in the feature-specific
-`FeatureNameSwaggerDocumentation.cs` file must document all of the following:
-
-- **Required fields:** Name required route, query, and request-body fields. State
-  required authorization or tenant context, but never document `CompanyId` as
-  a client request field when it comes from `ICurrentCompanyContext`.
-- **Validation:** Document numeric ranges, string lengths, formats, enum rules,
-  nullability, defaults, normalization, foreign-key state requirements, and
-  company ownership that the endpoint actually validates.
-- **Edge cases:** Document applicable empty-result, invalid-ID, not-found,
-  inactive, cross-company, duplicate, dependency, concurrency, token, and
-  repeated-operation behavior, including the expected `400`, `401`, `403`,
-  `404`, or `409` response.
-
-Use `SwaggerOperationDescription.Create` so the overview, required fields,
-validation, and edge cases have the same visible structure in Swagger UI.
-Documentation must match the request DTO, FluentValidation validator, service
-logic, authorization attributes, and declared response types. Do not document
-a planned rule as implemented. Update the Swagger text in the same change when
-any of those behaviors changes, and inspect the generated Swagger UI or JSON
-rather than relying on a successful build alone.
-
-### Mandatory Swagger re-review after every change
-
-Re-review Swagger whenever a change affects an API route, HTTP method, request
-or response model, enum, validation rule, authorization requirement, status
-code, `ApiErrorResponse`, pagination rule, filter, default value, or field
-requiredness/nullability. This gate applies even when the feature previously
-had complete Swagger documentation.
-
-Before marking the change complete, confirm all of the following against the
-running API's generated Swagger UI or OpenAPI JSON:
-
-- Request and response schemas match the actual serialized JSON contract.
-- Required and optional fields, validation limits, defaults, and enum values
-  are current.
-- Examples and operation descriptions describe implemented behavior only.
-- Bearer security, anonymous access, and role restrictions match the endpoint.
-- Success and applicable `400`, `401`, `403`, `404`, and `409` responses are
-  declared and accurately described.
-- Pagination and filtering parameters match the controller and validator.
-- The changed contract has been delivered to every affected frontend or
-  external API consumer.
-
-A successful format, build, or test run does not replace this Swagger review.
-Record the Swagger UI or OpenAPI verification in the feature completion report.
-
-### Client sidebar and CRUD integration
-
-For every API feature that users manage from the React client, update
-`G:/test/miniErp/client/src/components/ErpShell.tsx`:
-
-- Add one entry to `navItems`. Its `key` must match the feature configuration
-  key so selecting the sidebar item renders the correct page.
-- Add a matching `EntityConfig` with the API `endpoint`, page title, singular
-  name, description, visible table columns, and create/update fields.
-- Include every response value users must see in the table. Adding a field to
-  the form does not display it automatically; for example, a driver's
-  `nationalId` requires both a form field and a column definition.
-- Match client requiredness and nullability to the request DTO and
-  FluentValidation. Optional text and date fields should use `nullable: true`
-  so an empty input is sent as `null`, and must not use `required: true`.
-- Reuse a supported `EntityPage` field kind. Extend the `FieldDefinition.kind`
-  union in `EntityPage.tsx` only when a new HTML input or custom control is
-  required.
-- Load foreign-key dropdowns from the feature's small `/select` endpoint and
-  use the correct numeric or string option type.
-- Never add `CompanyId` to a tenant CRUD form. The selected company continues
-  to come from the access-token `company_id` claim.
-- Keep sidebar visibility and `canManage` behavior aligned with the API
-  authorization matrix. Hiding a button is only a user-interface convenience;
-  the API role policy remains the security boundary.
-- If the feature is intentionally API-only, record client integration as
-  `N/A` with the reason instead of silently omitting it.
-
-Verify the client after every sidebar or CRUD configuration change:
-
-```powershell
-Set-Location G:/test/miniErp/client
-npm.cmd run build
-```
-
-Manually confirm that the sidebar item opens the intended page, the first list
-request uses the selected company and pagination parameters, every required
-response field is visible, optional values render safely, and authorized CRUD
-operations refresh the table. Switch companies and confirm the page shows only
-the newly selected company's records. The client is a separate Git repository;
-do not assume a backend commit or push contains these changes.
-
-### Company context and tenant isolation
-
-The selected company is a request security boundary:
-
-- A user may be assigned to multiple companies, but each final access token
-  contains exactly one `company_id` selected during login.
-- `CompanyClaimResolver` validates that the authenticated principal has exactly
-  one positive integer company claim. JWT validation rejects invalid access
-  tokens before controller activation.
-- `ICurrentCompanyContext` is scoped to the HTTP request and exposes the
-  validated `CompanyId`. Do not parse claims separately in feature services.
-- Do not use a static or singleton company value. Do not resolve a tenant
-  service outside an authenticated request; background processing must receive
-  an explicit, independently validated company scope.
-- Keep company filters explicit. The current architecture does not use a base
-  tenant service or an EF global company filter.
-
-Inject and capture the company once per tenant service:
+`ICurrentCompanyContext` is the only tenant source inside feature services:
 
 ```csharp
 public sealed class FeatureService(
@@ -835,519 +367,672 @@ public sealed class FeatureService(
 }
 ```
 
-Apply `companyId` consistently:
-
-- List, select, get-by-ID, update, and delete queries must filter by it.
-- Create operations assign it to the new entity; request DTOs must not contain
-  a client-controlled `CompanyId`.
-- Duplicate checks are company-scoped unless uniqueness is intentionally
-  global.
-- Foreign-key checks require both the referenced ID and the same company.
-- Dependency checks that use `IgnoreQueryFilters()` must still retain the
-  explicit company condition.
-- Return `NotFound` for an entity or related ID from another company; do not
-  reveal that the record exists in another tenant.
-
-Do not repeat the former `GetCompanyId()`/`Result<int>` block in every method.
-Expected authentication failures are handled at the JWT boundary; business
-validation inside the service continues to use `Result<T>`.
-
-### Identity users and multiple roles
-
-- User create and update requests use a non-empty, duplicate-free `roles`
-  collection rather than a single role string.
-- User responses and login responses return all assigned roles.
-- Final access tokens contain one `role` claim for every assigned Identity role;
-  role authorization succeeds when any required role is present.
-- Role updates require the affected user to log in again to receive new claims.
-- Never allow deletion of the last Admin or removal of the Admin role from the
-  last Admin account.
-
-### Authorization matrix
-
-Complete this table for every feature before implementing its controller. The
-following access levels are the recommended defaults for ERP master data; any
-difference must be documented as a business decision.
-
-| Operation | Recommended access | Attribute source |
-|---|---|---|
-| List, select, get by ID | Authenticated | Inherited `[Authorize]` from `ApiControllerBase` |
-| Create, update, delete | `Admin` role | `[Authorize(Roles = "Admin")]` on the action or controller |
-| Login and refresh | Anonymous | Explicit `[AllowAnonymous]` |
-
-Verify anonymous, authenticated-without-role, and authorized-role requests.
-An action with no explicit authorization attribute is still authenticated
-because authorization is inherited from `ApiControllerBase`.
-
-### API contract examples
-
-Swagger and tests should confirm the actual JSON contract. A paginated response
-uses this shape:
-
-```json
-{
-  "items": [],
-  "pageNumber": 1,
-  "pageSize": 20,
-  "totalCount": 0,
-  "totalPages": 0
-}
-```
-
-All application JSON errors use `application/problem+json` and the same
-`ApiErrorResponse` contract. Expected business failures that belong to one
-request field place their message under that case-sensitive field name:
-
-```json
-{
-  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
-  "title": "يوجد تعارض في البيانات.",
-  "status": 409,
-  "detail": "الكود مستخدم بالفعل في سجل نشط.",
-  "instance": "/api/v1/Entities",
-  "errorCode": "Entities.CodeExists",
-  "errorType": "Conflict",
-  "errors": {
-    "Code": ["الكود مستخدم بالفعل في سجل نشط."]
-  },
-  "traceId": "request-trace-id"
-}
-```
-
-Field validation uses the identical outer contract and replaces `General`
-with one or more case-sensitive request-property keys:
-
-```json
-{
-  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
-  "title": "فشل التحقق من صحة البيانات.",
-  "status": 400,
-  "detail": "يرجى مراجعة الحقول غير الصحيحة والمحاولة مرة أخرى.",
-  "instance": "/api/v1/Entities",
-  "errorCode": "Validation.Failed",
-  "errorType": "Validation",
-  "errors": {
-    "Name": ["حقل الاسم مطلوب."]
-  },
-  "traceId": "request-trace-id"
-}
-```
-
-The nine properties (`type`, `title`, `status`, `detail`, `instance`,
-`errorCode`, `errorType`, `errors`, and `traceId`) are always present.
-Validation errors and field-targeted business errors use request-property
-keys. Other business, authentication, authorization, routing, method,
-media-type, and unexpected errors use `errors.General`; `$` is reserved for
-malformed request-body JSON. When creating an `Error` for a field-targeted
-business rule, pass `nameof(RequestType.Property)` as its optional
-`fieldName`. Never infer a field by parsing an error-code string.
-
-Keep `detail` even when its message is repeated in `errors`: `detail`
-preserves the standard Problem Details contract, while `errors` gives every
-frontend one rendering path. Do not derive behavior from localized messages;
-use `errorCode`.
-
-`ApiErrorResponseFactory`, `ResultExtensions`,
-`ArabicValidationResultFactory`, `GlobalExceptionHandler`, and status-code
-pages jointly enforce this contract. `UnifiedErrorResponseSwaggerFilter` must
-remain the last Swagger operation filter so every declared `4xx`/`5xx`
-response advertises only `application/problem+json` with
-`ApiErrorResponse`. URL-segment API versioning is intentional; do not add a
-second query-string version reader without also preserving the unified error
-writer.
-
-Requests rejected before ASP.NET reaches the application, such as malformed
-TLS or reverse-proxy request-size limits, cannot be guaranteed to use this
-JSON contract.
-
-Changing a response model requires confirming all frontend or external API
-consumers before merging.
-
-## 10. Required verification scenarios
-
-At minimum, verify:
-
-### Read
-
-- Empty and populated lists.
-- First page, later page, empty page, maximum page size, and invalid pagination.
-- Existing and missing IDs.
-- Select endpoints return only allowed active records.
-- List ordering is deterministic and paged responses contain complete metadata.
-
-### Create
-
-- Valid request.
-- Duplicate code or name.
-- Whitespace-padded values are normalized by mapping before the duplicate check.
-- Missing or inactive foreign-key record.
-- Validation errors.
-
-### Update
-
-- Valid request.
-- Missing entity.
-- Duplicate value belonging to another entity.
-- Updating an entity with its own unchanged unique value succeeds.
-- Missing or inactive foreign-key record.
-
-### Delete
-
-- Missing entity.
-- Entity without dependents.
-- Entity with dependents.
-- Confirmed soft-delete filtering or cascade results.
-- Historical dependents are included or excluded according to the documented
-  `IgnoreQueryFilters()` decision.
-
-### Cross-feature impact
-
-- Every service identified in the impact table still builds and behaves as
-  expected.
-- Shared response and selection models remain compatible.
-- Seed startup works on both an existing and a fresh database.
-
-### Tenant isolation
-
-- Missing, malformed, zero, negative, and multiple `company_id` claims are
-  rejected during JWT authentication.
-- A company A token cannot list, select, read, update, or delete company B data.
-- Create assigns company A even if a client attempts to send another company.
-- Duplicate checks permit or reject equal values according to the documented
-  company-scoped uniqueness rule.
-- A company A request cannot reference a company B parent record.
-- `IgnoreQueryFilters()` checks still cannot cross company boundaries.
-
-### Automated verification requirements
-
-Add or update automated tests for every applicable behavior:
-
-- Validator tests for required, whitespace-only, minimum, maximum, and invalid
-  values.
-- Mapping tests proving normalization and update mapping do not overwrite IDs
-  or creation audit information.
-- Service/integration tests for success, not-found, duplicate, foreign-key,
-  inactive-parent, and dependency-conflict results.
-- API tests for routing, pagination metadata, validation `400`, authentication
-  `401`, authorization `403`, not-found `404`, conflict `409`, and create `201`.
-- Persistence tests for unique indexes, global query filters, soft deletion,
-  audit values, and configured delete behavior.
-- Migration and seed tests on empty and existing databases, including repeated
-  seed execution.
-- Concurrency tests for duplicate creates and any row-version or one-time-token
-  behavior used by the feature.
-
-Use a relational provider for tests that verify SQL Server constraints or
-transactions; EF Core's in-memory provider does not reproduce those behaviors.
-
-```powershell
-dotnet test MiniErp.slnx --configuration Release --no-restore
-```
-
-If automated coverage is not yet available, record the missing test project as
-technical debt and attach repeatable manual API and database verification. Do
-not treat a build-only check as proof of business behavior.
-
-## 11. Mandatory edge-case review
-
-Every feature must record which edge cases apply and how each applicable case
-was verified. Do not mark a case as not applicable without a reason.
-
-### Input boundaries
-
-- Zero and negative route or foreign-key IDs.
-- Empty, whitespace-only, trimmed, minimum-length, and maximum-length strings.
-- Values exactly at and one character beyond configured database limits.
-- Null optional values and omitted optional JSON properties.
-- Case-only differences in unique codes, names, usernames, and emails.
-- Boolean state combinations such as active, inactive, and deleted.
-
-Validation limits must match EF Core column limits. Normalized values used for
-duplicate checks must be the same values saved to the database.
-
-### Data relationships and state
-
-- Referenced record is missing, soft-deleted, or inactive.
-- Referenced record changes or is deleted between validation and save.
-- Parent becomes inactive after a child has already been created.
-- Dependency checks include or exclude historical records intentionally.
-- Soft-deleted values interact correctly with filtered unique indexes.
-- Create and update responses still contain required navigation details.
-- Restoring data, if supported, does not violate a unique index or reference an
-  unavailable parent.
-
-### Concurrent requests
-
-- Two requests attempt to create the same unique value simultaneously.
-- Two requests update or delete the same record simultaneously.
-- A dependent record is created while its parent is being deleted.
-- Token or one-time-value rotation is attempted concurrently.
-
-An application-level `AnyAsync` check does not replace a database unique index.
-Use database constraints as the final protection. The normal CRUD policy in
-this project is to return a clear `Error.Conflict` from the pre-check and let
-unexpected or concurrent database exceptions flow to the global exception
-handler; add a targeted translation only when a feature explicitly requires a
-different concurrency contract.
-
-This policy has an explicit tradeoff: two simultaneous duplicate requests can
-both pass the pre-check, after which the unique index accepts one request and
-rejects the other. Without a targeted constraint translation, the rejected
-request is handled as an unexpected `500` response instead of `409 Conflict`.
-Record whether the feature owner accepts that response contract. If not, add
-and test a narrow translation for the relevant database constraint only.
-
-Use a row-version concurrency token when lost updates would be harmful.
-
-### Duplicate data
-
-For every field that should be unique, confirm all of the following:
-
-- Existing data is checked for duplicates before adding a unique index.
-- The service checks the normalized value that will actually be saved.
-- Case-only and whitespace-only differences follow the intended business rule.
-- The database has a unique index as the final concurrency-safe protection.
-- Update checks exclude the current record by ID.
-- Soft-deleted records are intentionally included or excluded from uniqueness.
-- Seeder reruns cannot create duplicate users, roles, codes, names, or lookup
-  records.
-- A clear cleanup or merge decision exists if historical duplicates are found.
-
-Example SQL for reviewing an existing table before a unique migration:
-
-```sql
-SELECT Code, COUNT(*) AS DuplicateCount
-FROM Items
-WHERE IsDeleted = 0
-GROUP BY Code
-HAVING COUNT(*) > 1;
-```
-
-Repeat the check using the same normalization and filter used by the intended
-unique index. Never add a unique constraint to existing data without first
-checking whether the migration will fail.
-
-### Query and response behavior
-
-- Empty result sets and large result sets.
-- Sorting is deterministic when multiple records have the same display value.
-- Select endpoints exclude inactive or unavailable relationships.
-- Global query filters behave correctly for normal and administrative queries.
-- Projection and mapping handle optional or unavailable navigation properties.
-- API response status and body match the declared Swagger contract.
-
-Add pagination before an unbounded list can reasonably become large.
-
-Use the shared `IPaginationService` with `PaginationRequest` and
-`PagedResponse<T>` for paginated endpoints. Feature services should supply a
-deterministically ordered `IOrderedQueryable<TEntity>` and must not duplicate
-count, offset, projection, or total-page calculations.
-
-```csharp
-var query = dbContext.Entities
-    .AsNoTracking()
-    .OrderBy(entity => entity.Name)
-    .ThenBy(entity => entity.Id);
-
-return await paginationService.PaginateAsync<Entity, EntityResponse>(
-    query,
-    pagination,
-    cancellationToken);
-```
-
-For a standard paginated `GetAll` endpoint:
-
-- Accept `[FromQuery] PaginationRequest pagination` in the controller.
-- Return `PagedResponse<T>` with `Items`, `PageNumber`, `PageSize`, `TotalCount`, and `TotalPages`.
-- Document the `pageNumber` and `pageSize` query parameters and the `400 Bad Request` response in Swagger.
-- Keep `select` or dropdown endpoints small and unpaginated when they return only `Id` and `Name`.
-- Verify the default page, an empty page, the maximum page size, and invalid page values.
-
-### Complete-set upsert endpoints
-
-When one screen edits an entire child-assignment collection, prefer one
-idempotent complete-set `PUT .../upsert` operation over separate create,
-update, and delete calls when the business workflow treats the collection as
-one unit.
-
-- The request contains the parent ID and the complete desired child-ID set,
-  not a delta.
-- A missing or null list is invalid. Explicitly decide whether an empty list
-  clears all current assignments and document that behavior.
-- Bound the list, require positive IDs, and reject duplicates instead of
-  silently removing them.
-- Validate the tenant-owned parent and every child in bulk. Never query once
-  per ID.
-- Load current non-deleted assignments once, calculate create/reactivate/keep/
-  soft-delete changes in memory, and save once.
-- Use a transaction when partial completion is invalid. Use serializable
-  isolation when concurrent complete-set replacements must not merge into an
-  unintended union.
-- Preserve soft-deleted history. Re-adding a child whose only prior assignment
-  is deleted creates a new row rather than clearing historical deletion audit
-  fields.
-- Repeating the same request must produce the same final set without changing
-  audit fields.
-- Return the complete final collection through server-side projection in
-  deterministic order.
-- Re-check incoming foreign-key protections: removing an active assignment may
-  still leave historical rows that intentionally block parent deletion.
-
-Replacing existing single-row write endpoints with a complete-set upsert is a
-breaking API contract. Update Swagger and the frontend integration guide in
-the same change and verify that the removed routes no longer appear.
-
-### Query performance and projection
-
-Read endpoints should select only the columns required by their response. Use
-server-side projection such as `ProjectToType<TResponse>()` or `Select(...)` so
-EF Core does not materialize complete entities and navigation graphs.
-
-```csharp
-var response = await dbContext.Items
-    .AsNoTracking()
-    .Where(item => item.IsActive)
-    .OrderBy(item => item.Name)
-    .ProjectToType<ItemResponse>()
-    .ToListAsync(cancellationToken);
-```
-
-Avoid O(n) database round trips and N+1 queries:
-
-- Never call `FirstAsync`, `AnyAsync`, or another database query inside a loop
-  over records.
-- Load required IDs or related values in one query using joins, projection, or
-  `Contains` with a bounded ID set.
-- Use `AnyAsync` instead of loading a collection only to check whether it has
-  rows.
-- Use `AsNoTracking` for read-only queries.
-- Keep filtering, sorting, projection, and pagination in the database query.
-- Do not call `ToListAsync` before filters or projection that SQL can perform.
-- Avoid `Include` when projection can return the required related fields.
-- Inspect generated SQL when a query contains multiple relationships or an
-  unexpected number of round trips.
-
-Returning n records naturally requires O(n) result processing. The requirement
-is to avoid O(n) separate database calls, repeated full-table scans, and
-unbounded entity materialization.
-
-### Authorization and security
-
-- Missing, malformed, expired, and valid access tokens.
-- Access tokens contain exactly one valid `company_id`; malformed tenant claims
-  fail before tenant services are created.
-- Authenticated user with the wrong role receives `403 Forbidden`.
-- Multi-role users receive all roles in login responses and JWT claims, and
-  every role-based endpoint follows the expected authorization decision.
-- Anonymous endpoints do not accidentally expose protected data.
-- User-supplied IDs cannot access or modify data outside the permitted scope.
-- Error messages do not expose passwords, token hashes, connection strings, or
-  internal exception details.
-- The current allow-any-origin CORS policy is not combined with credentialed
-  browser requests. Restrict allowed origins before enabling credentials or
-  cookie-based authentication.
-
-### Audit, time, and transactions
-
-- Create, update, and delete operations set the correct actor and UTC timestamp.
-- Failed operations do not leave partial data or misleading audit values.
-- Multi-step writes use a transaction when partial completion is invalid.
-- Cancellation before save does not create partial records.
-- Time comparisons use UTC consistently, especially for expiration behavior.
-
-### Seed and migration behavior
-
-- Seeder can run repeatedly without duplicates or unexpected data loss.
-- Destructive seed behavior is explicit and disabled when no longer required.
-- Production seed reruns preserve non-seed users and existing business data.
-- Migration works for both an empty database and a database containing data.
-- New required columns have a safe value or backfill for existing rows.
-- Migration rollback behavior is understood before deployment.
-
-### Edge-case confirmation gate
-
-- [ ] Applicable boundary values were tested.
-- [ ] Existing and concurrently-created duplicate data was checked.
-- [ ] Missing, inactive, and soft-deleted relationship cases were tested.
-- [ ] Unique-index and concurrent-request behavior was considered.
-- [ ] Query-filter behavior was verified.
-- [ ] Paginated list endpoints use `IPaginationService` and return paging metadata.
-- [ ] Read queries use projection and avoid N+1/O(n) database round trips.
-- [ ] Authentication and wrong-role behavior were tested.
-- [ ] Tenant claim validation and cross-company isolation were tested for every
-      company-owned entity and foreign key.
-- [ ] Audit and partial-failure behavior were verified.
-- [ ] Existing-data migration and repeated-seed behavior were checked.
-- [ ] Every untested or non-applicable case has a recorded reason.
-
-## 12. Definition of done
-
-A feature is complete only when:
-
-- [ ] The mandatory impact table has been answered.
-- [ ] The mandatory edge-case confirmation gate has been answered.
-- [ ] A repository search confirmed affected services and consumers.
-- [ ] Requests, validators, responses, mappings, service, controller, and Swagger
-      documentation are complete where applicable.
-- [ ] Foreign-key existence checks are implemented.
-- [ ] Delete relationships and dependency behavior are explicitly confirmed.
-- [ ] The migration was reviewed and has no unrelated changes.
-- [ ] Growing list endpoints use `PaginationRequest`, `PagedResponse<T>`, and deterministic ordering.
-- [ ] Authorization, anonymous access, Swagger security, and declared status
-      codes were verified for every endpoint.
-- [ ] A client sidebar item and matching CRUD configuration were added and
-      `npm.cmd run build` passed, or client integration was recorded as `N/A`
-      with a reason.
-- [ ] Every company-owned query, duplicate check, create assignment,
-      foreign-key lookup, and dependency check uses the validated company
-      context.
-- [ ] Startup migration, repeated seed, and production configuration behavior
-      were verified.
-- [ ] Automated tests were added or missing coverage was recorded with
-      repeatable manual evidence and a technical-debt item.
-- [ ] The solution builds without errors or warnings.
-- [ ] Formatting checks pass.
-- [ ] Authorized, unauthorized, success, validation, not-found, and conflict
-      scenarios have been verified.
-- [ ] Every exercised application error returns all nine `ApiErrorResponse`
-      fields, an appropriate `errors` key (`General`, a request field, or `$`),
-      and `application/problem+json`.
-- [ ] Generated Swagger declares `ApiErrorResponse` and only
-      `application/problem+json` for every documented `4xx`/`5xx` response.
-- [ ] Documentation and seed data are updated when behavior changes.
-
-When reporting completion, explicitly state:
-
-1. Which other services or features were checked.
-2. Whether the change affects any shared contract.
-3. Which foreign keys were found.
-4. The chosen delete behavior and how it was tested.
-5. Which edge cases were tested and which were not applicable.
-
-### Completion report template
-
-Use this template when handing off a completed feature:
+Every company-owned operation must:
+
+- Filter list, select, get, update, and delete queries by `companyId`.
+- Assign `companyId` during create.
+- Scope duplicate checks by `companyId`.
+- Validate both the ID and `companyId` of company-owned foreign keys.
+- Return `NotFound` for another company's record.
+- Retain `companyId` in every `IgnoreQueryFilters()` query.
+- Avoid parsing JWT claims again inside the service.
+
+### Outgoing foreign keys
+
+Before saving, confirm that each referenced record:
+
+- Exists.
+- Belongs to the selected company when tenant-owned.
+- Is active when inactive records are not allowed.
+- Has the required classification, such as product store versus container
+  store.
+
+Load bounded related ID sets in one query. Do not query once per request line.
+
+### Incoming foreign keys and deletion
+
+Before deleting a record:
+
+1. Find every incoming foreign key in entities, configurations, migrations, and
+   services.
+2. Decide whether current dependents, historical dependents, or both block
+   deletion.
+3. Keep `DeleteBehavior.Restrict` for ERP master data unless an approved
+   business rule requires something else.
+4. Return a clear `409 Conflict` before calling `Remove`.
+5. Test deletion with and without dependents.
+
+`AuditableEntityInterceptor` converts `Remove` into an update that sets
+`IsDeleted = true`. Therefore, database `Restrict` foreign keys do not block
+soft deletion of a referenced master record. Every approved current or
+historical dependency must be checked explicitly in the principal service
+before calling `Remove`.
+
+Do not use another master record as an indirect substitute for checking a
+direct incoming foreign key when that master relationship can be updated. A
+later update can point the master to a new record while historical documents
+and movements still reference the old one. Check those direct current and
+historical reference tables explicitly.
+
+This review is continuous. Whenever a later feature adds a foreign key to an
+existing entity, return to that entity's delete flow immediately. If the new
+reference is an approved blocker, add its direct dependency check, including
+`IgnoreQueryFilters()` and the explicit `companyId` filter when historical
+tenant data must be considered. Update the error documentation and deletion
+tests in the same change.
+
+Do not rely on `DbUpdateException` as normal delete validation.
+
+### Current BusinessPartner rules
+
+- `BusinessPartner` is shared by customers and suppliers.
+- Name, code, and optional tax number are unique per company according to the
+  current case-insensitive service rule; update excludes the current ID.
+- The database unique indexes remain the final duplicate protection.
+- Partner currency is the single current document currency.
+- Currency cannot change after any current or historical invoice, partner
+  opening balance, business-partner movement, container movement, or driver
+  trip exists.
+- Deletion is blocked by current or historical container stores and by all
+  current or historical financial references listed above.
+- Dependency checks using `IgnoreQueryFilters()` must still filter by
+  `companyId`.
+- Partner balance is derived per partner and currency. It is not stored on the
+  partner master record.
+
+## 6. Transactions and concurrency
+
+Keep concurrency handling proportional to the current feature:
+
+- Use one transaction when a multi-step write must succeed or fail as a unit.
+- Do not wrap a single normal CRUD `SaveChangesAsync` in a transaction without
+  a concrete atomicity requirement.
+- A master-detail relationship alone is not a reason for an explicit
+  transaction. Build the complete header and detail state and save it with one
+  `SaveChangesAsync`; the relational EF Core provider makes that save atomic.
+  Use an explicit transaction only when the workflow has multiple saves,
+  contexts, or side-effect writes that must commit or roll back together.
+- Do not add explicit SQL lock hints, raw SQL lock helpers, or application lock
+  services.
+- Do not change an existing isolation level without a reproduced problem and
+  explicit approval.
+- Use a RowVersion token when a lost update would be harmful.
+- For aggregate documents, RowVersion belongs only to the header.
+- An update must receive the token returned by the read response and assign
+  that client token as EF Core's original value.
+- Never replace the client's token with the latest database token before save.
+- Touch a header field such as `LastModifiedAt` for line-only updates so the
+  header RowVersion advances.
+- Catch `DbUpdateConcurrencyException` only where the feature has an explicit
+  concurrency result, then return a clear conflict telling the user to reload.
+- Do not add RowVersion to child rows without an independent child update
+  workflow.
+
+For unique values:
+
+- Pre-check the normalized value and return `Error.Conflict`.
+- Keep a database unique index as final protection.
+- Confirm that the production collation/index behavior matches the approved
+  case-sensitivity rule.
+- The normal CRUD policy lets an unexpected concurrent constraint failure flow
+  to the global exception handler.
+- Add targeted database-exception translation only when an approved API
+  contract requires it.
+
+### Complete-set child assignments
+
+For an existing workflow such as StoreContainer where one screen owns the full
+child set:
+
+- Accept the complete desired ID set, not a delta.
+- Reject null, invalid, unbounded, or duplicate IDs.
+- Document whether an empty set clears all active assignments.
+- Validate the tenant-owned parent and all children in bulk.
+- Load the current assignments once and calculate changes in memory.
+- An editable complete-set workspace must include inactive children that are
+  still actively assigned. Mark them as unavailable for new selection, but
+  keep them visible and removable so stale assignments are not hidden.
+- Preserve soft-deleted history.
+- Keep the existing transaction boundary so partial replacement cannot commit.
+- Make repeated identical requests idempotent.
+- Return the complete final ordered set.
+
+Keep this logic in the current service. Do not build a generic assignment
+framework.
+
+## 7. Queries, projection, and pagination
+
+- Use `AsNoTracking()` for read-only queries.
+- Filter and order before materialization.
+- Use Mapster `ProjectToType` or a direct `Select` for response projection.
+- Avoid `Include` when projection can return the required shape.
+- Never run a database query inside a loop over response or request rows.
+- Use `AnyAsync` when only existence is needed.
+- Use deterministic ordering with a stable final key such as `Id`.
+- Use `IPaginationService` for growing lists.
+- Keep small `Id`/`Name` select endpoints unpaginated.
+- Aggregate list responses must include the complete ordered child collections
+  required by the current frontend.
+
+Avoid N+1 queries, repeated full-table scans, and unbounded entity
+materialization. Do not introduce complex query abstractions for a single
+query.
+
+## 8. Canonical invoice behavior
+
+This section describes the implemented invoice feature and overrides older
+posting-oriented guidance.
+
+### Scope
+
+The invoice aggregate supports:
+
+- Sales.
+- Sales return.
+- Purchase.
+- Purchase return.
+- Paginated list, get by ID, create, update, and soft delete.
+- A required product-line collection and a required container-line collection;
+  send `[]` when there are no container lines.
+- Current operational item, container, partner, and internal-driver side
+  effects.
+
+It does not support:
+
+- Document status or posting.
+- Cancellation or reversal.
+- Original-invoice allocation for returns.
+- Journal entries or a general ledger.
+- Receipt/payment vouchers.
+- Voucher allocations.
+
+Returns are independent invoices. A purchase return must pass the same stock
+rules as any other outbound invoice.
+
+### Aggregate and server-derived values
+
+`Invoice`, `InvoiceLine`, and `InvoiceContainerLine` are one aggregate.
+
+- `InvoiceNumber` is generated by the server.
+- The current format is
+  `INV-{CompanyId}-{UTC timestamp}-{8-character GUID suffix}`.
+- Active invoice numbers are protected by the unique
+  `(CompanyId, InvoiceNumber)` index.
+- `CompanyId` comes from `ICurrentCompanyContext`.
+- `Currency` comes from the selected business partner.
+- `ItemUnitId` comes from the selected item.
+- The partner, product store, items, item units, and internal driver must be
+  active and available in the selected company.
+- Optional `CountryId` must reference an active global Country.
+- A supplied `ContainerStoreId` is validated even when `ContainerLines` is
+  empty; it must be an active company container store owned by the selected
+  partner.
+- The client sends `Count`, `Weight`, and `Price`.
+- The server calculates quantity, line total, subtotal, net total, payment
+  status, and remaining amount.
+- Use `decimal` and `InvoiceAmountRules`; never use `float` or `double`.
+- Repeated item IDs and repeated container IDs are rejected.
+- `Lines` contains 1–100 rows. `ContainerLines` contains 0–100 rows.
+- Each product line requires `Count > 0`, `Weight > 0`, and `Price >= 0`
+  within the configured precision and scale.
+- `DueDate` is optional and cannot precede `InvoiceDate`.
+- Update replaces the requested aggregate state while preserving identity and
+  audit history.
+
+Calculations:
 
 ```text
-Feature:
-Business purpose:
-Files and layers changed:
-Routes and operations:
-Authorization matrix:
-Entities and tables:
-Incoming and outgoing foreign keys:
-Delete behavior and historical-data decision:
-Validation and Mapster normalization:
-Unique fields and duplicate checks:
-Pagination, filtering, and deterministic ordering:
-Audit and soft-delete behavior:
-Seed impact and repeated-startup result:
-Migration name, review result, and rollback plan:
-Shared contracts and cross-feature impact:
-Client/sidebar integration and client build result:
-Automated tests executed:
-Manual verification executed:
-Untested or not-applicable cases with reasons:
-Known risks or follow-up technical debt:
-Build, format, and test command results:
+Quantity        = Count * Weight
+LineTotal       = Round(Quantity * Price, 2, AwayFromZero)
+Subtotal        = SUM(rounded LineTotal)
+Total           = Round(Subtotal - DiscountAmount, 2, AwayFromZero)
+RemainingAmount = Total - PaidAmount
 ```
+
+`DiscountAmount` must be between zero and `Subtotal`. `PaidAmount` must be
+between zero and `Total`. Quantity uses precision 18/scale 6; money uses
+precision 18/scale 2.
+
+### PaymentTerm
+
+Use the strongly typed enum:
+
+```text
+Cash   = 1
+Credit = 2
+```
+
+- The backend request receives `PaymentTerm` explicitly.
+- The frontend create form defaults to `Cash`.
+- The entity/database Cash default exists for persistence and existing-data
+  safety; it is not a backend request default.
+- A Cash invoice must be fully paid: `PaidAmount == Total`.
+- Cash has `RemainingAmount == 0` and creates no
+  `BusinessPartnerMovement`.
+- A Credit invoice may be unpaid, partially paid, or fully paid.
+- Credit creates one partner movement only when
+  `RemainingAmount > 0`.
+- The partner movement amount is exactly the remaining amount, not the total.
+- A fully paid Credit invoice creates no outstanding partner movement.
+- `PaymentStatus.Unpaid = 1` and `PaymentStatus.Paid = 2`.
+- `RemainingAmount <= 0` is Paid; otherwise it is Unpaid.
+- A partially paid Credit invoice remains Unpaid. There is no partially-paid
+  status.
+- A zero-total invoice is Paid and creates no partner movement.
+
+Partner direction:
+
+| Invoice type | Partner role | Partner movement |
+|---|---|---|
+| Sales | Customer | Debit |
+| Sales return | Customer | Credit |
+| Purchase | Supplier | Credit |
+| Purchase return | Supplier | Debit |
+
+Partner balances must be evaluated from active, non-deleted records per
+`CompanyId`, `BusinessPartnerId`, and `Currency`. Active partner opening
+balances remain separate records and contribute according to
+receivable/payable direction; active outstanding
+`BusinessPartnerMovement` rows contribute by debit/credit direction.
+
+There is currently no receipt/payment voucher or partner-balance reporting
+service. Do not describe one as implemented.
+
+### Product stock
+
+| Invoice type | Stock effect |
+|---|---|
+| Sales | Quantity out |
+| Sales return | Quantity in |
+| Purchase | Quantity in |
+| Purchase return | Quantity out |
+
+Current stock is derived from:
+
+```text
+SUM(active StockOpeningBalanceLine.Quantity)
++ SUM(active ItemMovement.QuantityIn - ItemMovement.QuantityOut)
+```
+
+Always filter by:
+
+```text
+CompanyId + StoreId + ItemId
+```
+
+The product store must be active, belong to the selected company, and have
+`IsContainerStore = false`.
+
+Every active, non-deleted `ItemMovement` contributes through its actual
+`QuantityIn - QuantityOut` values. Do not hard-code a partial movement-type
+list that omits adjustments or other existing movement rows.
+
+Stock validation must preserve these implemented rules:
+
+1. When timeline validation runs, validate the complete chronological balance,
+   not only the final balance.
+2. Opening balances are processed first on a date.
+3. Inbound movements are processed before outbound movements on the same date.
+4. The proposed invoice is ordered last among movements of the same direction
+   and date.
+5. When validation runs, reject any negative point in the resulting affected
+   timeline.
+6. On update, exclude the old invoice movements, add the proposed state, and
+   validate the exact affected old/new `(StoreId, ItemId)` pairs.
+7. Do not validate an unrelated Cartesian product of stores and items.
+8. Store, date, type, line additions/removals, and reduced inbound quantities
+   must all validate the resulting history.
+9. Removing an inbound invoice during update or delete must be rejected when a
+   later outbound movement would become unsupported.
+10. A new inbound Purchase or Sales return skips timeline validation because
+    it only adds stock; inbound updates and inbound deletes still validate the
+    complete affected history.
+11. Update reference ID and reference number must be both present or both
+    absent. Existing invoice movements are excluded only when both
+    `ReferenceId` and `ReferenceNumber` match.
+12. The invoice validation and movement save remain inside the existing
+    aggregate transaction.
+
+Do not replace the timeline check with only a current-balance check.
+
+### Containers
+
+- Container lines are allowed only for Sales and Sales return.
+- `ContainerStoreId` is required when container lines exist.
+- The store must be the active container store for the selected partner and
+  company.
+- Every container must be active and assigned to that store.
+- `OutgoingUnits` and `IncomingUnits` may both be positive.
+- They cannot both be zero.
+- Each container line creates the matching `ContainerMovement`.
+
+Container balance is derived from:
+
+```text
+SUM(active ContainerMovement.OutgoingUnits - IncomingUnits)
+```
+
+### Drivers
+
+| Case | UsesExternalDriver | DriverId | ExternalDriverName |
+|---|---:|---:|---|
+| No driver | `false` | `null` | `null` |
+| Internal driver | `false` | required | `null` |
+| External driver | `true` | `null` | required |
+
+- An internal driver must be active and belong to the selected company.
+- An internal driver creates one `DriverTrip`.
+- The trip links the company, driver, invoice, and business partner and copies
+  the invoice number, export code, and invoice date.
+- External driver data remains only on the invoice.
+- Never create a `Driver` or `DriverTrip` for an external driver.
+- `VehicleNumber` remains an optional invoice value in all driver modes.
+
+### Side-effect synchronization
+
+Create saves the aggregate and current operational side effects in one
+transaction:
+
+- One `ItemMovement` per active product line.
+- One `ContainerMovement` per active container line.
+- One `BusinessPartnerMovement` for an outstanding Credit invoice.
+- One `DriverTrip` when an internal driver is selected.
+
+Update:
+
+- Requires the current 8-byte header RowVersion.
+- Updates `LastModifiedAt`.
+- Replaces the active aggregate line state.
+- Removes the invoice's old active side effects.
+- Recreates side effects from the new saved state.
+- Commits only when the full replacement succeeds.
+
+Delete:
+
+- Validates historical stock when removing an inbound effect could create a
+  later shortage.
+- Soft-deletes the invoice, lines, container lines, and active side effects.
+- Does not create posting, cancellation, or reversal records.
+
+## 9. API, errors, authorization, and Swagger
+
+Use the shared result-to-HTTP path. Controllers must not create feature-specific
+error response objects.
+
+Use:
+
+- `Error.Validation` for invalid input or IDs.
+- `Error.NotFound` for unavailable requested or referenced records.
+- `Error.Conflict` for persisted unique-value duplicates, dependencies, stale
+  RowVersion, insufficient stock, or invalid state.
+- `Error.Unauthorized` and `Error.Forbidden` for access failures.
+
+Duplicate IDs inside one request collection are validation errors (`400`), not
+persisted-data conflicts.
+
+Every application error uses `application/problem+json` and the shared
+`ApiErrorResponse` with these nine properties:
+
+```text
+type
+title
+status
+detail
+instance
+errorCode
+errorType
+errors
+traceId
+```
+
+Field-targeted errors pass `nameof(RequestType.Property)` to `Error` so the
+message appears under the correct case-sensitive request-property key.
+Non-field errors use `errors.General`; malformed JSON uses `$`.
+
+Authorization defaults:
+
+| Operation | Access |
+|---|---|
+| List, select, get | Authenticated |
+| Create, update, delete | `Admin` |
+| Login and refresh | Explicitly anonymous |
+
+Access tokens carry the selected company, current roles, and the Identity
+security stamp. Token validation rechecks the active `UserCompany` assignment
+and security stamp on every request. Removing the selected company or changing
+roles invalidates the old access token; refresh or login issues current claims.
+
+Swagger must document:
+
+- Required fields and tenant context.
+- Validation limits and conditional rules.
+- Enum names and values through the shared enum filters.
+- Foreign-key, active-state, and company rules.
+- Pagination parameters.
+- Applicable `400`, `401`, `403`, `404`, and `409` responses.
+- The shared `ApiErrorResponse` only for declared errors.
+
+`UnifiedErrorResponseSwaggerFilter` remains the final operation filter.
+Whenever a route, contract, enum, validation rule, authorization rule, default,
+or response changes, inspect the generated OpenAPI document or Swagger UI.
+
+## 10. Frontend integration
+
+The frontend repository is:
+
+```text
+E:\client\client
+```
+
+General CRUD integration uses:
+
+```text
+E:\client\client\src\components\ErpShell.tsx
+E:\client\client\src\components\EntityPage.tsx
+```
+
+Invoices use the specialized aggregate page:
+
+```text
+E:\client\client\src\components\InvoicePage.tsx
+```
+
+Frontend rules:
+
+- Navigation keys must match the rendered feature configuration.
+- Match request requiredness, nullability, enum names, and numeric precision.
+- Never send `CompanyId`.
+- Load foreign keys from existing select endpoints when their response is
+  sufficient.
+- Add a specialized selector only when the current page needs additional data.
+- Show every response field required by the workflow.
+- Send the current RowVersion when the aggregate update contract includes it.
+- Send complete aggregate line collections, not line deltas.
+- Invoice `PaymentTerm` is a required Cash/Credit select and defaults to Cash
+  only in the frontend.
+- Cash keeps `PaidAmount` equal to the calculated total.
+- API authorization remains the security boundary; hidden buttons are only a
+  UI convenience.
+
+Verify:
+
+```powershell
+Set-Location E:\client\client
+npm.cmd run build
+```
+
+Manually confirm navigation, list paging, create, edit, delete, error display,
+company switching, optional values, and RowVersion refresh.
+
+## 11. Migrations, seeds, and deployment
+
+### Migration approval gate
+
+- A model change requires a migration.
+- Do not generate the migration until the entity/configuration design is
+  reviewed and the user explicitly approves migration generation.
+- Do not generate a migration for a service-only, validation-only, Swagger-only,
+  test-only, or frontend-only change.
+
+After approval:
+
+```powershell
+dotnet ef migrations add MigrationName `
+  --project E:\MiniErp\src\MiniErp.Infrastructure `
+  --startup-project E:\MiniErp\src\MiniErp.Api
+```
+
+Review:
+
+- `Up`, `Down`, and the model snapshot.
+- Column type, nullability, length, precision, and default values.
+- Existing-data backfill.
+- Index filters and case/soft-delete behavior.
+- Foreign-key names and delete behavior.
+- Absence of unrelated model changes.
+
+Then run:
+
+```powershell
+dotnet ef migrations has-pending-model-changes `
+  --project E:\MiniErp\src\MiniErp.Infrastructure `
+  --startup-project E:\MiniErp\src\MiniErp.Api
+```
+
+Do not manually edit the snapshot unless a generated migration is being
+carefully repaired.
+
+Startup behavior:
+
+- `Database:ApplyMigrationsOnStartup=true` applies pending migrations before
+  serving requests.
+- Never deploy an unreviewed migration while that option is enabled.
+- `Seed:Enabled=true` runs idempotent seed logic.
+- Seed passwords, JWT signing keys, and connection strings come from deployment
+  configuration.
+- Seed reruns must not delete or duplicate existing business data.
+- Company-owned seed lookups include `CompanyId`.
+- Verify fresh and existing databases when seed or migration behavior changes.
+
+## 12. Verification and definition of done
+
+Test only applicable behavior, but record why a case is not applicable.
+
+### Minimum feature scenarios
+
+Read:
+
+- Empty and populated lists.
+- Existing, missing, deleted, and other-company IDs.
+- Deterministic ordering and pagination metadata.
+- Select endpoints include only allowed active records.
+
+Create:
+
+- Valid request.
+- Required and boundary validation.
+- Normalized duplicate values, including case-only differences when relevant.
+- Missing, inactive, deleted, and other-company foreign keys.
+- Server-owned and calculated values cannot be overridden.
+
+Update:
+
+- Valid update.
+- Missing entity.
+- Duplicate belonging to another entity.
+- Own unchanged unique value succeeds.
+- Aggregate child addition, change, and removal.
+- Valid and stale RowVersion when the feature uses it.
+
+Delete:
+
+- Missing entity.
+- No dependents.
+- Current dependents.
+- Historical dependents according to the approved rule.
+- Soft-delete filtering and audit behavior.
+
+Cross-cutting:
+
+- Tenant isolation remains explicit.
+- Audit actor and UTC timestamps are correct.
+- Failed multi-step writes leave no partial data.
+- Swagger matches the serialized contract.
+- Frontend production build passes when the contract or UI changes.
+- No unrelated working-tree changes are overwritten.
+
+### Additional invoice scenarios
+
+- All four invoice directions.
+- Cash fully paid and no partner movement.
+- Credit unpaid, partially paid, and fully paid.
+- Discount and paid-amount boundaries.
+- Empty, exact, and insufficient stock.
+- Historical stock conflict after changing store, date, type, or lines.
+- Opening balance before same-date inbound and outbound movements.
+- Exact affected store/item pairs only.
+- Container-store ownership and assigned-container checks.
+- Internal, external, and no-driver cases.
+- Side-effect replacement on update.
+- Side-effect soft deletion on delete.
+- Stale header RowVersion.
+- Transaction rollback after an intermediate failure.
+
+Use a relational provider for database constraints, transactions, query
+filters, and RowVersion behavior. EF Core's in-memory provider is not evidence
+for those behaviors.
+
+### Backend source-change commands
+
+```powershell
+Set-Location E:\MiniErp
+
+dotnet build .\MiniErp.slnx `
+  --configuration Release `
+  --no-restore
+
+dotnet test .\MiniErp.slnx `
+  --configuration Release `
+  --no-restore
+
+dotnet format .\MiniErp.slnx `
+  --verify-no-changes `
+  --no-restore
+```
+
+These commands are required when backend source code changes. For a
+documentation-only change, review the Markdown structure, links, terminology,
+and `git diff --check`; do not run unrelated builds merely to produce activity.
+
+Run the client build only when frontend code or an API contract changes. Run
+the pending-model check only when the EF model or migration changes. Inspect
+Swagger/OpenAPI only when an endpoint contract or Swagger documentation
+changes.
+
+### Completion gate
+
+A change is complete only when:
+
+- Scope and non-goals are explicit.
+- A repository search identified affected producers and consumers.
+- Tenant filters and foreign keys are correct.
+- Every new foreign key was traced back to the existing principal lifecycle,
+  and required update or delete checks were changed in the same work.
+- Delete and historical-data behavior are documented and tested.
+- Validation, Mapster mapping, service behavior, responses, and Swagger agree.
+- Migration approval and review are complete when applicable.
+- Frontend integration is complete or recorded as `N/A` with a reason.
+- Applicable edge cases have automated coverage.
+- Build, tests, formatting, and relevant client/migration/Swagger checks pass.
+- No unrelated user changes were overwritten.
+
+Completion reports state:
+
+1. What changed.
+2. Other services and consumers checked.
+3. Shared-contract impact.
+4. Incoming and outgoing foreign keys.
+5. Delete and historical-data decision.
+6. Migration and seed impact.
+7. Backend, frontend, Swagger, and automated verification performed.
+8. Untested cases, accepted tradeoffs, and known risks.

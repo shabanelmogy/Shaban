@@ -122,9 +122,9 @@ Main fields:
 - `InvoiceNumber`, generated on the server
 - `ExportInvoiceCode`, optional
 - `InvoiceType`
+- `PaymentTerm` (`Cash = 1`, `Credit = 2`; defaults to `Cash`)
 - `InvoiceDate`
 - `DueDate`, optional
-- `InvoiceId`, optional reference to the original invoice for a return
 - `BusinessPartnerId`
 - `StoreId`, the product store
 - `ContainerStoreId`, optional
@@ -241,29 +241,31 @@ Customer container balance = SUM(OutgoingUnits - IncomingUnits)
 
 A positive result means the customer still holds containers.
 
-## 8. Deferred movement entities
+## 8. Invoice side-effect entities
 
-Movement entity designs may remain as future placeholders, but current
-document tasks must not configure, seed, or write them unless a separate
-requirement is approved.
+Invoice create, update, and soft delete synchronize the current operational
+side-effect rows in the same transaction. There is no status, posting,
+cancellation, reversal, voucher, or allocation workflow.
 
 ### ItemMovement
 
-Reserved for a future stock-movement requirement. `ItemUnitId` and `ItemUnit`
-are nullable on movement records.
+Product invoice lines create `ItemMovement` rows. `ItemUnitId` and `ItemUnit`
+remain nullable on generic movement records.
 
 ### BusinessPartnerMovement
 
-Reserved for a future partner-movement requirement.
+Credit invoices create one `BusinessPartnerMovement` with the invoice
+direction. Cash invoices are immediately paid and do not create an
+outstanding partner movement.
 
 ### ContainerMovement
 
-Reserved for a future container-movement requirement.
+Invoice container lines create `ContainerMovement` rows.
 
 ### DriverTrip
 
-Automatic creation is deferred because CRUD document saves have no posting
-side effects.
+An internal `DriverId` creates one `DriverTrip`; external drivers remain only
+on the invoice.
 
 ## 9. Simplified invoice behavior
 
@@ -281,7 +283,14 @@ side effects.
 - `InvoiceLine` and `InvoiceContainerLine` do not have row-version properties
   because they are not updated independently.
 - The audit interceptor records create, update, and delete information.
-- There is no document status, post, cancel, reversal, or movement operation.
+- There is no document status, post, cancel, reversal, voucher, or allocation
+  operation.
+- `Cash` is represented as immediately paid and `Credit` remains outstanding
+  against the partner account. The API derives payment status and
+  paid/outstanding amounts from `PaymentTerm`.
+- Invoice CRUD synchronizes current item, container, partner, and internal
+  driver-trip side effects. Updates replace active side-effect rows and
+  deletes soft-delete them with the invoice.
 
 ## 10. Atomic aggregate-save workflow
 
@@ -298,20 +307,18 @@ side effects.
 9. Replace the aggregate line sets in the change tracker.
 10. Call `Invoice.Touch(DateTime.UtcNow)` and explicitly mark
     `LastModifiedAt` modified so line-only changes always update the header.
-11. Save once and catch `DbUpdateConcurrencyException` as
-    `Invoices.Concurrency`. Commit only on success; any failure rolls back the
-    entire operation.
+11. Save the invoice aggregate and synchronize item, container, partner, and
+    driver-trip side effects in the same transaction. Commit only on success;
+    any failure rolls back the entire operation.
 
 ## 11. Return rules
 
-- A sales return references an existing sales invoice.
-- A purchase return references an existing purchase invoice.
-- The original invoice must belong to the same company, partner, store, and
-  currency.
-- Returned quantity cannot exceed the remaining unreturned quantity.
-- Repeated and concurrent returns must be included in the remaining-quantity
-  calculation.
-- Unlinked returns are not supported initially.
+- Sales returns and purchase returns are independent invoice documents.
+- A return uses the selected business partner, store, items, quantities,
+  prices, payment term, and other normal invoice data.
+- A return does not reference or allocate against an earlier invoice.
+- Purchase returns require sufficient stock.
+- Repeated item IDs are rejected.
 
 ## 12. Lifecycle operations
 
