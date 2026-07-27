@@ -518,6 +518,21 @@ Avoid N+1 queries, repeated full-table scans, and unbounded entity
 materialization. Do not introduce complex query abstractions for a single
 query.
 
+### Paginated `GetAll` filters
+
+Every paginated `GetAll` endpoint exposes a typed, optional filter request,
+following the Invoice pattern. Filters are applied with `AND` semantics after
+tenant and soft-delete scoping, while deterministic ordering and the existing
+pagination metadata are preserved.
+
+Filter contracts contain only supported, resource-specific fields and have
+FluentValidation validators for length, ID, enum, and date-range rules, using
+Arabic validation messages. Controllers bind the filter contracts from the
+query string, services apply them to the database query, and Swagger lists the
+available query fields and their validation rules. Adding filters is a
+service/contract documentation change and must not require a database
+migration.
+
 ## 8. Canonical invoice behavior
 
 This section describes the implemented invoice feature and overrides older
