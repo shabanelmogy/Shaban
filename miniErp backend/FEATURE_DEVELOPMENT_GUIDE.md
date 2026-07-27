@@ -525,6 +525,11 @@ following the Invoice pattern. Filters are applied with `AND` semantics after
 tenant and soft-delete scoping, while deterministic ordering and the existing
 pagination metadata are preserved.
 
+Use the common `search` field for resource-wide text search wherever the
+resource has searchable display values. Invoice filters include `search` and
+apply it across invoice, partner, store, country, driver, vehicle, product,
+and container display values.
+
 Filter contracts contain only supported, resource-specific fields and have
 FluentValidation validators for length, ID, enum, and date-range rules, using
 Arabic validation messages. Controllers bind the filter contracts from the
