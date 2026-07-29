@@ -341,8 +341,21 @@ line: `ItemId`, nullable server-derived `ItemUnitId`/`ItemUnit`, `Count`,
 `Notes`. Clients send `Count`, `Weight`, and `Price`; they do not send
 `Quantity` or `Total`.
 
-They follow the same simplified aggregate CRUD, transaction, row-version, and
-audit-interceptor rules. They do not generate movement or reversal records.
+Stock Opening Balances and Partner Opening Balances follow the simplified
+aggregate CRUD, transaction, row-version, and audit-interceptor rules and do
+not generate movement or reversal records. Stock Adjustments also use simple
+aggregate CRUD without status, posting, cancellation, or reversal, but each
+active increase/decrease line generates its matching `ItemMovement` atomically;
+outbound decreases validate on create, update, and delete, while inbound
+increase updates and deletes validate because they can reduce or remove stock;
+new inbound increases only add stock and do not require a balance check.
+
+Each company has one `CompanySettings` row with the `StockBalanceCheckMode`
+values `None`, `DateCheck`, `FinalCheck`, and `Both`. The shared stock service
+uses this setting for every eligible movement producer, including future
+outbound movement types. `None` disables only balance validation; tenant,
+active-record, and product-store validation remains mandatory. Missing rows
+default to `DateCheck`.
 
 ## 14. Frontend contract rules
 

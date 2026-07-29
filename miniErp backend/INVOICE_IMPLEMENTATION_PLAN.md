@@ -90,7 +90,13 @@ stock opening balances and every later document task:
 - Implement simple aggregate CRUD with atomic writes and row-version
   concurrency.
 - Include complete ordered adjustment-line details in every paginated item.
-- Do not add status, posting, cancellation, reversal, or item movements.
+- Save one matching `ItemMovement` for each active increase/decrease line in
+  the same aggregate transaction. Validate every outbound create, update, and
+  delete, and every inbound update/delete, against the complete chronological
+  stock timeline. New inbound creates only add stock and do not require a
+  balance check. Future outbound movement types must use the same validation
+  and must not rely only on final balance.
+- Do not add status, posting, cancellation, or reversal.
 
 ## 5. Receipt and payment vouchers
 

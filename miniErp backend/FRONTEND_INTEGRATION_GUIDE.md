@@ -966,8 +966,17 @@ effects in the same transaction.
 ### Step 4 - Stock Adjustments
 
 Planned as editable increase/decrease aggregate CRUD with header-only
-row-version concurrency and complete line collections. No posting,
-cancellation, reversal, or item movements.
+row-version concurrency and complete line collections. Each active line
+creates the matching adjustment stock movement in the same transaction, and
+decrease operations validate chronological available stock. No posting,
+cancellation, or reversal.
+
+The Admin company form also exposes `stockBalanceCheckMode` as a string enum:
+`None`, `DateCheck`, `FinalCheck`, or `Both`. The API returns the selected mode
+on every company response and defaults omitted values to `DateCheck`. `None`
+skips only balance validation; ordinary active-company, store, item, and unit
+validation remains required. The frontend must submit the complete adjustment
+line collection and must not add posting or cancellation controls.
 
 ### Step 5 - Receipt and Payment Vouchers
 

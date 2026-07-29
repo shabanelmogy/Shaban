@@ -1050,8 +1050,14 @@ Audit fields
 - Any line addition, change, or removal touches the header.
 - Return `StockAdjustments.Concurrency` for stale updates.
 - Include complete ordered lines in every paginated item.
-- No status, posting, cancellation, reversal, stock movements, or
-  posting-time stock validation.
+- Create one matching adjustment `ItemMovement` for every active line in the
+  same transaction.
+- Treat decreases as outbound movements and validate them against the complete
+  chronological stock timeline; future outbound movement types must follow
+  the same rule.
+- A new increase only adds stock and does not require a balance check; increase
+  edits and deletes still validate because they can reduce or remove stock.
+- No status, posting, cancellation, or reversal.
 
 Planned routes:
 
@@ -1162,12 +1168,13 @@ collection.
 
 ### Current decision
 
-Movement-based stock, partner, and container reports are deferred because the
-approved simple CRUD workflow does not generate movements.
+Movement-based stock, partner, and container reports remain deferred pending a
+separate source-of-truth approval. Stock adjustments and invoices now create
+their current operational item movements, but this does not authorize a new
+balance-report workflow.
 
 Do not:
 
-- Infer or introduce movement writes.
 - Add mutable current-balance columns to master data.
 - Implement reports against an unapproved source of truth.
 
