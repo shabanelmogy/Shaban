@@ -5,9 +5,11 @@ contain multiple logical sections. It is based on the completed
 `Customers/Individual/IndividualPartner` workflow and is intended to produce
 the same behavior in other features such as Company Partner.
 
-Use this guide together with `GENERIC_GRID_SCREEN_GUIDE.md`. The grid guide
-covers the list screen and row actions; this guide covers the full-page editor
-opened by Create, View, and Edit.
+Use this guide together with
+`GENERIC_ANGULAR_GRID_SCREEN_GUIDE_REVIEWED.md`. The reviewed grid guide covers
+the list screen and row actions; this guide covers the full-page editor opened
+by explicit Create, View, and Edit routes. Its compact-dialog rule does not
+apply to a multi-step full-page editor.
 
 ## 1. Required outcome
 
@@ -276,32 +278,11 @@ Core SCSS:
 }
 ```
 
-Lock both `html` and `body` during the full-page editor route:
-
-```ts
-private readonly pageScrollLockClass = 'feature-editor-scroll-lock';
-
-ngOnInit(): void {
-  document.documentElement.classList.add(this.pageScrollLockClass);
-  document.body.classList.add(this.pageScrollLockClass);
-}
-
-ngOnDestroy(): void {
-  document.documentElement.classList.remove(this.pageScrollLockClass);
-  document.body.classList.remove(this.pageScrollLockClass);
-}
-```
-
-Global SCSS:
-
-```scss
-html.feature-editor-scroll-lock,
-body.feature-editor-scroll-lock {
-  height: 100%;
-  overflow: hidden !important;
-  overscroll-behavior: none;
-}
-```
+Prefer making the routed editor shell the single scroll owner without mutating
+global `html`/`body` classes. If the application shell genuinely requires a
+global scroll lock, use one shared reference-counted scroll-lock service so a
+nested dialog/editor cannot remove a lock still owned by another overlay. Do
+not add and remove a feature-specific body class independently.
 
 Important:
 
@@ -309,7 +290,8 @@ Important:
   the same time.
 - There must be one vertical scrolling owner: `.editor-scroll`.
 - Keep the footer outside `.editor-scroll`.
-- Always remove the lock class in `ngOnDestroy`.
+- When a shared lock is required, release exactly the ownership token acquired
+  by the current component during destruction.
 
 ## 8. Title/header
 
@@ -349,8 +331,17 @@ when a single `Create New Entity` title is enough.
 
 ## 9. Stepper markup
 
+The example below implements the ARIA tabs pattern. If the screen will not
+implement linked tab panels, roving focus, and arrow-key behavior, do not
+declare `tablist`/`tab`; use a labelled `<nav>` or `<ol>` of step buttons
+instead.
+
 ```html
-<div class="editor-stepper" role="tablist">
+<div
+  class="editor-stepper"
+  role="tablist"
+  [attr.aria-label]="'featureForm.steps' | translate"
+  (keydown)="onStepKeydown($event)">
   <div class="editor-stepper-track" aria-hidden="true">
     <span [style.width.%]="stepProgress()"></span>
   </div>
@@ -360,10 +351,13 @@ when a single `Create New Entity` title is enough.
       type="button"
       class="editor-step"
       role="tab"
+      [id]="'editor-step-' + step.key"
+      [attr.aria-controls]="'editor-panel-' + step.key"
       [class.is-active]="currentStepIndex() === index"
       [class.is-complete]="currentStepIndex() > index"
       [attr.aria-selected]="currentStepIndex() === index"
       [attr.aria-current]="currentStepIndex() === index ? 'step' : null"
+      [attr.tabindex]="currentStepIndex() === index ? 0 : -1"
       (click)="goToStep(index)"
     >
       <span class="editor-step-number">
@@ -380,6 +374,16 @@ when a single `Create New Entity` title is enough.
     </button>
   }
 </div>
+
+@for (step of FORM_STEPS; track step.key; let index = $index) {
+  <section
+    role="tabpanel"
+    [id]="'editor-panel-' + step.key"
+    [attr.aria-labelledby]="'editor-step-' + step.key"
+    [hidden]="currentStepIndex() !== index">
+    <!-- Step content -->
+  </section>
+}
 ```
 
 Stepper rules:
@@ -388,6 +392,38 @@ Stepper rules:
 - Completed steps use a check icon.
 - Clicking a previous step is always allowed.
 - Clicking a future step validates the current step first in Create/Edit.
+- Left/Right Arrow move roving focus between horizontal tabs; Home/End move to
+  the first/last tab; Enter/Space activate the focused step.
+- In RTL, visual arrow behavior must follow the rendered order.
+- Every tab references one `tabpanel`, and every panel references its tab.
+
+```ts
+onStepKeydown(event: KeyboardEvent): void {
+  const tabs = Array.from(
+    (event.currentTarget as HTMLElement)
+      .querySelectorAll<HTMLButtonElement>('[role="tab"]'),
+  );
+  const current = tabs.indexOf(document.activeElement as HTMLButtonElement);
+  if (current < 0) return;
+
+  let next = current;
+  if (event.key === 'Home') next = 0;
+  else if (event.key === 'End') next = tabs.length - 1;
+  else if (event.key === 'ArrowRight') next = (current + 1) % tabs.length;
+  else if (event.key === 'ArrowLeft') {
+    next = (current - 1 + tabs.length) % tabs.length;
+  } else if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    this.goToStep(current);
+    return;
+  } else {
+    return;
+  }
+
+  event.preventDefault();
+  tabs[next]?.focus();
+}
+```
 - View mode allows free movement across every step.
 - On small screens, the stepper may scroll horizontally; do not shrink labels
   until unreadable.
@@ -429,7 +465,7 @@ step. Use the private `activateStep` method from validation navigation.
 The validation summary belongs below the stepper, not at the bottom of the
 form. It must contain:
 
-- a visible warning icon;
+- a visible error icon;
 - a clear title;
 - a short instruction;
 - the current invalid-field count;
@@ -513,7 +549,7 @@ Expected behavior:
 2. Missing-field list appears.
 3. User completes one field.
 4. That field disappears immediately from the list.
-5. When the last field is valid, the entire warning hides.
+5. When the last field is valid, the entire validation error summary hides.
 
 ## 13. Navigate, scroll, focus, and highlight
 
@@ -637,18 +673,26 @@ Rules:
 - Required validators must match backend `[Required]` rules.
 - Do not make optional backend fields required only because an old UI did.
 - Do not omit required nested fields.
-- Add a control only if it does not already exist.
+- The parent defines the complete API form shape before child steps render.
+- Child components receive their `FormGroup`/`FormArray` and manage values or
+  rows; they do not opportunistically change the contract after loading.
 - Avoid logic that adds the same checkbox/dropdown twice.
 - Use boolean defaults for checkboxes, `null` for dropdowns/dates, `0` for
   numeric amounts when zero is a meaningful default, and `''` for text.
 
-When child components add controls:
+For a genuinely dynamic extension field, register it once through an explicit
+parent-owned method before record loading:
 
 ```ts
-if (!this.form.get(field.name)) {
-  this.form.addControl(field.name, this.createControl(field));
+registerExtensionField(field: ExtensionField): void {
+  if (!this.form.contains(field.name)) {
+    this.form.addControl(field.name, this.createControl(field));
+  }
 }
 ```
+
+Do not let multiple step components race to add the same control during
+`ngOnInit`/`ngOnChanges`.
 
 ## 15. Load and patch order
 
@@ -663,17 +707,41 @@ Recommended order:
 7. apply mode (disable for View);
 8. stop loading.
 
-For dates used by PrimeNG Calendar, patch `Date` objects:
+For dates used by PrimeNG Calendar, patch `Date` objects. First classify each
+backend field:
+
+- **date-only business value** such as Date of Birth, joining date, issue date,
+  or expiry date: preserve the calendar day as `yyyy-MM-dd`;
+- **timestamp**: preserve time and timezone using the backend UTC convention.
+
+Parse a date-only value from its components so JavaScript does not reinterpret
+it as UTC:
 
 ```ts
-private toDate(value: string | Date | null | undefined): Date | null {
+private parseDateOnly(value: string | Date | null | undefined): Date | null {
   if (!value) return null;
-  const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date;
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return null;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(year, month - 1, day);
+
+  return date.getFullYear() === year
+    && date.getMonth() === month - 1
+    && date.getDate() === day
+      ? date
+      : null;
 }
 ```
 
-Do not patch `yyyy-MM-dd` strings into a calendar that expects `Date`.
+Do not patch `yyyy-MM-dd` strings into a calendar that expects `Date`, and do
+not parse date-only strings with `new Date(value)`.
 
 ## 16. Dropdown standard
 
@@ -766,18 +834,26 @@ Do not recreate datepicker CSS in each component.
 
 ## 19. Issue/expiry date rule
 
-Expiry must be after issue date:
+The boundary is a business decision, not a universal UI rule. Inspect the
+backend contract and use exactly one of:
+
+- inclusive: expiry is on or after issue (`expiry >= issue`);
+- strict: expiry is after issue (`expiry > issue`).
+
+The example below implements the strict rule. Rename the validator and adjust
+the comparison/minimum date when the backend allows the same day:
 
 ```ts
-const expiryAfterIssueDate: ValidatorFn = (
+readonly expiryAfterIssueDate: ValidatorFn = (
   control: AbstractControl,
 ): ValidationErrors | null => {
   const issue = control.get('issueDate')?.value;
   const expiry = control.get('expiryDate')?.value;
   if (!issue || !expiry) return null;
 
-  const issueDate = issue instanceof Date ? issue : new Date(issue);
-  const expiryDate = expiry instanceof Date ? expiry : new Date(expiry);
+  const issueDate = issue instanceof Date ? issue : this.parseDateOnly(issue);
+  const expiryDate = expiry instanceof Date ? expiry : this.parseDateOnly(expiry);
+  if (!issueDate || !expiryDate) return null;
   if (
     Number.isNaN(issueDate.getTime())
     || Number.isNaN(expiryDate.getTime())
@@ -819,8 +895,8 @@ getExpiryMinimum(row: AbstractControl): Date | undefined {
   const value = row.get('issueDate')?.value;
   if (!value) return undefined;
 
-  const parsed = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(parsed.getTime())) return undefined;
+  const parsed = value instanceof Date ? value : this.parseDateOnly(value);
+  if (!parsed || Number.isNaN(parsed.getTime())) return undefined;
 
   const timestamp = parsed.getTime();
   const cached = this.expiryMinimumCache.get(row);
@@ -896,15 +972,25 @@ Upload-state rules:
 - Mark `documentPath` touched after success or removal.
 - Never send a browser fake path.
 - Disable Upload and Remove in View mode.
+- Validate file size and extension in Angular for immediate feedback, but never
+  treat those client checks as security.
+- Require the backend to validate authorization, tenant/parent ownership,
+  maximum size, allowed extension, MIME type, and file signature.
+- Generate the storage name on the server; do not trust the original filename
+  as a path.
+- Define replacement, remove, failed-parent-save, orphan cleanup, and permanent
+  deletion behavior.
+- Preserve the existing stored path when Edit submits no replacement.
 
 ## 22. Credit-card standard
 
-Card rows should include:
+Only render payment-card fields when an approved payment workflow requires
+them. Card rows may include:
 
 - type dropdown;
 - card number;
 - month/year expiry calendar;
-- masked CVV input;
+- masked CVV input used only for immediate authorization;
 - name on card;
 - bank name;
 - default checkbox;
@@ -914,8 +1000,12 @@ Card rows should include:
 Security rules:
 
 - Use `type="password"` for CVV entry.
+- Collect CVV only when required to authorize the current transaction.
+- Never persist CVV after authorization, even encrypted.
+- Never return CVV in Detail/Edit/View models.
 - Do not log card number or CVV.
 - Do not put card details in route/query strings.
+- Prefer a payment-provider token instead of storing card data.
 - Export sensitive fields only when the approved business export explicitly
   requires them.
 - View mode should avoid exposing full sensitive values when masking is part of
@@ -1025,7 +1115,10 @@ save(): void {
 }
 ```
 
-Use `getRawValue()` because disabled View/Edit fields may otherwise be omitted.
+`getRawValue()` may be used to read disabled mutable controls, but it is never
+the API payload. Pass it to a typed builder that explicitly selects allowed
+fields. Do not spread tenant, generated number, audit, deletion, calculated,
+authorization, or other server-owned controls into the request.
 
 ## 26. Payload normalization
 
@@ -1036,11 +1129,12 @@ Normalize:
 - `''` to `null` for nullable IDs/enums;
 - dropdown IDs to numbers;
 - enum display labels to API enum values;
-- calendar `Date` objects to ISO strings;
+- date-only calendar values to `yyyy-MM-dd`;
+- timestamp values to the backend's explicit UTC format;
 - calculation types to exact strings;
 - `undefined` booleans to explicit defaults;
 - nested address and billing IDs;
-- collection `id`/`no` fields needed by Update;
+- existing child `id` fields needed to identify rows during Update;
 - uploaded paths from the server response.
 
 Helpers:
@@ -1052,10 +1146,12 @@ private toNullableInt(value: unknown): number | null {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
-private normalizeDate(value: string | Date | null): string | null {
-  if (!value) return null;
-  const date = value instanceof Date ? value : new Date(value);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+private toDateOnly(value: Date | null): string | null {
+  if (!value || Number.isNaN(value.getTime())) return null;
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 ```
 
@@ -1063,7 +1159,11 @@ For Update:
 
 - preserve the entity ID;
 - preserve nested entity IDs;
-- preserve `no` where the backend update mapper requires it;
+- omit `SubscriptionId`, generated `No`, audit fields, calculated totals,
+  deletion state, and other server-owned fields from normal payloads;
+- if a legacy base contract still requires `SubscriptionId` or `No`, isolate
+  that compatibility in the service adapter as an untrusted assertion; the
+  backend must compare/ignore it and preserve the stored value;
 - send deleted/removed rows according to backend reconciliation behavior.
 
 ## 27. Backend contract checklist
@@ -1208,8 +1308,11 @@ Large monitors:
 Required:
 
 - `type="button"` on non-submit buttons;
-- `role="tablist"` and `role="tab"` on the stepper;
-- `aria-selected` and `aria-current`;
+- when tab semantics are used: linked `tablist`, `tab`, and `tabpanel` roles,
+  `aria-controls`, `aria-labelledby`, `aria-selected`, roving `tabindex`, and
+  the standard arrow/Home/End/Enter/Space keyboard behavior;
+- otherwise, a labelled navigation/list pattern without partial tab roles;
+- `aria-current="step"` on the active step navigation item;
 - accessible labels on icon-only buttons;
 - visible keyboard focus;
 - `role="alert"` and `aria-live="polite"` on validation summary;
@@ -1378,9 +1481,13 @@ Also test:
 - API validation error;
 - save success and list refresh.
 
-## 36. Build verification
+## 36. Owner-run verification
 
-Run:
+Do not build, test, or run Sigma unless the owner explicitly requests it in the
+current task. Provide the following commands and acceptance scenarios for the
+owner; record only results the owner returns.
+
+Frontend commands the owner may run:
 
 ```powershell
 npx tsc -p tsconfig.app.json --noEmit
@@ -1388,7 +1495,7 @@ npx ngc -p tsconfig.app.json
 npm run build -- --configuration development
 ```
 
-For backend changes:
+For backend changes, commands the owner may run:
 
 ```powershell
 dotnet build SiGma.ViewModels.csproj --no-restore
@@ -1396,8 +1503,9 @@ dotnet build SiGma.Business.csproj --no-restore
 dotnet build SiGma.ServerAPI.csproj --no-restore
 ```
 
-If the full solution is slow, compile the changed project dependency chain.
-Do not report a timeout as a successful build.
+If the full solution is slow, the owner can compile the changed project
+dependency chain. Never claim a build or test result that was not supplied by
+the owner, and do not report a timeout as success.
 
 ## 37. Definition of done
 
