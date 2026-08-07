@@ -45,7 +45,7 @@ disagree, stop integration and report the mismatch instead of guessing.
 | 1 - Stock Opening Balances | Ready | Migrations present | Verified locally | Contract delivered | Editable aggregate CRUD; no movements |
 | 2 - Partner Opening Balances | Waiting | N/A | N/A | Not started | Wait for explicit Step 1 completion confirmation |
 | 3 - Invoices | Backend ready | Migration pending | Added/reviewed locally | Integrated/verify environment | Editable aggregate CRUD with PaymentTerm and no posting side effects |
-| 4 - Stock Adjustments | Waiting | N/A | N/A | Not started | Editable aggregate CRUD after Step 3 |
+| 4 - Stock Adjustments and Inventory Count | Ready | Applied in configured development DB | Verified locally | Integrated/build passed | Movement-backed adjustment CRUD plus stale-safe physical count reconciliation |
 | 5 - Receipt/payment vouchers | Waiting | N/A | N/A | Not started | Editable aggregate CRUD after Step 4 |
 | 6 - Balance Reports | Deferred | N/A | N/A | Not started | Requires approved source of truth |
 | 7 - Driver Trips | Deferred | N/A | N/A | Not started | Requires separate approval |
@@ -960,14 +960,139 @@ Implemented as editable aggregate CRUD for Invoice, product lines, and container
 lines. The frontend submits the complete aggregate and retains the original
 base64 `RowVersion`. A stale conflict requires reloading the invoice. Do not
 show Post or Cancel actions. Create, update, and delete synchronize the current
-item, container, outstanding-credit partner, and internal-driver-trip side
+item, container, outstanding partner, and internal-driver-trip side
 effects in the same transaction.
 
 ### Step 4 - Stock Adjustments
 
-Planned as editable increase/decrease aggregate CRUD with header-only
-row-version concurrency and complete line collections. No posting,
-cancellation, reversal, or item movements.
+Implemented as editable increase/decrease aggregate CRUD with header-only
+row-version concurrency, complete line collections, and synchronized
+`AdjustmentIncrease`/`AdjustmentDecrease` item movements. Inventory Count
+freezes every active item's system quantity for one product store, accepts
+physical quantities, and atomically generates only the required immutable
+Stock Adjustment In/Out documents. There is no status, posting, cancellation,
+reversal, or separate movement workflow.
+
+#### Routes and authorization
+
+| Method | Route | Access | Purpose |
+|---|---|---|---|
+| `GET` | `/api/v1/StockAdjustments` | Authenticated | Paginated complete adjustment aggregates |
+| `GET` | `/api/v1/StockAdjustments/{id}` | Authenticated | One adjustment |
+| `POST` | `/api/v1/StockAdjustments` | Admin | Create adjustment and movements |
+| `PUT` | `/api/v1/StockAdjustments/{id}` | Admin | Replace aggregate and movements |
+| `DELETE` | `/api/v1/StockAdjustments/{id}` | Admin | Soft-delete aggregate and movements |
+| `GET` | `/api/v1/InventoryCounts` | Authenticated | Paginated count headers |
+| `GET` | `/api/v1/InventoryCounts/{id}` | Authenticated | Complete frozen count |
+| `POST` | `/api/v1/InventoryCounts` | Admin | Create snapshot and load all eligible items |
+| `PUT` | `/api/v1/InventoryCounts/{id}` | Admin | Replace physical quantities and notes |
+| `POST` | `/api/v1/InventoryCounts/{id}/reconcile` | Admin | Generate non-zero adjustment differences |
+| `DELETE` | `/api/v1/InventoryCounts/{id}` | Admin | Delete an unreconciled count |
+
+Stock Adjustment list filters are optional `documentNumber`, `storeId`,
+`direction`, `fromDate`, and `toDate`. Inventory Count filters are optional
+`documentNumber`, `storeId`, `isReconciled`, `fromDate`, and `toDate`. Both
+also use the standard pagination query fields.
+
+#### Stock Adjustment request
+
+`direction` is the JSON enum name `Increase` or `Decrease`. The API rejects
+numeric enum values. `quantity` is positive `decimal(18,6)`, `itemUnitId` is
+server-derived, item IDs cannot repeat, and there are at most 100 lines.
+
+```json
+{
+  "storeId": 12,
+  "documentNumber": "SA-2026-001",
+  "documentDate": "2026-07-28",
+  "direction": "Decrease",
+  "reason": "Damaged stock",
+  "lines": [
+    {
+      "itemId": 35,
+      "quantity": 2.5,
+      "reason": "Count correction"
+    }
+  ]
+}
+```
+
+Update sends the complete replacement aggregate plus the original base64
+`rowVersion`. Responses add IDs, company/store/item/unit display fields,
+`sourceInventoryCountId`, `lastModifiedAt`, `rowVersion`, and the complete
+deterministically ordered line collection. When `sourceInventoryCountId` is
+not null, the frontend must hide edit/delete because generated adjustments are
+immutable.
+
+#### Inventory Count requests
+
+Create sends header fields only:
+
+```json
+{
+  "storeId": 12,
+  "documentNumber": "COUNT-2026-001",
+  "countDate": "2026-07-28",
+  "notes": "Monthly physical count"
+}
+```
+
+The create/detail response contains every active item with an active unit,
+including zero-stock items. Each line returns frozen `systemQuantity`,
+nullable `physicalQuantity`, nullable calculated `difference`, and display
+names. The client must not add, remove, or change item/unit/system fields.
+
+Update sends the complete frozen item set:
+
+```json
+{
+  "notes": "Count completed",
+  "lines": [
+    {
+      "itemId": 35,
+      "physicalQuantity": 17.5,
+      "notes": null
+    }
+  ],
+  "rowVersion": "AAAAAAAAB9E="
+}
+```
+
+`physicalQuantity` may be null while counting and may be zero, but must be
+present for every line before reconcile. Reconcile sends only:
+
+```json
+{
+  "rowVersion": "AAAAAAAAB9E="
+}
+```
+
+The response exposes `increaseAdjustmentId` and `decreaseAdjustmentId`; either
+is null when that direction has no differences. A reconciled count is
+read-only and cannot be deleted.
+
+#### Conflicts and frontend behavior
+
+- `StockAdjustments.Concurrency` and `InventoryCounts.Concurrency`: reload the
+  aggregate and require the user to reapply changes.
+- `Inventory.InsufficientStock` or `Inventory.HistoricalStockConflict`: keep
+  the form open and show the stock timeline conflict.
+- `InventoryCounts.SnapshotStale`: stock changed after the snapshot; do not
+  reconcile or silently reload quantities. Ask the user to create a new count.
+- `InventoryCounts.PhysicalQuantitiesRequired`: focus missing physical-count
+  inputs.
+- `InventoryCounts.LinesDoNotMatchSnapshot`: reload details; the client sent
+  an incomplete or altered frozen set.
+- `InventoryCounts.ReconciledImmutable`,
+  `InventoryCounts.AlreadyReconciled`, and
+  `StockAdjustments.GeneratedAdjustmentImmutable`: refresh and keep the
+  document read-only.
+- Missing, inactive, cross-company, container-store, duplicate-number, and
+  validation errors use the standard ProblemDetails contract.
+
+The integrated React pages use `/Stores/select` and `/Items/select`, send
+complete replacements, retain the latest row version, hide Admin actions from
+non-Admins, and passed the production Vite build on 2026-07-28.
 
 ### Step 5 - Receipt and Payment Vouchers
 
@@ -1102,9 +1227,10 @@ generated OpenAPI document after deployment.
 
 **Payment term:** `PaymentTerm` is serialized as the enum names `Cash` and
 `Credit` (`Cash = 1`, `Credit = 2`). The create/edit select is required and
-defaults to `Cash`. In the current no-posting workflow, Cash derives as paid
-immediately and Credit derives as outstanding. Invoice CRUD synchronizes item
-movements, container movements, outstanding Credit partner movements, and
+defaults to `Cash`. For both terms, the user enters `paidAmount` from zero
+through the net total. Any positive remaining amount is outstanding against
+the partner account. Invoice CRUD synchronizes item movements, container
+movements, outstanding partner movements, and
 internal driver trips; it does not create journal entries, vouchers, posting,
 or reversal rows.
 
@@ -1113,6 +1239,16 @@ are created and updated atomically. The API returns complete ordered child
 collections, server-derived currency and item units, calculated totals, and a
 header-only base64 row version. A stale token returns
 `Invoices.Concurrency` and requires a reload.
+
+**Invoice list filters:** The list supports optional invoice number, invoice
+type, partner, country, store, responsible driver, payment term, line-price
+status, and inclusive date range. Filters combine with `AND`. The frontend
+keeps draft filters separate from applied filters, resets pagination to page
+one when applying or clearing, and uses the shared `buildQueryString` helper
+to omit and safely encode empty query parameters. Filter field models remain
+feature-specific. The frontend should continue sending ISO `yyyy-MM-dd`;
+external query clients may send other recognizable date formats, with
+ambiguous numeric values interpreted day-first.
 
 The exact request/response contract, selectors, validation, errors, and
 examples are in

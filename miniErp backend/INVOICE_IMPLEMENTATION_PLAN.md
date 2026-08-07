@@ -63,13 +63,15 @@ stock opening balances and every later document task:
 
 - Finalize invoice, line, container-line, and driver fields.
 - Implement paginated list, details, create, update, and soft delete.
+- Add optional strongly typed list filters for invoice number, invoice type,
+  partner, country, store, responsible driver, payment term, line-price
+  status, and inclusive invoice-date range.
 - Include complete ordered product and container line details in every
   paginated invoice item.
 - Implement sales, sales return, purchase, and purchase return.
 - Add required `PaymentTerm` (`Cash = 1`, `Credit = 2`) with a default of
-  `Cash`; derive immediate-paid versus outstanding response values. Credit
-  invoices create one partner movement; Cash invoices do not remain
-  outstanding.
+  `Cash`. Both terms accept a paid amount from zero through the invoice total;
+  create one partner movement for any positive remaining amount.
 - Save item movements for product lines, container movements for container
   lines, and one `DriverTrip` for an internal driver.
 - Save an external driver name only on the invoice.
@@ -86,11 +88,22 @@ stock opening balances and every later document task:
 
 ## 4. Stock adjustments
 
-- Implement increase and decrease documents.
-- Implement simple aggregate CRUD with atomic writes and row-version
-  concurrency.
+- Implement increase and decrease documents with one positive `Quantity` per
+  line.
+- Reuse the shared derived-stock and historical-timeline logic already used by
+  invoices. Create, replace, and soft-delete only the typed adjustment
+  `ItemMovement` rows owned by the document.
+- Implement simple aggregate CRUD with atomic writes, header-only row-version
+  concurrency, `LastModifiedAt`, and header touch for line-only changes.
 - Include complete ordered adjustment-line details in every paginated item.
-- Do not add status, posting, cancellation, reversal, or item movements.
+- Add Inventory Count as a separate aggregate without duplicating movement or
+  current-balance tables. Create freezes all active-item system balances,
+  including zeros; update accepts the complete physical-count set.
+- Reconciliation rejects stock changes since the snapshot and atomically
+  creates only the required generated Stock Adjustment In/Out documents and
+  their normal item movements. Generated adjustments are immutable.
+- Do not add status, posting, cancellation, reversal, posting endpoints, or
+  mutable balance columns.
 
 ## 5. Receipt and payment vouchers
 

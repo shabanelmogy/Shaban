@@ -119,7 +119,8 @@ Main fields:
 
 - `Id`
 - `CompanyId`
-- `InvoiceNumber`, generated on the server
+- `InvoiceNumber`, required user input on create, trimmed, maximum 100
+  characters, duplicates allowed, and immutable after creation
 - `ExportInvoiceCode`, optional
 - `InvoiceType`
 - `PaymentTerm` (`Cash = 1`, `Credit = 2`; defaults to `Cash`)
@@ -254,9 +255,9 @@ remain nullable on generic movement records.
 
 ### BusinessPartnerMovement
 
-Credit invoices create one `BusinessPartnerMovement` with the invoice
-direction. Cash invoices are immediately paid and do not create an
-outstanding partner movement.
+Any invoice with `RemainingAmount > 0` creates one
+`BusinessPartnerMovement` with the invoice direction and the remaining amount.
+This applies to both Cash and Credit.
 
 ### ContainerMovement
 
@@ -285,9 +286,9 @@ on the invoice.
 - The audit interceptor records create, update, and delete information.
 - There is no document status, post, cancel, reversal, voucher, or allocation
   operation.
-- `Cash` is represented as immediately paid and `Credit` remains outstanding
-  against the partner account. The API derives payment status and
-  paid/outstanding amounts from `PaymentTerm`.
+- Both `Cash` and `Credit` may be unpaid, partially paid, or fully paid.
+  `PaidAmount` is explicit; the API calculates the remaining amount and
+  payment status from the invoice total and paid amount.
 - Invoice CRUD synchronizes current item, container, partner, and internal
   driver-trip side effects. Updates replace active side-effect rows and
   deletes soft-delete them with the invoice.
@@ -332,6 +333,7 @@ These remain separate features and tables:
 - `StockOpeningBalance` and `StockOpeningBalanceLine`
 - `PartnerOpeningBalance`
 - `StockAdjustment` and `StockAdjustmentLine`
+- `InventoryCount` and `InventoryCountLine`
 - `BusinessPartnerVoucher`
 - `BusinessPartnerVoucherAllocation`
 
@@ -342,12 +344,26 @@ line: `ItemId`, nullable server-derived `ItemUnitId`/`ItemUnit`, `Count`,
 `Quantity` or `Total`.
 
 They follow the same simplified aggregate CRUD, transaction, row-version, and
-audit-interceptor rules. They do not generate movement or reversal records.
+audit-interceptor rules. Stock Adjustments are the approved inventory
+exception: they synchronize typed adjustment item movements. Inventory Count
+reuses Stock Adjustment generation for non-zero physical-count differences;
+it does not add a second movement or current-balance table. None of these
+features adds posting, cancellation, status, or reversal operations.
 
 ## 14. Frontend contract rules
 
 - Reuse the existing select endpoints for drivers, stores, items, and business
   partners when their data is sufficient.
+- The invoice list accepts optional invoice number, invoice type, partner,
+  country, store, responsible driver, payment term, line-price status, and
+  inclusive date-range query filters. Supplied filters combine with `AND`.
+- Invoice line-price status is strongly typed: `HasMissingPrice` means at
+  least one line has `Price == 0`; `AllItemsPriced` means every line has
+  `Price > 0`.
+- Invoice date query filters use flexible `DateOnly` parsing. ISO
+  `yyyy-MM-dd` is preferred; recognizable alternate formats and
+  Arabic/Persian digits are accepted, and ambiguous numeric dates are
+  interpreted day-first.
 - Paginated document list items return their complete ordered child details:
   invoices return product and container lines, stock adjustments return their
   lines, and vouchers return allocations. A `lineCount` or allocation count
