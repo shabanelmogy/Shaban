@@ -119,8 +119,7 @@ Main fields:
 
 - `Id`
 - `CompanyId`
-- `InvoiceNumber`, required user input on create, trimmed, maximum 100
-  characters, duplicates allowed, and immutable after creation
+- `InvoiceNumber`, generated on the server
 - `ExportInvoiceCode`, optional
 - `InvoiceType`
 - `PaymentTerm` (`Cash = 1`, `Credit = 2`; defaults to `Cash`)
@@ -255,9 +254,9 @@ remain nullable on generic movement records.
 
 ### BusinessPartnerMovement
 
-Any invoice with `RemainingAmount > 0` creates one
-`BusinessPartnerMovement` with the invoice direction and the remaining amount.
-This applies to both Cash and Credit.
+Credit invoices create one `BusinessPartnerMovement` with the invoice
+direction. Cash invoices are immediately paid and do not create an
+outstanding partner movement.
 
 ### ContainerMovement
 
@@ -286,9 +285,9 @@ on the invoice.
 - The audit interceptor records create, update, and delete information.
 - There is no document status, post, cancel, reversal, voucher, or allocation
   operation.
-- Both `Cash` and `Credit` may be unpaid, partially paid, or fully paid.
-  `PaidAmount` is explicit; the API calculates the remaining amount and
-  payment status from the invoice total and paid amount.
+- `Cash` is represented as immediately paid and `Credit` remains outstanding
+  against the partner account. The API derives payment status and
+  paid/outstanding amounts from `PaymentTerm`.
 - Invoice CRUD synchronizes current item, container, partner, and internal
   driver-trip side effects. Updates replace active side-effect rows and
   deletes soft-delete them with the invoice.
@@ -333,7 +332,6 @@ These remain separate features and tables:
 - `StockOpeningBalance` and `StockOpeningBalanceLine`
 - `PartnerOpeningBalance`
 - `StockAdjustment` and `StockAdjustmentLine`
-- `InventoryCount` and `InventoryCountLine`
 - `BusinessPartnerVoucher`
 - `BusinessPartnerVoucherAllocation`
 
@@ -343,27 +341,26 @@ line: `ItemId`, nullable server-derived `ItemUnitId`/`ItemUnit`, `Count`,
 `Notes`. Clients send `Count`, `Weight`, and `Price`; they do not send
 `Quantity` or `Total`.
 
-They follow the same simplified aggregate CRUD, transaction, row-version, and
-audit-interceptor rules. Stock Adjustments are the approved inventory
-exception: they synchronize typed adjustment item movements. Inventory Count
-reuses Stock Adjustment generation for non-zero physical-count differences;
-it does not add a second movement or current-balance table. None of these
-features adds posting, cancellation, status, or reversal operations.
+Stock Opening Balances and Partner Opening Balances follow the simplified
+aggregate CRUD, transaction, row-version, and audit-interceptor rules and do
+not generate movement or reversal records. Stock Adjustments also use simple
+aggregate CRUD without status, posting, cancellation, or reversal, but each
+active increase/decrease line generates its matching `ItemMovement` atomically;
+outbound decreases validate on create, update, and delete, while inbound
+increase updates and deletes validate because they can reduce or remove stock;
+new inbound increases only add stock and do not require a balance check.
+
+Each company has one `CompanySettings` row with the `StockBalanceCheckMode`
+values `None`, `DateCheck`, `FinalCheck`, and `Both`. The shared stock service
+uses this setting for every eligible movement producer, including future
+outbound movement types. `None` disables only balance validation; tenant,
+active-record, and product-store validation remains mandatory. Missing rows
+default to `DateCheck`.
 
 ## 14. Frontend contract rules
 
 - Reuse the existing select endpoints for drivers, stores, items, and business
   partners when their data is sufficient.
-- The invoice list accepts optional invoice number, invoice type, partner,
-  country, store, responsible driver, payment term, line-price status, and
-  inclusive date-range query filters. Supplied filters combine with `AND`.
-- Invoice line-price status is strongly typed: `HasMissingPrice` means at
-  least one line has `Price == 0`; `AllItemsPriced` means every line has
-  `Price > 0`.
-- Invoice date query filters use flexible `DateOnly` parsing. ISO
-  `yyyy-MM-dd` is preferred; recognizable alternate formats and
-  Arabic/Persian digits are accepted, and ambiguous numeric dates are
-  interpreted day-first.
 - Paginated document list items return their complete ordered child details:
   invoices return product and container lines, stock adjustments return their
   lines, and vouchers return allocations. A `lineCount` or allocation count

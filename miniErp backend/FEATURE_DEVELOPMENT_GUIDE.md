@@ -62,10 +62,16 @@ Build mode:
 - Do not add an abstraction for a hypothetical future need. Introduce one only
   when it simplifies at least two current, concrete use cases.
 - Do not add raw SQL locking, `UPDLOCK`, `HOLDLOCK`, application locks, or
-  custom pessimistic-lock helpers. Keep the existing transaction boundary and
-  RowVersion behavior of the affected aggregate.
+  custom pessimistic-lock helpers unless a current approved workflow requires
+  deterministic cross-aggregate serialization. Perpetual inventory costing is
+  the approved exception: it uses a Serializable SQL Server transaction and
+  deterministic balance-key range locks, including keys whose balance row does
+  not yet exist.
 - Do not add invoice status, posting, cancellation, reversal, journal entries,
-  vouchers, or allocations. They are not part of the current application.
+  vouchers, or payment allocations. They are not part of the current
+  application. Server-derived `InventoryCostAllocation` rows used to cost
+  negative stock are an inventory-costing concern, not invoice posting or
+  payment allocation.
 - Do not create duplicate Customer and Supplier entities.
   `BusinessPartner` represents both roles.
 - Do not store mutable current-balance columns on `BusinessPartner`, `Item`,
@@ -221,53 +227,6 @@ Rules:
 - A frontend default does not remove a required backend request value.
 - Use property-based request models only when a real framework or binding
   requirement makes positional records unsuitable.
-
-### Manual DTO and projection construction
-
-Positional record definitions are still preferred for small request and
-response contracts, but manually constructing a record must not hide the
-meaning of values that can be swapped while still compiling.
-
-- Use named arguments when manually constructing response DTOs, report rows,
-  summaries, or other records that contain multiple primitive values.
-- Named arguments are mandatory when adjacent parameters have the same type,
-  especially fields such as `Count`, `Weight`, `Quantity`, `Price`, `Total`,
-  financial amounts, pagination values, currencies, and dates.
-- Do not rely on constructor position to map source properties to target DTO
-  fields. Keep the source property and destination parameter name visible at
-  the construction site.
-
-```csharp
-new PartnerItemReportMovementResponse(
-    Count: row.Count,
-    Weight: row.Weight,
-    Quantity: row.Quantity,
-    UnitPrice: row.Price,
-    TotalAmount: row.Total);
-```
-
-Named constructor arguments are not supported inside LINQ expression trees.
-For an EF Core projection, use an anonymous type or a member-initialized
-projection with explicit property names instead of a long positional
-constructor:
-
-```csharp
-var rows = await query
-    .Select(line => new
-    {
-        line.Count,
-        line.Weight,
-        line.Quantity,
-        UnitPrice = line.Price,
-        TotalAmount = line.Total
-    })
-    .ToListAsync(cancellationToken);
-```
-
-Add property-level regression assertions for values that could be exchanged
-without causing a compilation failure. For example, assert `Weight`,
-`Quantity`, `UnitPrice`, and `TotalAmount` separately rather than checking only
-that a response was returned.
 
 ### Mapping and validation
 
@@ -558,24 +517,32 @@ framework.
 - Use deterministic ordering with a stable final key such as `Id`.
 - Use `IPaginationService` for growing lists.
 - Keep small `Id`/`Name` select endpoints unpaginated.
-- Keep list filters feature-specific and strongly typed. Reuse pagination, but
-  do not create one universal filter DTO, base class, or dynamic
-  string-property filtering framework.
-- Apply optional filters with direct query conditions before ordering and
-  pagination. Extract one private `ApplyFilters` helper only when it keeps the
-  service orchestration readable.
-- Query-string `DateOnly` values use the reusable flexible binder. Prefer ISO
-  `yyyy-MM-dd`, but accept recognizable day-first, month-first, named-month,
-  alternate-separator, and Arabic/Persian-digit forms. Resolve ambiguous
-  numeric values day-first for the Arabic/Egyptian locale and return 400 for
-  values that still cannot be parsed.
-- Keep growing aggregate lists header-only when the table does not display
-  child rows. Load the complete ordered child collections from the get-by-ID
-  endpoint only when the user opens details or editing.
+- Aggregate list responses must include the complete ordered child collections
+  required by the current frontend.
 
 Avoid N+1 queries, repeated full-table scans, and unbounded entity
 materialization. Do not introduce complex query abstractions for a single
 query.
+
+### Paginated `GetAll` filters
+
+Every paginated `GetAll` endpoint exposes a typed, optional filter request,
+following the Invoice pattern. Filters are applied with `AND` semantics after
+tenant and soft-delete scoping, while deterministic ordering and the existing
+pagination metadata are preserved.
+
+Use the common `search` field for resource-wide text search wherever the
+resource has searchable display values. Invoice filters include `search` and
+apply it across invoice, partner, store, country, driver, vehicle, product,
+and container display values.
+
+Filter contracts contain only supported, resource-specific fields and have
+FluentValidation validators for length, ID, enum, and date-range rules, using
+Arabic validation messages. Controllers bind the filter contracts from the
+query string, services apply them to the database query, and Swagger lists the
+available query fields and their validation rules. Adding filters is a
+service/contract documentation change and must not require a database
+migration.
 
 ## 8. Canonical invoice behavior
 
@@ -591,18 +558,6 @@ The invoice aggregate supports:
 - Purchase.
 - Purchase return.
 - Paginated list, get by ID, create, update, and soft delete.
-- The paginated list accepts optional invoice number, invoice type, partner,
-  country, store, responsible driver, payment term, line-price status, and
-  inclusive date-range filters. Supplied filters combine with `AND`; omitting
-  them returns all invoice types.
-- The paginated list returns a financial summary for the complete filtered
-  result, independent of the current page: subtotal, discount, net total, paid
-  amount, and remaining amount. A filter with no matches returns zero amounts.
-- Invoice list items are header-only and include child counts. The frontend
-  loads the complete invoice aggregate through `GET /Invoices/{id}` only when
-  the user opens or edits a row.
-- `InvoicePriceStatus.HasMissingPrice` means at least one line has
-  `Price == 0`; `AllItemsPriced` means every line has `Price > 0`.
 - A required product-line collection and a required container-line collection;
   send `[]` when there are no container lines.
 - Current operational item, container, partner, and internal-driver side
@@ -612,24 +567,26 @@ It does not support:
 
 - Document status or posting.
 - Cancellation or reversal.
-- Original-invoice allocation for returns.
+- Invoice-level return allocation, posting, or reversal. A sales-return line
+  may optionally link to its original sales line only to resolve inventory
+  cost.
 - Journal entries or a general ledger.
 - Receipt/payment vouchers.
 - Voucher allocations.
 
 Returns are independent invoices. A purchase return must pass the same stock
-rules as any other outbound invoice.
+rules and uses the same current-average costing rule as any other outbound
+movement. It never uses the original purchase price.
 
 ### Aggregate and server-derived values
 
 `Invoice`, `InvoiceLine`, and `InvoiceContainerLine` are one aggregate.
 
-- `InvoiceNumber` is required user input on create, is trimmed, and has a
-  maximum length of 100 characters.
-- Duplicate invoice numbers are allowed, including within the same company.
-- The invoice number is immutable after creation because synchronized
-  movement records use it as part of the invoice reference.
-- `(CompanyId, InvoiceNumber)` is a non-unique lookup index.
+- `InvoiceNumber` is generated by the server.
+- The current format is
+  `INV-{CompanyId}-{UTC timestamp}-{8-character GUID suffix}`.
+- Active invoice numbers are protected by the unique
+  `(CompanyId, InvoiceNumber)` index.
 - `CompanyId` comes from `ICurrentCompanyContext`.
 - `Currency` comes from the selected business partner.
 - `ItemUnitId` comes from the selected item.
@@ -640,15 +597,22 @@ rules as any other outbound invoice.
   empty; it must be an active company container store owned by the selected
   partner.
 - The client sends `Count`, `Weight`, and `Price`.
+- A sales-return line may also send `SourceInvoiceLineId`. The source must be
+  an active Sales line for the same company, item, and store, and its movement
+  must be fully costed.
+- An unlinked sales return uses the current positive average. It sends
+  `ReturnUnitCost` only when no positive current average exists.
 - The server calculates quantity, line total, subtotal, net total, payment
-  status, and remaining amount.
+  status, remaining amount, all movement cost snapshots, pending cost, average
+  cost, and inventory value.
 - Use `decimal` and `InvoiceAmountRules`; never use `float` or `double`.
 - Repeated item IDs and repeated container IDs are rejected.
 - `Lines` contains 1–100 rows. `ContainerLines` contains 0–100 rows.
 - Each product line requires `Count > 0`, `Weight > 0`, and `Price >= 0`
   within the configured precision and scale.
 - `DueDate` is optional and cannot precede `InvoiceDate`.
-- Update replaces the requested aggregate state while preserving identity and
+- Update replaces the requested aggregate state while preserving aggregate
+  identity, matching `ItemMovement.Id`, matching movement `CreatedOn`, and
   audit history.
 
 Calculations:
@@ -678,12 +642,14 @@ Credit = 2
 - The frontend create form defaults to `Cash`.
 - The entity/database Cash default exists for persistence and existing-data
   safety; it is not a backend request default.
-- Both Cash and Credit invoices may be unpaid, partially paid, or fully paid.
-- For either payment term, `PaidAmount` must be between zero and `Total`.
-- Either payment term creates one partner movement only when
+- A Cash invoice must be fully paid: `PaidAmount == Total`.
+- Cash has `RemainingAmount == 0` and creates no
+  `BusinessPartnerMovement`.
+- A Credit invoice may be unpaid, partially paid, or fully paid.
+- Credit creates one partner movement only when
   `RemainingAmount > 0`.
 - The partner movement amount is exactly the remaining amount, not the total.
-- A fully paid invoice creates no outstanding partner movement.
+- A fully paid Credit invoice creates no outstanding partner movement.
 - `PaymentStatus.Unpaid = 1` and `PaymentStatus.Paid = 2`.
 - `RemainingAmount <= 0` is Paid; otherwise it is Unpaid.
 - A partially paid Credit invoice remains Unpaid. There is no partially-paid
@@ -717,24 +683,41 @@ service. Do not describe one as implemented.
 | Purchase | Quantity in |
 | Purchase return | Quantity out |
 
-Current stock is derived from:
-
-```text
-SUM(active StockOpeningBalanceLine.Quantity)
-+ SUM(active ItemMovement.QuantityIn - ItemMovement.QuantityOut)
-```
-
-`GET /Invoices/item-balance` returns this derived balance for one company,
-product store, item, and invoice date to support item selection. During edit,
-the optional current invoice ID excludes that invoice's existing movements so
-the displayed quantity is available to the replacement aggregate. This value
-is informational; save still runs the complete historical timeline validation.
-
-Always filter by:
+Every inventory quantity and cost timeline is partitioned by:
 
 ```text
 CompanyId + StoreId + ItemId
 ```
+
+`ItemMovement` is the canonical active timeline. Opening balances create
+`OpeningBalance` movements. The stock service retains a legacy fallback for an
+active opening-balance line only when no matching active opening-balance
+movement exists, so old databases remain readable without double counting.
+
+`ItemStoreBalance` stores the current replay result for each partition:
+
+- `Quantity`
+- `AverageCost`
+- `InventoryValue`
+- `RowVersion`
+
+It has a composite primary key on `(CompanyId, StoreId, ItemId)`. It is a
+server-maintained projection and is never accepted as document input.
+
+Each company has one `CompanySettings` row. Its `StockBalanceCheckMode` controls
+the reusable balance validation used by every stock-movement producer:
+
+- `None` skips balance/timeline validation only; active company, store, item,
+  and item-unit validation still runs.
+- `DateCheck` validates the complete chronological stock timeline.
+- `FinalCheck` validates only the resulting final balance after the proposed
+  operation.
+- `Both` runs both checks.
+
+Missing settings default to `DateCheck`. Any future operation that creates,
+changes, removes, or restores an `ItemMovement` must use this same company
+setting through the shared stock service; it must not bypass validation or
+implement a separate balance calculation.
 
 The product store must be active, belong to the selected company, and have
 `IsContainerStore = false`.
@@ -743,33 +726,37 @@ Every active, non-deleted `ItemMovement` contributes through its actual
 `QuantityIn - QuantityOut` values. Do not hard-code a partial movement-type
 list that omits adjustments or other existing movement rows.
 
-Stock Adjustments and Inventory Counts reuse this same source of truth:
+Every outbound create, update, and delete runs the configured affected-stock
+validation. `DateCheck` rejects a negative point in the chronological
+timeline, `FinalCheck` rejects a negative resulting final balance, `Both`
+applies both, and `None` permits negative quantity. This rule also applies to
+every future outbound document or movement type.
 
-- A Stock Adjustment line keeps one positive `Quantity` and creates one typed
-  `AdjustmentIncrease` or `AdjustmentDecrease` movement.
-- Adjustment update/delete identifies owned movements by movement type,
-  reference ID, and reference number so an overlapping ID from another
-  document type cannot be removed or excluded.
-- Inventory Count freezes all active items with active units for one product
-  store, including zero-stock items. It stores a snapshot, not a mutable
-  current-balance table.
-- Reconciliation requires a no-stock-change counting window. It compares the
-  current derived balance with every frozen line and also checks audited
-  opening/movement changes since `SnapshotTakenAt`.
-- Non-zero differences generate at most one immutable Increase and one
-  immutable Decrease Stock Adjustment inside the reconciliation transaction.
-  Zero differences never generate movements or empty adjustment documents.
+Inbound updates and deletes run the configured validation because they may
+reduce or remove stock that supports later outbound movements. A new inbound
+create is exempt from stock validation because it only adds stock. Costing
+replay still runs for every inbound create, including when validation is
+exempt.
+
+Under the current Stock Adjustment contract, each active increase/decrease
+line creates the matching adjustment `ItemMovement` atomically. An increase
+line requires a client-entered `UnitCost`; a decrease line never accepts one.
+Decreases are outbound and run configured validation on create, update, and
+delete. Increase updates and deletes also validate because they can reduce or
+remove inbound stock. A new increase only adds stock and does not require a
+balance check. Updates preserve matching movement IDs and `CreatedOn`, soft-
+delete removed movements, and create movements only for newly added lines.
 
 Stock validation must preserve these implemented rules:
 
-1. When timeline validation runs, validate the complete chronological balance,
-   not only the final balance.
+1. When `DateCheck` or `Both` timeline validation runs, validate the complete
+   chronological balance, not only the final balance.
 2. Opening balances are processed first on a date.
 3. Inbound movements are processed before outbound movements on the same date.
 4. The proposed invoice is ordered last among movements of the same direction
    and date.
-5. When validation runs, reject any negative point in the resulting affected
-   timeline.
+5. Date validation rejects any negative point in the resulting affected
+   timeline. Final validation checks only the final affected balance.
 6. On update, exclude the old invoice movements, add the proposed state, and
    validate the exact affected old/new `(StoreId, ItemId)` pairs.
 7. Do not validate an unrelated Cartesian product of stores and items.
@@ -777,9 +764,9 @@ Stock validation must preserve these implemented rules:
    must all validate the resulting history.
 9. Removing an inbound invoice during update or delete must be rejected when a
    later outbound movement would become unsupported.
-10. A new inbound Purchase or Sales return skips timeline validation because
-    it only adds stock; inbound updates and inbound deletes still validate the
-    complete affected history.
+10. Every outbound create, update, and delete runs the configured stock check.
+    Inbound updates and deletes also run it. A new inbound Purchase or Sales
+    return skips stock validation because it only adds stock.
 11. Update reference ID and reference number must be both present or both
     absent. Existing invoice movements are excluded only when both
     `ReferenceId` and `ReferenceNumber` match.
@@ -787,6 +774,111 @@ Stock validation must preserve these implemented rules:
     aggregate transaction.
 
 Do not replace the timeline check with only a current-balance check.
+
+### Perpetual weighted-average inventory costing
+
+`ItemMovement` stores these server-calculated costing fields:
+
+- `UnitCost`
+- `TotalCost`
+- `AverageCostAfter`
+- `QuantityAfter`
+- `InventoryValueAfter`
+- `PendingCostQuantity`
+- `CostStatus`
+
+`CostStatus` has stable values `Final`, `PartiallyCosted`, `Pending`, and
+`Revalued`. Quantity precision is `decimal(18,6)`, unit/average cost precision
+is `decimal(24,8)`, and total/inventory value precision is `decimal(28,8)`.
+Cost calculations round with `MidpointRounding.AwayFromZero`.
+
+Inbound source costs are:
+
+| Movement | Cost source |
+|---|---|
+| Purchase | Purchase invoice line `Price` |
+| Opening balance | Opening-balance line `Price` |
+| Stock-adjustment increase | Required line `UnitCost` |
+| Linked sales return | Fully costed original Sales movement |
+| Unlinked sales return | Current positive average, otherwise required `ReturnUnitCost` |
+
+A linked sales return whose source Sales movement is `Pending` or
+`PartiallyCosted` is rejected with:
+
+```text
+لا يمكن احتساب تكلفة مرتجع البيع لأن حركة البيع الأصلية لم تكتمل تكلفتها بعد.
+```
+
+An active linked sales return blocks soft deletion of its source Sales invoice.
+The source link is tenant-safe and remains an inventory-cost audit dependency,
+not a posting or reversal relationship.
+
+Sales, stock-adjustment decreases, and purchase returns use the current
+weighted-average cost immediately before the movement. Outbound movements do
+not change the positive average unless remaining quantity becomes zero or
+negative. Purchase returns never use the original purchase price.
+
+Normal inbound costing adds inbound value and recalculates weighted average.
+When `QuantityAfter <= 0`, both `AverageCostAfter` and
+`InventoryValueAfter` are zero. Never divide inventory value by a zero or
+negative quantity.
+
+When negative stock is permitted, an outbound quantity not covered by current
+positive stock remains in `PendingCostQuantity`. `UnitCost` remains null while
+the outbound movement is pending or partially costed. Future inbound quantity
+first covers pending outbound quantities in FIFO order before any remainder
+enters positive inventory. FIFO order is:
+
+```text
+MovementDate, CreatedOn, Id
+```
+
+Each cover creates a server-derived `InventoryCostAllocation`. The entity uses
+tenant-safe composite foreign keys:
+
+```text
+(CompanyId, OutboundMovementId) -> ItemMovement (CompanyId, Id)
+(CompanyId, InboundMovementId)  -> ItemMovement (CompanyId, Id)
+```
+
+`ItemMovement` therefore has an alternate key on `(CompanyId, Id)`. One active
+allocation is allowed per inbound/outbound movement pair. Allocations are
+rebuildable derived data: replay physically deletes affected rows and rebuilds
+them deterministically inside the same transaction.
+
+When a pending outbound is fully covered:
+
+- `PendingCostQuantity = 0`
+- `UnitCost = TotalCost / QuantityOut`
+- `CostStatus = Revalued`
+
+Any create, edit, delete, restore, date change, quantity change, cost change,
+item change, store change, direction change, movement-type change, or source-
+linkage change recalculates all affected subsequent active movements for every
+old and new `(CompanyId, StoreId, ItemId)` key. Replay includes both inbound
+and outbound movements. When the safe dependency boundary is uncertain, replay
+the full active timeline for that item/store.
+
+Document updates preserve matching `ItemMovement.Id` and `CreatedOn`, update
+matching movements in place, soft-delete removed movements, and create new
+movements only for new lines. They must not delete and recreate every item
+movement.
+
+The complete document operation runs atomically in one Serializable SQL Server
+transaction. Balance keys are locked in deterministic
+`CompanyId, StoreId, ItemId` order, including missing balance rows. Processing
+order is:
+
+1. Validate document/header concurrency.
+2. Reconcile stable item movements.
+3. Validate the configured stock rule.
+4. Replay costing and rebuild derived allocations.
+5. Update movement snapshots and `ItemStoreBalance`.
+6. Save and commit all document, movement, allocation, and balance changes.
+
+Any validation, concurrency, or costing failure rolls the entire operation
+back. Cost snapshot fields, allocation fields, balance fields, and cost status
+are server-owned and must never be accepted from the client.
 
 ### Containers
 
@@ -828,8 +920,7 @@ transaction:
 
 - One `ItemMovement` per active product line.
 - One `ContainerMovement` per active container line.
-- One `BusinessPartnerMovement` for any invoice with a positive remaining
-  amount.
+- One `BusinessPartnerMovement` for an outstanding Credit invoice.
 - One `DriverTrip` when an internal driver is selected.
 
 Update:
@@ -837,8 +928,11 @@ Update:
 - Requires the current 8-byte header RowVersion.
 - Updates `LastModifiedAt`.
 - Replaces the active aggregate line state.
-- Removes the invoice's old active side effects.
-- Recreates side effects from the new saved state.
+- Reconciles matching item movements in place, preserving their `Id` and
+  `CreatedOn`; soft-deletes removed item movements and creates only new ones.
+- Recreates non-item operational side effects from the new saved state.
+- Replays every affected old/new inventory timeline and updates costing
+  snapshots, allocations, and balances.
 - Commits only when the full replacement succeeds.
 
 Delete:
@@ -846,6 +940,7 @@ Delete:
 - Validates historical stock when removing an inbound effect could create a
   later shortage.
 - Soft-deletes the invoice, lines, container lines, and active side effects.
+- Replays every affected inventory timeline and current balance.
 - Does not create posting, cancellation, or reversal records.
 
 ## 9. API, errors, authorization, and Swagger
@@ -942,10 +1037,23 @@ Frontend rules:
 - Show every response field required by the workflow.
 - Send the current RowVersion when the aggregate update contract includes it.
 - Send complete aggregate line collections, not line deltas.
+- Every paginated Stock Adjustment item includes its complete,
+  deterministically ordered line collection. A line count may also be shown,
+  but never replaces the lines.
+- Stock-adjustment increase lines send `UnitCost`; decrease lines do not.
+- Inventory-count reconciliation sends one `UnitCost` for every positive
+  difference.
+- Invoice and stock-adjustment responses display server-calculated movement
+  `UnitCost`, `AverageCost`, `InventoryValue`, cost status, and pending
+  quantity where relevant.
+- Opening-balance lines label `Price` as unit cost and display the resulting
+  server-calculated average cost and inventory value snapshots.
+- Sales-return lines support optional original Sales-line selection and the
+  fallback `ReturnUnitCost` required when there is no positive current
+  average.
 - Invoice `PaymentTerm` is a required Cash/Credit select and defaults to Cash
   only in the frontend.
-- The user enters `PaidAmount` for both Cash and Credit; the frontend defaults
-  it to zero and does not derive it from the payment term.
+- Cash keeps `PaidAmount` equal to the calculated total.
 - API authorization remains the security boundary; hidden buttons are only a
   UI convenience.
 
@@ -1059,8 +1167,8 @@ Cross-cutting:
 ### Additional invoice scenarios
 
 - All four invoice directions.
-- Cash and Credit each unpaid, partially paid, and fully paid.
-- Outstanding Cash and Credit partner movements use only `RemainingAmount`.
+- Cash fully paid and no partner movement.
+- Credit unpaid, partially paid, and fully paid.
 - Discount and paid-amount boundaries.
 - Empty, exact, and insufficient stock.
 - Historical stock conflict after changing store, date, type, or lines.
@@ -1072,6 +1180,16 @@ Cross-cutting:
 - Side-effect soft deletion on delete.
 - Stale header RowVersion.
 - Transaction rollback after an intermediate failure.
+- Positive-stock weighted average and outbound current-average cost.
+- Quantity reaching zero and negative-stock pending cost.
+- FIFO coverage of one pending outbound by multiple inbound movements.
+- FIFO coverage of multiple pending outbounds by one inbound movement.
+- Backdated create, quantity/cost/date edit, item/store move, delete, and
+  restore replay all subsequent inbound and outbound movements.
+- Allocation rebuild is deterministic and leaves one row per movement pair.
+- Matching document updates preserve movement `Id` and `CreatedOn`.
+- Current item/store balance equals the final movement snapshot.
+- Inventory value reconciles with inbound value and total outbound cost.
 
 Use a relational provider for database constraints, transactions, query
 filters, and RowVersion behavior. EF Core's in-memory provider is not evidence

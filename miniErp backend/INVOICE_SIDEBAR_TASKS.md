@@ -5,7 +5,7 @@ shown in the Codex sidebar. It is the implementation checklist for Tasks 0–7
 and supersedes the older lifecycle, posting, cancellation, reversal, and
 movement instructions that may still appear in an earlier task preview.
 
-Last reviewed: 2026-07-28
+Last reviewed: 2026-07-25
 
 ## Portable handoff for another PC
 
@@ -106,8 +106,8 @@ development and verification policy.
 | 0 | Invoice 0 – Reference Data | `019f97eb-c87d-7211-afbf-bc9bb1e69f96` | Implemented |
 | 1 | Invoice 1 – Stock Opening Balances | `019f97eb-f38e-7610-a2cf-8537d71a1238` | Implemented and verified |
 | 2 | Invoice 2 – Partner Opening Balances | `019f97ec-202f-7563-9a7e-d0be18849b4a` | Implemented and verified; user confirmed completion on 2026-07-25 |
-| 3 | Invoice 3 – Invoice Workflow | `019f9a24-6614-7a60-8a5d-005dfda7be95` | Implemented and verified |
-| 4 | Invoice 4 – Stock Adjustments | `019f9a24-a593-7132-b593-e24af0742945` | Implemented and verified; includes Inventory Count workflow |
+| 3 | Invoice 3 – Invoice Workflow | `019f9a24-6614-7a60-8a5d-005dfda7be95` | Prepared; ready for explicit user start |
+| 4 | Invoice 4 – Stock Adjustments | `019f9a24-a593-7132-b593-e24af0742945` | Prepared; waiting for Step 3 completion |
 | 5 | Invoice 5 – Receipt and Payment Vouchers | `019f9a24-db3d-74f1-aa40-524268357b18` | Prepared; waiting for Step 4 completion |
 | 6 | Invoice 6 – Balance Reports | `019f9a25-1434-71c1-84de-40b14ad7a21e` | Prepared and deferred; waiting for Step 5 and source-of-truth approval |
 | 7 | Invoice 7 – Driver Trips | `019f9a25-f75d-7790-bffc-ca5812874fe7` | Prepared and deferred; waiting for Step 6 and separate approval |
@@ -276,9 +276,8 @@ Apply these approved simple-application rules:
 1. Implement editable aggregate CRUD only.
 2. Do not add `DocumentStatus`, draft/posted/cancelled states, post or cancel
    endpoints, reversal workflows, or posting/cancellation audit fields.
-3. Do not invent movement side effects. Invoice CRUD and Step 4 inventory
-   documents are explicit exceptions: they synchronize their approved current
-   operational movements in the same transaction.
+3. Do not generate item, partner, container, driver-trip, or reversal
+   movements.
 4. Save the complete aggregate in an explicit atomic transaction for create,
    update, and soft delete.
 5. Let `AuditableEntityInterceptor` populate audit fields. Feature services
@@ -913,19 +912,10 @@ Audit fields
 ### Required behavior
 
 - Paginated list, details, create, update, and soft delete.
-- The paginated list accepts optional invoice number, invoice type, partner,
-  country, store, responsible driver, payment term, line-price status, and
-  inclusive date-range filters. Supplied filters combine with `AND`.
-- Line-price status uses `HasMissingPrice` when any line has `Price == 0` and
-  `AllItemsPriced` when every line has `Price > 0`.
-- Date filters prefer ISO `yyyy-MM-dd` but accept recognizable alternate
-  formats and Arabic/Persian digits; ambiguous numeric dates are day-first.
 - Sales, purchase, sales-return, and purchase-return types.
-- Required `PaymentTerm` select with `Cash` as the frontend default.
-- Both Cash and Credit may be unpaid, partially paid, or fully paid.
-- Required user-entered invoice number, trimmed to at most 100 characters.
-- Duplicate invoice numbers are allowed, including within one company.
-- Invoice number is immutable after creation.
+- Required `PaymentTerm` select: `Cash` is immediately paid; `Credit`
+  remains outstanding against the business-partner account.
+- Server-generated invoice number.
 - Server-derived currency and item units.
 - Request line fields: `ItemId`, `Count`, `Weight`, `Price`, and `Notes`.
 - Calculate line quantity, line total, and invoice total on the server.
@@ -938,8 +928,7 @@ Audit fields
 - External driver name remains only on Invoice; `Driver` contains internal
   company drivers.
 - Invoice CRUD synchronizes product `ItemMovement`, container
-  `ContainerMovement`, `BusinessPartnerMovement` for any positive remaining
-  amount, and
+  `ContainerMovement`, `BusinessPartnerMovement` for Credit invoices, and
   `DriverTrip` for internal drivers in the same transaction. Updates replace
   active side-effect rows and deletes soft-delete them with the invoice.
 - There is no status, posting, cancellation, reversal, voucher, or allocation
@@ -1022,8 +1011,6 @@ Do not start until Step 3 is complete.
 
 - `StockAdjustment`
 - `StockAdjustmentLine`
-- `InventoryCount`
-- `InventoryCountLine`
 
 Current StockAdjustment header scaffold:
 
@@ -1055,8 +1042,7 @@ Audit fields
 
 ### Required behavior
 
-- Increase/decrease Stock Adjustment aggregate CRUD using one positive
-  `Quantity` per line.
+- Simple increase/decrease aggregate CRUD.
 - Active product-store validation and tenant isolation.
 - Explicit atomic create, update, and soft-delete transactions.
 - Add `LastModifiedAt`/`Touch` to the header.
@@ -1064,24 +1050,14 @@ Audit fields
 - Any line addition, change, or removal touches the header.
 - Return `StockAdjustments.Concurrency` for stale updates.
 - Include complete ordered lines in every paginated item.
-- Every Stock Adjustment creates the matching
-  `AdjustmentIncrease`/`AdjustmentDecrease` `ItemMovement`; update replaces
-  only that adjustment's typed movements and delete soft-deletes them.
-- Decreases and changes/removals of historical increases run the shared
-  historical stock-timeline validation.
-- Inventory Count create freezes the derived system quantity for every active
-  item with an active unit in the selected product store, including zero-stock
-  items. Clients cannot choose or remove snapshot items.
-- Inventory Count update replaces the complete set of physical quantities and
-  line notes while preserving frozen system quantities and units.
-- Inventory Count reconciliation requires every physical quantity, rejects a
-  stale snapshot when stock changed during counting, and atomically creates at
-  most one generated Increase and one generated Decrease Stock Adjustment.
-  Zero-difference lines and empty generated documents are omitted.
-- Generated Stock Adjustments link through `SourceInventoryCountId` and cannot
-  be edited or deleted independently.
-- No status, posting, cancellation, reversal, separate stock-movement table,
-  mutable current-balance column, or posting-time validation is added.
+- Create one matching adjustment `ItemMovement` for every active line in the
+  same transaction.
+- Treat decreases as outbound movements and validate them against the complete
+  chronological stock timeline; future outbound movement types must follow
+  the same rule.
+- A new increase only adds stock and does not require a balance check; increase
+  edits and deletes still validate because they can reduce or remove stock.
+- No status, posting, cancellation, or reversal.
 
 Planned routes:
 
@@ -1091,21 +1067,12 @@ GET    /api/v1/StockAdjustments/{id}
 POST   /api/v1/StockAdjustments
 PUT    /api/v1/StockAdjustments/{id}
 DELETE /api/v1/StockAdjustments/{id}
-
-GET    /api/v1/InventoryCounts
-GET    /api/v1/InventoryCounts/{id}
-POST   /api/v1/InventoryCounts
-PUT    /api/v1/InventoryCounts/{id}
-POST   /api/v1/InventoryCounts/{id}/reconcile
-DELETE /api/v1/InventoryCounts/{id}
 ```
 
-The user resolved the line-model decision on 2026-07-28: Stock Adjustment
-lines retain the single `Quantity` design. The approved migration is
-`20260728172815_AddStockAdjustmentsAndInventoryCounts`. The configured
-development database reported this migration as applied during final
-verification; other environments remain subject to the normal deployment
-migration workflow.
+Before migration approval, confirm whether adjustment lines keep their current
+single `Quantity` design or adopt the Invoice-style
+`Count`/`Weight`/calculated `Quantity`/`Price`/`Total` design. Do not invent
+that change during implementation without user approval.
 
 ## Step 5 — Receipt and Payment Vouchers
 
@@ -1201,12 +1168,13 @@ collection.
 
 ### Current decision
 
-Movement-based stock, partner, and container reports are deferred because the
-approved simple CRUD workflow does not generate movements.
+Movement-based stock, partner, and container reports remain deferred pending a
+separate source-of-truth approval. Stock adjustments and invoices now create
+their current operational item movements, but this does not authorize a new
+balance-report workflow.
 
 Do not:
 
-- Infer or introduce movement writes.
 - Add mutable current-balance columns to master data.
 - Implement reports against an unapproved source of truth.
 
@@ -1349,10 +1317,9 @@ Do not silently decide these while implementing:
    always derived from the selected partner.
 2. Stock Adjustment line model: retain the current single `Quantity` scaffold
    versus adopt Invoice-style count/weight/value fields.
-3. Invoice number ownership and uniqueness. **Resolved for Step 3:** the user
-   enters the required number on create; it is trimmed, limited to 100
-   characters, may be duplicated within the company, and is immutable after
-   creation. Keep a non-unique `(CompanyId, InvoiceNumber)` lookup index.
+3. Invoice number generation format and concurrency-safe sequence. **Resolved
+   for Step 3:** `INV-{CompanyId}-{UTC yyyyMMddHHmmssfff}-{8-char GUID
+   suffix}`, with a company-scoped unique filtered index.
 4. Exact decimal precision and rounding for Invoice and voucher money.
    **Resolved for Step 3 invoices:** quantity `decimal(18,6)`, money
    `decimal(18,2)`, line totals rounded away from zero to two decimals.
