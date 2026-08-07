@@ -222,6 +222,53 @@ Rules:
 - Use property-based request models only when a real framework or binding
   requirement makes positional records unsuitable.
 
+### Manual DTO and projection construction
+
+Positional record definitions are still preferred for small request and
+response contracts, but manually constructing a record must not hide the
+meaning of values that can be swapped while still compiling.
+
+- Use named arguments when manually constructing response DTOs, report rows,
+  summaries, or other records that contain multiple primitive values.
+- Named arguments are mandatory when adjacent parameters have the same type,
+  especially fields such as `Count`, `Weight`, `Quantity`, `Price`, `Total`,
+  financial amounts, pagination values, currencies, and dates.
+- Do not rely on constructor position to map source properties to target DTO
+  fields. Keep the source property and destination parameter name visible at
+  the construction site.
+
+```csharp
+new PartnerItemReportMovementResponse(
+    Count: row.Count,
+    Weight: row.Weight,
+    Quantity: row.Quantity,
+    UnitPrice: row.Price,
+    TotalAmount: row.Total);
+```
+
+Named constructor arguments are not supported inside LINQ expression trees.
+For an EF Core projection, use an anonymous type or a member-initialized
+projection with explicit property names instead of a long positional
+constructor:
+
+```csharp
+var rows = await query
+    .Select(line => new
+    {
+        line.Count,
+        line.Weight,
+        line.Quantity,
+        UnitPrice = line.Price,
+        TotalAmount = line.Total
+    })
+    .ToListAsync(cancellationToken);
+```
+
+Add property-level regression assertions for values that could be exchanged
+without causing a compilation failure. For example, assert `Weight`,
+`Quantity`, `UnitPrice`, and `TotalAmount` separately rather than checking only
+that a response was returned.
+
 ### Mapping and validation
 
 - FluentValidation handles request shape: required values, lengths, ranges,
