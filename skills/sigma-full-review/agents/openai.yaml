@@ -1,4 +1,0 @@
-interface:
-  display_name: "Sigma Full Review"
-  short_description: "Professional frontend/backend module review"
-  default_prompt: "Use $sigma-full-review to review the Staff module across frontend and backend."
