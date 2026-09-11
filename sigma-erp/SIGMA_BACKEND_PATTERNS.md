@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 19 |
-| Version | 0.11 |
-| Last verified against source | 2026-08-14 |
+| Version | 0.12 |
+| Last verified against source | 2026-08-28 |
 | Verified by | source inspection only — no build, test, migration, or database run |
 
 Build order for one entity, six steps, five patterns. Open the reference file,
@@ -145,6 +145,38 @@ collection declared as `ICollection<TChild>` for patterns 2 and 3 · calculated
 values are real properties when a list, report or filter needs them, not
 `[NotMapped]`.
 
+### Derived aggregate totals
+
+When an aggregate persists a total derived from its child rows, the aggregate
+owns the calculation. Keep the persisted property non-client-settable (normally
+`private set`) and expose a named domain method such as `RecalculateTotals()`.
+The service calls that method only after mapping and reconciling the authoritative
+children; it must not duplicate the formula with a VM `Sum(...)` expression.
+
+When a feature needs a deliberately explicit total from a documented feature
+calculation, expose a named aggregate method for that boundary (for example,
+`SetTotalChargesExplicit(...)`) instead of reopening the setter. Likewise,
+state flags such as closed or invoiced are changed through named domain methods
+(`Close()`, `MarkInvoiced()`, and their documented inverse where required), not
+through public setters. These methods preserve existing service-owned workflow
+ordering and do not replace feature validation.
+
+The client does not own a derived total. Remove it from Add/Update VMs when
+consumers have migrated. If a legacy client still sends the field temporarily,
+document the compatibility window and explicitly ignore it in the write map.
+Preserve the established formula unless a separate business decision changes
+discount, tax, rounding, selection, or rate rules.
+
+For the current `Agreement` aggregate, the temporary tax decision is explicit:
+`subtotal` is the sum of active booking and additional charges, `taxableAmount`
+is `max(subtotal - Discount, 0)`, and `TotalCharges` is
+`taxableAmount + (taxableAmount * effectiveTaxPercent / 100)`. Until the common
+settings value is wired into the aggregate workflow, a missing tax percentage
+uses `Agreement.DefaultTaxPercent` (`5%`). The domain validates tax percentages
+between `0` and `100` and rejects negative discounts. When the settings source
+is introduced, the service should pass that value into the same domain boundary;
+the formula and client-owned-total rule must remain unchanged.
+
 ---
 
 ## 2. Step 2 — EF configuration
@@ -247,10 +279,14 @@ SelectListBaseVm // Value, Text, LocalizedText — dropdowns
 
 **Add and Update carry client-editable inputs only.** Tenant, record number,
 audit values, delete flags, approval status and calculated totals are
-server-owned. `UpdateBaseVm.SubscriptionId` exists for backward compatibility
-and its own comment says the API does not trust it — the repository replaces it
-with the authenticated subscription. Do not read it as permission to accept a
-tenant from the client.
+server-owned. `UpdateBaseVm.SubscriptionId` and `UpdateBaseVm.No` currently
+exist for backward compatibility only. The frontend may continue sending them
+while legacy contracts are being migrated, but the backend must ignore both in
+every AutoMapper Update map. The repository still replaces the tenant with the
+authenticated subscription as defence in depth. Do not read either property as
+permission to accept a tenant or record number from the client. Remove both
+properties from the Update contract after all consumers have migrated; keep
+them on Detail/List DTOs when the UI needs to display them.
 
 Validation lives on the write VMs using DataAnnotations, and must agree with
 step 2:
@@ -260,10 +296,11 @@ step 2:
 [Range(0, double.MaxValue)] public decimal Amount { get; set; }
 ```
 
-**Check:** six files present · correct base per direction · write VMs contain no
-server-owned fields · `[MaxLength]` matches `HasMaxLength` · required/nullable
-matches the entity and the Angular model · Detail carries only what the editor
-needs · List follows block 7.
+**Check:** six files present · correct base per direction · feature write VMs
+declare no server-owned fields · inherited transitional `SubscriptionId` and
+`No` are ignored by every Update map · `[MaxLength]` matches `HasMaxLength` ·
+required/nullable matches the entity and the Angular model · Detail carries only
+what the editor needs · List follows block 7.
 
 ---
 
@@ -284,7 +321,11 @@ namespace SiGma.Business.MapperConfig
         {
             // Write maps
             CreateMap<BranchAddVM, Branch>();
-            CreateMap<BranchUpdateVM, Branch>();
+            CreateMap<BranchUpdateVM, Branch>()
+                // Transitional compatibility: these server-owned properties
+                // still exist on UpdateBaseVm but must never reach the entity.
+                .ForMember(d => d.SubscriptionId, o => o.Ignore())
+                .ForMember(d => d.No, o => o.Ignore());
 
             // Read maps
             CreateMap<Branch, BranchDetailVM>();
@@ -299,8 +340,11 @@ Direction is explicit and one-way in each direction. Therefore:
 - **no `ReverseMap()`.** It silently creates a write map you did not review, and
   that is how a client value reaches a server-owned column.
 - **no defensive `Ignore()` chains.** If a property must not be written, it does
-  not belong on the write VM. Removing it from the VM is the fix; `Ignore()` only
-  hides the design problem.
+  not belong on the write VM. Removing it from the VM is the final fix; `Ignore()`
+  otherwise hides the design problem. The only canonical transitional exception
+  is `UpdateBaseVm.SubscriptionId` and `UpdateBaseVm.No`: every Update map must
+  ignore both until they are removed from the shared contract. Extra ignores
+  require a documented compatibility reason and a removal plan.
 - add `ForMember` only for a genuine shape difference, such as flattening a
   navigation for display:
 
@@ -311,10 +355,11 @@ CreateMap<Vehicle, VehicleListVM>()
 
 Profiles are discovered by assembly scan, so no registration step.
 
-**Check:** four maps · no `ReverseMap` · no unnecessary `Ignore` · `ForMember`
-only for a real difference · every property the list displays is mapped or
-projected · nothing maps onto tenant, audit, `No`, delete flags or persisted
-totals.
+**Check:** four maps · no `ReverseMap` · Update ignores inherited
+`SubscriptionId` and `No` while they remain on `UpdateBaseVm` · no other
+unnecessary `Ignore` · `ForMember` only for a real difference · every property
+the list displays is mapped or projected · nothing maps onto tenant, audit,
+`No`, delete flags or persisted totals.
 
 ---
 
@@ -1768,7 +1813,7 @@ Ordered by risk. Item numbers are stable.
 | # | Problem | Evidence |
 |---|---|---|
 | 1 | `TotalCount` not returned | `BranchService.GetManyAsync` sets `TotalPages` only. Angular list components therefore reconstruct a total from page count, which overstates it on a partial last page. Set `TotalCount = total` in every list override |
-| 2 | Write VM base carries a tenant | `UpdateBaseVm.SubscriptionId` is client-settable. Its comment says the value is not trusted; remove it from the contract so it cannot be misread |
+| 2 | Write VM base carries server-owned fields | `UpdateBaseVm.SubscriptionId` and `UpdateBaseVm.No` are client-settable for backward compatibility. Every Update AutoMapper map must ignore both during migration; remove them from the Update contract after consumers stop sending them |
 | 3 | `Any`-style FK validation | `PurchaseOrderService` uses `ExistsAsync<Item>(x => itemIds.Contains(x.Id))`, which passes when only one requested id exists. Compare distinct counts instead |
 | 10 | `QueryReport<T>()` fails open | It returns the **unfiltered** set when the subscription claim is missing, and also when `T` lacks `SubscriptionId`/`IsDeleted`. Every other repository method fails closed. Any report path reached without a resolved claim can read across tenants. Make it fail closed, or require an explicit tenant argument |
 | 11 | Tenant read from `ClaimTypes.NameIdentifier` | `Repository` parses the subscription id out of the name-identifier claim. It is server-owned so it is not a hole, but overloading that claim is fragile — a future auth change that puts a user id there would silently repoint every tenant filter. Use a dedicated claim |

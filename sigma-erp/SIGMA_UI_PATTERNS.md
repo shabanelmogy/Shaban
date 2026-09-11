@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 30 |
-| Version | 0.48 |
-| Last verified against source | 2026-08-15 |
+| Version | 0.50 |
+| Last verified against source | 2026-08-27 |
 | Verified by | source inspection only — no build, test, or browser run |
 
 One page per UI building block. Every block has a **reference file** you can
@@ -230,6 +230,46 @@ Three wiring steps, all required:
 2. Service in `_metronic/layout/layout.module.ts` `providers` — see below.
 
 3. Menu entry, or the page is reachable only by typing the URL.
+
+### Standalone dialog registration and Angular 17 control flow
+
+This application currently has an explicit `files` boundary in
+`SiGmaAngularFrontEnd/tsconfig.app.json`. When a new standalone dialog or
+feature component produces Angular's “missing from the TypeScript compilation”
+diagnostic, add its exact `.component.ts` path to that `files` array, following
+the existing LeaseAgreement dialog entries. Do not replace the project boundary
+with a broad include glob, and do not add models, HTML, or SCSS files there;
+their component imports own their compilation. A missing component root can
+also make a valid standalone import appear “not statically analyzable” in the
+parent component's `imports` array.
+
+Use Angular 17 built-in control flow consistently. An `as` alias is allowed
+only on the primary `@if` of a control-flow block; it is invalid on an
+`@else if`. When loading and error states precede an optional response, make
+the response alias the primary condition of a nested `@if` inside the final
+`@else`:
+
+```html
+@if (loading()) {
+  <app-loading-state />
+} @else if (errorMessage()) {
+  <app-error-state [message]="errorMessage()" />
+} @else {
+  @if (summary(); as summary) {
+    <app-summary [total]="summary.total" />
+  } @else {
+    <app-empty-state />
+  }
+}
+```
+
+Never write `@else if (summary(); as summary)`: Angular 17 rejects it and the
+alias is then out of scope for the response markup. Keep aliases scoped to the
+smallest response block and reference the aliased value only inside that block.
+
+**Check:** new standalone dialog components are present in the current
+`tsconfig.app.json` `files` boundary when required · no `as` alias appears on
+an `@else if` · the fallback state remains reachable when the response is null.
 
 ### Global viewport and vertical-scroll ownership
 
@@ -1044,6 +1084,11 @@ component:
 }
 ```
 
+Ordinary paginated screens must use the table's natural height: do not pass a
+screen-specific `scrollHeight`. This keeps every standard grid consistent and
+places the paginator directly at the actual bottom of the rendered grid. A
+bounded table body is an explicit exception, not a visual preference.
+
 For a confirmed dense report that must keep row overflow inside the Grid, pass
 an explicit `scrollHeight` to `app-data-table`. The shared component then owns
 the vertical row viewport while leaving its paginator outside that viewport.
@@ -1122,6 +1167,13 @@ export interface ActionList {
   disabled?: (row?: any) => boolean;
 }
 ```
+
+Use `visible` for actions unavailable in the row's business state, such as an
+edit or state transition that is not allowed after close or void. Use
+`disabled` for transient UI conditions such as an in-flight request. Do not
+leave a permanently unavailable row action visible as a disabled or no-op menu
+item; the backend `can*` contract remains the source of truth and still
+revalidates the action.
 
 Full cycle for every action:
 
@@ -2534,6 +2586,14 @@ date input or calendar icon opens it. Do not use `[showOnFocus]="false"` when
 the input itself must remain an opening target; PrimeNG then opens only from the
 icon.
 
+When an editor has only date controls, or its first focusable control is a
+calendar, bind the shell's `[focusOnShow]="false"` and do not call the calendar
+input's `focus()` from `ngOnInit`, `onEditorShown`, or another lifecycle hook.
+Keep `[showOnFocus]="true"`; the calendar then opens on an intentional user
+click or keyboard focus, not while the dialog is being displayed. If initial
+focus is required in View mode, focus the shared dialog close control instead
+of a calendar.
+
 When a small dialog's first required action is choosing a date, it may open the
 calendar overlay after the shared editor shell emits `shown`. Keep this opt-in
 and local to that workflow; do not auto-open every calendar in the app:
@@ -3024,6 +3084,7 @@ while the report runs:
         [showIcon]="true"
         [showClear]="true"
         [showButtonBar]="true"
+        [hideOnDateTimeSelect]="false"
         iconDisplay="input"
         panelStyleClass="sigma-datepicker-panel statement-range-picker"
         [disabled]="loadingReport()"
@@ -3055,6 +3116,25 @@ while the report runs:
     </div>
   </div>
 </form>
+```
+
+For a range calendar, keep the popup open after the first date is selected so
+the user can select the end date from the same control:
+
+```html
+<p-calendar selectionMode="range" [hideOnDateTimeSelect]="false"></p-calendar>
+```
+
+Keep the range value date-based and make both dates easy to choose when the
+range spans more than one month:
+
+```html
+<p-calendar
+  selectionMode="range"
+  dataType="date"
+  [numberOfMonths]="2"
+  rangeSeparator=" - "
+></p-calendar>
 ```
 
 Default the range to month-to-date so the page is useful on arrival:
@@ -3389,12 +3469,13 @@ this.service.getList(query)
 `contactGroupSaving`. Use them to disable the button that is running.
 
 **Success toast — single owner.** The global `errorInterceptor` owns the one
-success toast for standard `POST`, `PUT`, and `PATCH` responses whose result has
+success toast for standard `POST`, `PUT`, `PATCH`, and `DELETE` responses whose result has
 `isSuccess: true` and a non-empty `message`. The feature subscription owns its
 local state, close event, and refresh only; it must not inject `MessageService`
 and add another success toast for the same response. A non-standard workflow may
 emit a manual toast only after verifying that the global interceptor does not
-classify that response as a successful mutation.
+classify that response as a successful mutation. This applies equally to
+state-changing actions such as close, void, approve, post, and delete.
 
 ```ts
 next: (result) => {
