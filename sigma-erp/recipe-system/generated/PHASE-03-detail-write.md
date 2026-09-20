@@ -11,25 +11,25 @@ business workflow.
 ## Canonical provenance
 
 - master.1: ## 1. Governance and review principles | sha256:defaefeff17c467afb2b3e953ac2eaf53d67fdc9b35b8eee12451c586bf41f33
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:82edca7271355f11049971f73e80f31d1f54e108c5a00906e5c0e4f9124f04ab
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:714c5d1c919cb6f602abb0c15cb8c3689a83f34ec41b041b63957dd765ec8934
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:60b490244a3ad6a1ae6870eb0e8fcd0c6ea2b984f5f7af86a667ef05ac4305f2
-- master.5: ## 5. Continuous quality gates | sha256:9e86071c1e6bbb5b2d7dba6270ea2a8a57b71c4750d11ac8ce4da4bfb373befb
-- master.6: ## 6. Human and AI review protocol | sha256:d08192101c921bc5679d61b77c428a570961e73cbf82ef3f8807b12b036b4cd3
-- ui.1: ## 1. Feature folders and wiring | sha256:cb8bed0ff6553d5aa9107d6d32ef8c5ce391b92689ffacdaea79203759344bdc
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:518b4536a222d1c0c8cdd6265af603ede18ef9742a98d423ad525dfcf9f486ec
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:cb0e817775ee1e443e9e191621b36169934a1b9efd398086fe06a3c3943d91f4
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:ad0c7c462af621944990cb16fd7bc8047ad6d4916af64faa0db5a191d8d15546
+- master.5: ## 5. Continuous quality gates | sha256:7670c6f18eccb6140087efbd98986043b801baad7d2b31c0f8f739392f2228f5
+- master.6: ## 6. Human and AI review protocol | sha256:e320d98cc6bfafa91e975d9a71eb6e932983db68f7ad93d378f99f6ddece800f
+- ui.1: ## 1. Feature folders and wiring | sha256:892d2ac3ae19a8b65346bc151efcfd78b5a8f0c9b611e55206b92656e37b8aa6
 - ui.2: ## 2. Service and response wrappers | sha256:6fa0394abd7f49ea6f19efcbf0f30dca568621f5250ab3b3343b7ba16a7102e9
 - ui.9: ## 9. Confirm: delete | sha256:2b7c7f35fcf489ae8bf36a257ffaf1fecffa6774bec9cc9eea12463759ee35dc
 - ui.10: ## 10. Confirm: discard | sha256:46ad7f8f6a61b7ca1b8d53b43574f70e84057c0486cb1756e09d8ae588f62f9f
 - ui.11: ## 11. Small modal on top | sha256:227974d714e69fb0e735de80fe0e6052cac762b7f01e16721c254e0dd499c3d8
 - ui.12: ## 12. Step form | sha256:39909d176aa0fa796015942ba7c7554c71a092d98a1c98ad717d6afac7755bf4
-- ui.13: ## 13. Modal with tabs | sha256:c343b5f25f107c6dceda6ddd69891f1fb6d472ead4e96f0c6b81c74f713d05d9
-- ui.14: ## 14. Editable collection table | sha256:2f289e3ca690896c1da0e9c4b022b972303d97a8791b98927d3e4a15f5ab0ecd
+- ui.13: ## 13. Modal with tabs | sha256:8e2b7e64d921446bc1d529e22a59e360cf9cacc5c4b539cf1b316a00c3f45074
+- ui.14: ## 14. Editable collection table | sha256:7b960dad8be88186512726a1f86df53a04918d0aa7dd5cc0f7310256072f8372
 - ui.15: ## 15. View mode | sha256:47aeb820938ae96bd7305ba9aed8d92077c3f769fd746c73a366782e4435e2dd
-- ui.16: ## 16. Dropdowns, lookups, enums | sha256:4689653f8f28d8471d08e22df55d006eca1ae2d2c8d6e6149c4cd261f60d71e2
-- ui.17: ## 17. Dates | sha256:4a2863cb6a810c63c1f5fac10f5b6b583d7a6bb9ebd74f9701c160f24c0b97dd
+- ui.16: ## 16. Dropdowns, lookups, enums | sha256:d79561f8978b204d55d3a35082ec821292b5c35c163b528f9f34356170f4d8b6
+- ui.17: ## 17. Dates | sha256:85e388f28d087258e6a2b96a92f7e6bb43f13caed9c81868481f6a7ec8d4d0bf
 - ui.18: ## 18. Documents and upload | sha256:cd2781e18d5958511a74fbdb186bdb47b822d6c8ad4c7ca56b5020e59ff3675f
-- ui.19: ## 19. Validation messages | sha256:42c78f95c1977fd63970cf9ce76e3f81b1cb416d8c4cbe7cd23ef0ca74f066dc
-- ui.22: ## 22. Loading, empty, error, toast | sha256:34448ab2484c3c7c1400a8ca698788e92ebab8a7e60fd51ed132b28fa004a529
+- ui.19: ## 19. Validation messages | sha256:51ac0deaaea47846133542b4f06349ce4201f373f65ac26cc5cdfce4a0e0816a
+- ui.22: ## 22. Loading, empty, error, toast | sha256:1e4012005b264f2c0efaf929b30f03ae84b7587138379ebf6c142fa12e43e9e2
 - ui.23: ## 23. Translations | sha256:1d159b39ed046537db86c6edffcdcd8ca30809f35761b5f19845d57e51896101
 - ui.24: ## 24. Colors, icons, buttons | sha256:4e343afab530c8c08638a07919595ff1169f60f6d0aebe43f1ada3414a535d49
 - ui.25: ## 25. RTL and dark theme | sha256:7a7270726f6b206659888dc898340d482f1d7c082bcb437a2d700ff228a026c5
@@ -37,17 +37,17 @@ business workflow.
 - ui.27: ## 27. Focus and keyboard | sha256:71009763a5b5c6848cda38eaf2bb0fa7ac83d001ab18c649f53f5c22edcb2b03
 - ui.28: ## 28. Request cancellation and stale responses | sha256:45d17c01d2519192de3a092e57c7deb97e2ddaf2731be82c57c11f703a36c31f
 - ui.29: ## 29. Verification expectations | sha256:b99e32e1615baff70816067504b9b429ef018cbbd3b01ba210dad38d7502903e
-- backend.3: ## 3. Step 3 — ViewModels | sha256:79f9d8c5c33521014de44f46fc92f499dd5dc55a5a6285457c645ec9f05c48fa
-- backend.4: ## 4. Step 4 — AutoMapper profile | sha256:6c391e0baff28f36ee71120ade8c4b4fac56071722b3e2affbd6a40d71ebd941
+- backend.3: ## 3. Step 3 — ViewModels | sha256:34e112b5119c6c4e222bd1e984261d3a3385c2b5c82f921d0a9d59b47480f4f9
+- backend.4: ## 4. Step 4 — AutoMapper profile | sha256:337246e86e0bbc6f3e4910c39f070f7235aa3984a4bad92b6ce70d49fb2e9658
 - backend.5: ## 5. Step 5 — Interface and service | sha256:46effe8a80e3a97586b936e66b90b193a0dae4b4ec6a926e9968eb4381bc001e
 - backend.6: ## 6. Step 6 — Controller | sha256:8921eeb99b61fc8c994fac1338bcddc91be4a1dc21d4e39e29282ae0c07166a9
-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:72718bb368abeebe4195a4cf5ed642eac10b5f6ca16da18b3c2356e43e298587
-- backend.10: ## 10. Select and dropdowns | sha256:bd8ecba0fc462392ca6d51bc3f8666a122b3f4590f149e75abaf5992bba77089
+- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c834c66dc17d92ffca8e74a7f32113de7febbf293507205c32287d375e3bb386
+- backend.10: ## 10. Select and dropdowns | sha256:4f52d4a48672f3a86c04856cf6a3b11e93442d6c062c78effbb56017e965a6da
 - backend.12: ## 12. Activate and deactivate | sha256:9b94917f07ae34b895ef07fcf62ad039cbaf1a00786bdd05fb91e078beb0dd32
 - backend.13: ## 13. Pattern 1 — Normal entity | sha256:a6d2fb7af604c71307dc1e5a74eba407f6eb6d0921b9cb6b917a7d93bd8606c1
-- backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:0433028596a9c31d801a06daf4634f2fe706fd4e2931b703434f696ad535eed9
+- backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:80805d298438df7141fade3d3c04cd3a8efd6ee44b4738c180623f50bf88b3c9
 - backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:632431c1d33706e030d2c1a56d0a52169d46daa4f69c3c44d910aabcf340eb12
-- backend.16: ## 16. Pattern 4 — Settings | sha256:08d3b98aa3eb5c00484338c2bb6bb32f38ad9ab87a6226d3650549456392dc75
+- backend.16: ## 16. Pattern 4 — Settings | sha256:2f54dc0f231a48095318a7f802cb952c1c6aef64770c9cadbdee36007035b65c
 - backend.18: ## 18. Edge cases | sha256:b78409883a1ffe3d4016644ed8b5afc92b3d48b47395c8f3c75a8117c49e69ef
 
 Approved references by editor shape:

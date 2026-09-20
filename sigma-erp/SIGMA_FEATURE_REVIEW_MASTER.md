@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Status | **Canonical.** Binding for Sigma feature review and implementation orchestration |
-| Version | 1.4 |
+| Version | 1.5 |
 | Last verified against documentation system | 2026-08-16 |
 | Verification | Documentation structure and source inspection only |
 
@@ -365,7 +365,13 @@ compatibility with existing consumers.
 
 Owns the final contract comparisons, full scoped diff review, outstanding
 decision register, verification status, risks, migration instruction, and final
-report. It must not introduce unrelated refactors.
+report. Frontend reconciliation must also enforce the UI Pattern Book's
+application-wide visual consistency invariant: repeated controls of the same UI
+role must use their canonical shared component/appearance/tokens, and a scoped
+feature cannot close with a feature-local visual fork for tabs, dropdowns,
+buttons, inputs, filters, tables, dialogs, confirmations, loading/error states,
+RTL, or dark-theme treatment unless the UI Pattern Book names a deliberate
+shape-specific exception. It must not introduce unrelated refactors.
 
 ### Parallel review
 

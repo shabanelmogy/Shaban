@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 19 |
-| Version | 0.12 |
-| Last verified against source | 2026-08-28 |
+| Version | 0.16 |
+| Last verified against source | 2026-09-17 |
 | Verified by | source inspection only — no build, test, migration, or database run |
 
 Build order for one entity, six steps, five patterns. Open the reference file,
@@ -631,6 +631,30 @@ Rules:
 - for a child collection, uniqueness is usually **within the parent**, so include
   the parent key in the predicate.
 
+### Temporal-range business keys
+
+A time period can be unique without being valid. Accounting periods such as fiscal
+years must also reject **overlap**: an incoming range `[StartDate, EndDate]`
+overlaps an existing range when `existing.StartDate <= EndDate &&
+existing.EndDate >= StartDate`. Apply the same rule on Update while excluding the
+current row. If downstream posting resolves one period for a date, allowing two
+matching periods at setup time is a configuration defect, not a resolver concern.
+
+When overlapping writes can race, keep the overlap check and the save in a
+`Serializable` transaction (or an equivalent database-safe range-lock design);
+an ordinary unique index cannot protect two different but overlapping ranges.
+
+Changing period boundaries must preserve dependent accounting data. Before saving
+a new range, verify linked dated records still fit the range and that invariants
+such as an Opening Balance date matching the fiscal-year start still hold. Do not
+silently re-home vouchers, month-close rows, budgets or opening balances as a side
+effect of editing the period master.
+
+If the period is soft-deletable, its ordinary exact-key unique index must follow the
+repository's active-row semantics with a filter such as `[IsDeleted] = 0`; otherwise
+a deleted setup row passes the service duplicate check but blocks recreation at the
+database layer.
+
 ### 2. Foreign key existence check
 
 Every incoming id must be proven to exist before the save. Because the
@@ -839,6 +863,13 @@ rather than throwing.
 
 Every entity gets `GET /<Entity>/GetSelect` from the base controller, backed by
 `SelectAsync`, which returns `DropdownDto`:
+
+The base lookup is only a default. When the business meaning of "selectable" is
+stricter than "row exists", override `SelectAsync` (or expose an explicit typed
+lookup) and apply the same predicate used by the consuming write validator. A
+posting-account picker, for example, must not return parent accounts when Save
+requires `AllowChildren == false`. Do not fix this mismatch in Angular by
+filtering labels client-side; the backend lookup is the source of selectable ids.
 
 ```csharp
 public class DropdownDto
@@ -1533,6 +1564,46 @@ Return settings in a deterministic order so the UI is stable, and add a
 tenant-scoped unique index on the logical key so duplicate rows cannot make
 behaviour ambiguous. Make the sync atomic: a validation or save failure must
 leave the previous set untouched.
+
+### Settings references must stay selectable on read and write
+
+When a setting maps to another entity, the predicate that defines a valid write
+reference must also define what the user can select. For example, an accounting
+mapping that requires a posting account must expose only posting accounts in its
+lookup (`AllowChildren == false`) and must re-check that same predicate on Save.
+Do not let the UI offer a value that the write contract will deterministically
+reject.
+
+Persisted settings can outlive the selectability of their target: a referenced
+row may be deleted, deactivated, converted to a parent/non-posting account, or
+otherwise stop satisfying the domain predicate. On read, do not echo that stale
+id as though it were still a valid selected option and then let a whole-set Save
+fail because the user never touched that row. Return the setting's logical key
+but expose the stale target as **unselected/unlinked**, so the user can choose a
+currently valid target and the next replacement save reconciles the stale
+reference. The database is not mutated by this read normalization. Save still
+validates every supplied id to protect against stale clients and races.
+
+If clearing the stale target would hide information the user must explicitly
+resolve, add a typed warning/error field to the read contract; do not weaken the
+write validator or re-include invalid targets in the dropdown.
+
+For a full-replacement settings contract, persisted duplicate physical rows may
+exist from legacy code or a schema period before the unique index. Do not echo
+those duplicates to the UI and then reject the unchanged full-set payload. Collapse
+read rows to one deterministic logical row, keep request-side duplicate validation
+strict for genuinely duplicated user input, and let reconciliation keep one stored
+row while deleting the extra legacy rows in the same atomic Save. If the incoming
+payload does not make the desired value unambiguous, fail with the duplicate key
+details instead of guessing.
+
+When legacy and canonical stored representations normalize to the same logical
+key, the canonical representation wins deterministically even when its mapped
+target is intentionally null/unlinked. A legacy value is only a read fallback
+when no canonical stored representation exists. Normalize any type-specific
+dimensions that are fixed by the contract (for example `BankAccounts` uses
+`Value = null`, `JobType = null`, and `LinkSection = Default`) so the next full
+replacement Save can reconcile the persisted row to canonical form.
 
 Do not add caching for a settings review, and do not use client ids as ownership
 or logical-key proof.

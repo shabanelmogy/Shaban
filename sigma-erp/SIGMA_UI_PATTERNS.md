@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 30 |
-| Version | 0.50 |
-| Last verified against source | 2026-08-27 |
+| Version | 0.57 |
+| Last verified against source | 2026-09-18 |
 | Verified by | source inspection only — no build, test, or browser run |
 
 One page per UI building block. Every block has a **reference file** you can
@@ -22,6 +22,36 @@ and final reconciliation are defined by `SIGMA_FEATURE_REVIEW_MASTER.md`. This
 book remains the Angular implementation authority incorporated by that master.
 Screenshots supply functional and content evidence only; they do not override
 this book's component, layout, accessibility, RTL, theme, or responsive rules.
+
+### Application-wide visual consistency invariant
+
+Sigma uses one visual language across the application. For the same UI role,
+features must consume the same shared component, appearance variant, design
+tokens, density, border radius, focus treatment, icon treatment, RTL behavior
+and dark-theme behavior. A feature must not invent a second visual treatment for
+Tabs, Dropdowns, Inputs, Buttons, Filters, Tables, Cards, Dialogs, Confirmations,
+Loading/Error states or other repeated controls merely because local CSS can
+produce it.
+
+When an approved screen exposes a reusable visual pattern, move that pattern to
+the owning shared component or shared token first, then make all in-scope
+consumers use it. Do not copy the reference feature's CSS into another feature.
+`app-editor-tabs appearance="workspace"` is the canonical routed-workspace tab
+appearance used by Opening Balances and Link Accounts. Canonical PrimeNG
+Dropdowns use one wrapper border, `6px` radius, shared surface/text/border
+tokens, the common primary focus ring, and the shared `34px` filter height or
+`36px` editable-row height according to context.
+
+Existing legacy screens may still contain older visual forks. Treat those as
+unification debt: do not copy them, and replace them with the canonical shared
+pattern when the feature is reviewed or modified. A deliberate visual exception
+must be named by UI shape in this book with a concrete usability/business reason;
+feature preference alone is not an exception.
+
+**Definition-of-Done gate:** every frontend review/reconciliation must compare
+repeated controls against their canonical shared owner. A scoped feature is not
+visually complete while it keeps feature-local duplicate tab/dropdown/button
+styling that the shared component or token already owns.
 
 ### Generation packets
 
@@ -50,9 +80,12 @@ and they differ deliberately.
 | Ordinary Add/View/Edit modal | `shared/components/editor-dialog/` + `Fleet/VehicleService/components/details` | Shared `app-editor-dialog` owns the controlled PrimeNG shell and mode-aware footer; the feature owns content, forms, validation, dirty-close and persistence |
 | Tabbed Add/View/Edit modal | `shared/components/editor-dialog/` + `shared/components/editor-tabs/` + `Fleet/VehicleService/components/details` | Use `app-editor-dialog` for the shell and `app-editor-tabs` for accessible navigation; the feature owns typed tab state, panels, bounded content and forms |
 | Editable child collection | `shared/components/editable-collection-table/` + `Fleet/VehicleService/components/details` + `Customers/Companies/CompanyPartner/components/detalisForm/{contact-persons,credit-cards,documents,drivers}` | Shared `app-editable-collection-table` owns collection chrome, required headers, optional heading, Add/default Remove or projected row actions, empty state, responsive table behavior, bounded `fillHeight` scrolling, and light/dark styling; the feature owns typed rows, projected cells/actions, validation, confirmation, mutation, and persistence |
+| Hierarchy tree workspace | `Accounts/Account/components/list` + `components/details` | Canonical routed tree editor for true parent/child master data: feature title + compact tree toolbar + bounded internal tree scroll + embedded detail pane; preserve hierarchy semantics instead of converting the tree to a flat Grid |
+| Financial collection editor | `Accounts/openingBalances/components/details` + tab editors + `shared/components/editable-collection-table/` | Routed accounting workspace for dense editable financial rows: immutable/server-owned context in the feature header, compact tabs/filters, grow-until-cap card, internal row scroll with sticky headers, visible Debit/Credit/Balance summary and Save action |
+| Tabbed settings workspace | `Accounts/Link Accounts/LinkAccounts/components/details` + `shared/components/editor-tabs/` | Routed settings/account-mapping workspace: shared workspace tabs, fixed route surface with no main-page vertical scroll, one internal content scroll owner, and Save outside that scroll region |
 | Nested child draft | `shared/components/editor-dialog/` + `shared/components/editor-tabs/` + `Customers/Companies/CompanyPartner/components/detalisForm/drivers` | Shared dialog/tab/section components own presentation and accessible navigation; the feature owns draft isolation, dirty-close approval and parent commit on Save only |
 | Confirmation and discard | `shared/service/confirmation-dialog.service.ts`, `Fleet/Vehicle` `requestClose()` | Single shared dialog for every yes/no |
-| Report | `shared/components/report-page/` + `shared/components/report-actions/` + `Customers/StatementOfAccount/components/list` | Shared page/action chrome around a typed filter, sectioned response and totals; shared print coordination |
+| Report | `shared/components/report-page/` + `shared/components/report-actions/` + `Customers/StatementOfAccount/components/list` + `Reports/TrailBalance/components/list` | Shared page/action chrome around a typed filter, sectioned response and totals; Trial Balance is the canonical dense accounting tree/table visual variant; shared print coordination |
 
 Where a block shows Company or Sales/Fleet markup for a filter concern, use it
 only for the filter shape. `shared/components/data-table` owns the reusable
@@ -135,7 +168,7 @@ silently revert the consumer to the legacy implementation.
 
 | # | Block | Status | Reference |
 |---|---|---|---|
-| 20 | [Report page](#20-report-page) | Canonical composite | shared report page/actions + `Customers/StatementOfAccount/` |
+| 20 | [Report page](#20-report-page) | Canonical composite | shared report page/actions + `Customers/StatementOfAccount/` + `Reports/TrailBalance/` |
 | 21 | [Report print](#21-report-print) | Canonical | `shared/service/report-print.service.ts` |
 
 **Cross-cutting**
@@ -347,7 +380,74 @@ fixed host bounded by the existing header/footer variables. The host must use
 flex sibling of the form body, and only a deliberately bounded child collection
 frame may own vertical row scrolling. This exception does not change block 13's
 rule that ordinary list-owned CRUD uses the shared editor dialog.
+**Routed settings-workspace exception:** when a routed settings or account-mapping
+workspace is intentionally designed without main-page scrolling, bound the route
+surface to the authenticated shell with the existing header/toolbar/footer
+variables and use `overflow: hidden` on the route/card flex chain. Keep the
+feature header, Save action, workspace tabs and compact search/filter controls
+outside the scrolling region. Exactly one feature-owned content viewport may use
+`overflow-y: auto`; child sections and editable tables must grow naturally and
+must not add a second vertical scrollbar unless a separately bounded collection
+is an explicit business requirement. Horizontal tab/table overflow remains
+allowed. On narrow screens, preserve this single vertical-scroll owner rather
+than falling back to nested page + child scrolling.
 
+### Hierarchy tree workspace — canonical composite
+
+Use this shape only when the domain is intrinsically hierarchical and the primary
+operation is navigating parent/child nodes, not paging flat records. The canonical
+reference is `Accounts/Account/components/list` with its embedded
+`components/details` pane. A hierarchy tree is a deliberate exception to the
+standard `app-data-table` list pattern; do not flatten it merely to reuse Grid
+chrome.
+
+Required composition:
+
+- one `app-feature-title` inside the workspace card; do not duplicate the title in
+  the Metronic toolbar;
+- a compact toolbar containing search plus neutral Expand All / Collapse All
+  actions; search controls consume `--sigma-filter-control-height`;
+- one tree navigation region with `min-height: 0` and internal vertical scrolling;
+- each child level adds a clear logical-axis indentation; the current Chart of Accounts reference uses `2rem` `padding-inline-start` per nested level plus a subtle `border-inline-start`/connector line. Keep the value large enough that parent/child depth is obvious without wasting horizontal space, and implement it with logical properties so RTL mirrors correctly;
+- one embedded detail/editor pane for the selected node or Add Child workflow;
+- desktop may use a tree/detail split; at narrow breakpoints stack the detail pane
+  below the tree instead of forcing two unusably narrow columns;
+- tree selection is navigation. Nested Add/Delete/Edit controls must stop
+  propagation so they do not also select/open the node;
+- preserve expanded ancestors when restoring a selected node after Save/Delete;
+- a local tree search may filter already-loaded nodes and retain matching ancestors;
+  it must not pretend to be server paging or a complete server-side search;
+- root/fixed nodes and leaf/parent capabilities come from backend/domain state.
+  Hide unavailable mutations or explain the restriction; do not infer permissions
+  from indentation or label text when typed metadata exists;
+- use `ConfirmationDialogService` for destructive actions and shared primary
+  actions for Create/Save. Do not add feature-local `p-confirmDialog` markup;
+- every tree/detail request handles declared and transport failures and releases
+  loading in `finalize`;
+- server-owned tenant/subscription, generated codes, hierarchy level and other
+  protected values are never added to write payloads merely because the detail
+  response contains them;
+- use logical CSS properties, visible focus, translated accessible labels, and
+  light/dark tokens. Avoid inline `style`, DOM `onmouseover/onmouseout`, and raw
+  English tooltips in a refactored hierarchy workspace.
+
+Viewport contract: the workspace participates in the existing authenticated shell
+and may be bounded like other dense editors. The outer page/card/detail ancestors
+use `display:flex`, `min-height:0`, and `overflow:hidden`; the tree viewport is the
+single vertical scroll owner for hierarchy rows. Do not make the browser page and
+the tree compete for the same row scrolling.
+
+For Chart of Accounts specifically, preserve these domain-facing UI rules from the
+backend contract: Level 1 accounts are fixed, Level 5 accounts are leaves, parent
+identity is immutable on update, accounts with children/transactions may block
+specific mutations, and Add Child is offered only when the selected parent may
+accept children. These are reference-specific examples, not universal tree rules.
+
+**Check:** true hierarchy confirmed · no `app-data-table` conversion · one feature
+title · compact toolbar · internal tree scroll · responsive tree/detail split ·
+selection restored after refresh · nested actions stop propagation · shared
+confirmation/actions · `finalize` cleanup · both failure channels · no server-owned
+write fields · translated RTL/dark/focus states.
 ### Why the service must be in `LayoutModule` providers
 
 **Transitional.** This is a consequence of how the app currently provides
@@ -1842,6 +1942,29 @@ be `${idPrefix}-tab-${key}`. Tab labels are translation keys; `ariaLabel` is the
 already translated accessible name. The shared component owns the tab-strip
 styles and consumes the shared editor-dialog tokens plus the global Sigma
 primary tokens. Feature SCSS owns only panel content and responsive layout.
+
+`app-editor-tabs` has two canonical appearances. `underline` is the default for
+modal/detail editors. `workspace` is the routed dense-workspace appearance and
+is the single source of the rounded tab strip, icon tile, active underline,
+hover/focus treatment, horizontal overflow, RTL keyboard behavior and dark
+state used by both Opening Balances and Link Accounts. Use it as:
+
+```html
+<app-editor-tabs
+  [tabs]="tabs"
+  [activeTab]="currentTab"
+  [ariaLabel]="'feature.sections' | translate"
+  idPrefix="feature-workspace"
+  appearance="workspace"
+  (activeTabChange)="setCurrentTab($event)"
+/>
+```
+
+Do not reproduce workspace-tab markup or styles in feature SCSS. When an older
+workspace is refactored, remove its local tab button loop and point it to this
+shared appearance so all routed workspaces stay visually and behaviorally
+consistent.
+
 Do not keep a feature-local `onTabKeydown`, tab-button loop, or duplicate tab
 styles after adopting `app-editor-tabs`.
 
@@ -2207,7 +2330,7 @@ CompanyPartner names above.
 
 `shared/components/editable-collection-table` is the single owner of compact
 editable collection chrome. It renders the optional heading icon, title and
-hint, shared primary Add action, translated/required headers, responsive table
+hint, shared primary Add action, collection-level validation alert, translated/required headers, responsive table
 shell with an optional minimum width, default Remove or projected row actions,
 empty state, and light/dark styling. The feature projects only its typed data
 cells/actions and retains all domain behavior. CompanyPartner uses the same
@@ -2322,6 +2445,7 @@ typed Edit/Delete behavior:
 | `editable` | Shows the Add action, action column, and Remove buttons when true |
 | `addLabel` | Translated-key label for the shared primary Add action |
 | `addDisabled` | Disables Add while a prerequisite such as lookup data is unavailable |
+| `validationMessage` | Optional translated-key collection-level validation alert rendered in the shared toolbar; the feature owns the condition/key (for example duplicate logical rows) |
 | `actionsLabel` | Optional action-column translation key; defaults to `general.actions` |
 | `removeLabel` | Optional Remove translation key; defaults to `general.remove` |
 | `addRequested` | Requests a feature-owned add/default-row/dialog workflow |
@@ -2378,13 +2502,185 @@ confirmRemovePart(index: number): void {
 **Check:** shared component and row directive are both imported · the actions
 directive is imported when custom actions are projected · column order matches
 projected cell order · row template emits cells, not a row · translation
-keys exist · `editable` is false in View mode · Add prerequisites use
+keys exist · collection-level blockers use the shared `validationMessage` alert · `editable` is false in View mode · Add prerequisites use
 `addDisabled` · feature confirms Remove (block 11) before mutation · feature
 marks the parent dirty and maps the collection into the write payload ·
 `fillHeight` is used only inside a bounded flex parent · `maxHeight` and
 `overflow-y: auto` keep row scrolling inside the table · totals/summaries remain
 outside the table frame and do not disappear when the frame scrolls.
 
+### Financial collection editor — canonical routed variant
+
+Use this variant for accounting setup or maintenance screens that edit many
+financial rows under one shared business context, especially when the screen is
+split into source/type tabs. The approved reference is:
+
+```text
+Accounts/openingBalances/components/details/
+Accounts/openingBalances/components/{accounts,cost-center,customers,suppliers,staff,stock,prepaid,deposit}/
+shared/components/editable-collection-table/
+```
+
+The feature owns the typed forms, filters, totals, row mapping and persistence.
+`app-editable-collection-table` still owns the table chrome. Routed source/type
+navigation uses `app-editor-tabs appearance="workspace"`; Opening Balances and
+Link Accounts are the approved routed references for that shared visual shape.
+Do not fork or copy the shared editable-table or tab components just to change
+height, scrolling or tab presentation.
+
+#### Header and immutable business context
+
+Use `app-feature-title` once. Put server-owned context that the user needs while
+editing in its action/metadata area rather than in an editable field. Examples
+include fiscal-year start, posting context or an immutable status. A server-owned
+value must not be presented with a fake Save/Change action.
+
+#### Grow until the footer, then scroll rows internally
+
+The desktop card grows naturally while the row count is small. It must not force
+an empty full-height workspace when only a few rows exist. As rows are added, the
+workspace may grow until the available authenticated-shell height is reached.
+After that point, the browser page must not keep growing for those rows: the
+editable table frame becomes the vertical scroll owner.
+
+Keep header, tabs, state banner, compact filters, financial summary and primary
+Save action outside the row-scroll frame. Keep table headers sticky inside that
+frame. The required flex-shrink chain uses `min-height: 0` on every shrinking
+ancestor between the route/card and the table frame; missing one link usually
+causes the page itself to grow despite `overflow: auto` lower in the DOM.
+
+Prefer inheriting the bounded authenticated shell established in block 1. When a
+route truly needs a local grow-until-cap boundary, apply one route-level
+`max-height` using the existing Metronic shell variables; do not repeat viewport
+calculations in tab components or child forms:
+
+```scss
+.financial-editor-page {
+  box-sizing: border-box;
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  max-height: calc(
+    100dvh - var(--bs-app-header-height, 74px) -
+      var(--bs-app-toolbar-height, 55px) -
+      var(--bs-app-footer-height, 60px) - 60px
+  );
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.financial-editor-card,
+.financial-editor-content,
+.financial-editor-tab,
+.financial-editor-tab > form {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.financial-editor-content app-editable-collection-table,
+.financial-editor-content .app-editable-collection-table {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+.financial-editor-content .app-editable-collection-table__frame {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges;
+}
+
+.financial-editor-content .app-editable-collection-table__frame thead th {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+}
+```
+
+The final `60px` above is breathing room for the current shell, not another
+footer. Use the actual existing layout variables and the closest approved screen
+when the shell changes. Never create page scroll plus table scroll for the same
+row set. On narrow/mobile layouts, relax the bounded editor when necessary so
+controls remain usable; avoid nested vertical scroll regions.
+
+#### Compact filters inside financial editors
+
+Financial-editor filters are a compact toolbar, not a second large card and not
+one field per line on ordinary desktop widths:
+
+- wrap with flex/grid and align controls to the bottom;
+- target roughly `170px` field basis and allow useful fields to grow to about
+  `300px`;
+- consume `--sigma-filter-control-height` (`34px` current fallback) for
+  single-line native and PrimeNG controls;
+- keep labels legible at about `11px`, with small `5-8px` gaps and `5-8px`
+  vertical padding;
+- Search is primary; Reset is neutral/secondary;
+- body-appended dropdown/calendar overlays must remain visible despite bounded
+  editor overflow.
+
+Do not compress filters by removing labels, shrinking practical hit targets or
+reducing contrast.
+
+#### Financial summary/action strip
+
+Do not render Total Debit, Total Credit or Balance as one unstructured sentence.
+Place a compact summary strip immediately below the scrollable table and keep it
+outside the table frame so totals and Save remain visible while rows scroll.
+
+```html
+<div class="financial-summary-bar">
+  <div class="financial-summary-items">
+    <div class="financial-summary-item financial-summary-item--debit">
+      <span class="financial-summary-label">{{ '...' | translate }}</span>
+      <strong class="financial-summary-value">{{ totalDebit() | number:digitsInfo() }}</strong>
+    </div>
+    <div class="financial-summary-item financial-summary-item--credit">
+      <span class="financial-summary-label">{{ '...' | translate }}</span>
+      <strong class="financial-summary-value">{{ totalCredit() | number:digitsInfo() }}</strong>
+    </div>
+    <div class="financial-summary-item financial-summary-item--balance">
+      <span class="financial-summary-label">{{ '...' | translate }}</span>
+      <strong class="financial-summary-value">{{ balance() | number:digitsInfo() }}</strong>
+    </div>
+  </div>
+  <app-primary-action-button ... />
+</div>
+```
+
+Current Sigma financial-summary geometry is compact: `8-10px` strip padding,
+`8px` radius, normal border and soft surface. Individual totals use about `132px`
+minimum width, `6px 10px` padding and `7px` radius. Labels are muted and about
+`9px`; values are about `14px`, weight `800`, and use
+`font-variant-numeric: tabular-nums` so monetary columns do not visually jump.
+
+Accounting accents are presentation only:
+
+- Debit: green accent (`#2f9d72` border / `#237b59` light value /
+  `#7fd6b2` dark value);
+- Credit: warm accent (`#c46a52` border / `#9e503d` light value /
+  `#f0a28d` dark value);
+- Balance: Sigma primary family (`#176f9d` light / `#8fd7f5` dark).
+
+Debit green and Credit warm/red are **not** Success/Error semantic states. Do not
+attach success/error copy, icons or accessibility meaning to them based only on
+color. Totals use the same backend-driven monetary precision policy as row
+inputs; never introduce a separate frontend rounding rule.
+
+**Financial collection check:** one `app-feature-title` · server-owned context is
+read-only header metadata · compact desktop filters · shared editable collection
+component retained · complete `min-height: 0` flex chain · one internal row
+scroll after the workspace cap · sticky table header · totals and Save outside
+the scroll frame · tabular monetary values · backend monetary precision · Debit/
+Credit colors remain non-semantic · RTL logical properties and dark equivalents.
 ---
 
 ## 15. View mode
@@ -2487,18 +2783,25 @@ The shared pipe currently declares `value: string`, but numeric enums such as
 aligned with the real enum value. Correcting the shared generic return type is
 part of backlog 22.
 
-**Single dropdown border ownership.** A closed `.p-dropdown` wrapper renders
-exactly one 1px border. Its nested `.p-dropdown-label` and trigger render no
-border, border radius, background, or box shadow, so they cannot cover the
-wrapper edge or create a second outline. The wrapper clips nested paint to its
-own radius. Reset inherited inner `height`, `min-height`, and `max-height`
-constraints because PrimeNG also puts `.p-inputtext` on the dropdown label; an
-oversized label must never paint across the 34px wrapper border. Do not target
-every `.p-inputtext` under a field; scope input styling to the direct input or
-`.p-calendar .p-inputtext`. Keep keyboard focus visible by changing the
-wrapper's existing border color and, when useful, its background; do not add an
-outline or outer box-shadow ring. The body-appended `.p-dropdown-panel` is a
-separate overlay and may retain its single theme boundary. Give it a unique
+**Single dropdown border and appearance ownership.** A closed `.p-dropdown`
+wrapper renders exactly one 1px border with `var(--sigma-control-radius)` (`6px` canonical). Its
+nested `.p-dropdown-label` and trigger render no independent border, radius,
+background, or box shadow, so they cannot cover the wrapper edge or create a
+second outline. Use the shared surface/text/border tokens; do not create
+feature-specific square, underline-only, pill, or double-border dropdowns.
+
+Reset inherited inner `height`, `min-height`, and `max-height` constraints
+because PrimeNG also puts `.p-inputtext` on the dropdown label; an oversized
+label must never paint across the wrapper border. Do not target every
+`.p-inputtext` under a field; scope input styling to the direct input or
+`.p-calendar .p-inputtext`.
+
+Keyboard focus uses the application primary color on the existing wrapper border
+plus the common subtle focus ring (`0 0 0 3px` with a low-opacity
+`--sigma-primary` mix). This is the same interaction treatment used by the
+approved accounting workspaces and Chart of Accounts. Do not invent a different
+focus halo per feature. The body-appended `.p-dropdown-panel` is a separate
+overlay and may retain its single theme boundary. Give it a unique
 `panelStyleClass` and style it in global `src/styles.scss` only when the feature
 requires a real overlay variation.
 
@@ -2937,7 +3240,7 @@ first invalid return · focus moves to the first invalid field.
 
 ## 20. Report page
 
-> **Status: Canonical composite** — shared page and action hosts; feature-owned filters, data, sections and totals
+> **Status: Canonical composite** — shared page/actions plus shared report filter/summary visual language; feature-owned contracts, data and calculations
 
 A report is **not** a list. It does not use the direct list `p-table` shape,
 has no row actions and has no server
@@ -2980,8 +3283,107 @@ imports: [
 
 `shared/components/reports/` already applies both hosts, so its consumers must
 not add another report page or action wrapper around `app-reports`. These shared
-hosts own presentation only. Filter controls, API contracts, calculations,
-tables, totals, loading/error state and export mapping remain feature-owned.
+hosts own page/action presentation. API contracts, calculations, report sections,
+data mapping, loading/error state and export mapping remain feature-owned. The
+visual language for repeated report filters and accounting totals is shared and
+must not be recreated feature-by-feature.
+
+### Report filter + totals visual invariant
+
+Opening Balances is the visual reference for compact accounting filters and
+Debit/Credit/Balance summaries. Reports use the shared classes defined in
+`src/styles.scss`, not copied feature CSS:
+
+```html
+<form class="sigma-filter-form sigma-report-filter-panel no-print" ...>
+  <div class="sigma-report-filter-field">...</div>
+  <label class="sigma-report-filter-check">...</label>
+  <div appReportActions class="sigma-report-filter-actions">...</div>
+</form>
+
+<div class="sigma-report-summary-bar">
+  <div class="sigma-report-totals">
+    <div class="sigma-report-total sigma-report-total--debit">...</div>
+    <div class="sigma-report-total sigma-report-total--credit">...</div>
+    <!-- add --balance/--net only when the response owns that total -->
+  </div>
+</div>
+```
+
+The filter strip must match Opening Balances: compact wrapping layout, primary
+inline-start accent, soft surface/gradient, shared 34 px control height, shared
+6 px input/dropdown radius and focus ring, and actions visually contained in the
+same strip. Search is the primary blue action; Refresh is a quieter primary-tinted
+action; Reset is a neutral surface/outline action; Excel/export uses a distinct
+export treatment. Action icons inherit the action colour so solid and outlined
+variants remain legible in light and dark themes. On mobile the group may wrap or
+stack, but it must not create a second vertical scroll owner.
+
+Accounting report totals use the same compact summary bar/card language as
+Opening Balances: shared surface/border/radius, tabular numerals, and semantic
+Debit/Credit/Balance-or-Net accents. The **numbers still come from the backend
+response**; shared styling never authorizes client-side recomputation of
+accounting totals. Keep the summary as small as the report needs: Trial Balance
+uses only **Total Debit** and **Total Credit**. Do not add Beginning/Ending/Net
+cards merely because the line model exposes those values. Add Balance or Net
+summary cards only when they are a deliberate report KPI owned by the backend
+contract and useful to the user.
+If a report has a non-accounting KPI layout that genuinely needs another visual
+shape, document the reason in its review evidence instead of silently forking the
+filter/summary pattern.
+
+For an explicitly approved dense accounting report that keeps its controls
+visible, the routed report may be bounded to the available shell height and use
+one internal **table-frame** vertical scroll owner. Keep the feature title,
+filter strip, lookup/error messages and accounting summary outside that scrolling
+frame. The table frame owns vertical row scrolling and any required horizontal
+overflow, and the table header remains sticky at the top of that frame. Do not
+put the vertical scroll on the surrounding card/results container and do not
+introduce a nested TreeTable vertical scrollbar. Printing releases those bounds
+so the full report can flow across pages.
+
+### Dense accounting tree/report table visual invariant
+
+`Reports/TrailBalance/components/list/` is the canonical visual reference for a
+dense accounting report that renders hierarchical rows (`p-treeTable`) or for a
+flat accounting report whose table serves the same read-only role. Reports with
+this same UI role must keep the same compact visual grammar rather than inventing
+a feature-specific table treatment:
+
+- keep the table inside one bordered report table frame; the **table frame** is
+  the row-scroll owner, never the surrounding report card;
+- keep the table header sticky inside that frame and visually distinct with a
+  soft themed surface, strong text, subtle vertical separators and a slightly
+  stronger bottom rule; do not use an oversized or card-like header;
+- target a compact header around `34px` high and compact data rows around `30px`
+  high, with roughly `5-6px` header block padding and `3px` row block padding;
+- numeric headers and cells align to logical end and use tabular numerals;
+- the first account/description column aligns to logical start and receives the
+  width needed to prevent hierarchy controls from crushing the label;
+- hierarchy togglers stay compact (about `22px`) and must not inflate row height;
+- when account code and account name are both shown, render them as separate
+  visual parts: code is quieter/smaller, name is the primary readable label;
+- hierarchy indentation must stay tight enough for dense accounting data. Do not
+  add decorative nested cards, large left padding, or oversized tree icons;
+- top-level hierarchy rows may receive a **subtle** weight/surface emphasis only;
+  deeper levels rely on indentation and the tree control, not progressively
+  louder backgrounds;
+- preserve horizontal overflow when required by financial columns, but avoid a
+  second nested vertical scrollbar inside the TreeTable itself;
+- sticky-header, row-density and hierarchy styling must use logical properties
+  (`inline-start`/`inline-end`) so Arabic RTL and English LTR remain equivalent;
+- print mode removes height/overflow bounds and lets the complete table flow.
+
+Use these rules for Trial Balance-like accounting reports and for any other
+report with the same dense read-only tree/table role. A different table style is
+valid only when the interaction model is materially different (for example an
+editable collection, paged CRUD grid, or KPI dashboard), and that difference
+must be recorded in review evidence.
+
+`Reports/TrailBalance/components/list/` is the current report consumer and
+Opening Balances remains the approved visual reference. A report review fails
+final reconciliation if it reintroduces feature-local filter-strip or accounting
+total-card styling when these shared classes fit the same UI role.
 
 ### Contract
 
@@ -3472,10 +3874,68 @@ this.service.getList(query)
 success toast for standard `POST`, `PUT`, `PATCH`, and `DELETE` responses whose result has
 `isSuccess: true` and a non-empty `message`. The feature subscription owns its
 local state, close event, and refresh only; it must not inject `MessageService`
-and add another success toast for the same response. A non-standard workflow may
-emit a manual toast only after verifying that the global interceptor does not
-classify that response as a successful mutation. This applies equally to
+and add another success toast for the same response. This applies equally to
 state-changing actions such as close, void, approve, post, and delete.
+
+A composite Save is different when the user-visible operation is not complete at
+the mutation response. If a successful mutation must be followed by required
+row/state/detail reloads before the screen can safely represent the committed
+result, the success message belongs to the **complete workflow**, not the first
+HTTP response. Suppress the mutation interceptor toast with the existing
+`X-Skip-Success-Toast` request header and emit exactly one feature success toast
+after all required refreshes succeed and loading has ended. Do not use a timer or
+network delay to reorder feedback.
+
+`BaseService.addSettingList` exposes the approved convenience option for this
+case:
+
+```ts
+let saveSuccessMessage: string | null = null;
+this.saving.set(true);
+this.loading.startLoading();
+this.service
+  .addSettingList<Result<unknown>>(
+    payload,
+    { skipSuccessToast: true },
+  )
+  .pipe(
+    switchMap((result) => {
+      if (!result.isSuccess) {
+        this.showBusinessFailure(result.message);
+        return EMPTY;
+      }
+      saveSuccessMessage = result.message;
+      return forkJoin({
+        rows: this.service.get<Results<Row>>(),
+        state: this.stateService.load(true),
+      });
+    }),
+    finalize(() => {
+      this.saving.set(false);
+      this.loading.endLoading();
+      if (saveSuccessMessage) this.showSaveSuccess(saveSuccessMessage);
+    }),
+  )
+  .subscribe({
+    next: ({ rows, state }) => {
+      const failed = [rows, state].find((response) => !response.isSuccess);
+      if (failed) {
+        saveSuccessMessage = null;
+        this.showBusinessFailure(failed.message);
+        return;
+      }
+      this.replaceRows(rows.entities ?? []);
+    },
+    error: (error) => {
+      saveSuccessMessage = null;
+      this.showTransportFailure(error);
+    },
+  });
+```
+
+If the mutation succeeds but a required refresh fails, clear the pending success
+message and do not show success because the current screen cannot yet represent
+the committed state reliably.
 
 ```ts
 next: (result) => {
@@ -3536,7 +3996,7 @@ these — see block 24.
 }
 ```
 
-**Check:** every request has `finalize` releasing loading · `isSuccess` and
+**Check:** every request has `finalize` releasing loading · composite saves suppress an early interceptor toast and show success only after required refreshes complete · `isSuccess` and
 `error` both handled · no silent `undefined` handler · exactly one success
 toast owner per mutation · manual toast key is `'global'` when a non-standard
 workflow genuinely needs one · dialogs show loading and empty states · entered

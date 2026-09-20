@@ -9,17 +9,17 @@ broad feature review or implementation.
 ## Canonical provenance
 
 - master.1: ## 1. Governance and review principles | sha256:defaefeff17c467afb2b3e953ac2eaf53d67fdc9b35b8eee12451c586bf41f33
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:82edca7271355f11049971f73e80f31d1f54e108c5a00906e5c0e4f9124f04ab
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:714c5d1c919cb6f602abb0c15cb8c3689a83f34ec41b041b63957dd765ec8934
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:60b490244a3ad6a1ae6870eb0e8fcd0c6ea2b984f5f7af86a667ef05ac4305f2
-- master.5: ## 5. Continuous quality gates | sha256:9e86071c1e6bbb5b2d7dba6270ea2a8a57b71c4750d11ac8ce4da4bfb373befb
-- master.6: ## 6. Human and AI review protocol | sha256:d08192101c921bc5679d61b77c428a570961e73cbf82ef3f8807b12b036b4cd3
-- master.7: ## 7. End-to-end reconciliation and final report | sha256:39f99be29bfd0892e5c78fc64960b02c7e77c9b2f80788e8aeb9401de2c24b11
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:518b4536a222d1c0c8cdd6265af603ede18ef9742a98d423ad525dfcf9f486ec
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:cb0e817775ee1e443e9e191621b36169934a1b9efd398086fe06a3c3943d91f4
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:ad0c7c462af621944990cb16fd7bc8047ad6d4916af64faa0db5a191d8d15546
+- master.5: ## 5. Continuous quality gates | sha256:7670c6f18eccb6140087efbd98986043b801baad7d2b31c0f8f739392f2228f5
+- master.6: ## 6. Human and AI review protocol | sha256:e320d98cc6bfafa91e975d9a71eb6e932983db68f7ad93d378f99f6ddece800f
+- master.7: ## 7. End-to-end reconciliation and final report | sha256:da98b3d333e7bbdc023e3fef57636a2addfb38d2e5c54ce3eded2255f6c6f971
 - master.8: ## 8. Packet generation and governance | sha256:7736123a9df1cfd5757234fd7011b2eea7ac56e91f3c63903cf2090ce09c06fa
 - ui.29: ## 29. Verification expectations | sha256:b99e32e1615baff70816067504b9b429ef018cbbd3b01ba210dad38d7502903e
 - ui.30: ## 30. Backlog, by priority | sha256:018583c2960771065df8f94d247e9d35d8c35391cd2c503b6ff146a5f483f352
 - backend.18: ## 18. Edge cases | sha256:b78409883a1ffe3d4016644ed8b5afc92b3d48b47395c8f3c75a8117c49e69ef
-- backend.19: ## 19. Backlog | sha256:a8d1958ad23d328e07a4c3604b5a56d121c073659bb51753c2871dbbfce4f02d
+- backend.19: ## 19. Backlog | sha256:4d1b5cb3f493bbbecc92ba7e2a879b83ccd5b03565df83931fe7ca7b105faff5
 
 Approved references used by prior phases:
 
