@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 19 |
-| Version | 0.17 |
+| Version | 0.19 |
 | Last verified against source | 2026-09-17 (`IRepository`, `SiGmaControllerBase`, `SiGmaDbContext`, `MiscellaneousInvoiceService`, `InvoiceService`, `PurchaseOrderService`, `WorkOrderService` re-checked 2026-09-28) |
-| Last content change | 2026-09-28 — skill promotion: page size 10 clamped 1–100 (block 9); repository calls and the list/extra-read-endpoint rule (block 5); base routes (block 6); tenant ownership (block 18) |
+| Last content change | 2026-09-28 — block 18 *Removing or renaming a member* (symbol-wide consumer search; cascade build errors). History in `../CHANGELOG.md` |
 | Verified by | source inspection only — no build, test, migration, or database run |
 
 Build order for one entity, six steps, five patterns. Open the reference file,

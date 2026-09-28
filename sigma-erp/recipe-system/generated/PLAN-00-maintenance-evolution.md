@@ -19,11 +19,11 @@ it does not authorize source edits.
 - master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
 - master.7: ## 7. End-to-end reconciliation and final report | sha256:e59115a082974a07d9b13b4aafddf6751b84bebfeb58c6cb53dbc751744b59d6
 - master.8: ## 8. Packet generation and governance | sha256:ec34b5d07a70aa09e1f34a15b20b247dd19e34aa43c4cc295fc7e6c45d5a3b85
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:ae7e4bd552342bab531b491b00db80bada826e75489e631b222586f39d176bde
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:c95681fac47e00b052f1ecefdc2839c8c351084a99cb9afe805bef10f674adf1
 - ui.29: ## 29. Verification expectations | sha256:75801ef0acaeae5306fd49ad2672c9791823ea01ada1cf0cbadbb76a4385048f
-- ui.30: ## 30. Backlog, by priority | sha256:8038d240e320d3677022c4bff1cdf2de7edaa506994cba8900c569b8b76a5c01
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:ab611bb68b93c0e7b2fe256a1fbafb30a9a2f9f6f56f397e87f1b6cf3301b3cb
-- backend.18: ## 18. Edge cases | sha256:54b16261e2303ca977639276da2aa38b689d83678f06e9ceb7e6b98a307944df
+- ui.30: ## 30. Backlog, by priority | sha256:c3396149e53c45b26211f3d9bffa6eace5108741592bfda800f3a9c1dbf5eaa6
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:46db61f9e8c41f4589021d3f1a0b56fd3c27f15588fe7179fb97c7260354d03a
+- backend.18: ## 18. Edge cases | sha256:8fda64720ceddd3848c23b32e84afc9cb6e2297f063b80a33a7bd4698b8f84a8
 - backend.19: ## 19. Backlog | sha256:4d1b5cb3f493bbbecc92ba7e2a879b83ccd5b03565df83931fe7ca7b105faff5
 
 Approved references are selected only after the affected UI/backend shapes are

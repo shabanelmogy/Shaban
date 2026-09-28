@@ -126,6 +126,12 @@ be `${idPrefix}-tab-${key}`. Tab labels are translation keys; `ariaLabel` is the
 already translated accessible name. The shared component owns the tab-strip
 styles and consumes the shared editor-dialog tokens plus the global Sigma
 primary tokens. Feature SCSS owns only panel content and responsive layout.
+The component also owns the dark theme: its stylesheet is encapsulated, so its
+dark rules sit under `:host-context([data-bs-theme='dark'])` (block 25), and
+their token fallbacks are the dark editor-dialog values. A host that defines
+the `--app-editor-dialog-*` tokens (the dialog, the Link Accounts card) keeps
+its own colours; a routed workspace that defines none still gets a dark strip.
+Do not add feature SCSS or page tokens only to darken the tabs.
 
 `app-editor-tabs` has two canonical appearances. `underline` is the default for
 modal/detail editors. `workspace` is the routed dense-workspace appearance and

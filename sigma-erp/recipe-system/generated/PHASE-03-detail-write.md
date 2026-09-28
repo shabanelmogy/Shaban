@@ -17,14 +17,14 @@ business workflow.
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
 - master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
 - master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:ae7e4bd552342bab531b491b00db80bada826e75489e631b222586f39d176bde
-- ui.1: ## 1. Feature folders and wiring | sha256:dd3b3e89fa9d9020882e9a3e21a196cbc3e611c579053691e626bdbb1ca5b9ee
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:c95681fac47e00b052f1ecefdc2839c8c351084a99cb9afe805bef10f674adf1
+- ui.1: ## 1. Feature folders and wiring | sha256:f778063b8be1d87f39de89e8ffdb32e7513fa4e84169e2220e1ffa1a54b7f576
 - ui.2: ## 2. Service and response wrappers | sha256:6fa0394abd7f49ea6f19efcbf0f30dca568621f5250ab3b3343b7ba16a7102e9
 - ui.9: ## 9. Confirm: delete | sha256:2b7c7f35fcf489ae8bf36a257ffaf1fecffa6774bec9cc9eea12463759ee35dc
 - ui.10: ## 10. Confirm: discard | sha256:46ad7f8f6a61b7ca1b8d53b43574f70e84057c0486cb1756e09d8ae588f62f9f
 - ui.11: ## 11. Small modal on top | sha256:227974d714e69fb0e735de80fe0e6052cac762b7f01e16721c254e0dd499c3d8
 - ui.12: ## 12. Step form | sha256:39909d176aa0fa796015942ba7c7554c71a092d98a1c98ad717d6afac7755bf4
-- ui.13: ## 13. Modal with tabs | sha256:8ff707ce88f7e4b013aaf937473f22ef70c9dd0ba2e80736637057d1d543fec1
+- ui.13: ## 13. Modal with tabs | sha256:fa18b98e6b9557c92259065de8c4d62253fdadbcaa76d53a77e36f3c50b26cef
 - ui.14: ## 14. Editable collection table | sha256:23e1b62bb54d8506549c32ce6a03cc590da684c93c5278a9d940546274f174ec
 - ui.15: ## 15. View mode | sha256:fad033e683d31973d4e7fa932bed5e1cc12ae78f83fdbcb2343daa184d696217
 - ui.16: ## 16. Dropdowns, lookups, enums | sha256:6932668317fa645c05bb1e26bd3221801b56510a77f5d1898ab758a1102c0874
@@ -39,7 +39,7 @@ business workflow.
 - ui.27: ## 27. Focus and keyboard | sha256:71009763a5b5c6848cda38eaf2bb0fa7ac83d001ab18c649f53f5c22edcb2b03
 - ui.28: ## 28. Request cancellation and stale responses | sha256:45d17c01d2519192de3a092e57c7deb97e2ddaf2731be82c57c11f703a36c31f
 - ui.29: ## 29. Verification expectations | sha256:75801ef0acaeae5306fd49ad2672c9791823ea01ada1cf0cbadbb76a4385048f
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:ab611bb68b93c0e7b2fe256a1fbafb30a9a2f9f6f56f397e87f1b6cf3301b3cb
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:46db61f9e8c41f4589021d3f1a0b56fd3c27f15588fe7179fb97c7260354d03a
 - backend.3: ## 3. Step 3 — ViewModels | sha256:34e112b5119c6c4e222bd1e984261d3a3385c2b5c82f921d0a9d59b47480f4f9
 - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:337246e86e0bbc6f3e4910c39f070f7235aa3984a4bad92b6ce70d49fb2e9658
 - backend.5: ## 5. Step 5 — Interface and service | sha256:9b3baa82fcb269fd9c8b3c9d407a7e5e10a2eab2bea4109ea2e7d8ce7f541a44
@@ -50,8 +50,8 @@ business workflow.
 - backend.13: ## 13. Pattern 1 — Normal entity | sha256:c744ef011b1b10511c873fe7afb1d6b6a1992392c81e9c9f6db18ceb05cf733c
 - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:80805d298438df7141fade3d3c04cd3a8efd6ee44b4738c180623f50bf88b3c9
 - backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:632431c1d33706e030d2c1a56d0a52169d46daa4f69c3c44d910aabcf340eb12
-- backend.16: ## 16. Pattern 4 — Settings | sha256:2f54dc0f231a48095318a7f802cb952c1c6aef64770c9cadbdee36007035b65c
-- backend.18: ## 18. Edge cases | sha256:54b16261e2303ca977639276da2aa38b689d83678f06e9ceb7e6b98a307944df
+- backend.16: ## 16. Pattern 4 — Settings | sha256:8a827fa820b53962a9a0821d91aa01bc60705da0b2f75077a2e17b63877c1bc1
+- backend.18: ## 18. Edge cases | sha256:8fda64720ceddd3848c23b32e84afc9cb6e2297f063b80a33a7bd4698b8f84a8
 
 Approved references by editor shape:
 

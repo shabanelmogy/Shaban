@@ -86,6 +86,40 @@ accept it from a payload.
 | Any failure | No stack trace, SQL, connection string, token or file path in the response |
 | Partial write | Never reported as success |
 
+### Removing or renaming a member
+
+A change that removes or renames an entity property, a ViewModel/DTO member, a
+service or interface method, or a whole type is not finished until every
+consumer compiles against it. Found 2026-09-28: `ApprovalStatus` was removed from
+`Job` and `LubricationJob` (entity, configuration, DTOs), but the estimate-to-job
+conversion in `JobEstimationService` still set `ApprovalStatus` on `new Job { … }`,
+so `SiGma.Business` failed to build (`CS0117`).
+
+In the same change:
+
+1. Search the whole backend for the removed name as a **symbol**, not only in
+   the feature folder: object initializers (`new Job { ApprovalStatus = … }`),
+   LINQ predicates and projections, AutoMapper `ForMember`, EF configuration,
+   other services that create or read the entity (conversions such as estimate
+   → job, reports, resolvers), controllers, and seed data. The search is
+   targeted at the removed symbol; it is not a full-solution review.
+2. Tell apart same-named members of **other** types (for example
+   `JobEstimation.ApprovalStatus` stays) by reading each hit, not by counting hits.
+3. Remove or adapt every hit that belongs to the removed member, and list them in
+   the report.
+4. When the removed property was persisted, the report tells the owner to run
+   `Add-Migration` with a suggested name (Master block 7); the snapshot still
+   holds the column until then.
+
+**Reading a build error list after such a change.** A project that fails to
+compile leaves its downstream projects building against the last good reference
+assembly. A downstream error such as `CS1061 'ILabourRateService' does not
+contain a definition for 'GetTariffAsync'` for a member that exists in source
+is then a cascade, not a second defect. Fix the first failing upstream project
+(`SiGma.Helpers` → `SiGma.ViewModels`, `SiGma.DataAccess`, `SiGma.Repos` →
+`SiGma.Business` → `SiGma.ServerAPI`, per the `ProjectReference` entries),
+rebuild, and only then read the downstream errors.
+
 **Check:** every applicable row exercised or explicitly marked not applicable ·
 boundary values tested at the boundary, not near it · cross-tenant cases behave
 identically to not-found · every "documented" decision is actually written down

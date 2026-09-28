@@ -482,6 +482,17 @@ assume the token interceptor will follow it. A provider in the wrong injector ca
 resolve the root interceptor-free `HttpClient` and silently send protected
 requests without `Authorization`.
 
+"Every authenticated feature service" includes each service a screen
+**borrows** from another feature, such as a lookup's `getSelectList`, not only
+the screen's own service. `providedIn: 'root'` alone is not enough. Found
+2026-09-28: Labour Tariff injected `StaffProfileService`, which no other screen
+used and which was missing from `LayoutModule.providers`; the screen showed its
+lookup error (source diagnosis: the `GetSelect` request resolves the root
+`HttpClient` and carries no token; the backend `SelectAsync` itself returns
+success). For every service a new or refactored component injects, confirm
+that a provider entry exists; when a lookup fails, check the HTTP status first
+(skill §6, "Lookup Failure Diagnosis").
+
 Do not fix this locally by adding a manual `Authorization` header or by creating
 another feature-level `provideHttpClient(...)`. Both approaches create another
 HTTP ownership fork and make interceptor behavior harder to reason about. The

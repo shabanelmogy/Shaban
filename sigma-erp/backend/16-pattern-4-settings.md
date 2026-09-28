@@ -51,6 +51,18 @@ public async Task<Result> UpdateSettingsAsync(ChargeSettingsAddVM addVm, Cancell
 confirm its query scope, delete-by-omission behaviour and save semantics match
 the contract you intend.
 
+**Verified 2026-09-28 — the snippet above is not what the reference does.**
+`SyncByKeyAsync` loads every non-deleted row of the entity for the tenant
+(`FindAllByAsync<TEntity>()`, no predicate) and deletes each one whose key the
+payload omits. It therefore fits only a table that holds exactly one settings
+set per tenant. The reference `ChargeSettingsService` no longer calls it: it
+validates the whole request, loads the existing rows, deletes omitted keys and
+extra legacy duplicates, updates matches, adds the rest, and saves once. Follow
+that shape. When one table holds several sets partitioned by a dimension (for
+example `LabourRateService`: the Default tariff plus one set per vehicle type),
+run that reconciliation inside the set's own scoped query, and never call
+`SyncByKeyAsync` for one partition, because it would delete every other set.
+
 Decide explicitly and write it down:
 
 | Decision | Options |

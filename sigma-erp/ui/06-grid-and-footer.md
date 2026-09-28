@@ -53,7 +53,7 @@ failure handling is correct.
   [sortField]="sortField()"
   [sortOrder]="sortOrder()"
   [showEmpty]="!errorMessage()"
-  currentPageReport="feature.pageReport"
+  currentPageReport="feature.showingEntries"
   emptyMessage="feature.empty"
   (lazyLoad)="onLazyLoad($event)"
 ></app-data-table>
@@ -266,14 +266,14 @@ back to `'{first} - {last} / {totalRecords}'` and shows only numbers
 
 **Inside `currentPageReport`, use no other placeholder.** PrimeNG replaces only
 `{first}`, `{last}`, `{rows}`, `{totalRecords}`, `{currentPage}`, and
-`{totalPages}`; `{total}` and `{{total}}` stay on screen as literal text. This
-rule covers only `currentPageReport`: a hand-built pager that translates a key
-with ngx-translate parameters (`'key' | translate: { from, to, total }`, for
-example `alerts.showingEntries`) correctly uses `{{…}}`.
+`{totalPages}`, each at its first occurrence only; `{total}` and `{{total}}`
+stay on screen as literal text. This rule covers only `currentPageReport`: a
+hand-built pager that translates a key with ngx-translate parameters
+(`'key' | translate: { from, to, total }`, for example
+`alerts.showingEntries`) correctly uses `{{…}}`.
 
 Do not bind `general.showingEntries` until backlog 37 is resolved: it still uses
 `{total}`.
-
 
 Public CSS variables allow an exceptional feature-specific width or semantic
 color without copying component internals: `--sigma-data-table-min-width`,
