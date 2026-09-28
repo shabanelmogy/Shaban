@@ -22,6 +22,11 @@ Generated files are derivative artifacts. Never edit them directly.
 
 ## Packet families
 
+`PLAN-*` packets are pre-implementation planning entry points for maintenance,
+extension, or cross-cutting evolution. Use them when the current business logic
+must be audited and a target design must be discussed/frozen before the normal
+feature phases begin.
+
 `PHASE-*` packets are bounded review entry points:
 
 1. Discovery and Evidence.
@@ -41,6 +46,12 @@ separate list-page task recipe.
 handoff document for one feature. Copy it outside `generated/`, fill only the
 applicable sections, and keep unresolved contract statuses visible through final
 reconciliation.
+
+`templates/MAINTENANCE-EVOLUTION-ARTIFACT.template.md` is the reusable planning
+document for an existing capability that is being extended or corrected. It
+captures the current-state audit, ambiguity register, impact map, option decision,
+target contracts, migration/compatibility strategy, implementation slices, and
+verification plan before code is changed.
 
 ## Generate
 
@@ -70,9 +81,15 @@ the packet and review whether the procedural template also needs a semantic
 update. The fingerprint catches source drift; human review decides whether the
 meaning changed.
 
+Block `0` is the document preamble, so a version, status, or verification-date
+edit in a book header changes the `master.0`, `ui.0`, or `backend.0` fingerprint
+and re-stales every recipe that consumes it. Finish every guide edit first, then
+regenerate once, then run check mode. Regenerating between guide edits only
+repeats the drift.
+
 ## Adding a packet or recipe
 
-1. Add a template under `templates/` using the `PHASE-*` or `RECIPE-*` prefix.
+1. Add a template under `templates/` using the `PLAN-*`, `PHASE-*`, or `RECIPE-*` prefix.
 2. Add one manifest entry with the exact source-block dependency closure.
 3. Use one approved reference per UI shape. Add a second reference only when the
    task genuinely contains a second shape.
@@ -91,6 +108,13 @@ meaning changed.
 - Deprecated examples remain in the books for human understanding but are not
   copied into generation templates.
 - Recipes carry source fingerprints and a generated-file warning.
+- Source block `0` means the canonical document preamble before `## 1`; use it
+  when a packet depends on authority/status/reference tables that live above the
+  numbered blocks.
+- Reconcile manifest `approvedReferences` against the canonical per-shape
+  reference tables whenever those tables change. Fingerprints prove that a
+  packet saw a changed source block; they cannot prove that a separately stored
+  manifest reference still has the correct semantic role.
 - Packet templates are reviewed whenever a referenced block changes.
 - The pilot should be evaluated against full-book and dependency-retrieval
   baselines before more recipe families are added.

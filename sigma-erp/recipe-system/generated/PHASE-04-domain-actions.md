@@ -8,25 +8,28 @@ domain transitions. It is not a container for every button click.
 
 ## Canonical provenance
 
-- master.1: ## 1. Governance and review principles | sha256:defaefeff17c467afb2b3e953ac2eaf53d67fdc9b35b8eee12451c586bf41f33
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:bac9708a301e31a0302ab3880f2fbf60269c5b647ef40b6e4b537e6748762e92
+- master.1: ## 1. Governance and review principles | sha256:127af0593047619ee010cc42872c85f6fb17822939fc1eb84ddc0448a1bc38d2
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:518b4536a222d1c0c8cdd6265af603ede18ef9742a98d423ad525dfcf9f486ec
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:cb0e817775ee1e443e9e191621b36169934a1b9efd398086fe06a3c3943d91f4
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:ad0c7c462af621944990cb16fd7bc8047ad6d4916af64faa0db5a191d8d15546
-- master.5: ## 5. Continuous quality gates | sha256:7670c6f18eccb6140087efbd98986043b801baad7d2b31c0f8f739392f2228f5
-- master.6: ## 6. Human and AI review protocol | sha256:e320d98cc6bfafa91e975d9a71eb6e932983db68f7ad93d378f99f6ddece800f
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:3e4693fe20b130ccadbc096ec295c856ca45b65edce618be94f856736f679a28
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
+- master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
+- master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:708ae50816aae4005b03f8b318a4c63de5617cfee5b238586b2a0a883b7df314
 - ui.7: ## 7. Action button cycle | sha256:a9541810dbd8de33c49818ca9685d69fc35243278fb8cfcac942757b12a16b83
 - ui.9: ## 9. Confirm: delete | sha256:2b7c7f35fcf489ae8bf36a257ffaf1fecffa6774bec9cc9eea12463759ee35dc
 - ui.10: ## 10. Confirm: discard | sha256:46ad7f8f6a61b7ca1b8d53b43574f70e84057c0486cb1756e09d8ae588f62f9f
 - ui.11: ## 11. Small modal on top | sha256:227974d714e69fb0e735de80fe0e6052cac762b7f01e16721c254e0dd499c3d8
-- ui.15: ## 15. View mode | sha256:47aeb820938ae96bd7305ba9aed8d92077c3f769fd746c73a366782e4435e2dd
-- ui.22: ## 22. Loading, empty, error, toast | sha256:1e4012005b264f2c0efaf929b30f03ae84b7587138379ebf6c142fa12e43e9e2
-- ui.23: ## 23. Translations | sha256:1d159b39ed046537db86c6edffcdcd8ca30809f35761b5f19845d57e51896101
-- ui.24: ## 24. Colors, icons, buttons | sha256:4e343afab530c8c08638a07919595ff1169f60f6d0aebe43f1ada3414a535d49
+- ui.15: ## 15. View mode | sha256:3b0303e758d2d470405bb73d932d5d6b727ed32d3b5b24fea10b5e549eea8a3b
+- ui.22: ## 22. Loading, empty, error, toast | sha256:ca36e24d2210bf4603cb8092cbe49288e0319910304eb16559bb2bef9935b8ca
+- ui.23: ## 23. Translations | sha256:fa61d2af66e51390cafeac43c298964d71c1e815236b1e5e66371b885b253893
+- ui.24: ## 24. Colors, icons, buttons | sha256:11d9de8679ce66408aed269fc2e00d16ee9ec1d1cb46a9ed8afeb693847fb377
 - ui.25: ## 25. RTL and dark theme | sha256:7a7270726f6b206659888dc898340d482f1d7c082bcb437a2d700ff228a026c5
 - ui.26: ## 26. Permissions and route access | sha256:33d769df2c69055e37edfd328738ca874edd65b8c285acb6443e5c3930e0f85a
 - ui.27: ## 27. Focus and keyboard | sha256:71009763a5b5c6848cda38eaf2bb0fa7ac83d001ab18c649f53f5c22edcb2b03
 - ui.28: ## 28. Request cancellation and stale responses | sha256:45d17c01d2519192de3a092e57c7deb97e2ddaf2731be82c57c11f703a36c31f
-- ui.29: ## 29. Verification expectations | sha256:b99e32e1615baff70816067504b9b429ef018cbbd3b01ba210dad38d7502903e
+- ui.29: ## 29. Verification expectations | sha256:9ed644e4850d168082c258bd00fb8826f51fda1ef8a98155baafa41583ad7a19
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:476faa25f2ba4a8a4cc59d4efb0c1798505bf3d241d0808c23ec84f849dbdbc9
 - backend.5: ## 5. Step 5 — Interface and service | sha256:46effe8a80e3a97586b936e66b90b193a0dae4b4ec6a926e9968eb4381bc001e
 - backend.6: ## 6. Step 6 — Controller | sha256:8921eeb99b61fc8c994fac1338bcddc91be4a1dc21d4e39e29282ae0c07166a9
 - backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c834c66dc17d92ffca8e74a7f32113de7febbf293507205c32287d375e3bb386
@@ -92,7 +95,9 @@ simulate authorization or state rules only in Angular.
 6. Prevent double confirmation and double execution.
 7. Define concurrency and idempotency behavior where replay matters.
 8. Handle declared and transport failures without losing recoverable user state.
-9. Define exact refresh target, page retention, and updated action availability.
+9. Define the success-feedback owner. A standard successful action uses the
+   global mutation interceptor once; do not emit another feature success toast.
+10. Define exact refresh target, page retention, and updated action availability.
 
 ## Required outputs
 
@@ -115,6 +120,8 @@ simulate authorization or state rules only in Angular.
 - Confirmation services are shared; typed workflows remain typed forms.
 - Buttons swap to a busy state and reject repeat execution.
 - Errors preserve actionable server messages and define recovery.
+- Every mutation produces at most one success notification. A feature may own a
+  composite final success only when the mutation suppresses the interceptor toast.
 - Refresh behavior respects the owning Grid page or editor state.
 - Action labels, focus, keyboard behavior, RTL, and themes are checked now.
 

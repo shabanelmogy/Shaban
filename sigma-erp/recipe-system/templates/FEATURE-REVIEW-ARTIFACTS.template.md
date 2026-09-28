@@ -15,6 +15,7 @@ decisions; it does not create architectural authority.
 | UI book version | |
 | Backend book version | |
 | Packet check result | |
+| Maintenance / Evolution Plan | Not required / Frozen / Blocked + artifact path |
 
 ## Feature Review Manifest
 
@@ -35,6 +36,7 @@ decisions; it does not create architectural authority.
 | Applicable phases | |
 | Skipped phases and reason | |
 | Explicit exclusions | |
+| Maintenance/evolution plan status | |
 
 ## Evidence Register
 
@@ -115,6 +117,12 @@ Fields removed from the ListVM:
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 
+## Success Feedback Contract
+
+| Mutation/workflow | Success owner | Interceptor suppressed | Final success point | Duplicate-notification risk | Evidence/status |
+|---|---|---|---|---|---|
+| | Global interceptor / Feature composite / Silent by contract | Yes / No | | | |
+
 ## Unresolved Requirements Register
 
 | Requirement | Evidence | Status | Missing source or decision | Blocked phase | Safe work that may continue | Owner |
@@ -140,6 +148,8 @@ Fields removed from the ListVM:
 | Complete scoped diff reviewed | | |
 | Stale imports/types checked | | |
 | Routes/providers/interceptors checked | | |
+| Protected GET and mutation carry Authorization through the expected interceptor chain | | |
+| Exactly one success notification per successful mutation/workflow | | |
 | Frontend/backend contracts reconciled | | |
 | English/Arabic translations checked | | |
 | Mapping/server-owned fields checked | | |
@@ -148,4 +158,3 @@ Fields removed from the ListVM:
 | Tests | | |
 | Browser/runtime | | |
 | Database/migration | | |
-

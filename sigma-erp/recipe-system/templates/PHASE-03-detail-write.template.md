@@ -133,10 +133,10 @@ being added to a payload.
 6. Define Save without ordinary confirmation.
 7. Define dirty discard for every exit path.
 8. Define focus, keyboard, tab, and validation semantics.
-   To keep a calendar closed on dialog startup while preserving input-click
-   opening, keep `[showOnFocus]="true"` and place `autofocus` on another
-   meaningful input. Do not make the date input icon-only by disabling
-   `showOnFocus`.
+   To keep a calendar closed on dialog startup, bind the shell's
+   `[focusOnShow]="false"` and give each calendar `[showOnFocus]="false"` with
+   `(click)` opening the overlay, per block 17. Calendars are typeable with
+   `[keepInvalid]="true"` and carry no icon.
    When a small date-first dialog must open its picker immediately, wait for
    the shared shell's `shown` output, defer one microtask so projected content
    is settled, focus the calendar input, and call the calendar overlay API
@@ -147,7 +147,11 @@ being added to a payload.
    define feature-owned typed rows, validation, confirmed removal, dirty state,
    payload mapping, explicit child reconciliation, and transaction behavior.
 10. Define upload, replacement, cleanup, and save-failure behavior.
-11. Define parent close and refresh signals.
+11. Define the Save success-feedback owner. Standard successful mutations rely
+    on the global interceptor once. A composite Save may own the final success
+    only when its mutation explicitly suppresses the interceptor toast and the
+    success is emitted after all required follow-up work succeeds.
+12. Define parent close and refresh signals.
 
 ## Required outputs
 
@@ -205,14 +209,18 @@ being added to a payload.
   headings are disabled, wide rows declare `tableMinWidth`, and the feature owns
   validation, confirmed mutation, dirty state, payload, and persistence.
 - A reason, note, or date workflow uses a typed form dialog, not confirmation.
-- A dialog calendar opens closed by default without disabling normal input
-  clicks: a different meaningful control receives initial focus and the
-  calendar retains `[showOnFocus]="true"`.
+- A dialog calendar opens closed by default: the dialog binds
+  `[focusOnShow]="false"`, the calendar uses `[showOnFocus]="false"` and opens
+  on click, and the input stays typeable.
+- The page never scrolls: the form pane or dialog body is the single scroll
+  owner and the action footer stays visible, per block 1.
 - Date-picker auto-open is opt-in only for a confirmed date-first workflow and
   occurs one microtask after dialog `shown`, with focus moved to the calendar
   input.
 - All form and dialog outputs are typed.
 - Upload files are validated and abandoned files are recoverable.
+- Save produces exactly one success notification; a feature-owned composite
+  success explicitly suppresses the mutation interceptor toast.
 - Translation, accessibility, RTL, theme, and responsive checks occur now.
 
 ## Expected handoff

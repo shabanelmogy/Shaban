@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "books": {
     "master": {
       "path": "../SIGMA_FEATURE_REVIEW_MASTER.md",
@@ -16,20 +16,47 @@
   },
   "recipes": [
     {
-      "id": "phase-00-discovery-evidence",
-      "status": "canonical-review",
-      "template": "templates/PHASE-00-discovery-evidence.template.md",
-      "output": "generated/PHASE-00-discovery-evidence.md",
+      "id": "plan-00-maintenance-evolution",
+      "status": "canonical-planning",
+      "template": "templates/PLAN-00-maintenance-evolution.template.md",
+      "output": "generated/PLAN-00-maintenance-evolution.md",
       "approvedReferences": [],
       "sources": [
+        { "book": "master", "block": 0 },
         { "book": "master", "block": 1 },
         { "book": "master", "block": 2 },
         { "book": "master", "block": 3 },
         { "book": "master", "block": 4 },
         { "book": "master", "block": 5 },
         { "book": "master", "block": 6 },
+        { "book": "master", "block": 7 },
+        { "book": "master", "block": 8 },
+        { "book": "ui", "block": 0 },
+        { "book": "ui", "block": 29 },
+        { "book": "ui", "block": 30 },
+        { "book": "backend", "block": 0 },
+        { "book": "backend", "block": 18 },
+        { "book": "backend", "block": 19 }
+      ]
+    },
+    {
+      "id": "phase-00-discovery-evidence",
+      "status": "canonical-review",
+      "template": "templates/PHASE-00-discovery-evidence.template.md",
+      "output": "generated/PHASE-00-discovery-evidence.md",
+      "approvedReferences": [],
+      "sources": [
+        { "book": "master", "block": 0 },
+        { "book": "master", "block": 1 },
+        { "book": "master", "block": 2 },
+        { "book": "master", "block": 3 },
+        { "book": "master", "block": 4 },
+        { "book": "master", "block": 5 },
+        { "book": "master", "block": 6 },
+        { "book": "ui", "block": 0 },
         { "book": "ui", "block": 1 },
         { "book": "ui", "block": 29 },
+        { "book": "backend", "block": 0 },
         { "book": "backend", "block": 18 }
       ]
     },
@@ -45,12 +72,14 @@
         "SigmaBackend/SiGma.Business/Services/AdministrationsServices/ChargeSettingsService.cs"
       ],
       "sources": [
+        { "book": "master", "block": 0 },
         { "book": "master", "block": 1 },
         { "book": "master", "block": 2 },
         { "book": "master", "block": 3 },
         { "book": "master", "block": 4 },
         { "book": "master", "block": 5 },
         { "book": "master", "block": 6 },
+        { "book": "backend", "block": 0 },
         { "book": "backend", "block": 1 },
         { "book": "backend", "block": 2 },
         { "book": "backend", "block": 3 },
@@ -79,15 +108,18 @@
       "approvedReferences": [
         "SiGmaAngularFrontEnd/src/app/modules/shared/components/data-table",
         "SiGmaAngularFrontEnd/src/app/modules/Fleet/VehicleService/components/list",
-        "SiGmaAngularFrontEnd/src/app/modules/Sales/Fleet/components/list"
+        "SiGmaAngularFrontEnd/src/app/modules/Accounts/openingBalances/components/details",
+        "SiGmaAngularFrontEnd/src/app/modules/Customers/Individual/IndividualPartner/components/list"
       ],
       "sources": [
+        { "book": "master", "block": 0 },
         { "book": "master", "block": 1 },
         { "book": "master", "block": 2 },
         { "book": "master", "block": 3 },
         { "book": "master", "block": 4 },
         { "book": "master", "block": 5 },
         { "book": "master", "block": 6 },
+        { "book": "ui", "block": 0 },
         { "book": "ui", "block": 1 },
         { "book": "ui", "block": 2 },
         { "book": "ui", "block": 3 },
@@ -108,6 +140,7 @@
         { "book": "ui", "block": 27 },
         { "book": "ui", "block": 28 },
         { "book": "ui", "block": 29 },
+        { "book": "backend", "block": 0 },
         { "book": "backend", "block": 7 },
         { "book": "backend", "block": 8 },
         { "book": "backend", "block": 9 },
@@ -134,12 +167,14 @@
         "SiGmaAngularFrontEnd/src/app/modules/Customers/Companies/CompanyPartner/components/detalisForm/drivers"
       ],
       "sources": [
+        { "book": "master", "block": 0 },
         { "book": "master", "block": 1 },
         { "book": "master", "block": 2 },
         { "book": "master", "block": 3 },
         { "book": "master", "block": 4 },
         { "book": "master", "block": 5 },
         { "book": "master", "block": 6 },
+        { "book": "ui", "block": 0 },
         { "book": "ui", "block": 1 },
         { "book": "ui", "block": 2 },
         { "book": "ui", "block": 9 },
@@ -161,6 +196,7 @@
         { "book": "ui", "block": 27 },
         { "book": "ui", "block": 28 },
         { "book": "ui", "block": 29 },
+        { "book": "backend", "block": 0 },
         { "book": "backend", "block": 3 },
         { "book": "backend", "block": 4 },
         { "book": "backend", "block": 5 },
@@ -185,12 +221,14 @@
         "SiGmaAngularFrontEnd/src/app/modules/Fleet/Vehicle"
       ],
       "sources": [
+        { "book": "master", "block": 0 },
         { "book": "master", "block": 1 },
         { "book": "master", "block": 2 },
         { "book": "master", "block": 3 },
         { "book": "master", "block": 4 },
         { "book": "master", "block": 5 },
         { "book": "master", "block": 6 },
+        { "book": "ui", "block": 0 },
         { "book": "ui", "block": 7 },
         { "book": "ui", "block": 9 },
         { "book": "ui", "block": 10 },
@@ -204,6 +242,7 @@
         { "book": "ui", "block": 27 },
         { "book": "ui", "block": 28 },
         { "book": "ui", "block": 29 },
+        { "book": "backend", "block": 0 },
         { "book": "backend", "block": 5 },
         { "book": "backend", "block": 6 },
         { "book": "backend", "block": 8 },
@@ -225,11 +264,13 @@
         "SiGmaAngularFrontEnd/src/app/app-routing.module.ts"
       ],
       "sources": [
+        { "book": "master", "block": 0 },
         { "book": "master", "block": 1 },
         { "book": "master", "block": 3 },
         { "book": "master", "block": 4 },
         { "book": "master", "block": 5 },
         { "book": "master", "block": 6 },
+        { "book": "ui", "block": 0 },
         { "book": "ui", "block": 1 },
         { "book": "ui", "block": 2 },
         { "book": "ui", "block": 22 },
@@ -238,6 +279,7 @@
         { "book": "ui", "block": 27 },
         { "book": "ui", "block": 28 },
         { "book": "ui", "block": 29 },
+        { "book": "backend", "block": 0 },
         { "book": "backend", "block": 3 },
         { "book": "backend", "block": 4 },
         { "book": "backend", "block": 5 },
@@ -252,6 +294,7 @@
       "output": "generated/PHASE-06-final-reconciliation.md",
       "approvedReferences": [],
       "sources": [
+        { "book": "master", "block": 0 },
         { "book": "master", "block": 1 },
         { "book": "master", "block": 2 },
         { "book": "master", "block": 3 },
@@ -260,8 +303,10 @@
         { "book": "master", "block": 6 },
         { "book": "master", "block": 7 },
         { "book": "master", "block": 8 },
+        { "book": "ui", "block": 0 },
         { "book": "ui", "block": 29 },
         { "book": "ui", "block": 30 },
+        { "book": "backend", "block": 0 },
         { "book": "backend", "block": 18 },
         { "book": "backend", "block": 19 }
       ]

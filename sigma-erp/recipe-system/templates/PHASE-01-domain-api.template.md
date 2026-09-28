@@ -44,12 +44,16 @@ derivative. Stop and report drift when they disagree.
 
 Required:
 
+- Frozen Maintenance / Evolution Plan when the Master Guide requires one.
 - Phase 0 Feature Review Manifest.
 - Evidence rows that require stored or returned data.
 - Selected backend pattern.
 - Scoped backend files and direct consumers.
 
 Missing or Uncertain evidence does not authorize a new entity property or API.
+If Phase 1 evidence conflicts with a Frozen maintenance/evolution target contract,
+mark the affected plan decision stale and reopen that decision; do not silently
+implement a different backend design.
 
 ## Procedure
 

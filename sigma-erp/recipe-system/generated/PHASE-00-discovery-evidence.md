@@ -9,14 +9,17 @@ contract map. It does not authorize source edits.
 
 ## Canonical provenance
 
-- master.1: ## 1. Governance and review principles | sha256:defaefeff17c467afb2b3e953ac2eaf53d67fdc9b35b8eee12451c586bf41f33
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:bac9708a301e31a0302ab3880f2fbf60269c5b647ef40b6e4b537e6748762e92
+- master.1: ## 1. Governance and review principles | sha256:127af0593047619ee010cc42872c85f6fb17822939fc1eb84ddc0448a1bc38d2
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:518b4536a222d1c0c8cdd6265af603ede18ef9742a98d423ad525dfcf9f486ec
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:cb0e817775ee1e443e9e191621b36169934a1b9efd398086fe06a3c3943d91f4
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:ad0c7c462af621944990cb16fd7bc8047ad6d4916af64faa0db5a191d8d15546
-- master.5: ## 5. Continuous quality gates | sha256:7670c6f18eccb6140087efbd98986043b801baad7d2b31c0f8f739392f2228f5
-- master.6: ## 6. Human and AI review protocol | sha256:e320d98cc6bfafa91e975d9a71eb6e932983db68f7ad93d378f99f6ddece800f
-- ui.1: ## 1. Feature folders and wiring | sha256:892d2ac3ae19a8b65346bc151efcfd78b5a8f0c9b611e55206b92656e37b8aa6
-- ui.29: ## 29. Verification expectations | sha256:b99e32e1615baff70816067504b9b429ef018cbbd3b01ba210dad38d7502903e
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:3e4693fe20b130ccadbc096ec295c856ca45b65edce618be94f856736f679a28
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
+- master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
+- master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:708ae50816aae4005b03f8b318a4c63de5617cfee5b238586b2a0a883b7df314
+- ui.1: ## 1. Feature folders and wiring | sha256:341e4648470ddba58990e292715336ddf7798fff2e52e2a5d249d649631280ef
+- ui.29: ## 29. Verification expectations | sha256:9ed644e4850d168082c258bd00fb8826f51fda1ef8a98155baafa41583ad7a19
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:476faa25f2ba4a8a4cc59d4efb0c1798505bf3d241d0808c23ec84f849dbdbc9
 - backend.18: ## 18. Edge cases | sha256:b78409883a1ffe3d4016644ed8b5afc92b3d48b47395c8f3c75a8117c49e69ef
 
 Approved references, when a shape is already known:
@@ -55,6 +58,7 @@ derivative. Stop and report drift when they disagree.
 Required inputs:
 
 - Requested feature and outcome.
+- Frozen Maintenance / Evolution Plan when the Master Guide requires one.
 - All supplied evidence.
 - Directly related source.
 - Master Guide.
@@ -64,17 +68,20 @@ route, file, contract, or business decision. Do not guess.
 
 ## Procedure
 
-1. Assign each screenshot or workflow source an Evidence ID.
-2. Record known screen, mode, role, locale, direction, viewport, date/version,
+1. If a Maintenance / Evolution Plan applies, import its Frozen scope, target
+   contracts, impact map, implementation slices, and remaining non-blocking open
+   decisions. Do not redesign the target silently in Phase 0.
+2. Assign each screenshot or workflow source an Evidence ID.
+3. Record known screen, mode, role, locale, direction, viewport, date/version,
    and whether it is current or historical.
-3. Extract only functional and content requirements.
-4. Classify every item as Explicit, Strong inference, or Uncertain.
-5. Inventory direct source producers and consumers.
-6. Select the simplest applicable UI shapes and backend pattern.
-7. Select one approved reference per shape.
-8. Create the initial column, filter, detail/write, action, and route contracts.
-9. Mark every row Confirmed, Derived, Missing, Conflicting, or Uncertain.
-10. Select the later phases required by the feature.
+4. Extract only functional and content requirements.
+5. Classify every item as Explicit, Strong inference, or Uncertain.
+6. Inventory direct source producers and consumers.
+7. Select the simplest applicable UI shapes and backend pattern.
+8. Select one approved reference per shape.
+9. Create the initial column, filter, detail/write, action, and route contracts.
+10. Mark every row Confirmed, Derived, Missing, Conflicting, or Uncertain.
+11. Select the later phases required by the feature.
 
 ## Required outputs
 
@@ -85,6 +92,7 @@ route, file, contract, or business decision. Do not guess.
 | Requested outcome | |
 | Source scope | |
 | Existing user changes | |
+| Maintenance / Evolution Plan | Not required / Frozen artifact / Blocked |
 | UI shapes | |
 | Backend pattern | |
 | Approved references | |
@@ -121,6 +129,8 @@ route, file, contract, or business decision. Do not guess.
 - A visible action is not authorization evidence.
 - Static screenshots provide weak state-transition evidence.
 - Uncertain items are not implemented automatically.
+- A required Maintenance / Evolution Plan is Frozen before implementation phases
+  begin; Phase 0 reports any new evidence that would invalidate it.
 - Reference modules are read-only unless explicitly scoped.
 
 ## Expected handoff

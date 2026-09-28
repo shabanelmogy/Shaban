@@ -44,6 +44,7 @@ derivative. Stop and report drift when they disagree.
 Required inputs:
 
 - Requested feature and outcome.
+- Frozen Maintenance / Evolution Plan when the Master Guide requires one.
 - All supplied evidence.
 - Directly related source.
 - Master Guide.
@@ -53,17 +54,20 @@ route, file, contract, or business decision. Do not guess.
 
 ## Procedure
 
-1. Assign each screenshot or workflow source an Evidence ID.
-2. Record known screen, mode, role, locale, direction, viewport, date/version,
+1. If a Maintenance / Evolution Plan applies, import its Frozen scope, target
+   contracts, impact map, implementation slices, and remaining non-blocking open
+   decisions. Do not redesign the target silently in Phase 0.
+2. Assign each screenshot or workflow source an Evidence ID.
+3. Record known screen, mode, role, locale, direction, viewport, date/version,
    and whether it is current or historical.
-3. Extract only functional and content requirements.
-4. Classify every item as Explicit, Strong inference, or Uncertain.
-5. Inventory direct source producers and consumers.
-6. Select the simplest applicable UI shapes and backend pattern.
-7. Select one approved reference per shape.
-8. Create the initial column, filter, detail/write, action, and route contracts.
-9. Mark every row Confirmed, Derived, Missing, Conflicting, or Uncertain.
-10. Select the later phases required by the feature.
+4. Extract only functional and content requirements.
+5. Classify every item as Explicit, Strong inference, or Uncertain.
+6. Inventory direct source producers and consumers.
+7. Select the simplest applicable UI shapes and backend pattern.
+8. Select one approved reference per shape.
+9. Create the initial column, filter, detail/write, action, and route contracts.
+10. Mark every row Confirmed, Derived, Missing, Conflicting, or Uncertain.
+11. Select the later phases required by the feature.
 
 ## Required outputs
 
@@ -74,6 +78,7 @@ route, file, contract, or business decision. Do not guess.
 | Requested outcome | |
 | Source scope | |
 | Existing user changes | |
+| Maintenance / Evolution Plan | Not required / Frozen artifact / Blocked |
 | UI shapes | |
 | Backend pattern | |
 | Approved references | |
@@ -110,6 +115,8 @@ route, file, contract, or business decision. Do not guess.
 - A visible action is not authorization evidence.
 - Static screenshots provide weak state-transition evidence.
 - Uncertain items are not implemented automatically.
+- A required Maintenance / Evolution Plan is Frozen before implementation phases
+  begin; Phase 0 reports any new evidence that would invalidate it.
 - Reference modules are read-only unless explicitly scoped.
 
 ## Expected handoff
@@ -117,4 +124,3 @@ route, file, contract, or business decision. Do not guess.
 Later phases receive the manifest, relevant evidence rows, frozen upstream
 contracts, unresolved requirements, and exact scoped paths. Phase 0 is complete
 only when no requirement is represented as an unlabeled inference.
-

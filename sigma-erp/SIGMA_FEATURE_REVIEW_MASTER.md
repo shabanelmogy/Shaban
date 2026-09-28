@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | Status | **Canonical.** Binding for Sigma feature review and implementation orchestration |
-| Version | 1.5 |
-| Last verified against documentation system | 2026-08-16 |
+| Version | 1.7 |
+| Last verified against documentation system | 2026-09-28 |
 | Verification | Documentation structure and source inspection only |
 
 This guide defines how a Sigma feature is scoped, reviewed, implemented, and
@@ -26,9 +26,12 @@ Use this order for every decision:
 
 1. This Master Guide and the applicable canonical pattern-book blocks.
 2. The applicable generated phase or task packet.
-3. The approved project reference named for the specific UI or backend shape.
-4. Screenshots, for functional requirements and visible content only.
-5. Reviewer inference, only when labelled and supported by evidence.
+3. The `sigma-screen-refactor` skill, the operational digest of level 1. Each
+   skill rule cites its owning book block, and the skill may not introduce a
+   rule level 1 lacks.
+4. The approved project reference named for the specific UI or backend shape.
+5. Screenshots, for functional requirements and visible content only.
+6. Reviewer inference, only when labelled and supported by evidence.
 
 If a generated packet conflicts with a canonical source, stop using the packet,
 report drift, and use the canonical source. If a canonical snippet conflicts
@@ -42,6 +45,7 @@ drift instead of silently changing the rule.
 | This Master Guide | Global review process and contract invariants | Yes |
 | UI and backend pattern books | Platform implementation patterns | Yes |
 | Generated phase packets | Bounded review procedures and required outputs | No |
+| `sigma-screen-refactor` skill | Operational checklist digest of the books for screen work; new lessons are written to the owning book block in the same task | No |
 | Generated task recipes | Linear implementation procedures for a task shape | No |
 | Approved project references | Concrete examples of an approved pattern | No |
 | Screenshots and videos | Functional evidence | No |
@@ -103,6 +107,87 @@ on another layer.
 - Keep existing architecture and business behavior unless an authoritative rule
   or explicit requirement demands a scoped change.
 
+### Maintenance and evolution planning before implementation
+
+Use a **Maintenance / Evolution Plan** before implementation when work changes or
+extends an existing business capability instead of merely completing an already
+frozen feature contract. The plan is mandatory when any of these are true:
+
+- the requested behavior crosses more than one established feature or module;
+- current business logic is incomplete, ambiguous, contradictory, or spread
+  across several writers/readers;
+- the change introduces a new shared concept such as currency, tax, numbering,
+  approvals, pricing, inventory valuation, posting, or another cross-cutting
+  domain rule;
+- persistence/schema, historical data, migration, compatibility, or rollout
+  behavior may change;
+- a shared Angular/.NET contract, interceptor, service, component, or report
+  calculation must change for several consumers;
+- there is a meaningful choice between extending the existing design, refactoring
+  it, replacing it, or creating a missing capability.
+
+The planning sequence is:
+
+1. **Define the requested outcome and boundaries.** Record the business result,
+   explicit non-goals, affected user roles/workflows, and why the change is needed.
+2. **Audit the existing state end to end.** Trace current entities/configuration,
+   writers, readers, calculations, endpoints, Angular consumers, reports,
+   permissions, tenancy, integrations, migrations, and related documentation.
+   Record what already works and what is only partial or legacy.
+3. **Create a Logic Ambiguity Register.** Every unclear rule is marked Confirmed,
+   Derived, Missing, Conflicting, or Uncertain with the source/owner needed to
+   resolve it. Implementation must never silently choose an Uncertain rule.
+4. **Build the impact map.** Identify producers, consumers, persisted data,
+   calculations, shared contracts, reports, background/integration paths, and
+   deployment/data-migration effects that can be changed by the new capability.
+5. **Classify each gap.** For every affected area choose `Keep`, `Extend`,
+   `Refactor`, `Replace`, `Create`, or `Remove`, with evidence and a reason. Do
+   not create a parallel path when extending or correcting the existing owner is
+   the cleaner contract.
+6. **Compare viable design options.** Record the alternatives that materially
+   differ, their effect on business correctness, maintainability, compatibility,
+   migration/data risk, complexity, and future extension. Select the target only
+   after the trade-offs are reviewable.
+   When an option changes business semantics rather than implementation shape,
+   present the alternatives and consequences to the business/system owner and
+   record the explicit decision; technical reviewers must not choose that policy
+   by convenience or convention.
+7. **Freeze the target contracts.** Define domain ownership, invariants,
+   persistence, calculations/precision/rounding, API contracts, failure behavior,
+   authorization/tenancy, UI workflow, reporting effects, and integration
+   boundaries. Reuse the existing canonical patterns for implementation shape.
+8. **Define migration and compatibility.** State how existing records behave,
+   default/backfill rules, schema/API compatibility, rollout order, and any
+   owner-run migration or data-correction step. Never assume old data is safely
+   compatible merely because new fields are nullable.
+9. **Split implementation into dependency-ordered slices.** Map each slice to
+   Phases 0–6 and the owning contracts. Earlier slices must establish contracts
+   needed by later consumers; no phase may invent a missing upstream decision.
+10. **Define verification before coding.** Specify source checks, tests, runtime
+    journeys, browser/UI checks, data/migration verification, reconciliation, and
+    rollback/recovery evidence appropriate to the risk.
+11. **Freeze or block the plan.** A plan is `Frozen` only when all decisions needed
+    for the first implementation slice are Confirmed/Derived and its downstream
+    impact is understood. Otherwise mark it `Blocked` with the exact decision or
+    evidence still required.
+
+The plan must produce an Existing-State Inventory, Logic Ambiguity Register,
+Impact Map, Gap Decision Table, Option/Decision Matrix, Target Contract, Migration
+and Compatibility Plan, dependency-ordered Implementation Plan, Verification
+Matrix, Decision Review record, and Open Decisions Register. The generated `PLAN-00-maintenance-evolution`
+packet and `MAINTENANCE-EVOLUTION-ARTIFACT.template.md` provide the reusable
+workflow and document shape.
+
+**Cross-cutting example — introducing currencies.** The plan must first discover
+what Sigma already assumes about amounts before deciding implementation: base,
+transaction and reporting currency roles; where currency is stored today; rate
+source/date/type; decimal precision and rounding owner; whether original and base
+amounts are persisted or derived; posting and document immutability rules;
+opening-balance/JV/customer/supplier/report impact; revaluation and gain/loss
+scope when applicable; UI selection/display; and the migration/default for
+existing records. These are questions to resolve from Sigma's actual business
+contracts, not preselected answers.
+
 ### Ownership is mandatory
 
 Every concern must have one primary phase owner. Other phases may consume or
@@ -150,8 +235,7 @@ when a Rental requirement asks to reproduce, compare, or complete a workflow:
 |---|---|
 | Application | `https://app.speedautosystems.com` |
 | Booking workflow | `https://app.speedautosystems.com/Application#/tenant/crs/bookings` |
-| Username | `info.kew.office@gmail.com` |
-| Password | `Test@123` |
+| Credentials | Held by the owner outside the documentation repository (removed from this guide on 2026-09-28). Ask the owner; never write them into a guide, packet, or review artifact |
 | Data classification | Demo account; no real production data |
 
 Treat the application as behavioral evidence for visible fields, terminology,
@@ -295,6 +379,10 @@ When no confirmed API or DTO field exists:
 
 Use only the phases applicable to the feature, but never omit Phases 0 and 6 for
 a broad review or implementation.
+
+When the request meets the Maintenance / Evolution Plan trigger in block 1, run
+`PLAN-00-maintenance-evolution` first. Phase 0 consumes the Frozen plan; it does
+not reopen its target decisions unless new source evidence creates a conflict.
 
 | Phase | Name | Primary purpose | Depends on |
 |---|---|---|---|
@@ -472,6 +560,7 @@ Make every applicable decision before writing code. Record its evidence.
 | 18 | Migration | Entity or EF changes require owner-run migration; reviewers never generate it automatically |
 | 19 | Reference action coverage | Inventory every reference action and explicitly classify it; no silent omissions |
 | 20 | Override audit | List every target-service override and its feature-specific reason; inherit when no reason exists |
+| 21 | Maintenance/evolution plan | Broad or cross-cutting changes with ambiguous/current behavior must have a Frozen Maintenance / Evolution Plan before implementation; unresolved required decisions remain Blocked |
 
 ### Grid and ListVM contract
 
@@ -597,10 +686,16 @@ not a late cosmetic review.
 - Cancel or ignore stale reads.
 - End loading state on success, declared failure, transport failure, and cancel.
 - Define recovery and retained user state.
+- Give every mutation exactly one success-feedback owner. Standard successful
+  mutations use the global mutation interceptor; a composite workflow may own the
+  final success only when the request explicitly suppresses the interceptor toast.
 
 ### Security and authorization
 
 - Authentication headers come from the correct interceptor-enabled client.
+- Trace each authenticated feature service to its real injector and `HttpClient`
+  chain. Do not repair a missing token by adding a manual Bearer header or another
+  feature-level `provideHttpClient` fork.
 - Backend boundaries validate tenant ownership, existence, authorization,
   state transitions, and business invariants.
 - UI visibility is presentation only.
@@ -657,6 +752,7 @@ not a late cosmetic review.
 
 Every phase task must receive:
 
+- the Frozen Maintenance / Evolution Plan when block 1 requires one;
 - the Feature Review Manifest;
 - applicable evidence rows;
 - confirmed upstream contract artifacts;
@@ -827,6 +923,10 @@ Phase 6 compares every applicable path.
 - Translation keys ↔ English and Arabic.
 - Feature styles ↔ local ownership, RTL, theme, overlay, and responsive rules.
 - Providers ↔ interceptor-enabled client and authentication header path.
+- Successful mutations ↔ exactly one success-feedback owner.
+- When a Maintenance / Evolution Plan was required, Frozen target contracts ↔
+  final source behavior, migration/compatibility decisions, implementation
+  slices, and verification evidence.
 
 ### Source-only diff review
 
@@ -857,6 +957,8 @@ Report proportionally:
 - contract tables or their final comparisons;
 - frontend, backend, mapping, and calculation decisions;
 - action and refresh behavior;
+- Maintenance / Evolution Plan status and any approved deviation from its Frozen
+  target contracts;
 - migration requirement;
 - possible compile/runtime risks;
 - verification performed and verification pending;
@@ -882,11 +984,16 @@ source dependencies live in `recipe-system/templates/` and
 - If check mode reports drift, use canonical sources and report the stale packet.
 - Regeneration is followed by semantic review; a matching hash proves
   synchronization, not correctness.
+- Manifest `approvedReferences` are reconciled against the canonical per-shape
+  reference tables during semantic review. A green fingerprint check does not
+  prove that a separately stored reference still has the correct role.
 - Packet templates contain process and required outputs, not competing
   architectural authority.
 
 ### Packet families
 
+- `PLAN-*` packets guide pre-implementation maintenance/evolution planning when
+  current behavior must be understood and target contracts decided before phases.
 - `PHASE-*` packets guide bounded review phases.
 - `RECIPE-*` packets guide implementation for a known task shape.
 
@@ -894,7 +1001,7 @@ A feature may require several phase packets and one implementation recipe. Phase
 packets establish and reconcile contracts; task recipes implement an approved
 shape.
 
-### Evolution procedure
+### Documentation-system evolution procedure
 
 1. Change the applicable canonical source.
 2. Update dependencies or templates when semantics change.

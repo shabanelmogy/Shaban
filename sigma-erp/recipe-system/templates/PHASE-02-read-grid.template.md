@@ -7,9 +7,20 @@ query to Grid rendering, paging, and export.
 
 {{SOURCE_FINGERPRINTS}}
 
-Approved list/grid reference:
+Approved references by read-path shape:
 
 {{APPROVED_REFERENCES}}
+
+Reference ownership is explicit:
+
+- reusable table shell and rendering: `shared/components/data-table`;
+- typed paging/sort/list integration: `Fleet/VehicleService/components/list`;
+- compact filter strip, the default for a new screen:
+  `Accounts/openingBalances/components/details`;
+- retained flat 12-column filter grid, only on a screen that already ships it:
+  `Customers/Individual/IndividualPartner/components/list`.
+
+Do not treat one of these references as authority for the other shapes.
 
 The Master Guide and canonical pattern books are authoritative. This packet is
 derivative. Stop and report drift when they disagree.
@@ -47,8 +58,15 @@ This is a replacement requirement, not permission to add a competing list path.
 ## Included concerns
 
 - Page title and list-level actions.
-- Search and filter controls, including the canonical compact flat 12-column
-  layout, 34px controls, dark theme, and 900px/700px responsive states.
+- Search and filter controls, including the canonical compact filter strip with
+  its uniform `repeat(N, 1fr)` field grid, 34px controls, dark theme, and
+  900px/700px responsive states.
+- Any date filter, per block 17: typeable (`[readonlyInput]="false"` with
+  `[keepInvalid]="true"`), no icon and no `[showIcon]`, a single range picker
+  opening on two months (`[numberOfMonths]="2"`), defaulting to the current
+  month.
+- No page scroll, per block 1: the grid rows are the screen's single scroll
+  owner; title, filters, and paginator stay fixed.
 - Four-layer reusable table integration: shared component, feature template,
   typed feature paging/sort TypeScript, and feature placement/token SCSS.
 - Optional typed whole-row activation for a confirmed, unambiguous workflow.
@@ -91,13 +109,19 @@ Conflicting source contracts.
 3. Write displayed/action needs beside frontend and backend properties.
 4. Remove non-consumed ListVM fields only after checking direct consumers.
 5. Freeze filter property names and exact backend key casing.
-6. Verify the filter is one flat 12-column grid without a nested filter card,
-   uses the canonical desktop spans, and collapses at 900px and 700px.
+6. Verify the filter is one compact strip holding a uniform `repeat(N, 1fr)`
+   field grid: every control one column wide, no empty cell at the end of a row,
+   any spanning group declared with `grid-column: span K`, a boolean filter
+   filling the last free column, the strip exactly as wide as the feature-title
+   card, no nested filter card, and collapse to two columns at 900px and one at
+   700px. A screen that already ships the flat 12-column grid keeps it.
 7. Verify false, zero, empty, enum, date, and multi-value serialization.
 8. Verify page-size clamp, `CountAsync`, total pages, and stable ordering.
 9. Verify server paging rather than client slicing or load-all behavior.
 10. Verify read cancellation, loading finalization, and both failure channels.
-11. Define refresh behavior after delete and other row actions.
+11. Define refresh behavior after delete and other row actions, and record the
+    success-feedback owner. A standard successful mutation uses the global
+    mutation interceptor once; the feature must not add a duplicate success toast.
 12. If the whole row opens a confirmed workflow, opt in through the shared
     table's typed row-activation API and verify click, `Enter`, `Space`, focus,
     and nested interactive-control suppression.
@@ -125,7 +149,7 @@ Name every removed ListVM field.
 | Shared component | Exactly one direct `p-table`; typed `DataTableColumn<T>`; actions, custom cell templates, optional accessible row activation and checkbox selection, table-owned paginator, translated headers, loading/empty states, and table-level theme/RTL-safe styling | |
 | Feature template | Exactly one `app-data-table` with typed data/columns/actions, paging and sort inputs, translated report/empty keys, error-aware empty visibility, one lazy-load output, optional typed row activation, and optional current-page typed checkbox selection only for confirmed workflows | |
 | Feature TypeScript | `DataTableComponent`, typed `DataTableColumn<Row>`, typed `TableLazyLoadEvent`, one page/sort conversion handler, API `totalRecords`, sort whitelist and stale-request protection; no `TableModule`, table `@ViewChild`, or internal mutation | |
-| Feature SCSS | Feature-prefixed compact flat filter layout plus Grid placement and optional public `--sigma-data-table-*` overrides; no nested filter card and no copied `.p-datatable-*`, action-menu, or paginator rules | |
+| Feature SCSS | Feature-prefixed compact filter strip, uniform `repeat(N, 1fr)` field grid, and Grid placement plus optional public `--sigma-data-table-*` overrides; strip and grid wrapper the same width as the feature-title card (`margin: 0 8px 6px` and `0 8px`); no nested filter card; no copied `.p-datatable-*`, action-menu, or paginator rules other than the block 6 Transitional fill block, copied exactly | |
 
 The footer remains owned by the direct `p-table` inside `app-data-table`; there
 is no second pager and its total always comes from the API rather than
@@ -158,10 +182,24 @@ is no second pager and its total always comes from the API rather than
 - ListVM equals displayed columns plus identity and real row-action state.
 - A visible screenshot column is evidence, not a new DTO authority.
 - Filter casing matches exactly across Angular and .NET.
-- Filters use the canonical flat 12-column geometry, 34px controls, dark-theme
-  treatment, and the 900px/700px responsive states; no nested filter card.
+- Filters use the canonical compact strip and its uniform `repeat(N, 1fr)` field
+  grid, 34px controls, dark-theme treatment, and the 900px/700px responsive
+  states; the strip is exactly as wide as the feature-title card; no nested
+  filter card and no empty cell at the end of a field row.
+- A filter date is typeable and its calendar carries no separate trigger button;
+  a range filter opens on two months and its field still occupies exactly one
+  grid column.
+- The route host claims the box the shell already sized (`height: 100%`) and does
+  not compute a second page height. The card's distance from the TopBar and the
+  footer is owned by **outer** spacing — the route's outer padding — while the
+  card's internal `padding` stays at its designed value; the card's outer edge,
+  border, and shadow move only when outer spacing changes. The shell toolbar band
+  is not a screen-scoped lever: it is the shell's own desktop value (`16px` above /
+  `8px` below) and a feature must not override it.
 - Actions column is first and follows the approved shared cycle.
 - Loading and errors cover both API failure channels.
+- Every list-owned mutation has exactly one success-feedback owner; standard
+  mutations rely on the global interceptor and do not add a feature success toast.
 - List requests cancel or ignore stale responses.
 - Opt-in whole-row activation is keyboard accessible and does not capture
   nested links, buttons, or form controls.

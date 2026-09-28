@@ -65,6 +65,11 @@ or rerun them before completion.
 12. Translation keys ↔ English and Arabic.
 13. Styles ↔ local ownership, accessibility, RTL, theme, and responsive rules.
 14. Providers ↔ interceptor-enabled `HttpClient` and authentication path.
+15. Successful mutations ↔ exactly one success-feedback owner; composite
+    workflows suppress the interceptor before emitting a feature-owned final toast.
+16. When a Maintenance / Evolution Plan was required, final source ↔ Frozen plan
+    target contracts, implementation slices, migration/compatibility decisions,
+    and verification matrix.
 
 ## Required outputs
 
@@ -81,6 +86,8 @@ Confirm:
 - complete scoped diff reviewed;
 - stale imports and types checked;
 - routes and providers checked;
+- authenticated GET/mutation interceptor path checked and duplicate success
+  notification ownership checked;
 - translations checked;
 - mappings and server-owned payload fields checked;
 - merge markers and whitespace checked;
@@ -108,4 +115,3 @@ Report:
 Do not report the feature complete while a Missing, Conflicting, or Uncertain
 contract blocks required behavior. A clean diff check is not proof of successful
 build or runtime behavior.
-

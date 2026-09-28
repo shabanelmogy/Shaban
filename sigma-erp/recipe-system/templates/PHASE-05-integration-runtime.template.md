@@ -57,14 +57,23 @@ Required:
 3. Verify every standalone import used by the template.
 4. Trace each feature service to its actual injector and `HttpClient` provider.
 5. Verify token and error interceptors are applied.
-6. Check service-name collisions and unintended root fallbacks.
-7. Trace parent/child close, changed, save, and refresh events.
-8. Verify cancellation and destruction for every subscription.
-9. Check translations and overlay services are registered.
-10. Inspect only direct consumers of changed models, endpoints, or shared services.
-11. Verify the authenticated document is viewport-bound, every flex ancestor
-    can shrink with `min-height: 0`, and `.app-content` is the only vertical
-    fallback for content that cannot fit.
+6. Under the current transitional architecture, verify every authenticated
+   feature service resolves from `_metronic/layout/layout.module.ts` providers,
+   because that injector owns the interceptor-equipped client. Reject a manual
+   Bearer header or feature-level `provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor]))`
+   fork as a workaround.
+7. Verify each request has one active interceptor path and each mutation has one
+   success-feedback owner; a feature success after a standard mutation must not
+   duplicate the global interceptor toast.
+8. Check service-name collisions and unintended root fallbacks.
+9. Trace parent/child close, changed, save, and refresh events.
+10. Verify cancellation and destruction for every subscription.
+11. Check translations and overlay services are registered.
+12. Inspect only direct consumers of changed models, endpoints, or shared services.
+13. Verify the authenticated document is viewport-bound, every flex ancestor
+    can shrink with `min-height: 0`, the route uses the container-fill host,
+    and `.app-content` never scrolls: each region has one internal scroll
+    owner, per block 1.
 
 ## Required outputs
 
@@ -90,12 +99,17 @@ Required:
 
 - A service registered only in the root injector must not accidentally bypass
   Layout interceptors.
+- Until the root-client backlog is resolved, authenticated feature services are
+  registered in the interceptor-owning `LayoutModule` injector; there is no
+  manual Authorization-header or feature `provideHttpClient` fork.
+- One request traverses one interceptor chain, and one successful mutation emits
+  one success notification.
 - Routed editors and dialog editors use the route counts defined by their shape.
 - All subscriptions have destruction or cancellation behavior.
 - Body-appended overlays retain feature-scoped styling and correct focus.
 - Direct consumers are checked before narrowing a model or renaming a service.
-- The authenticated browser document does not scroll, while tall routed content
-  remains keyboard- and touch-scrollable inside `.app-content`.
+- Neither the browser document nor `.app-content` scrolls; tall content stays
+  keyboard- and touch-scrollable inside its own component scroll owner.
 - No runtime claim is made from source inspection alone.
 
 ## Expected handoff

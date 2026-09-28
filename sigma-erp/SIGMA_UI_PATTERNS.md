@@ -3,8 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 30 |
-| Version | 0.57 |
-| Last verified against source | 2026-09-18 |
+| Version | 0.69 |
+| Last verified against source | 2026-09-21 (shared `data-table`, `editor-dialog`, `feature-title`, `base-component.service.ts`, `loading.service.ts`, and `src/styles.scss` re-checked 2026-09-28) |
+| Last content change | 2026-09-28 — skill promotion (documentation-system unification). Details in the change log at the end of block 30 |
 | Verified by | source inspection only — no build, test, or browser run |
 
 One page per UI building block. Every block has a **reference file** you can
@@ -74,22 +75,23 @@ and they differ deliberately.
 |---|---|---|
 | Solid primary action | `shared/components/primary-action-button/` | Shared `app-primary-action-button` owns button/submit semantics, primary tokens, icon placement, busy state, focus visibility, and RTL arrows; features supply translated labels and behavior |
 | List, grid, paging | `shared/components/data-table/` + `Fleet/VehicleService/components/list` | Shared `app-data-table` owns PrimeNG rendering and table styling; the feature owns typed columns, server paging, sorting, errors, and refresh state |
-| List filters | `Sales/Fleet/components/list` | Owns the approved typed filter form and list-level actions; do not copy its legacy table wrapper |
+| List filters | `Accounts/openingBalances/components/details` + `Customers/Individual/IndividualPartner/components/list` | Opening Balances is the canonical reference for the compact filter strip that a new screen uses; IndividualPartner remains the reference for the retained flat 12-column list-filter grid. List paging, sorting, actions and table integration remain owned by their own blocks and references |
 | Step form | `shared/components/step-form/` + `shared/components/form-validation-summary/` + `Customers/Companies/CompanyPartner/components/details` | Shared `app-step-form` owns progress navigation and `app-form-validation-summary` owns the accessible invalid-field summary; the feature owns one parent form, step gating, invalid-field discovery/focus, content, actions, and persistence |
 | Form section | `shared/components/form-section/` + `Customers/Companies/CompanyPartner/components/details` | Shared `app-form-section` owns the repeated section card, translated heading, optional description/icon, projected header actions, compact density, fill-height mode, responsive layout, and light/dark styling; the feature projects its form controls and owns validation and behavior |
 | Ordinary Add/View/Edit modal | `shared/components/editor-dialog/` + `Fleet/VehicleService/components/details` | Shared `app-editor-dialog` owns the controlled PrimeNG shell and mode-aware footer; the feature owns content, forms, validation, dirty-close and persistence |
 | Tabbed Add/View/Edit modal | `shared/components/editor-dialog/` + `shared/components/editor-tabs/` + `Fleet/VehicleService/components/details` | Use `app-editor-dialog` for the shell and `app-editor-tabs` for accessible navigation; the feature owns typed tab state, panels, bounded content and forms |
 | Editable child collection | `shared/components/editable-collection-table/` + `Fleet/VehicleService/components/details` + `Customers/Companies/CompanyPartner/components/detalisForm/{contact-persons,credit-cards,documents,drivers}` | Shared `app-editable-collection-table` owns collection chrome, required headers, optional heading, Add/default Remove or projected row actions, empty state, responsive table behavior, bounded `fillHeight` scrolling, and light/dark styling; the feature owns typed rows, projected cells/actions, validation, confirmation, mutation, and persistence |
 | Hierarchy tree workspace | `Accounts/Account/components/list` + `components/details` | Canonical routed tree editor for true parent/child master data: feature title + compact tree toolbar + bounded internal tree scroll + embedded detail pane; preserve hierarchy semantics instead of converting the tree to a flat Grid |
-| Financial collection editor | `Accounts/openingBalances/components/details` + tab editors + `shared/components/editable-collection-table/` | Routed accounting workspace for dense editable financial rows: immutable/server-owned context in the feature header, compact tabs/filters, grow-until-cap card, internal row scroll with sticky headers, visible Debit/Credit/Balance summary and Save action |
+| Financial collection editor | `Accounts/openingBalances/components/details` + tab editors + `shared/components/editable-collection-table/` | Routed accounting workspace for dense editable financial rows: immutable/server-owned context in the feature header, compact tabs/filters, grow-until-cap card, internal row scroll with sticky headers, visible Debit/Credit totals plus optional backend-owned Balance/Net when useful, and Save action |
 | Tabbed settings workspace | `Accounts/Link Accounts/LinkAccounts/components/details` + `shared/components/editor-tabs/` | Routed settings/account-mapping workspace: shared workspace tabs, fixed route surface with no main-page vertical scroll, one internal content scroll owner, and Save outside that scroll region |
 | Nested child draft | `shared/components/editor-dialog/` + `shared/components/editor-tabs/` + `Customers/Companies/CompanyPartner/components/detalisForm/drivers` | Shared dialog/tab/section components own presentation and accessible navigation; the feature owns draft isolation, dirty-close approval and parent commit on Save only |
 | Confirmation and discard | `shared/service/confirmation-dialog.service.ts`, `Fleet/Vehicle` `requestClose()` | Single shared dialog for every yes/no |
 | Report | `shared/components/report-page/` + `shared/components/report-actions/` + `Customers/StatementOfAccount/components/list` + `Reports/TrailBalance/components/list` | Shared page/action chrome around a typed filter, sectioned response and totals; Trial Balance is the canonical dense accounting tree/table visual variant; shared print coordination |
 
-Where a block shows Company or Sales/Fleet markup for a filter concern, use it
-only for the filter shape. `shared/components/data-table` owns the reusable
-table shell, while `Fleet/VehicleService` is the canonical feature integration.
+Where a block shows Company/Individual markup for a filter concern, use it only
+for the filter shape. `shared/components/data-table` owns the reusable table
+shell, while `Fleet/VehicleService` remains the canonical paged-grid feature
+integration.
 
 ## Pattern status
 
@@ -132,7 +134,7 @@ silently revert the consumer to the legacy implementation.
 | # | Block | Status | Reference |
 |---|---|---|---|
 | 3 | [Header](#3-header) | Canonical | `components/list/list.component.html` |
-| 4 | [Filters](#4-filters) | Canonical | same |
+| 4 | [Filters](#4-filters) | Canonical | `Accounts/openingBalances/components/details` (compact strip) + `Customers/Individual/IndividualPartner/components/list` (retained flat grid) |
 | 5 | [Columns](#5-columns) | Canonical | `Fleet/VehicleService/components/list/list.component.ts` |
 | 6 | [Grid and footer](#6-grid-and-footer) | Canonical | `shared/components/data-table/` + `Fleet/VehicleService/components/list` |
 | 7 | [Action button cycle](#7-action-button-cycle) | Transitional + canonical quotation specialization | `shared/components/action-button/` + `Sales/SalesQuotation/components/list` |
@@ -196,7 +198,10 @@ silently revert the consumer to the legacy implementation.
 
 > **Status: Canonical** — route/model shape; the interceptor wiring inside is Transitional
 
-Every feature is a folder with a routes file. Copy this shape exactly.
+For a conventional routed CRUD/list-detail feature, use this folder shape.
+Special shapes such as reports, hierarchy workspaces, routed financial editors,
+tabbed settings workspaces, and other explicitly documented exceptions follow
+their owning blocks instead of being forced into this baseline.
 
 ```
 <Feature>/
@@ -310,8 +315,9 @@ The authenticated Metronic shell must not make the browser document and the
 feature content competing vertical scroll owners. `LayoutComponent` owns the
 `sigma-app-viewport` body class while the authenticated shell is active. That
 class is bounded to one dynamic viewport, the flex ancestors use `min-height: 0`, and
-`.app-content` is the single vertical scroll owner when routed content exceeds
-the available height:
+`.app-content` is the shell's last-resort scroll owner. Under the *No page
+scroll* rule below, no Sigma route may rely on it: every route fills its box and
+scrolls inside its own components. The shell rule stays as the safety net:
 
 ```scss
 html { height: 100%; }
@@ -373,17 +379,195 @@ their bounded internal scroll. The `app-print-content-only` override must
 release the shell height and overflow so multi-page reports are not clipped;
 pair it with the print lifecycle in block 21.
 
+**A bounded route fills the container the shell already sized — it does not
+recompute the page height.** The shell gives the routed content an exactly-sized
+box: `.app-content` is `flex: 1 1 auto` inside the content wrapper, and its
+`.app-container` child is `flex: 1 1 auto; min-height: 0`. So the route host only
+has to claim it:
+
+```scss
+:host {
+  display: block;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+```
+
+Do **not** write `height: calc(100dvh - var(--bs-app-header-height) -
+var(--bs-app-toolbar-height) - var(--bs-app-footer-height) - <slack>)`. That is
+the "second page-height calculation" this rule forbids, and it is wrong by
+construction: the shell sizes the toolbar from the toolbar's own padding
+(`toolbar.fixed` is `false`, so Metronic forces `height: auto`), while the calc
+reserves a fixed `--bs-app-toolbar-height`, which is a *reservation* the shell
+keeps in step with the band by hand (`31px` desktop, `55px` base — see *Shell
+vertical insets* below) rather than a measurement of it. The two agree only by
+maintenance, and the per-screen `<slack>` is the fudge factor absorbing whatever
+is left —
+a number that cannot stay correct, because the toolbar's real height depends on
+whether a page title resolves at runtime. The visible symptom is a strip of dead
+space above the footer (calc too short) or a scrollbar in `.app-content` (calc too
+long), and it changes whenever the shell's toolbar or footer is touched.
+
+`Rental/RentalPlanner` and `Staff/designations` are the reference implementations
+of the container-fill host. Legacy screens still carrying a viewport calc are
+unification debt: do not copy the calc, and replace it with `height: 100%` when
+the feature is reviewed.
+
+#### No page scroll — one scroll owner per region
+
+Owner requirement (2026-09-28): **the page never scrolls, at any breakpoint.**
+`.app-content` must not show a scrollbar. Only components scroll, each inside
+its own bounded box:
+
+```text
+:host                 height: 100%; overflow: hidden        (container-fill, above)
+ └ .feature-page       display: flex; flex-direction: column; min-height: 0; overflow: hidden
+    └ .feature-panel   display: flex; flex-direction: column; min-height: 0; overflow: hidden
+       ├ app-feature-title        flex-shrink: 0        (fixed)
+       ├ .feature-filters         flex-shrink: 0        (fixed, block 4)
+       └ .feature-table-wrapper   flex: 1 1 auto; min-height: 0; overflow: hidden
+          ├ grid rows              the single scroll owner (block 6)
+          └ paginator / actions    flex-shrink: 0        (fixed at the bottom)
+```
+
+- A region has exactly **one** vertical scroll owner: grid rows (block 6), a
+  form or master/detail pane (blocks 12 and 14), or the dialog body (block 13).
+  Never nest two scroll owners for the same content.
+- Narrow widths rearrange panes (stacking, fewer filter columns) but never hand
+  scrolling back to the page. Do not switch outer containers to
+  `overflow: visible` and do not add content-sized minimum heights at a
+  breakpoint.
+- The panel is the primary card: `padding: 6px 12px`, `border: 1px solid
+  var(--sigma-border)`, `border-radius: 4px`, `background: var(--sigma-surface)`,
+  `box-shadow: var(--sigma-panel-shadow, 0 1px 3px rgb(35 48 62 / 8%))`, with a
+  small `gap` between its children and dark-theme values under `:host-context`.
+  Legacy `.card` / `.card-body` wrappers are not used.
+
+#### Base component
+
+List and details components extend `BaseComponentService`
+(`shared/service/base-component.service.ts`). It already provides `loading`,
+`router`, and `activatedRoute`, so do not inject a second `Router`. It also
+exposes `subscriptionId`, read from `localStorage`. Never put that value in a
+request payload: the tenant is server-owned (backlog 8 and 19).
+
+#### Shell vertical insets — where the gap above the content comes from
+
+`.app-content` must carry **no vertical padding**, and in the active shell it
+does not. The default layout config is `LightSidebarConfig` (pinned in
+`layout.service.ts`), which sets `toolbar.fixed` and `footer.fixed` to `false`,
+so Metronic's
+`[data-kt-app-toolbar-enabled=true]:not([data-kt-app-toolbar-fixed=true]) .app-content`
+and `:not([data-kt-app-footer-fixed=true]) .app-main .app-content` rules both
+match and pin `padding-top` and `padding-bottom` to `0`. Do not add a shell
+content inset here; a route owns its own inset.
+
+The band that remains between the toolbar and the routed content is the
+**toolbar's own vertical padding**, and it is the whole of the toolbar's vertical
+size rather than a slice of it: the layout config sets
+`app.toolbar.class: 'py-3 py-lg-6'` — `12px` on mobile but `24px` from `992px`
+up — while `toolbar.fixed` is `false`, which makes Metronic's
+`body:not([data-kt-app-toolbar-fixed=true]) .app-toolbar { height: auto }`
+(`assets/sass/layout/_toolbar.scss`) win over the base
+`.app-toolbar { height: var(--bs-app-toolbar-height) }`. So `padding` moves the
+band one-for-one; there is no fixed `55px` box absorbing it. Do not size this band
+from `--bs-app-toolbar-height` — the variable does not size the toolbar here. It
+is a *reservation* other screens read, and it is kept in step with the padding by
+hand (see the companion rule below).
+
+The toolbar does render real content: `toolbar.component.html` shows
+`app-page-title`, and `showPageTitle()` returns true for the `classic` layout
+(the active one) on any route not on its exclusion list. Its alternative toolbar
+layouts (accounting, extended, reports, saas) are commented out, so the page
+title is the only content.
+
+It is tightened in `src/styles.scss`, desktop only, from the layout config's
+`py-lg-6` (`24px` / `24px`) to `16px` above and `8px` below:
+
+```scss
+@media (min-width: 992px) {
+  .app-toolbar {
+    padding-top: 16px !important;
+    padding-bottom: 8px !important;
+  }
+
+  /* 55px (Metronic base) minus the 24px the band gave back. */
+  :root {
+    --bs-app-toolbar-height: 31px;
+  }
+}
+```
+
+The top keeps the title off the app header; the bottom is the gap between the
+title and the routed card, so it only needs a hairline. Mobile is left alone —
+`py-3` is already `12px` / `12px`.
+
+**The `--bs-app-toolbar-height` companion is not optional, and this is the trap.**
+34 feature stylesheets still size their page with the forbidden
+`calc(100dvh - … - var(--bs-app-toolbar-height) - … - <slack>)`, so they reserve a
+fixed height for this band. Reducing the band by `N` without reducing that
+reserved height by `N` leaves each of those routes `N` taller than its container —
+a scrollbar in `.app-content` — including five sibling Movements screens on the
+same review branch. The variable has **no other live consumer**: every other use
+in the Metronic SASS is gated on `toolbar.fixed` / `toolbar.sticky`, both off here,
+so changing it moves nothing else.
+
+A route built on the container-fill host is immune to this band. As those 34
+screens migrate, the companion override can be deleted.
+
+**Changing this band is a shell-level change.** It is allowed, but only with the
+companion kept in step, and only after checking which routes still compute their
+own height:
+
+```
+grep -rl "bs-app-toolbar-height" --include=*.scss src/app/modules | wc -l
+```
+
+The screen-scoped levers are the route's own outer padding and, if a route still
+computes its height, its own `slack` — never the card's internal inset.
+
+**Reduce the gap above a card by removing the OUTER gap — never the card's
+internal inset.** "Make the card higher / reduce the space between the card and
+the TopBar" means the distance *outside* the card: the route's outer padding (and,
+once a route is container-filled, the toolbar band above it). It does **not** mean
+the card's `padding`, which is the gap between the card's border/shadow and its
+own contents. Trimming the internal inset moves the contents, not the card: the
+card's outer edge stays exactly where it was, the border and shadow visibly crowd
+the first child, and the requested change appears to have done nothing. A route
+that pulls its card upward keeps a full internal inset and sets only its outer
+vertical padding to `0`.
+
+Keep any shell override in the stylesheet rather than in the layout config: the
+layout service caches its config under `<appVersion>-layoutConfig` in
+`localStorage`, so a config edit can be invisible to a browser that already stored
+one. `styles.scss` imports the Metronic SASS at the top of the file, so a rule
+added later in that file wins the cascade.
+
+**Check:** `.app-content` carries no vertical padding · the toolbar band is the
+layout config's value on mobile and the single desktop override (`16px` above /
+`8px` below) from `992px` up · no feature stylesheet overrides the toolbar band ·
+`--bs-app-toolbar-height` is kept in step with that band, because the routes that
+still compute their own page height reserve a fixed height from it · the toolbar
+is sized by its padding and not by `--bs-app-toolbar-height` · a route does not
+repeat the shell inset · the gap between the toolbar and the first card is the
+route's own outer padding and nothing else · the space above a card was reduced by
+changing outer padding (shell band or route padding), never the card's internal
+`padding` or the shadow · the card's internal `padding` is unchanged from its
+designed value · changing the toolbar band was checked against the routes that
+still compute their own page height, because it moves every one of them.
+
 **Routed full-page editor exception:** when a feature has an explicitly
 approved independently addressable Create/Edit/View route, the editor may use a
-fixed host bounded by the existing header/footer variables. The host must use
+container-fill host (`height: 100%`, see *No page scroll* below). The host must use
 `min-height: 0` and `overflow: hidden`; its action footer is a fixed-height
 flex sibling of the form body, and only a deliberately bounded child collection
 frame may own vertical row scrolling. This exception does not change block 13's
 rule that ordinary list-owned CRUD uses the shared editor dialog.
 **Routed settings-workspace exception:** when a routed settings or account-mapping
-workspace is intentionally designed without main-page scrolling, bound the route
-surface to the authenticated shell with the existing header/toolbar/footer
-variables and use `overflow: hidden` on the route/card flex chain. Keep the
+workspace is designed without main-page scrolling (every Sigma route is, under
+*No page scroll*), bound the route surface with the container-fill host and use
+`overflow: hidden` on the route/card flex chain. Keep the
 feature header, Save action, workspace tabs and compact search/filter controls
 outside the scrolling region. Exactly one feature-owned content viewport may use
 `overflow-y: auto`; child sections and editable tables must grow naturally and
@@ -391,6 +575,15 @@ must not add a second vertical scrollbar unless a separately bounded collection
 is an explicit business requirement. Horizontal tab/table overflow remains
 allowed. On narrow screens, preserve this single vertical-scroll owner rather
 than falling back to nested page + child scrolling.
+
+**Routed financial-editor exception:** a dense routed accounting editor such as
+Opening Balances may use one route-level grow-until-cap boundary and make its
+editable table frame the row-scroll owner after that cap is reached. Keep the
+feature title, workspace tabs, state/context banner, compact filters, totals and
+Save action outside the row-scroll frame. The route may calculate the cap once
+from the existing shell variables; child tabs/forms must not repeat viewport
+math or add a second vertical scroll owner. Block 14 defines the full financial
+editor contract.
 
 ### Hierarchy tree workspace — canonical composite
 
@@ -475,13 +668,28 @@ Also note `main.ts` imports `bootstrapApplication`, `provideHttpClient` and
 `withInterceptors` but never calls them; the app boots through
 `platformBrowserDynamic().bootstrapModule(AppModule)`. Those imports are dead.
 
-Until this is centralised (block 30, item 17), register every feature service in
-`LayoutModule.providers`. Do not add a manual `Authorization` header in a feature
-service as a workaround.
+Until this is centralised (block 30, item 17), register every authenticated
+feature service in **exactly** `_metronic/layout/layout.module.ts` →
+`LayoutModule.providers`, because that injector currently owns the
+`provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor]))`
+chain. Do not register the same service only in `AppModule`, a feature module, a
+component `providers` array, another layout-like module, or another injector and
+assume the token interceptor will follow it. A provider in the wrong injector can
+resolve the root interceptor-free `HttpClient` and silently send protected
+requests without `Authorization`.
+
+Do not fix this locally by adding a manual `Authorization` header or by creating
+another feature-level `provideHttpClient(...)`. Both approaches create another
+HTTP ownership fork and make interceptor behavior harder to reason about. The
+temporary rule is one authenticated provider location; the permanent fix is item
+17: provide the interceptor chain once at application root and remove the large
+Layout provider list.
 
 **Check:** routes file exists · route count matches the editor shape · `models/`
-has the files its shape needs · lazy route registered · service in
-`LayoutModule` providers · menu entry.
+has the files its shape needs · lazy route registered · every authenticated
+feature service resolves from `_metronic/layout/layout.module.ts` providers until
+item 17 is fixed · no duplicate/alternate feature `provideHttpClient` chain · no
+manual Bearer header workaround · menu entry.
 
 **Do not copy from** `Companies/Company`, `Companies/CompanyContactPerson`,
 `Companies/CompanyDriver`. Dead scaffolding: `/menu/products` columns, empty
@@ -572,6 +780,11 @@ getList(query: CompanyPartnerListQuery = {}): Observable<Results<CompanyPartnerD
 Always `app-feature-title` with the Create button in its slot. Never a second
 title in the Metronic toolbar.
 
+`app-feature-title` owns the title inset: 8px from the panel's top, left, and
+right edges with 16px separation below, matching the component host margin. A
+feature must not compensate by re-padding the title or the panel; where the
+title needs a compensating offset, match the responsive panel padding instead.
+
 Import `PrimaryActionButtonComponent` in the standalone feature and use the
 shared primary action from block 24. The feature supplies translated content
 and behavior; it does not recreate primary-button markup or styling.
@@ -609,8 +822,8 @@ record the Add contract as Missing and report the feature blocked instead of
 silently changing the demonstrated workflow.
 
 **Check:** icon set · title and subtitle translated · Create inside
-`app-feature-title` · white glyph in the solid title-icon tile · white glyph on
-the solid Create button.
+`app-feature-title` · 8px inset with 16px separation below · white glyph in the
+solid title-icon tile · white glyph on the solid Create button.
 
 ---
 
@@ -618,12 +831,28 @@ the solid Create button.
 
 > **Status: Canonical**
 
-Presentation reference: `Customers/Individual/IndividualPartner/components/list`;
-primary action implementation remains owned by block 24.
+Presentation references: `Accounts/openingBalances/components/details` for the
+compact strip, and `Customers/Individual/IndividualPartner/components/list` for
+the retained flat grid; primary action implementation remains owned by block 24.
 
-One `<form>`, `[formGroup]`, `(ngSubmit)`. Every control labelled. The canonical
-list filter is a compact, flat 12-column grid inside the primary panel. Do not
-wrap it in a second bordered, rounded, padded, or tinted filter card.
+One `<form>`, `[formGroup]`, `(ngSubmit)`. Every control labelled.
+
+This block owns filter **semantics** for every filter shape, and two approved
+**presentations**:
+
+- **Compact filter strip — default for a new screen.** One compact wrapping strip
+  with an inline-start primary accent, a soft tinted surface and a restrained
+  shadow, holding a uniform field grid. Full spec under
+  `#### Compact filter strip — default presentation`.
+- **Flat 12-column grid — retained, do not spread.** The presentation already
+  shipped by the ordinary typed list features. Keep it on the screens that
+  already use it; a new screen does not adopt it.
+
+The strip is bordered, rounded and tinted by design. The prohibition on wrapping
+a filter set in "a second bordered, rounded, padded, or tinted filter card"
+belongs to the flat-grid presentation, where it forbids stacking an extra card
+*around* the flat grid. It is not a prohibition on the strip, and it is not a
+licence to add a decorative card anywhere else.
 
 All single-line filter controls use the application token
 `--sigma-filter-control-height: 34px` from `src/styles.scss`. This is a shared
@@ -638,9 +867,249 @@ New or refactored feature-owned filter forms must use a class ending in
 `-filters` or `-filter-form`. Reusable or dynamic filter forms, plus existing
 legacy filter forms that have not yet been renamed, use `sigma-filter-form`.
 These are the canonical filter boundaries consumed by the shared height rule.
-Do not override `height`, `min-height`, or `max-height` for a single-line
-filter control in feature SCSS. A feature continues to own layout, colors,
+Do not hard-code or substitute another single-line filter height in feature
+SCSS. The shared token remains authoritative. A PrimeNG wrapper or its direct
+internal input/trigger may bind `height`, `min-height`, or `max-height` to
+`var(--sigma-filter-control-height)` when required to make the complete control
+resolve to the shared 34px contract. A feature continues to own layout, colors,
 borders, focus treatment, and responsive behavior.
+
+#### Compact filter strip — default presentation
+
+Use this for a new screen's filters. It is one compact wrapping strip, not a
+second large card, and not one field per line on ordinary desktop widths.
+
+Surface contract:
+
+- `display: flex; flex-direction: column` with an `8px` gap (field grid above,
+  actions row below) and `flex-shrink: 0`, because the strip is fixed and never
+  scrolls;
+- `padding: 8px 12px`, `box-sizing: border-box`, and `margin: 0 8px 6px`;
+- **the strip is exactly as wide as the feature-title card above it.** Give it
+  the same inline margin as the `app-feature-title` host (`8px`), and keep
+  `box-sizing: border-box` so the `border-inline-start` accent does not widen it.
+  Two cards stacked in the same panel must share both edges;
+- `border: 1px solid <themed filter border>`;
+- `border-inline-start: 3px solid var(--sigma-primary, #3498db)`;
+- `border-radius: 8px`;
+- surface = a `135deg` gradient of
+  `color-mix(in srgb, var(--sigma-primary) 5%, transparent)` over the feature's
+  filter-surface token;
+- `box-shadow: 0 3px 10px rgb(29 54 73 / 5%)`.
+
+Use logical properties so the inline-start accent mirrors in RTL, and provide
+dark-theme values for the strip surface, border and label tokens.
+
+##### Field distribution — the arrangement rule
+
+Inside the strip, lay the fields out as a **uniform `N`-column grid**, not as
+free-wrapping boxes:
+
+- `display: grid; grid-template-columns: repeat(N, minmax(0, 1fr));
+  align-items: end; gap: 5px 8px` — every column is the same width, so every
+  control lines up with the controls above and below it;
+- one control occupies exactly one column. A control that needs more room — a
+  radio group belonging to the field beside it, for example — spans the extra
+  columns explicitly with `grid-column: span K` and never relies on wrapping;
+- **choose `N` so the fields fill complete rows.** Count the fields, add the
+  columns consumed by any spanning group, and pick the divisor that leaves no
+  empty cell at the end of a row. A trailing gap is a layout defect, not a
+  neutral outcome;
+- a boolean filter is a field: it takes the next free column and bottom-aligns
+  with its neighbours (`align-self: end`, plus the shared control height) so it
+  fills the row instead of starting a lonely one;
+- the field label sits above its control: `11px`, weight `700`,
+  `letter-spacing: 0.01em`, `margin: 0 0 2px`;
+- controls keep `var(--sigma-control-radius)` (`6px`) and the shared
+  `--sigma-filter-control-height` (`34px`), with `var(--sigma-control-focus-ring)`
+  on focus and a primary-tinted border on hover;
+- actions keep their own full-width row below the field grid (right-aligned,
+  `gap: 8px`), so they never consume a field column.
+
+Responsive:
+
+- at `900px`, drop `N` to `2` and give any spanning group `grid-column: 1 / -1`;
+- at `700px`, drop to a single column and give every child `grid-column: 1 / -1`;
+- the strip stays outside any row-scroll frame and must not become a second
+  vertical scroll owner.
+
+Copy this:
+
+```scss
+.feature-page {
+  --feature-filter-surface: #f8fbfd;
+  --feature-filter-border: #d7e3eb;
+  --feature-filter-label: #4a6174;
+  --feature-filter-control-border: #98a7b7;
+}
+
+.feature-filters {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 8px;
+  margin: 0 8px 6px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--feature-filter-border);
+  border-inline-start: 3px solid var(--sigma-primary, #3498db);
+  border-radius: 8px;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--sigma-primary) 5%, transparent),
+      transparent 42%
+    ),
+    var(--feature-filter-surface);
+  box-shadow: 0 3px 10px rgb(29 54 73 / 5%);
+}
+
+.feature-filter-controls {
+  display: block;
+  flex: 0 0 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/*
+ * Four columns because this filter set fills three complete rows: one column
+ * plus a three-column group, then four single-column fields, then four more.
+ * Count the fields before you pick N.
+ */
+.feature-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: end;
+  gap: 5px 8px;
+}
+
+.feature-filter-field {
+  min-width: 0;
+
+  label {
+    display: block;
+    margin: 0 0 2px;
+    color: var(--feature-filter-label);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+
+  > input {
+    box-sizing: border-box;
+    width: 100%;
+    padding-inline: 10px;
+    border: 1px solid var(--feature-filter-control-border);
+    border-radius: var(--sigma-control-radius, 6px);
+    color: var(--sigma-text, #3f4850);
+    background: var(--sigma-surface, #fff);
+    box-shadow: none;
+    font-size: 11px;
+  }
+}
+
+/* A radio group belonging to the field beside it spans the spare columns. */
+.feature-filter-mode {
+  display: flex;
+  grid-column: span 3;
+  min-height: var(--sigma-filter-control-height, 34px);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* A boolean filter fills the last free column instead of starting a new row. */
+.feature-filter-boolean {
+  display: inline-flex;
+  min-width: 0;
+  min-height: var(--sigma-filter-control-height, 34px);
+  align-items: center;
+  align-self: end;
+  gap: 8px;
+  color: var(--sigma-text, #3f4850);
+  font-size: 11px;
+  cursor: pointer;
+
+  input {
+    width: 15px;
+    height: 15px;
+    margin: 0;
+    flex: 0 0 auto;
+    accent-color: var(--sigma-primary);
+  }
+}
+
+.feature-filter-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+:host ::ng-deep .feature-filter-field .p-dropdown,
+:host ::ng-deep .feature-filter-field .p-calendar .p-inputtext {
+  width: 100%;
+  border: 1px solid var(--feature-filter-control-border);
+  border-radius: var(--sigma-control-radius, 6px);
+  color: var(--sigma-text, #3f4850);
+  background: var(--sigma-surface, #fff);
+  box-shadow: none;
+  font-size: 11px;
+}
+
+:host-context([data-bs-theme='dark']) {
+  .feature-page {
+    --feature-filter-surface: #172630;
+    --feature-filter-border: #3d5262;
+    --feature-filter-label: #b3c4d0;
+    --feature-filter-control-border: #526879;
+  }
+}
+
+@media (max-width: 900px) {
+  .feature-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .feature-filter-mode {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .feature-filter-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .feature-filter-field,
+  .feature-filter-mode,
+  .feature-filter-boolean {
+    grid-column: 1 / -1;
+  }
+}
+```
+
+This is a presentation contract only. Semantics still come from the rest of this
+block and keyboard/accessibility rules from block 27: one real `<form>` with
+`(ngSubmit)`, every control labelled, `label for` matched by `inputId`/`id`, and
+Search as the `type="submit"` action so Enter inside a filter field searches
+rather than triggering an unrelated outer form. If the reference source misses
+one of those semantics, treat it as source drift to fix in the feature review —
+not as permission to copy the gap. Do not compress filters by removing labels,
+shrinking practical hit targets, or reducing contrast.
+
+#### Flat 12-column grid — retained presentation
+
+Use this only on the ordinary typed list features that already ship it. A new
+screen uses the compact strip above.
 
 On a wide screen, Branch and Search occupy the first row (`3 + 9` columns).
 Agreement Status, the inactive toggle, and actions occupy the second row
@@ -932,14 +1401,24 @@ private buildFilters(): IndividualPartnerListFilters {
 }
 ```
 
-**Check:** one flat 12-column filter grid, with no nested filter card · desktop
-spans are `3 + 9` then `3 + 3 + 6` · all controls collapse to one column by
-700px · every single-line native and PrimeNG filter control consumes
-`--sigma-filter-control-height` and remains exactly 34px high in light and dark
-themes · no feature-level height override · `label for` matches
-`inputId` · Search is `type="submit"` and disabled while running · changing
-filters resets to page 1 · search value trimmed · no extra search/clear button
-beside a dropdown that already has `[showClear]` and `[filter]`.
+**Check:** the strip surface is one wrapping band with an inline-start primary
+accent, an `8px` radius, a tinted surface and a restrained shadow, and it stays
+outside any row-scroll frame · the strip is exactly as wide as the
+feature-title card above it — same inline margin, `box-sizing: border-box`, both
+edges shared · the field grid uses a uniform `repeat(N, 1fr)`
+layout in which every control is one column wide and every row is completely
+filled, with no empty cell at the end of a row · any spanning group declares
+`grid-column: span K` explicitly · a boolean filter occupies a field column and
+bottom-aligns with its neighbours · actions keep their own full-width
+right-aligned row and never consume a field column · a flat 12-column grid
+appears only on a screen that already ships it, with no nested filter card ·
+all controls collapse to one column by `700px` · every single-line native and
+PrimeNG filter control consumes `--sigma-filter-control-height` and remains
+exactly 34px high in light and dark themes · no hard-coded or alternate feature
+height · any PrimeNG dimension binding uses the shared token · `label for`
+matches `inputId` · Search is `type="submit"` and disabled while running ·
+changing filters resets to page 1 · search value trimmed · no extra search/clear
+button beside a dropdown that already has `[showClear]` and `[filter]`.
 
 ---
 
@@ -984,6 +1463,16 @@ private toGridRow(item: CompanyPartnerDTO): CompanyPartnerGridRow {
   };
 }
 ```
+
+**Template columns and status text.** When a column uses a custom cell template
+(`#statusTemplate`, `#dateTemplate`), declare it with
+`@ViewChild('statusTemplate', { static: true }) protected statusTemplate!: TemplateRef<unknown>;`
+and build the `columns` signal in `ngOnInit()` through an `initColumns()` method,
+so the template reference exists before the table renders. Give a status column
+**both** `cellTemplate` and a `value: (row) => this.getStatusText(row.status)`
+fallback that returns translated text. Export and any render path that bypasses
+the template then still show translated text instead of a raw enum. In the
+template, bind the row with `let-row` (`$implicit`).
 
 **Required columns rule.** The list model carries only what the grid shows, plus
 `id`, plus what a row action needs. Company's 6 columns need: `id`, `no`,
@@ -1175,34 +1664,77 @@ Its list SCSS owns only page/panel/error layout and the placement of the shared
 component:
 
 ```scss
-:host { display: block; }
-
-.feature-grid {
+.feature-table-wrapper {
   --sigma-data-table-min-width: 640px;
-  display: block;
-  margin: 0 14px 12px;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0 8px;
+  overflow: hidden;
 }
 ```
 
-Ordinary paginated screens must use the table's natural height: do not pass a
-screen-specific `scrollHeight`. This keeps every standard grid consistent and
-places the paginator directly at the actual bottom of the rendered grid. A
-bounded table body is an explicit exception, not a visual preference.
+The wrapper takes the same `8px` inline margin as the `app-feature-title` host
+and the block 4 filter strip, so all three cards share both edges. It has no
+bottom margin, because the paginator is grounded to the card's bottom edge.
 
-For a confirmed dense report that must keep row overflow inside the Grid, pass
-an explicit `scrollHeight` to `app-data-table`. The shared component then owns
-the vertical row viewport while leaving its paginator outside that viewport.
-It binds the value to the PrimeNG scroll contract and to the wrapper's explicit
-`max-height`, so responsive table mode cannot silently expand the route page.
-Do not add a feature-local `.p-datatable-wrapper` override. Keep this opt-in:
-`.app-content` remains the route-shell fallback scroll owner for ordinary pages.
+**The grid rows are the screen's scroll owner (no page scroll).** The page never
+scrolls (block 1, *No page scroll*). A list screen therefore gives the remaining
+panel height to the grid, and the rows scroll inside it while the title, filters,
+and paginator stay fixed.
 
-```html
-<app-data-table
-  scrollHeight="clamp(200px, calc(100dvh - 500px), 460px)"
-  ...
-/>
-```
+> **Transitional — fill workaround, until the shared fill mode exists (backlog 34).**
+> `app-data-table` has no fill mode yet. Its wrapper forces
+> `max-height: var(--sigma-data-table-scroll-height, 288px) !important`, and
+> `scrollHeight="flex"` leaves that variable invalid, so the grid does not fill
+> on its own. Until the shared component gains a fill input, pass
+> `scrollHeight="flex"` and copy this block **exactly**. It is the only
+> permitted feature-level override of table or paginator internals:
+>
+> ```scss
+> ::ng-deep .feature-table-wrapper {
+>   .sigma-data-table,
+>   .p-datatable {
+>     flex: 1 1 auto;
+>     min-height: 0;
+>     display: flex;
+>     flex-direction: column;
+>     height: 100%;
+>     overflow: hidden;
+>   }
+>
+>   .p-datatable-wrapper {
+>     flex: 1 1 0 !important;
+>     min-height: 0 !important;
+>     height: auto !important;
+>     max-height: none !important;
+>     overflow-y: auto !important;
+>   }
+>
+>   p-paginator,
+>   .p-paginator {
+>     margin-top: auto !important;
+>     padding: 6px 0 4px !important;
+>     flex-shrink: 0 !important;
+>   }
+> }
+> ```
+>
+> The shared paginator's own spacing is `padding: 10px 0 12px`; the values above
+> compact it only inside a filled grid. Add no other `.p-datatable-*` or
+> `.p-paginator` rule. When backlog 34 ships, replace this block with the shared
+> fill input.
+
+An explicit `scrollHeight` value (for example
+`clamp(200px, calc(100dvh - 500px), 460px)`) is only for a grid **nested inside**
+another scroll owner, such as a report section or a tab. There the shared
+component owns the row viewport and its paginator stays outside it. Do not add a
+feature-local `.p-datatable-wrapper` override in that case.
+
+The empty state defaults to `emptyMessage = 'general.noDataFound'`. Keep that key
+in both `en.ts` and `ar.ts`, and add both entries when overriding it with a
+feature key.
 
 Public CSS variables allow an exceptional feature-specific width or semantic
 color without copying component internals: `--sigma-data-table-min-width`,
@@ -1227,8 +1759,10 @@ template, TypeScript and SCSS evidence reported separately · exactly one
 `app-data-table` and no second pager · typed translated columns and empty state ·
 `totalRecords` from the API total, never `rows.length` · page conversion
 `first / rows + 1` once in the typed event handler · no copied
-`.p-datatable-*`, action-control, dropdown, or paginator rules · public CSS
-variables used only for real feature variation · no cross-feature `@use`.
+`.p-datatable-*`, action-control, dropdown, or paginator rules beyond the
+Transitional fill block · grid rows are the single scroll owner and the page does
+not scroll · public CSS variables used only for real feature variation · no
+cross-feature `@use`.
 
 ---
 
@@ -2285,42 +2819,21 @@ Order matters: hide, then reset. Resetting inside `(onHide)` runs before the use
 has answered, which is the defect being replaced. The confirmation dialog is
 appended to body, so it correctly stacks above this dialog (block 11).
 
-**Check:** Fleet shell structure + target-owned class prefix · `appendTo="body"`
-+ unique `styleClass` · `[draggable]="false"` · responsive
-`[style]`/`[breakpoints]`, never `100vw`/`100vh` · child draft mutates its parent
-only in Save · close intent goes through one method that applies the discard
-rule, then `close()` hides and resets · no reset in `(onHide)` · nested dropdowns
-and calendars also `appendTo="body"` · width sized for the widest tab, not the
-first · rebuild translated field config on `onLangChange`.
+**Check:** the feature consumes `app-editor-dialog` rather than declaring a
+feature-owned `p-dialog` shell · width/breakpoint overrides are passed only
+through supported shared-component inputs when the content genuinely needs them ·
+child draft mutates its parent only in Save · close intent goes through one
+method that applies the discard rule, then `close()` hides and resets · no reset
+in `(onHide)` · nested dropdowns and calendars use their approved body-appended
+overlay contract · rebuild translated field config on `onLangChange` when the
+feature stores translated configuration.
 
-**Header and action styling:** a custom header supplied through `pTemplate="header"`
-is a flex item inside PrimeNG's dialog header. Give the custom header
-`width: 100%` and keep the close control at the logical edge with
-`margin-inline-start: auto`; otherwise the header can shrink-wrap around the
-title and place the X button beside it instead of at the dialog edge. Primary
-action buttons must set their icon colour explicitly so theme or Bootstrap icon
-rules cannot reduce contrast:
-
-```scss
-.company-driver-dialog-heading {
-  display: flex;
-  width: 100%;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
-.company-driver-dialog-close {
-  margin-inline-start: auto;
-}
-
-.company-dialog-primary,
-.company-dialog-primary i {
-  color: #fff;
-}
-```
-
-The same rules apply when a feature uses its own class prefix instead of the
-CompanyPartner names above.
+The shared `app-editor-dialog` owns `appendTo="body"`, modal/drag/resize behavior,
+the header hierarchy and close control, responsive shell sizing, footer action
+markup, primary-icon contrast, focus styling, RTL, dark theme and Escape output.
+Do not recreate its `pTemplate="header"`, footer buttons, or internal classes in
+feature templates/SCSS. A feature owns projected content and may supply only the
+documented public inputs, outputs and `dialogClass` hook.
 
 ---
 
@@ -2607,34 +3120,39 @@ calculations in tab components or child forms:
 
 The final `60px` above is breathing room for the current shell, not another
 footer. Use the actual existing layout variables and the closest approved screen
-when the shell changes. Never create page scroll plus table scroll for the same
-row set. On narrow/mobile layouts, relax the bounded editor when necessary so
-controls remain usable; avoid nested vertical scroll regions.
+when the shell changes. The `55px` in `var(--bs-app-toolbar-height, 55px)` is a
+CSS fallback only — the shell sets that variable on `:root` (`31px` on desktop,
+kept in step with the toolbar band in block 1), so a bounded editor picks up the
+current band without being edited. Never treat the fallback as a measurement of
+the toolbar. Never create page scroll plus table scroll for the same
+row set. On narrow/mobile layouts, rearrange the editor (stack panes, reduce
+filter columns) but keep it bounded: the page never scrolls (block 1, *No page
+scroll*), and the row frame stays the single vertical scroll owner.
 
 #### Compact filters inside financial editors
 
-Financial-editor filters are a compact toolbar, not a second large card and not
-one field per line on ordinary desktop widths:
+The filter strip in a routed financial editor is the block 4 compact filter
+strip — same surface, same uniform field grid, same semantics. Block 4 is the
+single authority for that pattern; do not keep a second copy of the spec here.
 
-- wrap with flex/grid and align controls to the bottom;
-- target roughly `170px` field basis and allow useful fields to grow to about
-  `300px`;
-- consume `--sigma-filter-control-height` (`34px` current fallback) for
-  single-line native and PrimeNG controls;
-- keep labels legible at about `11px`, with small `5-8px` gaps and `5-8px`
-  vertical padding;
-- Search is primary; Reset is neutral/secondary;
-- body-appended dropdown/calendar overlays must remain visible despite bounded
-  editor overflow.
+Two points are specific to this bounded shape:
 
-Do not compress filters by removing labels, shrinking practical hit targets or
-reducing contrast.
+- body-appended dropdown and calendar overlays must remain visible despite the
+  bounded editor overflow, and still follow blocks 16 and 17;
+- on narrow screens the Search/Reset actions may use an equal-width two-column
+  row when both are present.
+
+The strip stays outside the row-scroll frame and must not become another
+vertical scroll owner.
 
 #### Financial summary/action strip
 
-Do not render Total Debit, Total Credit or Balance as one unstructured sentence.
-Place a compact summary strip immediately below the scrollable table and keep it
-outside the table frame so totals and Save remain visible while rows scroll.
+Do not render financial totals as one unstructured sentence. Place a compact
+summary strip immediately below the scrollable table and keep it outside the
+table frame so totals and Save remain visible while rows scroll. Debit and Credit
+are the base accounting totals for this shape. Add Balance or Net only when that
+value is deliberately owned by the backend/workflow and useful on the current
+tab; do not invent a third card merely to fill the strip.
 
 ```html
 <div class="financial-summary-bar">
@@ -2647,10 +3165,7 @@ outside the table frame so totals and Save remain visible while rows scroll.
       <span class="financial-summary-label">{{ '...' | translate }}</span>
       <strong class="financial-summary-value">{{ totalCredit() | number:digitsInfo() }}</strong>
     </div>
-    <div class="financial-summary-item financial-summary-item--balance">
-      <span class="financial-summary-label">{{ '...' | translate }}</span>
-      <strong class="financial-summary-value">{{ balance() | number:digitsInfo() }}</strong>
-    </div>
+    <!-- Optional: add --balance/--net only when the owning contract needs it. -->
   </div>
   <app-primary-action-button ... />
 </div>
@@ -2668,7 +3183,7 @@ Accounting accents are presentation only:
   `#7fd6b2` dark value);
 - Credit: warm accent (`#c46a52` border / `#9e503d` light value /
   `#f0a28d` dark value);
-- Balance: Sigma primary family (`#176f9d` light / `#8fd7f5` dark).
+- Optional Balance/Net: Sigma primary family (`#176f9d` light / `#8fd7f5` dark).
 
 Debit green and Credit warm/red are **not** Success/Error semantic states. Do not
 attach success/error copy, icons or accessibility meaning to them based only on
@@ -2676,18 +3191,24 @@ color. Totals use the same backend-driven monetary precision policy as row
 inputs; never introduce a separate frontend rounding rule.
 
 **Financial collection check:** one `app-feature-title` · server-owned context is
-read-only header metadata · compact desktop filters · shared editable collection
+read-only header metadata · Opening-Balances accounting filter surface retained
+without copying its semantic/accessibility gaps · labels correctly associated
+with controls · approved overlays remain unclipped · shared editable collection
 component retained · complete `min-height: 0` flex chain · one internal row
-scroll after the workspace cap · sticky table header · totals and Save outside
-the scroll frame · tabular monetary values · backend monetary precision · Debit/
-Credit colors remain non-semantic · RTL logical properties and dark equivalents.
+scroll after the workspace cap · sticky table header · Debit/Credit plus only
+contract-owned optional Balance/Net · totals and Save outside the scroll frame ·
+tabular monetary values · backend monetary precision · Debit/Credit colors remain
+non-semantic · RTL logical properties, narrow-screen behavior and dark equivalents.
 ---
 
 ## 15. View mode
 
 > **Status: Canonical**
 
-The route supplies the mode; the container disables the whole form once.
+The owning editor container supplies the mode and disables the whole form once.
+A routed editor normally derives `create | view | edit` from route data/params;
+a list-owned dialog receives the same explicit mode from its parent/list. Child
+sections consume the resulting form state rather than inventing another mode.
 
 ```ts
 readonly pageMode = signal<CompanyEditorMode>('create');
@@ -2722,9 +3243,20 @@ swaps Cancel for Close and shows an Edit button:
 {{ (isViewMode() ? 'general.close' : 'general.cancel') | translate }}
 ```
 
+**View-only dialogs.** `app-editor-dialog` defaults to
+`primaryActionVisible = true`, and in `mode="view"` that primary action is an
+**Edit** button. A dialog that is strictly a read-only viewer (no edit path, or
+a state where editing is not allowed) binds `[primaryActionVisible]="false"`.
+
+**Mode-specific lookups.** Request option lists only for controls rendered in
+the active mode. In View, display the names the Detail DTO already carries and
+skip edit-only dropdown lookups; do not show lookup warnings for controls that
+are not rendered.
+
 **Check:** `disable({ emitEvent: false })` so it does not fire `valueChanges` ·
 step navigation still works in view mode · Save hidden, not just disabled · Add
-and Delete buttons disabled through `parentForm.disabled`.
+and Delete buttons disabled through `parentForm.disabled` · read-only dialogs
+bind `[primaryActionVisible]="false"` · no edit-only lookups in View.
 
 ---
 
@@ -2732,7 +3264,8 @@ and Delete buttons disabled through `parentForm.disabled`.
 
 > **Status: Canonical**
 
-**Server lookup** — always `getSelectList` returning `DropDownSelect`:
+**Simple server lookup** — use `getSelectList` returning `DropDownSelect` when
+the backend exposes the ordinary reusable select contract:
 
 ```ts
 export interface DropDownSelect {
@@ -2758,6 +3291,15 @@ private loadBranches(): void {
 
 Bind `optionLabel="value"` and `optionValue="id"` — that matches
 `DropDownSelect`, so do not invent other field names.
+
+Some domains expose one typed options/configuration endpoint because the screen
+needs several related option sets or metadata together. That is valid when it is
+the confirmed backend contract; keep the response typed and bind each option set
+to its real shape. `Accounts/Link Accounts/LinkAccounts` is the approved example:
+its `getOptions()` returns a typed `LinkAccountsOptionsVM` while ordinary account,
+branch and job-category selects still use their normal select endpoints. Do not
+split a confirmed composite options contract merely to force every lookup through
+`DropDownSelect`.
 
 **Enum dropdown** — `EnumToArrayPipe` turns an enum into `{ key, value, id }[]`.
 Map it once in memory when the component is created; mapping a small enum is
@@ -2809,8 +3351,10 @@ When the dropdown is inside a canonical filter boundary from block 4, its
 outer wrapper consumes `--sigma-filter-control-height`; do not replace that
 shared 34px height in feature SCSS.
 
-**Check:** lookup failures show a message, not silence · `optionLabel`/
-`optionValue` match the source shape · `appendTo="body"` on every dropdown ·
+**Check:** lookup failures show a message, not silence · ordinary simple lookups
+use `getSelectList`/`DropDownSelect`; confirmed composite/domain option endpoints
+remain typed · `optionLabel`/`optionValue` match the source shape ·
+`appendTo="body"` on every dropdown ·
 `[showClear]` and `[filter]` instead of companion buttons · enum options mapped
 once in memory · exactly one wrapper border with borderless label and trigger ·
 inner label/trigger dimensions cannot cover the wrapper edge · focus changes
@@ -2823,20 +3367,26 @@ the existing border without an outer halo · filter dropdowns use the shared
 
 > **Status: Canonical**
 
-`p-calendar`, always appended to body with the shared panel class:
+`p-calendar`, always appended to body with the shared panel class. **Never** use
+a native `<input type="date">`. Every Sigma calendar is typeable, carries no
+icon, and keeps an invalid partial entry instead of clearing it. Editor shape:
 
 ```html
 <p-calendar
-  [inputId]="'company-driver-' + field.name"
-  [formControlName]="field.name"
-  [showIcon]="true"
+  #dateCal
+  inputId="field-date"
+  formControlName="date"
+  dateFormat="dd/mm/yy"
+  [readonlyInput]="false"
+  [keepInvalid]="true"
   [showButtonBar]="true"
+  [showOnFocus]="false"
+  (click)="dateCal.showOverlay()"
   [maxDate]="today"
-  [readonlyInput]="true"
   appendTo="body"
   panelStyleClass="sigma-datepicker-panel"
-  dateFormat="dd/mm/yy"
-  [placeholder]="'dd/mm/yyyy'"
+  styleClass="w-100"
+  [placeholder]="'feature.date' | translate"
 ></p-calendar>
 ```
 
@@ -2847,8 +3397,74 @@ Display format is `dd/mm/yy` in the picker and `dd/MM/yyyy` in tables:
 ```
 
 When the calendar is inside a canonical filter boundary from block 4, its
-wrapper, input, and visible trigger consume `--sigma-filter-control-height`.
-Do not add a feature-local filter-calendar height.
+wrapper and input consume `--sigma-filter-control-height`. Do not add a
+feature-local filter-calendar height.
+
+**Every calendar is typeable (owner decision, 2026-09-28).** Use
+`[readonlyInput]="false"` on filters **and** on detail/editor forms. The user
+types `dd/mm/yy` straight into the box and opens the picker only when they want
+to browse. Always pair it with `[keepInvalid]="true"`: without it, PrimeNG's
+blur handler (`updateInputfield()`) clears any text that does not match its
+internal format, so a half-typed or range value disappears when the user
+clicks Search or Save. Type the control as `Date | string | null` (a range as
+`Date[] | string | null`) and normalise it before sending, through
+`parseDateValue()` / `parseRangeString()` helpers that accept `dd/MM/yyyy`,
+`dd-MM-yyyy`, and `yyyy-MM-dd` and emit `yyyy-MM-dd` for `FilterHelper.GetDate`.
+Keep `dateFormat="dd/mm/yy"` everywhere, so what the user types is what the box
+shows. Minimum and maximum dates, plus start/end ordering, are still validated
+in the form and on the backend.
+
+**A date range is one range picker on two months.** Never render two separate
+From/To inputs. `selectionMode="range"` pairs with `[numberOfMonths]="2"`, so a
+range that straddles a month boundary needs no paging. A list or report range
+filter defaults to the **current month**, from the 1st to its last day:
+
+```html
+<p-calendar
+  inputId="featureDateRange"
+  formControlName="dateRange"
+  selectionMode="range"
+  [numberOfMonths]="2"
+  [readonlyInput]="false"
+  [keepInvalid]="true"
+  [showButtonBar]="true"
+  dateFormat="dd/mm/yy"
+  appendTo="body"
+  panelStyleClass="sigma-datepicker-panel"
+  styleClass="w-100"
+></p-calendar>
+```
+
+```ts
+private getDefaultDateRange(): Date[] {
+  const now = new Date();
+  return [
+    new Date(now.getFullYear(), now.getMonth(), 1),
+    new Date(now.getFullYear(), now.getMonth() + 1, 0),
+  ];
+}
+```
+
+`numberOfMonths` is a **panel** property: it widens the overlay, not the field.
+The range field still occupies exactly one column of the block 4 grid — do not
+compensate for the second month by giving the field a larger `grid-column` span,
+which would break the field distribution rule and narrow every other control.
+The panel is appended to body, so the second month is never clipped by the
+strip.
+
+**A calendar carries no icon (owner decision, 2026-09-28).** Never set
+`[showIcon]`, on filters or in editors. The global sheet hides
+`.p-datepicker-trigger` with `display: none !important` (`src/styles.scss`), so
+`[showIcon]="true"` renders nothing and only leaves reserved dead padding. The
+`p-calendar` host is a full-width block, so an icon-less calendar measures
+exactly like a plain text input in the same column. The input is the target: a
+click opens the panel, and the user can also type straight into it.
+
+Do **not** re-show the trigger from a feature stylesheet. A
+`display: inline-flex !important` override on `.p-datepicker-trigger` brings
+back a separate `36px` button beside the input, which splits the control in two
+and breaks the strip's field distribution. Backlog 32 tracks removing the
+existing `[showIcon]` attributes.
 
 **Date-only values must not go through `toISOString()`.** It converts local time
 to UTC, which changes the calendar date whenever the local offset is **ahead of
@@ -2881,21 +3497,15 @@ private toDateInput(value: string | Date | null | undefined): string {
 Validate ordering in the UI as well as the backend, e.g.
 `validationMessages.expiryAfterIssueDate` for issue/expiry pairs.
 
-A dialog should normally open with its calendar overlay closed. Because the
-shared editor shell focuses the first focusable control, place `autofocus` on a
-different meaningful input when a calendar would otherwise receive initial
-focus. Keep the calendar's `[showOnFocus]="true"` so a later click on either the
-date input or calendar icon opens it. Do not use `[showOnFocus]="false"` when
-the input itself must remain an opening target; PrimeNG then opens only from the
-icon.
-
-When an editor has only date controls, or its first focusable control is a
-calendar, bind the shell's `[focusOnShow]="false"` and do not call the calendar
-input's `focus()` from `ngOnInit`, `onEditorShown`, or another lifecycle hook.
-Keep `[showOnFocus]="true"`; the calendar then opens on an intentional user
-click or keyboard focus, not while the dialog is being displayed. If initial
-focus is required in View mode, focus the shared dialog close control instead
-of a calendar.
+**A dialog opens with its calendar overlay closed.** Bind the shell's
+`[focusOnShow]="false"` on `app-editor-dialog`, and on each calendar use
+`[showOnFocus]="false"` with `(click)="dateCal.showOverlay()"` (editor snippet
+above). The panel then opens only on an intentional click on the input, never
+while the dialog is being displayed or when focus lands on the field. Keyboard
+users type the date directly, because every calendar is typeable. Do not call
+the calendar input's `focus()` from `ngOnInit`, `onEditorShown`, or another
+lifecycle hook. If initial focus is required in View mode, focus the shared
+dialog close control instead of a calendar.
 
 When a small dialog's first required action is choosing a date, it may open the
 calendar overlay after the shared editor shell emits `shown`. Keep this opt-in
@@ -2919,21 +3529,25 @@ openDatePicker(): void {
 <app-editor-dialog (shown)="openDatePicker()">
   <p-calendar
     #effectiveDateCalendar
-    [showOnFocus]="true"
+    [showOnFocus]="false"
     appendTo="body"
     ...
   ></p-calendar>
 </app-editor-dialog>
 ```
 
-**Check:** `appendTo="body"` and `panelStyleClass="sigma-datepicker-panel"` ·
-no `toISOString()` on a date-only value · `[maxDate]`/`[minDate]` where the
-business requires it · issue/expiry and start/end ordering validated · any
-calendar that must start closed does not receive initial focus · a user click
-on its input or icon opens it · any auto-open behavior waits for dialog `shown`,
-defers one microtask so projected content is settled, focuses the input, and is
-limited to an explicitly confirmed date-first workflow · filter calendars use
-the shared 34px wrapper, input, and trigger height.
+**Check:** no native `<input type="date">` · `appendTo="body"` and
+`panelStyleClass="sigma-datepicker-panel"` · `[readonlyInput]="false"` with
+`[keepInvalid]="true"` on every calendar, and typed values normalised to
+`yyyy-MM-dd` · no `toISOString()` on a date-only value ·
+`[maxDate]`/`[minDate]` where the business requires it · issue/expiry and
+start/end ordering validated · no `[showIcon]` and no feature re-showing
+`.p-datepicker-trigger` · dialogs bind `[focusOnShow]="false"` and calendars
+use `[showOnFocus]="false"` plus `(click)` to open · any auto-open waits for
+dialog `shown` and is limited to a confirmed date-first workflow · filter
+calendars use the shared 34px height · a range is one `selectionMode="range"`
+picker with `[numberOfMonths]="2"`, occupying exactly one grid column, and a
+list or report range defaults to the current month.
 
 ---
 
@@ -3310,14 +3924,15 @@ Debit/Credit/Balance summaries. Reports use the shared classes defined in
 </div>
 ```
 
-The filter strip must match Opening Balances: compact wrapping layout, primary
-inline-start accent, soft surface/gradient, shared 34 px control height, shared
-6 px input/dropdown radius and focus ring, and actions visually contained in the
-same strip. Search is the primary blue action; Refresh is a quieter primary-tinted
-action; Reset is a neutral surface/outline action; Excel/export uses a distinct
-export treatment. Action icons inherit the action colour so solid and outlined
-variants remain legible in light and dark themes. On mobile the group may wrap or
-stack, but it must not create a second vertical scroll owner.
+The filter strip consumes the complete accounting-filter visual contract from
+block 14 rather than restating or forking it here: compact wrapping layout,
+logical inline-start primary accent, themed soft surface/gradient, shared control
+height/radius/focus treatment, dark/RTL equivalents and the same narrow-screen
+stacking rules. Report semantics still follow block 4: labels remain associated
+with controls and Search submits the real filter form. Search is the primary
+action; Refresh may use a quieter primary-tinted treatment; Reset is neutral;
+Excel/export uses the approved export treatment. The group must not create a
+second vertical scroll owner.
 
 Accounting report totals use the same compact summary bar/card language as
 Opening Balances: shared surface/border/radius, tabular numerals, and semantic
@@ -3483,11 +4098,11 @@ while the report runs:
         selectionMode="range"
         [numberOfMonths]="2"
         dateFormat="dd/mm/yy"
-        [showIcon]="true"
+        [readonlyInput]="false"
+        [keepInvalid]="true"
         [showClear]="true"
         [showButtonBar]="true"
         [hideOnDateTimeSelect]="false"
-        iconDisplay="input"
         panelStyleClass="sigma-datepicker-panel statement-range-picker"
         [disabled]="loadingReport()"
         appendTo="body"
@@ -3867,8 +4482,30 @@ this.service.getList(query)
   .subscribe({ next: …, error: … });
 ```
 
+**What drives the global loader.** Use it for screen-level data loads and page
+fetches, destructive or domain row actions (accept, reject, delete, void),
+editor detail loading, and editor save. `LoadingService` is a single boolean
+(backlog 27), so any `endLoading()` hides the spinner for everyone. Auxiliary
+lookups that run at the same time as the primary load (for example
+`loadLookups()` next to `loadData()` in `ngOnInit()`) therefore **must not**
+call `startLoading()` / `endLoading()`. Otherwise the lookup finishing first
+dismisses the loader while the grid is still fetching.
+
 **Local busy flags** for per-action state: `searching`, `saving`, `revising`,
-`contactGroupSaving`. Use them to disable the button that is running.
+`contactGroupSaving`, `loadingList`. Bind them to the control they describe:
+`[loading]="loadingList()"` on `app-data-table` and on the Search button
+(`app-primary-action-button` takes `[loading]`, not `[busy]`), and
+`[saving]="saving()"` on `app-editor-dialog`. Skip a table request when page
+number and page size have not changed.
+
+**Lookup failures stay visible.** A required Create/Edit option list that fails
+shows its error; never hide it by returning empty options or by making a
+protected endpoint anonymous. Diagnose by HTTP status before changing the UI:
+`401` authentication (token missing, expired, or signed by a different auth
+server; also check that the service resolves from the interceptor-equipped
+`LayoutModule` injector, block 1), `403` authorization, `404` route mismatch,
+`0` transport/CORS, `5xx` server. Never copy bearer tokens into logs,
+screenshots, or messages.
 
 **Success toast — single owner.** The global `errorInterceptor` owns the one
 success toast for standard `POST`, `PUT`, `PATCH`, and `DELETE` responses whose result has
@@ -3876,6 +4513,25 @@ success toast for standard `POST`, `PUT`, `PATCH`, and `DELETE` responses whose 
 local state, close event, and refresh only; it must not inject `MessageService`
 and add another success toast for the same response. This applies equally to
 state-changing actions such as close, void, approve, post, and delete.
+
+**Duplicate-success prevention gate.** For every mutation, decide the toast owner
+before writing the subscription:
+
+- **standard mutation:** interceptor owns success; the feature must not call
+  `messageService.add({ severity: 'success', ... })`, `showSuccess(...)`, a
+  success SweetAlert, or another success surface for that same response;
+- **composite workflow:** feature owns the final success only after all required
+  follow-up work succeeds; the mutation request must carry
+  `X-Skip-Success-Toast` so the interceptor stays silent;
+- **no response message / deliberately silent mutation:** do not manufacture a
+  second generic success merely because the request returned 2xx unless the
+  workflow explicitly owns that feedback.
+
+A source review that finds a manual feature success toast immediately after a
+standard successful mutation must treat it as a duplication defect unless that
+request demonstrably suppresses the interceptor toast. Registering
+`errorInterceptor` in more than one active `HttpClient` chain is also invalid;
+there must be one interceptor execution path per request.
 
 A composite Save is different when the user-visible operation is not complete at
 the mutation response. If a successful mutation must be followed by required
@@ -3975,8 +4631,9 @@ Handle **both** failure channels. `isSuccess: false` is a business failure and
 });
 ```
 
-`error: () => undefined` is never acceptable. The Company list still has six of
-these — see block 24.
+`error: () => undefined` is never acceptable. Treat any occurrence found during
+a feature review as a current defect and replace it with the feature's declared
+business/transport failure handling.
 
 **Dialog states** — loading, empty and content are explicit:
 
@@ -3998,9 +4655,12 @@ these — see block 24.
 
 **Check:** every request has `finalize` releasing loading · composite saves suppress an early interceptor toast and show success only after required refreshes complete · `isSuccess` and
 `error` both handled · no silent `undefined` handler · exactly one success
-toast owner per mutation · manual toast key is `'global'` when a non-standard
-workflow genuinely needs one · dialogs show loading and empty states · entered
-data survives a failed save.
+toast owner per mutation · a standard mutation has no feature-level success
+toast/SweetAlert helper · a feature-owned composite success uses
+`X-Skip-Success-Toast` on its mutation · the interceptor is not duplicated across
+active HTTP chains · manual toast key is `'global'` when a non-standard workflow
+genuinely needs one · dialogs show loading and empty states · entered data
+survives a failed save.
 
 ---
 
@@ -4008,8 +4668,10 @@ data survives a failed save.
 
 > **Status: Canonical**
 
-Two files are maintained: `i18n/vocabs/en.ts` and `ar.ts`. The other five
-(`ch`, `de`, `es`, `fr`, `jp`) are stubs — do not add feature keys to them.
+Two files are maintained:
+`src/app/modules/i18n/vocabs/en.ts` and
+`src/app/modules/i18n/vocabs/ar.ts`. The other five (`ch`, `de`, `es`, `fr`,
+`jp`) are stubs — do not add feature keys to them.
 
 Nested objects, one block per screen area:
 
@@ -4061,10 +4723,11 @@ invalidFields: '{{count}} invalid fields',
 - a key missing from **`ar`** falls back to English text, which looks
   untranslated but is not broken.
 
-Add every new key to **both** `en.ts` and `ar.ts` in the same edit. Current
-state, measured: `en` 7,129 keys, `ar` 5,791; 1,439 keys exist only in `en`,
-101 only in `ar`. None of the `ar`-only keys are referenced in code, so no
-screen currently renders a raw key.
+Add every new key to **both** `en.ts` and `ar.ts` in the same edit. Translation
+coverage counts are volatile audit data, not a canonical implementation rule;
+recompute them when auditing language coverage instead of copying a historical
+count into a feature decision. Any missing `ar` key still falls back to English
+and remains translation debt even when the UI does not render a raw key.
 
 **Watch the casing, and watch the block.** The two files drift on both. The
 credit-card header asked for `mangeDetails.cVV`; `en.ts` had `cVV` but `ar.ts`
@@ -4085,7 +4748,7 @@ object argument.
 
 ## 24. Colors, icons, buttons
 
-> **Status: Transitional** — three primary blues and two icon libraries in use, backlog 1, 2, 15
+> **Status: Transitional** — multiple primary-color forks and two icon libraries remain, backlog 1 and 15
 
 ### Button roles
 
@@ -4093,8 +4756,7 @@ object argument.
 |---|---|---|
 | Primary | `app-primary-action-button` | Create, Search, Next, Save, Edit from View |
 | Secondary | `individuals-secondary-button`, `individual-secondary-action` | Cancel, Close, Export, Previous |
-| Dialog primary | `company-dialog-primary` | Save inside a dialog |
-| Dialog secondary | `company-dialog-secondary` | Cancel inside a dialog |
+| Dialog footer actions | `app-editor-dialog` | Mode-aware Save/Edit and Cancel/Close inside the shared editor shell |
 | Row icon | Feature-owned semantic icon button | Edit or another nonstandard child-row action |
 | Child row remove | `app-editable-collection-table` | Standard confirmed Remove request in an editable child collection |
 | Add row | `app-editable-collection-table` → `app-primary-action-button` | Add/select under a compact child table |
@@ -4142,16 +4804,13 @@ mode-aware Save/Edit behavior.
 
 ### Icon rule
 
-An icon on a **solid** coloured button is always white, and you must target the
-`i` element too — Bootstrap Icons rules otherwise beat the inherited colour:
-
-```scss
-.company-dialog-primary { color: #fff; }
-.company-dialog-primary i { color: #fff; }
-```
-
-On a white or transparent surface use the semantic text colour, never forced
-white.
+An icon on a **solid** coloured action must have the same high-contrast foreground
+as its label. Shared components such as `app-primary-action-button` and
+`app-editor-dialog` own this internally; consumers must not reach into their
+classes to restyle the nested `i`. For a genuinely feature-owned semantic icon
+button, make the icon inherit `currentColor` and define the foreground on the
+button itself. On a white or transparent surface use the semantic text colour,
+never forced white.
 
 ### Loading swap
 
@@ -4534,16 +5193,47 @@ block on the first attempt and read correctly in the diff.
 
 Owner acceptance pass for a screen built from this book:
 
-1. Create, view, edit, delete the record.
-2. Cancel a dirty form; cancel a clean form; cancel in view mode.
-3. Filter, page, change rows-per-page, delete the last row on a page.
-4. Export with filters applied; confirm row count and headers.
-5. Print, if the screen has a report.
-6. Switch to Arabic: check direction, arrows, and that no raw key appears.
-7. Switch to dark theme, including every dialog and dropdown overlay.
-8. Narrowest supported viewport.
-9. Confirm protected requests carry `Authorization: Bearer …` without recording
-   the token value.
+1. Exercise every workflow that the screen actually owns: Create/View/Edit/Delete
+   for CRUD, confirmed domain actions for stateful screens, and no invented CRUD
+   acceptance step for read-only reports or settings-only workspaces.
+2. For editable surfaces, cancel a dirty form, cancel a clean form, and close View
+   mode; verify X/Cancel/Escape share the same dirty-close rule where applicable.
+3. For paged lists, filter, page, sort where supported, change rows-per-page, and
+   delete the last row on a page. Confirm stale/overlapping requests do not replace
+   newer results.
+4. Export with filters applied; confirm row count, column order and translated
+   headers. Print the full report when print exists, not only the visible viewport.
+5. Switch to Arabic: check direction, directional arrows, tab keyboard direction,
+   logical-start/end alignment, and that no raw key appears.
+6. Switch to dark theme, including every dialog, dropdown/calendar overlay,
+   filter surface, table header and totals/summary surface.
+7. Check the narrowest supported viewport and keyboard-only operation: visible
+   focus, associated labels, first-invalid-field focus, dialog focus trap/return,
+   editor-tab Home/End/arrows and accessible icon-only actions.
+8. For financial editors and dense accounting reports, verify exactly one row/table
+   vertical scroll owner after the approved cap, sticky headers, unclipped body-
+   appended overlays, totals/actions remaining visible outside the row scroll, and
+   no page scroll at the narrowest supported width (panes rearrange; the page never
+   scrolls).
+9. For hierarchy and tabbed settings workspaces, verify the documented single
+   content-scroll owner, responsive stacking/overflow, selection/tab restoration,
+   and that fixed Save/header/tab controls remain reachable.
+10. For reports, verify backend-owned totals/KPIs, empty/not-run/error states, and
+    print mode releasing fixed heights/overflow so all rows can flow across pages.
+11. For at least one protected GET and one protected mutation from the reviewed
+    feature, confirm the request carries `Authorization: Bearer …` without
+    recording the token value. If it does not, verify the service resolves from
+    the current interceptor-equipped `LayoutModule` injector before changing
+    feature code.
+12. For every successful mutation exercised during acceptance, confirm exactly
+    one success notification appears. A standard mutation should be reported by
+    the global interceptor once; a feature-owned composite workflow must suppress
+    that interceptor toast and emit only its final success after all required
+    refreshes complete.
+13. On every screen, at desktop and the narrowest supported width, with and
+    without a resolved page title, confirm `.app-content` shows no scrollbar and
+    that only the documented component (grid rows, form pane, or dialog body)
+    scrolls.
 
 **Check:** report lists what was and was not verified · no runtime claim from
 source alone · owner acceptance steps included in the handoff.
@@ -4581,26 +5271,31 @@ are stable identifiers, so they are not renumbered when priority changes.
 
 | # | Problem | Evidence |
 |---|---|---|
-| 4 | Six silent failures in the Company list | `loadBranches`, `loadContactGroups`, `getListItems`, `deleteCompany`, `saveContactGroup`, export all use `error: () => undefined` |
 | 14 | `CacheService.clearLocal()` exists | Would wipe the auth token and `subscriptionId` if ever called |
 | 28 | Enums cached indefinitely in browser storage | Company stores `gender` and `documentType` under unversioned global keys. Old values survive deployments and can collide with another feature; map the small enums in memory instead |
 | 27 | Global loading state is a boolean | `LoadingService.startLoading()` writes `true` and any `endLoading()` writes `false`; overlapping requests can hide the spinner while another request is active. Use a reference counter or scoped loading tokens |
 | 29 | Uploaded-file cleanup is fire-and-forget | Fleet starts one delete subscription per path, clears tracking immediately and ignores failures. Coordinate cleanup as in block 18 and add server-side expiry for abandoned temporary files |
+| 31 | Manual success notifications can duplicate the global mutation toast | `errorInterceptor` already emits one success toast for successful POST/PUT/PATCH/DELETE responses with a message, while current features still contain manual `MessageService` success helpers after standard mutations (for example Fleet VehicleService/VehicleType list actions). Remove the feature success or explicitly suppress the interceptor only for a documented composite workflow |
 
 ### P4 — consistency and appearance
 
 | # | Problem | Evidence |
 |---|---|---|
-| 1 | Three different primary blues | `#3498db` IndividualPartner list, `#2497d4` its details and drivers, `#1478b5` Fleet |
+| 1 | Multiple primary-color forks remain | `#3498db` (`--sigma-primary`) is the canonical Sigma primary. Current feature/shared styles still contain the blue forks `#2497d4` and `#1478b5` (for example Supplier details / confirmation and Receipt or Staff statement surfaces) and the teal forks `#20b2aa`, `#1a7f82`, `#146264`, `#17a8aa`. None may be used in new work |
 | 15 | Two icon libraries | `Customers/StatementOfAccount` uses Font Awesome (`fas fa-print`, `far fa-file-excel`); everything else uses Bootstrap Icons |
-| 10 | 1,439 keys only in `en.ts` | Arabic falls back to English in those places |
+| 10 | English/Arabic translation coverage still drifts | Missing Arabic keys fall back to English. Exact key counts are volatile audit data and must be recomputed when translation coverage is reviewed |
 | 11 | Nested dialog pager is hand-built | Agreements dialog draws its own chevrons |
+| 32 | `[showIcon]` renders nothing | `src/styles.scss` hides `.p-datepicker-trigger` with `display: none !important` (re-verified 2026-09-28), and `iconDisplay` defaults to `'button'` in PrimeNG 17, so `[showIcon]` without `iconDisplay="input"` is a no-op. At the 2026-09-21 count, 155 of 176 calendars set it. **Owner decision 2026-09-28: Sigma calendars carry no icon** (block 17), so remove `[showIcon]` and any `iconDisplay="input"` when a screen is touched. The `34px` inline-end padding the global input rule reserves for the trigger is dead space; reclaim it in the shared calendar rule once the sweep is done |
+| 33 | 16 feature stylesheets override the shared paginator | At the 2026-09-21 count, 16 files set `.p-paginator { padding: … }`: Movements ×5 (`6px 0 4px !important`), Fleet ×4 and Limousine ×4 (`8px 0 0`), Transportation ×3 (`8px 0 2px`, `8px 0 0`). The shared paginator in `data-table.component.scss` is `padding: 10px 0 12px` (re-verified 2026-09-28; an earlier note that it had become `4px` is superseded). Resolution: screens adopt the block 6 Transitional fill block, whose `6px 0 4px` is the one permitted override, and every other variant is removed. Backlog 34 retires the workaround itself |
 | 13 | Dead feature roots still routed | `Companies/Company`, `CompanyContactPerson`, `CompanyDriver` wired in `pages/routing.ts` and `LayoutModule`, no menu entry |
+| 34 | `app-data-table` has no fill mode | The wrapper forces `max-height: var(--sigma-data-table-scroll-height, 288px) !important`, and `scrollHeight="flex"` makes that variable invalid, so a list grid cannot fill the panel and be the page's scroll owner without the block 6 Transitional `::ng-deep` block. Add a typed `fill` input (or accept `scrollHeight="flex"`) that sets the flex chain, wrapper and paginator spacing inside the component, then replace every feature copy of the workaround |
+| 35 | Legacy page-height calcs | 34 feature stylesheets (2026-09-21 count) still size the route with `calc(100dvh - … - var(--bs-app-toolbar-height) - … - <slack>)`, kept working only by the desktop `--bs-app-toolbar-height: 31px` shim in `src/styles.scss`. Replace each with the block 1 container-fill host when the screen is touched; delete the shim when none remain |
 
 ### Resolved
 
 | # | Problem | Resolution |
 |---|---|---|
+| 4 | Company list silent transport failures | Fixed before the 2026-09-20 guide review. Scoped source inspection found no remaining `error: () => undefined` handlers under `Customers/Companies/CompanyPartner`; block 22 keeps the prohibition as the canonical rule |
 | 24 | Bare `window.print()` | Fixed 2026-08-09. `ReportPrintService` now owns the Metronic body class, print invocation and `afterprint` cleanup; report, list and detail print actions use it instead of calling the browser directly |
 | 16 | Reports had no shared shell | Fixed 2026-08-09. `appReportPage` and `appReportActions` now own reusable report-page and action-toolbar presentation; `shared/components/reports` applies them for its consumers, while standalone report routes import them directly |
 | 3 | Cross-feature SCSS import | Fixed 2026-08-09. Company owns locally prefixed `companies-*` page/filter styles and consumes the shared data table, primary action, and editor dialog without importing Individual SCSS |
@@ -4608,8 +5303,18 @@ are stable identifiers, so they are not renumbered when priority changes.
 | 18 | Child dialogs discarded silently | Fixed 2026-08-09. Company driver now uses controlled `app-editor-dialog`; X, Cancel and scoped Escape all run one dirty-discard decision before the draft is reset |
 | 2 | `company-dialog-primary` defined twice, different colours | Fixed 2026-08-09. Company driver no longer owns dialog action styles; it consumes the shared editor-dialog footer and primary tokens |
 | 30 | Company child collections rebuilt table chrome | Fixed 2026-08-09. Contact persons, credit cards, documents and drivers now consume `app-editable-collection-table`; custom driver Edit/Delete actions use the shared action projection |
-| 31 | Step-form validation summary was feature-owned | Fixed 2026-08-09. Shared `app-form-validation-summary` now owns accessible alert/count/action presentation while Company retains invalid-field discovery, step changes and focus |
+| 31a | Step-form validation summary was feature-owned | Fixed 2026-08-09. Shared `app-form-validation-summary` now owns accessible alert/count/action presentation while Company retains invalid-field discovery, step changes and focus |
 | 23 | Stepper announced tabs it did not implement | Fixed 2026-08-08. Shared `app-step-form` now owns ordinary step navigation with `nav`/`ol`, ordinary buttons, visible labels and `aria-current="step"`; Company no longer carries feature-local tab-role stepper markup or styles |
 | 9a | `mangeDetails.cVV` missing from `ar.ts` | Fixed 2026-08-06. Was a casing mismatch: `en` used `cVV`, `ar` had only `cvv`. First fix landed in the wrong block (`statementOfAccount`) and read correctly in the diff — see block 29 |
 | 25 | Company editor had no discard prompt | Fixed 2026-08-06. `cancel()` now applies block 10 |
 | 26 | Driver rows deleted with no confirmation | Fixed 2026-08-06. `deleteDriver()` now applies block 11 |
+
+### Change log
+
+Narrative history moved out of the header on 2026-09-28, so a history edit no
+longer changes the block 0 fingerprint of every packet.
+
+| Date | Version | Change |
+|---|---|---|
+| 2026-09-28 | 0.69 | Promoted the `sigma-screen-refactor` skill into this book (owner decisions in `reviews/SIGMA_DOCUMENTATION_SYSTEM_MAINTENANCE_EVOLUTION_PLAN.md`). Block 1: **no page scroll** at any breakpoint, with one scroll owner per region; panel card values; `BaseComponentService`. Block 4: filter strip is a fixed column strip with `gap: 8px`, `padding: 8px 12px`, and `margin: 0 8px 6px`. Block 5: `@ViewChild({ static: true })` + `initColumns()` and the status text fallback. Block 6: grid wrapper `margin: 0 8px`, grid rows as the scroll owner, the Transitional fill block (backlog 34), and the empty-state key. Block 14 and block 29: mobile relaxation replaced by the no-page-scroll rule. Block 15: `[primaryActionVisible]="false"` for read-only dialogs and mode-specific lookups. Block 17: every calendar is typeable with `keepInvalid`, carries no icon, and uses `showOnFocus=false` + click to open in dialogs; no native date inputs; a single range picker that defaults to the current month. Block 22: lookup/loader race, busy-flag bindings, lookup failure diagnosis. Backlog: 1 (teal forks), 32 (no-icon decision), 33 (shared paginator re-verified at `10px 0 12px`), new 34 and 35; duplicate resolved 31 renumbered 31a |
+| 2026-09-21 | 0.68 | 2026-09-21 — block 1's shell-toolbar band is now tightened on desktop (with the companion height override, detailed further down), and block 17 added three filter-calendar rules: a filter date is typeable (`[readonlyInput]="false"` on a list or report filter, `"true"` only on a detail or editor form — verified against all 13 editable usages in the app); a range picker uses `selectionMode="range"` + `[numberOfMonths]="2"`, a panel property that must not be compensated for by widening the field's grid span; and a filter calendar carries no trigger icon — the global sheet hides `.p-datepicker-trigger`, so a feature must not re-show it, because the extra `36px` button splits the box and leaves the input narrower than the field below it. Block 17's canonical editor snippet gained `iconDisplay="input"` (without it, `[showIcon]="true"` renders nothing). Backlog item 32 records the existing deviation: 155 of 176 calendars set `showIcon` with no `iconDisplay` and render no icon. Backlog item 33 records 16 feature stylesheets that override the shared paginator's spacing — every one trimming the bottom to 0–4px against the shared `12px`, which showed the shared default was the outlier. Block 1 gained `#### Shell vertical insets` — `.app-content` carries no vertical padding, and the toolbar band is tightened in `src/styles.scss` on desktop only, from the layout config's `py-lg-6` (`24px` / `24px`) to `16px` above and `8px` below, paired with the mandatory companion `--bs-app-toolbar-height: 31px` (`55px` − `24px`), because 34 feature stylesheets still size their page with `calc(100dvh - … - var(--bs-app-toolbar-height) - … - <slack>)` and reserve a fixed height for that band — reducing the band without reducing the reservation would leave each of those routes `24px` taller than its container. That variable has no other live consumer: every other use in the Metronic SASS is gated on `toolbar.fixed` / `toolbar.sticky`, both off. Because `toolbar.fixed` is false, Metronic's `height: auto` rule beats the base `height: var(--bs-app-toolbar-height)`, so the toolbar is sized by its padding and not by that `55px` variable. Block 1 also gained the **outer-versus-inner** rule: reducing the space above a card means the route's outer padding, never the card's internal `padding` — trimming the internal inset moves the contents while the card's outer edge and shadow stay put, so the card's own `padding` must stay at its designed value. The shared-table block states that a feature grid's bottom margin is a feature-owned placement value (`8px`–`18px` observed) while the paginator's internal spacing stays shared. The bounded-route-frame section gained the **container-fill** requirement: a route host claims the box the shell already sized with `height: 100%`, and must not write a second page-height `calc(100dvh - … - var(--bs-app-toolbar-height) - … - <slack>)` — that calc reserves a fixed `55px` for a toolbar the shell sizes from its own padding, so the per-screen slack cannot stay correct (`Rental/RentalPlanner` and `Staff/designations` are the references). The shell-insets section records that changing the toolbar band is therefore a shell-level change which moves every legacy screen still carrying that calc |

@@ -3,8 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 19 |
-| Version | 0.16 |
-| Last verified against source | 2026-09-17 |
+| Version | 0.17 |
+| Last verified against source | 2026-09-17 (`IRepository`, `SiGmaControllerBase`, `SiGmaDbContext`, `MiscellaneousInvoiceService`, `InvoiceService`, `PurchaseOrderService`, `WorkOrderService` re-checked 2026-09-28) |
+| Last content change | 2026-09-28 — skill promotion: page size 10 clamped 1–100 (block 9); repository calls and the list/extra-read-endpoint rule (block 5); base routes (block 6); tenant ownership (block 18) |
 | Verified by | source inspection only — no build, test, migration, or database run |
 
 Build order for one entity, six steps, five patterns. Open the reference file,
@@ -419,10 +420,26 @@ the feature interface first. When you override, reproduce every invariant the
 base method provided — tenant scope, soft-delete filter, server-owned fields,
 response shape. A secure base does not protect an override that replaces it.
 
+**Repository calls.** Load by id with `UnitOfWork.Repository.FindByIdAsync<T>(id, ct)`.
+There is no `GetByIdAsync` on `IRepository`. For relations use
+`GetByIdWithNavigationsAsync<T>(id, ct)`, or `GetByIdDeepAsync<T>(id, ct)` for a
+read-only tree (`SiGma.Repos/IRepository/IRepository.cs`).
+
+**Standard list = `GetManyAsync` override.** A screen's list overrides
+`GetManyAsync(ListSmBase searchModel)`, which the base controller exposes as
+`GET /<Controller>` (block 9). Do not add a new `Search…Async` method or
+`[HttpPost("search")]` endpoint for a standard list. An **additional** read
+endpoint is allowed only when the feature contract records why, for example a
+mixed-source grid that unions two aggregates (`GET Job/workshop-grid`) or an
+existing endpoint kept for external compatibility (`POST JobEstimation/search`).
+A new one still takes `[FromQuery] ListSmBase` on `GET` and returns `Results<T>`
+with the block 9 paging contract.
+
 **Check:** interface closes the generic and adds only real extras · service
 inherits `Service<…>` · only justified overrides · overrides preserve base
 invariants · a `Fail` helper for consistent messages · `CancellationToken`
-forwarded where the base declares one.
+forwarded where the base declares one · `FindByIdAsync`, never `GetByIdAsync` ·
+no new search endpoint without a recorded reason.
 
 ---
 
@@ -477,6 +494,11 @@ Add an explicit action only for a genuinely custom operation:
 public async Task<IActionResult> ReviseSalaryAsync(int id, StaffSalaryRevisionVM vm)
     => ToActionResult(await Service.ReviseSalaryAsync(id, vm));
 ```
+
+**Base routes.** `SiGmaControllerBase` exposes `POST`, `PUT`, `DELETE ?id=`,
+`GET` (list), `GET GetById/{id}`, `GET GetByWithNavigationsId/{id}`,
+`GET GetAllWithNavigations`, `GET GetSelect`, and `POST handleActivate`. There is
+no root `GET /{id}`: Angular detail calls use `GetByWithNavigationsId/{id}`.
 
 **Check:** inherits `SiGmaControllerBase` · no re-declared base endpoints · no
 business logic in the controller · custom routes match the Angular service ·
@@ -811,7 +833,7 @@ becomes "absent" instead of silently changing the query:
 
 ```csharp
 var pageNo   = searchModel.PageNo ?? 1;
-var pageSize = searchModel.PageSize ?? 20;
+var pageSize = Math.Clamp(searchModel.PageSize ?? 10, 1, 100);
 var filters  = searchModel.Filters ?? [];
 
 if (FilterHelper.GetInt(filters, "branchId") is { } branchId)
@@ -843,10 +865,11 @@ if (!string.IsNullOrEmpty(search))
 ```
 
 **Bound the page size.** `PageSize` is client-supplied and unbounded. A request for
-`pageSize=100000` will attempt it:
+`pageSize=100000` will attempt it. The Sigma default is **10**, clamped to
+**1–100** (owner decision, 2026-09-28):
 
 ```csharp
-var pageSize = Math.Clamp(searchModel.PageSize ?? 20, 1, 200);
+var pageSize = Math.Clamp(searchModel.PageSize ?? 10, 1, 100);
 var pageNo   = Math.Max(searchModel.PageNo ?? 1, 1);
 ```
 
@@ -1083,7 +1106,7 @@ rules on Add and Update, and reference checks on Delete.
 public override async Task<Results<BranchListVM>> GetManyAsync(ListSmBase searchModel)
 {
     var pageNo   = searchModel.PageNo ?? 1;
-    var pageSize = searchModel.PageSize ?? 20;
+    var pageSize = Math.Clamp(searchModel.PageSize ?? 10, 1, 100);
     var filters  = searchModel.Filters ?? [];
 
     var baseQuery = UnitOfWork.Repository.Query<Branch>().AsNoTracking();
@@ -1786,6 +1809,44 @@ before paging · one query per section · `[Authorize]` present · tenant predic
 explicit where `QueryReport` cannot apply it · same rules across screen, print and
 export.
 
+#### Derived filters whose predicate lives in another aggregate
+
+An aggregated log may need a filter whose condition is owned by a different
+aggregate. Freeze the join key from the source before writing the predicate, and
+prefer the tightest key available: match on the owning agreement when the row has
+one, and fall back to the vehicle only for rows that carry no agreement, because
+not every movement source has an agreement column. State the fallback in the
+code, not only in the review.
+
+Record the timestamp the filter actually means, not the one that looks closest.
+"Recorded after the movement went out" is `Accident.CreatedAt > movement.DateTimeOut`;
+`Accident.AccidentDateTime` falling inside the movement window is a different rule
+and returns different rows. Both are defensible; only one is what the business
+asked for, so name it explicitly and do not let a later reader swap it silently.
+
+When the predicate needs a second table, load the matching keys once with a
+bounded query and evaluate the flag in memory over the already aggregated rows.
+Do not add a correlated subquery to each source projection: the aggregation is
+unbounded and runs before paging, so the cost lands on every row of every source.
+Bound the scan by the earliest row you must decide for.
+
+A flag you add to the read DTO must be truthful on every request that returns the
+DTO, so compute it unconditionally rather than only when the caller filters on it.
+A field that is only populated on one code path is a trap for the next reader.
+
+Verify the tenant predicate against the write path that stamps ownership. Before
+filtering a table by `SubscriptionId`, confirm the writer actually sets it — if
+ownership is stamped at the persistence boundary rather than in the service, say
+so, because a predicate on an unstamped column silently returns nothing.
+
+**Check:** join key chosen from the source and stated · agreement-first with a
+vehicle fallback wherever a source has no agreement · the timestamp means what
+the label says, and the alternative was rejected on purpose · one bounded query,
+not one per source projection · scan bounded by the earliest decided row · null
+timestamps excluded explicitly rather than matching silently · DTO flag computed
+on every request · tenant predicate verified against the stamping write path ·
+the filter absent returns the same rows as before it existed.
+
 ---
 
 ## 18. Edge cases
@@ -1794,6 +1855,14 @@ export.
 
 Walk this list before calling an entity finished. Mark a row not applicable
 rather than skipping it silently.
+
+### Tenant ownership
+
+`SubscriptionId` is server-owned. `SiGmaDbContext.SaveChangesAsync` stamps it
+from the authenticated claim on insert and throws `InvalidOperationException`
+if an existing row's value changes. Never assign it in a service, a child loop,
+or a mapping (`item.SubscriptionId = entity.SubscriptionId` is wrong), and never
+accept it from a payload.
 
 ### Input
 

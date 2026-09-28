@@ -8,16 +8,19 @@ broad feature review or implementation.
 
 ## Canonical provenance
 
-- master.1: ## 1. Governance and review principles | sha256:defaefeff17c467afb2b3e953ac2eaf53d67fdc9b35b8eee12451c586bf41f33
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:bac9708a301e31a0302ab3880f2fbf60269c5b647ef40b6e4b537e6748762e92
+- master.1: ## 1. Governance and review principles | sha256:127af0593047619ee010cc42872c85f6fb17822939fc1eb84ddc0448a1bc38d2
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:518b4536a222d1c0c8cdd6265af603ede18ef9742a98d423ad525dfcf9f486ec
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:cb0e817775ee1e443e9e191621b36169934a1b9efd398086fe06a3c3943d91f4
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:ad0c7c462af621944990cb16fd7bc8047ad6d4916af64faa0db5a191d8d15546
-- master.5: ## 5. Continuous quality gates | sha256:7670c6f18eccb6140087efbd98986043b801baad7d2b31c0f8f739392f2228f5
-- master.6: ## 6. Human and AI review protocol | sha256:e320d98cc6bfafa91e975d9a71eb6e932983db68f7ad93d378f99f6ddece800f
-- master.7: ## 7. End-to-end reconciliation and final report | sha256:da98b3d333e7bbdc023e3fef57636a2addfb38d2e5c54ce3eded2255f6c6f971
-- master.8: ## 8. Packet generation and governance | sha256:7736123a9df1cfd5757234fd7011b2eea7ac56e91f3c63903cf2090ce09c06fa
-- ui.29: ## 29. Verification expectations | sha256:b99e32e1615baff70816067504b9b429ef018cbbd3b01ba210dad38d7502903e
-- ui.30: ## 30. Backlog, by priority | sha256:018583c2960771065df8f94d247e9d35d8c35391cd2c503b6ff146a5f483f352
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:3e4693fe20b130ccadbc096ec295c856ca45b65edce618be94f856736f679a28
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
+- master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
+- master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
+- master.7: ## 7. End-to-end reconciliation and final report | sha256:9969123abe737b9b3a7bad955fb9ca8869f56b558cf2c6f423e0af01c060b9b9
+- master.8: ## 8. Packet generation and governance | sha256:ec34b5d07a70aa09e1f34a15b20b247dd19e34aa43c4cc295fc7e6c45d5a3b85
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:708ae50816aae4005b03f8b318a4c63de5617cfee5b238586b2a0a883b7df314
+- ui.29: ## 29. Verification expectations | sha256:9ed644e4850d168082c258bd00fb8826f51fda1ef8a98155baafa41583ad7a19
+- ui.30: ## 30. Backlog, by priority | sha256:7d1f8cf1f9c0a1c9e29e5e58e1a255db6a509315cfacddec6ad236d666d7f89c
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:476faa25f2ba4a8a4cc59d4efb0c1798505bf3d241d0808c23ec84f849dbdbc9
 - backend.18: ## 18. Edge cases | sha256:b78409883a1ffe3d4016644ed8b5afc92b3d48b47395c8f3c75a8117c49e69ef
 - backend.19: ## 19. Backlog | sha256:4d1b5cb3f493bbbecc92ba7e2a879b83ccd5b03565df83931fe7ca7b105faff5
 
@@ -79,6 +82,11 @@ or rerun them before completion.
 12. Translation keys ↔ English and Arabic.
 13. Styles ↔ local ownership, accessibility, RTL, theme, and responsive rules.
 14. Providers ↔ interceptor-enabled `HttpClient` and authentication path.
+15. Successful mutations ↔ exactly one success-feedback owner; composite
+    workflows suppress the interceptor before emitting a feature-owned final toast.
+16. When a Maintenance / Evolution Plan was required, final source ↔ Frozen plan
+    target contracts, implementation slices, migration/compatibility decisions,
+    and verification matrix.
 
 ## Required outputs
 
@@ -95,6 +103,8 @@ Confirm:
 - complete scoped diff reviewed;
 - stale imports and types checked;
 - routes and providers checked;
+- authenticated GET/mutation interceptor path checked and duplicate success
+  notification ownership checked;
 - translations checked;
 - mappings and server-owned payload fields checked;
 - merge markers and whitespace checked;
