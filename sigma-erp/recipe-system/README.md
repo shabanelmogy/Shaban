@@ -2,8 +2,8 @@
 
 This directory provides generated phase-review and task-implementation packets
 for coding models. It does not replace `SIGMA_FEATURE_REVIEW_MASTER.md`,
-`SIGMA_UI_PATTERNS.md`, or `SIGMA_BACKEND_PATTERNS.md`; those files remain the
-canonical sources of review, contract, and implementation rules.
+`SIGMA_UI_PATTERNS.md`, or `SIGMA_BACKEND_PATTERNS.md` (stored as one file per
+block in `master/`, `ui/`, and `backend/`); those remain the canonical sources of review, contract, and implementation rules.
 
 ## Why this exists
 
@@ -15,6 +15,7 @@ The recipe system therefore separates three concerns:
 
 1. The Master Guide and pattern books own the rules and explanations.
 2. `recipe-manifest.json` declares which canonical blocks govern a task shape.
+   Each book is a directory; block N is the file `NN-*.md` in it.
 3. `Generate-SigmaRecipes.ps1` combines the task template with fingerprints of
    those source blocks and writes the generated packet.
 
@@ -108,9 +109,9 @@ repeats the drift.
 - Deprecated examples remain in the books for human understanding but are not
   copied into generation templates.
 - Recipes carry source fingerprints and a generated-file warning.
-- Source block `0` means the canonical document preamble before `## 1`; use it
-  when a packet depends on authority/status/reference tables that live above the
-  numbered blocks.
+- Source block `0` is the file `00-preamble.md`: the whole document preamble
+  before `## 1.`, including the unnumbered authority, status, and reference
+  tables. Use it when a packet depends on those tables.
 - Reconcile manifest `approvedReferences` against the canonical per-shape
   reference tables whenever those tables change. Fingerprints prove that a
   packet saw a changed source block; they cannot prove that a separately stored

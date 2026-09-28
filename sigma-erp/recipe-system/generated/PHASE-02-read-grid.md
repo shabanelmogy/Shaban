@@ -8,42 +8,42 @@ query to Grid rendering, paging, and export.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:bac9708a301e31a0302ab3880f2fbf60269c5b647ef40b6e4b537e6748762e92
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2a00e0f2004ea5c5cbd27c9a26b08bfe0599846b4a088c1e6e51a13c51123c74
 - master.1: ## 1. Governance and review principles | sha256:127af0593047619ee010cc42872c85f6fb17822939fc1eb84ddc0448a1bc38d2
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:518b4536a222d1c0c8cdd6265af603ede18ef9742a98d423ad525dfcf9f486ec
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:a34e2c67fb64586a7d135ae183ef2085e698c442fe21f0ea34059360b019c63c
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:3e4693fe20b130ccadbc096ec295c856ca45b65edce618be94f856736f679a28
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
 - master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
 - master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:708ae50816aae4005b03f8b318a4c63de5617cfee5b238586b2a0a883b7df314
-- ui.1: ## 1. Feature folders and wiring | sha256:341e4648470ddba58990e292715336ddf7798fff2e52e2a5d249d649631280ef
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:63f665b9264fc646a9f94d3df75f0cd421a92fd9f5e30fc68f2c119750a35972
+- ui.1: ## 1. Feature folders and wiring | sha256:dd3b3e89fa9d9020882e9a3e21a196cbc3e611c579053691e626bdbb1ca5b9ee
 - ui.2: ## 2. Service and response wrappers | sha256:6fa0394abd7f49ea6f19efcbf0f30dca568621f5250ab3b3343b7ba16a7102e9
 - ui.3: ## 3. Header | sha256:9662bca9cbe8aea34b8a49b71413c3c20636e691a1da5fa62c15c441f5c75cee
-- ui.4: ## 4. Filters | sha256:f1b5dfa24790f3c576143c1be6f9177b780779f4d0e65806aa2af36acb80cce1
-- ui.5: ## 5. Columns | sha256:ad3424836e7e8e0cb99f11dd07eee4a0924858b5847fc5d8939a780bc8ac0c23
-- ui.6: ## 6. Grid and footer | sha256:a8675e3e7a39f031435bccc891091504dea72093ab759ebd62e2cb022373a72f
+- ui.4: ## 4. Filters | sha256:9c4d8c09def40069ee0fce5e8292f58145bb2dec06873efa0c81ec68f8740228
+- ui.5: ## 5. Columns | sha256:b3a1e55a78c393793ca810af0640eb2b4b662ce032fbd7167d31e135751c7734
+- ui.6: ## 6. Grid and footer | sha256:d239089e531398fcae3f910688a539bca802e0e942c1988c5bfa849b1dc73904
 - ui.7: ## 7. Action button cycle | sha256:a9541810dbd8de33c49818ca9685d69fc35243278fb8cfcac942757b12a16b83
 - ui.8: ## 8. Export to Excel | sha256:02013c0ac0b494bb84f343e5ce55e391956ac9f6cc476cc9491b6ce473fae226
 - ui.9: ## 9. Confirm: delete | sha256:2b7c7f35fcf489ae8bf36a257ffaf1fecffa6774bec9cc9eea12463759ee35dc
-- ui.15: ## 15. View mode | sha256:3b0303e758d2d470405bb73d932d5d6b727ed32d3b5b24fea10b5e549eea8a3b
+- ui.15: ## 15. View mode | sha256:fad033e683d31973d4e7fa932bed5e1cc12ae78f83fdbcb2343daa184d696217
 - ui.16: ## 16. Dropdowns, lookups, enums | sha256:6932668317fa645c05bb1e26bd3221801b56510a77f5d1898ab758a1102c0874
 - ui.19: ## 19. Validation messages | sha256:51ac0deaaea47846133542b4f06349ce4201f373f65ac26cc5cdfce4a0e0816a
-- ui.22: ## 22. Loading, empty, error, toast | sha256:ca36e24d2210bf4603cb8092cbe49288e0319910304eb16559bb2bef9935b8ca
+- ui.22: ## 22. Loading, empty, error, toast | sha256:ef8ed233b38d520940646072757df48c42f7b3d392e397bc25700b10862ddd9f
 - ui.23: ## 23. Translations | sha256:fa61d2af66e51390cafeac43c298964d71c1e815236b1e5e66371b885b253893
 - ui.24: ## 24. Colors, icons, buttons | sha256:11d9de8679ce66408aed269fc2e00d16ee9ec1d1cb46a9ed8afeb693847fb377
 - ui.25: ## 25. RTL and dark theme | sha256:7a7270726f6b206659888dc898340d482f1d7c082bcb437a2d700ff228a026c5
 - ui.26: ## 26. Permissions and route access | sha256:33d769df2c69055e37edfd328738ca874edd65b8c285acb6443e5c3930e0f85a
 - ui.27: ## 27. Focus and keyboard | sha256:71009763a5b5c6848cda38eaf2bb0fa7ac83d001ab18c649f53f5c22edcb2b03
 - ui.28: ## 28. Request cancellation and stale responses | sha256:45d17c01d2519192de3a092e57c7deb97e2ddaf2731be82c57c11f703a36c31f
-- ui.29: ## 29. Verification expectations | sha256:9ed644e4850d168082c258bd00fb8826f51fda1ef8a98155baafa41583ad7a19
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:476faa25f2ba4a8a4cc59d4efb0c1798505bf3d241d0808c23ec84f849dbdbc9
+- ui.29: ## 29. Verification expectations | sha256:75801ef0acaeae5306fd49ad2672c9791823ea01ada1cf0cbadbb76a4385048f
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:ab611bb68b93c0e7b2fe256a1fbafb30a9a2f9f6f56f397e87f1b6cf3301b3cb
 - backend.7: ## 7. ListVM scope rule | sha256:65cc47b13fc8e207693e2ed6d033d491f879d845dc39a07b261670328ecbc1d1
 - backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c834c66dc17d92ffca8e74a7f32113de7febbf293507205c32287d375e3bb386
-- backend.9: ## 9. Search model and filters | sha256:7d2ca975a0db84d36a1d3a2f1efd588f197f7f11e188ab64f85e84578a17a72b
+- backend.9: ## 9. Search model and filters | sha256:6ab38c4859bfd9d1a29424abfa3e6ea38670329c9c1c3f78db133cf4945523fa
 - backend.10: ## 10. Select and dropdowns | sha256:4f52d4a48672f3a86c04856cf6a3b11e93442d6c062c78effbb56017e965a6da
-- backend.13: ## 13. Pattern 1 — Normal entity | sha256:a6d2fb7af604c71307dc1e5a74eba407f6eb6d0921b9cb6b917a7d93bd8606c1
+- backend.13: ## 13. Pattern 1 — Normal entity | sha256:c744ef011b1b10511c873fe7afb1d6b6a1992392c81e9c9f6db18ceb05cf733c
 - backend.17: ## 17. Pattern 5 — Reports | sha256:309c2a4dec4c1479e70b870ba4452011775fc3d5273bfea78aba1f8647b41ee3
-- backend.18: ## 18. Edge cases | sha256:b78409883a1ffe3d4016644ed8b5afc92b3d48b47395c8f3c75a8117c49e69ef
+- backend.18: ## 18. Edge cases | sha256:54b16261e2303ca977639276da2aa38b689d83678f06e9ceb7e6b98a307944df
 
 Approved references by read-path shape:
 
@@ -80,6 +80,9 @@ second grid implementation.
   requires a contract change.
 - Preserve row Create/View/Edit handoff to the single controlled modal owned by
   Phase 3; Phase 2 does not create a second editor component or editor route.
+  The only exception is the routed full-page editor variant (UI block 13), used
+  when the frozen contract approves an independently addressable route; Create,
+  View, and Edit then navigate to that one editor.
 
 A request to restore or preserve an older filter, title, or action-button
 appearance applies only to feature-owned layout and styling. It never permits
@@ -102,9 +105,12 @@ This is a replacement requirement, not permission to add a competing list path.
 - Search and filter controls, including the canonical compact filter strip with
   its uniform `repeat(N, 1fr)` field grid, 34px controls, dark theme, and
   900px/700px responsive states.
-- Any date filter, per block 17: typeable (`[readonlyInput]="false"` on a
-  filter), no separate trigger button and therefore no `showIcon` alone, and a
-  range picker opening on two months (`[numberOfMonths]="2"`).
+- Any date filter, per block 17: typeable (`[readonlyInput]="false"` with
+  `[keepInvalid]="true"`), no icon and no `[showIcon]`, a single range picker
+  opening on two months (`[numberOfMonths]="2"`), defaulting to the current
+  month.
+- No page scroll, per block 1: the grid rows are the screen's single scroll
+  owner; title, filters, and paginator stay fixed.
 - Four-layer reusable table integration: shared component, feature template,
   typed feature paging/sort TypeScript, and feature placement/token SCSS.
 - Optional typed whole-row activation for a confirmed, unambiguous workflow.
@@ -187,7 +193,7 @@ Name every removed ListVM field.
 | Shared component | Exactly one direct `p-table`; typed `DataTableColumn<T>`; actions, custom cell templates, optional accessible row activation and checkbox selection, table-owned paginator, translated headers, loading/empty states, and table-level theme/RTL-safe styling | |
 | Feature template | Exactly one `app-data-table` with typed data/columns/actions, paging and sort inputs, translated report/empty keys, error-aware empty visibility, one lazy-load output, optional typed row activation, and optional current-page typed checkbox selection only for confirmed workflows | |
 | Feature TypeScript | `DataTableComponent`, typed `DataTableColumn<Row>`, typed `TableLazyLoadEvent`, one page/sort conversion handler, API `totalRecords`, sort whitelist and stale-request protection; no `TableModule`, table `@ViewChild`, or internal mutation | |
-| Feature SCSS | Feature-prefixed compact filter strip, uniform `repeat(N, 1fr)` field grid, and Grid placement plus optional public `--sigma-data-table-*` overrides; strip the same width as the feature-title card; no nested filter card and no copied `.p-datatable-*`, action-menu, or paginator rules | |
+| Feature SCSS | Feature-prefixed compact filter strip, uniform `repeat(N, 1fr)` field grid, and Grid placement plus optional public `--sigma-data-table-*` overrides; strip and grid wrapper the same width as the feature-title card (`margin: 0 8px 6px` and `0 8px`); no nested filter card; no copied `.p-datatable-*`, action-menu, or paginator rules other than the block 6 Transitional fill block, copied exactly | |
 
 The footer remains owned by the direct `p-table` inside `app-data-table`; there
 is no second pager and its total always comes from the API rather than

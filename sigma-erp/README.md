@@ -23,8 +23,20 @@ Use these current files directly:
    cites its owning book block; a lesson is written to the book and the skill
    in the same task (see `F:\My Work\Sigma\AGENTS.md`).
 
-Read the version/status metadata from each canonical file header; do not duplicate
-those values in secondary indexes.
+Each of the three guides is stored as one file per block in `master/`, `ui/`,
+and `backend/`. The `SIGMA_*.md` file of the same name is a short index; the
+block number stays the citation key ("UI block 17" is `ui/17-*.md`). Version
+history is in `CHANGELOG.md`.
+
+Read the version/status metadata from each guide's `00-preamble.md` header; do
+not duplicate those values in secondary indexes.
+
+## Starting a screen
+
+Pick the screen type in `ui/screens/00-catalog.md`. Each of the seven screen
+files names the approved reference, the backend pattern, the contracts to freeze
+first, and the UI blocks to read in order. The screen files add no rule; the
+cited blocks own every rule.
 
 ## Which workflow to start with
 
@@ -78,8 +90,6 @@ content synchronization; it does not replace semantic review.
 
 ## Historical archive
 
-`sigma-erp.rar` is a historical snapshot whose contents are dated August 2026.
-It contains older copies of the same guides, templates, manifest, generator, and
-generated packets. It is **not canonical** and must not be used as the source for
-current planning or implementation decisions. Keep it only as historical backup
-unless it is intentionally moved to an archive/old-files location later.
+The August 2026 snapshot `sigma-erp.rar` was moved out of this folder on
+2026-09-28 by the owner. It is **not canonical** and must not be used as the
+source for current planning or implementation decisions.

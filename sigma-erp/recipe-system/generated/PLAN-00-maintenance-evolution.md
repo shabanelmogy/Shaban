@@ -10,20 +10,20 @@ it does not authorize source edits.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:bac9708a301e31a0302ab3880f2fbf60269c5b647ef40b6e4b537e6748762e92
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2a00e0f2004ea5c5cbd27c9a26b08bfe0599846b4a088c1e6e51a13c51123c74
 - master.1: ## 1. Governance and review principles | sha256:127af0593047619ee010cc42872c85f6fb17822939fc1eb84ddc0448a1bc38d2
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:518b4536a222d1c0c8cdd6265af603ede18ef9742a98d423ad525dfcf9f486ec
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:a34e2c67fb64586a7d135ae183ef2085e698c442fe21f0ea34059360b019c63c
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:3e4693fe20b130ccadbc096ec295c856ca45b65edce618be94f856736f679a28
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
 - master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
 - master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
-- master.7: ## 7. End-to-end reconciliation and final report | sha256:9969123abe737b9b3a7bad955fb9ca8869f56b558cf2c6f423e0af01c060b9b9
+- master.7: ## 7. End-to-end reconciliation and final report | sha256:e59115a082974a07d9b13b4aafddf6751b84bebfeb58c6cb53dbc751744b59d6
 - master.8: ## 8. Packet generation and governance | sha256:ec34b5d07a70aa09e1f34a15b20b247dd19e34aa43c4cc295fc7e6c45d5a3b85
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:708ae50816aae4005b03f8b318a4c63de5617cfee5b238586b2a0a883b7df314
-- ui.29: ## 29. Verification expectations | sha256:9ed644e4850d168082c258bd00fb8826f51fda1ef8a98155baafa41583ad7a19
-- ui.30: ## 30. Backlog, by priority | sha256:7d1f8cf1f9c0a1c9e29e5e58e1a255db6a509315cfacddec6ad236d666d7f89c
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:476faa25f2ba4a8a4cc59d4efb0c1798505bf3d241d0808c23ec84f849dbdbc9
-- backend.18: ## 18. Edge cases | sha256:b78409883a1ffe3d4016644ed8b5afc92b3d48b47395c8f3c75a8117c49e69ef
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:63f665b9264fc646a9f94d3df75f0cd421a92fd9f5e30fc68f2c119750a35972
+- ui.29: ## 29. Verification expectations | sha256:75801ef0acaeae5306fd49ad2672c9791823ea01ada1cf0cbadbb76a4385048f
+- ui.30: ## 30. Backlog, by priority | sha256:8038d240e320d3677022c4bff1cdf2de7edaa506994cba8900c569b8b76a5c01
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:ab611bb68b93c0e7b2fe256a1fbafb30a9a2f9f6f56f397e87f1b6cf3301b3cb
+- backend.18: ## 18. Edge cases | sha256:54b16261e2303ca977639276da2aa38b689d83678f06e9ceb7e6b98a307944df
 - backend.19: ## 19. Backlog | sha256:4d1b5cb3f493bbbecc92ba7e2a879b83ccd5b03565df83931fe7ca7b105faff5
 
 Approved references are selected only after the affected UI/backend shapes are

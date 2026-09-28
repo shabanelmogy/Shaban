@@ -1,16 +1,16 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "books": {
     "master": {
-      "path": "../SIGMA_FEATURE_REVIEW_MASTER.md",
+      "dir": "../master",
       "label": "Sigma Feature Review Master Guide"
     },
     "ui": {
-      "path": "../SIGMA_UI_PATTERNS.md",
+      "dir": "../ui",
       "label": "Sigma UI Pattern Book"
     },
     "backend": {
-      "path": "../SIGMA_BACKEND_PATTERNS.md",
+      "dir": "../backend",
       "label": "Sigma Backend Pattern Book"
     }
   },

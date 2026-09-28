@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop'
 $systemRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $manifestPath = Join-Path $systemRoot 'recipe-manifest.json'
 $manifest = Get-Content -Raw -Encoding UTF8 -LiteralPath $manifestPath | ConvertFrom-Json
-$supportedSchemaVersion = 3
+$supportedSchemaVersion = 4
 
 if ([int]$manifest.schemaVersion -ne $supportedSchemaVersion) {
     throw "Unsupported recipe manifest schemaVersion '$($manifest.schemaVersion)'. Expected $supportedSchemaVersion."
@@ -28,9 +28,18 @@ if ($duplicateOutputs.Count -gt 0) {
 }
 
 foreach ($bookProperty in $manifest.books.PSObject.Properties) {
-    $bookPath = [System.IO.Path]::GetFullPath((Join-Path $systemRoot $bookProperty.Value.path))
-    if (-not (Test-Path -LiteralPath $bookPath)) {
-        throw "Canonical book '$($bookProperty.Name)' was not found at $bookPath."
+    $bookPath = [System.IO.Path]::GetFullPath((Join-Path $systemRoot $bookProperty.Value.dir))
+    if (-not (Test-Path -LiteralPath $bookPath -PathType Container)) {
+        throw "Canonical book directory '$($bookProperty.Name)' was not found at $bookPath."
+    }
+    $duplicateBlocks = @(
+        Get-ChildItem -LiteralPath $bookPath -File -Filter '*.md' |
+            Where-Object { $_.Name -match '^\d{2}-' } |
+            Group-Object { $_.Name.Substring(0, 2) } |
+            Where-Object { $_.Count -gt 1 }
+    )
+    if ($duplicateBlocks.Count -gt 0) {
+        throw "Canonical book '$($bookProperty.Name)' has more than one file for block(s): $($duplicateBlocks.Name -join ', ')."
     }
 }
 
@@ -67,44 +76,20 @@ function Get-SourceBlock {
         [Parameter(Mandatory = $true)][int]$Block
     )
 
-    $lines = Get-Content -Encoding UTF8 -LiteralPath $BookPath
-    if ($Block -eq 0) {
-        $start = 0
-        $end = $lines.Count
-        for ($index = 0; $index -lt $lines.Count; $index++) {
-            if ($lines[$index] -match '^##\s+') {
-                $end = $index
-                break
-            }
-        }
-        $heading = "$($lines[0]) - preamble"
-    }
-    else {
-        $headingPattern = '^##\s+' + [regex]::Escape([string]$Block) + '(?:\.|\s)'
-        $start = -1
-
-        for ($index = 0; $index -lt $lines.Count; $index++) {
-            if ($lines[$index] -match $headingPattern) {
-                $start = $index
-                break
-            }
-        }
-
-        if ($start -lt 0) {
-            throw "Block $Block was not found in $BookPath."
-        }
-
-        $end = $lines.Count
-        for ($index = $start + 1; $index -lt $lines.Count; $index++) {
-            if ($lines[$index] -match '^##\s+') {
-                $end = $index
-                break
-            }
-        }
-        $heading = $lines[$start]
+    # One file per block: <BookPath>/<NN>-<slug>.md. Block 0 is the whole preamble,
+    # including the unnumbered sections (authority order, pattern status, contents).
+    $prefix = '{0:D2}-' -f $Block
+    $blockFiles = @(
+        Get-ChildItem -LiteralPath $BookPath -File -Filter '*.md' |
+            Where-Object { $_.Name.StartsWith($prefix) }
+    )
+    if ($blockFiles.Count -ne 1) {
+        throw "Block $Block was not found (or is ambiguous) in $BookPath."
     }
 
-    $text = Normalize-Text (($lines[$start..($end - 1)]) -join "`n")
+    $lines = @(Get-Content -Encoding UTF8 -LiteralPath $blockFiles[0].FullName)
+    $heading = if ($Block -eq 0) { "$($lines[0]) - preamble" } else { $lines[0] }
+    $text = Normalize-Text ($lines -join "`n")
     $sha = [System.Security.Cryptography.SHA256]::Create()
     try {
         $bytes = [System.Text.Encoding]::UTF8.GetBytes($text)
@@ -145,7 +130,7 @@ foreach ($recipeDefinition in $recipes) {
             throw "Recipe '$($recipeDefinition.id)' references unknown book '$($source.book)'."
         }
 
-        $bookPath = [System.IO.Path]::GetFullPath((Join-Path $systemRoot $bookDefinition.path))
+        $bookPath = [System.IO.Path]::GetFullPath((Join-Path $systemRoot $bookDefinition.dir))
         $block = Get-SourceBlock -BookPath $bookPath -Block ([int]$source.block)
         "- $($source.book).$($source.block): $($block.Heading) | sha256:$($block.Hash)"
     }

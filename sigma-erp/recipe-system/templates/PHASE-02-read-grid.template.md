@@ -39,6 +39,9 @@ second grid implementation.
   requires a contract change.
 - Preserve row Create/View/Edit handoff to the single controlled modal owned by
   Phase 3; Phase 2 does not create a second editor component or editor route.
+  The only exception is the routed full-page editor variant (UI block 13), used
+  when the frozen contract approves an independently addressable route; Create,
+  View, and Edit then navigate to that one editor.
 
 A request to restore or preserve an older filter, title, or action-button
 appearance applies only to feature-owned layout and styling. It never permits

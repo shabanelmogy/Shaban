@@ -214,6 +214,9 @@ being added to a payload.
   on click, and the input stays typeable.
 - The page never scrolls: the form pane or dialog body is the single scroll
   owner and the action footer stays visible, per block 1.
+- Every new or refactored `app-editor-dialog` binds `[contentPadded]="true"`
+  unless its body is full-bleed by design, and the feature content wrapper has
+  no padding of its own, per block 13 *Body padding*.
 - Date-picker auto-open is opt-in only for a confirmed date-first workflow and
   occurs one microtask after dialog `shown`, with focus moved to the calendar
   input.
