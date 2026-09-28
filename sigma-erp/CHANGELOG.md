@@ -23,6 +23,7 @@ now on.
 
 | Date | Guide | Version | Change |
 |---|---|---|---|
+| 2026-09-28 | UI | 0.71 | Block 6: new section *Current page report format*; mandate `currentPageReport="<feature>.showingEntries"` with `{first}`, `{last}`, `{totalRecords}` placeholders in `en.ts` and `ar.ts` |
 | 2026-09-28 | UI | 0.70 | Block 13: new *Body padding* section; `app-editor-dialog` gains opt-in `[contentPadded]`, required on new and refactored editors, and the shell-ownership sentence now points to it (it previously claimed the shell owned content padding while the source body had none). Block 30: backlog 36 for editors that pad their own wrapper. Preamble header points to this file instead of block 30 |
 | 2026-09-28 | Master | 1.9 | Block 7: final report adds "Suggested migration name and commit messages" (PascalCase verb-first unique migration name with its `Add-Migration` command; one Conventional Commits message per affected repository; suggest only). Backend `00-preamble` six-steps note points to it |
 | 2026-09-28 | Master | 1.8 | Block 2: new section "Screenshot-backed scope from the user request". A user request that explicitly places a screenshot's missing business in scope approves the Explicit items' existence and labels; type, validation, calculations, transitions, and existing-row values stay Missing until the user decides. Also added a pointer from "Missing screenshot contracts" |

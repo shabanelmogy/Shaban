@@ -19,7 +19,7 @@ it does not authorize source edits.
 - master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
 - master.7: ## 7. End-to-end reconciliation and final report | sha256:e59115a082974a07d9b13b4aafddf6751b84bebfeb58c6cb53dbc751744b59d6
 - master.8: ## 8. Packet generation and governance | sha256:ec34b5d07a70aa09e1f34a15b20b247dd19e34aa43c4cc295fc7e6c45d5a3b85
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:63f665b9264fc646a9f94d3df75f0cd421a92fd9f5e30fc68f2c119750a35972
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:ae7e4bd552342bab531b491b00db80bada826e75489e631b222586f39d176bde
 - ui.29: ## 29. Verification expectations | sha256:75801ef0acaeae5306fd49ad2672c9791823ea01ada1cf0cbadbb76a4385048f
 - ui.30: ## 30. Backlog, by priority | sha256:8038d240e320d3677022c4bff1cdf2de7edaa506994cba8900c569b8b76a5c01
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:ab611bb68b93c0e7b2fe256a1fbafb30a9a2f9f6f56f397e87f1b6cf3301b3cb

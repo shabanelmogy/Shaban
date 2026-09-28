@@ -246,6 +246,35 @@ The empty state defaults to `emptyMessage = 'general.noDataFound'`. Keep that ke
 in both `en.ts` and `ar.ts`, and add both entries when overriding it with a
 feature key.
 
+### Current page report format (`currentPageReport`)
+
+Every new or refactored list screen that pages through `app-data-table` binds
+`currentPageReport` to a feature translation key. Name a new key
+`<feature>.showingEntries`. An existing `<feature>.pageReport` key that already
+uses the placeholders below is compliant; do not rename it.
+
+The shared component passes the value through the `translate` pipe and hands the
+result to PrimeNG's `currentPageReportTemplate`. Define the key in both `en.ts`
+and `ar.ts` with PrimeNG's placeholders only:
+
+- `en.ts`: `'Showing {first} to {last} of {totalRecords} entries'`
+- `ar.ts`: `'عرض {first} إلى {last} من {totalRecords} إدخال'`
+
+**Do not omit `currentPageReport`.** When it is unbound, `app-data-table` falls
+back to `'{first} - {last} / {totalRecords}'` and shows only numbers
+(`1 - 10 / 16`).
+
+**Inside `currentPageReport`, use no other placeholder.** PrimeNG replaces only
+`{first}`, `{last}`, `{rows}`, `{totalRecords}`, `{currentPage}`, and
+`{totalPages}`; `{total}` and `{{total}}` stay on screen as literal text. This
+rule covers only `currentPageReport`: a hand-built pager that translates a key
+with ngx-translate parameters (`'key' | translate: { from, to, total }`, for
+example `alerts.showingEntries`) correctly uses `{{…}}`.
+
+Do not bind `general.showingEntries` until backlog 37 is resolved: it still uses
+`{total}`.
+
+
 Public CSS variables allow an exceptional feature-specific width or semantic
 color without copying component internals: `--sigma-data-table-min-width`,
 `--sigma-data-table-empty-height`, `--sigma-data-table-border`,

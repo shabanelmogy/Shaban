@@ -15,13 +15,13 @@ query to Grid rendering, paging, and export.
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
 - master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
 - master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:63f665b9264fc646a9f94d3df75f0cd421a92fd9f5e30fc68f2c119750a35972
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:ae7e4bd552342bab531b491b00db80bada826e75489e631b222586f39d176bde
 - ui.1: ## 1. Feature folders and wiring | sha256:dd3b3e89fa9d9020882e9a3e21a196cbc3e611c579053691e626bdbb1ca5b9ee
 - ui.2: ## 2. Service and response wrappers | sha256:6fa0394abd7f49ea6f19efcbf0f30dca568621f5250ab3b3343b7ba16a7102e9
 - ui.3: ## 3. Header | sha256:9662bca9cbe8aea34b8a49b71413c3c20636e691a1da5fa62c15c441f5c75cee
 - ui.4: ## 4. Filters | sha256:9c4d8c09def40069ee0fce5e8292f58145bb2dec06873efa0c81ec68f8740228
 - ui.5: ## 5. Columns | sha256:b3a1e55a78c393793ca810af0640eb2b4b662ce032fbd7167d31e135751c7734
-- ui.6: ## 6. Grid and footer | sha256:d239089e531398fcae3f910688a539bca802e0e942c1988c5bfa849b1dc73904
+- ui.6: ## 6. Grid and footer | sha256:1bb539b986d61daf3c102dbe205d643e29b5766c6f582e6f2109a7b4cd6dc14d
 - ui.7: ## 7. Action button cycle | sha256:a9541810dbd8de33c49818ca9685d69fc35243278fb8cfcac942757b12a16b83
 - ui.8: ## 8. Export to Excel | sha256:02013c0ac0b494bb84f343e5ce55e391956ac9f6cc476cc9491b6ce473fae226
 - ui.9: ## 9. Confirm: delete | sha256:2b7c7f35fcf489ae8bf36a257ffaf1fecffa6774bec9cc9eea12463759ee35dc

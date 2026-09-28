@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 30 |
-| Version | 0.70 |
+| Version | 0.71 |
 | Last verified against source | 2026-09-21 (shared `data-table`, `editor-dialog`, `feature-title`, `base-component.service.ts`, `loading.service.ts`, and `src/styles.scss` re-checked 2026-09-28) |
-| Last content change | 2026-09-28 — block 13 *Body padding* (`[contentPadded]`), backlog 36. History in `../CHANGELOG.md` |
+| Last content change | 2026-09-28 — block 6 *Current page report format* (`currentPageReport="<feature>.showingEntries"`). History in `../CHANGELOG.md` |
 | Verified by | source inspection only — no build, test, or browser run |
 
 One page per UI building block. Every block has a **reference file** you can

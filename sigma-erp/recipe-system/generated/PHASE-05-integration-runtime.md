@@ -14,7 +14,7 @@ contracts are connected through the actual application injector and route tree.
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
 - master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
 - master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:63f665b9264fc646a9f94d3df75f0cd421a92fd9f5e30fc68f2c119750a35972
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:ae7e4bd552342bab531b491b00db80bada826e75489e631b222586f39d176bde
 - ui.1: ## 1. Feature folders and wiring | sha256:dd3b3e89fa9d9020882e9a3e21a196cbc3e611c579053691e626bdbb1ca5b9ee
 - ui.2: ## 2. Service and response wrappers | sha256:6fa0394abd7f49ea6f19efcbf0f30dca568621f5250ab3b3343b7ba16a7102e9
 - ui.22: ## 22. Loading, empty, error, toast | sha256:ef8ed233b38d520940646072757df48c42f7b3d392e397bc25700b10862ddd9f
