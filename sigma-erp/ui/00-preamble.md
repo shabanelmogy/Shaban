@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 30 |
-| Version | 0.74 |
+| Version | 1.51 |
 | Last verified against source | 2026-09-21 (shared `data-table`, `editor-dialog`, `feature-title`, `base-component.service.ts`, `loading.service.ts`, and `src/styles.scss` re-checked 2026-09-28) |
-| Last content change | 2026-09-28 — block 1: borrowed services (lookups from other features) also need a `LayoutModule.providers` entry. History in `../CHANGELOG.md` |
+| Last content change | 2026-10-02 — Follow Up adopts the frozen professional Summary extension in its existing Details/Summary workspace tabs: responsive 960px maximum, shared server-owned additive KPI cards, shared-grid comparison cells and raw-username drill-down, with active-section Excel and full-document print preserving state. Feature formulas remain in the frozen contract/review. UI 20 and skill synchronized; source-only, owner visual/runtime acceptance pending. History in `../CHANGELOG.md` |
 | Verified by | source inspection only — no build, test, or browser run |
 
 One page per UI building block. Every block has a **reference file** you can
@@ -66,32 +66,33 @@ packet still carries the current fingerprints of its canonical source blocks.
 Tasks without a matching recipe use the smallest applicable block dependency
 closure from this book.
 
-## Reference per shape
+## Shared owner per shape
 
-Do not read one feature as the reference for everything. Each shape has its own,
-and they differ deliberately.
+Do not read one feature as the reference for everything. **Screen-level reference
+implementations live in one place only: `ui/screens/00-catalog.md`** (list, routed editor, step
+form, tree, financial collection, settings workspace, report, financial document, action dialog).
+This table names the shared piece each shape is built on and what the feature keeps.
 
-| Shape | Canonical reference | Why |
+| Shape | Shared owner | The feature owns |
 |---|---|---|
-| Solid primary action | `shared/components/primary-action-button/` | Shared `app-primary-action-button` owns button/submit semantics, primary tokens, icon placement, busy state, focus visibility, and RTL arrows; features supply translated labels and behavior |
-| List, grid, paging | `shared/components/data-table/` + `Fleet/VehicleService/components/list` | Shared `app-data-table` owns PrimeNG rendering and table styling; the feature owns typed columns, server paging, sorting, errors, and refresh state |
-| List filters | `Accounts/openingBalances/components/details` + `Customers/Individual/IndividualPartner/components/list` | Opening Balances is the canonical reference for the compact filter strip that a new screen uses; IndividualPartner remains the reference for the retained flat 12-column list-filter grid. List paging, sorting, actions and table integration remain owned by their own blocks and references |
-| Step form | `shared/components/step-form/` + `shared/components/form-validation-summary/` + `Customers/Companies/CompanyPartner/components/details` | Shared `app-step-form` owns progress navigation and `app-form-validation-summary` owns the accessible invalid-field summary; the feature owns one parent form, step gating, invalid-field discovery/focus, content, actions, and persistence |
-| Form section | `shared/components/form-section/` + `Customers/Companies/CompanyPartner/components/details` | Shared `app-form-section` owns the repeated section card, translated heading, optional description/icon, projected header actions, compact density, fill-height mode, responsive layout, and light/dark styling; the feature projects its form controls and owns validation and behavior |
-| Ordinary Add/View/Edit modal | `shared/components/editor-dialog/` + `Fleet/VehicleService/components/details` | Shared `app-editor-dialog` owns the controlled PrimeNG shell and mode-aware footer; the feature owns content, forms, validation, dirty-close and persistence |
-| Tabbed Add/View/Edit modal | `shared/components/editor-dialog/` + `shared/components/editor-tabs/` + `Fleet/VehicleService/components/details` | Use `app-editor-dialog` for the shell and `app-editor-tabs` for accessible navigation; the feature owns typed tab state, panels, bounded content and forms |
-| Editable child collection | `shared/components/editable-collection-table/` + `Fleet/VehicleService/components/details` + `Customers/Companies/CompanyPartner/components/detalisForm/{contact-persons,credit-cards,documents,drivers}` | Shared `app-editable-collection-table` owns collection chrome, required headers, optional heading, Add/default Remove or projected row actions, empty state, responsive table behavior, bounded `fillHeight` scrolling, and light/dark styling; the feature owns typed rows, projected cells/actions, validation, confirmation, mutation, and persistence |
-| Hierarchy tree workspace | `Accounts/Account/components/list` + `components/details` | Canonical routed tree editor for true parent/child master data: feature title + compact tree toolbar + bounded internal tree scroll + embedded detail pane; preserve hierarchy semantics instead of converting the tree to a flat Grid |
-| Financial collection editor | `Accounts/openingBalances/components/details` + tab editors + `shared/components/editable-collection-table/` | Routed accounting workspace for dense editable financial rows: immutable/server-owned context in the feature header, compact tabs/filters, grow-until-cap card, internal row scroll with sticky headers, visible Debit/Credit totals plus optional backend-owned Balance/Net when useful, and Save action |
-| Tabbed settings workspace | `Accounts/Link Accounts/LinkAccounts/components/details` + `shared/components/editor-tabs/` | Routed settings/account-mapping workspace: shared workspace tabs, fixed route surface with no main-page vertical scroll, one internal content scroll owner, and Save outside that scroll region |
-| Nested child draft | `shared/components/editor-dialog/` + `shared/components/editor-tabs/` + `Customers/Companies/CompanyPartner/components/detalisForm/drivers` | Shared dialog/tab/section components own presentation and accessible navigation; the feature owns draft isolation, dirty-close approval and parent commit on Save only |
-| Confirmation and discard | `shared/service/confirmation-dialog.service.ts`, `Fleet/Vehicle` `requestClose()` | Single shared dialog for every yes/no |
-| Report | `shared/components/report-page/` + `shared/components/report-actions/` + `Customers/StatementOfAccount/components/list` + `Reports/TrailBalance/components/list` | Shared page/action chrome around a typed filter, sectioned response and totals; Trial Balance is the canonical dense accounting tree/table visual variant; shared print coordination |
+| Solid primary action | `shared/components/primary-action-button/` (button/submit semantics, tokens, icon, busy state, focus, RTL arrows) | translated label and behaviour |
+| List, grid, paging | `shared/components/data-table/` (`[fill]`, column `type`, `dataTableExportRows`) + the `sigma-list-*` shell (block 1) | typed columns, server paging, sorting, errors, refresh state |
+| List filters | `shared/components/filter-panel/` (strip, *More filters*, Reset, dark/RTL, responsive); reports use the `sigma-report-filter-*` strip | fields, order, width, form and search logic |
+| Step form | `shared/components/step-form/` + `shared/components/form-validation-summary/` | one parent form, step gating, invalid-field focus, persistence |
+| Form section | `shared/components/form-section/` (section card, heading, header actions, density, fill height, light/dark) | form controls, validation, behaviour |
+| Add/View/Edit modal, with or without tabs | `shared/components/editor-dialog/` + `shared/components/editor-tabs/` | content, typed tab state, forms, validation, dirty-close, persistence |
+| Routed document editor | the shared editor shell (`src/styles.scss`, block 1) + `shared/utils/editable-rows.ts` + `app-field-error` | workspace layout, forms, persistence |
+| Editable child collection | `shared/components/editable-collection-table/` (chrome, headers, Add/Remove, empty state, `fillHeight` scroll, light/dark); consumers `Customers/Companies/CompanyPartner/components/detalisForm/{contact-persons,credit-cards,documents,drivers}` | typed rows, projected cells and actions, validation, confirmation, persistence |
+| Nested child draft | editor dialog + editor tabs; consumer `Customers/Companies/CompanyPartner/components/detalisForm/drivers` | draft isolation, dirty-close approval, parent commit on Save only |
+| Confirmation and discard | `shared/service/confirmation-dialog.service.ts` (block 9, 10); `requestClose()` in `Workshop/Job/components/editor` (routed) and `Fleet/Vehicle/components/details` (dialog) | when to ask, and what happens after |
+| Report | `shared/components/report-page/` + `shared/components/report-actions/` + shared print coordination | typed filter, sections, totals |
 
-Where a block shows Company/Individual markup for a filter concern, use it only
-for the filter shape. `shared/components/data-table` owns the reusable table
-shell, while `Fleet/VehicleService` remains the canonical paged-grid feature
-integration.
+Shared pieces added in the shared-first rewrite (2026-10-01): `app-field-error` (block 19),
+`app-state-message` (block 22), `enumOptions` (16), `parseDateValue`/`parseDateRange`/
+`currentMonthRange` (17), `toListParams`/`fetchAllPages` (2, 8), the `money` pipe (14, 20),
+`sigma-danger-button` (24), `sigma-print-flow` (21), editable-table `stickyHeader` (14) and the
+filter panel `--check`/`--choice` fields (4). A block that shows older feature markup uses it
+for semantics only; the presentation is the shared piece.
 
 ## Pattern status
 
@@ -127,18 +128,18 @@ silently revert the consumer to the legacy implementation.
 | # | Block | Status | Reference |
 |---|---|---|---|
 | 1 | [Feature folders and wiring](01-feature-folders-and-wiring.md) | Canonical | `CompanyPartner/` |
-| 2 | [Service and response wrappers](02-service-and-response-wrappers.md) | Transitional | `services/companypartner.service.ts` |
+| 2 | [Service and response wrappers](02-service-and-response-wrappers.md) | Canonical | `shared/utils/list-query.ts` + `Workshop/Job/services/job.service.ts` |
 
 **Main page**
 
 | # | Block | Status | Reference |
 |---|---|---|---|
-| 3 | [Header](03-header.md) | Canonical | `components/list/list.component.html` |
-| 4 | [Filters](04-filters.md) | Canonical | `Accounts/openingBalances/components/details` (compact strip) + `Customers/Individual/IndividualPartner/components/list` (retained flat grid) |
+| 3 | [Header](03-header.md) | Canonical | `Workshop/Job/components/list/list.component.html` |
+| 4 | [Filters](04-filters.md) | Canonical | `shared/components/filter-panel/` + `Workshop/Job/components/list` |
 | 5 | [Columns](05-columns.md) | Canonical | `Fleet/VehicleService/components/list/list.component.ts` |
-| 6 | [Grid and footer](06-grid-and-footer.md) | Canonical | `shared/components/data-table/` + `Fleet/VehicleService/components/list` |
-| 7 | [Action button cycle](07-action-button-cycle.md) | Transitional + canonical quotation specialization | `shared/components/action-button/` + `Sales/SalesQuotation/components/list` |
-| 8 | [Export to Excel](08-export-to-excel.md) | Canonical | list `exportToExcel` |
+| 6 | [Grid and footer](06-grid-and-footer.md) | Canonical | `shared/components/data-table/` + `Workshop/Job/components/list` |
+| 7 | [Action button cycle](07-action-button-cycle.md) | Canonical + quotation specialization | `shared/components/action-button/` + `Sales/SalesQuotation/components/list` |
+| 8 | [Export to Excel](08-export-to-excel.md) | Canonical | `fetchAllPages` + `dataTableExportRows`, Job list |
 
 **Dialogs**
 
@@ -161,25 +162,25 @@ silently revert the consumer to the legacy implementation.
 
 | # | Block | Status | Reference |
 |---|---|---|---|
-| 16 | [Dropdowns, lookups, enums](16-dropdowns-lookups-enums.md) | Canonical | filters + drivers |
-| 17 | [Dates](17-dates.md) | Canonical | drivers, documents |
-| 18 | [Documents and upload](18-documents-and-upload.md) | Transitional | `detalisForm/documents/` |
-| 19 | [Validation messages](19-validation-messages.md) | Canonical | child sections |
+| 16 | [Dropdowns, lookups, enums](16-dropdowns-lookups-enums.md) | Canonical | `shared/utils/enum-options.ts` + Job editor |
+| 17 | [Dates](17-dates.md) | Canonical | `shared/utils/date-utils.ts` + Job list/editor |
+| 18 | [Documents and upload](18-documents-and-upload.md) | Canonical | `shared/components/file-field/` + `DocumentUploadTracker` + `detalisForm/documents/` |
+| 19 | [Validation messages](19-validation-messages.md) | Canonical | `shared/components/field-error/`; *Money and tax in forms* section |
 
 **Reports**
 
 | # | Block | Status | Reference |
 |---|---|---|---|
-| 20 | [Report page](20-report-page.md) | Canonical composite | shared report page/actions + `Customers/StatementOfAccount/` + `Reports/TrailBalance/` |
+| 20 | [Report page](20-report-page.md) | Canonical composite | shared report page/actions + `sigma-report-*` classes + `Accounts/TrailBalance/` (Statement of Account for semantics) |
 | 21 | [Report print](21-report-print.md) | Canonical | `shared/service/report-print.service.ts` |
 
 **Cross-cutting**
 
 | # | Block | Status | Reference |
 |---|---|---|---|
-| 22 | [Loading, empty, error, toast](22-loading-empty-error-toast.md) | Canonical | list + dialogs |
+| 22 | [Loading, empty, error, toast](22-loading-empty-error-toast.md) | Canonical | `errorInterceptor`, `LoadingService`, `shared/components/state-message/` |
 | 23 | [Translations](23-translations.md) | Canonical | `i18n/vocabs/en.ts`, `ar.ts` |
-| 24 | [Colors, icons, buttons](24-colors-icons-buttons.md) | Transitional | `shared/components/primary-action-button/` + approved composite controls |
+| 24 | [Colors, icons, buttons](24-colors-icons-buttons.md) | Canonical | global `--sigma-*` tokens + `primary-action-button` + `sigma-secondary-button`/`sigma-danger-button` |
 | 25 | [RTL and dark theme](25-rtl-and-dark-theme.md) | Canonical | `translation.service.ts` |
 
 **Governance**
@@ -193,4 +194,3 @@ silently revert the consumer to the legacy implementation.
 | 30 | [Unification backlog](30-backlog-by-priority.md) | Governance | app-wide |
 
 ---
-

@@ -27,19 +27,16 @@ only remaining directional arrows, never semantic icons, numbers or text:
 }
 ```
 
-Dark theme keys off `data-bs-theme` on `<html>`; redeclare the same tokens:
+Dark theme keys off `data-bs-theme` on `<html>`. A feature that uses the global `--sigma-*`
+tokens (block 24) gets dark mode with **no** rule of its own. Only a feature-owned domain token
+needs a dark value, and in component SCSS that needs `:host-context`:
 
 ```scss
 :host-context([data-bs-theme='dark']) {
-  --feature-text: #e4edf5;
-  --feature-muted: #9dafbf;
-  --feature-border: #344557;
-  --feature-surface: #1d2a37;
-  --feature-canvas: #16222d;
+  --vehicle-status-reserved: #f0b35a;   // a real domain colour, not a palette copy
 }
 ```
-
-This is component SCSS, so `:host-context` is required. Body-appended overlays
+ Body-appended overlays
 use the global `[data-bs-theme='dark'] .<overlay-style-class>` form from block
 24 instead.
 
@@ -49,8 +46,8 @@ public `--sigma-data-table-*` color variable must override that same variable
 for dark theme. The legacy global `table-list` rules are compatibility only and
 are not an implementation reference.
 
-**Check:** no hard-coded `left`/`right` in feature layout · only arrows flipped ·
-dark tokens declared for host and dialog roots · body-appended overlays checked
+**Check:** no hard-coded `left`/`right` in feature layout · only arrows flipped · global
+`--sigma-*` tokens used, dark values only for feature-owned domain tokens · body-appended overlays checked
 in both directions and themes · Arabic text not mirrored.
 
 ---

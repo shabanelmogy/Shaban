@@ -33,6 +33,11 @@ and supplies:
 | `GET /<Entity>/GetByWithNavigationsId/{id}` | `DetailWithNavigationsAsync` |
 | `GET /<Entity>/GetSelect` | `SelectAsync` |
 
+A single-row settings controller derives from `SingleRowSettingsControllerBase` instead, which
+adds `GET /<Entity>/Mine` and `PUT /<Entity>/Mine` (block 16).
+
+Only `POST` passes the request's `CancellationToken` to the service (D5-2 deferred, block 5).
+
 `ToActionResult` maps `Result.IsSuccess` to 200 and a failure to
 `Result.StatusCode` or 400, so services return `Result`/`Results<T>` and never
 touch HTTP.

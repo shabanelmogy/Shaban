@@ -70,6 +70,11 @@ or rerun them before completion.
 16. When a Maintenance / Evolution Plan was required, final source ↔ Frozen plan
     target contracts, implementation slices, migration/compatibility decisions,
     and verification matrix.
+17. For reports, Phase 2's UI 20 evidence ↔ final request/backend slicing/counts,
+    totals and complete print/Excel scope, conditional FormGroup/busy/validation,
+    applied filters, effective bucket labels and single error owner. UI 21 owns
+    print preparation. Name actual symbols; report findings/Uncertain evidence
+    separately from pending runtime acceptance instead of repeating "Matched".
 
 ## Required outputs
 

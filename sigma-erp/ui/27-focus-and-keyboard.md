@@ -14,15 +14,15 @@ the trap, you handle the edges.
 | Row action menu | Escape and outside click close it; focus returns to the trigger |
 | Icon-only button | `aria-label`, always |
 | Decorative icon | `aria-hidden="true"`, always |
-| Invalid submit | focus the first invalid control, do not only paint it red |
+| Invalid submit | focus the first invalid control; shared `focusField` reveals clipped fields inside actual scroll regions, with no page/clipped-shell movement (block 12) |
+| Added child row | `EditableRows.add` uses shared `focusField(focusId, { openOverlay: false })`: wait for rendering, reveal within real scroll regions, focus with preventScroll, leave picker closed (block 14) |
 | Step form | `app-step-form` owns ordinary-button navigation and `aria-current`; feature Back/Next remain `type="button"` so Enter cannot skip a step |
 | Editor tabs | `app-editor-tabs` owns roving focus, Home/End, and direction-aware arrow keys; feature panels keep matching IDs and labels |
 
 Getting these free is the reason to use `p-dialog` and the shared confirmation
 service rather than a hand-rolled backdrop. A plain `<div>` with
-`role="dialog"` provides none of them — which is why the hand-rolled Staff
-salary-revision modal (`Staff/Staff/components/list/list.component.html`) must
-not be used as a model. Block 13 shows the canonical replacement.
+`role="dialog"` provides none of them — which is why a hand-rolled `role="dialog"` modal must not be used. (The Staff salary-revision
+modal now uses `app-editor-dialog`, verified 2026-10-01.) Block 13 shows the canonical replacement.
 
 Filter forms submit on Enter because they are real `<form>` elements with
 `type="submit"` on Search. Keep that; do not intercept Enter.
@@ -34,4 +34,3 @@ feature-local duplicate tab keyboard handler · no `role="dialog"` hand-rolled
 markup in new code.
 
 ---
-

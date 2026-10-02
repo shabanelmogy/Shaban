@@ -69,7 +69,7 @@ Three wiring steps, all required:
 },
 ```
 
-2. Service in `_metronic/layout/layout.module.ts` `providers` — see below.
+2. Service `@Injectable({ providedIn: 'root' })` — see *One `HttpClient`* below.
 
 3. Menu entry, or the page is reachable only by typing the URL.
 
@@ -213,10 +213,57 @@ whether a page title resolves at runtime. The visible symptom is a strip of dead
 space above the footer (calc too short) or a scrollbar in `.app-content` (calc too
 long), and it changes whenever the shell's toolbar or footer is touched.
 
-`Rental/RentalPlanner` and `Staff/designations` are the reference implementations
-of the container-fill host. Legacy screens still carrying a viewport calc are
+The shared class `sigma-route-host` is this `:host` block (`host: { class: 'sigma-route-host' }`
+in the component metadata); `Workshop/Job/components/list` is the reference. Do not repeat the
+block in feature SCSS. Legacy screens still carrying a viewport calc are
 unification debt: do not copy the calc, and replace it with `height: 100%` when
 the feature is reviewed.
+
+#### Shared list page shell
+
+> **Status: Canonical** — classes in `src/styles.scss`; reference `Workshop/Job/components/list`
+> (owner request 2026-09-30: shared, customization kept to a minimum).
+
+A list route writes **no** page, panel, header, alert or table-fill SCSS. It uses:
+
+| Where | Use | Replaces the feature copy of |
+|---|---|---|
+| Component metadata | `host: { class: 'sigma-route-host' }` | the container-fill `:host` block above |
+| Page | `<section class="sigma-list-page">` | `.feature-page` |
+| Card | `<div class="sigma-list-panel">` (dark shadow included) | `.feature-panel` |
+| Title | `<header class="sigma-list-header"><app-feature-title>` | header wrapper rules |
+| Filters | `form[appFilterPanel]` (block 4) | the filter strip |
+| Alerts | `div.sigma-alert` (danger), `sigma-alert--warning` | `.feature-alert` |
+| Secondary actions | `button.sigma-secondary-button` (Export, Reset, header actions) | `.feature-secondary-button` |
+| Grid | `<div class="sigma-list-table"><app-data-table [fill]="true">` (block 6) | the table wrapper and the `::ng-deep` fill block |
+
+The chain below is what these classes implement. A screen that needs something they do not
+express records it as an exception in its review; it does not restyle the shared classes.
+
+#### Shared editor page shell
+
+> **Status: Canonical** — classes in `src/styles.scss`; reference `Workshop/Job/components/editor`
+> (step 3 of the shared-first rewrite, 2026-10-01).
+
+A routed editor (block 13 *Modal or routed page*) writes no page, panel, alert, field, totals or
+footer SCSS. It uses:
+
+| Where | Use |
+|---|---|
+| Component metadata | `host: { class: 'sigma-route-host' }` |
+| Page / card | `section.sigma-editor-page` > `div.sigma-editor-panel` (same values as the list shell) |
+| Title | `app-feature-title` with a Back button `button.sigma-secondary-button.sigma-icon-button` in `feature-title-leading` |
+| Alerts | `div.sigma-alert`, `sigma-alert--warning` |
+| Form region | `form.sigma-editor-form` > `div.sigma-editor-body` — the bounded region; each pane inside owns its scroll. A one-pane editor (step form, plain record) puts its sections in `div.sigma-editor-scroll`, the single scroll owner; its children keep their content height (`flex: 0 0 auto`), so a section is never squeezed under the next one |
+| Fields | `div.sigma-editor-grid` (`--sigma-editor-columns`, default 4; 2 under 1024px, 1 under 700px) of `div.sigma-field` (label + one control of exactly `--sigma-editor-control-height` — 34px, the filter height — for inputs, dropdowns, calendars and numbers; cells align to the top, so an error under one control never moves its neighbours; `sigma-field__read` for a read-only value, `--full` spans the row, `--check` for a checkbox with its label) and `app-field-error` (block 19); a file is `div.sigma-file-field` (block 18) |
+| Document totals | `div.sigma-editor-totals` (`__grand` for the total) with the `money` pipe; Debit/Credit summaries use `sigma-report-summary-bar` (block 14) |
+| Footer | `footer.sigma-editor-footer`: Cancel `sigma-secondary-button`, then the primary action |
+
+The feature keeps only its workspace layout (for example Job's group list and detail panes).
+
+**Check boxes (G9, 2026-10-01).** Every boolean field is its own
+`<div class="sigma-field sigma-field--check">` with the input before its label. Two check boxes
+never share one field or one label.
 
 #### No page scroll — one scroll owner per region
 
@@ -225,15 +272,18 @@ Owner requirement (2026-09-28): **the page never scrolls, at any breakpoint.**
 its own bounded box:
 
 ```text
-:host                 height: 100%; overflow: hidden        (container-fill, above)
- └ .feature-page       display: flex; flex-direction: column; min-height: 0; overflow: hidden
-    └ .feature-panel   display: flex; flex-direction: column; min-height: 0; overflow: hidden
-       ├ app-feature-title        flex-shrink: 0        (fixed)
-       ├ .feature-filters         flex-shrink: 0        (fixed, block 4)
-       └ .feature-table-wrapper   flex: 1 1 auto; min-height: 0; overflow: hidden
-          ├ grid rows              the single scroll owner (block 6)
-          └ paginator / actions    flex-shrink: 0        (fixed at the bottom)
+.sigma-route-host        height: 100%; overflow: hidden        (container-fill, above)
+ └ .sigma-list-page      flex column; min-height: 0; overflow: hidden
+    └ .sigma-list-panel  flex column; min-height: 0; overflow: hidden
+       ├ .sigma-list-header / app-feature-title   flex-shrink: 0   (fixed, block 3)
+       ├ form[appFilterPanel]                      flex-shrink: 0   (fixed, block 4)
+       └ .sigma-list-table   flex: 1 1 auto; min-height: 0; overflow: hidden
+          └ app-data-table [fill]   rows are the single scroll owner, paginator fixed (block 6)
 ```
+
+An editor or workspace that is not a list uses the same chain with its own region
+(form pane, master/detail pane) as the scroll owner, until the shared editor page shell
+(step 3 of the shared-first plan) exists.
 
 - A region has exactly **one** vertical scroll owner: grid rows (block 6), a
   form or master/detail pane (blocks 12 and 14), or the dialog body (block 13).
@@ -242,11 +292,9 @@ its own bounded box:
   scrolling back to the page. Do not switch outer containers to
   `overflow: visible` and do not add content-sized minimum heights at a
   breakpoint.
-- The panel is the primary card: `padding: 6px 12px`, `border: 1px solid
-  var(--sigma-border)`, `border-radius: 4px`, `background: var(--sigma-surface)`,
-  `box-shadow: var(--sigma-panel-shadow, 0 1px 3px rgb(35 48 62 / 8%))`, with a
-  small `gap` between its children and dark-theme values under `:host-context`.
-  Legacy `.card` / `.card-body` wrappers are not used.
+- The panel is the primary card, `sigma-list-panel`. Its padding, border, surface, shadow,
+  gap and dark values live in `src/styles.scss`; do not restate them in a feature or in
+  review notes. Legacy `.card` / `.card-body` wrappers are not used.
 
 #### Base component
 
@@ -254,7 +302,8 @@ List and details components extend `BaseComponentService`
 (`shared/service/base-component.service.ts`). It already provides `loading`,
 `router`, and `activatedRoute`, so do not inject a second `Router`. It also
 exposes `subscriptionId`, read from `localStorage`. Never put that value in a
-request payload: the tenant is server-owned (backlog 8 and 19).
+request payload: the tenant is server-owned, and the per-screen cleanup is block 2
+*Write payloads carry client inputs only* (backlog 8 and 19).
 
 #### Shell vertical insets — where the gap above the content comes from
 
@@ -361,13 +410,10 @@ changing outer padding (shell band or route padding), never the card's internal
 designed value · changing the toolbar band was checked against the routes that
 still compute their own page height, because it moves every one of them.
 
-**Routed full-page editor exception:** when a feature has an explicitly
-approved independently addressable Create/Edit/View route, the editor may use a
-container-fill host (`height: 100%`, see *No page scroll* below). The host must use
-`min-height: 0` and `overflow: hidden`; its action footer is a fixed-height
-flex sibling of the form body, and only a deliberately bounded child collection
-frame may own vertical row scrolling. This exception does not change block 13's
-rule that ordinary list-owned CRUD uses the shared editor dialog.
+**Routed editor pages:** a record that block 13's decision rule (D4-2) sends to a page uses the
+shared editor page shell above: container-fill host, `min-height: 0`, `overflow: hidden`, a fixed
+`sigma-editor-footer` outside the form body, and only the panes inside `sigma-editor-body` own
+vertical scroll. Records the rule keeps in a modal use `app-editor-dialog` (block 13).
 **Routed settings-workspace exception:** when a routed settings or account-mapping
 workspace is designed without main-page scrolling (every Sigma route is, under
 *No page scroll*), bound the route surface with the container-fill host and use
@@ -380,14 +426,10 @@ is an explicit business requirement. Horizontal tab/table overflow remains
 allowed. On narrow screens, preserve this single vertical-scroll owner rather
 than falling back to nested page + child scrolling.
 
-**Routed financial-editor exception:** a dense routed accounting editor such as
-Opening Balances may use one route-level grow-until-cap boundary and make its
-editable table frame the row-scroll owner after that cap is reached. Keep the
-feature title, workspace tabs, state/context banner, compact filters, totals and
-Save action outside the row-scroll frame. The route may calculate the cap once
-from the existing shell variables; child tabs/forms must not repeat viewport
-math or add a second vertical scroll owner. Block 14 defines the full financial
-editor contract.
+**Routed financial collection editors** (Opening Balances) follow the same container-fill chain;
+the editable table is the row-scroll owner through `[fillHeight]` + `[stickyHeader]` (block 14).
+The former route-level `calc(100dvh - …)` grow-until-cap boundary is legacy and is removed in
+the screen's review.
 
 ### Hierarchy tree workspace — canonical composite
 
@@ -445,65 +487,38 @@ title · compact toolbar · internal tree scroll · responsive tree/detail split
 selection restored after refresh · nested actions stop propagation · shared
 confirmation/actions · `finalize` cleanup · both failure channels · no server-owned
 write fields · translated RTL/dark/focus states.
-### Why the service must be in `LayoutModule` providers
+### One `HttpClient`
 
-**Transitional.** This is a consequence of how the app currently provides
-`HttpClient`, not an Angular rule. Verified chain, 2026-08-06:
+> **Status: Canonical** (2026-09-30, backlog 17 resolved)
 
-| Where | What it provides | Interceptors |
-|---|---|---|
-| `app.module.ts` imports `HttpClientModule` | root `HttpClient` | **none** — no `HTTP_INTERCEPTORS` are registered anywhere |
-| `app-routing.module.ts` path `''` | lazy-loads `LayoutModule` behind `AuthGuard`, creating a child injector | — |
-| `layout.module.ts` providers call `provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor]))` | a second `HttpClient` in that child injector | `tokenInterceptor`, `errorInterceptor` |
+`app.module.ts` provides the only application `HttpClient`:
 
-So there are two `HttpClient` instances. Angular resolves from the nearest
-injector, which means:
+```ts
+providers: [
+  provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor])),
+  …
+],
+```
 
-- a service listed in `LayoutModule.providers` is instantiated in the lazy child
-  injector and receives the **interceptor-equipped** client;
-- a service that is only `providedIn: 'root'` resolves the root instance and
-  receives the **interceptor-free** client, so its requests carry no
-  `Authorization` header;
-- a service marked `providedIn: 'root'` **and** listed in `LayoutModule.providers`
-  is fine for components inside the layout — the layout provider wins. Company
-  and Staff both do this.
+Every service resolves it, so `providedIn: 'root'` is enough; a feature service no longer needs
+an entry in `LayoutModule.providers` (that list is legacy and is removed gradually, not
+extended). Both interceptors act only on Sigma API requests (`isSigmaApiRequest`: the URL
+starts with `environment.baseUrl`). The login server, assets and third-party URLs pass
+through untouched. For an API request:
 
-Also note `main.ts` imports `bootstrapApplication`, `provideHttpClient` and
-`withInterceptors` but never calls them; the app boots through
-`platformBrowserDynamic().bootstrapModule(AppModule)`. Those imports are dead.
+- `tokenInterceptor` adds `Authorization: Bearer …` when a token is stored, and
+  `Accept-Language` from the UI language (`ar` → `ar-SA`, else `en-US`), so backend
+  messages follow the UI;
+- `errorInterceptor` presents every failure and the standard success toast (block 22).
 
-Until this is centralised (block 30, item 17), register every authenticated
-feature service in **exactly** `_metronic/layout/layout.module.ts` →
-`LayoutModule.providers`, because that injector currently owns the
-`provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor]))`
-chain. Do not register the same service only in `AppModule`, a feature module, a
-component `providers` array, another layout-like module, or another injector and
-assume the token interceptor will follow it. A provider in the wrong injector can
-resolve the root interceptor-free `HttpClient` and silently send protected
-requests without `Authorization`.
-
-"Every authenticated feature service" includes each service a screen
-**borrows** from another feature, such as a lookup's `getSelectList`, not only
-the screen's own service. `providedIn: 'root'` alone is not enough. Found
-2026-09-28: Labour Tariff injected `StaffProfileService`, which no other screen
-used and which was missing from `LayoutModule.providers`; the screen showed its
-lookup error (source diagnosis: the `GetSelect` request resolves the root
-`HttpClient` and carries no token; the backend `SelectAsync` itself returns
-success). For every service a new or refactored component injects, confirm
-that a provider entry exists; when a lookup fails, check the HTTP status first
-(skill §6, "Lookup Failure Diagnosis").
-
-Do not fix this locally by adding a manual `Authorization` header or by creating
-another feature-level `provideHttpClient(...)`. Both approaches create another
-HTTP ownership fork and make interceptor behavior harder to reason about. The
-temporary rule is one authenticated provider location; the permanent fix is item
-17: provide the interceptor chain once at application root and remove the large
-Layout provider list.
+Do not add a feature-level `provideHttpClient(...)`, import `HttpClientModule` in a feature
+module, or set a manual `Authorization` header. The lazy `AuthModule` keeps its own client for
+the login server. When one request alone gets `401`, check the token and that its URL is built
+from `environment.baseUrl`.
 
 **Check:** routes file exists · route count matches the editor shape · `models/`
-has the files its shape needs · lazy route registered · every authenticated
-feature service resolves from `_metronic/layout/layout.module.ts` providers until
-item 17 is fixed · no duplicate/alternate feature `provideHttpClient` chain · no
+has the files its shape needs · lazy route registered · services are `providedIn: 'root'` and API URLs start with `environment.baseUrl` · no
+feature `provideHttpClient` chain or `HttpClientModule` import · no
 manual Bearer header workaround · menu entry.
 
 **Do not copy from** `Companies/Company`, `Companies/CompanyContactPerson`,

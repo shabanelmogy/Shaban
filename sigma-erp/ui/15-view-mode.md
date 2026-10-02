@@ -50,7 +50,14 @@ the active mode. In View, display the names the Detail DTO already carries and
 skip edit-only dropdown lookups; do not show lookup warnings for controls that
 are not rendered.
 
-**Check:** `disable({ emitEvent: false })` so it does not fire `valueChanges` ·
+**Disabled vs readonly.** A disabled control is missing from `form.value`, so a payload is always
+built from `form.getRawValue()` (View mode disables the whole form). Use `disabled` for a control
+the user cannot change in this mode or state. Use a `readonly` input, or the `sigma-field__read`
+text, for a value the server owns or derives (tax rate, line total, document number): it stays
+visible, keeps its styling and is never sent as an input (blocks 14 and 19).
+
+**Check:** `disable({ emitEvent: false })` so it does not fire `valueChanges` · payloads from
+`getRawValue()` · derived and server-owned values `readonly` or read text ·
 step navigation still works in view mode · Save hidden, not just disabled · Add
 and Delete buttons disabled through `parentForm.disabled` · read-only dialogs
 bind `[primaryActionVisible]="false"` · no edit-only lookups in View.

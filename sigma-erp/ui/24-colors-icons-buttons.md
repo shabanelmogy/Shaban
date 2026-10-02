@@ -1,13 +1,15 @@
 ## 24. Colors, icons, buttons
 
-> **Status: Transitional** — multiple primary-color forks and two icon libraries remain, backlog 1 and 15
+> **Status: Canonical** — global tokens and shared buttons (shared-first rewrite 2026-10-01).
+> Remaining legacy: primary-colour and icon-library forks elsewhere (backlog 1, 15); Statement of Account now uses shared tokens and Bootstrap Icons (2026-10-02, source-only).
 
 ### Button roles
 
 | Role | Approved implementation | Used for |
 |---|---|---|
 | Primary | `app-primary-action-button` | Create, Search, Next, Save, Edit from View |
-| Secondary | `individuals-secondary-button`, `individual-secondary-action` | Cancel, Close, Export, Previous |
+| Secondary | `button.sigma-secondary-button` (`src/styles.scss`) | Cancel, Close, Export, Reset, Previous, header secondary actions |
+| Destructive | `button.sigma-secondary-button.sigma-danger-button` | Delete/void outside a dialog footer, always behind its confirmation (block 9) |
 | Dialog footer actions | `app-editor-dialog` | Mode-aware Save/Edit and Cancel/Close inside the shared editor shell |
 | Row icon | Feature-owned semantic icon button | Edit or another nonstandard child-row action |
 | Child row remove | `app-editable-collection-table` | Standard confirmed Remove request in an editable child collection |
@@ -113,21 +115,22 @@ tabs, focus accents, and checkbox/radio accents. Do not introduce
 body-appended overlay inherits the global token from `:root`, so it does not
 need to redeclare the primary color on its overlay root.
 
-Feature-owned structural and semantic tokens remain local to the feature SCSS,
-light then dark:
+**Semantic colours are global too** (decision D4-6, 2026-10-01). `src/styles.scss` defines them
+once for light (`:root`) and dark (`[data-bs-theme='dark']`):
 
-```scss
---feature-accent: #32b6ad;
---feature-text: #243648;
---feature-muted: #708295;
---feature-border: #dce5ed;
---feature-surface: #fff;
---feature-canvas: #f4f7fa;
-```
+| Token | Use |
+|---|---|
+| `--sigma-text`, `--sigma-muted` | body text, secondary text |
+| `--sigma-surface`, `--sigma-surface-soft`, `--sigma-canvas` | cards, soft bands, page background |
+| `--sigma-border`, `--sigma-border-strong` | borders |
+| `--sigma-debit-*`, `--sigma-credit-*`, `--sigma-balance-value` | accounting accents (non-semantic, block 14) |
+| `--sigma-filter-*`, `--sigma-data-table-*`, `--app-editor-dialog-*` | owned by their shared component |
 
-Replace `feature` with the owning feature prefix, as in block 1. A feature may
-add a distinct semantic color only when it represents a real domain role rather
-than another version of the shared primary action color.
+A feature uses these tokens and declares **no** palette of its own (`--feature-text`,
+`--feature-surface`, … and their dark copies). It may declare one token only for a real domain
+colour that no shared token expresses (for example a vehicle-status colour), with its dark
+value. The 108 feature stylesheets that still declare palettes (2026-10-01) switch to the
+global tokens in their reviews.
 
 ### Where body-appended overlay styles belong
 
@@ -164,9 +167,7 @@ outside the component's scope. Use `:host-context`:
 
 ```scss
 :host-context([data-bs-theme='dark']) {
-  --feature-text: #e4edf5;
-  --feature-surface: #1d2a37;
-  --feature-canvas: #16222d;
+  --vehicle-status-reserved: #f0b35a;   // a feature-owned domain token only (block 25)
 }
 ```
 
@@ -174,8 +175,9 @@ Use the bare `[data-bs-theme='dark'] …` form only in **global** `styles.scss`,
 where it is the correct selector for body-appended overlays. Feature-owned
 direct table rules use `:host-context([data-bs-theme='dark'])`.
 
-**Check:** shared primary component instead of a raw Bootstrap or feature-local
-primary class · glyph white on solid · loading disables double execution · both
+**Check:** shared primary component, `sigma-secondary-button` and `sigma-danger-button`
+instead of raw Bootstrap or feature-local button classes · colours from the global
+`--sigma-*` tokens, no feature palette · glyph white on solid · loading disables double execution · both
 themes declared · dialog variables declared on the overlay class ·
 `aria-hidden` and `aria-label` correct.
 

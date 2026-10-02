@@ -1,81 +1,112 @@
 ## 16. Pattern 4 — Settings
 
-> **Status: Canonical** — reference `Services/AdministrationsServices/ChargeSettingsService.cs`
+> **Status: Canonical** — owner decision 2026-10-01. Shared owner:
+> `Services/HelperServices/ServiceHelper.cs` (`IServiceHelper`). References:
+> `FieldsSettingsService` (single rows), `NotificationsSettingsModelService` and
+> `EmailTemplateService` (several rows by key).
 
-A settings screen loads and saves a whole set. Do not force it into record CRUD.
+A settings screen saves settings, not records. Do not force it into record CRUD, and do not
+write a save loop of your own: every settings service persists through `IServiceHelper` and
+saves once. There are exactly **two shapes**:
 
-The interface does **not** extend `IService`; it declares just the two real
-operations:
+| Shape | The screen | Save rule | Helper |
+|---|---|---|---|
+| **Single row** | one row of settings for the tenant (Common, Workshop, Account, Equipment, each block of Fields settings) | update the row; create it when it does not exist | `GetSingleAsync` / `UpsertSingleAsync` |
+| **Several rows** | several rows of the same subject, each identified by a key (booking notifications by `Action`, email templates by `TemplateType`, charge settings by module/charge/rate type) | each incoming row updates the row with its key, or is added; rows not sent stay as they are | `UpsertByKeyAsync` |
+
+Nothing is deleted by omission. A screen on which the user removes a settings row does it
+with an explicit row Delete action (confirmation, UI block 9), not by leaving the row out of
+the Save payload.
+
+### Single row
+
+A single-row setting derives from the shared bases (2026-10-01) and writes no code of its own:
 
 ```csharp
-public class ChargeSettingsService : IChargeSettingsService
+public interface IWorkshopSettingService
+    : IService<WorkshopSettingAddVM, WorkshopSettingUpdateVM, WorkshopSettingDetailVM, WorkshopSettingListVM>,
+      ISingleRowSettingsService<WorkshopSettingAddVM, WorkshopSettingDetailVM> { }
+
+public class WorkshopSettingService
+    : SingleRowSettingsService<WorkshopSettingAddVM, WorkshopSettingUpdateVM, WorkshopSettingDetailVM,
+        WorkshopSettingListVM, WorkshopSetting>, IWorkshopSettingService
 {
-    private readonly IUnitOfWork<SiGmaDbContext> UnitOfWork;
-    private readonly IStringLocalizer<GeneralMessage> Localization;
-    private readonly IServiceHelper ServiceHelper;
-    …
+    public WorkshopSettingService(IUnitOfWork<SiGmaDbContext> unitOfWork, IMapper mapper,
+        IStringLocalizer<GeneralMessage> localization, IServiceHelper settings)
+        : base(unitOfWork, mapper, localization, settings) { }
 }
+
+public class WorkshopSettingController
+    : SingleRowSettingsControllerBase<WorkshopSettingAddVM, WorkshopSettingUpdateVM, WorkshopSettingDetailVM,
+        WorkshopSettingListVM, IWorkshopSettingService> { … }
 ```
 
-Define the **logical key** that identifies one setting. For Charge Settings it is
-`(ModuleType, ChargeType, RateType)`. Collapse duplicates in the incoming
-payload deliberately, then sync by that key:
+- `GET {controller}/Mine` returns the tenant's row, or a success with no entity (the screen shows its defaults).
+- `PUT {controller}/Mine` saves it: update, or create when it does not exist.
+- The inherited `AddAsync` (legacy POST) is overridden to do the same, so an older client never adds a second row.
+- Validation that the setting needs goes in a `SaveMineAsync` override that calls the base.
+- Angular calls `getMine<Result<Dto>>()` and `saveMine<Result<Dto>>(payload)` from `BaseService` (UI block 2).
+
+- The read returns the tenant's row, or `null`. The screen then shows its defaults; the read
+  never inserts.
+- The row is the **latest** one (`Id` descending), so legacy duplicate rows cannot make reads
+  and writes land on different rows. The owner removes existing duplicates (decision
+  2026-10-01). After that, a unique index on `SubscriptionId` (filtered `[IsDeleted] = 0`) is
+  added per entity when its screen is reviewed, with the owner running the migration.
+- The endpoints are *get* and *save* only. There is no list, add or delete endpoint for a
+  single-row setting, and the Angular screen never lists rows, takes "the last one" or
+  POSTs a new row on every save.
+- `GetSingleAsListAsync` and `UpsertAsync(list)` keep the older list-shaped contract (a list
+  with zero or one item) that `FieldsSettingsService` and the Fields screen use. New screens use
+  the single-object methods.
+- Every other service that needs the setting reads it through its owner (for example
+  `ITaxPolicyService` for common tax settings), never with its own
+  `Query<T>().FirstOrDefault()`.
+
+### Several rows
 
 ```csharp
-public async Task<Result> UpdateSettingsAsync(ChargeSettingsAddVM addVm, CancellationToken cancellationToken)
-{
-    if (addVm == null)
-        return new Result { IsSuccess = false, Message = Localization["InvalidRequest"] };
-
-    // Duplicate policy: deterministic last-wins on the logical key
-    var distinct = addVm.ChargeSettings
-        .GroupBy(x => (x.ModuleType, x.ChargeType, x.RateType))
-        .Select(g => g.Last())
-        .ToList();
-
-    await ServiceHelper.SyncByKeyAsync<ChargeSettingsListVM, ChargeSettings,
-            (ModuleType, ChargeTypes, RateTypeSettings)>(
-        distinct,
-        vm => (vm.ModuleType, vm.ChargeType, vm.RateType),
-        e  => (e.ModuleType,  e.ChargeType,  e.RateType),
-        cancellationToken);
-
-    await UnitOfWork.SaveChangesAsync(cancellationToken);
-
-    return new Result { IsSuccess = true, Message = Localization["SavedSuccessfully"] };
-}
+var saved = await ServiceHelper.UpsertByKeyAsync<RentalBookingNotificationListVM, RentalBookingNotification, BookingAction>(
+    addVm.RentalBookingNotifications,
+    x => x.Action,      // key of the incoming row
+    x => x.Action,      // key of the stored row
+    cancellationToken);
+if (!saved.IsSuccess) return saved;   // nothing is saved
+await UnitOfWork.SaveChangesAsync(cancellationToken);
 ```
 
-`ServiceHelper.SyncByKeyAsync` lives in
-`Services/HelperServices/ServiceHelper.cs`. Read it before relying on it, and
-confirm its query scope, delete-by-omission behaviour and save semantics match
-the contract you intend.
+- **Keys.** The key is the business key of one row. A composite key is a tuple:
+  `x => (x.ModuleType, x.ChargeType, x.RateType)`.
+- **Invalid keys.** An undefined enum key fails the whole call (`SettingsInvalidKey`) before
+  anything is saved. When the payload repeats a key, the last row wins.
+- **Partitioned rows.** A setting kept per partition (for example Labour Rate per vehicle type)
+  passes `scope: x => x.VehicleTypeId == vehicleTypeId`, so only that partition's rows are
+  matched.
+- **One save.** A screen that saves several shapes at once (Fields, Notifications) calls the
+  helper for each part and saves once at the end, so one failure saves nothing.
 
-**Verified 2026-09-28 — the snippet above is not what the reference does.**
-`SyncByKeyAsync` loads every non-deleted row of the entity for the tenant
-(`FindAllByAsync<TEntity>()`, no predicate) and deletes each one whose key the
-payload omits. It therefore fits only a table that holds exactly one settings
-set per tenant. The reference `ChargeSettingsService` no longer calls it: it
-validates the whole request, loads the existing rows, deletes omitted keys and
-extra legacy duplicates, updates matches, adds the rest, and saves once. Follow
-that shape. When one table holds several sets partitioned by a dimension (for
-example `LabourRateService`: the Default tariff plus one set per vehicle type),
-run that reconciliation inside the set's own scoped query, and never call
-`SyncByKeyAsync` for one partition, because it would delete every other set.
+**Legacy — moved when the screen is reviewed.**
+- **CRUD base:** about 68 settings services still expose the generic record CRUD
+  (`Service<…>`). Settings screens verified 2026-10-01 (Angular screen → controller → service):
 
-Decide explicitly and write it down:
+  | State | Screens (controller) |
+  |---|---|
+  | ~~Read the last row; POST adds a new row on every save~~ — **moved 2026-10-01** to `SingleRowSettingsService` + `getMine`/`saveMine` | Workshop, Broker, DDA, HRM, Limousine, Payment Gateway |
+  | Read the last row; own Add/Update override that updates the first row | Cost Centers (`SettingsCostCentersModel`) |
+  | Read the last row; saves with PUT only (first save when no row exists not verified) | API Key (`ApiKeySetting`) |
+  | Own `GetMySetting` + POST or PUT | Common (`SettingsCommonModel`), Document Number (`SettingsDocumentNumberModel`) |
+  | Already on `IServiceHelper` | Fields, Notifications, Email Templates |
 
-| Decision | Options |
-|---|---|
-| Replacement or patch | Full replacement: an omitted key means delete. Patch: absence means leave alone. Never guess. |
-| Empty list | Delete all, only when the API contract says so; otherwise reject. |
-| Duplicate keys in payload | Reject as user error, or deterministic last-wins as above. |
-| Missing settings on read | Empty response, seeded defaults, or calculated defaults. |
+  With the six screens moved, the owner can remove duplicate rows: no screen adds rows any more.
+  The Limousine readers in `LimoQuotationService`/`TripBookingService` read the latest row too.
+- **Own reconcile loops:** `ChargeSettingsService` and `LabourRateService` delete omitted keys
+  in their own reconcile loop.
+- **Own endpoints:** `SettingsCommonModel` and `SettingsDocumentNumberModel` have their own
+  `GetMySetting` endpoints.
 
-Return settings in a deterministic order so the UI is stable, and add a
-tenant-scoped unique index on the logical key so duplicate rows cannot make
-behaviour ambiguous. Make the sync atomic: a validation or save failure must
-leave the previous set untouched.
+Each of these moves to the shape above in its review. The former
+`ServiceHelper.SyncByKeyAsync` (delete by omission over the whole tenant table) was removed on
+2026-10-01; it had no callers.
 
 ### Settings references must stay selectable on read and write
 
@@ -92,7 +123,7 @@ otherwise stop satisfying the domain predicate. On read, do not echo that stale
 id as though it were still a valid selected option and then let a whole-set Save
 fail because the user never touched that row. Return the setting's logical key
 but expose the stale target as **unselected/unlinked**, so the user can choose a
-currently valid target and the next replacement save reconciles the stale
+currently valid target and the next Save replaces the stale
 reference. The database is not mutated by this read normalization. Save still
 validates every supplied id to protect against stale clients and races.
 
@@ -100,30 +131,30 @@ If clearing the stale target would hide information the user must explicitly
 resolve, add a typed warning/error field to the read contract; do not weaken the
 write validator or re-include invalid targets in the dropdown.
 
-For a full-replacement settings contract, persisted duplicate physical rows may
-exist from legacy code or a schema period before the unique index. Do not echo
-those duplicates to the UI and then reject the unchanged full-set payload. Collapse
-read rows to one deterministic logical row, keep request-side duplicate validation
-strict for genuinely duplicated user input, and let reconciliation keep one stored
-row while deleting the extra legacy rows in the same atomic Save. If the incoming
-payload does not make the desired value unambiguous, fail with the duplicate key
-details instead of guessing.
+Persisted duplicate physical rows may exist from legacy code or a period before the unique
+index. The helper resolves them to the latest row for both read and write, so the screen never
+shows duplicates and an unchanged Save never fails on them. The owner removes the extra rows
+(decision 2026-10-01); a service does not delete them as a side effect of Save. Request-side
+duplicate keys follow the helper rule (the last row wins).
 
 When legacy and canonical stored representations normalize to the same logical
 key, the canonical representation wins deterministically even when its mapped
 target is intentionally null/unlinked. A legacy value is only a read fallback
 when no canonical stored representation exists. Normalize any type-specific
 dimensions that are fixed by the contract (for example `BankAccounts` uses
-`Value = null`, `JobType = null`, and `LinkSection = Default`) so the next full
-replacement Save can reconcile the persisted row to canonical form.
+`Value = null`, `JobType = null`, and `LinkSection = Default`) so the next Save
+updates the persisted row to canonical form.
 
 Do not add caching for a settings review, and do not use client ids as ownership
 or logical-key proof.
 
-**Check:** logical key defined and validated · every key enum checked with
-`Enum.IsDefined` · replacement vs patch documented · duplicate policy explicit ·
-sync is tenant-scoped and atomic · one `SaveChangesAsync` · deterministic read
-order · unique index on the key.
+**Check:** shape chosen — single row or several rows · persisted only through `IServiceHelper`
+(`GetSingleAsync`/`UpsertSingleAsync` or `UpsertByKeyAsync`) and one `SaveChangesAsync` · no
+delete by omission; removal is an explicit row action · key is the business key, enum keys
+validated by the helper, the `Result` checked before saving · partitioned rows pass `scope` ·
+no list/add/delete endpoint and no "take the last row" Angular logic for a single-row setting ·
+other services read the setting through its owner · unique index on `SubscriptionId` (single
+row) or on the key (several rows) added when the screen is reviewed.
 
 ---
 

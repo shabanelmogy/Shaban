@@ -1,6 +1,6 @@
 ## 2. Service and response wrappers
 
-> **Status: Transitional** — `Result.id` and `Results<T> extends Result<any>` are untyped, backlog 22
+> **Status: Canonical** — `Result`/`Results` typed (decision D5-4, 2026-10-01)
 
 Extend `BaseService` and pass the controller name once.
 
@@ -20,20 +20,39 @@ Inherited helpers, so you do not rewrite them:
 | `get<T>(obj?)` | `GET {control}?Filters[key]=value&...` |
 | `getById<T>(id)` | `GET {control}/GetById/{id}` |
 | `getByIdWithNavigation<T>(id)` | `GET {control}/GetByWithNavigationsId/{id}` |
-| `getSelectList<T>()` | `GET {control}/GetSelect` — dropdown options |
+| `getSelectList<T>(options?)` | `GET {control}/GetSelect` — dropdown options; pass `{ skipErrorInterceptor: true }` only when the feature owns an inline lookup error/retry state (block 22) |
 | `getByType<T>(type)` | `GET {control}/GetByType/{type}` |
 | `post<T>` / `put<T>` | `POST` / `PUT {control}` |
 | `delete<T>(id)` | `DELETE {control}?id={id}` |
+| `getMine<T>()` / `saveMine<T>(data)` | `GET` / `PUT {control}/Mine` — single-row settings (BE block 16): read the one row, save it (update or create). Never list rows and take the last one |
+
+Shared list helpers (`shared/utils/list-query.ts`, 2026-10-01), for any service:
+
+| Helper | Use |
+|---|---|
+| `ListQuery<TFilters>` | `{ pageNo, pageSize, filters, sortField?, sortOrder? }` — the typed list request |
+| `toListParams(query)` | `HttpParams` with `Filters[key]` for non-empty values, `pageNo`, `pageSize`, `Filters[sortField]`, `Filters[sortOrder]` |
+| `toFilterParams(filters)` | Unpaged read/report `HttpParams` with non-empty `Filters[key]` only; `toListParams` reuses this serializer before adding page/sort |
+| `fetchAllPages(getPage, errorKey)` | every page for export or print; fails the whole result when one page fails (block 8) |
+
+```ts
+getList(query: ListQuery<JobFilters>): Observable<Results<JobListRow>> {
+  return this.http.get<Results<JobListRow>>(`${this.baseUrl}Job/workshop-grid`, { params: toListParams(query) });
+}
+
+getAllList(query: ListQuery<JobFilters>): Observable<JobListRow[]> {
+  return fetchAllPages((pageNo) => this.getList({ ...query, pageNo, pageSize: 100 }), 'job.errors.export');
+}
+```
+
+Do not hand-build `HttpParams` or copy the all-pages loop into a feature service.
 
 Every response is one of two wrappers. Always check `isSuccess` before reading
 data.
 
-**These two contracts are Transitional.** `Result.id` is `any`, and
-`Results<T> extends Result<any>` so `entity` is untyped on a list response.
-`ActionList.action`, `.visible` and `.disabled` also take `any` (block 7). Use
-them as they are — they are shared contracts and changing them is a coordinated
-edit — but do not treat `any` here as licence for `any` in your own feature
-models. Typed replacements are backlog item 22.
+**Typed since 2026-10-01 (D5-4).** `Result.id` is `number | string | null` (convert with
+`Number(result.id)` where a number is needed), and `Results<T>` no longer carries an untyped
+`entity`: a list has `entities`. `ActionList<Row>` is generic (block 7).
 
 ```ts
 export interface Result<T> {
@@ -41,10 +60,10 @@ export interface Result<T> {
   isSuccess: boolean;
   isInfo: boolean;
   message: string;
-  id: any | null;
+  id: number | string | null;
 }
 
-export interface Results<T> extends Result<any> {
+export interface Results<T> extends Omit<Result<never>, 'entity'> {
   entities: T[];
   pageNo: number;
   pageSize: number;
@@ -69,8 +88,43 @@ getList(query: CompanyPartnerListQuery = {}): Observable<Results<CompanyPartnerD
 }
 ```
 
+### Write payloads carry client inputs only
+
+> **Status: Canonical** (owner decision 2026-10-01)
+
+An Add or Update payload contains only the fields the user edits plus `id` on Update. It never
+contains:
+
+- `subscriptionId`: the tenant comes from the token;
+- the server-owned document `no`;
+- audit values (`createdBy`, `createdAt`), `isDeleted`/`isActive` flags;
+- approval or posting status;
+- calculated totals.
+
+The backend ignores all of them: `UpdateBaseVm` carries `Id` only and no write VM declares a
+tenant (backend blocks 3 and 4, 2026-09-30). Sending them breaks nothing, but it keeps dead code
+and implies the client owns them.
+
+**Cleanup is part of every screen review, not a bulk change.** When a screen is reviewed,
+remove from that screen, in the same change:
+
+1. the `subscriptionId` form control and every `subscriptionId: …` in its payloads, child rows
+   and dialogs, including `localStorage.getItem('subscriptionId')` and
+   `BaseComponentService.subscriptionId` reads;
+2. the server-owned `no` from Add/Update payloads. Keep `no` only where the user types a
+   reference number that the backend declares explicitly on the Add and Update VMs (Cash
+   Deposit, Card Transaction Bank Transfer and Purchase Return detail rows);
+3. those members from the screen's **write** interfaces (Add/Update models). List and Detail
+   models keep `subscriptionId`/`no` only when the screen displays them.
+
+Then the owner compiles (`ng build`): the typed forms and write interfaces change together, and a
+leftover reference shows up there. Do not bulk-edit other screens or strip the fields centrally
+in an interceptor. Tracked as backlog 8 and 19.
+
 **Check:** extends `BaseService` · empty filters dropped, not sent as `''` ·
-`isSuccess` checked · payload types are real interfaces, never `unknown`.
+`isSuccess` checked · payload types are real interfaces, never `unknown` · no `subscriptionId`,
+server-owned `no`, audit, delete/active flag, status or calculated total in a write payload or
+write interface of the reviewed screen.
 
 ---
 

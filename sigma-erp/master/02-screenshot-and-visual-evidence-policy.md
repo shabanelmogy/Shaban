@@ -16,35 +16,11 @@ Use screenshots to identify:
 - labels, business terminology, and information hierarchy;
 - user workflows clearly demonstrated by a sequence of screenshots.
 
-### External rental simulation reference — Speed Auto Systems
+### External functional references
 
-Sigma Rental features simulate the demonstrated business workflows of Speed
-Auto Systems. Use the following demo tenant as an external functional reference
-when a Rental requirement asks to reproduce, compare, or complete a workflow:
-
-| Item | Demo access |
-|---|---|
-| Application | `https://app.speedautosystems.com` |
-| Booking workflow | `https://app.speedautosystems.com/Application#/tenant/crs/bookings` |
-| Credentials | Held by the owner outside the documentation repository (removed from this guide on 2026-09-28). Ask the owner; never write them into a guide, packet, or review artifact |
-| Data classification | Demo account; no real production data |
-
-Treat the application as behavioral evidence for visible fields, terminology,
-filters, actions, state-dependent workflows, calculations, reports, and
-accounting outcomes. Inspect the complete relevant workflow and its alternate
-states when the requested feature depends on them. Use read-only inspection by
-default; do not create, change, or delete external demo data unless the user
-explicitly places that mutation in scope.
-
-Speed Auto Systems is not implementation authority. Sigma must simulate the
-confirmed business behavior through the canonical Sigma Angular and .NET
-patterns, current source contracts, reusable controls, validation, RTL/theme
-rules, and Sigma accounting architecture. Do not copy its page layout, source
-architecture, API contracts, permissions, database design, or journal-entry
-structure without confirming each requirement against Sigma source and the
-applicable canonical guides. If the reference conflicts with Sigma authority,
-preserve the confirmed business requirement using the approved Sigma pattern
-and record the conflict or inference in the feature evidence table.
+An external system the owner names as a functional reference (for example the Speed Auto Systems
+demo for Rental workflows) is behavioural evidence only, never implementation authority. Its
+access and usage notes are kept outside the governance book: `reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md`.
 
 ### Screenshots are not implementation authority
 
@@ -203,6 +179,25 @@ Rules:
    the screen type, the editor shape, or the controls; choose the screen type in
    the UI book's `ui/screens/00-catalog.md` and represent every approved item
    through that type's blocks.
+6. **Owner standing decision for Missing detail (2026-09-28).** The owner
+   ruled: "when business is missing, bring it to the closest correct thing that
+   exists, or create a new one", and "answer any question with what you judge
+   best". So a Missing item from the two middle rows of the table above does not
+   stop the work. The reviewer:
+   - chooses the closest correct option that current source supports (an
+     existing entity, relation, setting, or reference pattern), or creates the
+     minimal new element when none fits;
+   - records it in the feature artifact as **Reviewer decision (owner standing
+     rule)** with the evidence and the alternatives rejected, and reports it;
+   - keeps the migration boundary: a new persisted field is proposed with its
+     suggested `Add-Migration` name, never run.
+
+   The standing rule does **not** cover destroying or rewriting existing data,
+   access restrictions, or accounting posting effects. Those still wait for an
+   explicit user decision, and so does any action the tooling refuses. A
+   derived value with no source at all is shown empty rather than invented
+   (Labour Activities Report: Profile and the three time columns stay empty
+   until the job labour line records them).
 
 ---
 

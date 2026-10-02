@@ -34,14 +34,17 @@ migration impact. It excludes UI layout and component selection.
 Owns headers and filters that affect the read path, exact query keys, paging,
 sorting, ListVM scope, Grid columns, row rendering, read loading/error/empty
 states, cancellation, export, refresh/page retention, and query performance. It
-does not own Add/Update payloads or editor validation.
+adopts the shared list pieces (UI blocks 1, 4, 6, 8; backend `ApplyListFilters`). It does not own
+Add/Update payloads or editor validation.
 
 ### Phase 3 — Detail and Write Path
 
 Owns editor shape and mode behavior, Detail/Add/Update contracts, typed forms,
 validation parity, Save, Cancel, dirty-state handling, child collections,
 documents, uploads, typed nested dialogs, reconciliation, and write recovery. It
-does not own list paging or independent domain transitions.
+adopts the shared editor pieces (editor shell, `EditableRows`, `app-field-error`,
+`DocumentUploadTracker`; the block 13 modal-or-page rule). It does not own list paging or
+independent domain transitions.
 
 Stepper, modal tabs, documents, and child collections are conditional shapes,
 not requirements for every editor.
@@ -51,7 +54,8 @@ not requirements for every editor.
 Owns Delete, activate/deactivate, approve/unapprove, post/unpost, void,
 finalize, remove-child, and comparable transitions. It verifies visibility,
 server authorization, state preconditions, confirmation or typed input, busy
-protection, concurrency, idempotency, recovery, and refresh.
+protection, concurrency, idempotency, recovery, and refresh. A posted financial document is
+voided or credited, never deleted (backend block 15, decision J-1 pending).
 
 Before implementing Phase 4, inventory **every public domain action** exposed by
 the approved reference across its interface, service, controller, Angular

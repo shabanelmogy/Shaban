@@ -2,8 +2,26 @@
 
 > **Status: Canonical**
 
+**Stable dropdown width (owner rule, 2026-10-01).** Every dropdown's closed field
+has a layout-defined width independent of its placeholder or selected label.
+In forms and filters, fill the allocated responsive grid field (`width: 100%`);
+the grid owns available width. In editable tables, declare a fixed `width` on
+each dropdown column through `EditableCollectionTableColumn` (block 14), such as
+200px for Company Contact Designation and 180px for Card Type. Choose the width for the
+field's content; 180px is not a universal size. The shared table owns fixed
+layout and long-label clipping, with horizontal scrolling inside its frame.
+Keep the option panel appended to body. Do not size a closed dropdown from its
+selected text or add feature-specific width selectors. Apply this rule in new
+work and when reviewing existing screens; this decision is not a bulk rewrite.
+
 **Simple server lookup** — use `getSelectList` returning `DropDownSelect` when
 the backend exposes the ordinary reusable select contract:
+
+For an inline lookup warning/retry, use the inherited optional
+`getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true })` rather than
+copying the GET into a feature service. The feature handles both failure channels,
+uses local loading, and keeps the warning visible (block 22); default consumers
+continue using the global error interceptor.
 
 ```ts
 export interface DropDownSelect {
@@ -30,6 +48,17 @@ private loadBranches(): void {
 Bind `optionLabel="value"` and `optionValue="id"` — that matches
 `DropDownSelect`, so do not invent other field names.
 
+**Saved select options (2026-10-02).** Use the pure shared
+`mergeSelectOptions(incoming, saved)` from `shared/utils/select-options.ts`
+when a loaded record has selected IDs/names that a lookup does not return.
+Fetched options keep their order and labels; append saved detail-derived pairs
+whose IDs are absent, comparing number/string IDs through `String(id)`. Never
+invent a label or change the form's stored ID. Company editor and nested Driver
+country/nationality controls adopt it; other feature copies move during their
+own review (backlog 39). Presentation fallback does not bypass backend reference
+validation. Inline lookup failures keep their error and explicit Retry, with
+the existing `skipErrorInterceptor` option, so one error owner remains.
+
 Some domains expose one typed options/configuration endpoint because the screen
 needs several related option sets or metadata together. That is valid when it is
 the confirmed backend contract; keep the response typed and bind each option set
@@ -39,29 +68,37 @@ branch and job-category selects still use their normal select endpoints. Do not
 split a confirmed composite options contract merely to force every lookup through
 `DropDownSelect`.
 
-**Enum dropdown** — `EnumToArrayPipe` turns an enum into `{ key, value, id }[]`.
-Map it once in memory when the component is created; mapping a small enum is
-cheaper and safer than persisting it:
+**Translated options (2026-10-01).** Bind `[options]="genderOptions | translateOptions"` with
+`optionLabel="label"` (`shared/pipes/translate-options.pipe.ts`): the pipe adds the translated label,
+caches it per language, and the dropdown filter searches the translated text. No
+`pTemplate="item"`/`"selectedItem"` pair just to translate a key.
+
+**Enum dropdown** — `enumOptions(Enum, keyPrefix)` from `shared/utils/enum-options.ts`
+(2026-10-01) builds `{ id, key }[]` once, when the component is created. `id` is the enum's own
+value and `key` a translation key (`<prefix>.<Member>`), so a new or reordered member can never
+shift the ids sent to the backend:
 
 ```ts
-readonly documentTypeOptions = this.enumToArrayPipe.transform(DocumentTypeEnum);
-readonly genderOptions = this.enumToArrayPipe.transform(GenderEnum);
+readonly labourTypeOptions = enumOptions(JobLabourType, 'job.labourTypes');
 ```
 
-For an enum dropdown bind `optionLabel="key"` and `optionValue="value"`.
+```html
+<p-dropdown formControlName="labourType" [options]="labourTypeOptions"
+            optionLabel="key" optionValue="id" appendTo="body">
+  <ng-template pTemplate="item" let-option>{{ option.key | translate }}</ng-template>
+  <ng-template pTemplate="selectedItem" let-option>{{ option.key | translate }}</ng-template>
+</p-dropdown>
+```
 
-**Legacy — do not copy.** Company caches these arrays under unversioned
-`localStorage` keys such as `gender` and `documentType`. They can survive a
-deployment after the enum changes, collide with another feature, and add storage
-failure modes to a trivial transform. `CacheService.clearLocal()` and
-`clearSession()` are worse: they wipe all storage, including the auth token and
-`subscriptionId`. Do not use that cache for enum options and never call either
-clear-all method.
+For read-only display use `enumKey(Enum, keyPrefix, value) | translate`.
 
-The shared pipe currently declares `value: string`, but numeric enums such as
-`GenderEnum` produce numbers at runtime. Keep the form control and payload
-aligned with the real enum value. Correcting the shared generic return type is
-part of backlog 22.
+**Legacy — do not copy.** `EnumToArrayPipe` (67 files at 2026-10-01) declares `value: string`
+although numeric enums produce numbers, and its optional `startId` numbers options by index.
+Company also caches enum arrays under unversioned `localStorage` keys (`gender`,
+`documentType`), which survive deployments and collide across features;
+`CacheService.clearLocal()`/`clearSession()` wipe all storage, including the auth token. Replace
+the pipe with `enumOptions` when a screen is reviewed, never cache enum options, and never call
+either clear-all method.
 
 **Single dropdown border and appearance ownership.** A closed `.p-dropdown`
 wrapper renders exactly one 1px border with `var(--sigma-control-radius)` (`6px` canonical). Its
@@ -89,15 +126,22 @@ When the dropdown is inside a canonical filter boundary from block 4, its
 outer wrapper consumes `--sigma-filter-control-height`; do not replace that
 shared 34px height in feature SCSS.
 
+**Empty value is `null`.** PrimeNG 17 shows the `[showClear]` icon whenever the
+model is not `null` and an option matches it, so a dropdown control is typed
+`FormControl<T | null>` and starts at `null`, never `''`. A text-valued option
+list (`optionValue="value"`) must also drop blank values, otherwise `''` matches
+a blank option and the clear icon appears on an empty-looking field.
+
+
 **Check:** lookup failures show a message, not silence · ordinary simple lookups
 use `getSelectList`/`DropDownSelect`; confirmed composite/domain option endpoints
 remain typed · `optionLabel`/`optionValue` match the source shape ·
 `appendTo="body"` on every dropdown ·
-`[showClear]` and `[filter]` instead of companion buttons · enum options mapped
-once in memory · exactly one wrapper border with borderless label and trigger ·
+`[showClear]` and `[filter]` instead of companion buttons · dropdown controls
+start at `null`, never `''`, and text-valued options drop blanks · enum options from
+`enumOptions` once in memory · exactly one wrapper border with borderless label and trigger ·
 inner label/trigger dimensions cannot cover the wrapper edge · focus changes
 the existing border without an outer halo · filter dropdowns use the shared
-34px height · no unversioned enum data stored in browser storage.
+34px height · no unversioned enum data stored in browser storage · no `EnumToArrayPipe`, hand list or index ids for a new or reviewed screen.
 
 ---
-

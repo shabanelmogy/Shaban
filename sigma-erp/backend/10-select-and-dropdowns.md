@@ -1,6 +1,6 @@
 ## 10. Select and dropdowns
 
-> **Status: Transitional** — the base returns a failure for an empty list, see below
+> **Status: Canonical**
 
 Every entity gets `GET /<Entity>/GetSelect` from the base controller, backed by
 `SelectAsync`, which returns `DropdownDto`:
@@ -52,22 +52,9 @@ public override async Task<Results<DropdownDto>> SelectAsync()
 }
 ```
 
-**Defect to know about.** The base treats an empty lookup as a failure:
-
-```csharp
-if (items == null || !items.Any())
-    return new Results<DropdownDto>
-    {
-        IsSuccess = false,                                  // wrong
-        Message = Localization.GetString(GeneralMessage.FailedToFound)
-    };
-```
-
-An empty dropdown is a valid state — a tenant with no branches yet is not an
-error. Because Angular guards on `if (response.isSuccess)`, the caller both fails
-and shows an empty list, and a real failure becomes indistinguishable from
-"nothing configured yet". For a new lookup, override and return
-`IsSuccess = true` with an empty `Entities`. Backlog item 13.
+**An empty lookup is a success.** The base returns `IsSuccess = true` with an empty
+`Entities` (re-verified 2026-09-30): a tenant with no branches yet is not an error, and a real
+failure stays distinguishable. An override must keep that behaviour.
 
 **Check:** returns `DropdownDto`, not a custom shape · inactive rows excluded when
 they must not be selectable · deterministic order · empty result is a success ·

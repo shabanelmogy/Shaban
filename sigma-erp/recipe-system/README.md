@@ -119,3 +119,10 @@ repeats the drift.
 - Packet templates are reviewed whenever a referenced block changes.
 - The pilot should be evaluated against full-book and dependency-retrieval
   baselines before more recipe families are added.
+
+## Read-only companion checks
+
+- `Check-Translations.ps1` — en/ar key parity per block (UI block 23).
+- `Check-BookReferences.ps1` — every source path, type name, `sigma-*` class, block number and
+  markdown link named by the books and the skill exists. Run it after a book or skill change;
+  exit code = unresolved paths, blocks and links.

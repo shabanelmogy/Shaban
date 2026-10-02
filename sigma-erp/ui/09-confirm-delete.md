@@ -47,7 +47,16 @@ Defaults: width `460px`, collapsing to `calc(100vw - 20px)` under `520px`,
 Anything that collects a reason, note or date is **not** this dialog — it is a
 form modal (block 13).
 
-**Check:** `record` filled so the user sees which row · `subtitle` and `warning`
+**After the delete.**
+- **Success.** Reload the current page. When the deleted row was the only row of a page after the first, request the previous page, so the user never lands on an empty page.
+- **Failure.** The global interceptor shows the message (block 22); the feature only clears its busy state and keeps the row.
+- **Child rows.** A child row of an editor is not deleted with this dialog directly; it goes through `EditableRows.requestRemove`, which skips the confirmation for an untouched new row (block 14).
+
+**Preset.** `confirmation.confirmDelete({ title, message, warning?, record })` fills the severity, icons
+and Delete/Cancel labels (2026-10-01).
+
+**Check:** `record` filled so the user sees which row · last row of a page goes back one page ·
+no feature error toast on failure · · `subtitle` and `warning`
 for destructive actions · mutation only inside `if (confirmed)`.
 
 ---

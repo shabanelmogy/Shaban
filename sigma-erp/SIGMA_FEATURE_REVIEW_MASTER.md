@@ -16,3 +16,6 @@ are in [`master/00-preamble.md`](master/00-preamble.md). History is in
 | 6 | [6. Human and AI review protocol](master/06-human-and-ai-review-protocol.md) |
 | 7 | [7. End-to-end reconciliation and final report](master/07-end-to-end-reconciliation-and-final-report.md) |
 | 8 | [8. Packet generation and governance](master/08-packet-generation-and-governance.md) |
+
+Production preparation notes are maintained in
+[block 5 — Production notes](master/05-continuous-quality-gates.md#production-notes-owner-request-2026-10-02).

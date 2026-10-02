@@ -1,40 +1,52 @@
 ## 18. Documents and upload
 
-> **Status: Transitional** — rows carry server-owned `subscriptionId` and the
-> reference cleanup is fire-and-forget, backlog 19 and 29
+> **Status: Canonical** — `DocumentUploadTracker` + `FileUploadService.upload/remove` (2026-10-01).
+> Legacy: rows still carrying `subscriptionId` (backlog 8, 19) and the 21 screens that upload
+> without tracking (backlog 29)
 
-### Shared Documents/Images presentation
+### One documents presentation
 
-The Documents tab in **Create New Vehicle** is the visual reference for
-document and image collection sections. Its reusable presentation lives in
-global `src/styles.scss` behind the opt-in `sigma-documents` prefix. Use these
-classes instead of copying the Fleet component SCSS:
+**`app-file-field` (2026-10-01).** A single file control is
+`<app-file-field [inputId] folder="…" [accept] [control]="form.controls.path" />`
+(`shared/components/file-field`): it draws the box below, uploads through the editor's
+`DocumentUploadTracker`, checks `accept` and the shared size/type rules, marks a replaced or
+removed saved file for deletion after save, shows a rejected file with `app-field-error`, and shows
+the name only when the control is disabled. The feature writes no upload code.
 
-| Concern | Shared class |
-|---|---|
-| Section card | `sigma-documents` |
-| Header, icon and title | `sigma-documents__header`, `__icon`, `__title` |
-| Add/delete/upload actions | `sigma-documents__actions`, `__action` plus `--add`, `--delete` or `--upload` |
-| Content and file input | `sigma-documents__body`, `__file-row`, `__file-input`, `__file-name` |
-| Collection table | `sigma-documents__table-wrap`, `__table`, `__row-actions` |
-| File/image list | `sigma-documents__list`, `__list-item` |
-| Empty state | `sigma-documents__empty` |
+The shared file field passes both its bound `control` and its upload-rejection `message`
+to `app-field-error`. A nonempty rejection message takes precedence; otherwise touched/dirty
+control errors (such as the document/profile path length) appear through the same shared
+presentation. Do not add a second feature-local file error below the shared field.
 
-The global selector is intentionally opt-in; never style every `table`, file
-input or `.document-*` element globally. Feature components retain their own
-typed forms, upload workflow, validation and payloads. The shared pattern owns
-presentation only and already includes light, dark, RTL and responsive rules.
+**File cell (shared, 2026-10-01).** A file control — in a field or in a collection cell — is
+`div.sigma-file-field`, drawn as one 34px control box like the other fields: the hidden
+`input[type=file]`, then `span.sigma-file-field__name` with the file name (`is-empty` when none), then
+the icon actions at the end — an upload `label.sigma-secondary-button.sigma-icon-button` that opens
+the input (upload state from `DocumentUploadTracker.uploading()`) and a remove `sigma-icon-button`
+that calls `markRemoved`. Markup order is visual order (name, upload, remove). In an editable table the file column
+is headed with a plain word (*Attachment*, not *Document Path*) and gets `minWidth: '220px'` so the name
+and both icons fit inside the box. A file the picker rejects (`DocumentUploadTracker.validate`) shows below it with
+`<app-field-error [message]="key" />`. Reference: `Customers/Individual/IndividualPartner/components/details`.
+
+A document or image collection is an `app-editable-collection-table` (block 14) whose rows are
+the document fields plus a file cell (file input, file name/link, upload state). There is no
+separate documents stylesheet: the former `sigma-documents__*` classes this block described do
+**not** exist in `src/styles.scss` (verified 2026-10-01), and screens must not add them.
+`app-documents` (Company) is the current reusable component on that table.
 
 `app-documents` is reusable across a step and a dialog tab. It takes the parent
-form plus the array name, so one component serves both:
+form, array name and an `idPrefix`, so one component serves both. The parent creates
+the typed `FormArray<DocumentRow>` before rendering; the child never creates an
+unrelated empty form when that array is missing.
 
 ```ts
 @Input() parentForm!: FormGroup;
 @Input() arrayName: string = 'documents';
+@Input() idPrefix = 'company-document';
 
 ngOnInit(): void {
-  const documentsArray = this.parentForm.get(this.arrayName) as FormArray;
-  if (!documentsArray) this.parentForm.addControl(this.arrayName, this.fb.array([]));
+  const documentsArray = this.parentForm.get(this.arrayName) as FormArray<DocumentRow>;
+  // EditableRows reads this existing parent-owned array.
 }
 ```
 
@@ -46,162 +58,119 @@ ngOnInit(): void {
 <app-documents [parentForm]="driverDraft" arrayName="documents"></app-documents>
 ```
 
-Upload stores a server path on the row; it does not hold the file in the form:
-
-The reference implementation subscribes bare. Follow block 28 instead — tear
-down, release the busy flag, and handle failure:
+Upload stores a server path on the row; it does not hold the file in the form. The editor
+provides one `DocumentUploadTracker` (`shared/service/document-upload-tracker.service.ts`), which
+tracks what was uploaded but not yet saved and what was removed, and cleans up:
 
 ```ts
-onFileSelected(index: number, file: File): void {
-  if (!this.isAllowed(file)) {
-    this.uploadError.set('companyForm.fileTypeOrSizeInvalid');
-    return;
+@Component({ …, providers: [DocumentUploadTracker] })
+export class FeatureEditorComponent {
+  readonly uploads = inject(DocumentUploadTracker);
+
+  onFileSelected(index: number, file: File): void {
+    const invalid = this.uploads.validate(file);          // 'validationMessages.fileType' | 'fileSize'
+    if (invalid) { this.uploadError.set(invalid); return; }
+    this.uploadError.set('');
+    const row = this.documents.at(index);
+    this.uploads.upload('CustomerDocuments', file, index).subscribe({
+      next: (path) => {
+        this.uploads.markRemoved(row.controls.documentPath.value);   // the replaced saved file
+        row.controls.documentPath.setValue(path);
+        row.markAsDirty();
+      },
+      error: () => this.uploadFailedRow.set(index),   // the interceptor showed the message; the row keeps its file
+    });
   }
 
-  this.uploadError.set('');
-  this.uploadingIndex.set(index);
+  removeDocument(index: number): void {                    // after the row confirmation
+    this.uploads.markRemoved(this.documents.at(index).controls.documentPath.value);
+    this.documents.removeAt(index);
+  }
 
-  this.fileService.uploadFile('PartnerDocuments', file)
-    .pipe(
-      takeUntilDestroyed(this.destroyRef),
-      finalize(() => this.uploadingIndex.set(null)),
-    )
-    .subscribe({
-      next: (path) => {
-        this.pendingPaths.add(path);
-        const row = this.documents.at(index);
-        if (!row) return; // retained in pendingPaths for cleanup
-        row.patchValue({ documentPath: path });
-        row.get('documentPath')?.markAsTouched();
-      },
-      error: () => this.uploadError.set('companyForm.uploadFailed'),
+  private afterSave(saved: FeatureDTO): void {
+    this.uploads.finishSave(saved.documents.map((d) => d.documentPath)).subscribe((failed) => {
+      this.cleanupCompleted(failed);
     });
+  }
+
+  private discardAndClose(): void {
+    this.uploads.discard().subscribe((failed) => this.cleanupCompleted(failed));
+  }
+
+  private cleanupCompleted(failed: string[]): void {
+    if (failed.length) {
+      this.uploadError.set('feature.fileCleanupFailed');
+      return; // remain open; Retry repeats this cleanup, never the successful save
+    }
+    this.close();
+  }
 }
 ```
 
-### Validation and abandoned uploads
+- **`upload`** validates the type (pdf, jpg, jpeg, png) and the size (5 MB), shows `uploading()` per row, and errors instead of returning a message as a path. The legacy `FileUploadService.uploadFile` returns messages like "Invalid file type." as its value — never use it in new or reviewed code.
+- **Deletion timing.** A replaced or removed saved file is deleted only after a successful save, so a failed save never loses the previous document. `discard` deletes only unsaved uploads.
+- **Server side.** Browser cleanup is best effort (a tab can close first), so the server must also expire abandoned uploads, and it re-validates the extension, signature, size and path.
+- **Translations.** Add the feature's cleanup-failure key to both `en.ts` and `ar.ts`.
 
-Client checks are convenience only; the backend must re-validate extension,
-MIME/signature, size and storage path.
+### Typed partner rows and isolated child drafts
 
-```ts
-private static readonly ALLOWED = ['pdf', 'jpg', 'jpeg', 'png'];
-private static readonly MAX_BYTES = 5 * 1024 * 1024;
+Partner editors reuse `shared/models/partner-editor.ts` and
+`shared/utils/partner-editor-forms.ts`: `DocumentRow`, `CardRow`, their factories
+and payload mappers, address controls, optional date validation and issue/expiry ordering.
+Required card text uses the shared factory's nonblank validation before payload trimming;
+whitespace-only card number, security code, holder name or bank name cannot pass as filled.
+The row contract is `id`, numeric `documentType`, `documentNumber`, `issuedBy`,
+`issueDate`, `expiryDate`, `documentPath`, `isInternational`.
 
-private isAllowed(file: File): boolean {
-  const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
-  return DocumentsComponent.ALLOWED.includes(ext)
-    && file.size > 0
-    && file.size <= DocumentsComponent.MAX_BYTES;
-}
-```
+**One rule set for partner documents (G5, decided 2026-10-01).**
+`CustomerDocument` is shared by individuals, companies and drivers. It has one row factory, one
+validator set, one upload folder and one payload mapper (the shared ones above), and every
+partner screen adopts them; a screen-local variant is a finding.
 
-State the allowed types and size limit in the UI, not only in the validator.
+| Field | Rule |
+|---|---|
+| `documentType`, `documentNumber`, `issueDate`, `expiryDate` | Required: expiry alerts and the issue/expiry order depend on them |
+| `issuedBy`, `documentPath`, `isInternational` | Optional |
+| Upload folder | `CustomerDocuments` |
 
-**Abandoned uploads.** A file uploaded to the server before the parent form is
-saved is an orphan if the user cancels. `Fleet/Vehicle` is the reference: it
-tracks paths, but its current cleanup fires one unobserved request per path and
-clears the sets before those requests succeed. That part is **Legacy — do not
-copy**. Coordinate cleanup and retain failures:
+The backend VM carries the same `[Required]` set. Individual, Company and the nested driver
+draft adopt the shared rows/factories and explicit wire enum (2026-10-01, source-only).
+`PartnerDocumentType` mirrors explicit backend wire values; do not calculate IDs from
+string-enum positions. Older rows carrying tenant/audit controls remain backlog 8 and 19;
+reviewed Company and Driver writes contain none.
 
-```ts
-private readonly pendingPaths = new Set<string>();   // uploaded, not yet saved
-private readonly removedPaths = new Set<string>();   // saved, removed in this session
-readonly fileCleanupRunning = signal(false);
+An isolated nested editor provides its own `DocumentUploadTracker`. Cancel calls its
+`discard()`, leaving the parent's saved files and other drafts alone. Draft Save validates
+the child form, then calls `draftUploads.transferTo(parentUploads)` and commits the form to
+the parent. It does not call `finishSave`: only successful aggregate persistence makes the
+files saved. Block draft Save/Close during upload or cleanup. When a collection helper removes
+a whole row, retain the original saved paths and compare them with the successful payload to
+mark paths that disappeared; include nested documents in that comparison.
 
-private deleteTrackedPaths(paths: Set<string>): Observable<string[]> {
-  const candidates = [...paths];
-  if (!candidates.length) return of([]);
-
-  return forkJoin(
-    candidates.map((path) =>
-      this.fileService.deleteFile(path).pipe(
-        map(() => ({ path, deleted: true })),
-        catchError(() => of({ path, deleted: false })),
-      ),
-    ),
-  ).pipe(
-    map((outcomes) => {
-      const failed: string[] = [];
-      outcomes.forEach((outcome) => {
-        if (outcome.deleted) paths.delete(outcome.path);
-        else failed.push(outcome.path);
-      });
-      return failed;
-    }),
-  );
-}
-
-// After the parent save succeeds, remove paths referenced by the saved form from
-// the pending set. Anything left there was replaced/removed before Save and is
-// an orphan. Delete it together with removed paths, retaining failures.
-private finishSuccessfulSave(): void {
-  const persistedPaths = new Set(
-    this.documents.controls
-      .map((control) => String(control.get('documentPath')?.value ?? '').trim())
-      .filter(Boolean),
-  );
-  persistedPaths.forEach((path) => this.pendingPaths.delete(path));
-
-  this.fileCleanupRunning.set(true);
-  forkJoin({
-    removedFailed: this.deleteTrackedPaths(this.removedPaths),
-    orphanedFailed: this.deleteTrackedPaths(this.pendingPaths),
-  })
-    .pipe(
-      takeUntilDestroyed(this.destroyRef),
-      finalize(() => this.fileCleanupRunning.set(false)),
-    )
-    .subscribe(({ removedFailed, orphanedFailed }) => {
-      if (removedFailed.length || orphanedFailed.length) {
-        this.uploadError.set('companyForm.fileCleanupFailed');
-      }
-      this.finish(true);
-    });
-}
-
-// Before discard/close, wait for cleanup to settle. Failed paths remain in the
-// set and are reported; the server must also expire abandoned temporary files.
-private discardAndClose(): void {
-  if (this.fileCleanupRunning()) return;
-  this.fileCleanupRunning.set(true);
-  this.deleteTrackedPaths(this.pendingPaths)
-    .pipe(
-      takeUntilDestroyed(this.destroyRef),
-      finalize(() => this.fileCleanupRunning.set(false)),
-    )
-    .subscribe((failed) => {
-      if (failed.length) this.uploadError.set('companyForm.fileCleanupFailed');
-      this.close();
-    });
-}
-```
-
-Replacing a file adds the old path to `removedPaths` rather than deleting it
-immediately, so a failed save does not destroy the previous document.
-Browser cleanup is best effort: a tab can be killed before any request runs, so
-temporary uploads also need a server-side expiry/orphan-cleanup policy.
-Add `companyForm.fileCleanupFailed` to both `en.ts` and `ar.ts` before using the
-example message.
-
-Row shape as currently built: `id`, `subscriptionId`, `documentType`,
-`documentNumber`, `issuedBy`, `issueDate`, `expiryDate`, `documentPath`.
-
-**`subscriptionId` should not be there.** It is the tenant, which is server-owned
-— the backend must take it from the authenticated principal, never from the
-request. The driver draft does the same thing
-(`subscriptionId: Number(localStorage.getItem('subscriptionId') || 0)`). Both are
-**legacy**: leave them until the backend contract is corrected together (block
-30, items 8 and 19), and do not add server-owned fields to a new child row.
+**Concurrent uploads and cleanup (2026-10-01).** The tracker counts subscribed uploads,
+including overlapping controls, and remains busy until all finish. Cleanup waits for uploads
+before taking its pending-path snapshot and blocks new uploads while cleaning. Transfer
+requires idle trackers. Editor Save, step navigation and Close use that complete busy state.
+Nested tab navigation uses the shared `app-editor-tabs.disabled` input while
+uploading/cleaning, and document collection mutations are unavailable during
+that same period. Otherwise removing a row or destroying its file-control tab
+tears down the subscribed upload before its path can reach the owning tracker.
+Company Documents and Driver fields consume these existing shared busy signals;
+no separate upload-state framework is introduced (2026-10-02, source-only).
+Keep failed cleanup paths for retry and show one localized inline message; do not close on
+cleanup failure or repeat the successful aggregate save. A discard failure also keeps the
+editor open. Tracker cleanup requests suppress interceptor presentation because the editor
+owns that one feedback channel.
 
 Server-owned, never client-supplied: tenant/`subscriptionId`, record number,
 `createdAt`/`createdBy` and other audit values, delete flags, approval status,
 calculated totals.
 
-**Check:** `arrayName` passed when the array is not called `documents` · no
+**Check:** one `DocumentUploadTracker` per editor, `upload`/`remove` (never `uploadFile`) ·
+cleanup after save and on discard · documents on `app-editable-collection-table` ·
+`arrayName` passed when the array is not called `documents` · no
 server-owned fields in a new row contract · existing `documentPath` preserved when no new
 file is chosen · removal clears the path and marks touched · empty state present ·
 issue/expiry ordering validated · never store CVV or card data in a document row.
 
 ---
-

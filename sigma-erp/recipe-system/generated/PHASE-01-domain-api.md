@@ -8,32 +8,32 @@ are finalized.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2a00e0f2004ea5c5cbd27c9a26b08bfe0599846b4a088c1e6e51a13c51123c74
-- master.1: ## 1. Governance and review principles | sha256:127af0593047619ee010cc42872c85f6fb17822939fc1eb84ddc0448a1bc38d2
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:a34e2c67fb64586a7d135ae183ef2085e698c442fe21f0ea34059360b019c63c
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:3e4693fe20b130ccadbc096ec295c856ca45b65edce618be94f856736f679a28
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:7f9e01355e77a11d7b6ac6c30e6093397e8df8ada6489488ca1027b7d252fa03
-- master.5: ## 5. Continuous quality gates | sha256:20f297601f44c6f54a86681f894a655fcd8cf1f78c852288f0654451830a50c9
-- master.6: ## 6. Human and AI review protocol | sha256:4ceaecd1ec28eb3a13b14908b167b8b4c632cbdc403f7f7622324076cd3e6399
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:46db61f9e8c41f4589021d3f1a0b56fd3c27f15588fe7179fb97c7260354d03a
-- backend.1: ## 1. Step 1 — Entity | sha256:402e9b4eea62373a3aafebd8985dc20e9724d8d140a798e123ebd6024a3de7bb
-- backend.2: ## 2. Step 2 — EF configuration | sha256:380d118d3350120685c6803baac619d45a383d7b9c3594417953129d93994322
-- backend.3: ## 3. Step 3 — ViewModels | sha256:34e112b5119c6c4e222bd1e984261d3a3385c2b5c82f921d0a9d59b47480f4f9
-- backend.4: ## 4. Step 4 — AutoMapper profile | sha256:337246e86e0bbc6f3e4910c39f070f7235aa3984a4bad92b6ce70d49fb2e9658
-- backend.5: ## 5. Step 5 — Interface and service | sha256:9b3baa82fcb269fd9c8b3c9d407a7e5e10a2eab2bea4109ea2e7d8ce7f541a44
-- backend.6: ## 6. Step 6 — Controller | sha256:196e4d710119ab25a6e4a2e7f6db823b298f7420f9748f792f92944c95602654
-- backend.7: ## 7. ListVM scope rule | sha256:65cc47b13fc8e207693e2ed6d033d491f879d845dc39a07b261670328ecbc1d1
-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c834c66dc17d92ffca8e74a7f32113de7febbf293507205c32287d375e3bb386
-- backend.9: ## 9. Search model and filters | sha256:6ab38c4859bfd9d1a29424abfa3e6ea38670329c9c1c3f78db133cf4945523fa
-- backend.10: ## 10. Select and dropdowns | sha256:4f52d4a48672f3a86c04856cf6a3b11e93442d6c062c78effbb56017e965a6da
-- backend.11: ## 11. Document numbers (No) | sha256:de235ede7e7b956870b015236d065da71dce0ebd1f9ec3a16a5da492302529ab
-- backend.12: ## 12. Activate and deactivate | sha256:9b94917f07ae34b895ef07fcf62ad039cbaf1a00786bdd05fb91e078beb0dd32
-- backend.13: ## 13. Pattern 1 — Normal entity | sha256:c744ef011b1b10511c873fe7afb1d6b6a1992392c81e9c9f6db18ceb05cf733c
-- backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:80805d298438df7141fade3d3c04cd3a8efd6ee44b4738c180623f50bf88b3c9
-- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:632431c1d33706e030d2c1a56d0a52169d46daa4f69c3c44d910aabcf340eb12
-- backend.16: ## 16. Pattern 4 — Settings | sha256:8a827fa820b53962a9a0821d91aa01bc60705da0b2f75077a2e17b63877c1bc1
-- backend.17: ## 17. Pattern 5 — Reports | sha256:309c2a4dec4c1479e70b870ba4452011775fc3d5273bfea78aba1f8647b41ee3
-- backend.18: ## 18. Edge cases | sha256:8fda64720ceddd3848c23b32e84afc9cb6e2297f063b80a33a7bd4698b8f84a8
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:e091f8715bd45438f4c58030c4b56015b25567c6a0541c233340321b522d916a
+- master.1: ## 1. Governance and review principles | sha256:3e69ec4d48c952286dea7792d9e442d37585c15446b7ef02531c8a54053558cf
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:2d02535a738d0a1e03f44f22ff5ac7028554bc00cf9e8517245d3cf9e4c5811e
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
+- master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+- master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
+- backend.1: ## 1. Step 1 — Entity | sha256:3d755799b3e4b42bb225a46660377f86994c9d67b9450ca7b9ec9ca126c78f2b
+- backend.2: ## 2. Step 2 — EF configuration | sha256:542434089dccbb109c242e52bd9ccc357f6b6d217efa9b68ed0dad17259e7a48
+- backend.3: ## 3. Step 3 — ViewModels | sha256:4a11c70ca487d4644b26fc5082a6d9244db925d3a6ef8d3f7c174b0548fb48a1
+- backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
+- backend.5: ## 5. Step 5 — Interface and service | sha256:d8ab105a1462baaa5dee9c089419a7783ede54cdb09d075a51805970fef624f9
+- backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
+- backend.7: ## 7. ListVM scope rule | sha256:24fbfbcf92b61da465eb4b8b4d9aa50f2c48c1f43e8711402843db1ff1a7771e
+- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:1798ea5f97d741d74fdb69fb8555447c0a2d04fabc40b88895e17d22b8588e36
+- backend.9: ## 9. Search model and filters | sha256:80adaa0424534a753b302d2ae386e8374958bea389692e3b856f7ecc8cdf082e
+- backend.10: ## 10. Select and dropdowns | sha256:700a3fc93df824f337cf2bf5c2fe12f866d8aee46c8be35976a2fccf7fa533cb
+- backend.11: ## 11. Document numbers (No) | sha256:64b0d4b95e91a9b9dd3abc1f8eb55a0251a388795d6ea0743a61e3c329d1b202
+- backend.12: ## 12. Activate and deactivate | sha256:0ab72d83147f2121f134159c72ce89862f2e6687b34d190aedcb9f48dd277c8d
+- backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
+- backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:72df618eef97754d2145fd42ce10e3a09b842ec6870bce6a2e7ee3eced51af93
+- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:7e2d36c3ce382f62e903e3c14d8cc74023eb1e28cadc8913c5cc0e37aceb62d7
+- backend.16: ## 16. Pattern 4 — Settings | sha256:f2379884db393f76c984b88a487c4ec4cbad1e492a69a48302d9761d6fa2339e
+- backend.17: ## 17. Pattern 5 — Reports | sha256:57ec4fd3d996915f15d15c7baad51a573b258d24cd19680dc1c2f10ef437aa73
+- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
 
 Approved backend references:
 

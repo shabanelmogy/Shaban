@@ -22,7 +22,12 @@ Phase 6 compares every applicable path.
 - Translation keys ↔ English and Arabic.
 - Feature styles ↔ local ownership, RTL, theme, overlay, and responsive rules.
 - Providers ↔ interceptor-enabled client and authentication header path.
-- Successful mutations ↔ exactly one success-feedback owner.
+- Successful mutations ↔ exactly one success-feedback owner; failures ↔ exactly one error owner.
+- Changed feature code ↔ the shared pieces of its blocks (block 5 *Shared pieces, not feature
+  copies*), with feature copies removed.
+- Restricted actions ↔ the *Authorization candidates* list in the review (UI block 26).
+- Every decision taken ↔ its business reasoning (block 1).
+- The change ↔ the shared-extraction gate (block 5): what was extracted, or why nothing qualified.
 - When a Maintenance / Evolution Plan was required, Frozen target contracts ↔
   final source behavior, migration/compatibility decisions, implementation
   slices, and verification evidence.
@@ -66,6 +71,15 @@ Report proportionally:
 
 Do not claim full feature completion while a Missing, Conflicting, or Uncertain
 contract blocks required behavior.
+
+### Schema impact check (G2, 2026-10-01)
+
+Before the report, list every change in the diff to an entity property or its nullability, a
+`[MaxLength]`, an EF `HasMaxLength`/`IsRequired`/index/relationship configuration, and every
+removed column. Any one of them makes `Add-Migration <Name>` a required report line, with the
+reason and the data to check before applying it: values longer than a new limit, nulls in a
+column that becomes required, a data copy before a column is dropped. A task with such a change
+cannot close without that line.
 
 ### Suggested migration name and commit messages
 

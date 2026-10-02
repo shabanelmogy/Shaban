@@ -33,13 +33,35 @@ deleteDriver(index: number) {
     })
     .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe((confirmed) => {
-      if (confirmed) this.drivers.removeAt(index);
+      if (!confirmed) return;
+      this.drivers.removeAt(index);
+      this.parentForm.markAsDirty();           // the editor now has unsaved changes
     });
 }
 ```
 
-**Check:** shared service, not a nested `p-dialog` · fallback title when the
+A child row of a collection normally goes through `EditableRows.requestRemove` (block 14), which
+adds the untouched-new-row rule and marks the editor dirty; use this hand-written form only when
+the confirmation needs a custom `record`.
+
+**Check:** shared service, not a nested `p-dialog` · the parent form is marked dirty after a
+removal · fallback title when the
 record has no name yet · removal only inside `if (confirmed)`.
+
+**Agreement history (shared, 2026-10-01).** A list's *agreements history* action opens
+`<app-agreement-history-dialog [source]="historySource" [subtitle]="…" (closed)="…">` from
+`shared/components/agreement-history-dialog`, inside `@if (historyRow(); as row)`.
+
+- **The dialog owns:** the load from `source` when it opens, the loading, empty and error
+  states (the source call sends `X-Skip-Error-Interceptor`), and the columns and their status
+  badge.
+- **Columns:** `[showCustomer]="false"` on a customer's own history, `[showVehicle]="false"` on
+  a vehicle's.
+- **Rows:** `AgreementHistoryRow` from `shared/models/agreement-history.ts`.
+- **Translations:** the `agreementHistory.*` keys.
+
+The feature keeps only the selected row and the `source` function. References: the
+Individual, Company and Vehicle lists.
 
 ---
 

@@ -49,6 +49,7 @@ Every material finding records:
 | Severity | Correctness, security, contract, behavior, accessibility, or consistency impact |
 | Confidence | Confirmed, strong inference, or uncertain |
 | Resolution | Required change or exact unresolved decision |
+| Business reasoning | For a recommended rule or decision: why it is the business-correct choice (block 1), separate from its migration cost |
 
 ### Handoff rules
 
@@ -58,6 +59,11 @@ Every material finding records:
 - Mark the affected artifacts stale and rerun their checks.
 - Contradictions go to Phase 6; they are not resolved by whichever reviewer ran
   last.
+- **One owner per feature at a time (G18, 2026-10-01).** Before the first edit, and again
+  before each write phase, run `git status` and compare file times in the scoped folders with
+  discovery. If another tool or session changed scoped files since discovery, stop and report to
+  the owner: do not overwrite, build on top of the changes, or continue in parallel. A session
+  that resumes after a usage limit or a compaction repeats this check before writing.
 
 ### Calling the Contract-First Split Review
 

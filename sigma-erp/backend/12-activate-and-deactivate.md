@@ -1,6 +1,6 @@
 ## 12. Activate and deactivate
 
-> **Status: Transitional** — the base does not validate its targets, see below
+> **Status: Canonical** — the base validates every target (2026-09-30)
 
 `POST /<Entity>/handleActivate` maps to `HandleActiveAsync` and takes:
 
@@ -12,68 +12,47 @@ public class ActiveVm
 }
 ```
 
-The base implementation:
+The base implementation (`Service.HandleActiveAsync`, `virtual` since 2026-09-30) is a
+validated bulk mutation — it checks every target before mutating any target:
 
-```csharp
-public async Task<Result> HandleActiveAsync(ActiveVm activeVm)
-{
-    var entities = (await UnitOfWork.Repository
-        .FindByAsync<TEntity>(a => activeVm.Ids.Contains(a.Id))).ToList();
+- `Ids` null or empty → `ActivationNoRecords`;
+- duplicate ids are collapsed;
+- any id not found in the caller's tenant → `ActivationRecordsNotFound`, and nothing changes;
+- success and failure messages are localized (`ActivationSucceeded`, `ActivationFailed`).
 
-    entities.ForEach(a => a.IsActive = activeVm.IsActive);
-    UnitOfWork.Repository.UpdateRange(entities);
-    var result = await UnitOfWork.SaveChangesAsync();
-    …
-}
-```
+**Activation changes one field (2026-10-02).** Load every target tracked in the write
+context, change `IsActive`, and call `UnitOfWork.SaveChangesAsync` directly. Do not call
+`Repository.Update`/`UpdateRange` for these tracked rows: it marks unrelated scalar fields
+modified and can overwrite another request's name or notes with an older snapshot. The
+tenant-filtered load retains the original SubscriptionId concurrency value. An unchanged
+active state is successful under the shared zero-change save contract (block 5). This does
+not add a version check for concurrent changes to IsActive itself. Source-only correction;
+owner concurrency verification pending.
 
-Tenant and soft-delete scoping come from the repository, so cross-tenant ids
-cannot be flipped — they are simply not returned.
-
-**Two defects.** This is a bulk mutation, and the rule for any bulk operation is
-that it validates every target before mutating any target:
-
-1. **Partial success reported as success.** Send five ids where three exist and
-   the call activates three and returns success. The caller cannot tell.
-2. **No null guard.** `Ids` is declared `null!`, so an omitted `Ids` throws inside
-   `Contains` rather than returning a validation failure.
-
-Override when the entity's active state matters:
+Tenant and soft-delete scoping come from the repository, so a cross-tenant id counts as not
+found. Override only for an entity rule, and call the base for the mutation:
 
 ```csharp
 public override async Task<Result> HandleActiveAsync(ActiveVm activeVm)
 {
-    if (activeVm?.Ids is not { Count: > 0 })
-        return Fail("No records were supplied.");
+    // Deactivating? Apply the same references Delete checks, when the entity requires it.
+    if (activeVm is { IsActive: false, Ids.Count: > 0 } &&
+        await UnitOfWork.Repository.ExistsAsync<Partner>(x => activeVm.Ids.Contains(x.BranchId)))
+        return BusinessFailure("BranchDeactivateReferenced");
 
-    var ids = activeVm.Ids.Distinct().ToList();
-
-    var entities = (await UnitOfWork.Repository
-        .FindByAsync<Branch>(a => ids.Contains(a.Id))).ToList();
-
-    if (entities.Count != ids.Count)
-        return Fail("One or more records were not found.");
-
-    // Deactivating? Check the same references Delete checks.
-    if (!activeVm.IsActive)
-        foreach (var id in ids)
-            if (await UnitOfWork.Repository.ExistsAsync<Partner>(x => x.BranchId == id))
-                return Fail("Cannot deactivate a branch that is referenced by Partners.");
-
-    entities.ForEach(a => a.IsActive = activeVm.IsActive);
-    UnitOfWork.Repository.UpdateRange(entities);
-    …
+    return await base.HandleActiveAsync(activeVm);
 }
 ```
 
-Deactivation is a soft form of removal, so if a row cannot be deleted while
-referenced, decide explicitly whether it can be deactivated while referenced.
-
-Backlog item 16.
+Default rule: deactivation is allowed while the row is referenced (deactivating only removes it
+from new selections). An entity that must block it overrides, as above, and records why.
+`JournalVoucherService` and `OpeningBalanceServiceBase` still re-implement the interface
+member explicitly (written before the base was virtual); move them to `override` when they are
+next touched.
 
 **Check:** `Ids` null and empty handled · duplicates collapsed · found count equals
 requested count before mutating · deactivation rules stated relative to Delete ·
-partial success never reported as success.
+partial success never reported as success · tracked activation saves only changed IsActive
+values without forcing full-row updates.
 
 ---
-

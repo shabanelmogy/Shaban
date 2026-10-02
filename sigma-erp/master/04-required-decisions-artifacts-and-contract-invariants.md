@@ -25,26 +25,30 @@ Make every applicable decision before writing code. Record its evidence.
 | # | Decision | Rule |
 |---|---|---|
 | 1 | Canonical reference | Select per UI or backend shape, never one reference per whole feature |
-| 2 | Editor shape | Decide from business groups, child collections, and parent-context needs, never field count |
+| 2 | Editor shape | UI block 13 decision rule (D4-2): fields only or one small child list without totals → modal; two or more collections, totals or posting → routed page. Then tabs/steps from the business groups, never field count |
 | 3 | Route count | Routed editors have list/create/view/edit modes; dialog editors keep the list route only |
-| 4 | Grid columns | Record exact `colName` order with Actions first |
+| 4 | Grid columns | Record the exact `DataTableColumn.field` order (with `type`), Actions first |
 | 5 | ListVM scope | Displayed columns plus identity and real row-action state only |
 | 6 | Add/Update scope | Client-editable inputs only; server-owned fields are excluded |
 | 7 | Detail scope | Data rendered by the details UI only |
-| 8 | Style ownership | Feature-owned prefix and structural/semantic tokens; shared global primary tokens; no cross-feature style dependency |
+| 8 | Style ownership | Shared shell, components and global `--sigma-*` tokens own the look (UI blocks 1, 24); the feature keeps only its layout and real domain tokens; no cross-feature style dependency |
 | 9 | Confirmation | Destructive or risky operations only |
 | 10 | Dirty discard | Required for editable state; view and pristine state leave silently |
 | 11 | Backend pattern | Choose the simplest valid pattern |
 | 12 | Entity base class | Select the base matching persistence and subscription behavior |
 | 13 | Duplicate key | Use the real business key, update excluding self, and a matching unique index |
 | 14 | FK and delete checks | Validate every required FK and inventory every inbound delete reference |
-| 15 | Filter contract | Exact key casing, clamped page size, `CountAsync` total |
+| 15 | Filter contract | Documented keys (case-insensitive binding), clamped page size, `CountAsync` total; feature keys in `ApplyListFilters` |
 | 16 | Translations | Matching keys in English and Arabic |
-| 17 | Service registration | Requests must use the interceptor-enabled `HttpClient` scope |
+| 17 | Service registration | `providedIn: 'root'`; API URLs on `environment.baseUrl` (the one interceptor-enabled `HttpClient`, UI block 1) |
 | 18 | Migration | Entity or EF changes require owner-run migration; reviewers never generate it automatically |
 | 19 | Reference action coverage | Inventory every reference action and explicitly classify it; no silent omissions |
 | 20 | Override audit | List every target-service override and its feature-specific reason; inherit when no reason exists |
 | 21 | Maintenance/evolution plan | Broad or cross-cutting changes with ambiguous/current behavior must have a Frozen Maintenance / Evolution Plan before implementation; unresolved required decisions remain Blocked |
+| 22 | Child collection contract | Full snapshot (D4-3): every row sent, saved rows with their id, missing rows removed |
+| 23 | Money and VAT | Server totals; VAT per tax rate on the document, rounded once (D4-4) |
+| 24 | Authorization candidates | Actions needing a permission listed with their endpoints (UI block 26) |
+| 25 | Business correctness | Every recommended rule states its business reasoning (block 1) |
 
 ### Grid and ListVM contract
 
@@ -111,17 +115,8 @@ returns the same inherited behavior is prohibited. The scoped reconciliation
 must search the target service and controller for `override` and remove every
 row without a recorded reason. Do not copy redundant overrides from a reference.
 
-### Quotation/action failure-prevention register
-
-| Failure seen in review | Root cause | Mandatory prevention |
-|---|---|---|
-| Customer approve/reject or Revise is absent | Reference inspected partially or only the screenshot menu was copied | Complete the reference-action inventory across backend and Angular before implementation |
-| Action exists in one layer only | No vertical-slice reconciliation | Require every Supported action to fill every action-state contract column |
-| Redundant `DetailAsync`/`GetManyWithNavigationsAsync` or controller override | Reference methods copied for symmetry | Complete the override-justification table and inherit any row without distinct behavior |
-| Action appears in the wrong state | One status field was checked while another approval axis was implicit | Freeze and validate the complete source and target state tuples |
-| Backend explains a blocked transition but UI shows a generic error | Non-2xx `Result` body was ignored | Recover safe `error.message` from the HTTP error payload before the translated fallback |
-| Unapprove passes a dependency pre-check while a dependent record is created concurrently | Separate dependency query was assumed atomic with the update | Record an isolation/invariant strategy or disclose the residual race |
-| Sales-only downstream action is copied into another quotation | Reference parity was confused with domain parity | Classify the action Not Applicable with concrete missing-domain evidence; never add a no-op |
+The quotation/action failure-prevention register lives with the quotation action cycle (UI
+block 7).
 
 Visibility is not authorization. If the app has no authorization mechanism, do
 not invent one and do not describe a hidden control as secured.
@@ -143,6 +138,17 @@ Use these statuses consistently:
 - Missing — required behavior has no contract.
 - Conflicting — authoritative consumers disagree.
 - Uncertain — evidence is insufficient; do not implement automatically.
+
+### Artifact status and closure (G3, 2026-10-01)
+
+Every artifact starts with the status table: `Status` is one of Draft, Frozen, Blocked,
+Implemented — source-only, Closed, and `Owner verification pending` is yes or no. Free text
+such as "implemented and source-reviewed" is not a status.
+
+A Frozen contract is a hand-off, not a deliverable. An implementation task closes only with
+its review or reconciliation artifact, the block 7 report, the shared-extraction result
+(block 5) and the learning-protocol rows. An artifact never cites a file that does not exist
+yet; it names the file it will create as *pending*. Source: `reviews/COMPANIES_PARALLEL_IMPLEMENTATION_FEATURE_REVIEW.md` D3.
 
 ---
 

@@ -33,6 +33,7 @@ Shared blocks to reuse instead of inventing keys:
 | `general.*` | save, cancel, close, delete, edit, add, next, previous, search, actions, success, code, exportExcel |
 | `mangeDetails.*` | field labels shared across customer screens: firstName, mobileNo, email, documentType, cardNumber |
 | `validationMessages.*` | required, email, expiryAfterIssueDate |
+| `partnerForm.enums.*`, `partnerForm.attachment` | neutral enum and attachment labels used by Individual, Company and driver drafts |
 | `sideMenu.*` | navigation entries |
 
 Naming: `<feature>` for the list, `<feature>Form` for the editor. Suffix
@@ -73,10 +74,31 @@ One oddity to know: some keys are literal English sentences, e.g.
 `'Please wait...': 'Please wait...'`. It resolves and is used in dialog loading
 states, so leave it alone.
 
-**Check:** key added to `en.ts` **and** `ar.ts` · placed in the matching feature
+**Parity check (read-only).** `recipe-system/Check-Translations.ps1` lists the keys missing
+from `ar.ts`, the keys missing from `en.ts` (a raw key in English — severe) and case-only
+differences. Run it for the blocks a review touched, for example:
+
+```powershell
+& 'F:\My Work\Shaban Documents\Shaban\sigma-erp\recipe-system\Check-Translations.ps1' -Block job,validationMessages
+```
+
+The whole-file counts are volatile audit data (2026-10-01: about 1,570 keys missing from
+`ar.ts`, 380 from `en.ts`, 5 case-only differences). Fix the blocks you touch; do not bulk-edit
+other features. The misspelled `mangeDetails` namespace is legacy: keep it for existing keys,
+and put new shared customer labels there only until a renamed block exists.
+
+**Check:** key added to `en.ts` **and** `ar.ts` · `Check-Translations.ps1 -Block <touched blocks>` reports nothing · placed in the matching feature
 block · reuses `general.*`/`mangeDetails.*`/`validationMessages.*` where one
 exists · no literal English in a template · parameters use `{{name}}` and an
 object argument.
 
----
+**No built keys; one namespace per feature (G8, G11, 2026-10-01).** A translation key is
+written in full in the template or the spec list, never concatenated from a control or enum
+name, so that the parity check can find it.
 
+A screen reads its own namespace plus the neutral shared ones (`general.*`, `mangeDetails.*`).
+It never reads another feature's namespace, as Company does with `individualForm.enums.*`. A
+key that two features need moves to a neutral namespace; partner enums go to
+`partnerForm.enums.*`, created when the first screen moves.
+
+---

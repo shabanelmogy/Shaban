@@ -10,17 +10,22 @@ right edges with 16px separation below, matching the component host margin. A
 feature must not compensate by re-padding the title or the panel; where the
 title needs a compensating offset, match the responsive panel padding instead.
 
+For an explicitly approved report title/filter width match, use the shared
+report-panel modifier defined in [block 20](20-report-page.md#title-and-filter-card-width).
+That scoped report choice overrides the default inline title inset; features
+do not implement the exception in local styles.
+
 Import `PrimaryActionButtonComponent` in the standalone feature and use the
 shared primary action from block 24. The feature supplies translated content
 and behavior; it does not recreate primary-button markup or styling.
 
-Snippets in the main-page blocks use the neutral `feature-*` prefix. Replace
-`feature` with the owning feature name (`fleet-*`, `warehouse-*`, and so on);
-never copy another feature's prefix.
+The title sits in the shared list shell (block 1); a feature adds no page, panel or header
+class of its own:
 
 ```html
-<section class="feature-page">
-  <div class="feature-panel">
+<section class="sigma-list-page">
+  <div class="sigma-list-panel">
+    <header class="sigma-list-header">
     <app-feature-title
       [title]="'companyPartners.title' | translate"
       [subtitle]="'companyPartners.manage' | translate"
@@ -31,6 +36,7 @@ never copy another feature's prefix.
         (pressed)="openCreate()"
       />
     </app-feature-title>
+    </header>
 ```
 
 The solid title-icon tile is owned by `app-feature-title`. Its glyph must be

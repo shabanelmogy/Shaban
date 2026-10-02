@@ -76,15 +76,18 @@ document the compatibility window and explicitly ignore it in the write map.
 Preserve the established formula unless a separate business decision changes
 discount, tax, rounding, selection, or rate rules.
 
-For the current `Agreement` aggregate, the temporary tax decision is explicit:
-`subtotal` is the sum of active booking and additional charges, `taxableAmount`
-is `max(subtotal - Discount, 0)`, and `TotalCharges` is
-`taxableAmount + (taxableAmount * effectiveTaxPercent / 100)`. Until the common
-settings value is wired into the aggregate workflow, a missing tax percentage
-uses `Agreement.DefaultTaxPercent` (`5%`). The domain validates tax percentages
-between `0` and `100` and rejects negative discounts. When the settings source
-is introduced, the service should pass that value into the same domain boundary;
-the formula and client-owned-total rule must remain unchanged.
+A tax inside a domain formula takes its rate from `ITaxPolicyService` (block 5 *Tax in any
+service*, block 15 rule 8), snapshots it on the document, and never falls back to a literal
+rate constant.
+
+### One status flag per entity (G1, 2026-10-01)
+
+An entity has one active/inactive flag, and it is the one its consumers read. Partners use
+`Partner.IsInactive`: agreements, bookings and select lists block an inactive customer through
+it (`RentalAgreementService`, `LeaseAgreementService`, `BookingService`). Before a screen edits
+or filters a status column, search its readers. A duplicate legacy column, such as
+`Company.InActive`, is reported for removal with a migration that copies its data. It is never
+edited or filtered (backlog 29).
 
 ---
 

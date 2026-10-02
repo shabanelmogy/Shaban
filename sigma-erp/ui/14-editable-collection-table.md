@@ -11,6 +11,12 @@ cells/actions and retains all domain behavior. CompanyPartner uses the same
 component for contact persons, credit cards, documents, and the driver summary;
 do not copy their former `company-editable-table` markup.
 
+Shared partner contracts use `DocumentRow`/`CardRow` and factories/mappers from
+`shared/utils/partner-editor-forms.ts`; Company and its Driver editors adopt them.
+The containing form owns the arrays. Presentation components take those arrays,
+typed seeds and unique control ID prefixes rather than inventing a second form graph
+or copying date/identity/validation rules. See block 18 for nested upload ownership.
+
 Import both standalone declarations in the direct consumer:
 
 ```ts
@@ -40,6 +46,17 @@ The column `header` and every text input below are translation keys. Set
 `numeric: true` for a compact numeric column and `required: true` when the
 projected control is required. The shared component translates the keys and
 supplies the accessible table and button labels.
+
+Use column `width` for a fixed CSS width (Individual Document Type uses `240px`).
+The shared table switches to fixed layout with a matching `colgroup` only when
+at least one column declares `width`. Other columns remain flexible; declared
+`minWidth` and numeric/action widths provide the existing sizing hints. Long
+dropdown labels stay inside their column. Keep wide-table overflow on the shared
+frame; do not add feature-specific cell/dropdown width selectors.
+
+Every dropdown column declares `width` so selected labels cannot resize the
+closed control or its siblings (block 16). Company Contact Designation uses
+200px and Card Type uses 180px; choose other widths according to field content.
 
 ```html
 <app-editable-collection-table
@@ -113,10 +130,12 @@ typed Edit/Delete behavior:
 | `tableMinWidth` | Optional CSS minimum width such as `900px`; preserve wide editable-row usability while the shared frame supplies horizontal scrolling |
 | `fillHeight` | Defaults false; set true only when the feature places the table in a bounded flex area; the shared host and scroll frame then participate in the available height instead of expanding the page |
 | `maxHeight` | Optional responsive upper bound for the shared scroll frame; pair with `fillHeight` when totals or other content must remain visible below the table |
-| `columns` | Required ordered header definitions; `numeric` applies the compact numeric-column class and `required` renders the required marker |
+| `stickyHeader` | Defaults false; makes the frame the single vertical scroll owner with a sticky header row. Use with `fillHeight` in a bounded flex parent, or with `maxHeight` (2026-10-01) |
+| `columns` | Required ordered header definitions; optional `width` fixes a column through the shared colgroup/layout; `minWidth` supplies a minimum-width hint; `numeric` applies the compact numeric-column class and `required` renders the required marker |
 | `emptyMessage` | Required translated-key empty-state message |
 | `emptyIcon` | Optional decorative Bootstrap icon for the empty state |
 | `editable` | Shows the Add action, action column, and Remove buttons when true |
+| `actionsVisibleInView` | Defaults false; retains the projected action cell/header in View when it also contains row data. The feature hides mutations and keeps data controls read-only; the default Remove button remains editable-only. |
 | `addLabel` | Translated-key label for the shared primary Add action |
 | `addDisabled` | Disables Add while a prerequisite such as lookup data is unavailable |
 | `validationMessage` | Optional translated-key collection-level validation alert rendered in the shared toolbar; the feature owns the condition/key (for example duplicate logical rows) |
@@ -148,7 +167,64 @@ The ownership boundary is strict:
 
 Keep the array typed and feature-owned. Create or attach it in the feature form;
 the shared component must never create controls or reconcile the aggregate.
-Handle removal as a request and confirm before mutating:
+
+When a row checkbox belongs beside its actions, use `appEditableCollectionActions`
+and the shared `app-editable-collection-table__row-actions` group. The shared table
+owns checkbox size/accent there as well as in ordinary cells. Preserve the field
+in View with `actionsVisibleInView`, while the feature hides the delete button;
+give the checkbox its translated accessible name and title.
+
+For a wider projected action group, set `--sigma-editable-actions-width` and
+`--sigma-editable-row-actions-gap` on the shared table host. Shared defaults are
+74px and 5px; the action colgroup/header/cell share the width. Keep these choices local to the
+consumer through the variables; do not override shared cell selectors.
+
+When the checkbox needs a visible caption in an action cell, wrap its input and
+translated text in `label.app-editable-collection-table__row-check`. Shared styling
+owns its control-line alignment, gap and colour; the wrapping label supplies the
+accessible name and a clickable caption. Allocate action-column width for the
+caption and buttons.
+
+When a flag and its mutation button need separate column headings, keep the flag
+in an ordinary projected data cell with its own translated header/accessibility
+label; reserve the shared Actions column for buttons. Individual Documents uses
+Is International (136px) immediately after Attachment (280px), then the default
+74px Actions column for Remove. The flag remains visible in View without an empty
+Actions column; `actionsVisibleInView` is unnecessary in this arrangement.
+
+### Row mechanics — `EditableRows`
+
+`shared/utils/editable-rows.ts` (2026-10-01) owns the repeated mechanics of a child
+`FormArray`. The feature keeps its typed array, row factory, cells and payload mapping:
+
+```ts
+readonly parts = new EditableRows<FormGroup<PartControls>, PartDTO>({
+  array: this.form.controls.parts,
+  create: (seed) => this.createPartRow(seed),
+  parent: this.form,
+  confirmation: this.confirmationDialog,
+  destroyRef: this.destroyRef,
+  removeTitle: 'services.removeChildTitle',
+  removeMessage: 'services.removePartMessage',
+  focusId: (index) => `service-part-${index}`,
+});
+
+addPart(): void { this.parts.add(); }                         // dirty + focus on the new row
+confirmRemovePart(index: number): void { this.parts.requestRemove(index); }
+private applyDetail(dto: ServiceDTO): void { this.parts.replace(dto.parts); }   // not dirty
+```
+
+- **Confirmation rule.** Adding or removing a row marks the editor dirty.
+  - A new row the user has not touched (no saved id, pristine) is removed directly.
+  - A saved or edited row is confirmed first (block 9).
+  - The helper re-resolves the row's index after the confirmation, so a collection that changed meanwhile removes the right row.
+- **Focus.** `add` reveals/focuses the new row's first control when `focusId` is given (the control's `id`), through shared `focusField` with `openOverlay: false`. It waits for rendering, scrolls actual content regions only and prevents browser focus scrolling; Add does not automatically open the picker. See block 27.
+- **Per-row errors.** Each validated cell gets `app-field-error` (block 19). The first invalid control is focused on Save.
+- **Duplicates.** `duplicateIndexes(row => key)` returns the rows that repeat a business key. Show the table's `validationMessage` and block Save while it is not empty.
+- **Maximum rows.** When the business caps the rows, bind `addDisabled` to the cap, and the backend enforces the same cap.
+- **Update payload (D4-3, full snapshot).** Send every row. A saved row carries `savedId(row)`; a new row has no id. A removed row is simply absent, and an empty list clears the collection only when the business allows zero rows.
+
+Manual removal, when a feature cannot use the helper yet, follows the same rule:
 
 ```ts
 confirmRemovePart(index: number): void {
@@ -173,14 +249,28 @@ confirmRemovePart(index: number): void {
 }
 ```
 
+**Derived cells.** A cell calculated from other inputs (line total, line tax, net, balance) is
+read-only: it shows a preview rounded with `roundMoney` where the backend rounds, it is never
+part of the row payload, and the backend value replaces the preview after save (AGENTS
+"Backend, mapping, and calculation rules"; block 19 *Money and tax in forms*). Show it as text
+or a `readonly` input, not as an editable control.
+
+**One height, top-aligned cells (owner request 2026-10-01).** Inputs, dropdowns and calendars in a row are exactly
+`--sigma-editor-control-height` (34px, the same as the editor fields and filters), and cells align to
+the top, so an error under one cell never moves the controls of the others. A checkbox cell sits on
+the control line, using the same 15px box and `accent-color: var(--sigma-primary)` as
+editor checkbox fields (block 1). The shared table owns this; features add no row CSS.
+
 **Check:** shared component and row directive are both imported · the actions
 directive is imported when custom actions are projected · column order matches
 projected cell order · row template emits cells, not a row · translation
 keys exist · collection-level blockers use the shared `validationMessage` alert · `editable` is false in View mode · Add prerequisites use
-`addDisabled` · feature confirms Remove (block 11) before mutation · feature
+`addDisabled` · rows added/removed through `EditableRows` (untouched new rows removed directly,
+others confirmed, block 9) · full-snapshot update payload · feature
 marks the parent dirty and maps the collection into the write payload ·
-`fillHeight` is used only inside a bounded flex parent · `maxHeight` and
-`overflow-y: auto` keep row scrolling inside the table · totals/summaries remain
+`fillHeight` is used only inside a bounded flex parent · `maxHeight` or `stickyHeader` keep row
+scrolling inside the table, with no feature rule on the frame · derived cells read-only and
+not in the payload · totals/summaries remain
 outside the table frame and do not disappear when the frame scrolls.
 
 ### Financial collection editor — canonical routed variant
@@ -209,156 +299,85 @@ editing in its action/metadata area rather than in an editable field. Examples
 include fiscal-year start, posting context or an immutable status. A server-owned
 value must not be presented with a fake Save/Change action.
 
-#### Grow until the footer, then scroll rows internally
+#### Bounded height — rows scroll inside the table
 
-The desktop card grows naturally while the row count is small. It must not force
-an empty full-height workspace when only a few rows exist. As rows are added, the
-workspace may grow until the available authenticated-shell height is reached.
-After that point, the browser page must not keep growing for those rows: the
-editable table frame becomes the vertical scroll owner.
+The page never scrolls (block 1). The routed financial editor uses the container-fill host
+(`sigma-route-host`) and a flex column in which every shrinking ancestor has `min-height: 0`.
+The editable table is the single vertical scroll owner, through its own inputs:
 
-Keep header, tabs, state banner, compact filters, financial summary and primary
-Save action outside the row-scroll frame. Keep table headers sticky inside that
-frame. The required flex-shrink chain uses `min-height: 0` on every shrinking
-ancestor between the route/card and the table frame; missing one link usually
-causes the page itself to grow despite `overflow: auto` lower in the DOM.
-
-Prefer inheriting the bounded authenticated shell established in block 1. When a
-route truly needs a local grow-until-cap boundary, apply one route-level
-`max-height` using the existing Metronic shell variables; do not repeat viewport
-calculations in tab components or child forms:
-
-```scss
-.financial-editor-page {
-  box-sizing: border-box;
-  display: flex;
-  min-width: 0;
-  min-height: 0;
-  max-height: calc(
-    100dvh - var(--bs-app-header-height, 74px) -
-      var(--bs-app-toolbar-height, 55px) -
-      var(--bs-app-footer-height, 60px) - 60px
-  );
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.financial-editor-card,
-.financial-editor-content,
-.financial-editor-tab,
-.financial-editor-tab > form {
-  display: flex;
-  min-width: 0;
-  min-height: 0;
-  flex: 1 1 auto;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.financial-editor-content app-editable-collection-table,
-.financial-editor-content .app-editable-collection-table {
-  display: flex;
-  min-width: 0;
-  min-height: 0;
-  flex: 1 1 auto;
-  flex-direction: column;
-}
-
-.financial-editor-content .app-editable-collection-table__frame {
-  min-height: 0;
-  flex: 1 1 auto;
-  overflow: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable both-edges;
-}
-
-.financial-editor-content .app-editable-collection-table__frame thead th {
-  position: sticky;
-  z-index: 1;
-  top: 0;
-}
+```html
+<app-editable-collection-table
+  title="openingBalances.accounts"
+  [headingVisible]="false"
+  [columns]="columns"
+  [editable]="isEditable()"
+  [fillHeight]="true"
+  [stickyHeader]="true"
+  tableMinWidth="900px"
+  …
+>
 ```
 
-The final `60px` above is breathing room for the current shell, not another
-footer. Use the actual existing layout variables and the closest approved screen
-when the shell changes. The `55px` in `var(--bs-app-toolbar-height, 55px)` is a
-CSS fallback only — the shell sets that variable on `:root` (`31px` on desktop,
-kept in step with the toolbar band in block 1), so a bounded editor picks up the
-current band without being edited. Never treat the fallback as a measurement of
-the toolbar. Never create page scroll plus table scroll for the same
-row set. On narrow/mobile layouts, rearrange the editor (stack panes, reduce
-filter columns) but keep it bounded: the page never scrolls (block 1, *No page
-scroll*), and the row frame stays the single vertical scroll owner.
+`fillHeight` joins the host to the bounded flex chain, and `stickyHeader` makes the frame the
+scroll owner with a sticky header row. The feature does **not** style
+`.app-editable-collection-table__frame`, its `thead` or the host from feature SCSS. The rule is
+the same as for `app-data-table` (block 6): inputs and documented variables only. Header, tabs,
+state banner, filters, the financial summary and the Save action stay outside the frame.
 
-#### Compact filters inside financial editors
+> **Legacy — do not copy.** Opening Balances still sizes its route with a
+> `max-height: calc(100dvh - …)` "grow until the footer" cap and reaches into the table frame
+> and `thead` from its SCSS. Both are removed in its review: the container-fill host replaces
+> the calc (block 1), and `[fillHeight]` + `[stickyHeader]` replace the frame rules.
 
-The filter strip in a routed financial editor is the block 4 compact filter
-strip — same surface, same uniform field grid, same semantics. Block 4 is the
-single authority for that pattern; do not keep a second copy of the spec here.
+On narrow layouts, stack the panes and reduce filter columns, but keep the chain bounded. The
+row frame stays the only vertical scroll owner.
 
-Two points are specific to this bounded shape:
+#### Filters inside financial editors
 
-- body-appended dropdown and calendar overlays must remain visible despite the
-  bounded editor overflow, and still follow blocks 16 and 17;
-- on narrow screens the Search/Reset actions may use an equal-width two-column
-  row when both are present.
-
-The strip stays outside the row-scroll frame and must not become another
-vertical scroll owner.
+The filter strip is the shared filter panel (`form[appFilterPanel]`, block 4), outside the row
+frame. Body-appended dropdown and calendar overlays stay visible despite the bounded overflow
+(blocks 16 and 17).
 
 #### Financial summary/action strip
 
-Do not render financial totals as one unstructured sentence. Place a compact
-summary strip immediately below the scrollable table and keep it outside the
-table frame so totals and Save remain visible while rows scroll. Debit and Credit
-are the base accounting totals for this shape. Add Balance or Net only when that
-value is deliberately owned by the backend/workflow and useful on the current
-tab; do not invent a third card merely to fill the strip.
+Totals are one compact strip directly below the table, outside the frame, so totals and Save
+stay visible while rows scroll. The strip uses the **shared accounting summary classes** from
+`src/styles.scss`, the same ones reports use (block 20). A feature writes no summary CSS:
 
 ```html
-<div class="financial-summary-bar">
-  <div class="financial-summary-items">
-    <div class="financial-summary-item financial-summary-item--debit">
-      <span class="financial-summary-label">{{ '...' | translate }}</span>
-      <strong class="financial-summary-value">{{ totalDebit() | number:digitsInfo() }}</strong>
+<div class="sigma-report-summary-bar" aria-live="polite">
+  <div class="sigma-report-totals">
+    <div class="sigma-report-total sigma-report-total--debit">
+      <span class="sigma-report-total__label">{{ 'openingBalances.totalDebit' | translate }}</span>
+      <strong class="sigma-report-total__value">{{ totalDebit() | money }}</strong>
     </div>
-    <div class="financial-summary-item financial-summary-item--credit">
-      <span class="financial-summary-label">{{ '...' | translate }}</span>
-      <strong class="financial-summary-value">{{ totalCredit() | number:digitsInfo() }}</strong>
+    <div class="sigma-report-total sigma-report-total--credit">
+      <span class="sigma-report-total__label">{{ 'openingBalances.totalCredit' | translate }}</span>
+      <strong class="sigma-report-total__value">{{ totalCredit() | money }}</strong>
     </div>
-    <!-- Optional: add --balance/--net only when the owning contract needs it. -->
+    <!-- --balance or --net only when the owning contract returns that value -->
   </div>
-  <app-primary-action-button ... />
+  <app-primary-action-button … />
 </div>
 ```
 
-Current Sigma financial-summary geometry is compact: `8-10px` strip padding,
-`8px` radius, normal border and soft surface. Individual totals use about `132px`
-minimum width, `6px 10px` padding and `7px` radius. Labels are muted and about
-`9px`; values are about `14px`, weight `800`, and use
-`font-variant-numeric: tabular-nums` so monetary columns do not visually jump.
+- Debit and Credit are the base totals. Add `--balance` or `--net` only when the backend or the
+  workflow owns that value and it is useful on the current tab.
+- The Debit/Credit accents (`--sigma-debit-*`, `--sigma-credit-*`) are presentation only, not
+  success or error states. Attach no success/error icon, copy or accessibility meaning to them.
+- Values use the `money` pipe (`shared/pipes/money.pipe.ts`): 2 decimals, Latin digits, the
+  backend's half-away-from-zero rounding, and tabular numerals from the shared class.
 
-Accounting accents are presentation only:
+**Financial collection check:** one `app-feature-title` · server-owned context is read-only
+header metadata · filters are the shared filter panel · `[fillHeight]` + `[stickyHeader]` and
+no feature rule on the table frame, `thead` or host · no page-height `calc(100dvh …)` · one row
+scroll owner · totals and Save outside the frame, in the shared `sigma-report-summary-bar` with
+the `money` pipe · Debit/Credit colours stay non-semantic · RTL logical properties,
+narrow-screen stacking and dark theme from the shared tokens.
 
-- Debit: green accent (`#2f9d72` border / `#237b59` light value /
-  `#7fd6b2` dark value);
-- Credit: warm accent (`#c46a52` border / `#9e503d` light value /
-  `#f0a28d` dark value);
-- Optional Balance/Net: Sigma primary family (`#176f9d` light / `#8fd7f5` dark).
+**One binding style per row (G9, 2026-10-01).** A row template binds the row once, with
+`<ng-container [formGroup]="row">` (or `[formGroupName]="i"` under `formArrayName`) around its
+cells, and uses `formControlName` in every cell. Mixing `[formGroup]` on one cell with
+`[formControl]` on the others is a finding.
 
-Debit green and Credit warm/red are **not** Success/Error semantic states. Do not
-attach success/error copy, icons or accessibility meaning to them based only on
-color. Totals use the same backend-driven monetary precision policy as row
-inputs; never introduce a separate frontend rounding rule.
-
-**Financial collection check:** one `app-feature-title` · server-owned context is
-read-only header metadata · Opening-Balances accounting filter surface retained
-without copying its semantic/accessibility gaps · labels correctly associated
-with controls · approved overlays remain unclipped · shared editable collection
-component retained · complete `min-height: 0` flex chain · one internal row
-scroll after the workspace cap · sticky table header · Debit/Credit plus only
-contract-owned optional Balance/Net · totals and Save outside the scroll frame ·
-tabular monetary values · backend monetary precision · Debit/Credit colors remain
-non-semantic · RTL logical properties, narrow-screen behavior and dark equivalents.
 ---
-

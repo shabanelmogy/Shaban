@@ -2,15 +2,33 @@
 
 > **Status: Canonical composite** — shared page/actions plus shared report filter/summary visual language; feature-owned contracts, data and calculations
 
-A report is **not** a list. It does not use the direct list `p-table` shape,
-has no row actions and has no server
-paging. The user picks filters, presses Search, and gets one document with
+A report is **not** a CRUD list. The canonical document shape has no row actions
+or server paging. The user picks filters, presses Search, and gets one document with
 sections and totals. Reference:
 `Customers/StatementOfAccount/components/list/`.
 
 Sibling reports that follow the same shape: `Customers/BalancesSummary`,
 `Customers/ReceivableAgeAnalysis`, `Suppliers/SupplierStatementOfAccount`,
 `Staff/StaffStatementOfAccount`.
+
+An existing report API can paginate its response; inspect it before adopting the
+unpaged document presentation. That transport contract is not changed by importing
+a shared grid. Preserve/freeze the existing request, counts and totals scope, then
+choose server paging or an explicitly complete collection for local presentation
+paging. Do not introduce server paging into an already complete report merely to
+reuse a grid, or infer completeness from Result<T> rather than Results<T>.
+
+Every report table in new or reviewed report work uses typed `app-data-table`
+columns. Existing reports migrate when their report is in scope; this rule does
+not authorize a bulk rewrite of reports outside the current review. The shared
+grid does not change the report's semantics: for a proven complete response use
+`lazy=false`; for an existing paged response preserve `lazy=true`, server
+paging and authoritative counts. Keep the complete dataset proof where the
+report promises full output, backend-owned totals, section hierarchy, print
+flow and applied-filter scope.
+When a report needs a capability the shared grid does not yet provide, extend
+the shared component in that report's scoped implementation. Do not flatten a
+hierarchy or silently authorize a feature-owned table.
 
 ### Shared shell — mandatory replacement
 
@@ -50,9 +68,64 @@ must not be recreated feature-by-feature.
 
 ### Report filter + totals visual invariant
 
-Opening Balances is the visual reference for compact accounting filters and
-Debit/Credit/Balance summaries. Reports use the shared classes defined in
-`src/styles.scss`, not copied feature CSS:
+The shared bounded variant uses `host: { class: 'sigma-route-host sigma-print-flow' }`,
+`section[appReportPage].sigma-report-page--fill.sigma-print-flow`, and
+`.sigma-report-panel.sigma-print-flow`. These opt-in global classes reuse the
+application's existing page/panel values; features do not copy page/panel SCSS or
+subtract shell heights. Other report consumers retain their existing layout until reviewed.
+
+For a sectioned read-only document, every section table is a typed
+`app-data-table`. For a proven complete response in full-document flow and
+print, one outer `.sigma-report-table-frame.sigma-print-flow` may own the report
+flow; bind each grid `scrollable=false` so the complete arrays remain in that
+outer document. An existing paged response keeps `lazy=true`, server paging and
+its authoritative counts; importing the shared grid does not turn it into a
+complete flow document.
+Keep title, filters, inline warnings/contact metadata and existing backend totals
+outside the frame. In a bounded screen layout with independently visible
+sections, do not force one global row scroller: each section's layout boundary
+uses `overflow: hidden` and passes its remaining size to its shared grid
+(`fill=true`, `scrollable=true`), whose row wrapper owns that section's vertical
+and horizontal scrolling. This applies to complete all-row sections with
+`paginator=false` as well as complete sections using a local paginator; a frozen
+paged transport keeps its server paginator/count contract. Summary and detail
+panes may therefore scroll independently.
+
+The former native report classes `.sigma-report-table`, `.sigma-report-number`
+and `.sigma-report-empty` remain compatibility styles for out-of-scope existing
+consumers until each report is reviewed; new or reviewed work uses the shared
+grid and its documented inputs/tokens. The shared grid and global styles own
+compact rows, sticky themed headers, logical alignment, row surfaces/hover and
+white print surfaces. Trial Balance remains the reference for panel/title
+spacing, header density and accounting values; do not add a feature palette or
+override the shared grid's row treatment to imitate a legacy body surface. The
+shared report panel retains that reference's insets, radius and subtle shadow.
+Feature SCSS owns section placement only; do not add feature-owned table markup
+or PrimeNG wrapper scroll rules. Statement of Account now adopts this shared
+variant; its earlier `statement-*` filter/palette/height styles remain legacy
+examples only.
+
+#### Title and filter card width
+
+**Explicit owner choice, 2026-10-02:** Customer Statement of Account and
+Receivable Age Analysis keep the title card the same width as the filter card,
+with both inline edges aligned. Their existing `.sigma-report-panel` also uses
+`sigma-report-panel--aligned-title`. The shared rule in `src/styles.scss` sets
+only its direct `app-feature-title` child's `margin-inline: 0`, matching the
+report filter strip's zero inline margins. Both cards stretch to the same panel
+content width in LTR and RTL, including the responsive panel-padding change.
+
+Keep the existing title block spacing, panel padding, colors and scroll owners.
+Do not add a fixed width, a feature-local margin override or compensating filter
+padding. This modifier is a reusable opt-in capability; the owner decision is
+scoped to these two reports, and other consumers retain their existing title
+presentation until explicitly approved. This supersedes the earlier Trial
+Balance title-inline comparison for these two consumers only. Actual visual
+acceptance remains owner verification when the change is reviewed from source.
+
+Every report filter strip and accounting summary uses the shared global classes in
+`src/styles.scss` (reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). A report
+writes no filter or totals CSS of its own:
 
 ```html
 <form class="sigma-filter-form sigma-report-filter-panel no-print" ...>
@@ -70,18 +143,25 @@ Debit/Credit/Balance summaries. Reports use the shared classes defined in
 </div>
 ```
 
-The filter strip consumes the complete accounting-filter visual contract from
-block 14 rather than restating or forking it here: compact wrapping layout,
-logical inline-start primary accent, themed soft surface/gradient, shared control
-height/radius/focus treatment, dark/RTL equivalents and the same narrow-screen
-stacking rules. Report semantics still follow block 4: labels remain associated
-with controls and Search submits the real filter form. Search is the primary
-action; Refresh may use a quieter primary-tinted treatment; Reset is neutral;
-Excel/export uses the approved export treatment. The group must not create a
-second vertical scroll owner.
+The strip owns its layout, the 34px control height (`--sigma-filter-control-height`), focus,
+dark theme, RTL and narrow-screen stacking. The actions use the shared variants
+`sigma-report-action--search` (primary), `--refresh` (quiet primary), `--reset` (neutral) and
+`--export` (neutral secondary). Export uses global strong-border, text and soft-surface
+tokens; hover/focus uses the primary border, balance text and a 7% primary/surface mix.
+Both themes resolve these same rules through their tokens, without a later dark base
+overriding interactive states. Its icon inherits the label colour; Excel does not require
+a green button. This shared palette follows the owner's 2026-10-02 correction and applies
+to both ordinary and specialized exports. Features never add an export palette of their own.
+Search may use `app-primary-action-button type="submit"`; its shared
+report-strip context uses those same compact dimensions. Direct secondary buttons
+use `btn btn-secondary` with the corresponding report variant, as in Trial Balance.
+`sigma-report-action-group` supplies the same wrapping and narrow-screen two-column
+layout as the existing `app-buttons` group. Report semantics still follow block 4: labels are associated with their controls,
+Search submits the real filter form, and the strip is never a second vertical scroll owner.
+A list screen uses the filter panel of block 4 instead; the two shared strips are not mixed.
 
-Accounting report totals use the same compact summary bar/card language as
-Opening Balances: shared surface/border/radius, tabular numerals, and semantic
+Accounting report totals use the shared summary bar above (also used by financial editors,
+block 14): shared surface/border/radius, tabular numerals, and semantic
 Debit/Credit/Balance-or-Net accents. The **numbers still come from the backend
 response**; shared styling never authorizes client-side recomputation of
 accounting totals. Keep the summary as small as the report needs: Trial Balance
@@ -94,26 +174,92 @@ shape, document the reason in its review evidence instead of silently forking th
 filter/summary pattern.
 
 For an explicitly approved dense accounting report that keeps its controls
-visible, the routed report may be bounded to the available shell height and use
-one internal **table-frame** vertical scroll owner. Keep the feature title,
-filter strip, lookup/error messages and accounting summary outside that scrolling
-frame. The table frame owns vertical row scrolling and any required horizontal
-overflow, and the table header remains sticky at the top of that frame. Do not
-put the vertical scroll on the surrounding card/results container and do not
-introduce a nested TreeTable vertical scrollbar. Printing releases those bounds
+visible, the routed report may be bounded to the available shell height. Each
+visible section chooses its own layout boundary and shared-grid row viewport;
+keep the feature title, filter strip, lookup/error messages and accounting
+summary outside those scrolling regions. The active grid owns vertical rows and
+any required horizontal overflow, and its header remains sticky inside that
+grid. Do not put vertical scroll on the surrounding card/results container or
+introduce a nested hierarchy scrollbar. Printing releases each section's bounds
 so the full report can flow across pages.
+
+### Tabbed report sections
+
+**Explicit presentation choice, 2026-10-02:** Follow Up uses two shared workspace
+tabs, Details and Summary, after the owner requests one tab per section. Details
+is initial; Summary uses a responsive maximum inline width of 960px at logical
+start within the bounded result area. This supersedes the provisional 520px
+example for Follow Up only; it is not a shared tab default. Both typed grids
+retain complete arrays with paginator=false, the active grid owns row scrolling,
+and the public shared-grid minimum width allows the expanded Summary metrics to
+overflow horizontally on narrow windows without page scroll. Existing shared
+`sigma-report-summary-bar`, `sigma-report-totals` and `sigma-report-total`
+classes present the four server-owned additive operational KPI cards. Comparison
+bars are custom cells in the shared grid renderer with presentation-only max
+scaling, and the user cell's shared secondary action drills into the exact raw
+username filter value; null/blank groups remain label-only. Ordinary Excel follows
+the active complete section and its current columns; full print includes the KPI
+cards and both Summary/Details arrays regardless of selection, then restores
+selection and form state. Keep busy, printing and filter-invalidation gates.
+Metric formulas, scopes and reference-date semantics remain in the frozen Follow
+Up contract/review and are not universal report defaults. No new shared
+disclosure capability or feature-owned tab/card palette is required.
+
+**Explicit presentation choice, 2026-10-02:** the owner requests every Customer
+Statement section table to match BalancesSummary's shared grid. That report
+uses typed `app-data-table` columns with lazy=false and owner-approved local
+pagination (block 6), retaining full response arrays and backend totals. To keep
+the paginator at the card bottom, it uses fill=true and scrollable=!printing():
+the external report frame is a flex layout boundary with overflow hidden and the
+active shared grid row wrapper owns both scroll axes. Pass shrinking flex height
+through the visible panel. The tab label identifies the section on screen; the
+owner removes its duplicate table heading, which remains visible only in print.
+Panel aria-labelledby still points to the tab. Every section
+keeps independent controlled paging; print preparation turns pagination and
+scrolling off and restores them after print/cancel/failure (block 21). Print
+panel layout returns to block flow. Every report section follows this shared-grid
+baseline when the report is reviewed. Existing out-of-scope consumers migrate at
+their own review; no feature table palette is added.
+
+When the owner approves tabs for an existing sectioned report, reuse
+`app-editor-tabs` with `appearance="workspace"` (block 13), typed keys, existing
+translation labels and optional response-row counts. Keep this `no-print`
+navigation outside the bounded results area, below the filters and
+backend totals. Each feature panel follows the shared ID/aria-labelledby
+contract and remains keyboard focusable. The shared component owns tab styling
+and keyboard navigation; feature CSS owns only section layout and visibility.
+
+Preserve the report's mode-specific section conditions and existing radio/select
+mode controls. Switching sections changes presentation without another API call,
+server paging or changed accounting. Ordinary Excel follows the selected section's
+complete array and current columns (block 8); print still covers every applicable
+section (block 21). Empty
+sections remain inspectable without a fabricated response. Resetting filters
+selects the primary section; a Refresh of the same filters retains selection.
+Reset the actual row viewport when selecting a section without moving keyboard
+focus off the selected tab. Flow reports reset the outer frame; filling
+shared grids use `DataTableComponent.scrollToStart()` (block 6), never a feature
+query of PrimeNG internals.
+
+Keep all sections applicable to the chosen report mode in the DOM and hide
+inactive panels with screen-media CSS only. Do not use `@switch`, conditional
+rendering or `[hidden]` for the active-section selection: full-report printing
+requires all applicable panels, independently of the selected tab (block 21).
+Existing mode conditions still govern which sections belong to the report.
 
 ### Dense accounting tree/report table visual invariant
 
-`Reports/TrailBalance/components/list/` is the canonical visual reference for a
-dense accounting report that renders hierarchical rows (`p-treeTable`) or for a
-flat accounting report whose table serves the same read-only role. Reports with
-this same UI role must keep the same compact visual grammar rather than inventing
-a feature-specific table treatment:
+`Accounts/TrailBalance/components/list/` is the canonical visual reference for a
+dense accounting report that renders hierarchical rows (its existing source uses
+`p-treeTable`) or for a flat accounting report whose table serves the same
+read-only role. New and reviewed reports with this UI role still use
+`app-data-table`; add any missing hierarchy capability to that shared component
+within the scoped report task. Preserve the same compact visual grammar rather
+than inventing a feature-specific table treatment:
 
-- keep the table inside one bordered report table frame; the **table frame** is
-  the row-scroll owner, never the surrounding report card;
-- keep the table header sticky inside that frame and visually distinct with a
+- keep each bounded section inside its layout boundary; the shared grid's row
+  viewport is that section's scroll owner, never the surrounding report card;
+- keep the table header sticky inside that grid and visually distinct with a
   soft themed surface, strong text, subtle vertical separators and a slightly
   stronger bottom rule; do not use an oversized or card-like header;
 - target a compact header around `34px` high and compact data rows around `30px`
@@ -130,23 +276,42 @@ a feature-specific table treatment:
   deeper levels rely on indentation and the tree control, not progressively
   louder backgrounds;
 - preserve horizontal overflow when required by financial columns, but avoid a
-  second nested vertical scrollbar inside the TreeTable itself;
+  second nested vertical scrollbar inside the shared grid's hierarchy viewport;
 - sticky-header, row-density and hierarchy styling must use logical properties
   (`inline-start`/`inline-end`) so Arabic RTL and English LTR remain equivalent;
 - print mode removes height/overflow bounds and lets the complete table flow.
 
 Use these rules for Trial Balance-like accounting reports and for any other
-report with the same dense read-only tree/table role. A different table style is
-valid only when the interaction model is materially different (for example an
-editable collection, paged CRUD grid, or KPI dashboard), and that difference
-must be recorded in review evidence.
+report with the same dense read-only tree/table role. The interaction model may
+change shared-grid inputs or require a shared capability, but it does not permit
+a feature-owned table or flattening the hierarchy; record the required shared
+extension in review evidence.
 
-`Reports/TrailBalance/components/list/` is the current report consumer and
-Opening Balances remains the approved visual reference. A report review fails
+`Accounts/TrailBalance/components/list/` is the reference consumer. A report review fails
 final reconciliation if it reintroduces feature-local filter-strip or accounting
 total-card styling when these shared classes fit the same UI role.
 
-### Contract
+### Required report review evidence
+
+Record these rows in the existing feature review, with actual frontend/backend
+file symbols, the confirmed contract and a match/finding/Uncertain result. Phase 2
+produces them and Phase 6 compares them against final source; imports/class names
+and a previous review's "Matched" claim do not supply the evidence (Master 5).
+
+| Concern | Required source comparison |
+|---|---|
+| Dataset and totals scope | Actual request page/size and backend clamp/Skip/Take (or absence), response rows/count/page metadata and scope of each total. For local paging prove the collection complete; for server paging use actual counts. Trace print/Excel to all matching rows with the same applied filter, including failure of any later page (6/8/21, BE 17). |
+| Conditional filter controls | Trace every formControlName, including @if/tab/expanded filters, to its actual FormGroup ancestor and typed control. Do not close the form before projected conditional controls without explicitly binding that same group. Keep one Search submit contract. |
+| Applied filter lifetime | Freeze valid filters on Search. Disable/enable the reactive form through its API around requests, with emitEvent=false; template disabled bindings alone are not the reactive busy contract. On user filter changes invalidate rows/totals and disable print/Excel until the next successful Search, unless an explicit applied-filter display identifies retained results. Reset not-run/error/paging state and prevent late responses restoring invalidated output (28). |
+| Conditional business filters | Record toggle-off/default behavior, types and validation. Custom aging boundaries are positive increasing integers checked at both boundaries (BE 17); their effective applied values label grid, summary, print and Excel. Do not label custom values with fixed default ranges or send hidden custom values as effective defaults. The feature owns its exact boundaries/formula. |
+| Dates and language | Confirm appDatePicker plus the required single-date dateInputMask/placeholder recipe (17), valid control state and shared serialization before Search. Resolve dropdown enum labels, display statuses and export headers in the active language rather than storing translated labels only at initialization (16/23). |
+| Busy, failure and empty states | Trace declared and transport failures for report and lookups, one feedback owner and the matching skip header for inline errors (22), visible recovery, and distinct not-run/empty/error output. Mark narrow-layout and print/runtime acceptance pending unless actually authorized and performed (29). |
+
+These are focused read-path checks, not permission to run builds/tests/browser/DB
+commands or to modify unrelated consumers. A known mismatch remains a finding;
+updating this book does not repair the application.
+
+### Unpaged document contract example
 
 One typed filter, one typed response holding every section:
 
@@ -176,8 +341,9 @@ export interface CustomerStatement {
 ```
 
 **All totals come from the response**, never summed in the template. A report
-service is thin — one `GET`, same `Filters[key]` convention, `Result<T>` not
-`Results<T>` because there is no paging:
+service is thin — one `GET`, same `Filters[key]` convention. This unpaged example
+uses `Result<T>`; inspect existing endpoints rather than treating that type as proof
+that their rows are complete:
 
 ```ts
 @Injectable({ providedIn: 'root' })
@@ -186,13 +352,10 @@ export class CustomerStatementOfAccountService {
   private readonly endpoint = `${environment.baseUrl}Customer/Statement`;
 
   getStatement(filter: CustomerStatementFilter): Observable<Result<CustomerStatement>> {
-    const params = new HttpParams()
-      .set('Filters[customerId]', String(filter.customerId))
-      .set('Filters[fromDate]', filter.fromDate)
-      .set('Filters[toDate]', filter.toDate)
-      .set('Filters[reportType]', filter.reportType)
-      .set('Filters[includeInactive]', String(filter.includeInactive));
-    return this.http.get<Result<CustomerStatement>>(this.endpoint, { params });
+    return this.http.get<Result<CustomerStatement>>(this.endpoint, {
+      params: toFilterParams(filter),
+      headers: { 'X-Skip-Error-Interceptor': 'true' }, // inline report error owner (block 22)
+    });
   }
 }
 ```
@@ -200,10 +363,10 @@ export class CustomerStatementOfAccountService {
 ### Derived operational summary reports
 
 A report that combines KPI-style summary sections with a detail table still
-uses this report pattern. It is not a paged list and must not be converted to
-`app-data-table`, `table-list`, or a client-side collection of placeholder
-totals. Use one typed response containing every ordered summary section and the
-detail rows. The template only formats values returned by the backend.
+uses this report pattern. It is not a paged list, and its detail table uses
+typed `app-data-table` columns with the complete response rows. Use one typed
+response containing every ordered summary section and the detail rows. The
+template only formats values returned by the backend.
 
 When the supplied evidence shows summary labels but not their calculations,
 freeze a named backend derivation before implementing the screen. Record every
@@ -219,8 +382,8 @@ Use the shared report shell and the current filter/action style:
 - for a single-day report, use one `p-calendar`, default it to today, require
   the value, and serialize it from local year/month/day parts;
 - place Print, Export and Refresh/Search in one `appReportActions` toolbar;
-- use a native semantic table for report rows and responsive horizontal
-  scrolling, not list paging or row actions;
+- use typed `app-data-table` columns for report rows and the shared responsive
+  scroll/print inputs, not list paging or row actions;
 - show loading, inline error, empty-summary, and empty-detail states; and
 - make solid action and title icons explicitly white in light and dark themes.
 
@@ -230,8 +393,11 @@ remain translated while calculation ownership stays on the backend.
 
 ### Filter bar
 
-Date range as one control, `no-print` on the whole form, every control disabled
-while the report runs:
+Date range as one control, `no-print` on the whole form, and the form disabled while the report
+runs. Disable it with `filterForm.disable({ emitEvent: false })` and re-enable it in `finalize`,
+not with `[disabled]` on a reactive control. The snippet shows the semantics of the Statement of
+Account; its `statement-*` presentation classes are legacy, and a reviewed report uses the shared
+strip above:
 
 ```html
 <form class="statement-filters no-print" [formGroup]="filterForm" (ngSubmit)="search()">
@@ -300,27 +466,20 @@ range spans more than one month:
 ></p-calendar>
 ```
 
-Default the range to month-to-date so the page is useful on arrival:
+Default the range to the **current month**, from the 1st to its last day, the same as lists
+(owner rule 2026-09-24, block 17): `dateRange: this.fb.control<Date[] | string | null>(currentMonthRange())`.
 
-```ts
-private defaultDateRange(): Date[] {
-  const toDate = new Date();
-  toDate.setHours(0, 0, 0, 0);
-  const fromDate = new Date(toDate.getFullYear(), toDate.getMonth(), 1);
-  return [fromDate, toDate];
-}
-```
+**Explicit owner exception, 2026-10-02:** Customer Statement starts and resets with
+null date range/customer, so the user can inspect its empty table layout. The
+existing selected-mode table headers and empty messages render before Search;
+response/contact/KPIs remain absent and print/export stay disabled. An empty
+ageing section must not manufacture zero balances. Search still requires valid
+dates and a customer. Keep this documented exception scoped to that report;
+other report defaults remain current month unless explicitly overridden.
 
-Serialize dates from local parts, never `toISOString()` (block 17):
-
-```ts
-private formatApiDate(value: Date): string {
-  const year = value.getFullYear();
-  const month = String(value.getMonth() + 1).padStart(2, '0');
-  const day = String(value.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-```
+Serialize with the shared helpers, never `toISOString()` and never a private copy (block 17):
+`const [fromDate, toDate] = parseDateRange(values.dateRange);` gives `yyyy-MM-dd` strings
+(null when invalid).
 
 ### Search: validate, then run
 
@@ -332,10 +491,9 @@ search(): void {
   if (this.loadingReport()) return;
 
   const values = this.filterForm.getRawValue();
-  const fromDate = values.dateRange?.[0] ?? null;
-  const toDate = values.dateRange?.[1] ?? null;
+  const [fromDate, toDate] = parseDateRange(values.dateRange);   // yyyy-MM-dd or null
 
-  if (!fromDate || !toDate || fromDate.getTime() > toDate.getTime()) {
+  if (!fromDate || !toDate || fromDate > toDate) {
     this.errorMessage.set(this.translate.instant('customerStatement.invalidDateRange'));
     return;
   }
@@ -346,8 +504,8 @@ search(): void {
 
   const filter: CustomerStatementFilter = {
     customerId: values.customerId,
-    fromDate: this.formatApiDate(fromDate),
-    toDate: this.formatApiDate(toDate),
+    fromDate,
+    toDate,
     reportType: values.reportType,
     includeInactive: values.includeInactive,
   };
@@ -406,52 +564,22 @@ readonly isOutstanding      = computed(() => this.selectedReportType() === 'outs
 
 ### Rows, numbers, empty state
 
-Amounts always `| number: '1.2-2'`. Blanks always `—`. Truncated text carries a
-`[title]`. Conditional columns appear in header, body **and** footer together:
-
-```html
-<td class="description-cell" [title]="line.description || ''">{{ line.description || '—' }}</td>
-<td>{{ line.debit | number: '1.2-2' }}</td>
-@if (isOutstanding()) {
-  <td>{{ line.dueAmount | number: '1.2-2' }}</td>
-}
-```
-
-The empty row distinguishes "no result" from "not run yet":
-
-```html
-} @empty {
-  <tr>
-    <td [attr.colspan]="isOutstanding() ? 11 : 10" class="statement-empty-row">
-      {{ (hasSearched() ? 'customerStatement.noData'
-                        : 'customerStatement.selectCustomerPrompt') | translate }}
-    </td>
-  </tr>
-}
-```
+Amounts always use `| money` (`shared/pipes/money.pipe.ts`: 2 decimals, Latin
+digits, the backend rounding, and the same text as a grid money column). Blanks
+always render as `—`. Truncated text carries a `[title]`. Define typed
+`app-data-table` columns so conditional fields remain aligned in the column
+definition, body and any shared summary presentation. The shared grid owns the
+loading and empty states; bind its empty visibility to the report's
+`hasSearched`/error state so "no result", "not run yet" and "error" remain
+distinct. Do not add a feature-owned `<table>` or a second row renderer.
 
 ### Totals footer
 
-A separate summary table reusing the same `<colgroup>` via
-`*ngTemplateOutlet`, so columns stay aligned with the scrolling body:
-
-```html
-<div class="statement-table-summary">
-  <table class="statement-table statement-ledger-table" [class.outstanding-table]="isOutstanding()">
-    <ng-container *ngTemplateOutlet="ledgerColumns"></ng-container>
-    <tfoot>
-      <tr>
-        <td colspan="7" class="summary-caption">{{ 'customerStatement.summary' | translate }}</td>
-        <td class="summary-value">
-          <span>{{ 'customerStatement.totalDebit' | translate }}</span>
-          <strong>{{ report()?.totalDebit || 0 | number: '1.2-2' }}</strong>
-        </td>
-        …
-      </tr>
-    </tfoot>
-  </table>
-</div>
-```
+Keep report totals in the response and the shared report summary bar, outside the
+grid rows. If a future section requires a grid-integrated total row, add that
+capability to the shared component within the scoped report task before using
+it; do not document or invent feature-owned summary inputs, add a feature-owned
+table footer, or recompute totals in the template.
 
 Signed balances render as magnitude plus a Dr/Cr marker, not a minus sign:
 
@@ -469,36 +597,51 @@ absoluteAmount(value: number | null | undefined): number {
 ### Export
 
 Build export objects when Export is clicked so translated property names use the
-current language (block 8):
+current language (block 8). For a tabbed report, dispatch from the active typed
+key to that section's complete array and existing grid columns. Use the shared
+formatter; never slice the local page or require ledger rows to export a populated
+secondary section. Customer Statement's source uses:
 
 ```ts
 private buildExportRows(): Array<Record<string, string | number>> {
-  return this.ledgerLines().map((line) => ({
-    [this.translate.instant('customerStatement.date')]: this.formatDisplayDate(line.date),
-    [this.translate.instant('customerStatement.debit')]: line.debit,
-    …
-  }));
+  const translate = (key: string) => this.translate.instant(key);
+  switch (this.activeTab()) {
+    case 'ledger':
+      return dataTableExportRows(this.ledgerLines(), this.ledgerColumns(), translate);
+    case 'deposits':
+      return dataTableExportRows(this.deposits(), this.depositColumns, translate);
+    case 'pending-pdcs':
+      return dataTableExportRows(this.pendingPDCs(), this.pendingPDCColumns, translate);
+    case 'advance-tax':
+      return dataTableExportRows(this.advanceTaxInvoices(), this.advanceTaxColumns(), translate);
+    case 'ageing':
+      return dataTableExportRows(this.ageingRows(), this.ageingColumns, translate);
+  }
 }
 
 exportToExcel(): void {
   const rows = this.buildExportRows();
   if (rows.length) {
-    onExportToExcel(signal(rows), 'CustomerStatementOfAccount');
+    onExportToExcel(signal(rows),
+      `CustomerStatementOfAccount_${this.selectedReportType()}_${this.activeTab()}`);
   }
 }
 ```
 
-The existing Statement of Account source memoises translated object keys in a
-`computed()`. That is **Legacy — do not copy**: `translate.instant()` reads no
+Memoising translated object keys in a
+`computed()` is **Legacy — do not copy**: `translate.instant()` reads no
 signal, so a language switch does not invalidate those cached headers.
 
-A second export may aggregate the same lines — group in a `Map`, never a second
-request:
+A second export may aggregate the selected applicable lines — group in a Map,
+never a second request. Customer Statement uses its active ledger/outstanding or
+advance invoice lines through chargeLines; the action is unavailable on deposits,
+PDCs and ageing because those models have no voucher-type debit/credit fields.
+Keep the existing confirmed grouping formula; this changes data selection only:
 
 ```ts
 readonly chargesTypewiseTotals = computed(() => {
   const totals = new Map<string, { voucherType: string; debit: number; credit: number; balance: number }>();
-  this.ledgerLines().forEach((line) => { … });
+  this.chargeLines().forEach((line) => { … });
   return Array.from(totals.values()); // neutral data; translate headers on click
 });
 ```
@@ -507,9 +650,9 @@ readonly chargesTypewiseTotals = computed(() => {
 summed in the template · required filters validated into `errorMessage` before
 the request · `hasSearched` distinguishes empty from not-run · every action
 disabled while loading · export and print disabled with no data · amounts
-`1.2-2` · `—` for blanks · conditional columns added to header, body and footer
-together · dates serialized from local parts · one outer `appReportPage` · each
+with `| money` · `—` for blanks · conditional columns added to header, body and footer
+together · default range the current month · dates serialized with `parseDateRange`/`toApiDate` · form
+disabled with `disable()`, not `[disabled]` · one outer `appReportPage` · each
 report action group uses `appReportActions` with a translated accessible name.
 
 ---
-

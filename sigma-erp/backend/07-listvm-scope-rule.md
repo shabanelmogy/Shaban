@@ -28,7 +28,9 @@ for no consumer. They belong to `BranchDetailVM` only.
 
 Procedure when you build or review a list:
 
-1. Open the Angular `initColumns()` and write down every `colName`.
+1. Open the Angular list component and write down every `field` of its
+   `DataTableColumn<Row>[]` (block 5 of the UI book), plus fields used only by `status(row)`
+   or `value(row)`. Older screens name them `colName` in `initColumns()`.
 2. Add the row identity (`Id`) and anything a row action needs — a status flag a
    menu item tests, a foreign key an inline edit sends.
 3. That is the ListVM. Everything else is removed.
@@ -41,10 +43,10 @@ If the frontend is not in scope, do **not** delete properties on assumption.
 Record the decision as `FRONTEND_UNVERIFIED` and name the template you need.
 
 **Also return a real total.** `Results<T>` carries `TotalPages` **and**
-`TotalCount`. `BranchService.GetManyAsync` sets `TotalPages` but leaves
-`TotalCount` unset, which is why Angular list components carry a fallback that
-reconstructs a total from page count — and that fallback overstates the count on
-a partial last page. Always set both:
+`TotalCount`. The base `GetManyAsync`/`GetManyWithNavigationsAsync` set both from
+`CountAsync` over the same filter (2026-09-30). An override that builds its own query
+must set both too — a total rebuilt from `TotalPages × PageSize` overstates the count on a
+partial last page:
 
 ```csharp
 var total = await baseQuery.CountAsync();

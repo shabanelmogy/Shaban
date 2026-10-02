@@ -10,6 +10,8 @@ source dependencies live in `recipe-system/templates/` and
 - Each packet declares exact canonical source-block dependencies.
 - Each packet carries source fingerprints.
 - Run `Generate-SigmaRecipes.ps1 -Check` before using a packet.
+- Read-only companions in `recipe-system/`: `Check-Translations.ps1` (en/ar key parity, UI
+  block 23) and `Check-BookReferences.ps1` (every path and cross-reference the books name exists).
 - If check mode reports drift, use canonical sources and report the stale packet.
 - Regeneration is followed by semantic review; a matching hash proves
   synchronization, not correctness.

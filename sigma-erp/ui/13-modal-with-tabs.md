@@ -9,14 +9,19 @@ tabs does not create a new shell shape: it uses the same shared
 `app-editor-dialog` as a single-section editor and projects `app-editor-tabs`
 plus its feature-owned tab panels into the body.
 
-**Mandatory CRUD modal rule.** For an ordinary list-owned Add/Create, View and
-Edit workflow, all three actions open the same controlled `app-editor-dialog`
-editor and pass an explicit `create | view | edit` mode. The Create button and View/Edit row
-actions must not navigate to separate routed pages or mix modal and routed
-editors. A routed editor is allowed only when confirmed source or a documented
-business workflow requires an independently addressable page; absence of an
-existing modal is not such evidence. View mode reuses the same data/detail
-contract and modal shell, makes controls read-only, hides Save, and offers Close.
+**Modal or routed page — decision rule (owner decision D4-2, 2026-10-01).** Create, View and Edit
+of one record always use the same editor and pass an explicit `create | view | edit` mode:
+
+| The record has… | Editor |
+|---|---|
+| fields only, or one small child list, and no totals | **modal** — `app-editor-dialog` (this block) |
+| two or more child collections, **or** totals, **or** approval/posting | **routed page** — the shared editor shell (block 1) and *Routed full-page editor* below |
+
+Examples: branches, categories, activities, simple settings rows and time logs are modals;
+Job, quotations, invoices, bills, purchase orders, GRNs and vouchers are routed pages. A screen
+that fits the rule needs no separate approval; a deliberate exception is recorded in its review.
+View reuses the same detail contract and editor, makes controls read-only, hides Save and offers
+Close (or Edit).
 
 ```text
 shared/components/editor-dialog/editor-dialog.component.ts
@@ -94,6 +99,12 @@ readonly tabs: ReadonlyArray<EditorTab<FeatureEditorTab>> = [
 readonly currentTab = signal<FeatureEditorTab>('general');
 ```
 
+`EditorTab.count?: number` optionally displays a shared count badge beside the
+translated label. The feature supplies a nonnegative row count from its current
+data; zero remains visible and omitting `count` leaves existing tabs unchanged.
+Use a computed tab list when counts change. Keep counts separate from translation
+keys and leave badge sizing, colours and dark/active states to the shared component.
+
 Import `EditorTabsComponent` in the standalone feature component, then keep the
 panels in the feature form:
 
@@ -155,6 +166,11 @@ workspace is refactored, remove its local tab button loop and point it to this
 shared appearance so all routed workspaces stay visually and behaviorally
 consistent.
 
+Read-only reports may reuse `appearance="workspace"` for section navigation.
+Their panel visibility and full-report print contract follow blocks 20 and 21;
+the editor `@switch` example above is not suitable when printing requires every
+report section to remain rendered.
+
 Do not keep a feature-local `onTabKeydown`, tab-button loop, or duplicate tab
 styles after adopting `app-editor-tabs`.
 
@@ -196,6 +212,30 @@ content requires it. `app-editor-tabs` and the feature-owned panels remain
 projected editor body content.
 
 ### Body padding — `[contentPadded]`
+
+**Bounded body chain (source checked 2026-10-01).** The shared PrimeNG content and
+`.app-editor-dialog-content` pass a shrinking flex column (`min-height: 0`) to the
+projected editor. A long form uses `sigma-editor-form` → `sigma-editor-body` →
+`sigma-editor-scroll`; the inner region scrolls while dialog header/footer stay fixed.
+Do not restore a viewport-height calculation or scroll owner in feature SCSS.
+
+**Definite height for flex editors.** When projected content uses that zero-basis
+flex chain, give `app-editor-dialog` a definite `height` through its shared input,
+such as `height="min(720px, calc(100dvh - 24px))"` when a fixed workspace is needed.
+A maximum height alone does not supply available height to zero-basis flex
+descendants; they can collapse under an auto-height dialog. The shared shell
+still owns maximum height, header/footer and content bounds; the inner editor
+scrolls. Default dialogs retain auto height when the input is omitted. Do not
+patch `.p-dialog-content` or copy viewport-height selectors into a feature.
+
+**Content-sized dialog alternative.** For a form that should fit its content
+without blank space, omit `height`, keep a shell `maxHeight`, and use existing
+`flex-fill` (`flex: 1 1 auto`) on every projected link of that editor chain:
+form, body and inner scroll region. This retains intrinsic content sizing while
+allowing the inner region to shrink/scroll at the shell limit; keep `min-height: 0`
+and overflow ownership from the shared classes. Do not leave a zero-basis child
+in the auto-height chain. Company Driver draft uses this alternative with
+`maxHeight="90dvh"` after the owner requested removal of unused space.
 
 > **Status: Canonical** (2026-09-28)
 
@@ -285,28 +325,36 @@ The parent collection changes only after child Save succeeds:
 Draft in, parent touched only on Save:
 
 ```ts
-openDialog() {                       // Add
+readonly visible = signal(false);
+readonly draft = signal<FormGroup<DriverControls> | null>(null);
+private editIndex: number | null = null;
+
+openDialog(): void {                     // Add
   this.editIndex = null;
-  this.driverDraft = this.createDriverForm();
-  this.visible = true;
+  this.draft.set(this.createDriverForm());
+  this.visible.set(true);
 }
 
-editDriver(index: number) {          // Edit
+editDriver(index: number): void {        // Edit: a copy, so Cancel leaves the row untouched
   this.editIndex = index;
-  this.driverDraft = this.createDriverForm();
-  this.driverDraft.patchValue(driverValues);
-  this.visible = true;
+  this.draft.set(this.createDriverForm(this.drivers.at(index).getRawValue()));
+  this.visible.set(true);
 }
 
-saveDriver() {
-  if (!this.driverDraft) return;
-  if (this.driverDraft.invalid) { this.driverDraft.markAllAsTouched(); return; }
-  if (this.editIndex !== null) this.drivers.setControl(this.editIndex, this.driverDraft);
-  else this.drivers.push(this.driverDraft);
-  this.driverDraft = null;
-  this.visible = false;
+saveDriver(): void {
+  const draft = this.draft();
+  if (!draft) return;
+  if (draft.invalid) { draft.markAllAsTouched(); return; }
+  if (this.editIndex !== null) this.drivers.setControl(this.editIndex, draft);
+  else this.drivers.push(draft);
+  this.parentForm.markAsDirty();
+  this.close();
 }
 ```
+
+Build the draft from the row's raw value (`createDriverForm(value)`), not with `patchValue`
+alone: `patchValue` does not create the rows of a nested `FormArray` (for example a driver's
+documents).
 
 Field groups are declarative, so the template loops instead of repeating markup:
 
@@ -327,14 +375,14 @@ as Detail + Documents.
 
 ### Routed full-page detail form with a bounded child collection
 
-> **Status: Canonical composite variant** — use only when the feature has an
-> explicitly approved independently addressable Create/Edit/View route; this
-> does not replace the ordinary CRUD modal rule above
+> **Status: Canonical composite variant** — for records that the decision rule above sends to a
+> routed page
 
-Approved reference:
+References:
 
 ```text
-Rental/RentalQuotation/components/details/details.component.{ts,html,scss}
+Workshop/Job/components/editor/                 (shared editor shell, EditableRows, field errors)
+Rental/RentalQuotation/components/details/      (single child collection with a summary)
 shared/components/form-section/
 shared/components/editable-collection-table/
 ```
@@ -344,8 +392,8 @@ route-level page. Keep one typed parent form and use the shared section and
 editable-table components; the feature owns only the route state, controls,
 payload, validation, and business behavior.
 
-The routed shell owns the available viewport between the existing header and
-footer. It must have `min-height: 0` and `overflow: hidden`, with no browser/page
+The routed shell is the shared editor shell (block 1 *Shared editor page shell*): the host fills
+the box the shell sized, with `min-height: 0` and `overflow: hidden`, and no browser/page
 scroll. The form body is a flex column: the first section keeps its intrinsic
 height, the child-collection section fills the remaining height, and the
 Save/Cancel footer is a non-shrinking sibling outside the clipped form body.
@@ -376,8 +424,8 @@ visible title:
       [columns]="itemColumns"
       [editable]="isEditable()"
       [fillHeight]="true"
+      [stickyHeader]="true"
       tableMinWidth="1200px"
-      maxHeight="clamp(120px, calc(100dvh - 540px), 240px)"
       (removeRequested)="requestRemoveItem($event)"
     >
       <!-- projected typed cells only -->
@@ -392,9 +440,9 @@ visible title:
 
 `app-form-section [fill]="true"` makes the section and its content a bounded
 flex column. The feature table area gets `min-height: 0`, `flex: 1 1 auto`, and
-`overflow: hidden`; `app-editable-collection-table [fillHeight]="true"` makes
-its frame the flex child. Give the frame a responsive `maxHeight` and keep
-`overflow-x: auto` plus `overflow-y: auto` in the shared table. The summary
+`overflow: hidden`; `app-editable-collection-table [fillHeight]="true" [stickyHeader]="true"`
+makes its frame the flex child and the single row scroll owner (block 14). No viewport
+arithmetic (`calc(100dvh - …)`) sizes the frame. The summary
 must be `flex: 0 0 auto`, so it remains visible when the row frame acquires a
 vertical scrollbar. Use logical properties and existing light/dark/RTL tokens;
 do not add a feature body scroll or a second page-height calculation.
@@ -405,7 +453,9 @@ reachable at all row counts:
 ```html
 </form>
 <footer class="feature-page-actions">
-  <button type="button" (click)="requestClose()">…</button>
+  <button type="button" class="sigma-secondary-button" (click)="requestClose()">
+    {{ (isView() ? 'general.close' : 'general.cancel') | translate }}
+  </button>
   @if (!isView()) {
     <app-primary-action-button
       [label]="'general.save' | translate"
@@ -416,7 +466,8 @@ reachable at all row counts:
 </footer>
 ```
 
-**Check:** route approval is recorded before using this variant · one parent
+**Check:** the record meets the routed-page rule (or its exception is recorded) · shared editor
+shell classes, no feature page/panel/field/footer SCSS · one parent
 `FormGroup` · fixed shell ends above the normal app footer · no page/body scroll
 introduced · section Add is projected into the title row · child table owns the
 only row scroll · totals/discount/grand total remain outside the table frame and

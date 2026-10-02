@@ -6,7 +6,7 @@
 |---|---|
 | Use when | An accounting setup or maintenance screen edits many financial rows under one shared business context, usually split into source/type tabs |
 | Do not use when | The rows belong to one document header (use [02](02-list-with-routed-master-detail-editor.md)), or the screen only maps settings (use [06](06-tabbed-settings-workspace.md)) |
-| Owning blocks | [14 Editable collection table](../14-editable-collection-table.md), section "Financial collection editor — canonical routed variant"; [1 Feature folders and wiring](../01-feature-folders-and-wiring.md), "Routed financial-editor exception" |
+| Owning blocks | [14 Editable collection table](../14-editable-collection-table.md), section "Financial collection editor — canonical routed variant" (`[fillHeight]` + `[stickyHeader]`, shared summary bar); [1 Feature folders and wiring](../01-feature-folders-and-wiring.md), container-fill chain |
 | Approved reference | `Accounts/openingBalances/components/details` + its tab editors + `shared/components/editable-collection-table/` |
 | Backend pattern | Not fixed by the UI shape; select from backend "The five patterns" |
 | Contracts to freeze first | Server-owned context fields; row Add/Update contract; backend-owned totals and balance (Master block 4) |

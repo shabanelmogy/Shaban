@@ -2,7 +2,7 @@
 
 > **Status: Transitional** — authentication only; no authorization mechanism exists, backlog 20
 
-**Transitional.** State of the app, verified 2026-08-06:
+**Transitional.** State of the app, re-verified 2026-10-01 (API role policies are commented out; see the deferred plan):
 
 - `app-routing.module.ts` guards the whole layout with
   `canActivate: [AuthGuard]`.
@@ -36,11 +36,19 @@ What this means when you build a screen:
 
 When a permission mechanism is introduced it belongs in `shared`, applied at the
 route and at the action, and this block plus block 7 must be updated together.
-Tracked in block 30, item 20.
+Tracked in block 30, item 20; the design is deferred by the owner (2026-10-01) to
+`reviews/Deferred/AUTHORIZATION_MAINTENANCE_EVOLUTION_PLAN.md`.
+
+**Authorization candidates.** Until then, every screen review lists, in its review
+artifact under *Authorization candidates*, the actions that clearly need a restriction
+(delete or void posted data, approve, post, close a period, change settings or accounts),
+with the endpoint each one calls. Do not hide or disable them for this reason; the list is
+the permission inventory the deferred plan starts from.
 
 **Check:** no fabricated permission call · restricted actions confirmed as
 backend-enforced · `visible`/`disabled` used for row-state rules · no claim that
-a hidden control is secure.
+a hidden control is secure · restricted actions listed under *Authorization candidates*
+in the review artifact.
 
 ---
 

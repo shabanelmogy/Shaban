@@ -1,6 +1,6 @@
 ## 14. Pattern 2 — Master-detail, no financial effect
 
-> **Status: Transitional** — reference `Services/VouchersServices/PurchaseOrderService.cs`; its FK validation has a defect, see below
+> **Status: Canonical** — reference `Services/VouchersServices/PurchaseOrderService.cs` (FK checks and delete fixed 2026-10-01)
 
 A header plus detail rows, saved as one graph. No journal voucher, no
 allocation.
@@ -48,36 +48,120 @@ await UnitOfWork.SaveChangesAsync();
 
 **Totals are recalculated on the server.** Never persist a total the client sent.
 
-**Defect to avoid — `Any` is not proof that all ids are valid.** The reference
-does this:
+**Detail references — every distinct id must exist.** `ExistsAsync(x => ids.Contains(x.Id))` is
+true when *one* id exists, so an unknown id passes beside a real one. The reference validates
+all detail references in one helper built on the base `AllExistAsync` (block 8):
 
 ```csharp
-// WRONG: true when *one* of the requested ids exists
-var validItemsExist = await UnitOfWork.Repository.ExistsAsync<Item>(x => itemIds.Contains(x.Id));
-if (!validItemsExist) return Fail("Invalid Item references");
+if (await InvalidDetailReferenceAsync(vm.PurchaseOrderDetails.Select(d =>
+        (d.ItemId, d.AssetTypeId, d.VehicleId, d.UnitsOfMeasuresId, d.JobId))) is { } referenceError)
+    return Fail(referenceError);
 ```
 
-An unknown id passes as long as one sibling is real. Compare counts instead:
-
-```csharp
-var foundCount = await UnitOfWork.Repository.Query<Item>()
-    .Where(x => itemIds.Contains(x.Id))
-    .Select(x => x.Id)
-    .Distinct()
-    .CountAsync();
-
-if (foundCount != itemIds.Count) return Fail("Invalid Item references");
-```
-
-Backlog item 3.
+**Delete removes the details too.** `RemoveAsync` is overridden with
+`RemoveWithChildrenAsync(id, ct, x => x.PurchaseOrderDetails)`, so the lines are soft-deleted with
+the header and no report counts lines of a deleted document.
 
 Also decide and document, per feature:
 
-- omitted vs empty detail collection — preserve, clear, or reject;
+- nothing about omitted vs empty: the contract is a **full snapshot** (owner decision D4-3,
+  2026-10-01). The client always sends the whole collection; a saved row carries its id, a new
+  row has none, a missing row is removed, and an empty list clears the collection only when the
+  business minimum allows zero rows. The base `UpdateAsync` still treats a `null` collection as
+  "leave alone" for old clients; new and reviewed screens never send `null`;
 - whether a detail id from the client is verified to belong to **this** parent
   and tenant before it is updated or removed;
 - status transitions as explicit methods with legal source/target checks, as
   `ToggleApprovalStatusAsync` and `ToggleBillStatusAsync` do.
+
+### Owned rows on update — which way (Canonical, 2026-10-01)
+
+| The aggregate has | Update with | Reference |
+|---|---|---|
+| Reviewed owned collections or owned references (documents, cards, address, billing) | Override protected `UpdateCoreAsync` with tracked load and existing reconciliation helpers; public Update delegates to the base guard | `IndividualPartnerService` |
+| Owned rows that have their own owned rows (a company's drivers and their documents) | Override protected `UpdateCoreAsync` on a tracked load with `ReconcileOwned`; public `UpdateAsync` delegates to the base | `CompanyService` |
+
+**Tracked ownership before mapping (2026-10-01 comprehensive customer fixes).** A saved
+reference id must belong to this aggregate, not merely exist in the tenant. Load the live
+owned collections and references tracked, check `OwnsAll` and `OwnsReference`, then
+map the request directly onto retained tracked instances. Ignore manually reconciled
+navigations in the Update profile. Never attach a request-created graph first or map
+a newly constructed child entity onto a saved entity: absent request fields such as
+`No` can overwrite stored values. Individual now uses the existing tracked core
+pattern for this reason. The legacy generic Update implementation is unchanged for
+unreviewed consumers; its engine repair remains a separate task (backlog 32).
+
+**Unchanged snapshots are successful updates.** After loading the existing aggregate and
+validating the request, an unchanged snapshot is successful. Shared UnitOfWork sync/async
+save returns true after SaveChanges completes, including zero affected rows; exceptions
+and tenant-ownership conflicts still fail. `SaveUpdateAsync` delegates to that one rule.
+Do not force an Update on the entire graph to make a no-op return an affected row.
+
+**Grandchildren: an explicit override.** AutoMapper clears a destination collection and refills it
+with new objects. Its own documentation says to use AutoMapper.Collection when that is not wanted.
+The base therefore reconciles one level only, and a removed grandchild would stay saved. Such an
+aggregate overrides protected `UpdateCoreAsync` on a tracked load, inside the base's
+`UniqueColumns` write guard (block 8). Public `UpdateAsync` resolves saving master-data
+helpers first, then delegates to the base:
+
+1. Resolve every value that saves on its own first (the default contact group), before entering
+   the base write guard and before aggregate mutations.
+2. Inside the protected core, load exactly the rows the editor owns (filtered includes,
+   `AsSplitQuery()`).
+3. Check `OwnsAll`/`OwnsReference` for every collection, nested ones included.
+4. Check each dropped child with `InUseAsync<TChild>` (block 8).
+5. Map the scalars with the owned navigations ignored in the profile, run `ReconcileOwned` and
+   `ReconcileReference`, then save once.
+
+| Member | Use |
+|---|---|
+| `OwnsAll(incoming, current)` / `OwnsReference(incoming, current)` | Saved ids are this record's live rows |
+| `ReconcileOwned(current, incoming, update?, removing?)` | One collection: deletes the missing, maps the kept, adds the new; `update` handles a row's own children, `removing` removes them first |
+| `ReconcileReference(incoming, current)` | A one-to-one owned row: null removes it, otherwise the input maps onto the saved row and keeps its id |
+
+A removed row stays in its collection and keeps its foreign key; `SaveChanges` turns the delete
+into a soft delete. `DriverService` uses the same override because `CompanyService` maps drivers
+through the driver profile, whose owned navigations must stay ignored. Making the base reconcile
+grandchildren for every screen is backlog 32.
+
+**Default contact group (G16, 2026-10-01; replaces the earlier note that gave Company an owning
+transaction).** `GetOrCreateDefaultGroupIdAsync` saves the default group and its account by
+itself. That group is reusable master data: a group left behind by a failed customer save is
+valid, not partial persistence. Resolve it outside the caller's aggregate transaction and
+before any tracked mapping, removal or other mutation: its save can flush the entire scoped
+context. Individual and Company follow that ordering. Their base write guard takes an
+application lock in a ReadCommitted transaction for duplicate checks and the save (block 8);
+it never includes default-group creation. A single tracked Driver save uses the implicit
+transaction.
+
+**Shared customer helpers (`Services/Customers`, 2026-10-01).** Individual and Company use the
+same pieces:
+
+- `AgreementStatusFilter.Apply` — the open/closed agreement filter of both customer lists;
+- `IContactGroupAccountService.CustomerGroupIdAsync` — default resolution and Customer-type
+  validation for CRUD, group actions and import; it rejects absent authentication before
+  any saving helper;
+- write-VM `DateAfter` and `NotFutureDate` — API date checks, with equivalent explicit
+  validation where custom import bypasses these VMs (block 3);
+- `CustomerContactGroupUpdateVM` — the contact-group change of every customer list.
+
+Keep Company ownership readable in private `OwnsEveryRow`. Use base `RemoveDroppedAsync`
+for omitted drivers/contacts (same `MarkRemovedAsync` usage/owned-row checks), and
+`SaveUpdateAsync` for one save and the standard localized result. These helpers add no saves
+or nested transactions. Added-row numbering is shared at UnitOfWork save (block 11).
+
+A customer service adds only what is its own.
+
+**One agreement history (2026-10-01).** `Services/AgreementServices/AgreementHistory.cs` reads
+the rental and lease agreements of one customer, vehicle or driver
+(`LoadAsync(customerId:|vehicleId:|driverId:)`), newest first, into `AgreementHistoryVM`. It
+returns them with `AsResults`, or `NotFound(message)` when the record does not exist.
+
+- **Readers:** Individual, Company and Vehicle use it, with no history query of their own.
+- **Status:** the read returns `IsClosed` as a boolean, never a status text, so the client
+  translates it.
+- **Transportation agreements:** not included. They are not `Agreement` rows, and Speed
+  Auto shows rental and lease only.
 
 ### Quotation domain-action specialization — Canonical
 
@@ -193,14 +277,14 @@ recorded.
 **Check:** minimum detail count enforced · header and distinct detail FKs
 validated by count, not `Any` · aggregate loaded tracked with children · child
 ids proven to belong to this parent and tenant · totals recalculated server-side ·
-omitted/empty semantics documented · one save, or a transaction when there are
+full-snapshot collections (D4-3) · one save, or a transaction when there are
 several.
 
 ### Explicit transaction boundary — Canonical
 
 Decide from the number of `SaveChangesAsync` calls reachable on **one execution
 path**, not from the number of save statements visible in the method. Do not
-open an explicit transaction when a path performs one save through one scoped
+open an explicit transaction solely for atomicity when a path performs one save through one scoped
 `DbContext`, including a tracked parent-and-children graph: EF Core's implicit
 transaction makes that save atomic.
 
@@ -213,6 +297,14 @@ not by themselves require an explicit transaction. Open it before the first
 mutation and include every dependent save. A conditional workflow may therefore
 use an explicit transaction on its multi-save branch while its one-save branch
 uses the implicit transaction.
+
+**Check/save concurrency is a separate reason for isolation.** One-save atomicity does not
+protect earlier duplicate/range reads. For declared `UniqueColumns`, base Add/Update use the
+shared UnitOfWork application-lock boundary; Company and Individual import chunks use the
+same entity/tenant resource and recheck live keys inside it (block 8). A navigation graph
+alone does not require that boundary. Reusable default-group creation precedes it and all
+aggregate mutation. Temporal-overlap checks retain their separate range-isolation rule in
+block 8. Owner runtime verification covers races, timeout/deadlock outcomes and rollback.
 
 Private helpers that call `SaveChangesAsync` do not start nested transactions
 when every owning method already opens the transaction and the helper receives
@@ -232,11 +324,11 @@ Current source reconciliation:
 
 | Source | Decision and evidence |
 |---|---|
-| `Services/Bases/Service.cs` — `UpdateAsync` | Reconciles the parent and its collections before one `SaveChangesAsync`; the complete graph uses EF Core's implicit transaction. Runtime verification remains required for representative collection add, update and remove cases because this is a generic service. |
+| `Services/Bases/Service.cs` — `UpdateAsync` | One save makes the graph atomic. When `UniqueColumns` exists, a shared explicit application-lock transaction also protects the earlier duplicate checks; otherwise the save uses EF Core's implicit transaction. Runtime verification remains required for collection add, update and remove cases. The comprehensive customer source review separately records defects in the legacy detached update's one-to-one ownership and saved-child mapping. |
 | `Services/SeedDataService.cs` — `SeedSetting` | Insert and update saves are in mutually exclusive branches. One invocation reaches one save, so no explicit transaction is required. |
 | `Services/VouchersServices/PurchaseOrderService.cs` — `ToggleBillStatusAsync` | The early not-approved path returns after its optional save; the approved path performs its separate save. No invocation reaches both saves, so no explicit transaction is required. |
 | Private journal-voucher helpers | Remain transaction-free when their owning methods open the transaction before the first mutation and pass the same scoped unit of work and `DbContext`; they must not create a nested transaction. |
-| `Services/VouchersServices/MiscellaneousInvoiceService.cs` — `AddAsync` | The branch that saves the invoice and a journal voucher keeps an explicit transaction; the invoice-only branch performs one save and uses EF Core's implicit transaction. Manually verify successful and failing execution of both branches. |
+| `Services/VouchersServices/MiscellaneousInvoiceService.cs` — `AddAsync` | `AddAsync` always runs in one explicit transaction (re-verified 2026-10-01): it saves the invoice, builds the journal and, when the invoice produces journal lines, posts it and links it, then commits; a journal posting failure rolls everything back. The former separate invoice-only path no longer exists. Manually verify a successful save and a failing journal (nothing persisted). |
 
 This reconciliation changes transaction ownership only. It does not by itself
 change APIs, DTOs, mappings, calculations, entities, EF configuration or schema,
@@ -245,4 +337,3 @@ are complete when the table still matches current control flow; the named
 runtime checks remain owner verification, not unresolved contract decisions.
 
 ---
-

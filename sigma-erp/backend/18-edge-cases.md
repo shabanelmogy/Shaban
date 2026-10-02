@@ -63,7 +63,7 @@ accept it from a payload.
 | `pageSize=0` or a huge `pageSize` | Clamped, per block 9 |
 | Zero results | `IsSuccess = true` with an empty list — an empty result is not a failure |
 | `TotalCount` on a partial last page | Exact, never derived from `TotalPages × PageSize` |
-| Filter key with the wrong casing | Currently ignored — see block 9 trap |
+| Filter key with the wrong casing | Matched case-insensitively — block 9 |
 | Malformed filter value | Treated as absent, never as a different filter |
 | Duplicate submit of the same create | Blocked by the duplicate rule and by a unique index |
 | Two concurrent updates to one row | Behaviour known and documented; last-write-wins is a decision, not an accident |
@@ -71,7 +71,7 @@ accept it from a payload.
 | Failure after the document saves but before the voucher | Transaction rolls back the document too — pattern 15 |
 | Bulk activate where some ids are missing | Whole call fails; nothing is flipped — block 12 |
 | Unauthenticated request | 401 before any service code runs |
-| Report reached with no subscription claim | Must not return other tenants' rows — `QueryReport` caveat, block 17 |
+| Report reached with no subscription claim | Returns nothing — `QueryReport` fails closed, block 17 |
 | Export whose second page fails | Whole export fails; no partial file |
 | Upload with a wrong extension, oversized, or a spoofed MIME | Rejected server-side, not only in the client |
 | Empty lookup for a dropdown | Success with an empty list — block 10 |
@@ -90,10 +90,9 @@ accept it from a payload.
 
 A change that removes or renames an entity property, a ViewModel/DTO member, a
 service or interface method, or a whole type is not finished until every
-consumer compiles against it. Found 2026-09-28: `ApprovalStatus` was removed from
-`Job` and `LubricationJob` (entity, configuration, DTOs), but the estimate-to-job
-conversion in `JobEstimationService` still set `ApprovalStatus` on `new Job { … }`,
-so `SiGma.Business` failed to build (`CS0117`).
+consumer compiles against it. Why: a consumer outside the feature folder (for example a
+conversion that builds the entity in another service) still sets the old member and the
+project fails to build (`CS0117`).
 
 In the same change:
 
@@ -110,6 +109,21 @@ In the same change:
 4. When the removed property was persisted, the report tells the owner to run
    `Add-Migration` with a suggested name (Master block 7); the snapshot still
    holds the column until then.
+5. Search the **Angular app** too when the member was part of an API contract:
+   models, services and endpoints, list columns, filters, row-action
+   visibility, editor lock or read-only checks, export mappings and
+   translations. The compiler does not catch these. A check on a field the API
+   no longer returns reads `undefined` and fails silently: row actions disappear,
+   an editor opens locked, and buttons call deleted endpoints.
+
+**Adding a member to a combined projection.** When one DTO is projected from
+several sources and joined with `Concat`/`Union` (for example the Jobs grid:
+`Job` rows + `LubricationJob` rows into `JobGridRowDto`), a member added to one
+projection must be assigned in **every** projection, with a typed `null` when a
+source has no value (`Status = (Status?)null`). It compiles either way; EF fails
+only at run time with *"Unable to translate set operations when both sides don't
+assign values to the same properties"*. When adding a member,
+search the service for other projections of the same DTO.
 
 **Reading a build error list after such a change.** A project that fails to
 compile leaves its downstream projects building against the last good reference

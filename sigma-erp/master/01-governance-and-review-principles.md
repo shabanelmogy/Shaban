@@ -29,6 +29,50 @@ Review end-to-end paths:
 A component-only or service-only finding is incomplete when correctness depends
 on another layer.
 
+### Business correctness first
+
+> Owner rule (2026-10-01): "انا عايز بشكل عام تقديم الاصح فى البيزنس عن السهل او اللى موجود".
+
+When a decision has a business- or accounting-correct answer and an easier one, the review
+recommends and the implementation applies the **correct** one. The current code, the number
+of documents that already behave one way, or a lower implementation cost are never the reason
+for a rule: existing behaviour is evidence of what *is*, not of what is *right*. State the
+business reasoning first; migration cost is a separate note. When correctness depends on law
+or accounting treatment the reviewer cannot confirm (tax authority, auditor), say so and name
+who must confirm, instead of defaulting to current behaviour. Example: VAT is rounded once per
+tax rate on the document (D4-4), although most documents rounded per line.
+
+### Proportional process (owner decision D4-5, 2026-10-01)
+
+The artifacts follow the size of the change, not a fixed list:
+
+| Tier | Scope | Required |
+|---|---|---|
+| **S** | One element or one rule in one screen (a label, a validator, a button state) | The fix, the scoped diff review, and a short report (files, decision, owner check). No contract-freeze file |
+| **M** | One screen or one feature end to end | Contract freeze (only the contracts the screen has), the scoped diff review, and a reconciliation section in the review artifact |
+| **L** | A new feature, a module, or a cross-cutting change (shared component, base class, policy) | The Maintenance / Evolution Plan, then the full artifact set of block 4 |
+
+When in doubt, take the larger tier. A change that grows during the work moves up a tier, and the missing artifacts are added.
+
+### Whole-application review order
+
+The screen-by-screen review of the application follows this order. Each screen is reviewed once, against the books as they are when it is reached:
+
+1. **Vouchers and journals first.** Payments (F1), receipts, credit and debit notes, deposits and card settlements, then the journal voucher screens. Use `reviews/JOURNAL_ENTRIES_DECISION_SHEET.md`.
+2. **Sales and purchase documents.** Invoices, bills, purchase orders, GRNs, purchase returns and requests: screen type 08 or 02, VAT per tax rate (D4-4).
+3. **Settings left outside `IServiceHelper`.** Cost Centers, API Key, Common, Document Number and Charge Settings.
+4. **Operational modules, one module at a time.** Workshop (Job is the reference), Rental, Lease, Limousine, Transportation, Equipment Rental, Fleet, Customers and suppliers, Staff and HRM, Stock, Assets.
+5. **Reports.** Within each module, after its documents.
+
+**Per-screen checklist:**
+1. Pick the screen type (`ui/screens/00-catalog.md`) and the tier (above).
+2. Freeze the contracts the type lists.
+3. Adopt every shared piece the type's blocks name (UI backlog 39 and 40, backend backlog 21–24), and remove the feature copies.
+4. Remove the server-owned fields from the payloads (UI block 2).
+5. List the *Authorization candidates* (UI block 26).
+6. Apply *Business correctness first* to every decision.
+7. Record the review, with the owner-run checks.
+
 ### Scope and change discipline
 
 - Review only the requested feature and directly related contracts and wiring.

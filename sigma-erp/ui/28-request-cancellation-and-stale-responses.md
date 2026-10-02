@@ -24,7 +24,10 @@ after a newer one. Two cases to guard:
 **Rapid re-search, paging and refresh.** Disabling Search prevents a second Search
 click, but it does not prevent a lazy-page or Refresh event from overlapping the
 current request. Drive list queries through `switchMap` so the previous HTTP
-request is cancelled before the next one starts:
+request is cancelled before the next one starts. Reference: `Workshop/Job/components/list`
+(`bindListQueries`); its load error is shown inline, so the request sends
+`X-Skip-Error-Interceptor` and reads the message with `apiErrorMessage` (block 22). The snippet
+below shows the same shape on Company:
 
 ```ts
 private readonly listQuery$ = new Subject<CompanyPartnerListQuery>();
@@ -60,9 +63,8 @@ private requestList(query: CompanyPartnerListQuery): void {
 
 `defer` is important: when a new query arrives, `switchMap` first unsubscribes
 the previous request (running its `finalize`), then starts the new loading cycle.
-The shared `LoadingService` is currently a plain boolean, not a reference
-counter, so unrelated concurrent callers can still hide each other's spinner;
-that shared defect is backlog 27.
+The shared `LoadingService` is a reference counter (block 22), so the cancelled request's
+`finalize` and the new request's start keep the spinner correct.
 
 **Row/dialog detail requests.** Discard a late response by identity as well as
 tearing it down on destroy:
@@ -89,10 +91,16 @@ Do not introduce NgRx, an application-wide request-sequence service, or a custom
 cancellation framework for this. A local trigger stream plus `switchMap`, and an
 identity/open-state check for dialogs, are enough.
 
+**Dependent lookups follow the same rule.** A lookup triggered by a field change (vehicle →
+vehicle card, customer → contracts) goes through a `Subject` + `switchMap`: the previous request is
+cancelled, the card is cleared while loading, an error shows a message, and saved-record
+fallbacks apply only while the saved value is still selected (reference: Job editor vehicle card,
+2026-09-30).
+
 **Check:** every subscription has `takeUntilDestroyed` · the trigger is disabled
 while its request runs · list refresh/paging uses `switchMap` · late dialog
 responses discarded by row id or open-state check · `finalize` releases loading
-on success, failure and cancellation · no new state framework added.
+on success, failure and cancellation · no new state framework added · field-triggered lookups use `Subject` + `switchMap` with an error message.
 
 ---
 

@@ -51,11 +51,17 @@ Owner acceptance pass for a screen built from this book:
    and that fixed Save/header/tab controls remain reachable.
 10. For reports, verify backend-owned totals/KPIs, empty/not-run/error states, and
     print mode releasing fixed heights/overflow so all rows can flow across pages.
+    Include more matching rows than the API's page-size cap: compare the actual
+    count with reachable grid rows, print/Excel scope and totals scope. Exercise
+    every conditional filter, custom toggle on/off and invalid/reversed boundaries,
+    change filters after success and during a delayed request, and confirm that
+    partial dates and load failures follow the documented validation/feedback owner.
+    These remain owner acceptance steps; source review alone cannot certify them.
 11. For at least one protected GET and one protected mutation from the reviewed
     feature, confirm the request carries `Authorization: Bearer …` without
-    recording the token value. If it does not, verify the service resolves from
-    the current interceptor-equipped `LayoutModule` injector before changing
-    feature code.
+    recording the token value. If it does not, check that the request URL starts
+    with `environment.baseUrl` (the interceptors act only on Sigma API requests,
+    block 1) before changing feature code.
 12. For every successful mutation exercised during acceptance, confirm exactly
     one success notification appears. A standard mutation should be reported by
     the global interceptor once; a feature-owned composite workflow must suppress
@@ -66,8 +72,28 @@ Owner acceptance pass for a screen built from this book:
     that only the documented component (grid rows, form pane, or dialog body)
     scrolls.
 
+**Source-only compile guard — TypeScript library level.** Agents cannot build,
+so check new code against the project's `tsconfig.json` `lib` setting, which is
+`es2018` (re-verified 2026-09-29; `target` is `es2022`, but `lib` decides which
+APIs type-check). Do not use APIs added after ES2018: `Array.prototype.flat` and
+`flatMap`, `Object.fromEntries`, `String.prototype.replaceAll`, `Array.prototype.at`,
+`structuredClone`, `Array.prototype.findLast`. Use `reduce`/`concat`, loops or a
+spread instead; otherwise the build fails with `TS2550`.
+
+**Generic helpers over typed forms.** Inside a generic class, `FormArray<TRow>.controls` and
+`.at()` resolve to Angular's `ɵTypedOrUntyped` union (`TRow[] | AbstractControl[]`), not to
+`TRow`, and fail with `TS2322`/`TS2345`. Read the rows through one getter that casts
+(`this.array.controls as TRow[]`), as `EditableRows` does.
+
 **Check:** report lists what was and was not verified · no runtime claim from
-source alone · owner acceptance steps included in the handoff.
+source alone · owner acceptance steps included in the handoff · no API newer
+than the `tsconfig.json` `lib` level.
+
+**`tsconfig.app.json` `files` (G17, 2026-10-01).** Add a runtime entry only after the compiler
+reports that file missing. Never add feature files pre-emptively, and never add a broad
+`include` (root AGENTS, *Frontend and contract rules*).
+When retiring or moving a runtime root, reconcile its existing explicit entries as well
+as route/import references. An obsolete `files` entry still compiles a removed screen;
+remove it, keep test files in the test config, and check that the remaining roots exist.
 
 ---
-

@@ -1,21 +1,21 @@
-# Screen 02 — List with routed master-detail editor
+# Screen 02 — List with routed document editor
 
 > Navigation layer: adds no rule and restates no value. The cited blocks win.
 
 | | |
 |---|---|
-| Use when | A paged list whose Create, View, and Edit must be independently addressable pages, **and** confirmed source or a documented business workflow approves that route. The editor holds one header plus bounded child collections |
-| Do not use when | The only reason is that no modal exists yet (UI block 13, "Mandatory CRUD modal rule"); use [01](01-list-with-modal-editor.md) |
-| Owning blocks | [13 Modal with tabs](../13-modal-with-tabs.md), section "Routed full-page detail form with a bounded child collection"; [1 Feature folders and wiring](../01-feature-folders-and-wiring.md), "Routed full-page editor exception" |
-| Approved reference | List as screen 01 (`Fleet/VehicleService/components/list`); editor `Rental/RentalQuotation/components/details` + `shared/components/form-section/` + `shared/components/editable-collection-table/` |
+| Use when | The UI block 13 decision rule (D4-2) sends the record to a page: two or more child collections, or totals, or approval/posting. Create, View and Edit are routes of one editor |
+| Do not use when | The record has fields only or one small child list without totals (use [01](01-list-with-modal-editor.md)); the document posts a journal (use [08](08-financial-document.md), which builds on this type) |
+| Owning blocks | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md), "Shared editor page shell"; [13 Modal with tabs](../13-modal-with-tabs.md), decision rule and "Routed full-page detail form"; [14](../14-editable-collection-table.md) `EditableRows` |
+| Approved reference | List as screen 01 (`Workshop/Job/components/list`); editor `Workshop/Job/components/editor` (shell, `EditableRows`, field errors, return with list state); single-collection variant `Rental/RentalQuotation/components/details` |
 | Backend pattern | 2 Master-detail, no financial effect; 3 when saving writes a journal voucher, allocations, or accounting state |
-| Contracts to freeze first | Route contract (why the page must be addressable); Grid Column and Filter contract; Detail/Add/Update contract with child reconciliation; Action-state contract (Master block 4) |
+| Contracts to freeze first | Route contract (the decision-rule reason, list query parameters kept on return); Grid Column and Filter contract; Detail/Add/Update contract with child reconciliation; Action-state contract (Master block 4) |
 
 ## Read in this order
 
 | # | Block | Decides for this screen |
 |---|---|---|
-| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | `create`, `edit/:id`, `view/:id` routes; routed full-page editor exception; the fixed footer outside the form body; one scroll owner |
+| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | `create`, `edit/:id`, `view/:id` routes; the shared editor page shell; the fixed footer outside the form body; one scroll owner per pane |
 | 2 | List blocks [2](../02-service-and-response-wrappers.md)–[9](../09-confirm-delete.md) | As screen 01, except that Create, View, and Edit navigate to the editor routes |
 | 3 | [13 Modal with tabs](../13-modal-with-tabs.md) — routed variant | One typed parent form, section-header Add action, the child collection filling the remaining height |
 | 4 | [14 Editable collection table](../14-editable-collection-table.md) | Child rows, bounded row scrolling, row actions |

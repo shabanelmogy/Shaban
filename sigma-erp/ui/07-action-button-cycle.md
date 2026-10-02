@@ -1,6 +1,6 @@
 ## 7. Action button cycle
 
-> **Status: Transitional** — `ActionList` is untyped (`any`), backlog 22
+> **Status: Canonical** — declare `ActionList<Row>` for typed actions (2026-09-30)
 
 One `ActionList[]`. Pass it to `app-data-table` through `[actions]`. The shared
 table renders the Actions column first and composes the existing
@@ -25,14 +25,19 @@ private initActions(): void {
 Use the model for conditional rows instead of hiding logic in HTML:
 
 ```ts
-export interface ActionList {
+export interface ActionList<TRow = any> {
   title: string;
   icon?: string;
-  action: (action?: any) => void;
-  visible?: (row?: any) => boolean;
-  disabled?: (row?: any) => boolean;
+  action: (row?: TRow) => void;
+  visible?: (row?: TRow) => boolean;
+  disabled?: (row?: TRow) => boolean;
 }
+
+readonly moreActions = signal<ActionList<CompanyPartnerGridRow>[]>([]);
 ```
+
+New and refactored screens declare the row type (`ActionList<Row>`); the `any` default only
+keeps older untyped declarations compiling.
 
 Use `visible` for actions unavailable in the row's business state, such as an
 edit or state transition that is not allowed after close or void. Use
@@ -139,25 +144,12 @@ clear the busy state in `finalize`; and refresh the current page after success.
 Rely on the global mutation interceptor for the success toast so the feature
 does not emit a duplicate.
 
-`ToActionResult` commonly converts `Result.IsSuccess == false` into a non-2xx
-response. Therefore the transport `error` callback must recover the backend
-`Result.Message` from `HttpErrorResponse.error.message` when present, then fall
-back to the translated feature error. Handling only the `next` branch loses
-business failures such as an invalid transition or blocked Unapprove; showing
-only a generic error also fails the contract.
-
-```ts
-import { HttpErrorResponse } from '@angular/common/http';
-
-private mutationError(error: unknown, fallbackKey: string): string {
-  if (error instanceof HttpErrorResponse && error.error &&
-      typeof error.error === 'object') {
-    const message = (error.error as { message?: unknown }).message;
-    if (typeof message === 'string' && message.trim()) return message;
-  }
-  return this.translate.instant(fallbackKey);
-}
-```
+`ToActionResult` converts `Result.IsSuccess == false` into a non-2xx response. The global
+error interceptor already shows the backend `Result.message` for both channels (block 22), so
+the action restores its row and busy state in both `next` (`isSuccess: false`) and `error`,
+and shows nothing itself. An action whose message belongs inline (for example inside a reason
+dialog) sends `X-Skip-Error-Interceptor` and reads the message with
+`apiErrorMessage(error, fallbackKey)` from `shared/utils/api-error.ts`; never a private copy.
 
 Before reconciliation, trace every Supported action through all of these links:
 
@@ -182,6 +174,19 @@ revalidates every transition · reference inventory has no unclassified row.
 **Check:** actions passed once to `app-data-table` · no feature-owned
 `TemplateRef` wiring · row identified by `id` · destructive and risky actions
 confirm, routine ones do not · busy guard · last-page-delete handled.
+
+
+#### Failure-prevention register (moved from Master block 4, 2026-10-01)
+
+| Failure seen in review | Root cause | Mandatory prevention |
+|---|---|---|
+| Customer approve/reject or Revise is absent | Reference inspected partially or only the screenshot menu was copied | Complete the reference-action inventory across backend and Angular before implementation |
+| Action exists in one layer only | No vertical-slice reconciliation | Require every Supported action to fill every action-state contract column |
+| Redundant `DetailAsync`/`GetManyWithNavigationsAsync` or controller override | Reference methods copied for symmetry | Complete the override-justification table and inherit any row without distinct behavior |
+| Action appears in the wrong state | One status field was checked while another approval axis was implicit | Freeze and validate the complete source and target state tuples |
+| Backend explains a blocked transition but UI shows a generic error | Non-2xx `Result` body was ignored | Let the error interceptor present the backend `Result.message`; an inline message reads it with `apiErrorMessage` (UI block 22) |
+| Unapprove passes a dependency pre-check while a dependent record is created concurrently | Separate dependency query was assumed atomic with the update | Record an isolation/invariant strategy or disclose the residual race |
+| Sales-only downstream action is copied into another quotation | Reference parity was confused with domain parity | Classify the action Not Applicable with concrete missing-domain evidence; never add a no-op |
 
 ---
 

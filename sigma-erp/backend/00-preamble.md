@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 19 |
-| Version | 0.19 |
-| Last verified against source | 2026-09-17 (`IRepository`, `SiGmaControllerBase`, `SiGmaDbContext`, `MiscellaneousInvoiceService`, `InvoiceService`, `PurchaseOrderService`, `WorkOrderService` re-checked 2026-09-28) |
-| Last content change | 2026-09-28 — block 18 *Removing or renaming a member* (symbol-wide consumer search; cascade build errors). History in `../CHANGELOG.md` |
+| Version | 0.72 |
+| Last verified against source | 2026-10-01 (base `Service`, `Repository.QueryReport`, `ListSmBase`, `UpdateBaseVm`, profiles, `DailyServiceLogReportService`) |
+| Last content change | 2026-10-02 — Allocation-based aging preserves ledger net, reconciles both cutoff-qualified sides and fails closed on missing AR mapping; explicit complete-response options preserve paged defaults (17). History in `../CHANGELOG.md` |
 | Verified by | source inspection only — no build, test, migration, or database run |
 
 Build order for one entity, six steps, five patterns. Open the reference file,
@@ -90,4 +90,3 @@ document.
 | 19 | [Backlog](19-backlog.md) | — |
 
 ---
-

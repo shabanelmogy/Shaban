@@ -3,9 +3,10 @@
 | | |
 |---|---|
 | Status | **Canonical.** Binding for Sigma feature review and implementation orchestration |
-| Version | 1.9 |
-| Last verified against documentation system | 2026-09-28 |
+| Version | 1.26 |
+| Last verified against documentation system | 2026-10-01 (completion plan R5–R8; history in `CHANGELOG.md`) |
 | Verification | Documentation structure and source inspection only |
+| Last content change | 2026-10-02 — Conformance claims require actual consumer/producer symbols and compared contracts; required report evidence before and after implementation (block 5) |
 
 This guide defines how a Sigma feature is scoped, reviewed, implemented, and
 reconciled across Angular and .NET. It owns global review rules and contract
@@ -57,10 +58,9 @@ drift instead of silently changing the rule.
 2. [Screenshot and visual evidence policy](02-screenshot-and-visual-evidence-policy.md)
 3. [Phase model, ownership, and dependencies](03-phase-model-ownership-and-dependencies.md)
 4. [Required decisions, artifacts, and contract invariants](04-required-decisions-artifacts-and-contract-invariants.md)
-5. [Continuous quality gates](05-continuous-quality-gates.md)
+5. [Continuous quality gates](05-continuous-quality-gates.md), including [Production notes](05-continuous-quality-gates.md#production-notes-owner-request-2026-10-02)
 6. [Human and AI review protocol](06-human-and-ai-review-protocol.md)
 7. [End-to-end reconciliation and final report](07-end-to-end-reconciliation-and-final-report.md)
 8. [Packet generation and governance](08-packet-generation-and-governance.md)
 
 ---
-

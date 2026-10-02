@@ -3,7 +3,7 @@
 > **Status: Canonical**
 
 `p-calendar`, always appended to body with the shared panel class. **Never** use
-a native `<input type="date">`. Every Sigma calendar is typeable, carries no
+a native `<input type="date">`. By default a Sigma calendar is typeable, carries no
 icon, and keeps an invalid partial entry instead of clearing it. Editor shape:
 
 ```html
@@ -25,29 +25,88 @@ icon, and keeps an invalid partial entry instead of clearing it. Editor shape:
 ></p-calendar>
 ```
 
-Display format is `dd/mm/yy` in the picker and `dd/MM/yyyy` in tables:
-
-```html
-{{ agreement.startDate | date: 'dd/MM/yyyy HH:mm' }}
-```
+Display format is `dd/mm/yy` in the picker and `dd/MM/yyyy` (`dd/MM/yyyy HH:mm` with time) in
+tables. A grid column uses `type: 'date'` or `type: 'dateTime'` (block 5); other text uses
+`formatDisplayDate(value, withTime)`.
 
 When the calendar is inside a canonical filter boundary from block 4, its
 wrapper and input consume `--sigma-filter-control-height`. Do not add a
 feature-local filter-calendar height.
 
-**Every calendar is typeable (owner decision, 2026-09-28).** Use
+**Shared date picker (2026-10-01).** Put `appDatePicker` (`shared/directives/date-picker.directive.ts`) on
+every `p-calendar`: it applies `dd/mm/yy`, typeable with `keepInvalid`, button bar, no icon, the
+`sigma-datepicker-panel` class, `appendTo="body"`, no open on focus, and open on click. The element
+then carries only what differs — `inputId`, the control, `[minDate]`/`[maxDate]`, `view="month"
+dateFormat="mm/yy"`. Reference: the Individual editor. The rules below are what the directive
+applies; a calendar without it repeats them by hand (UI backlog 39).
+
+**Calendars are typeable by default (owner decision, 2026-09-28).** Use
 `[readonlyInput]="false"` on filters **and** on detail/editor forms. The user
 types `dd/mm/yy` straight into the box and opens the picker only when they want
 to browse. Always pair it with `[keepInvalid]="true"`: without it, PrimeNG's
 blur handler (`updateInputfield()`) clears any text that does not match its
 internal format, so a half-typed or range value disappears when the user
 clicks Search or Save. Type the control as `Date | string | null` (a range as
-`Date[] | string | null`) and normalise it before sending, through
-`parseDateValue()` / `parseRangeString()` helpers that accept `dd/MM/yyyy`,
-`dd-MM-yyyy`, and `yyyy-MM-dd` and emit `yyyy-MM-dd` for `FilterHelper.GetDate`.
+`Date[] | string | null`) and normalise it before sending with the shared
+`parseDateValue(value)` / `parseDateRange(value)` from `shared/utils/date-utils.ts`
+(2026-10-01). They accept a picker `Date`/`Date[]` or typed `dd/MM/yyyy`, `dd-MM-yyyy`,
+`yyyy-MM-dd` (a range also `from - to`, `to`, `إلى` or a comma) and emit `yyyy-MM-dd` for
+`FilterHelper.GetDate`. The private copies in Work Order and Labour Activities Report are
+removed in their reviews.
 Keep `dateFormat="dd/mm/yy"` everywhere, so what the user types is what the box
 shows. Minimum and maximum dates, plus start/end ordering, are still validated
 in the form and on the backend.
+
+**Explicit picker-only request.** When the owner requests selection without text
+entry, keep `appDatePicker` and override `[readonlyInput]="true"` and
+`[keepInvalid]="false"` on those calendars. Do not disable the control or filter text
+keystrokes. The shared directive opens picker-only inputs with Enter, Space or
+Arrow Down; panel keyboard navigation, clear action and date validators remain
+available. Use this only while the owner's explicit picker-only decision applies.
+
+**Date-only editing (owner standing decision, 2026-10-01).** Every date field
+allows manual date editing or picker selection, and rejects arbitrary text.
+`appDatePicker` enables `dateNumericInput` by default; no per-field opt-in is
+required. Its shared insertion/paste/key guards accept digits and the configured
+numeric date separators, with the space/hyphen separator for ranges and
+space/colon for time. A 12-hour time also allows its AM/PM marker characters.
+Editing/navigation keys and shortcuts remain available. Keep `keepInvalid=true`
+so partial numeric dates survive editing; the calendar parser and form validators
+still enforce real dates, range ordering and business limits. Character filtering
+does not replace date validation. The shared directive also captures native
+`input` before PrimeNG's handler, strips disallowed characters and preserves the
+caret if insertion bypassed the preventive guards. PrimeNG's keydown gate is
+enabled for that input event so paste/drop/mobile editing reaches its normal
+parser once. Scope this to the calendar's actual text input, skip disabled and
+picker-only fields, and remove the listener on destroy. Do not repair only the
+visible text after PrimeNG has already stored it in the form.
+Use numeric date formats; never add feature-local
+keyboard guards or disable filtering to allow arbitrary text. The existing
+Companies/Driver and Individual date fields consume the shared directive;
+legacy calendars without it adopt it during their screen review (UI backlog 39).
+
+**Required structured single-date recipe (owner decision, 2026-10-02).** Character
+filtering alone does not constrain a date's shape. Every new or reviewed date
+field uses `appDatePicker`; bind `[dateInputMask]="true"` for single
+`dd/mm/yy` and `mm/yy` calendars without time. This is the required recipe for
+future date fields; the directive retains opt-in behavior for existing consumers
+until their screen review. Show `placeholder="dd/mm/yyyy"`
+or `placeholder="mm/yyyy"` to match the configured format. Do not add a local
+mask, native date input or per-feature input handlers.
+The shared guard limits day/month to two digits and year to four, requires `/`
+between parts, rejects complete day/month values outside 1–31/1–12, and restores
+the prior value for invalid insertion that cannot be canceled. Separators are
+typed by the user; the directive does not insert them automatically. Partial
+edits remain strings and invalid until a complete real `DD/MM/YYYY` or `MM/YYYY`
+value is entered. Angular validation prevents PrimeNG's short-year parsing from
+turning a partial year into a valid saved date. Clear and picker selection keep
+their normal behavior; month-view expiry retains its existing first-day storage.
+Individual Birth/Document/Card dates and Company Card/Document/Driver dates use
+this same shared implementation. Driver Documents reuses Company Documents.
+Date order and other business validators remain on the form. Time/range fields
+retain the shared character guard and their existing real-date/order validation;
+the single-date mask does not define a time or range grammar. Legacy fields
+without `appDatePicker` adopt it during their screen review, without a bulk rewrite.
 
 **A date range is one range picker on two months.** Never render two separate
 From/To inputs. `selectionMode="range"` pairs with `[numberOfMonths]="2"`, so a
@@ -71,14 +130,13 @@ filter defaults to the **current month**, from the 1st to its last day:
 ```
 
 ```ts
-private getDefaultDateRange(): Date[] {
-  const now = new Date();
-  return [
-    new Date(now.getFullYear(), now.getMonth(), 1),
-    new Date(now.getFullYear(), now.getMonth() + 1, 0),
-  ];
-}
+readonly filterForm = this.fb.group({
+  dateRange: this.fb.control<Date[] | string | null>(currentMonthRange()),
+});
 ```
+
+`currentMonthRange()` is shared (`date-utils.ts`); the rule is the owner's (2026-09-24,
+"الشهر الحالي") and applies to lists **and** reports (block 20).
 
 `numberOfMonths` is a **panel** property: it widens the overlay, not the field.
 The range field still occupies exactly one column of the block 4 grid — do not
@@ -101,6 +159,14 @@ back a separate `36px` button beside the input, which splits the control in two
 and breaks the strip's field distribution. Backlog 32 tracks removing the
 existing `[showIcon]` attributes.
 
+**Shared transport helpers (`shared/utils/date-utils.ts`).** Sigma stores dates as local
+wall-clock time and the backend converts no timezone, so **no date or date-time goes through
+`toISOString()`** (it appends `Z` and shifts the value by the UTC offset: 10:00 saved in Dubai
+reads back as 06:00). Use `toApiDate(value)` → `yyyy-MM-dd`,
+`toApiDateTime(value)` → `yyyy-MM-ddTHH:mm:ss` (no `Z`), and `formatDisplayDate(value,
+withTime)` → `dd/MM/yyyy[ HH:mm]` for grid `value` functions and exports. Do not add feature
+copies of these helpers.
+
 **Date-only values must not go through `toISOString()`.** It converts local time
 to UTC, which changes the calendar date whenever the local offset is **ahead of
 UTC** — exactly the region this app runs in.
@@ -111,23 +177,8 @@ UTC** — exactly the region this app runs in.
 UTC−5 happens to survive, which is why the bug hides in some environments and
 not others.
 
-Build from local parts instead:
-
-```ts
-private toDateInput(value: string | Date | null | undefined): string {
-  if (!value) return '';
-  if (typeof value === 'string') {
-    const dateOnly = /^(\d{4}-\d{2}-\d{2})/.exec(value);
-    if (dateOnly) return dateOnly[1];
-  }
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) return '';
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-}
-```
+Use the shared `toApiDate(value)` — it builds the date from local parts and keeps a
+`yyyy-MM-dd` string unchanged. Do not write a private copy (`toDateInput`, `formatApiDate`).
 
 Validate ordering in the UI as well as the backend, e.g.
 `validationMessages.expiryAfterIssueDate` for issue/expiry pairs.
@@ -171,7 +222,9 @@ openDatePicker(): void {
 </app-editor-dialog>
 ```
 
-**Check:** no native `<input type="date">` · `appendTo="body"` and
+**Check:** single date fields use shared structured DD/MM/YYYY or MM/YYYY
+editing and matching placeholders; incomplete/invalid input blocks Save ·
+no native `<input type="date">` · `appendTo="body"` and
 `panelStyleClass="sigma-datepicker-panel"` · `[readonlyInput]="false"` with
 `[keepInvalid]="true"` on every calendar, and typed values normalised to
 `yyyy-MM-dd` · no `toISOString()` on a date-only value ·
@@ -182,7 +235,6 @@ use `[showOnFocus]="false"` plus `(click)` to open · any auto-open waits for
 dialog `shown` and is limited to a confirmed date-first workflow · filter
 calendars use the shared 34px height · a range is one `selectionMode="range"`
 picker with `[numberOfMonths]="2"`, occupying exactly one grid column, and a
-list or report range defaults to the current month.
+list or report range defaults to the current month · no `toISOString()` on any API date or date-time; `toApiDate`/`toApiDateTime`/`formatDisplayDate` from `date-utils.ts`.
 
 ---
-

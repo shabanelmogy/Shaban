@@ -41,14 +41,12 @@ if (FilterHelper.GetBool(filters, "isInactive") is { } isInactive)
     query = query.Where(x => x.IsActive != isInactive);
 ```
 
-**Three traps.**
+**Filter keys are case-insensitive** (2026-09-30). The `ListSmBase.Filters` setter copies
+the bound values into an `OrdinalIgnoreCase` dictionary, the same as
+`SpecificationRequestDto`, so `Filters[Search]` and `Filters[search]` are one key. Keep
+the documented casing anyway; a key repeated with different casing keeps the last value.
 
-**Filter keys are case-sensitive.** `ListSmBase.Filters` is a plain
-`Dictionary<string, string>` with the default comparer, so `Filters[Search]` and
-`Filters[search]` are different keys and the wrong casing is silently ignored —
-no error, just an unfiltered list. Note `SpecificationRequestDto` *does* use
-`StringComparer.OrdinalIgnoreCase`, so the two request types disagree. Match the
-exact casing the Angular service sends. Backlog item 12.
+**Two traps.**
 
 **`GetString` does not trim.** It rejects whitespace-only values but returns
 ` " abc " ` unchanged, so trim before comparing or searching:
@@ -68,7 +66,12 @@ var pageSize = Math.Clamp(searchModel.PageSize ?? 10, 1, 100);
 var pageNo   = Math.Max(searchModel.PageNo ?? 1, 1);
 ```
 
-**Check:** filter keys match the Angular casing exactly · every value read via
+The base list methods apply this through `NormalizePaging(searchModel)` whenever the
+request carries paging. A request with neither `PageNo` nor `PageSize` stays unpaged,
+because existing "load all" callers rely on it; a new caller that needs every row pages
+through `TotalPages` instead (UI block 8). An override calls `NormalizePaging` too.
+
+**Check:** filter keys use the documented casing (binding is case-insensitive) · every value read via
 `FilterHelper`, never `filters["x"]` directly · strings trimmed · page number and
 size clamped · filters applied before `CountAsync` · unknown filter keys ignored
 rather than throwing.

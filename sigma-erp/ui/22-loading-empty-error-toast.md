@@ -20,12 +20,11 @@ this.service.getList(query)
 
 **What drives the global loader.** Use it for screen-level data loads and page
 fetches, destructive or domain row actions (accept, reject, delete, void),
-editor detail loading, and editor save. `LoadingService` is a single boolean
-(backlog 27), so any `endLoading()` hides the spinner for everyone. Auxiliary
-lookups that run at the same time as the primary load (for example
-`loadLookups()` next to `loadData()` in `ngOnInit()`) therefore **must not**
-call `startLoading()` / `endLoading()`. Otherwise the lookup finishing first
-dismisses the loader while the grid is still fetching.
+editor detail loading, and editor save. `LoadingService` counts (2026-09-30): the spinner
+stays until every `startLoading()` has had its `endLoading()`, `endLoading()` never goes below
+zero, and a route change resets the count. Pair each start with exactly one end in
+`finalize`. Auxiliary lookups (for example `loadLookups()` next to `loadData()`) still do
+not drive the global loader; they use local state, so a slow lookup never blocks the page.
 
 **Local busy flags** for per-action state: `searching`, `saving`, `revising`,
 `contactGroupSaving`, `loadingList`. Bind them to the control they describe:
@@ -34,14 +33,41 @@ dismisses the loader while the grid is still fetching.
 `[saving]="saving()"` on `app-editor-dialog`. Skip a table request when page
 number and page size have not changed.
 
+**Error presentation — single owner.** The global `errorInterceptor` presents **every**
+failure of a Sigma API request: a `Result` with `isSuccess: false` (any status) and every HTTP
+error, through `ApiErrorDialogService`. It also ends the global loader and handles `401`
+(logout). A feature therefore does **not** show its own toast or dialog for the same failure;
+it restores its own state (busy flags off, entered data kept, dialog stays open). The only
+exception is a message that belongs inside the screen (a report filter error, an inline
+lookup warning): that request sends `X-Skip-Error-Interceptor` and the feature shows the
+message itself. Existing feature error toasts are removed when their screen is reviewed (backlog
+40).
+
+**Reading an API error.** For that inline case use `apiErrorMessage(error, fallbackKey)` from
+`shared/utils/api-error.ts`: it returns the backend `Result.message`
+from the error body when present, otherwise the translation key. Do not copy a private
+`extractErrorMessage` into features, and do not read
+`error.message` of an `HttpErrorResponse`. An action that returns nothing to act on (for
+example an export with zero rows while the grid has rows) shows its error instead of doing
+nothing.
+
 **Lookup failures stay visible.** A required Create/Edit option list that fails
 shows its error; never hide it by returning empty options or by making a
 protected endpoint anonymous. Diagnose by HTTP status before changing the UI:
 `401` authentication (token missing, expired, or signed by a different auth
-server; also check that the service resolves from the interceptor-equipped
-`LayoutModule` injector, block 1), `403` authorization, `404` route mismatch,
+server; also check that the URL is built from `environment.baseUrl`, block 1), `403` authorization, `404` route mismatch,
 `0` transport/CORS, `5xx` server. Never copy bearer tokens into logs,
 screenshots, or messages.
+
+**Customer CSV imports (2026-10-01).** Use the existing shared CSV component and
+the shared list title/fill table shell. Construct typed write DTOs only after validating
+nonempty boolean/numeric cells and DMY/ISO date text; do not replace malformed values with
+0/false or ambiguous month-first dates. One inline feedback owner handles row errors,
+Result.message, ordinary HTTP failures and network fallback, with an inflight guard and
+finalize for the loader. Partial success retains both saved counts and failed-row diagnostics.
+Long diagnostics use `ul.sigma-alert-list`, whose bounded internal scroll is owned by
+`src/styles.scss`; they never transfer scrolling to the route. A View reads saved lookup
+labels without edit-only lookups; Edit merges saved selections with fetched options.
 
 **Success toast — single owner.** The global `errorInterceptor` owns the one
 success toast for standard `POST`, `PUT`, `PATCH`, and `DELETE` responses whose result has
@@ -93,7 +119,7 @@ this.service
   .pipe(
     switchMap((result) => {
       if (!result.isSuccess) {
-        this.showBusinessFailure(result.message);
+        this.restoreAfterFailure(); // the interceptor showed the message
         return EMPTY;
       }
       saveSuccessMessage = result.message;
@@ -113,14 +139,14 @@ this.service
       const failed = [rows, state].find((response) => !response.isSuccess);
       if (failed) {
         saveSuccessMessage = null;
-        this.showBusinessFailure(failed.message);
+        this.restoreAfterFailure(); // the interceptor showed the message
         return;
       }
       this.replaceRows(rows.entities ?? []);
     },
     error: (error) => {
       saveSuccessMessage = null;
-      this.showTransportFailure(error);
+      this.restoreAfterFailure();
     },
   });
 ```
@@ -131,39 +157,23 @@ the committed state reliably.
 
 ```ts
 next: (result) => {
-  if (!result.isSuccess) { this.showError(result.message); return; }
+  if (!result.isSuccess) return; // shown by the interceptor
   this.form.markAsPristine();
   this.closed.emit(true);
 }
 ```
 
-**Error toast** — same shape, `severity: 'error'`, longer life:
-
-```ts
-private showError(message?: string): void {
-  const detail = message?.startsWith('companyPartners.')
-    ? this.translate.instant(message)
-    : message || this.translate.instant('companyPartners.operationError');
-  this.messageService.add({
-    key: 'global',
-    severity: 'error',
-    summary: this.translate.instant('companyPartners.errorTitle'),
-    detail,
-    life: 5000,
-  });
-}
-```
-
 Handle **both** failure channels. `isSuccess: false` is a business failure and
-`error:` is a transport failure — neither may pass silently:
+`error:` is a transport failure — neither may pass silently, and in both the interceptor has
+already shown the message, so the feature restores its state:
 
 ```ts
 .subscribe({
   next: (response) => {
-    if (!response.isSuccess) { this.showError(response.message); return; }
+    if (!response.isSuccess) return;       // message shown by the interceptor; form kept
     …
   },
-  error: () => this.showError(),
+  error: () => this.saveFailed.set(true), // restore state; never `() => undefined`
 });
 ```
 
@@ -171,32 +181,34 @@ Handle **both** failure channels. `isSuccess: false` is a business failure and
 a feature review as a current defect and replace it with the feature's declared
 business/transport failure handling.
 
-**Dialog states** — loading, empty and content are explicit:
+**Loading, empty and error states** inside a dialog body, panel or section use the shared
+`app-state-message` (`shared/components/state-message`, 2026-10-01). It owns the spinner, icon,
+colour, spacing and `role`, with shared default messages (`general.loading`,
+`general.noData`, `apiErrors.unexpectedMessage`):
 
 ```html
 @if (agreementsLoading()) {
-  <div class="individual-dialog-state">
-    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-    {{ 'Please wait...' | translate }}
-  </div>
+  <app-state-message kind="loading" />
+} @else if (agreementsError()) {
+  <app-state-message kind="error" [message]="agreementsError()" />
 } @else if (agreements().length === 0) {
-  <div class="individual-dialog-state is-empty">
-    <i class="bi bi-journal-x" aria-hidden="true"></i>
-    <strong>{{ 'companyPartners.noAgreements' | translate }}</strong>
-  </div>
+  <app-state-message kind="empty" message="companyPartners.noAgreements" icon="bi bi-journal-x" />
 } @else {
   … table …
 }
 ```
 
+A grid's own empty/loading state stays with `app-data-table` (block 6). Hand-written state
+markup (`individual-dialog-state`, `'Please wait...'`) is replaced in the screen's review.
+
 **Check:** every request has `finalize` releasing loading · composite saves suppress an early interceptor toast and show success only after required refreshes complete · `isSuccess` and
-`error` both handled · no silent `undefined` handler · exactly one success
+`error` both handled (state restored) · no feature error toast/dialog on top of the interceptor
+unless the request sends `X-Skip-Error-Interceptor` · no silent `undefined` handler · exactly one success
 toast owner per mutation · a standard mutation has no feature-level success
 toast/SweetAlert helper · a feature-owned composite success uses
 `X-Skip-Success-Toast` on its mutation · the interceptor is not duplicated across
 active HTTP chains · manual toast key is `'global'` when a non-standard workflow
-genuinely needs one · dialogs show loading and empty states · entered data
+genuinely needs one · dialogs and panels show loading, empty and error states with `app-state-message` · entered data
 survives a failed save.
 
 ---
-

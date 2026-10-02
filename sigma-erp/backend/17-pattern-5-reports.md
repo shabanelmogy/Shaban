@@ -1,6 +1,6 @@
 ## 17. Pattern 5 — Reports
 
-> **Status: Transitional** — `QueryReport` fails open, see the warning
+> **Status: Canonical**
 
 A report is not CRUD. It has no Add, Update or Delete, no `ListVM`, and often no
 entity of its own — it reads across several tables and returns one shaped
@@ -38,28 +38,13 @@ var lines = await UnitOfWork.Repository.QueryReport<JournalVoucherLine>()
     .ToListAsync(cancellationToken);
 ```
 
-**Warning — `QueryReport` fails open.** Every other repository method fails closed:
-an unresolved subscription claim yields `SubscriptionId == 0` and returns nothing.
-`QueryReport` instead returns the **unfiltered** set when the claim is missing, and
-also when `T` has no `SubscriptionId`/`IsDeleted` property:
-
-```csharp
-// If no subscription was resolved from the current request, don't filter by subscription.
-if (_subscriptionId <= 0)
-    return query;
-…
-if (subscriptionProp == null || isDeletedProp == null)
-    return query;
-```
-
-So any report reached without a resolved claim — a background job, a scheduled
-task, an endpoint whose `[Authorize]` was relaxed — can read across tenants. Until
-that is fixed (backlog item 10):
+**`QueryReport` fails closed.** A tenant-scoped type returns nothing when the subscription
+claim cannot be resolved; soft-deleted rows are excluded; a global reference type
+(`EntityBaseWithoutSubscription`) is not tenant-filtered (re-verified 2026-09-30). Still:
 
 - never use `QueryReport` for a validation or ownership check;
 - keep `[Authorize]` on every report controller;
-- when the projected type is keyless or a view, add the tenant predicate
-  yourself rather than assuming it was applied.
+- when the projected type is keyless or a view, add the tenant predicate yourself.
 
 Rules for the query itself:
 
@@ -74,6 +59,51 @@ Rules for the query itself:
 - **no N+1.** One query per section, not one per row;
 - **date boundaries are explicit** — is `toDate` inclusive? Decide, document it,
   and apply it identically everywhere.
+
+**Paged report responses are explicit.** State the page-size clamp, deterministic
+ordering and rows/count/page metadata even when wrapped inside Result<T>. Document
+whether totals cover the page or all matching rows; frontend paging, print and export
+must honor that scope (UI 6/8/20/21). A first page cannot be presented as a full report.
+This rule does not introduce paging into an existing unpaged endpoint.
+
+When a screen needs the complete filtered dataset, prefer an explicitly confirmed
+complete-response route or opt-in request flag over repeatedly recomputing the
+same report for every page. Freeze that option and its rows/count/page metadata
+with the consumer; preserve the existing paged default for other callers. When
+only a paged contract exists, the consumer must collect every page before local
+paging, print or export.
+
+**Conditional aging filters have one effective contract.** When a report supports
+custom bucket end-days, the off state uses its confirmed defaults and the on state
+requires positive, strictly increasing integer boundaries. Validate at the API even
+when the form validates; do not silently accept an invalid sequence. Either return
+effective boundaries or expose a confirmed contract the consumer can use to label
+the same applied buckets in screen, summary, print and Excel. Exact values and
+accounting formulas remain in the feature contract, not this reusable rule (UI 20).
+
+### Allocation-based financial aging
+
+Trace the ledger writer and allocation consumer before freezing financial
+formulas. A posted receipt or credit may already reduce the debit-credit ledger
+net; deducting its matched amount again produces a false balance. For outstanding
+aging, reconcile the actual target and source lines before bucketing: reduce
+opposite-signed remaining amounts by the same matched magnitude, bounded by each
+line's capacity, so matching preserves the ledger net. Keep informational matched
+amounts distinct from net balance; exact column meanings remain feature-owned.
+
+Apply the same explicit as-of cutoff to allocation dates and both actual journal
+sides, with tenant, live-parent, posted/non-voided and account/partner eligibility.
+Resolve explicit source details or the actual allocating document's journal from
+the persisted links. A header-level link can cover several eligible lines;
+document deterministic distribution and capacity guards rather than selecting an
+arbitrary first credit. Never use unrelated receipt totals as a matching proxy.
+
+Require confirmed receivable-account membership. Missing control-account mapping
+must produce the feature's documented configuration failure or empty-result
+contract; it must never widen the query to every customer-associated account.
+Review partial settlement, full settlement, unapplied credit, future allocation
+and future source cases by source arithmetic, and distinguish that evidence from
+owner runtime/accounting acceptance.
 
 ### Derived operational summary reports
 
@@ -91,25 +121,10 @@ collected values must use the authoritative allocation records rather than
 subtracting unrelated receipt totals. Age buckets must be disjoint, cover the
 documented population exactly once, and use one documented as-of boundary.
 
-Current Daily Service Logs baseline (`DailyServiceLogReportService`):
-
-| Section | Backend derivation |
-|---|---|
-| Date boundary | The selected local calendar date uses a half-open interval `[date, date + 1 day)`. Month/year/PY comparisons end at the equivalent exclusive boundary |
-| RAC / Outside | Named compatibility proxy: a Job without `CustomerId` is RAC/internal; a Job with `CustomerId` is Outside. This is inferred from current persisted relationships and must be replaced if the domain adds an explicit ownership classification |
-| Vehicle service counts | Distinct `Job.VehicleId` values in each documented period, split by the RAC/Outside proxy |
-| Invoicing | `Invoice.JobNo == Job.No`; sum invoice `TotalAmount` for the period and split by the owning Job proxy |
-| Collection outstanding | Invoice total minus all authoritative journal-voucher allocations as of the selected day; never below zero. Age from `DueDate`, falling back to `InvoiceDate`, in disjoint 0–30, 31–90, 91–180, 181–270, 271–365, and >365 day buckets |
-| Receipts | Approved, non-voided receipts linked through invoice journal-voucher allocations. Group only the amount allocated to service invoices by payment type; day and month sections use the same as-of boundary |
-| Opening / closing | `ApprovalStatus.NotApproved` is the current open-job proxy; any other approval status is the current closed-job proxy because the aggregate has no separate close timestamp |
-| Pending closing | Open Jobs grouped by age: 0, 1–2, 3–7, 8–90, and >90 days. The last two labels are “More than 7 Days” and “More than 3 Months” |
-| Purchases | Approved `PurchaseOrderDetail.AmountPlusTax` rows linked to a Job; compare current-year-to-date with the equivalent previous-year period |
-| Payment outstanding | Job-linked Bill total minus authoritative allocations, never below zero, grouped into 0–90, 91–270, and >270 day buckets |
-| Detail rows | Jobs within the selected day, ordered by `DateAndTime` then `Id`. Invoice amount is preferred; receipt-only allocations supply Amount Collected; Amount Pending is the non-negative difference |
-
-These are named source-backed proxies, not new stored facts. Changing one is a
-business-contract change and requires updating the backend calculation, typed
-response expectations, UI labels where applicable, and this baseline together.
+A feature's derivation table (sections, proxies, boundaries, buckets) belongs to its review
+artifact, not to this block. Example: Daily Service Logs —
+`reviews/DAILY_SERVICE_LOGS_FEATURE_REVIEW.md`. Changing a proxy is a business-contract change:
+the backend calculation, the typed response, the UI labels and that artifact change together.
 
 ### Derived operational alerts
 
@@ -208,4 +223,3 @@ on every request · tenant predicate verified against the stamping write path ·
 the filter absent returns the same rows as before it existed.
 
 ---
-

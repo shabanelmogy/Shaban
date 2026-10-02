@@ -50,6 +50,29 @@ fallback that returns translated text. Export and any render path that bypasses
 the template then still show translated text instead of a raw enum. In the
 template, bind the row with `let-row` (`$implicit`).
 
+**Column types (shared formatting).** `DataTableColumn.type` formats the field so a feature
+writes no `value` function or template for common cells:
+
+| `type` | Renders | Export writes |
+|---|---|---|
+| `'dateTime'` / `'date'` | `dd/MM/yyyy HH:mm` / `dd/MM/yyyy` (`formatDisplayDate`) | the same text |
+| `'money'` | 2 decimals, Latin digits, half away from zero (`formatMoney`) | the same text |
+| `'number'` | the number | the number |
+| `'status'` + `status: (row) => ({ label, tone })` | `sigma-status-badge` with `tone` `success`/`info`/`warning`/`danger`/`neutral`, translated `label` | the translated label |
+
+`value` still wins over `type`, and `cellTemplate` remains for anything richer. Reference:
+Job list (`type: 'status' | 'money' | 'dateTime'`, no templates, no formatting helpers).
+
+**Status badge (shared).** A status cell is `<span class="sigma-status-badge …">` with a
+variant — `--success` (active/open), `--info`, `--warning`, `--danger` (voided/rejected), or
+the neutral base (closed/inactive) — defined once in `src/styles.scss` for light and dark. No
+feature badge CSS. A list whose status filter or row actions depend on the status **shows** the
+Status column, so the user sees why an action is missing; the backend sort switch includes
+`status`.
+
+**Sort whitelist from the columns.** `onLazyLoad` accepts a sort field only when a column with
+that `field` is `sortable`: build the set from `columns`, never a second hand-written list.
+
 **Required columns rule.** The list model carries only what the grid shows, plus
 `id`, plus what a row action needs. Company's 6 columns need: `id`, `no`,
 `companyName`, `phone1`, `phone2`, `contactGroup`, `contactGroupId` (Edit
@@ -60,7 +83,7 @@ weight — give export-only data its own contract.
 translation key · every `field` is a typed row property · sortable fields are
 backend-confirmed and whitelisted · derived values remain feature-owned · no
 model field that no column or action reads · no `ListCol`, `ColType` or
-`initColumns()` remains.
+`initColumns()` remains · status cells use `sigma-status-badge` with a translated `value` fallback · the sort whitelist is derived from the sortable columns · dates, money and statuses use `type` (and `status`) instead of per-feature `value` functions or templates.
 
 ---
 

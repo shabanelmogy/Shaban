@@ -107,9 +107,9 @@
       "output": "generated/PHASE-02-read-grid.md",
       "approvedReferences": [
         "SiGmaAngularFrontEnd/src/app/modules/shared/components/data-table",
-        "SiGmaAngularFrontEnd/src/app/modules/Fleet/VehicleService/components/list",
-        "SiGmaAngularFrontEnd/src/app/modules/Accounts/openingBalances/components/details",
-        "SiGmaAngularFrontEnd/src/app/modules/Customers/Individual/IndividualPartner/components/list"
+        "SiGmaAngularFrontEnd/src/app/modules/shared/components/filter-panel",
+        "SiGmaAngularFrontEnd/src/app/modules/Workshop/Job/components/list",
+        "SiGmaAngularFrontEnd/src/app/modules/Accounts/TrailBalance/components/list"
       ],
       "sources": [
         { "book": "master", "block": 0 },
@@ -131,7 +131,10 @@
         { "book": "ui", "block": 9 },
         { "book": "ui", "block": 15 },
         { "book": "ui", "block": 16 },
+        { "book": "ui", "block": 17 },
         { "book": "ui", "block": 19 },
+        { "book": "ui", "block": 20 },
+        { "book": "ui", "block": 21 },
         { "book": "ui", "block": 22 },
         { "book": "ui", "block": 23 },
         { "book": "ui", "block": 24 },
@@ -304,6 +307,8 @@
         { "book": "master", "block": 7 },
         { "book": "master", "block": 8 },
         { "book": "ui", "block": 0 },
+        { "book": "ui", "block": 20 },
+        { "book": "ui", "block": 21 },
         { "book": "ui", "block": 29 },
         { "book": "ui", "block": 30 },
         { "book": "backend", "block": 0 },

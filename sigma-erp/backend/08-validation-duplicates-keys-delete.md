@@ -39,9 +39,41 @@ Consequences for your checks:
 - A soft-deleted record therefore does **not** block a duplicate check. If the
   business needs the name reserved even after deletion, pass
   `includeDeleted: true` deliberately and say why.
-- One fail-open path exists: `QueryReport<T>()` returns the **unfiltered** set when
-  the subscription claim is missing, or when `T` has no `SubscriptionId`/
-  `IsDeleted` property. Never use it for a validation check. Backlog item 10.
+- `QueryReport<T>()` is read-only report access (`AsNoTracking`). It fails closed when
+  the subscription claim is missing, but it is still not a validation tool: never use it
+  for a duplicate, existence or ownership check.
+
+### Automatic input checks (2026-10-01)
+
+Before mapping anything, the base `AddAsync` and `UpdateAsync` run `InvalidInputAsync`:
+
+1. **Unique columns.** The service declares them, each with its message key, and the base rejects
+   a value already used by another live row of the tenant:
+   ```csharp
+   protected override (Expression<Func<Company, string?>> Column, string MessageKey)[] UniqueColumns =>
+       [(x => x.CompanyName, "CompanyNameExists"), (x => x.VAT, "CompanyVatExists")];
+   ```
+2. **References.** For every foreign key in the request (the record's own and its nested rows':
+   address, billing, child lines), the base checks that the chosen id is a live row of the tenant.
+   It reads the keys from the EF model and fails with `ReferenceNotFound` ("a selected value from
+   {table} no longer exists"). Only an absent/null optional id means nothing was chosen;
+   a supplied foreign key must be positive. This does not reject the identity 0 of a new owned row.
+   `MissingReferenceAsync` skips `IsBaseLinking()` inheritance keys: their `Id`
+   identifies the row itself, not a user-selected base entity. New nested rows
+   with `Id = 0` remain valid in an Update snapshot; saved row ownership is
+   checked separately. All ordinary business FKs keep positive/live/tenant checks.
+
+When two users save the same value at the same moment, both pass check 1 and the unique index refuses
+the second save. That is answered once, in `AccountingConfigurationExceptionMiddleware` (409,
+`RecordAlreadyExists`): a service does not wrap its save in `try/catch (DbUpdateException)`.
+SQL deadlocks (1205), whether raised by a query or wrapped by a save, and
+`DbUpdateConcurrencyException` are also answered centrally with localized 409
+`ConcurrentWriteConflict`. Reload/review is required; never blindly retry an aggregate write.
+
+The service keeps only the rules the base cannot know: a date order, a state, an accounting rule.
+An override that replaces the base Add or Update calls `InvalidInputAsync(vm, id)` itself
+(reference `CompanyService.UpdateCoreAsync`). Sections 1 and 2 below explain what these checks do and
+how to write a rule the base cannot express.
 
 ### 1. Duplicate check
 
@@ -71,8 +103,21 @@ Rules:
 - normalize before comparing. Trim first, and decide case behaviour explicitly;
   `Contains` and `==` follow the database collation, so state the intent
   rather than relying on it;
-- back the rule with a unique index from step 2, or two concurrent requests can
-  both pass the check and both insert;
+- back the rule with a unique index from step 2. When inheritance splits the business key
+  and its tenant/live-row scope across tables, an ordinary filtered index cannot express that
+  key: serialize participating duplicate-check writes with the shared
+  `UnitOfWork.ExecuteUniqueWriteAsync<TEntity>` (owner decision 2026-10-01). It takes an
+  Exclusive SQL Server application lock per entity type and authenticated subscription before
+  duplicate reads, inside a ReadCommitted transaction. Base Add/Update apply it when
+  `UniqueColumns` is declared; custom aggregate updates override protected `UpdateCoreAsync`.
+  Custom writers, including Company and Individual import chunks, use the same boundary and
+  recheck live keys inside it. A pre-flight import snapshot alone is insufficient. Preserve
+  partial-chunk commit semantics. The lock waits at most 10 seconds; timeout, cancellation or
+  deadlock outcomes stop the write with localized 409. Never blindly retry or claim all
+  deadlocks impossible. An owned transaction commits only success and disposes on every exit;
+  an existing outer transaction remains the caller's responsibility. This protects participating
+  writers, not arbitrary SQL or future bypass writers; a database invariant still requires a
+  deliberate schema design. A graph alone does not require an extra transaction;
 - for a child collection, uniqueness is usually **within the parent**, so include
   the parent key in the predicate.
 
@@ -107,6 +152,9 @@ repository scopes by tenant, `ExistsAsync` also proves the row belongs to the
 caller's tenant — that is the ownership check, so do not re-implement it with a
 raw `DbContext.Set<T>()` or a bare `FindById`.
 
+The base checks every reference in the request automatically (*Automatic input checks* above); write
+one by hand only for an id the EF model does not hold as a foreign key.
+
 **Required single FK:**
 
 ```csharp
@@ -122,36 +170,28 @@ if (vm.JobId.HasValue &&
     return Fail("Invalid Job");
 ```
 
-**Many ids from a detail collection** — compare counts. This is the one that is
-easy to get wrong:
+**Many ids from a detail collection** — every distinct id must exist. Use the base helper
+`AllExistAsync<T>(ids)` (distinct count compared in the database; null ids ignored):
 
 ```csharp
-var itemIds = vm.PurchaseOrderDetails
-    .Where(d => d.ItemId.HasValue)
-    .Select(d => d.ItemId!.Value)
-    .Distinct()
-    .ToList();
-
-if (itemIds.Count > 0)
-{
-    var foundCount = await UnitOfWork.Repository.Query<Item>()
-        .Where(x => itemIds.Contains(x.Id))
-        .Select(x => x.Id)
-        .Distinct()
-        .CountAsync();
-
-    if (foundCount != itemIds.Count) return Fail("Invalid Item references");
-}
+if (!await AllExistAsync<Item>(vm.PurchaseOrderDetails.Select(d => d.ItemId)))
+    return Fail("Invalid Item references");
 ```
 
 `ExistsAsync<Item>(x => itemIds.Contains(x.Id))` is **not** equivalent — it returns
 true when a single requested id exists, so an unknown id passes alongside a real
-sibling. `PurchaseOrderService` currently has that defect; backlog item 3.
+sibling. `PurchaseOrderService` had that defect in ten checks until 2026-10-01 (backlog 3).
 
 Also validate:
 
 - **dependent combinations**, not just each id alone — a Role must belong to the
   supplied Department, a CarModel to the supplied CarMake;
+- **reference type**, when one table serves several businesses: Company and Individual create,
+  update, contact-group actions and import accept `ContactType.Customer` groups only.
+  `IContactGroupAccountService.CustomerGroupIdAsync(chosen)` resolves the default for absence
+  and returns null for a supplied group of the wrong type or a missing/foreign/deleted group.
+  Resolve it before tracked mutations because default creation may save the scoped context.
+  Shared existence validation proves tenant/liveness, but not domain type;
 - **self-reference and cycles** for any hierarchy: reject
   `vm.ParentId == vm.Id`, then walk the chain to reject a longer loop;
 - **selectability**, when inactive rows exist but must not be chosen — add
@@ -160,46 +200,49 @@ Also validate:
 A client-supplied navigation object is never proof of anything. Read the id and
 verify it.
 
-### 3. Reference check before delete
+### 3. Reference check before delete (automatic, 2026-10-01)
 
-Before removing a row, inventory everything that points at it, from the current
-EF model rather than memory, and block with a message naming the blocker.
+A record that something still points at is never deleted. The base finds those references in the
+EF model, so nobody lists them by hand and a reference added later is checked with no code.
+
+`RemoveWithChildrenAsync(id, ct, owned…)` does the whole delete:
+
+1. **Not found:** returns 404 when the record is missing.
+2. **In use:** `InUseAsync` checks every table with a foreign key to the entity or one of its
+   base types. The first live row blocks the delete with `RecordInUse` ("used in {table}"). The
+   table name comes from the `Entity<Type>` key, or from the type name in words.
+3. **Delete:** soft-deletes the record and the owned rows named in `owned`. Those rows belong to
+   the record, so they never block.
 
 ```csharp
-public override async Task<Result> RemoveAsync(int id)
-{
-    if (await UnitOfWork.Repository.ExistsAsync<Partner>(x => x.BranchId == id))
-        return Fail("Cannot delete — branch is referenced by Partners.");
-
-    // InvoiceBase is abstract — EF maps concrete subtypes, so check each one
-    if (await UnitOfWork.Repository.ExistsAsync<Invoice>(x => x.BranchId == id))
-        return Fail("Cannot delete — branch is referenced by Invoices.");
-    if (await UnitOfWork.Repository.ExistsAsync<LimousineInvoice>(x => x.BranchId == id))
-        return Fail("Cannot delete — branch is referenced by Limousine Invoices.");
-    if (await UnitOfWork.Repository.ExistsAsync<MiscellaneousInvoice>(x => x.BranchId == id))
-        return Fail("Cannot delete — branch is referenced by Miscellaneous Invoices.");
-    // … EquipmentRentalInvoice, TransportationInvoice, RentalQuotation, PurchaseOrder
-
-    return await base.RemoveAsync(id);
-}
+// Individual, Driver: the whole delete
+public override Task<Result> RemoveAsync(int id)
+    => RemoveWithChildrenAsync(id, CancellationToken.None,
+        x => x.Documents, x => x.CreditCards, x => x.PartnerAddress, x => x.BillingInfo);
 ```
 
-How to build that list — do not guess:
+A child with usages of its own (a company's driver or contact person) is checked with
+`InUseAsync<TChild>(childId, owned…)` before it is dropped from a snapshot or deleted with its
+parent. Company adds only that check and its drivers' documents and address (reference
+`CompanyService`).
 
-1. search the model for the FK property name, e.g. `BranchId`;
-2. add the semantic references that do **not** carry the obvious name —
-   attendance, history, log and report tables that reference the row another way;
-3. for an abstract base such as `InvoiceBase`, list every concrete subtype
-   separately; a check against the base does not compile to one table;
-4. give each blocker its own message so the user knows what to clear first;
-5. finish with `base.RemoveAsync(id)` when the base behaviour — soft delete,
-   `DeletedAt`, `DeletedBy` — is what you want.
+Rules:
 
-Two more rules:
-
-- **owned children are not blockers.** Detail rows the aggregate owns should
-  cascade or be soft-deleted with the parent, per the step 2 configuration. Only
-  *foreign* references block.
+- **owned children are not blockers.** They are deleted with the parent, because every delete is a
+  soft delete and EF cascade never reaches them. Never pass a foreign relation (a branch, another
+  document) as owned.
+- **Inheritance links are not usages.** `InUseAsync` skips EF foreign keys for
+  which `IsBaseLinking()` is true: a derived row and its base row represent the
+  same entity. Under TPT, counting Company → Partner would prevent a company
+  from deleting itself. Keep ordinary external and self-referencing business
+  foreign keys subject to usage checks; never skip a whole table.
+- **No hand-written reference lists.** No `ExistsAsync` chains and no per-service blocker
+  messages. Add an `Entity<Type>` key in both `GeneralMessage` files when a table's name should be
+  translated.
+- **No extra code where the base does the job.** No manual `Context.Remove` of an owned row, no
+  tracked load only to delete, no not-found check before the helper.
+- **Services on `base.RemoveAsync` are not checked yet.** A service without owned rows that still
+  relies on `base.RemoveAsync` gets no usage check until backlog 31 moves it into the base delete.
 - **bulk delete validates every target before mutating any target**, so a
   partially applied delete is impossible.
 
@@ -208,11 +251,11 @@ Two more rules:
 | Check | Normal | Master-detail | Master-detail + financial | Settings |
 |---|---|---|---|---|
 | Duplicate on Add | Business key | Document number, normalized first | Document number, normalized first | Logical key, in payload and in store |
-| Duplicate on Update | Exclude self | Exclude self | Exclude self | Not applicable — sync by key |
+| Duplicate on Update | Exclude self | Exclude self | Exclude self | Not applicable — upsert by key (block 16) |
 | Header FK exists | Each FK | Each FK | Each FK plus accounts and fiscal period | Enum keys via `Enum.IsDefined` |
 | Detail FK exists | Not applicable | Distinct ids, count compare | Distinct ids, count compare | Not applicable |
 | Child belongs to parent | Not applicable | Required | Required | Not applicable |
-| Reference check on Delete | Required | Required, plus document state | Blocked when posted, approved, or allocated | Usually delete-by-omission |
+| Reference check on Delete | Required | Required, plus document state | Blocked when posted, approved, or allocated | Explicit row Delete only; never by omission (block 16) |
 
 **Check:** duplicate checked on Add and on Update excluding self · duplicate scope
 is the business key and is backed by a unique index · strings normalized before
@@ -221,8 +264,8 @@ collections verified by distinct count, never `Any` · dependent combinations an
 hierarchy cycles rejected · no manual tenant or soft-delete predicate added ·
 `QueryReport` never used for validation · all references inventoried before
 delete with specific messages · abstract bases expanded to concrete subtypes ·
-owned children not treated as blockers · bulk delete validates all before
+owned children soft-deleted with the parent through `RemoveWithChildrenAsync` · collections
+checked with `AllExistAsync` · bulk delete validates all before
 mutating any.
 
 ---
-
