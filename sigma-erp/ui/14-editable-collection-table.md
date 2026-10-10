@@ -81,12 +81,13 @@ closed control or its siblings (block 16). Company Contact Designation uses
         ></p-dropdown>
       </td>
       <td class="is-number">
-        <input
-          type="number"
+        <p-inputNumber
+          appQuantityInput
           formControlName="quantity"
-          min="1"
-          max="2147483647"
-          step="1"
+          [min]="1"
+          [max]="2147483647"
+          [step]="1"
+          [maxFractionDigits]="0"
         />
       </td>
     </ng-container>
@@ -131,13 +132,14 @@ typed Edit/Delete behavior:
 | `fillHeight` | Defaults false; set true only when the feature places the table in a bounded flex area; the shared host and scroll frame then participate in the available height instead of expanding the page |
 | `maxHeight` | Optional responsive upper bound for the shared scroll frame; pair with `fillHeight` when totals or other content must remain visible below the table |
 | `stickyHeader` | Defaults false; makes the frame the single vertical scroll owner with a sticky header row. Use with `fillHeight` in a bounded flex parent, or with `maxHeight` (2026-10-01) |
-| `columns` | Required ordered header definitions; optional `width` fixes a column through the shared colgroup/layout; `minWidth` supplies a minimum-width hint; `numeric` applies the compact numeric-column class and `required` renders the required marker |
+| `columns` | Required ordered header definitions; optional `width` fixes a column through the shared colgroup/layout; `minWidth` supplies a minimum-width hint; `numeric` applies the compact numeric-column class; optional `align` (`start`/`center`/`end`) controls header alignment, with existing default preserved; `required` renders the required marker |
 | `emptyMessage` | Required translated-key empty-state message |
 | `emptyIcon` | Optional decorative Bootstrap icon for the empty state |
 | `editable` | Shows the Add action, action column, and Remove buttons when true |
 | `actionsVisibleInView` | Defaults false; retains the projected action cell/header in View when it also contains row data. The feature hides mutations and keeps data controls read-only; the default Remove button remains editable-only. |
 | `addLabel` | Translated-key label for the shared primary Add action |
 | `addDisabled` | Disables Add while a prerequisite such as lookup data is unavailable |
+| `removeDisabled` | Defaults false; disables the default Remove action while a feature snapshot is loading/saving |
 | `validationMessage` | Optional translated-key collection-level validation alert rendered in the shared toolbar; the feature owns the condition/key (for example duplicate logical rows) |
 | `actionsLabel` | Optional action-column translation key; defaults to `general.actions` |
 | `removeLabel` | Optional Remove translation key; defaults to `general.remove` |
@@ -167,6 +169,27 @@ The ownership boundary is strict:
 
 Keep the array typed and feature-owned. Create or attach it in the feature form;
 the shared component must never create controls or reconcile the aggregate.
+
+**Pending removal and Save (2026-10-03).** Supply `EditableRows.canMutate` for reviewed
+editors whose collection can become locked. It checks before opening the confirmation and
+again after it resolves, in addition to re-resolving the row identity. A confirmation opened
+before Save cannot remove a row from the submitted snapshot. Feature Add methods keep their
+own busy/read-only/load gate; the shared helper's Add return contract stays compatible.
+
+For reviewed editors whose reactive controls remain visible during removal,
+set `EditableRows.freezeParentOnConfirmation: true` (2026-10-09). This optional
+input defaults false for existing consumers. The helper delegates to UI10's
+`freezeFormState`, restores the prior control state before the existing same-row
+and `canMutate` recheck, and releases it idempotently on finalization/destruction.
+Features retain their parent identity, busy and read-only gates; the complete
+snapshot and untouched-new-row shortcut remain unchanged. Lease adopts this
+opt-in; compilation/interaction acceptance remains owner-pending.
+
+For child contracts with nonnumeric identity, provide `EditableRows.isSavedRow`
+from the actual typed row key. The untouched-new-row shortcut must never bypass
+confirmation for a saved GUID/string row. The optional predicate affects only
+saved/new classification; numeric `savedId()` and existing callers retain their
+public return contract. LeaseClause uses its persisted GUID key (2026-10-09).
 
 When a row checkbox belongs beside its actions, use `appEditableCollectionActions`
 and the shared `app-editable-collection-table__row-actions` group. The shared table
@@ -261,6 +284,90 @@ the top, so an error under one cell never moves the controls of the others. A ch
 the control line, using the same 15px box and `accent-color: var(--sigma-primary)` as
 editor checkbox fields (block 1). The shared table owns this; features add no row CSS.
 
+**Optional centered body cells (Sales Quotation owner request, 2026-10-08).**
+Set `--sigma-editable-cell-vertical-align: middle` on the shared table host when
+the owner requests vertical centering. The shared body-cell rule includes the
+projected fields, read values and generated action cell; headers remain top-aligned
+and other consumers retain the default `top`. A field and its error message
+remain one cell group, so that group is centered when validation increases row
+height. Do not add feature-specific `td` selectors. Sales Quotation adopts this
+option; visual/validation/RTL acceptance remains owner verification.
+
+**Numeric cells (owner request 2026-10-04).** Numeric inputs select their value
+on entry through the shared global selection owner (block 27); native
+`appNumericFocus` supplies appearance only. Use shared
+`app-editable-collection-table__value` for numeric read/derived text: the same
+34px control line, 9px inline inset, 12px tabular figures and LTR numeric text.
+Read/derived figures are centered under their centered numeric headings;
+editable input text retains the right alignment from block27. It remains text without an editable field
+border or focus target. Preserve `money`/number formatting and calculation
+ownership; feature styles must not recreate the treatment. Job and
+JobEstimation item price/labour charges and numeric View cells adopt it.
+
+**Optional numeric units (Rental Booking owner correction, 2026-10-07).**
+Pair a shrinking numeric input and `span.app-editable-collection-table__unit`
+inside `app-editable-collection-table__input-unit`. Shared styling retains the
+existing34px control line,6px gap and a non-shrinking10px muted unit with isolated
+LTR unit text. For a read/derived badge, add `__value--with-unit` and the same
+unit span. Units are neutral captions, never the generic red `small` validation
+style. Keep FieldError below the input group. These classes are opt-in; existing
+consumers and all parsing, precision, calculations and payloads are unchanged.
+Rental Booking adopts this for Rate and protection excess; native reactive
+checkboxes reuse the existing15px primary accent and34px `__row-check` label.
+Source-only; owner input/RTL/theme/visual acceptance pending.
+
+**Optional equal numeric widths (Rental Booking owner correction, 2026-10-07).**
+Use `__number` on a numeric input inside `__input-unit` or on a shared numeric
+value badge, with a consumer-local `--sigma-editable-number-width` on the table
+host. Shared width/max-width/flex bounds apply the same chosen width to input
+and read text; `__input-unit--fixed` centers the number/unit group and keeps
+units outside the numeric box in a fixed54px unit rail, so varying unit labels
+never move neighboring numeric boxes. Default consumers are unchanged. Choose a width
+that fits the table's narrowest numeric column after shared cell padding, and
+retain the internal table scroll and all formatting/controls/calculations.
+Booking selects96px within its existing620px table minimum; consumer detail-row
+geometry leaves room for units, not feature-owned input/badge CSS. Source-only;
+owner visual/RTL/theme/input acceptance pending.
+
+**Editable Quantity (application-wide owner instruction, 2026-10-04).** Use
+`p-inputNumber appQuantityInput` with direct `InputNumberModule` and
+`QuantityInputDirective` imports (block 27). The shared directive/styles own
+compact stacked increase/decrease buttons, the 34px control line and numeric
+alignment; feature columns retain their current widths. Keep existing integer
+or decimal precision, min/max/step, typed row controls and validators. Native
+row recalculation moves to `onInput`, which follows the widget's CVA update for
+typing and stepping. Do not replace Remaining Quantity/derived/View text with
+editable widgets or recreate the widget/rail in feature SCSS.
+
+**Read-only numeric blue badge (owner generalization, 2026-10-04).** In new or
+reviewed editable collection rows, every non-editable numeric value uses
+`app-editable-collection-table__value app-editable-collection-table__value--highlight`
+and its column declares `numeric:true` (shared default center; an explicit
+`align:'center'` is also valid). This includes server-owned
+Remaining Quantity, derived Amount/Tax/Gross and numeric cells rendered as text
+in View. The shared owner keeps the figure centered under its heading with
+themed title text, a 12% primary/surface blue tint, 700 weight and 6px radius on
+the same 34px control line. Reuse the existing Job/JobEstimation Price/Charges
+appearance; do not add local badges, colors or cell CSS. Editable Quantity/Unit
+Price remain numeric controls. The badge is plain text, without button semantics
+or a focus target; preserve zero, null/blank handling, number/money formatting,
+backend authority and payload/calculation ownership. This is an editor-row
+presentation rule; DataTable/report formatting and SummaryCards keep their own
+owners. Existing unrelated consumers migrate on review. The requisition-owned
+Create Purchase Request adopts it for Remaining Quantity/Amount/Tax/Gross.
+Source-only; owner visual/RTL/theme/print acceptance pending.
+
+**Heading/value alignment (owner application-wide instruction, 2026-10-04).**
+Numeric shared table headers and plain `td.is-number` default to center; the
+shared value class also centers by default. Existing explicit column alignment
+remains supported, but any justified deviation must keep heading and read value
+aligned together. Do not show View Quantity at the inline edge under a centered
+or start-aligned heading. Every numeric read/derived cell uses the existing blue
+highlight; current plain shared value spans in ItemRequisition, its Issue dialog,
+ItemIssue and Workshop Job/Estimate adopt it. Reuse this owner across screens,
+without per-feature offsets, padding tricks or cell CSS. Other DataTable/report
+and summary owners retain their contracts; input digits remain right-aligned.
+
 **Check:** shared component and row directive are both imported · the actions
 directive is imported when custom actions are projected · column order matches
 projected cell order · row template emits cells, not a row · translation
@@ -340,40 +447,63 @@ frame. Body-appended dropdown and calendar overlays stay visible despite the bou
 
 #### Financial summary/action strip
 
-Totals are one compact strip directly below the table, outside the frame, so totals and Save
-stay visible while rows scroll. The strip uses the **shared accounting summary classes** from
-`src/styles.scss`, the same ones reports use (block 20). A feature writes no summary CSS:
+Totals are one summary-card region directly below the table, outside the frame,
+so totals and Save stay visible while rows scroll. New or reviewed financial
+summary cards use the shared `app-summary-cards` owner from UI 20/24; the feature
+passes typed authoritative values, translated labels/suffixes and placement only
+and writes no card CSS:
+
+For a master-detail workspace where totals compete with row visibility, select
+the shared `density="slim"` (UI24), `layout="row"`, `[minCardWidth]="140"`
+and `[maxHeight]="80"`. This keeps horizontal icon/copy, smaller figures and
+padding in the shared owner, with wrapped totals accessible through its own
+keyboard-focusable scroll. Workshop Job/Estimate/WorkOrder adopt this on the
+owner's 2026-10-04 instruction; source-only, visual acceptance pending.
 
 ```html
-<div class="sigma-report-summary-bar" aria-live="polite">
-  <div class="sigma-report-totals">
-    <div class="sigma-report-total sigma-report-total--debit">
-      <span class="sigma-report-total__label">{{ 'openingBalances.totalDebit' | translate }}</span>
-      <strong class="sigma-report-total__value">{{ totalDebit() | money }}</strong>
-    </div>
-    <div class="sigma-report-total sigma-report-total--credit">
-      <span class="sigma-report-total__label">{{ 'openingBalances.totalCredit' | translate }}</span>
-      <strong class="sigma-report-total__value">{{ totalCredit() | money }}</strong>
-    </div>
-    <!-- --balance or --net only when the owning contract returns that value -->
-  </div>
-  <app-primary-action-button … />
-</div>
+<app-summary-cards
+  [ariaLabel]="translatedSummaryLabel"
+  [cards]="summaryCards()"
+  density="compact"
+  [minCardWidth]="190"
+/>
+<app-primary-action-button … />
 ```
 
-- Debit and Credit are the base totals. Add `--balance` or `--net` only when the backend or the
-  workflow owns that value and it is useful on the current tab.
-- The Debit/Credit accents (`--sigma-debit-*`, `--sigma-credit-*`) are presentation only, not
-  success or error states. Attach no success/error icon, copy or accessibility meaning to them.
-- Values use the `money` pipe (`shared/pipes/money.pipe.ts`): 2 decimals, Latin digits, the
-  backend's half-away-from-zero rounding, and tabular numerals from the shared class.
+`summaryCards()` uses `format: 'money'` for Debit/Credit/Balance-or-Net values;
+the shared `formatMoney`/MoneyPipe owner keeps two Latin decimal digits and the
+backend's half-away-from-zero display rounding. For a signed balance whose
+contract uses Dr/Cr, the feature supplies absolute magnitude plus the matching
+translated suffix key; do not change the sign convention of other totals.
+The component never derives or replaces accounting totals; the
+shared formatter applies only the approved display rounding.
+Debit and Credit are the base totals; add Balance or Net only when the backend or
+workflow owns that value and it is useful on the current tab. The Debit/Credit
+accents (`--sigma-debit-*`, `--sigma-credit-*`) remain presentation only, never
+success/error states, and receive no success or error icon, copy or accessibility
+meaning.
+
+The former `sigma-report-summary-bar` markup remains compatibility guidance for
+out-of-scope legacy consumers only. New/reviewed editors use `app-summary-cards`
+even when the screen is editable; shared cards preserve the existing formulas,
+authoritative values, money formatting and token palette.
 
 **Financial collection check:** one `app-feature-title` · server-owned context is read-only
 header metadata · filters are the shared filter panel · `[fillHeight]` + `[stickyHeader]` and
 no feature rule on the table frame, `thead` or host · no page-height `calc(100dvh …)` · one row
-scroll owner · totals and Save outside the frame, in the shared `sigma-report-summary-bar` with
-the `money` pipe · Debit/Credit colours stay non-semantic · RTL logical properties,
+scroll owner · totals and Save outside the frame, with totals in `app-summary-cards` and
+the shared money formatter · Debit/Credit colours stay non-semantic · RTL logical properties,
 narrow-screen stacking and dark theme from the shared tokens.
+
+**Pending row confirmations (Accounts review, 2026-10-05).** Shared
+`EditableRows.confirmationPending` exposes the pending removal decision so an
+aggregate can block Save, tab switching and navigation. `canMutate` is rechecked
+before opening confirmation and after acceptance; acceptance re-resolves the
+same row object's current index. An obsolete confirmation cannot remove another
+row or mutate a submitted snapshot. Untouched new rows retain direct removal.
+The feature still guards Add and owns its typed form, payload and domain locks.
+These optional hooks preserve other consumers' behavior. Source-only; owner
+runtime acceptance pending.
 
 **One binding style per row (G9, 2026-10-01).** A row template binds the row once, with
 `<ng-container [formGroup]="row">` (or `[formGroupName]="i"` under `formArrayName`) around its
@@ -381,3 +511,7 @@ cells, and uses `formControlName` in every cell. Mixing `[formGroup]` on one cel
 `[formControl]` on the others is a finding.
 
 ---
+
+
+### Contextual confirmation forms (2026-10-09)
+`EditableRows` may receive `confirmationForms` when `freezeParentOnConfirmation` is enabled. The optional forms are frozen with the parent through the shared plural helper; the default remains unchanged. Use this only where row operations depend on a separate customer/category/context form. Preserve row identity re-resolution, saved-row confirmation and canMutate checks. Source-only evidence: Limousine tariff context and TripBooking documents.

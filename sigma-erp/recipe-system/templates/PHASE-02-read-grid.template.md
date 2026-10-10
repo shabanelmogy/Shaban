@@ -23,7 +23,13 @@ Reference ownership is explicit:
 Do not treat one of these references as authority for the other shapes.
 
 The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop and report drift when they disagree.
+derivative. Stop using a packet that disagrees with canonical sources. Follow
+Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
+book/template/manifest claims, regenerate affected packets through the generator,
+semantically review their source rules and approved-reference roles, then rerun
+`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+unrelated changes; source-read-only review still forbids application-source edits.
+Use canonical sources and report a precise blocker for unresolved conflicts.
 
 ## Mandatory in-place list replacement
 
@@ -37,11 +43,11 @@ second grid implementation.
   flags, and remote internal-table mutation from the existing list TypeScript.
 - Keep the existing feature route and service boundary unless confirmed source
   requires a contract change.
-- Preserve row Create/View/Edit handoff to the single controlled modal owned by
-  Phase 3; Phase 2 does not create a second editor component or editor route.
-  The only exception is the routed full-page editor variant (UI block 13), used
-  when the frozen contract approves an independently addressable route; Create,
-  View, and Edit then navigate to that one editor.
+- Preserve Create/View/Edit handoff to the single editor selected by UI block
+  13's D4-2 rule and frozen in Phase 1: fields only or one small child list
+  without totals use a controlled modal; two or more child collections, totals,
+  or approval/posting use a routed editor. Phase 2 does not create another
+  editor. Create, View, and Edit use that same selected editor in all modes.
 
 A request to restore or preserve an older filter, title, or action-button
 appearance applies only to feature-owned layout and styling. It never permits
@@ -122,6 +128,9 @@ Conflicting source contracts.
    layout, theme and RTL; UI block 4 owns its values. Remove feature filter
    styles during review; do not preserve a legacy compact or flat grid as an
    alternative canonical presentation. Reports use UI block 20's shared strip.
+   For checkbox filters, apply UI4's control-box centering check independently
+   of heading/validation height and wrapped-row placement. Do not treat a
+   feature's pixel offset as a canonical shared recipe.
 7. Verify false, zero, empty, enum, date, and multi-value serialization.
 8. Verify page-size clamp, `CountAsync`, total pages, and stable ordering.
    Resolve table paging with `resolveListPaging` against the previous feature

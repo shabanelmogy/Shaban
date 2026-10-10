@@ -1,8 +1,10 @@
 ## 13. Modal with tabs
 
 > **Status: Canonical composite** — use `app-editor-dialog` for the modal shell,
-> `app-editor-tabs` for accessible navigation, `Fleet/VehicleService` for the
-> feature integration, and block 10 for controlled dirty-close behavior
+> `app-editor-tabs` for accessible navigation, the shared declarations and snippet below for
+> modal integration, and block 10 for controlled dirty-close behavior
+
+Reference correction (2026-10-07): Fleet/Vehicle and Fleet/VehicleService currently use routed editors. They are not a modal integration reference. For a type01 editor, use the actual shared EditorDialog/EditorTabs declarations and this block's controlled modal composition; Job remains the list-shell reference. Do not copy a routed feature and call it modal conformance. Source-only; owner visual acceptance pending.
 
 Use for Create, Edit, and View editors with real peer sections. A modal having
 tabs does not create a new shell shape: it uses the same shared
@@ -30,8 +32,6 @@ shared/components/editor-dialog/editor-dialog.component.scss
 shared/components/editor-tabs/editor-tabs.component.ts
 shared/components/editor-tabs/editor-tabs.component.html
 shared/components/editor-tabs/editor-tabs.component.scss
-Fleet/VehicleService/components/details/details.component.html
-Fleet/VehicleService/components/details/details.component.ts
 ```
 
 `app-editor-dialog` owns the body-appended PrimeNG shell, header hierarchy,
@@ -392,6 +392,13 @@ route-level page. Keep one typed parent form and use the shared section and
 editable-table components; the feature owns only the route state, controls,
 payload, validation, and business behavior.
 
+When the owner needs Details / Jobs / selected Job details side by side, use
+the shared three-pane editor variant from UI1, rather than a capped master
+section above a feature-local two-column workspace. Job and JobEstimation
+consume that shared form/body/pane layout, one-column master fields and
+container-responsive placement. Preserve `formArrayName` through a non-DOM
+`ng-container`, so group bindings and the existing typed form remain intact.
+
 The routed shell is the shared editor shell (block 1 *Shared editor page shell*): the host fills
 the box the shell sized, with `min-height: 0` and `overflow: hidden`, and no browser/page
 scroll. The form body is a flex column: the first section keeps its intrinsic
@@ -572,6 +579,22 @@ markup, primary-icon contrast, focus styling, RTL, dark theme and Escape output.
 Do not recreate its `pTemplate="header"`, footer buttons, or internal classes in
 feature templates/SCSS. A feature owns projected content and may supply only the
 documented public inputs, outputs and `dialogClass` hook.
+
+**Shared branch-setting consumer evidence (2026-10-09; Master5 extraction gate):**
+`shared/components/branch-tariff-settings/BranchTariffSettingsComponent` owns the
+existing tenant-wide branch/percentage settings workflow used by RentalTariff,
+LeaseTariff and TariffCard. All three mount the same controlled editor and delegate
+its deferred discard decision from their list route guards. It uses the public
+720px width, viewport-bounded 560px definite height, padded shared flex body and
+the UI14 fill/sticky collection. The Add toolbar is independent of saved row
+count; successful empty loading remains editable. Lookup or settings failure
+blocks partial replacement and offers inline Retry. Invalid inputs leave Save
+available to reveal field/duplicate feedback; pending reads, Save and confirmations
+retain their gates. This business owner composes existing EditorDialog,
+EditableRows and freezeFormState; do not copy its form/request implementation
+into consumers or infer separate rental/lease settings from the entry location.
+The source API has no module/card discriminator; that contract stays in the
+feature freeze. Source-only evidence, owner runtime/visual acceptance pending.
 
 ---
 

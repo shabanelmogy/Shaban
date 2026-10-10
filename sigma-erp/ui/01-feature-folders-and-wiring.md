@@ -75,6 +75,42 @@ Three wiring steps, all required:
 
 ### Standalone dialog registration and Angular 17 control flow
 
+**Standalone consumer contract — mandatory source check.** Before adding or
+moving shared controls, inspect the exact imported file's exports and the
+current owning component/directive declaration. A sibling `.directives.ts`
+file is not automatically re-exported by `.component.ts`. Every component,
+directive and pipe used by a standalone template must also be present in that
+consumer's `@Component.imports` (or supplied by an actually imported NgModule);
+a TypeScript import alone does not register it. For example, a filter using
+`app-field-error` needs `FieldErrorComponent` in both places. Check bound input
+names and literal values against the current public types (block22 states).
+Do not add `CUSTOM_ELEMENTS_SCHEMA`/`NO_ERRORS_SCHEMA`, casts, export aliases or
+new compiler roots to conceal an incorrect import or unsupported input.
+
+When removing an injected dependency, inspect remaining `this.<member>`
+uses and the actual base-class members. Removing duplicate API success toasts
+does not remove an existing non-API informational action (block22); preserve
+its declared service injection. Inspect the installed framework declarations
+before using a version-sensitive API (block28). TypeScript/Angular parsing,
+path-existence checks and template-name scans establish only their respective
+source facts; they do not validate exports, Angular registration, input types,
+class members or application compilation. The Lease compiler-feedback repair
+is the source-backed example; owner compilation remains pending.
+
+**TypeScript library compatibility — mandatory source check.** Inspect the
+effective `compilerOptions.lib` before introducing standard JavaScript APIs.
+Current `tsconfig.json` selects `es2018` and `dom`, although `target` is
+`es2022`. The target controls emitted syntax; it does not widen explicit lib
+declarations or supply runtime polyfills. `Array.flatMap`/`Array.flat` and
+`Object.fromEntries` require ES2019 declarations and must not be used under
+the current library contract. Use typed `for...of`/`push` accumulation for
+flattening export rows and typed construction/addControl for form records.
+Preserve source order, null handling, headers and values. Do not widen lib or
+add a polyfill to silence a local feature error; such a project compatibility
+change requires its own explicit scope and runtime support review. Template/TS
+parser success proves syntax only, not library/type compatibility. CashFlow
+export and Budget form construction are the source-backed repair examples.
+
 This application currently has an explicit `files` boundary in
 `SiGmaAngularFrontEnd/tsconfig.app.json`. When a new standalone dialog or
 feature component produces Angular's “missing from the TypeScript compilation”
@@ -260,6 +296,24 @@ footer SCSS. It uses:
 | Footer | `footer.sigma-editor-footer`: Cancel `sigma-secondary-button`, then the primary action |
 
 The feature keeps only its workspace layout (for example Job's group list and detail panes).
+
+**Shared three-pane editor (owner request, 2026-10-04).** Job and JobEstimation
+use `form.sigma-editor-form--three-pane` and
+`div.sigma-editor-body--three-pane` with three rendered siblings:
+`sigma-editor-pane--master`, `sigma-editor-pane--jobs`, and
+`sigma-editor-pane--detail` (each also `sigma-editor-pane`). The shared owner
+in `src/styles.scss` uses 240–280px / 170–200px / remaining-width columns,
+10px gaps and bounded full-height panes. Master fields use
+`sigma-editor-grid sigma-editor-pane-fields` inside `sigma-editor-scroll`
+for one field column; the Jobs list and selected detail retain their own
+internal scroll, fixed summary and outside Save/Cancel footer. An Angular
+`ng-container formArrayName` groups the latter two without a DOM grid wrapper,
+preserving the existing control hierarchy. A named inline-size container on
+the form responds to available width: at 900px the master spans the first
+column and Jobs/details stack in the second; at 620px all three stack in source
+order. Print releases this layout. Features do not copy these grid/breakpoint
+rules. One component serves Create/Edit/View; content and financial contracts
+remain unchanged. Source-only; owner desktop/narrow/RTL/print acceptance pending.
 
 **Check boxes (G9, 2026-10-01).** Every boolean field is its own
 `<div class="sigma-field sigma-field--check">` with the input before its label. Two check boxes
@@ -487,6 +541,30 @@ title · compact toolbar · internal tree scroll · responsive tree/detail split
 selection restored after refresh · nested actions stop propagation · shared
 confirmation/actions · `finalize` cleanup · both failure channels · no server-owned
 write fields · translated RTL/dark/focus states.
+
+### Authenticated-shell sidebar disclosure
+
+**Canonical shared owner:** `_metronic/layout/components/sidebar/sidebar-menu/SidebarMenuComponent`.
+Its `isGroupOpen` / `toggleGroup` state and `groupHeader` template own both sidebar
+accordion levels. Keep route highlighting (`here`, leaf `active`, submenu
+`menu-active-bg`) separate from disclosure: never let `RouterLinkActive` and a
+DOM animation plugin both write `show` or submenu display for these groups.
+The component binds `show` from its disclosure state, using route activity
+and search as defaults; an explicit user choice wins until search rebuilds
+the nodes. Opening a group closes its siblings at that level.
+
+Reuse the existing Metronic menu/arrow classes and Sigma theme tokens. Group
+disclosure uses native buttons with `aria-expanded`; appbar Pin stays a separate
+button. Both disclosure and pin clicks stop propagation before Metronic's
+delegated handlers. Other Metronic menus retain their existing engine. No
+sidebar drawer, minimize, navigation or shortcut-storage contract changes.
+
+**Check:** select a leaf, close/reopen its main and nested groups; switch siblings;
+repeat through Recent and search/clear; verify Enter/Space, independent Pin,
+RTL/dark and narrow/minimized sidebar behavior. These are owner runtime checks;
+source review does not certify them. Evidence: 2026-10-03 sidebar collapse fix,
+`reviews/SIDEBAR_ACCORDION_COLLAPSE_FEATURE_REVIEW.md`.
+
 ### One `HttpClient`
 
 > **Status: Canonical** (2026-09-30, backlog 17 resolved)
@@ -526,4 +604,3 @@ manual Bearer header workaround · menu entry.
 action bodies, `console.log("Delete2")`, 0-byte SCSS.
 
 ---
-

@@ -30,6 +30,80 @@ When a report needs a capability the shared grid does not yet provide, extend
 the shared component in that report's scoped implementation. Do not flatten a
 hierarchy or silently authorize a feature-owned table.
 
+### Accounts family composition — reviewed source
+
+**All tree reports: Expand All / Collapse All (owner rule, 2026-10-05).** Every
+report that displays a real tree uses UI6's shared ReportTreeActions controls.
+Both actions apply to every supplied level, including descendants currently
+hidden by collapsed parents. DataTable hierarchy consumers receive them
+automatically; the existing shared dynamic Reports TreeNode adapter uses the
+same toolbar for its legacy consumers without changing their request/paging
+contract. This additive compatibility support does not make that legacy tree
+body a canonical reference or authorize new private report tables. Flat and
+indent-only reports retain no tree toolbar. Keep translated native buttons and
+toolbar name, loading/empty gating, wrapping/RTL/themes and print hiding. These
+are view actions: no confirmation, API call, recalculation or source-row writes.
+Canonical print includes all descendants and preserves screen expansion; Excel reads the
+complete original source regardless of collapse. UI6 owns recursive expansion
+state and shared toolbar details; features must not copy controls or reach into
+PrimeNG expansion internals. Source-only; owner acceptance pending.
+
+Stable report editing uses the optional global
+`sigma-report-filter-panel--stable` modifier: field wrappers align at the top,
+dropdown/calendar hosts and roots stay within the field width, and selected
+dropdown labels shrink. Keep the existing report field flex basis/bounds,
+wrapping, narrow breakpoint, checkbox/action alignment and body overlay owner.
+Accounts configurations opt in through `stableFilterLayout`; Ledger adopts it
+after the owner's account-field movement report (2026-10-05). The family binds
+FieldError's existing string reserveMessage for date and required feedback in
+this mode (UI19), retaining validators and message visibility. Other reports
+keep their defaults until reviewed. No feature alignment CSS or business change;
+source-only, owner visual/runtime acceptance pending.
+
+The fourteen complete Accounts reports use an Accounts-local typed
+`AccountReportConfig`/`AccountReportPageComponent` over the existing shared hosts,
+controls, grid and cards. Configurations retain feature-owned filter names,
+request/response types, sections, backend totals and existing navigation.
+`FormRecord` owns controls; lookup failures block Search and have local retry.
+Changing filters invalidates output; requests capture the applied snapshot and
+disable the form until completion. Export reads complete source rows and builds
+translated headers at click time. Hierarchies use UI6's optional shared adapter;
+FY2 remains flat. Server-owned context such as Ledger account identity/currency
+is retained outside the grid through `responseContext`, not invented as a new
+transport column. Sections default to independent bounded shared row viewports.
+Optional `sectionLayout: 'document'` selects the existing complete-document
+alternative: full-width sections in source order, one keyboard-accessible outer
+`sigma-report-table-frame`, and grids with `fill=false`/`scrollable=false`.
+The owner's later explicit accounting-format decision supersedes CashFlow's
+document and tab experiments (2026-10-05). It uses one full-width filling shared
+table, one Account/Amount header and two common78%/22% columns. Section rows
+identify operating/investing/financing activities; each complete array precedes
+its authoritative server net subtotal, followed by server NetChangeInCash with
+a shared double rule. NetIncome uses its existing producer-defined operating
+line (translated label), or the response field when that line is absent.
+The five figures remain within the statement instead of KPI tiles. There are
+no activity tabs or independently scrolling activity panes. The owner's later
+explicit Tree View request groups those same three activities through shared
+DataTableHierarchy: each default-expanded root shows its authoritative net and
+contains the complete account lines plus closing subtotal. Final net change
+stays at root level. Local children represent the response's existing section
+groups, not account-parent relationships. UI6's optional activateEnabled exposes
+ledger links only on actual accounts; expansion keeps the shared keyboard/RTL
+owner. All descendants remain in print/Excel regardless of collapse.
+UI6's optional shared rowTone/column width/link.enabled own the presentation;
+synthetic headings/totals have stable local identities and no ledger link.
+No frontend financial calculation is introduced. CashFlow's explicit exportRows
+retains the previous complete three-section Excel shape from original arrays,
+without injecting structural display rows; print includes the whole statement.
+The full-width route modifier and public32rem minimum/wrapping remain. The
+unconsumed Accounts-specific tab adapter is retired; other report layouts are
+unchanged. Optional summaryDensity/summaryMaxHeight still pass through public
+SummaryCards inputs for card consumers. Document mode remains an optional
+complete-response presentation with shared empty states. Print releases bounds.
+This composition does not convert
+Journal's existing paged API or introduce new financial calculations. The shared
+page shell/appearance is unchanged; source-only, owner acceptance pending.
+
 ### Shared shell — mandatory replacement
 
 Every report route imports `ReportPageComponent` and places `appReportPage` on
@@ -105,27 +179,55 @@ or PrimeNG wrapper scroll rules. Statement of Account now adopts this shared
 variant; its earlier `statement-*` filter/palette/height styles remain legacy
 examples only.
 
-#### Title and filter card width
+#### Title, filter, summary and table width
 
-**Explicit owner choice, 2026-10-02:** Customer Statement of Account and
-Receivable Age Analysis keep the title card the same width as the filter card,
-with both inline edges aligned. Their existing `.sigma-report-panel` also uses
-`sigma-report-panel--aligned-title`. The shared rule in `src/styles.scss` sets
-only its direct `app-feature-title` child's `margin-inline: 0`, matching the
-report filter strip's zero inline margins. Both cards stretch to the same panel
-content width in LTR and RTL, including the responsive panel-padding change.
+**General owner choice, 2026-10-03:** canonical `.sigma-report-panel` title cards
+match the filter card's appearance and inline edges by default. The shared rule
+sets its direct `app-feature-title` child's margin to `-8px 0 16px`, retaining
+block spacing and matching the report filter strip's zero inline margins.
+Both cards stretch to the same panel content width in LTR/RTL and through
+responsive panel-padding changes. Title/list-filter/report-filter backgrounds
+share `--sigma-filter-panel-background` and the themed border/shadow; block3/4
+own the card rule. Existing filter padding/control geometry and scroll owners
+remain.
 
-Keep the existing title block spacing, panel padding, colors and scroll owners.
-Do not add a fixed width, a feature-local margin override or compensating filter
-padding. This modifier is a reusable opt-in capability; the owner decision is
-scoped to these two reports, and other consumers retain their existing title
-presentation until explicitly approved. This supersedes the earlier Trial
-Balance title-inline comparison for these two consumers only. Actual visual
-acceptance remains owner verification when the change is reviewed from source.
+**Owner clarification, 2026-10-05:** the report result/table frame shares those
+same logical edges and available width with the title, filters and summary
+region. A direct `.sigma-list-table` inside `.sigma-report-panel` has zero
+inline margins through the global report context rule; its ordinary-list8px
+inset does not apply to reports. Journal adopts this through its existing
+wrapper, while the fourteen Accounts family reports already stretch their
+result regions to the panel content width. Intentional section columns align
+within their own container; individual summary tiles retain their shared grid.
+Keep wide-table scrolling inside the existing grid/document frame and retain
+column minima, responsive layout, RTL, paging, totals, print and export scope.
+Do not add fixed feature widths, duplicate wrapper padding or deep table CSS.
+Compare both frame edges with the cards at desktop and narrow sizes; source-only
+verification leaves visual acceptance pending for the owner.
 
-Every report filter strip and accounting summary uses the shared global classes in
-`src/styles.scss` (reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). A report
-writes no filter or totals CSS of its own:
+The owner's final-column correction on the same date also applies inside the
+frame: `.sigma-report-panel` supplies public
+`--sigma-data-table-scrollbar-gutter: auto`, consumed by UI6's shared row wrapper,
+and the report document frame uses `scrollbar-gutter: auto`. Do not permanently
+reserve an empty scrollbar strip after the final column. A native classic
+scrollbar still consumes its required space when rows actually overflow;
+compare the full table frame with the cards and distinguish that scrollbar
+from an erroneous margin. Keep native scrolling accessible, existing column
+minima and print flow; never hide scrollbars or add fixed width compensation.
+
+This supersedes the 2026-10-02 alignment choice previously scoped to Customer
+Statement, Receivable Age Analysis and Follow Up. The existing
+`sigma-report-panel--aligned-title` modifier remains an idempotent compatibility
+alias; new canonical report panels do not need it. Do not add fixed widths,
+feature-local margin overrides or compensating filter padding. Legacy feature
+layout overrides are not bulk rewritten by this shared change. Actual visual
+acceptance remains owner verification when source-only reviewed.
+
+Every report filter strip uses the shared global classes in `src/styles.scss`
+(reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). New or reviewed
+summary/KPI cards use `app-summary-cards`; the former compact accounting bar is
+compatibility-only for out-of-scope consumers. A report writes no filter or
+summary-card CSS of its own:
 
 ```html
 <form class="sigma-filter-form sigma-report-filter-panel no-print" ...>
@@ -134,14 +236,65 @@ writes no filter or totals CSS of its own:
   <div appReportActions class="sigma-report-filter-actions">...</div>
 </form>
 
-<div class="sigma-report-summary-bar">
-  <div class="sigma-report-totals">
-    <div class="sigma-report-total sigma-report-total--debit">...</div>
-    <div class="sigma-report-total sigma-report-total--credit">...</div>
-    <!-- add --balance/--net only when the response owns that total -->
-  </div>
-</div>
+<app-summary-cards
+  [ariaLabel]="translatedSummaryLabel"
+  [cards]="summaryCards()"
+  [minCardWidth]="190"
+/>
 ```
+
+The feature supplies a typed `ReadonlyArray<SummaryCard>` descriptor, for
+example `{ id, labelKey, value, icon, accent, format: 'number' }`; use
+`format: 'money'` and a translated `suffixKey` for authoritative financial
+values. Labels, hints, secondary values and selection remain descriptor inputs;
+the shared component owns card markup, geometry, palette, formatting and print.
+
+Reports whose owner requests actions on the filter control line may opt into
+`sigma-report-filter-panel--inline` alongside the stable modifier. The shared
+Accounts composition exposes this through optional `inlineFilterActions`, false
+by default. It counts its non-checkbox fields for the shared grid, reserves a
+translated invisible aria-hidden action caption and renders one existing action
+template; non-adopters retain the direct toolbar. Budget Variance opts in with
+three fields. Validation feedback remains below controls and action heights use
+the existing 34px token. Source-only; responsive/RTL/visual acceptance pending.
+The shared
+grid uses the feature's `--sigma-report-filter-columns` plus an auto action
+column, three columns below1250px and one below640px. All field wrappers shrink
+within their cells; native inputs retain full width and single-line labels
+ellipsis visually while keeping their full accessible text. The action field
+uses `sigma-report-filter-field--actions` and an aria-hidden invisible
+`sigma-report-filter-caption` to reserve the same label geometry, followed by
+the existing ReportActions/action-group. Validated fields reserve feedback with
+FieldError (UI19); actions align with inputs rather than feedback. Native and
+primary action buttons use the same exact control-height token, retaining
+shared theme/RTL/busy/wrapping. Journal adopts five fields/four actions on the
+owner's2026-10-05 instruction; other strips keep defaults. No feature CSS.
+Source-only; narrow layout and visual acceptance remain pending.
+
+Wide fields in inline report strips opt into the shared
+`sigma-report-filter-field--wide` modifier, spanning two grid tracks. Include
+that extra track in `--sigma-report-filter-columns`; the auto action track is
+unchanged. The shared owner resets the span to auto at640px so the single-column
+layout creates no implicit second column. This extends the existing FilterPanel wide-field mechanics to the
+report strip while preserving report1250/640 breakpoints, stable validation,
+RTL/theme and all non-adopter defaults. No feature width or calendar override;
+source conformance only, owner visual/input acceptance pending.
+
+Inline strips may supply `--sigma-report-filter-template` as a complete grid
+template, including a dedicated action track when actions stay inline, when equal filter tracks waste space or
+clip choice labels. Its default is the existing column-count template; shared
+1250px three-column and640px single-column fallbacks still apply. Use
+max-content for short choice/checkbox groups and minmax(0, weighted-fr) for
+editable fields and wrapping actions. StaffStatement adopts weighted
+Date2.5/Staff1.5/SubLedger1.5 tracks and content-sized Report Type/inactive
+tracks on the owner's2026-10-08 clipping report. Its later owner instruction
+moves all six actions to a separate row: keep five filter tracks and span the
+action wrapper with existing `sigma-field--full` (grid-column1/-1), removing the
+inline-only caption. Shared narrow wrapping remains. This supersedes its earlier
+date-span2 adoption: remove that modifier when the explicit template already
+owns date width. Existing shared choice labels stay nowrap, date/calendar
+bounds and action wrap remain; no feature CSS or changes to non-adopters.
+Source-only visual/RTL/input acceptance remains pending.
 
 The strip owns its layout, the 34px control height (`--sigma-filter-control-height`), focus,
 dark theme, RTL and narrow-screen stacking. The actions use the shared variants
@@ -160,18 +313,90 @@ layout as the existing `app-buttons` group. Report semantics still follow block 
 Search submits the real filter form, and the strip is never a second vertical scroll owner.
 A list screen uses the filter panel of block 4 instead; the two shared strips are not mixed.
 
-Accounting report totals use the shared summary bar above (also used by financial editors,
-block 14): shared surface/border/radius, tabular numerals, and semantic
-Debit/Credit/Balance-or-Net accents. The **numbers still come from the backend
-response**; shared styling never authorizes client-side recomputation of
+An explicit frozen owner decision can select block4's FilterPanel for a report's
+main search form, keeping the block20 shell, data/totals/print contracts and
+statement-dialog strips. Staff and Suppliers Balance Summary use five main
+columns plus Balance Type in More Filters; Customers retains its existing paged
+summary/list exception. The owner's 2026-10-03 stability follow-up opts all three
+into shared stableLayout. Use the existing mx-0 utility to retain report card
+edges, and project report actions with appFilterActions/appReportActions plus
+one shared Reset. This is a recorded presentation exception, not a blanket
+report migration or a change to Range/business semantics.
+
+Report radio groups can opt into the shared `sigma-report-filter-choice` class
+on their labelled radiogroup. `src/styles.scss` then owns PrimeNG radio selected,
+hover and focus states through `--sigma-primary`, `--sigma-primary-hover` and
+`--sigma-control-focus-ring`, overriding the installed Lara theme's separate blue.
+Keep existing `p-radioButton` controls, associated labels, disabled states and
+reactive-form values; no feature radio palette or deep selectors. The class is
+opt-in and does not recolour out-of-scope existing groups. Customer Statement's
+Report Type consumes it. Row grouping and spacing remain feature decisions
+recorded in the feature contract, using existing layout utilities.
+
+The existing compact `sigma-report-summary-bar`/`sigma-report-totals`/
+`sigma-report-total` accounting bar remains the compatibility owner for
+out-of-scope consumers: shared surface/border/radius, tabular numerals and
+semantic Debit/Credit/Balance-or-Net accents. The **numbers still come from the
+backend response**; shared styling never authorizes client-side recomputation of
 accounting totals. Keep the summary as small as the report needs: Trial Balance
 uses only **Total Debit** and **Total Credit**. Do not add Beginning/Ending/Net
 cards merely because the line model exposes those values. Add Balance or Net
 summary cards only when they are a deliberate report KPI owned by the backend
 contract and useful to the user.
-If a report has a non-accounting KPI layout that genuinely needs another visual
-shape, document the reason in its review evidence instead of silently forking the
-filter/summary pattern.
+If a report has a non-accounting KPI need, keep its cards in
+`app-summary-cards` and document only the feature content/placement in review
+evidence; do not fork the shared visual shape or filter/summary pattern.
+
+### Shared summary/KPI cards across screen types
+
+Any new or reviewed summary, KPI or total-card region on a list, report,
+dashboard, routed editor or dialog uses the one shared `app-summary-cards`
+component from `shared/components/summary-cards/`. It accepts a readonly typed
+`SummaryCard[]` with stable `id`, translated `labelKey`, authoritative display
+`value`, Bootstrap `icon`, approved `accent`, optional `format` (`number`,
+`money` or `text`), translated `suffixKey`, `hintKey`/`hintParams` and an
+optional secondary value. The component fetches nothing, derives no totals,
+changes no business state and owns the card geometry, palette, typography,
+surface, icon tile, focus and print treatment.
+
+Width is container-responsive through auto-fit columns and the public
+`minCardWidth` input (190px default); height follows content with equal row
+stretching. The optional numeric `maxHeight` input defaults to null. When it is
+supplied, the shared internal card list owns its vertical scroll and receives
+keyboard focus/tabindex with visible focus; when absent, cards remain natural
+height. Features may place or bound the host and choose public `density`
+(`comfortable`, `compact` or `dense`), `layout`, `minCardWidth`, `maxHeight`, `selectable`,
+`selectedId` and `disabled`; they never override card internals, colors, padding,
+radius or fonts. Selectable cards use native buttons, `aria-pressed`, visible
+focus and a stable-id `cardSelected` output; static cards have no card-level
+click affordance or tab stop. Number formatting uses Angular `formatNumber`,
+monetary values use the shared `formatMoney` owner, and BalancesSummary
+preserves absolute magnitude with a translated Dr/Cr suffix. Print removes any
+card-list bound (`maxHeight: none; overflow: visible`) while retaining every
+card and hint.
+The row option fits all cards into equal columns on a container wider than
+1100px, wrapping through the shared auto-fit/minimum-width rule below that
+threshold; it does not leave a last card outside the screen. Dense density
+provides smaller figures through the same shared owner (UI 24). Print wraps
+all cards independently of screen layout. No new accounting/status formulas
+are introduced by the visual component.
+
+The shared component is the approved adoption target for Dashboard,
+FollowUpReport, DebtCollection, Customers/Alerts, BalancesSummary and
+ReceivableAgeAnalysis. Their public sizing contracts are Follow Up
+`minCardWidth=220`/`maxHeight=180`, Debt compact `170`/`180`, Alerts compact
+`180`/`160`, Receivable Age dense/row `140`/`180` with 12px bottom separation on
+the host, Balances main compact `180`
+with a host bound of `320` plus three dialog compact cards at `180` without a
+card bound, and Dashboard default `190` at natural height. Existing consumers
+migrate when explicitly in scope, so this rule does not claim that every legacy
+screen has already migrated. Follow Up keeps its report-specific metrics,
+paging, tabs, drill-down and complete output contracts below; those formulas
+remain in the feature contract/review.
+
+DebtCollection and ReceivableAgeAnalysis keep 12px bottom separation from the
+following grid on the shared component host (UI 24); keep card internals owned
+by the shared component and do not duplicate an existing parent gap.
 
 For an explicitly approved dense accounting report that keeps its controls
 visible, the routed report may be bounded to the available shell height. Each
@@ -185,22 +410,58 @@ so the full report can flow across pages.
 
 ### Tabbed report sections
 
-**Explicit presentation choice, 2026-10-02:** Follow Up uses two shared workspace
-tabs, Details and Summary, after the owner requests one tab per section. Details
-is initial; Summary uses a responsive maximum inline width of 960px at logical
-start within the bounded result area. This supersedes the provisional 520px
-example for Follow Up only; it is not a shared tab default. Both typed grids
-retain complete arrays with paginator=false, the active grid owns row scrolling,
-and the public shared-grid minimum width allows the expanded Summary metrics to
-overflow horizontally on narrow windows without page scroll. Existing shared
-`sigma-report-summary-bar`, `sigma-report-totals` and `sigma-report-total`
-classes present the four server-owned additive operational KPI cards. Comparison
-bars are custom cells in the shared grid renderer with presentation-only max
-scaling, and the user cell's shared secondary action drills into the exact raw
-username filter value; null/blank groups remain label-only. Ordinary Excel follows
-the active complete section and its current columns; full print includes the KPI
-cards and both Summary/Details arrays regardless of selection, then restores
-selection and form state. Keep busy, printing and filter-invalidation gates.
+**One on-screen section title (owner confirmation, 2026-10-03).** In every new
+or reviewed tabbed report, when the Tab caption identifies the table's section,
+do not repeat that caption as a heading above the table on screen. Keep the main
+feature title and column headers. Retain a print-only section heading because
+tabs are hidden in print; use the existing `d-none d-print-block` utilities on
+the heading, without a feature heading style. Keep each panel's
+aria-labelledby pointing to its Tab, its existing mode-specific caption and
+all applicable sections in the DOM. Supplier Statement adopts this for its
+Ledger/Outstanding and Advance Tax headings; other consumers adopt in scope.
+This makes the existing Customer Statement print-only-heading rule below
+explicit for all reviewed tabbed reports; it changes no data or print scope.
+
+**Frozen owner refinement, 2026-10-03:** Follow Up keeps two shared workspace
+tabs, Details and Summary, and both sections stretch to the report panel's full
+content width through the existing public `sigma-route-host--full-width`
+placement. This supersedes the earlier 520px and 960px Summary limits; the panel
+remains responsive and the public shared-grid minimum width owns any internal
+horizontal overflow without page scroll. Summary remains unpaginated;
+Details binds the complete array to the existing controlled local paginator with
+the shared default 15 rows and 10/15/20/50/100 choices (the later owner decision
+in UI6 supersedes the earlier 20-row default), using the feature
+`reports.followUpShowingEntries` page-report key with `{first}`, `{last}` and
+`{totalRecords}` placeholders. Details retains its page and
+chosen size when switching tabs; valid Search, filter edits, Reset and the
+raw-username drill-down reset its offset while preserving size. Existing shared
+`app-summary-cards` presents the four server-owned additive operational KPI cards
+in equal auto-fit columns with `[minCardWidth]="220"` and `[maxHeight]="180"`:
+four columns when the
+container permits, then three, two or one as it narrows. Use its
+comfortable Dashboard KPI shape: 14px vertical/16px horizontal padding, 44px
+semantic icon with a 14% accent wash, 10px radius, 12px gap, 1.6rem value, 9%
+accent wash and 3px
+logical-start accent through the shared sigma/Bootstrap tokens. Compact density
+uses the shared 10px/12px padding, 32px icon, 8px gap and 1.35rem value when the
+screen's content requires it; no feature card geometry or palette is copied.
+The overall follow-up count uses the approved primary accent through its
+descriptor; no feature-only emphasis variant is introduced. The user
+cell uses the quiet shared `sigma-report-user-action` secondary action, including
+inherited hover/focus/busy behavior; null/blank groups remain label-only.
+Comparison bars remain custom cells in the shared grid renderer, with feature
+placement limited to the public 88px/7px semantic bar dimensions and Summary's
+175px count column through public column classes. A compact translated
+scope/reference-date row and balanced caption row sit above the grid. Ordinary
+Excel follows the active complete section and its current columns, exporting all
+filtered Details rows regardless of the visible page; full print keeps KPI values,
+captions, reference text and all Summary/Details arrays regardless of selection,
+hides decorative icon tiles, temporarily releases pagination/scrolling, then
+restores the controlled page, size, selected tab and form state. Follow Up's
+existing `.sigma-report-panel` also opts into the public
+`sigma-report-panel--aligned-title` modifier. Keep busy, printing,
+filter-invalidation, metrics, formulas and reference-date semantics unchanged;
+feature formulas remain in the frozen contract/review.
 Metric formulas, scopes and reference-date semantics remain in the frozen Follow
 Up contract/review and are not universal report defaults. No new shared
 disclosure capability or feature-owned tab/card palette is required.
@@ -292,6 +553,20 @@ final reconciliation if it reintroduces feature-local filter-strip or accounting
 total-card styling when these shared classes fit the same UI role.
 
 ### Required report review evidence
+
+For a reviewed family of reports with the same read-only lifecycle, a typed
+feature-family composition may share the form/request/print/export code and
+template while each consumer owns its columns, filters, lookups and returned
+totals. It still composes the canonical ReportPage, FeatureTitle, DataTable and
+SummaryCards owners; it does not create a second visual pattern or infer data
+completeness. StockReports uses `stockReports/shared/StockReportPage` and its
+typed `StockReportConfig` for eight consumers (2026-10-04). Every reader requests
+the frozen complete-response opt-in, and the composition checks both the flag
+and matching row count before enabling output. Adapt DataTable's typed
+`pageSize` event to the `rows` input expected by `resolveListPaging` before
+writing local paging state. Backend formulas and source limitations remain in
+the feature contract. This adoption is source-only; owner runtime and visual
+acceptance remain pending.
 
 Record these rows in the existing feature review, with actual frontend/backend
 file symbols, the confirmed contract and a match/finding/Uncertain result. Phase 2

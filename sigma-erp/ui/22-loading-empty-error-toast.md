@@ -69,6 +69,16 @@ Long diagnostics use `ul.sigma-alert-list`, whose bounded internal scroll is own
 `src/styles.scss`; they never transfer scrolling to the route. A View reads saved lookup
 labels without edit-only lookups; Edit merges saved selections with fetched options.
 
+**CSV preview lifetime (2026-10-10, Overtime source evidence).** Reviewed preview consumers
+reuse `ImportCsvComponent.parsingChanged` and `fileFailed`: clear the previous preview when
+selection begins, freeze the selected input context and block submission until parsing ends,
+and keep a failed replacement file unsubmitable. `reset()` clears parser feedback when the
+consumer explicitly clears its preview. The shared parser owns parsing/error presentation,
+disables repeat file selection and ignores completion after destruction. A controlled dialog
+remounts its parser per session so an old file/error cannot populate a reopened draft. No
+consumer parser fork or partial valid subset. Other consumers retain their existing fileImported
+contract; import atomicity and replacement rules remain feature-owned. Source-only acceptance pending.
+
 **Success toast — single owner.** The global `errorInterceptor` owns the one
 success toast for standard `POST`, `PUT`, `PATCH`, and `DELETE` responses whose result has
 `isSuccess: true` and a non-empty `message`. The feature subscription owns its
@@ -78,6 +88,13 @@ state-changing actions such as close, void, approve, post, and delete.
 
 **Duplicate-success prevention gate.** For every mutation, decide the toast owner
 before writing the subscription:
+
+Dependency cleanup follows the actual feedback owner, not a blanket removal of
+`MessageService`. An existing informational action that sends no API request
+(for example Agreement's unavailable-email notice) may retain its one `info`
+toast with key `global` and an explicit injection. It is not a mutation success
+toast. Search remaining class-member uses before removing the dependency;
+ordinary API failure/success rules below remain unchanged (block1).
 
 - **standard mutation:** interceptor owns success; the feature must not call
   `messageService.add({ severity: 'success', ... })`, `showSuccess(...)`, a
@@ -198,6 +215,13 @@ colour, spacing and `role`, with shared default messages (`general.loading`,
 }
 ```
 
+The public `StateMessageKind` contract currently accepts only `loading`,
+`empty` and `error`; `warning`/`info` are not supported inputs. A failed detail
+or lookup uses `kind="error"`, with its declared retry behavior. A genuine
+non-error advisory uses the existing shared `sigma-alert--warning` presentation
+(block1), rather than extending the component contract to silence a consumer
+type error. Import and register `StateMessageComponent` wherever used (block1).
+
 A grid's own empty/loading state stays with `app-data-table` (block 6). Hand-written state
 markup (`individual-dialog-state`, `'Please wait...'`) is replaced in the screen's review.
 
@@ -212,3 +236,29 @@ genuinely needs one · dialogs and panels show loading, empty and error states w
 survives a failed save.
 
 ---
+
+### Composed read failures (2026-10-06; Master 5 shared-extraction gate)
+
+Composed reads such as `fetchAllPages` and grouped selects can throw an ordinary
+`Error` containing a declared safe business message. Reviewed consumers use
+`composedReadErrorMessage` from `shared/utils/api-error.ts`; it preserves that
+message and delegates HTTP Result bodies/fallbacks to `apiErrorMessage`.
+Do not copy the Error-versus-HttpErrorResponse branch into each feature, or use
+this helper to expose arbitrary exception diagnostics. Card Transactions Bank
+Transfers list/export/report consumes it. Other consumers retain their current
+behavior until their own screen review. Source-only; owner compilation and
+failure-path acceptance remain pending.
+
+### Common settings inline feedback (2026-10-09)
+
+When Common settings are required by an inline lookup batch, use the optional
+`CommonSettingsService.getMySetting<T>({ skipErrorInterceptor: true })` contract
+(block 2), handle Result and HTTP failures in that batch, and retain explicit
+Retry and entered values. Rental Agreement Deposit adopts it for settings-owned
+amount wording. Defaults and other consumers keep global feedback; auxiliary
+settings reads use local busy state rather than the global loader. Source-only;
+owner failure/Retry acceptance remains pending.
+
+
+### Retryable required settings (2026-10-09)
+Required settings used by a calculation or transition join the lookup batch with the other `Result` reads. Declared failure and HTTP failure both set the lookup error, preserve the form, and make Retry repeat the request. A plain successful settings value is handled separately from `Result` wrappers. Source-only evidence: Limousine tax settings adoption.

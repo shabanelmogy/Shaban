@@ -132,6 +132,79 @@ colour that no shared token expresses (for example a vehicle-status colour), wit
 value. The 108 feature stylesheets that still declare palettes (2026-10-01) switch to the
 global tokens in their reviews.
 
+### Shared summary/KPI cards
+
+`app-summary-cards` (`shared/components/summary-cards/`) is the single visual
+owner for summary, KPI and total cards on any screen shape: list, report,
+dashboard, routed editor or dialog. It uses the existing Sigma/Bootstrap tokens
+for surface, border, text, primary and semantic accents. The Dashboard KPI strip
+is the visual reference: comfortable cards use 14px vertical/16px horizontal
+padding, a 44px icon tile with a 14% accent wash, 10px radius, 12px gap, a
+1.6rem value, a 9% accent gradient wash and a 3px logical-start accent stripe.
+Compact density uses 10px
+vertical/12px horizontal padding, a 32px icon tile, 8px gap and a 1.35rem value.
+Dense density uses 8px/10px padding, a 24px icon, 6px content gap, 1.05rem
+values and 0.6875rem labels with vertical icon/copy placement for narrow tiles.
+Slim density is for totals beside a master-detail workspace: 6px vertical/10px
+horizontal padding, a 20px icon beside the copy, 6px card/content gaps, 1rem
+values and 0.6875rem labels. It reduces height without feature card overrides.
+Workshop Job, JobEstimation and WorkOrder select slim/row/min140/max80 after
+the owner's 2026-10-04 request to preserve detail visibility. The 80px bound
+keeps wrapped totals internally scrollable; print releases it. This is an
+opt-in presentation choice; other densities and authoritative values remain.
+
+CashFlowStatement's later explicit accounting-format decision supersedes its
+slim-card experiment: its five authoritative figures sit within one shared
+statement table using UI6's optional section/subtotal/total rows. These are
+accounting document rows, not bespoke KPI cards. Other card consumers retain
+their shared sizing and appearance.
+
+Approved accents are primary, success, info, warning, danger and neutral, using
+the existing Sigma/Bootstrap theme tokens. Debit, credit and balance consume
+the existing accounting-value tokens and retain their non-semantic accounting
+meaning; colors never change a formula or become a success/error assertion.
+
+The shared owner renders one `<ul class="sigma-summary-cards">` wrapper with
+private component SCSS, auto-fit columns, a 190px default public `minCardWidth`,
+content-sized height with equal row stretch, readable wrapped labels, tabular
+values and text access to truncated amounts. Features may place or bound the
+host and pass public density/layout/minimum-width/maximum-height/selection inputs; they do not override
+card geometry, colors, padding, radius, font or icon-tile styling. The earlier
+report-specific insights draft is retired; there is no global insights variant.
+The old compact accounting summary bar remains compatibility-only for
+out-of-scope consumers. New/reviewed financial cards use the shared `formatMoney`
+owner plus translated Dr/Cr suffixes, while number cards use Angular
+`formatNumber` for authoritative values; this visual owner never adds accounting
+or status formulas.
+
+The typed `SummaryCard` shape carries `id`, `labelKey`, `value`, `icon`,
+`accent`, optional `format` (`number`/`money`/`text`), `suffixKey`,
+`hintKey`/`hintParams` and `secondary`. The component inputs are `cards`,
+`ariaLabel`, `density`, `layout`, `minCardWidth`, `maxHeight`, `selectable`, `selectedId` and
+`disabled`; `cardSelected` emits only the stable card id. It fetches nothing and
+does not derive or mutate business state. `density` is comfortable, compact,
+dense or slim. `layout` defaults to grid; row fits the actual card count into equal
+`minmax(0, 1fr)` tracks above a 1100px container width, then wraps through
+auto-fit/public minimum width in smaller containers. Do not render an off-screen
+horizontal rail. Optional numeric `maxHeight` (pixels, null by default) bounds
+the shared internal list; it owns its scroll and keyboard/visible focus while
+the surrounding table retains usable height. Natural-height consumers keep
+their existing scroll owner. These inputs change space usage, not card colors
+or business scope.
+
+Keep 12px separation between a summary-card region and the following grid. Use
+the parent's existing gap when it already supplies this separation; otherwise
+place margin-block-end on the component host, not its private card/list
+selectors. DebtCollection and ReceivableAgeAnalysis use this host placement.
+
+Selectable cards are native buttons with `aria-pressed`, visible focus, disabled
+busy guard and a stable-id selection output. Static cards have no click affordance
+or card-level tab stop; a bounded or row-layout list remains keyboard-focusable.
+Print removes the height bound/overflow and wraps every row-layout card. It uses
+compact white cards, neutral borders/text, wrapped values
+and hints, break-inside avoidance, and hides decorative icon tiles/washes/stripes
+while preserving captions and authoritative values in both themes and directions.
+
 ### Where body-appended overlay styles belong
 
 A `p-dialog`, dropdown panel or calendar with `appendTo="body"` is moved outside

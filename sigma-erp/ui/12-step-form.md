@@ -110,13 +110,19 @@ failure channel. Success retains the read-only state during attachment cleanup. 
 validation-summary navigation obeys the same busy/ready gate as the step header and Next.
 
 ```ts
-goToStep(index: number): void {
+async goToStep(index: number): Promise<void> {
+  if (this.busy() || !this.ready()) return;
   if (index < 0 || index >= this.FORM_STEPS.length) return;
-  if (
-    !this.isViewMode()
-    && index > this.currentStepIndex()
-    && !this.validateCurrentStep()
-  ) return;
+  if (!this.isViewMode() && index > this.currentStepIndex()) {
+    this.validating.set(true);
+    let valid = false;
+    try {
+      valid = await settleStepValidation(this.stepControls(), this.destroyRef);
+    } finally {
+      this.validating.set(false);
+    }
+    if (!valid || !this.validateCurrentStep()) return;
+  }
 
   this.activateStep(index);
 }
@@ -215,5 +221,45 @@ back never validates. A header handler that skips the gate is a finding.
 control names (`'mangeDetails.' + name`), or walking the form to generate specs, is not allowed:
 an optional control then produces a badge whose key does not exist. Every key in the specs exists
 in `en.ts` and `ar.ts` (block 23).
+
+**Early duplicate checks (owner decision 2026-10-03).** For an existing
+server-owned uniqueness rule, configure only that field with `updateOn:'blur'`
+and attach `uniqueFieldValidator` (`shared/utils/unique-field-validation.ts`).
+Supply the service's typed `checkUnique`, declared field name, current edit id,
+DestroyRef and the save's normalization. Attach after hydration or gate checks
+with ready/edit mode; View makes no checks. Do not infer that every child
+collection prohibits duplicates. Reference: Individual Email/MobileNo,
+Company CompanyName/VAT and Staff Email/MobileNo.
+
+The validator remembers the last completed available/duplicate result by
+normalized value and edit identity; unchanged Next/Save reuses it. A changed
+value, including a synchronously invalid edit, invalidates the old result.
+Angular cancellation plus ref-counted sharing discards stale checks. A pending
+check is awaited, not restarted; failed/empty/malformed responses produce
+`uniqueCheckFailed`, block progression and remain retryable, with a ten-second
+request bound. The typed preflight Result uses `entity.isAvailable`; both taken
+and available are successful queries. Skip both success/error interceptors and
+let the shared FieldError own checking/duplicate/failure feedback (block19).
+
+Every forward route and Save awaits `settleStepValidation(controls, destroyRef)`
+from `shared/utils/step-form-validation.ts`. Next checks its current step; Save
+checks the whole parent form before building its snapshot. The helper blurs
+the focused input before inspection and after awaited checks so Enter cannot
+save an uncommitted blur value. It refreshes cached async validators and awaits
+every pending child, including when a parent is already INVALID. Features add
+a local validating flag to busy guards and prevent form-content mutations
+while settling without disabling/cancelling the pending controls; a native
+inert body is one source-supported option. Release that flag before existing
+summary/focus navigation. Mark touched and show existing field/spec errors on
+failure; do not short-circuit the feedback path merely because settling failed.
+Back and View skip validation. Silent re-enable after Save failure must not
+start an unobservable pending check; keep validation disabled during that
+restore, or reuse a completed cache result. The backend always rechecks during
+the final write because preflight cannot reserve a value (BE8).
+
+The shared gate also applies to step forms without unique keys. The scoped
+closedLeaseAgreements compatibility consumer retains its legacy presentation,
+but tab/Next forward events run the same gate and existing field validators;
+new/reviewed full screen implementations still use the canonical shared shell.
 
 ---

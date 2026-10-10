@@ -38,6 +38,12 @@ Task<Results<DropdownDto>> SelectAsync();
 The service inherits the generic base and overrides **only** what needs
 feature-specific rules:
 
+The shared interface/service/controller constrain the detail response only to
+`class`, since their read paths do not use `DetailBaseVm` members. Use a lean
+explicit detail VM when inherited fields are unused (block 3); legacy derived
+detail VMs remain accepted. Do not duplicate generic read methods to work around
+a read-shape constraint.
+
 ```csharp
 public class BranchService :
     Service<BranchAddVM, BranchUpdateVM, BranchDetailVM,
@@ -117,6 +123,15 @@ return true when EF completes successfully, including zero affected rows. An unc
 validated update succeeds. Keep ownership-conflict failure and exception propagation;
 `SaveUpdateAsync` uses this shared result rather than forcing writes or adding a local
 no-change shortcut (block 14).
+
+**Valid tenant at persistence (2026-10-03, owner-approved R2).** Before numbering,
+UOW rejects Added/Modified/Deleted EntityBase entries when its resolved
+subscription is not positive. DbContext independently applies the same rule
+before audit/SQL, covering direct saves and all sync/async overloads. The typed
+`SubscriptionRequiredException` becomes localized `FailToAuth`/HTTP401 through
+the existing middleware. No-change and global-only saves do not require a
+tenant. Repository ordinary tenant operations guard earlier; the report/global
+exception follows blocks 17–18. Do not add per-service tenant fallbacks.
 
 **Known gap (owner decision D5-2, deferred):** only `AddAsync` takes a `CancellationToken`;
 `UpdateAsync`, `RemoveAsync`, `DetailAsync` and `GetManyAsync` do not, so a cancelled request

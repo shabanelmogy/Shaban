@@ -7,7 +7,7 @@
 | Use when | A paged list of records with fields only or one small child list and no totals (UI block 13 decision rule); Create, View and Edit belong to the list |
 | Do not use when | The record has two or more child collections, totals or posting (use [02](02-list-with-routed-master-detail-editor.md) or [08](08-financial-document.md)), or the output is a report, tree, settings set, or financial collection (see the [catalog](00-catalog.md)) |
 | Owning blocks | [6 Grid and footer](../06-grid-and-footer.md), [13 Modal with tabs](../13-modal-with-tabs.md) |
-| Approved reference | List `Workshop/Job/components/list` (shared shell, filter panel, `app-data-table [fill]`); editor `shared/components/editor-dialog/` (+ `editor-tabs/`) + `Fleet/VehicleService/components/details` |
+| Approved reference | List `Workshop/Job/components/list` (shared shell, filter panel, `app-data-table [fill]`); editor shared `editor-dialog/` (+ `editor-tabs/`) and UI13 controlled composition |
 | Backend pattern | 1 Normal entity; 2 when a header owns detail rows |
 | Contracts to freeze first | Grid Column and Filter contract; Detail/Add/Update contract; Action-state contract for risky or stateful actions (Master block 4) |
 

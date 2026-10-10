@@ -13,10 +13,35 @@
 removed saved file for deletion after save, shows a rejected file with `app-field-error`, and shows
 the name only when the control is disabled. The feature writes no upload code.
 
+Stored-path `app-file-field` optionally emits `storedFile` after a successful upload with
+`{ originalFileName, filePath }`. Use it only when the existing API preserves the original
+filename separately from the server path (Job Estimation logs). The control and tracker
+still own path/dirty/cleanup state; no emission is made for failed or selection-only
+uploads. Consumers clear obsolete metadata when their path is cleared. No API/storage
+contract is introduced by this additive output.
+
 The shared file field passes both its bound `control` and its upload-rejection `message`
 to `app-field-error`. A nonempty rejection message takes precedence; otherwise touched/dirty
 control errors (such as the document/profile path length) appear through the same shared
 presentation. Do not add a second feature-local file error below the shared field.
+
+**Atomic multipart actions (2026-10-03).** When an existing endpoint owns file storage,
+attachment persistence and rollback cleanup together, use the same field with
+`[selectionOnly]="true"` and a typed `FormControl<File | null>`. It validates through
+`FileUploadService.validationError`, marks the local selection dirty/touched and never uploads,
+deletes or mutates a tracker. The owning action sends the File to its existing multipart
+endpoint. `folder` and `DocumentUploadTracker` are unnecessary in selection mode; stored-path
+mode retains the required editor tracker and its cleanup lifecycle. Do not route an atomic
+attachment through Media first or duplicate feature file validation/markup. Reviewed Agreement
+documents and Movement View consume this opt-in mode.
+
+**Saved-file links (2026-10-03).** Use `app-file-link [path]="savedPath"` for a read-only
+stored-file action. It resolves root-relative/relative or same-origin absolute paths against
+the current API origin, accepts HTTP(S) only and opens with `noopener noreferrer`. It shows no
+action for an absent/invalid path. Return persisted `documentPath` in the read DTO rather than
+inferring a file from `hasDocument` or a name. This reuses the existing FileStore/static-file
+contract; it introduces no new file access policy. Reviewed identity and supporting-file
+readers share it. Preserve historical files independently of current type upload eligibility.
 
 **File cell (shared, 2026-10-01).** A file control — in a field or in a collection cell — is
 `div.sigma-file-field`, drawn as one 34px control box like the other fields: the hidden

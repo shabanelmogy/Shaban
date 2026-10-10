@@ -29,6 +29,42 @@ Display format is `dd/mm/yy` in the picker and `dd/MM/yyyy` (`dd/MM/yyyy HH:mm` 
 tables. A grid column uses `type: 'date'` or `type: 'dateTime'` (block 5); other text uses
 `formatDisplayDate(value, withTime)`.
 
+**Hydrate saved calendar dates through the shared owner.** Use
+`toPickerDate(apiDate)` from `shared/utils/date-utils.ts` to turn a saved API
+date or date-only filter URL value into the `Date` expected by PrimeNG's picker.
+It validates the first calendar-date segment with `parseDateValue`, creates a
+local year/month/day and returns null for missing/invalid values. Keep typed
+editing as `Date | string | null`; restoring a saved value is a separate step
+from parsing manual text or building date-only transport. Range restoration
+uses two hydrated Dates after validating both endpoints. Do not patch raw ISO
+strings into a masked picker or use UTC conversion/private hydration parsers.
+The existing `partnerPickerDate` compatibility wrapper delegates to this same
+algorithm without changing its callers. Equipment Rental adopts the neutral
+helper after source review found repeated picker hydration in its editors and
+route restoration. Date-time controls retain their own wall-clock contract;
+this helper represents a calendar day only. Source-only; owner reload/typing/
+route/visual acceptance and compilation remain pending.
+
+Full calendar years (2026-10-09 Lease tariff follow-up): `parseMonthValue`
+accepts backend-supported years 0001..9999. Shared saved-day construction uses
+`setFullYear` instead of the multi-argument Date constructor, which coerces
+years 00..99 to 1900..1999. `parseDateValue` validates the same actual local
+year/month/day; `toPickerDate` retains it, and date transport/display pads the
+year to four digits. Existing two-digit manual-year normalization stays
+compatible; year zero remains invalid. No timezone conversion or business
+date bound changes. Source-only; owner input/reload acceptance pending.
+
+Transportation continuation (2026-10-09): the same full-year invariant applies
+to month boundaries, not only saved-day hydration. `currentMonthRange(date)`
+uses `setFullYear` for its local first/last days and retains midnight; it must
+not reintroduce the Date constructor's 1900 offset for years 0001..0099.
+TripSheet hydrates the parsed month through `toPickerDate(month + '-01')`,
+shifts with `setMonth`, validates the destination with `parseMonthValue`, and
+uses `currentMonthRange` for the request boundaries. Moving outside 0001..9999
+does not submit a request. Current-year defaults, local transport, picker
+grammar and business bounds stay unchanged. Source-only; owner compilation,
+manual month/route navigation and API-date acceptance remain pending.
+
 When the calendar is inside a canonical filter boundary from block 4, its
 wrapper and input consume `--sigma-filter-control-height`. Do not add a
 feature-local filter-calendar height.
@@ -56,6 +92,35 @@ removed in their reviews.
 Keep `dateFormat="dd/mm/yy"` everywhere, so what the user types is what the box
 shows. Minimum and maximum dates, plus start/end ordering, are still validated
 in the form and on the backend.
+
+Reviewed screens reuse `dateValueValidator`, `dateRangeValidator` and
+`dateTimeValueValidator` from `date-utils.ts`; pair optional validators with
+`Validators.required` only where the frozen contract requires a date. Nonempty ranges
+need two real ordered endpoints. Typed single dates/ranges need complete four-digit years;
+typed local date-time is `DD/MM/YYYY HH:mm[:ss]`, never browser-dependent month-first parsing.
+`toApiDateTime` normalizes that complete local text as well as picker Dates without `Z`.
+The structured picker mask and business-specific bounds retain their own roles. Workshop
+is the source-inspected consumer; build/input acceptance remains owner-pending.
+
+**Month transport.** A reviewed month picker uses `Date | string | null`,
+`view="month"`, `dateFormat="mm/yy"`, the shared structured mask and
+`placeholder="mm/yyyy"`. Normalize with `parseMonthValue` from
+`shared/utils/date-utils.ts`: a valid local picker Date, complete `MM/YYYY`, or
+complete API `yyyy-MM` becomes `yyyy-MM`. Empty, partial, malformed and out-of-range
+values return null; month is 1–12 and year is 1–9999. Never coerce a short year or
+copy a month parser into a feature. Use `currentMonthRange()[0]` for a current-month
+picker default. Staff Overtime, Duty Schedule and Timesheet are source-inspected
+consumers; their payroll and sparse-write contracts remain feature-owned.
+
+**Shared month validation (2026-10-06, Master5 extraction gate).** Reviewed month
+controls use `monthValueValidator` from `date-utils.ts`, with `Validators.required`
+only when mandatory. It delegates to `parseMonthValue`, accepts an empty optional
+control and returns the existing `date` validation error for invalid or partial
+months and non-date/non-string values. Depreciation adopts it. Accounts report
+family and Staff Timesheet retain two source-inspected local validator copies
+until their own review (UI30/39); this addition does not authorize a bulk change.
+The shared picker mask, current-month default, business bounds and transport
+remain separate owners. Source-only; owner input/runtime acceptance pending.
 
 **Explicit picker-only request.** When the owner requests selection without text
 entry, keep `appDatePicker` and override `[readonlyInput]="true"` and
@@ -137,6 +202,23 @@ readonly filterForm = this.fb.group({
 
 `currentMonthRange()` is shared (`date-utils.ts`); the rule is the owner's (2026-09-24,
 "الشهر الحالي") and applies to lists **and** reports (block 20).
+
+**Fixed dash-range delimiter (owner request, 2026-10-03).** For enabled,
+typeable numeric `appDatePicker` range fields with the default dash separator,
+keep the exact ` - ` delimiter (one space on each side). The shared directive
+protects an existing marker from partial deletion/replacement; Backspace/Delete
+at it move to the adjacent date boundary. Select-all replacement/deletion and
+clear remain available. Normalize missing/excess spaces before PrimeNG's native
+input parser, preserving selection offsets; slash-based date formats make an
+unspaced dash unambiguous. If the date format itself uses a dash, protect its
+existing spaced delimiter without guessing compact pasted boundaries. A
+pre-edit snapshot restores the range and selection when a noncancelable partial
+edit destroys its marker; history/select-all/empty edits remain allowed.
+Single/multiple/custom-separator/disabled/picker-only fields keep their existing
+behavior. Do not add local masks, synthetic input, another parser or an extra
+form write: the existing capture-input guard corrects text before PrimeNG parses
+once. Partial dates, validators/bounds/order, picker/clear and API transport
+remain with their existing owners. Source conformance is not runtime acceptance.
 
 `numberOfMonths` is a **panel** property: it widens the overlay, not the field.
 The range field still occupies exactly one column of the block 4 grid — do not

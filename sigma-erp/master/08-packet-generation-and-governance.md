@@ -12,7 +12,20 @@ source dependencies live in `recipe-system/templates/` and
 - Run `Generate-SigmaRecipes.ps1 -Check` before using a packet.
 - Read-only companions in `recipe-system/`: `Check-Translations.ps1` (en/ar key parity, UI
   block 23) and `Check-BookReferences.ps1` (every path and cross-reference the books name exists).
-- If check mode reports drift, use canonical sources and report the stale packet.
+- Keep packets current throughout each task (standing owner instruction,
+  2026-10-09). After changing a canonical block, template or manifest dependency/
+  reference, regenerate the affected packets in the same task, semantically
+  review them and rerun `-Check` before use or handoff. Do not defer routine
+  regeneration to the owner.
+- When the initial check reports existing drift, reconcile stale template and
+  manifest claims against canonical evidence, then regenerate and semantically
+  review the affected packets before using them. Standing authorization covers
+  derivative documentation maintenance during source-read-only reviews as well;
+  it does not authorize application-source edits or new canonical decisions.
+- Preserve unrelated changes and record refreshed packet IDs, check results and
+  semantic-review evidence in the task review. When a required source is missing
+  or a semantic conflict cannot be resolved from canonical evidence, do not use
+  the affected packet; use canonical sources and report the precise blocker.
 - Regeneration is followed by semantic review; a matching hash proves
   synchronization, not correctness.
 - Manifest `approvedReferences` are reconciled against the canonical per-shape

@@ -33,7 +33,7 @@ scope from the user request").
 
 | # | Screen type | Owning block(s) | Approved UI reference | Backend pattern (backend `00-preamble`, "The five patterns") |
 |---|---|---|---|---|
-| 01 | List with modal editor | 1, 4, 6, 13 | List `Workshop/Job/components/list` (shell, filter panel, grid); modal editor `Fleet/VehicleService/components/details` | 1 Normal entity (`BranchService`), or 2 when a header owns detail rows |
+| 01 | List with modal editor | 1, 4, 6, 13 | List `Workshop/Job/components/list` (shell, filter panel, grid); modal shared `editor-dialog/` (+ `editor-tabs/`), UI13 controlled composition | 1 Normal entity (`BranchService`), or 2 when a header owns detail rows |
 | 02 | List with routed document editor | 1 (editor shell), 13 (decision rule, routed variant), 14 | List as 01; editor `Workshop/Job/components/editor` | 2 (`PurchaseOrderService`), or 3 when saving has a financial effect |
 | 03 | Step-form record | 12 | `Customers/Individual/IndividualPartner/components/{list,details}`; CompanyPartner now adopts the same shared shell and gated steps (2026-10-01 comprehensive fixes) | 1 or 2 by the record's child collections |
 | 04 | Hierarchy tree workspace | 1 ("Hierarchy tree workspace") | `Accounts/Account/components/{list,details}` | Select by the table; not fixed by the UI shape |
@@ -52,6 +52,7 @@ something specific to that type.
 |---|---|
 | [1](../01-feature-folders-and-wiring.md) | Folder shape, route wiring, container-fill host, no page scroll, one scroll owner per region, base component |
 | [3](../03-header.md) | `app-feature-title` inside the primary card |
+| [24](../24-colors-icons-buttons.md) | Shared `app-summary-cards` for any summary/KPI/total-card region; features pass content, public density/layout/minCardWidth/maxHeight/selection and host placement only |
 | [22](../22-loading-empty-error-toast.md) | Loading, empty, error, and toast states; both failure channels |
 | [23](../23-translations.md) | Translation keys in both vocabularies |
 | [24](../24-colors-icons-buttons.md) | Tokens, icons, shared buttons |

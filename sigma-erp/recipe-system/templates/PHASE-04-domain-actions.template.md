@@ -11,8 +11,21 @@ Approved confirmation and workflow references:
 
 {{APPROVED_REFERENCES}}
 
+Reference roles: the shared confirmation service owns confirmation-only
+interactions; `shared/components/action-button` owns menu rendering;
+`Sales/SalesQuotation/components/list` owns the quotation specialization (UI 7);
+`Workshop/Job/components/close-job` is the typed action-dialog reference (UI 13
+and screen 09). Other domain transitions select their owning feature reference
+after its state contract is frozen; do not copy quotation business rules.
+
 The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop and report drift when they disagree.
+derivative. Stop using a packet that disagrees with canonical sources. Follow
+Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
+book/template/manifest claims, regenerate affected packets through the generator,
+semantically review their source rules and approved-reference roles, then rerun
+`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+unrelated changes; source-read-only review still forbids application-source edits.
+Use canonical sources and report a precise blocker for unresolved conflicts.
 
 ## Purpose
 
@@ -53,6 +66,12 @@ simulate authorization or state rules only in Angular.
 
 ## Procedure
 
+Before implementation, inventory every public domain action in the approved
+reference's backend interface, service and controller, and Angular service and
+owning action menu (Master blocks 3 and 4). Classify every action as Supported,
+Not Applicable, Missing or Conflicting. An exclusion names the absent domain
+state or dependency; absence from a screenshot is not sufficient.
+
 1. List every domain action and its owner surface.
 2. Define visible, disabled, and server-permitted states separately.
 3. Verify tenant, ownership, existence, references, and state at the backend.
@@ -66,6 +85,18 @@ simulate authorization or state rules only in Angular.
 10. Define exact refresh target, page retention, and updated action availability.
 
 ## Required outputs
+
+### Approved-reference action coverage
+
+| Approved-reference action | Target classification | Evidence or exclusion reason |
+|---|---|---|
+| | Supported / Not Applicable / Missing / Conflicting | |
+
+Every Supported action records its exact source/target state, response flags,
+backend interface/service, controller verb/route/payload, Angular service,
+interaction, dependency/concurrency rule, failure recovery and refresh in the
+Master block 4 action-state contract. Missing or Conflicting decisions block the
+affected slice rather than authorizing an invented transition.
 
 ### Action-state matrix
 
@@ -81,6 +112,8 @@ simulate authorization or state rules only in Angular.
 
 ## Continuous gates
 
+- Every approved-reference public action is classified once, and every Supported
+  action has a complete backend-to-UI vertical slice with no blank contract cell.
 - UI visibility is never described as security.
 - Confirmation is not used for Save, Next, Search, Export, or Print.
 - Confirmation services are shared; typed workflows remain typed forms.

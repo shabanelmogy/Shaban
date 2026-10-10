@@ -14,6 +14,13 @@ Keep the option panel appended to body. Do not size a closed dropdown from its
 selected text or add feature-specific width selectors. Apply this rule in new
 work and when reviewing existing screens; this decision is not a bulk rewrite.
 
+The shared three-pane editor applies `min-width:0`, `width:100%` and
+`max-width:100%` to `sigma-field` dropdown hosts/wrappers. Its closed label
+shrinks and uses ellipsis, while the trigger keeps its width and the option
+panel remains appended to body. This fixes long Work Order labels in Create
+Job without resizing the Details column or feature CSS (2026-10-04,
+source-only; owner narrow/RTL/visual acceptance pending).
+
 **Simple server lookup** — use `getSelectList` returning `DropDownSelect` when
 the backend exposes the ordinary reusable select contract:
 
@@ -47,6 +54,36 @@ private loadBranches(): void {
 
 Bind `optionLabel="value"` and `optionValue="id"` — that matches
 `DropDownSelect`, so do not invent other field names.
+
+Accounts report dropdowns cache their translated option arrays by source-array
+identity and current language, avoiding rebuilding a large lookup on every
+change-detection pass. A replaced lookup array or language change supplies fresh
+labels. Large report selectors may opt into descriptor `virtualScroll: true`;
+the shared template uses PrimeNG's public virtualScroll/virtualScrollItemSize
+inputs and a body-appended `sigma-report-select-panel--virtual` overlay. Its
+shared 38px border-box rows match the 38px scroller size, with zero block padding;
+full options, filtering, selection and clear behavior remain. Other selectors
+retain nonvirtual rendering. Budget Variance Account adopts it after the owner's
+opening/responsiveness report; runtime root cause and visual acceptance remain
+pending. Do not add feature panel CSS or truncate the source options.
+
+**Selectable records and historical labels.** Source ordinary entity choices
+from the owning select endpoint (or the confirmed typed domain lookup below),
+not from the navigation graphs of documents that reference them. A live
+document may still reference a soft-deleted entity for
+historical display. When that entity is no longer selectable, keep its name in
+the Detail DTO and render it as read text in View; do not put it back into the
+current choices. A missing historical relation has no invented label. The
+write validator remains authoritative; keeping the old label visible does not
+authorize saving a deleted reference. Closed Lease Agreements' Clause Type
+picker uses `ClauseType/GetSelect`, while View reads `clauseTypeName` from the
+agreement detail (2026-10-03, source-only).
+
+**Typed option arrays (2026-10-03).** PrimeNG's `p-dropdown.options` input in the current
+application expects a mutable array. A feature getter returning a freshly filtered list
+declares `T[]`, not `readonly T[]`; preserve readonly source collections by making a mutable
+copy before binding when necessary. Do not hide an input mismatch with an untyped cast.
+The owner-reported Logs Movement TS4104 was corrected by returning `CheckCardDocument[]`.
 
 **Saved select options (2026-10-02).** Use the pure shared
 `mergeSelectOptions(incoming, saved)` from `shared/utils/select-options.ts`
@@ -91,6 +128,17 @@ readonly labourTypeOptions = enumOptions(JobLabourType, 'job.labourTypes');
 ```
 
 For read-only display use `enumKey(Enum, keyPrefix, value) | translate`.
+
+**Journal voucher source text (Bank Reconciliation review, 2026-10-05).**
+For the backend's string `VoucherTypeName.ToString()` contract, reuse
+`voucherTypeText(value, translate)` from `shared/utils/voucher-type-text.ts`.
+Its explicit mapping uses neutral `voucherTypeNames.*` EN/AR keys for the current
+journal source names; an unknown name retains its source text and null remains
+empty. Grid and `dataTableExportRows` call the same transformation with the
+current translator, so switching language changes display and export together.
+This is presentation only: no ID renumbering, new enum contract, query or payload
+change. Bank Reconciliation adopts it; the existing Customer Statement local
+mapping remains counted in backlog39 for its own review.
 
 **Legacy — do not copy.** `EnumToArrayPipe` (67 files at 2026-10-01) declares `value: string`
 although numeric enums produce numbers, and its optional `startId` numbers options by index.

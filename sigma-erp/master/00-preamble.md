@@ -3,10 +3,10 @@
 | | |
 |---|---|
 | Status | **Canonical.** Binding for Sigma feature review and implementation orchestration |
-| Version | 1.26 |
+| Version | 1.28 |
 | Last verified against documentation system | 2026-10-01 (completion plan R5–R8; history in `CHANGELOG.md`) |
 | Verification | Documentation structure and source inspection only |
-| Last content change | 2026-10-02 — Conformance claims require actual consumer/producer symbols and compared contracts; required report evidence before and after implementation (block 5) |
+| Last content change | 2026-10-09 — Continuous generated-packet maintenance after documentation changes and initial drift, with generator-only refresh, semantic review and final check (block 8) |
 
 This guide defines how a Sigma feature is scoped, reviewed, implemented, and
 reconciled across Angular and .NET. It owns global review rules and contract
@@ -35,7 +35,8 @@ Use this order for every decision:
 6. Reviewer inference, only when labelled and supported by evidence.
 
 If a generated packet conflicts with a canonical source, stop using the packet,
-report drift, and use the canonical source. If a canonical snippet conflicts
+follow block 8 to reconcile, regenerate and semantically review it, and use the
+canonical source until the conflict is resolved. If a canonical snippet conflicts
 with current source, current source wins for factual behavior; report the guide
 drift instead of silently changing the rule.
 

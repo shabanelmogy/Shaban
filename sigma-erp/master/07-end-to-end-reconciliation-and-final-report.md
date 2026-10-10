@@ -20,6 +20,8 @@ Phase 6 compares every applicable path.
 - Routes/modes ↔ editor shape and exit behavior.
 - Upload UI ↔ Media/API/storage/cleanup contract.
 - Translation keys ↔ English and Arabic.
+- Screen user-guide topics and steps ↔ final screen routes, actions, states,
+  validations and financial/business constraints.
 - Feature styles ↔ local ownership, RTL, theme, overlay, and responsive rules.
 - Providers ↔ interceptor-enabled client and authentication header path.
 - Successful mutations ↔ exactly one success-feedback owner; failures ↔ exactly one error owner.
@@ -31,6 +33,49 @@ Phase 6 compares every applicable path.
 - When a Maintenance / Evolution Plan was required, Frozen target contracts ↔
   final source behavior, migration/compatibility decisions, implementation
   slices, and verification evidence.
+
+### Screen user guide completion gate (owner instruction, 2026-10-08)
+
+After completing an authorized implementation or refactor of a user-facing
+screen, create its in-app user guide, or update the existing guide, **before
+the final handoff**. A screen implementation is not source-complete while this
+required deliverable is absent or describes outdated behavior. This applies
+to newly implemented and subsequently reviewed screens; it does not authorize
+a bulk retrofit of screens outside the current task.
+
+1. Finish and reconcile the screen's actual implementation first, then write
+   the explanation from that final source. Cover the screen's purpose,
+   prerequisites, task steps, available actions and relevant state transitions,
+   validation/financial limits, and useful questions where applicable. Explain
+   what a user does and what happens; do not publish implementation internals
+   or invent actions, permissions, payment, posting or refund behavior.
+2. Add or update the screen's topic in its owning module's guide, with the
+   appropriate lifecycle/context. Child dialogs and Create/Edit/View modes
+   belong in the parent screen's explanation when they share its workflow;
+   they do not require duplicate guide pages or sidebar entries. Keep existing
+   topics and stable links, and update relevant explanations when behavior
+   changes. When no module guide exists, create its content and register it in
+   the existing reader, with one guide entry under that module's sidebar menu.
+3. Reuse `SiGmaAngularFrontEnd/src/app/modules/UserGuide/` models, reader,
+   journey/topic components and existing shared UI owners. Keep typed authored
+   content separate from presentation, with English and Arabic text, while UI
+   controls follow UI23. Use the actual operational routes for screen links;
+   source-unsupported workflows are stated as unavailable, never promised.
+   Do not create another viewer, external site or per-screen card palette.
+4. Reconcile the explanation against the final routes, visible actions and
+   owning backend rules where needed, especially financial constraints. In
+   the existing feature review record the content file, module guide route
+   and sidebar entry, covered topic identities and source evidence. Check
+   topic/route coverage, bilingual text and directly touched UI translations.
+   Reading/navigation/RTL/theme/print checks remain owner acceptance under the
+   existing execution boundary; documentation is not proof of runtime success.
+5. This step belongs to authorized frontend/full-stack screen work. A
+   source-read-only review reports a missing or stale guide without changing
+   application source. A backend-only task records user-guide impacts for its
+   scoped frontend follow-up instead of silently expanding its source scope.
+   Step-by-step phase commands retain their boundary: intermediate phases
+   record the guide handoff requirement; screen implementation completion
+   includes the guide before final reconciliation.
 
 ### Source-only diff review
 
@@ -46,6 +91,8 @@ Before completion:
   action has its route, payload, flag/status, UI interaction, translation,
   failure handling, and refresh path;
 - check merge markers and whitespace errors;
+- check that the required in-app guide exists and matches the final screen,
+  including its module menu link and English/Arabic content;
 - preserve unrelated changes;
 - distinguish source verification from build, runtime, browser, and database
   verification.
@@ -61,6 +108,8 @@ Report proportionally:
 - contract tables or their final comparisons;
 - frontend, backend, mapping, and calculation decisions;
 - action and refresh behavior;
+- user-guide content file, module guide route/menu entry, covered screen topics,
+  evidence of content conformance and pending owner acceptance;
 - Maintenance / Evolution Plan status and any approved deviation from its Frozen
   target contracts;
 - migration requirement;
@@ -133,4 +182,3 @@ refactor(labour-activities): move to shared list and editor dialog
 ```
 
 ---
-

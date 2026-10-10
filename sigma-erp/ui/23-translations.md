@@ -34,6 +34,7 @@ Shared blocks to reuse instead of inventing keys:
 | `mangeDetails.*` | field labels shared across customer screens: firstName, mobileNo, email, documentType, cardNumber |
 | `validationMessages.*` | required, email, expiryAfterIssueDate |
 | `partnerForm.enums.*`, `partnerForm.attachment` | neutral enum and attachment labels used by Individual, Company and driver drafts |
+| `voucherTypeNames.*` | neutral journal-source labels, consumed by shared `voucherTypeText` (block16) |
 | `sideMenu.*` | navigation entries |
 
 Naming: `<feature>` for the list, `<feature>Form` for the editor. Suffix

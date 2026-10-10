@@ -18,7 +18,7 @@ Inherited helpers, so you do not rewrite them:
 | Method | Calls |
 |---|---|
 | `get<T>(obj?)` | `GET {control}?Filters[key]=value&...` |
-| `getById<T>(id)` | `GET {control}/GetById/{id}` |
+| `getById<T>(id, options?)` | `GET {control}/GetById/{id}` — optional `{ skipErrorInterceptor: true }` when the consumer owns inline detail feedback (block 22); omitted options preserve global feedback |
 | `getByIdWithNavigation<T>(id)` | `GET {control}/GetByWithNavigationsId/{id}` |
 | `getSelectList<T>(options?)` | `GET {control}/GetSelect` — dropdown options; pass `{ skipErrorInterceptor: true }` only when the feature owns an inline lookup error/retry state (block 22) |
 | `getByType<T>(type)` | `GET {control}/GetByType/{type}` |
@@ -128,3 +128,18 @@ write interface of the reviewed screen.
 
 ---
 
+### Common settings used by an inline lookup batch (2026-10-09)
+
+`CommonSettingsService.getMySetting<T>(options?)` retains the current
+`SettingsCommonModel/GetMySetting` endpoint and typed `Result<T>`. A consumer
+that owns inline error/Retry feedback may pass `{ skipErrorInterceptor: true }`;
+the service sends the existing `X-Skip-Error-Interceptor` header. Omitted options
+retain global feedback. Rental Agreement Deposit reads `CommonDTO` alongside its
+options and supplies the configured currency labels/decimals to shared
+`amountInWords` (block 19), keeping entered amounts on failure. This option
+changes feedback ownership only; it adds no settings API, currency default or
+financial calculation. Source-only; owner compiler/failure/Retry acceptance pending.
+
+
+### Required settings reads (2026-10-09)
+A settings lookup that gates a dependent workflow may expose an opt-in strict read mode. Strict mode throws or returns the declared failure so the caller can block Save/Finish and offer Retry; the legacy optional fallback remains for non-gating previews. Cache successful strict reads separately and do not cache failures. Source-only evidence: Limousine quotation and TripBooking tax settings.

@@ -1,9 +1,11 @@
 # PHASE 3: Detail and Write Path
 
 Use this packet for Create, Edit, and View behavior from detail loading through
-Save, discard, and parent refresh. Ordinary list-owned CRUD uses one controlled
-dialog editor; a routed editor requires confirmed source or a documented
-business workflow.
+Save, discard, and parent refresh. Select the editor using UI block 13's D4-2
+rule: fields only or one small child list without totals use a controlled modal;
+two or more child collections, totals, or approval/posting use a routed editor.
+Create, Edit, and View share that editor with an explicit mode. Ordered step
+workflows follow UI block 12; deliberate exceptions are recorded in the review.
 
 ## Canonical provenance
 
@@ -28,8 +30,11 @@ Reference ownership is explicit:
 - reusable editable child-collection chrome, required headers, Add/default
   Remove or projected actions, empty state, responsive behavior, and table styling:
   `shared/components/editable-collection-table`;
-- ordinary modal modes, feature content, dirty lifecycle and persistence:
-  `Fleet/VehicleService/components/details`;
+- ordinary modal integration: UI block 13 controlled composition and the
+  shared EditorDialog/EditorTabs declarations; Fleet/VehicleService is routed
+  and is not a modal reference;
+- routed document editor shell, panes, fixed footer and Create/Edit/View modes:
+  `Workshop/Job/components/editor`;
 - routed step-form state, forward-validation gate, invalid-field discovery and
   focus, content, footer actions and persistence:
   `Customers/Companies/CompanyPartner/components/details`;
@@ -67,14 +72,20 @@ tablist, or copy a feature-specific direct `p-dialog` shell. Combine the shared
 shell with the canonical controlled dirty-close lifecycle; do not copy a source
 visibility hook that closes before discard approval.
 
-Create, View and Edit for an ordinary CRUD list must open that same controlled
-`app-editor-dialog` component with an explicit mode. Do not mix modal Create with routed
-View/Edit, or add editor routes merely because legacy routes exist. View mode is
-read-only, hides Save and exits through Close. Record the confirmed workflow
-evidence before selecting a routed editor instead.
+Create, View and Edit use the same shape selected by D4-2 and the screen catalog:
+the controlled `app-editor-dialog` for a simple record, or the shared routed
+editor shell for a document. Do not mix modal Create with routed View/Edit, or
+select a shape merely because legacy routes exist. View mode is read-only,
+hides Save and exits through Close. Record the selected rule and source evidence.
 
 The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop and report drift when they disagree.
+derivative. Stop using a packet that disagrees with canonical sources. Follow
+Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
+book/template/manifest claims, regenerate affected packets through the generator,
+semantically review their source rules and approved-reference roles, then rerun
+`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+unrelated changes; source-read-only review still forbids application-source edits.
+Use canonical sources and report a precise blocker for unresolved conflicts.
 
 ## Purpose
 
@@ -113,14 +124,19 @@ Required:
 - Phase 1 Detail/Add/Update and aggregate contracts.
 - Approved reference for each editor/dialog shape.
 
-Required screenshot fields with Missing contracts remain unresolved rather than
-being added to a payload.
+For screenshot-backed missing business explicitly placed in scope by the user,
+apply Master block 2's owner standing rule: resolve Missing details using the
+closest correct source-supported option or the minimal new element, record the
+decision and evidence, and report it. Data destruction, access restrictions and
+accounting effects still require the owner's decision. Other genuinely Missing
+contracts remain unresolved and are not invented in a payload.
 
 ## Procedure
 
-1. Confirm one `app-editor-dialog` Add/View/Edit surface and a list-only route
-   for ordinary CRUD, or record the exact evidence that requires routed editor
-   URLs. Use `app-editor-tabs` for custom editor tab navigation; tabs are
+1. Apply UI block 13's D4-2 rule and record the source-supported screen type.
+   Simple list records use one `app-editor-dialog` Add/View/Edit surface and a
+   list-only route; documents use the shared routed shell in all three modes.
+   Use `app-editor-tabs` for custom editor tab navigation; tabs are
    projected body content, not a reason for another shell. For a confirmed
    routed step workflow, use `app-step-form` and wrap repeated content groups
    with `app-form-section`; keep the single parent form, forward-validation
@@ -189,9 +205,9 @@ being added to a payload.
 - Add and Update contain client-editable inputs only.
 - View mode does not depend on disabled controls alone for security.
 - Dirty dialogs use controlled visibility; the library must not close first.
-- Ordinary Create/View/Edit uses the shared `app-editor-dialog`, one feature
-  content component and an explicit mode; no mixed routed/modal editor survives
-  without confirmed evidence.
+- Create/View/Edit shares one feature content component and explicit modes in
+  the shape selected by UI block 13's D4-2 rule; no mixed routed/modal editor
+  survives without a documented governing exception.
 - A new or refactored tabbed Add/View/Edit modal projects `app-editor-tabs` and
   matching feature-owned panels into `app-editor-dialog`; it owns neither a
   feature-local tab keyboard handler nor a direct `p-dialog` shell.

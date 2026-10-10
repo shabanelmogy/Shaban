@@ -10,20 +10,20 @@ it does not authorize source edits.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:e091f8715bd45438f4c58030c4b56015b25567c6a0541c233340321b522d916a
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:38d22849a6d25f64baa38c14562b4c85f08b29199ca287825471c3cfdacaf0e7
 - master.1: ## 1. Governance and review principles | sha256:3e69ec4d48c952286dea7792d9e442d37585c15446b7ef02531c8a54053558cf
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:2d02535a738d0a1e03f44f22ff5ac7028554bc00cf9e8517245d3cf9e4c5811e
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
 - master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.7: ## 7. End-to-end reconciliation and final report | sha256:8fa78e06f935902ad9952aea5946dc0aa7338c1773ed5ae26b2a8773c7fb1ad8
-- master.8: ## 8. Packet generation and governance | sha256:de0bdccd8d6abdfc58ff5c34954fd4d027818fc95b7c31678b4added20fb742a
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:681863fa27d60be8922ee563bd76488b459947d5d0497e478de2ef748bb2abed
+- master.7: ## 7. End-to-end reconciliation and final report | sha256:19e4710cabe88f26cc45a10219fc9e19830eae0d722ca8c6e4bdbbf4ac28524a
+- master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:1ee143e6e852683c791622ef3af32d881d057bf39cd40e075837d578707c646b
 - ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
-- ui.30: ## 30. Backlog, by priority | sha256:3ba3365df2abbe12ebaaa967384555764c4b21ef601c53130db88f48381e198f
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
+- ui.30: ## 30. Backlog, by priority | sha256:40f660b87620c32c9dc93dad29af8974f968dc210f6957179c41d6a4023d0fca
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:8a1b6fc2fa0bedff7a3245f9b349945a955c10cfa4a4fc4c76896841aab53cdc
+- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
 - backend.19: ## 19. Backlog | sha256:b7b2b40c39735d0f149c7df2b3280c32f8c2cb0fdc04b425cd0bafa3a8c1af30
 
 Approved references are selected only after the affected UI/backend shapes are
@@ -32,7 +32,13 @@ known:
 
 
 The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop and report drift when they disagree.
+derivative. Stop using a packet that disagrees with canonical sources. Follow
+Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
+book/template/manifest claims, regenerate affected packets through the generator,
+semantically review their source rules and approved-reference roles, then rerun
+`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+unrelated changes; source-read-only review still forbids application-source edits.
+Use canonical sources and report a precise blocker for unresolved conflicts.
 
 ## Purpose
 

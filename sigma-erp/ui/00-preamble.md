@@ -43,6 +43,15 @@ Dropdowns use one wrapper border, `6px` radius, shared surface/text/border
 tokens, the common primary focus ring, and the shared `34px` filter height or
 `36px` editable-row height according to context.
 
+Summary, KPI and total-card regions follow the same shared-first rule on every
+screen shape: list, report, dashboard, routed editor and dialog. New or reviewed
+work uses `app-summary-cards` with typed values and public density/layout/width/height
+inputs. Features own content, placement and host bounds only; they do not create
+local card geometry, palette, typography, icon tiles or financial/status
+formulas. The existing compact accounting summary bar remains a compatibility
+owner for out-of-scope consumers, and legacy screens migrate when explicitly
+reviewed rather than being claimed as already migrated.
+
 Existing legacy screens may still contain older visual forks. Treat those as
 unification debt: do not copy them, and replace them with the canonical shared
 pattern when the feature is reviewed or modified. A deliberate visual exception
@@ -84,6 +93,7 @@ This table names the shared piece each shape is built on and what the feature ke
 | Routed document editor | the shared editor shell (`src/styles.scss`, block 1) + `shared/utils/editable-rows.ts` + `app-field-error` | workspace layout, forms, persistence |
 | Editable child collection | `shared/components/editable-collection-table/` (chrome, headers, Add/Remove, empty state, `fillHeight` scroll, light/dark); consumers `Customers/Companies/CompanyPartner/components/detalisForm/{contact-persons,credit-cards,documents,drivers}` | typed rows, projected cells and actions, validation, confirmation, persistence |
 | Nested child draft | editor dialog + editor tabs; consumer `Customers/Companies/CompanyPartner/components/detalisForm/drivers` | draft isolation, dirty-close approval, parent commit on Save only |
+| Summary, KPI and total cards | `shared/components/summary-cards/` (`app-summary-cards`, typed `SummaryCard[]`, public density/layout/minCardWidth/maxHeight and optional native selection) | authoritative values, labels/hints, placement and screen-specific selection mapping |
 | Confirmation and discard | `shared/service/confirmation-dialog.service.ts` (block 9, 10); `requestClose()` in `Workshop/Job/components/editor` (routed) and `Fleet/Vehicle/components/details` (dialog) | when to ask, and what happens after |
 | Report | `shared/components/report-page/` + `shared/components/report-actions/` + shared print coordination | typed filter, sections, totals |
 

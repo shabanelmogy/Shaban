@@ -26,6 +26,24 @@ markup such as a status badge, icon, link, or multi-line content. The API model
 or a feature-owned Grid-row mapper remains the source of business derivations;
 the shared table must not invent fields or domain rules.
 
+**Column identity.** A field may have two distinct presentations, such as its
+retained numeric quantity column and a derived status badge with another header.
+The shared DataTable header and body loops track `column.field + ':' + column.header`;
+each field/header pair must be unique. The header is the stable translation key,
+so language changes do not change identity. Keep sorting bound to the actual
+field and use a distinct meaningful header for each presentation; do not add
+a transport property solely to make DOM keys unique. Stock Reports uses this
+shared capability for its approved appended statuses (2026-10-05). Numeric
+values, status formatting/export and row identity retain their existing owners;
+runtime acceptance remains pending after source review.
+
+**Complete multi-line content.** Set a column's public `cellClass` to
+`sigma-data-table__cell--wrap` when full notes or attachment links must remain
+visible. The shared table owns wrapping, long-token breaks and top alignment;
+features must not override its cell selectors. Compact cells retain their
+default single-line ellipsis. This changes presentation only, preserving the
+complete value used by templates and exports.
+
 Values the grid shows but the API does not return are built in one mapper:
 
 ```ts
@@ -86,4 +104,3 @@ model field that no column or action reads · no `ListCol`, `ColType` or
 `initColumns()` remains · status cells use `sigma-status-badge` with a translated `value` fallback · the sort whitelist is derived from the sortable columns · dates, money and statuses use `type` (and `status`) instead of per-feature `value` functions or templates.
 
 ---
-

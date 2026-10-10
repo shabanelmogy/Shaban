@@ -9,7 +9,7 @@ Six files per entity in `SiGma.ViewModels/ViewModels/<Entity>/`:
 | `<Entity>AddVM.cs` | `AddBaseVm` / `AddBaseVmWithName` | client → server, create |
 | `<Entity>UpdateVM.cs` | `UpdateBaseVm` / `UpdateBaseVmWithName` | client → server, update |
 | `<Entity>ListVM.cs` | `ListBaseVm` / `ListBaseVmWithName` | server → grid |
-| `<Entity>DetailVM.cs` | `DetailBaseVm` / `DetailBaseVmWithName` | server → editor |
+| `<Entity>DetailVM.cs` | `LeanDetailBaseVm` (Id) / `NumberedDetailBaseVm` (Id + nullable No); explicit class for incompatible identity shapes; legacy heavy base only when every inherited field is consumed | server → editor |
 | `<Entity>FullListVm.cs` | `ListBaseVm…` | only for a **named** second consumer (export or picker) whose shape differs from the ListVM, recorded in the contract; otherwise not created (backlog 7) |
 | `<Entity>DeleteVm.cs` | — | `Id` only |
 
@@ -36,9 +36,45 @@ What each base supplies:
 AddBaseVm      // nothing — the client supplies no identity or tenant
 UpdateBaseVm   // Id only
 ListBaseVm     // SubscriptionId, Id, IsActive, IsValid, IsChanged, No, GUID, CreatedAt, CreatedBy
-DetailBaseVm   // as ListBaseVm plus IsDeleted
+LeanDetailBaseVm // Id only — canonical lean detail identity
+NumberedDetailBaseVm // inherits LeanDetailBaseVm, adds string? No only
+DetailBaseVm   // legacy: as ListBaseVm plus IsDeleted; unchanged for compatibility
 SelectListBaseVm // Value, Text, LocalizedText — dropdowns
 ```
+
+**Lean detail contracts (2026-10-03).** Declare only identity, displayed/action
+state and editor fields. Do not inherit unused tenant/audit/flags merely to satisfy
+a generic constraint. `IService`, `Service` and `SiGmaControllerBase` accept
+`TDetailVm : class`: their detail paths map/return that type without using base
+members. Staff, Designation and Timesheet use lean detail contracts; existing
+derived detail DTOs and invoice/settings-specific constraints remain compatible.
+Preserve required No/display labels/owned children when removing inheritance.
+No endpoint, result envelope, entity or write-validation change follows from this
+read-shape correction; adopt during the owning feature review, not a bulk rewrite.
+
+**Shared lightweight identity (owner-approved, 2026-10-08).** Repeated detail
+identity now belongs to the existing `SiGma.Helpers.ViewModelsBases.Detail`
+namespace: abstract `LeanDetailBaseVm` exposes `int Id`; abstract
+`NumberedDetailBaseVm : LeanDetailBaseVm` adds `string? No`. Both are public
+get/set auto-properties with the original defaults. Each base has its own file.
+Use the Id-only base for root/child detail responses with matching identity;
+use the numbered base only when the consumed No contract matches its nullable
+type/default/attributes. A nonnullable initialized No remains declared on the
+feature VM over the Id-only base (reference: `TaxAdvanceDetailVm`). Avoid
+shadowing inherited Id/No or adding Name/tenant/audit/GUID/flags to either base.
+
+References: `SalesQuotationDetailVM` and `SupplierDetailVM` inherit the numbered
+base; `SalesQuotationItemDetailVM` and `SupplierAddressDetailVM` inherit the
+identity base. Flattened response properties, concrete DTO types, initializers,
+owned children, formulas and convention mapping remain unchanged. No
+polymorphic JSON discriminator, base map, serializer option or tighter generic
+constraint is required. The heavy `DetailBaseVm` hierarchy remains unchanged
+for compatible existing consumers. Owner approved creating and reusing these
+bases; this pass adopts them across the 48 standalone detail VMs that repeat int Id;
+this is not authorization to remove fields from other legacy detail contracts.
+Future adoption occurs within the owning scope and compares the entire
+flattened contract before/after. This supersedes the earlier explicit-only
+recommendation for repeated identity while retaining the lean response rule.
 
 **Add and Update carry client-editable inputs only.** Tenant, record number,
 audit values, delete flags, approval status and calculated totals are
@@ -68,6 +104,12 @@ Add/Update services reached through API model validation. A custom import bounda
 bypasses these VMs must apply the equivalent validation explicitly.
 Request attributes are enforced at the API boundary; callers bypassing model validation need
 their own equivalent boundary validation.
+
+`DateAfter` accepts both `DateTime` calendar days and `DateOnly` with the same comparison semantics, so date-only write VMs reuse the shared validator rather than duplicating comparison logic. `DateAfter` rejects equality by default. A frozen business rule
+that permits the same day opts in with `AllowEqual = true` on the affected VM property;
+use an explicit localized `ErrorMessage` key saying on-or-after. Null remains governed by
+requiredness. Existing strict consumers, including document expiry, keep the default.
+The Angular group comparison and picker minimum must match that inclusive or strict rule.
 
 **Customer import boundary (2026-10-01).** Reuse the ordinary write VM's validation metadata
 for matching CSV fields, including billing minima and persisted length limits. Check enum

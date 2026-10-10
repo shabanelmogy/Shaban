@@ -38,6 +38,16 @@ decisions; it does not create architectural authority.
 | Explicit exclusions | |
 | Maintenance/evolution plan status | |
 
+## Screen user guide completion (Master7)
+
+Complete for authorized frontend/full-stack screen implementation; for other
+scopes record the applicable follow-up without expanding source-edit authority.
+Create/update the guide after reconciling the screen and before final handoff.
+
+| Screen/topic identity | Content file | Module guide route / sidebar entry | Final source supporting purpose, steps, actions and constraints | EN/AR coverage | Source status / owner verification pending |
+|---|---|---|---|---|---|
+| | | | | | |
+
 ## Evidence Register
 
 | Evidence ID | File/source | Screen and state | Locale/direction | Viewport | Role | Date/version | Current or historical | Notes |

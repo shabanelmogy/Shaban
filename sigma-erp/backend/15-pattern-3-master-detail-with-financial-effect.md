@@ -246,6 +246,25 @@ projection per partner), periods `IAccountingPeriodService`, numbers
 `IJournalNumberGenerator` — all scoped and registered by the assembly scan. New code
 injects the narrow interface it needs.
 
+### Collection and lifecycle concurrency across services (Sales, 2026-10-04)
+
+A document whose eligibility depends on rows written by other services (a sales agreement:
+its units' sale state, its quotation's state, and the receipts collected against it) is
+protected by **one** tenant lock, `UnitOfWork.ExecuteUniqueWriteAsync<TOwner>`, taken by
+every participating writer: the owner's add/update/remove and lifecycle actions, and the
+other service's writes whose rows (before or after the change) link to the owner. Every
+eligibility check (state, outstanding balance, duplicate) is re-read inside the lock; a
+writer that already owns a transaction opens it first and takes the lock inside it (the lock
+then lives until that transaction ends, and never commits it). A multi-save action inside the
+lock relies on the lock's transaction instead of opening its own. The state columns are also
+EF concurrency tokens (no schema change), and a child-only edit marks the root modified so
+its token is checked. A reversal that reopens a balance (void or delete of a receipt of a
+closed document) moves the document back to its previous open state in the same transaction;
+un-voiding re-runs the add eligibility. Equal installments are rounded down to the money
+decimals and the last takes the remainder, so no row is negative. Reference:
+`SalesAgreementService`, `ReceiptService` (`LockSalesCollectionAsync`,
+`ReopenClosedAgreementAsync`). Owner runtime verification of races pending.
+
 **Check:** transaction opened before the first mutation and covers every
 dependent save · rollback restores document, voucher, allocations and flags ·
 debit equals credit · one-sided lines · allocation limits and ownership checked ·

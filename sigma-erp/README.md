@@ -70,6 +70,12 @@ For one implementation/review run, copy:
 Keep unresolved contracts visible until Phase 6; do not replace the artifact with
 a prose-only summary.
 
+## Cases needing more evidence
+
+[UNCERTAIN_CASES.md](UNCERTAIN_CASES.md) records suspected behavior, the evidence
+still needed, the owner decision, and the conditions for revisiting each case.
+Start with that register when continuing a deferred uncertain finding.
+
 ## Generated packet verification
 
 From this folder:

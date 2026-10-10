@@ -7,6 +7,11 @@ Shared helper, signature `onExportToExcel(data, fileName, headers?)` where
 belongs to the Transitional shared helper boundary (backlog 22), not to the
 feature contract.
 
+Export mapping follows UI1's TypeScript library compatibility rule. The current
+ES2018 library excludes flatMap; complete multi-section reports such as CashFlow
+accumulate typed rows with for...of/push, retaining section/source order and
+click-time translated headers without changing project compiler options.
+
 **Column headers are UI text, so translate them.** Resolve header text when the
 user clicks Export. Customer Statement dispatches to the selected section's
 typed grid columns (block 20); it does not cache translated object keys:

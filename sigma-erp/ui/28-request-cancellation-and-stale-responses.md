@@ -18,8 +18,32 @@ this.service.getList(query)
 parameter (`private destroy$: DestroyRef`) in older ones such as the Company
 editor. Either is fine — match the file you are editing.
 
-That handles destroy. It does **not** handle a slower earlier response landing
-after a newer one. Two cases to guard:
+**Deferred UI work follows the same lifetime.** Inspect the installed Angular
+declarations, not a newer online API or an assumed property. Sigma's current
+Angular17.3.12 `DestroyRef` exposes `onDestroy`, but not `destroyed`; do not read
+`destroyRef.destroyed`. A deferred print after detail rendering can reuse the
+existing RxJS cancellation owner:
+
+```ts
+import { timer } from 'rxjs';
+
+timer(0)
+  .pipe(takeUntilDestroyed(this.destroyRef))
+  .subscribe(() => this.print()); // print checks loaded detail/readiness
+```
+
+This preserves one deferred turn and unsubscribes before execution when the
+component is destroyed. If retaining an existing native timer or animation
+frame, register its `clearTimeout`/`cancelAnimationFrame` through
+`DestroyRef.onDestroy` instead. Keep the feature's loaded-record/identity
+checks; cancelling HTTP alone does not cancel a separately scheduled callback.
+Do not upgrade Angular or add a cancellation framework for this local fix.
+LeaseQuotation and LeaseMasterAgreement auto-print are the repair examples;
+source evidence is the installed `@angular/core/index.d.ts` plus the consumer
+subscriptions, and owner compilation/runtime acceptance remains pending.
+
+Teardown handles destroy. It does **not** handle a slower earlier response
+landing after a newer one. Two request cases to guard:
 
 **Rapid re-search, paging and refresh.** Disabling Search prevents a second Search
 click, but it does not prevent a lazy-page or Refresh event from overlapping the
@@ -103,4 +127,3 @@ responses discarded by row id or open-state check · `finalize` releases loading
 on success, failure and cancellation · no new state framework added · field-triggered lookups use `Subject` + `switchMap` with an error message.
 
 ---
-

@@ -13,6 +13,20 @@ if an existing row's value changes. Never assign it in a service, a child loop,
 or a mapping (`item.SubscriptionId = entity.SubscriptionId` is wrong), and never
 accept it from a payload.
 
+**Missing subscription (owner-approved R2, 2026-10-03).** Ordinary EntityBase
+Repository reads and writes require the resolved claim to be a positive integer;
+missing, nonnumeric, zero or negative values throw `SubscriptionRequiredException`
+before querying or mutating the graph. The existing exception middleware returns
+HTTP401 with the localized `FailToAuth` Result. Keep the guard on operations,
+not construction: login/service resolution and global entities need no tenant.
+UOW rejects pending tenant writes before numbering; DbContext rejects them before
+audit/SQL in all sync/async SaveChanges overloads, including direct context saves.
+An unchanged or global-only save remains allowed. Never fall back to a tenant
+from the entity, payload or a default ID. Background tenant writes need an
+explicit trusted context; no implicit System bypass exists. `QueryReport` keeps
+its separate empty fail-closed/global contract (block 17). The NameIdentifier
+claim convention itself remains the current contract (backlog 11).
+
 ### Input
 
 | Case | Expected |
@@ -52,6 +66,8 @@ accept it from a payload.
 | Child id belonging to another parent | Rejected |
 | Duplicate rows inside one child collection | Rejected or merged, per the documented rule |
 | Delete with no references | Succeeds, soft delete applied |
+| Delete after another request changes unrelated fields | Only IsDeleted/DeletedBy/DeletedAt are written; the other request's values remain (shared HandleAudit, block 8) |
+| Pending scalar edits followed by Remove on the same row | Delete writes its three fields only; original concurrency values preserved, other tracked entities' edits retained (block 8) |
 | Delete with each blocking reference | Blocked with a message naming that blocker |
 | Delete a row already soft-deleted | Idempotent or a clear failure, not an exception |
 
@@ -71,6 +87,7 @@ accept it from a payload.
 | Failure after the document saves but before the voucher | Transaction rolls back the document too — pattern 15 |
 | Bulk activate where some ids are missing | Whole call fails; nothing is flipped — block 12 |
 | Unauthenticated request | 401 before any service code runs |
+| Ordinary tenant read/write reached with an invalid subscription claim | 401/FailToAuth before repository work or tenant persistence; no tenant-0 fallback |
 | Report reached with no subscription claim | Returns nothing — `QueryReport` fails closed, block 17 |
 | Export whose second page fails | Whole export fails; no partial file |
 | Upload with a wrong extension, oversized, or a spoofed MIME | Rejected server-side, not only in the client |

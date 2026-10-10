@@ -22,14 +22,19 @@ and then applies tenant plus soft-delete filtering automatically to
 `Query`, `ExistsAsync`, `FindByIdAsync`, `FindByAsync` and the rest:
 
 ```csharp
-var query = _context.Set<T>().Where(a => a.SubscriptionId == _subscriptionId);
+var query = TenantSet<T>().Where(a => a.SubscriptionId == _subscriptionId);
 if (!includeDeleted)
     query = query.Where(a => a.IsDeleted != true);
 ```
 
-Both default to `includeDeleted = false`. On write, `Add`/`Update` call
-`SetSubscriptionIdForEntityAndChildren`, which overwrites any client-supplied
-`SubscriptionId` on the entity **and its children**.
+Both default to `includeDeleted = false`. Ordinary tenant reads use the guarded
+`TenantSet<T>`; writes call `RequireSubscription` before changing the graph.
+A resolved subscription <= 0 throws `SubscriptionRequiredException`, returned
+as localized `FailToAuth`/HTTP401 (owner-approved R2, 2026-10-03; block 18).
+On write, `Add` stamps roots and `AssignTenantOwnershipToAddedGraph` stamps new
+children. `Update`/`Delete` use `ProtectTenantOwnershipForWriteGraph`, preserving
+ownership for existing rows and protecting their SubscriptionId concurrency
+value. These methods do not permit moving an existing row between tenants.
 
 Consequences for your checks:
 
@@ -121,6 +126,31 @@ Rules:
 - for a child collection, uniqueness is usually **within the parent**, so include
   the parent key in the predicate.
 
+### Advisory unique-value preflight (owner decision 2026-10-03)
+
+Step forms may check a declared unique field after entry through authenticated
+`POST /{controller}/CheckUnique`, inherited from SiGmaControllerBase and
+IService/Service. Request: `UniqueValueCheckRequest` (`fieldName`, `value`,
+optional `excludeId`); response: `Result<UniqueValueCheckDto>` with
+`entity.isAvailable`. Both available and taken are successful read responses;
+taken uses the existing duplicate message. Validate the field against
+`UniqueColumns` member names first, reject unsupported fields and nonpositive
+supplied edit ids, and treat an empty optional value as available. Arbitrary
+entity-property reflection is not a supported query API.
+
+`UniqueValueExistsAsync` owns the shared predicate used by InvalidInputAsync
+and preflight: Repository.ExistsAsync supplies tenant/live scope, the edited
+row is excluded, and cancellation flows to the query. A service overrides only
+normalization/comparison that its existing write rule requires (Staff email
+trim/lower and stored lowercase comparison, phone trim only). Other equality
+preserves existing database collation. UI12 caches these advisory answers and
+UI19 owns inline feedback; there is no preflight toast, mutation, application
+lock, number reservation, transaction/save or schema change. All existing
+write checks, serialization and database protection remain authoritative;
+another writer can claim an available value before final Save. Composite keys
+or collection rules require their own frozen domain contract, never a guessed
+single-column preflight declaration.
+
 ### Temporal-range business keys
 
 A time period can be unique without being valid. Accounting periods such as fiscal
@@ -210,9 +240,30 @@ EF model, so nobody lists them by hand and a reference added later is checked wi
 1. **Not found:** returns 404 when the record is missing.
 2. **In use:** `InUseAsync` checks every table with a foreign key to the entity or one of its
    base types. The first live row blocks the delete with `RecordInUse` ("used in {table}"). The
-   table name comes from the `Entity<Type>` key, or from the type name in words.
+   table name comes from the matched row's concrete EF entity type, through the
+   `Entity<Type>` key or its type name in words. A reference declared on an
+   inheritance base such as `Partner.SalesPersonId -> Staff` must name the actual
+   Company/IndividualPartner/Supplier/etc. category, rather than the base table.
+   Shared `ReferencingTableCoreAsync` retains `AnyAsync` for types without derived
+   types; an inheritance hierarchy reads at most one matching row with
+   `AsNoTracking().FirstOrDefaultAsync` and resolves `FindRuntimeEntityType`, with
+   declared metadata as fallback. Return no row identity or saved contents.
 3. **Delete:** soft-deletes the record and the owned rows named in `owned`. Those rows belong to
    the record, so they never block.
+
+**Soft delete writes only its fields (owner-approved R1, 2026-10-03).** The shared
+`SiGmaDbContext.HandleAudit` converts each Deleted EntityBase into a write of
+`IsDeleted`, `DeletedBy` and `DeletedAt` only. Restore that entry's scalar current
+values from OriginalValues, set its state to Unchanged, then assign the three
+deletion fields and explicitly mark only those properties modified. Restoring
+the scalar values prevents later DetectChanges from including edits that preceded
+Remove on the same row. Never replace the original concurrency values or clear
+the whole tracker; SubscriptionId and other tokens keep their existing predicate.
+Pending scalar edits on the deleted row are discarded; other tracked rows keep
+their changes, including legitimate parent updates. Do not force full-row Modified
+for soft delete or add a transaction/save solely for this conversion. Every
+Deleted owned row uses the same boundary; ownership and usage checks above stay.
+Source-only correction; owner concurrent-delete verification pending (block 18).
 
 ```csharp
 // Individual, Driver: the whole delete
@@ -238,7 +289,9 @@ Rules:
   foreign keys subject to usage checks; never skip a whole table.
 - **No hand-written reference lists.** No `ExistsAsync` chains and no per-service blocker
   messages. Add an `Entity<Type>` key in both `GeneralMessage` files when a table's name should be
-  translated.
+  translated, including each concrete Partner subtype used by the shared blocker
+  message. A business FK remains a usage even when declared on a base type;
+  translating/resolving its category never exempts the reference from deletion checks.
 - **No extra code where the base does the job.** No manual `Context.Remove` of an owned row, no
   tracked load only to delete, no not-found check before the helper.
 - **Services on `base.RemoveAsync` are not checked yet.** A service without owned rows that still

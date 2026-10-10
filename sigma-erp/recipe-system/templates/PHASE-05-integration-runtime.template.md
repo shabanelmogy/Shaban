@@ -11,8 +11,20 @@ Approved wiring references:
 
 {{APPROVED_REFERENCES}}
 
+Reference roles: `pages/routing.ts` owns the lazy feature entry;
+`app.module.ts` owns the single interceptor-equipped root client;
+`app-routing.module.ts` is the transitional AuthGuard/access reference from
+UI block 26. LayoutModule is inspected as a consumer when relevant, not copied
+as a feature-level HttpClient provider.
+
 The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop and report drift when they disagree.
+derivative. Stop using a packet that disagrees with canonical sources. Follow
+Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
+book/template/manifest claims, regenerate affected packets through the generator,
+semantically review their source rules and approved-reference roles, then rerun
+`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+unrelated changes; source-read-only review still forbids application-source edits.
+Use canonical sources and report a precise blocker for unresolved conflicts.
 
 ## Purpose
 
@@ -57,11 +69,10 @@ Required:
 3. Verify every standalone import used by the template.
 4. Trace each feature service to its actual injector and `HttpClient` provider.
 5. Verify token and error interceptors are applied.
-6. Under the current transitional architecture, verify every authenticated
-   feature service resolves from `_metronic/layout/layout.module.ts` providers,
-   because that injector owns the interceptor-equipped client. Reject a manual
-   Bearer header or feature-level `provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor]))`
-   fork as a workaround.
+6. Follow UI block 1's one-root-client contract: authenticated feature services
+   use `providedIn: 'root'` and the interceptor-equipped client configured once
+   in AppModule. LayoutModule and feature injectors do not provide another client.
+   Reject manual Bearer headers or feature-level `provideHttpClient` forks.
 7. Verify each request has one active interceptor path and each mutation has one
    success-feedback owner; a feature success after a standard mutation must not
    duplicate the global interceptor toast.
@@ -97,11 +108,8 @@ Required:
 
 ## Continuous gates
 
-- A service registered only in the root injector must not accidentally bypass
-  Layout interceptors.
-- Until the root-client backlog is resolved, authenticated feature services are
-  registered in the interceptor-owning `LayoutModule` injector; there is no
-  manual Authorization-header or feature `provideHttpClient` fork.
+- Feature services resolve the one interceptor-equipped root HttpClient; there
+  is no LayoutModule client, manual Authorization header or feature client fork.
 - One request traverses one interceptor chain, and one successful mutation emits
   one success notification.
 - Routed editors and dialog editors use the route counts defined by their shape.

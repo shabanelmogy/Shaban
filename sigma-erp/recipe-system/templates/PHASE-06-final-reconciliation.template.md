@@ -12,7 +12,13 @@ Approved references used by prior phases:
 {{APPROVED_REFERENCES}}
 
 The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop and report drift when they disagree.
+derivative. Stop using a packet that disagrees with canonical sources. Follow
+Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
+book/template/manifest claims, regenerate affected packets through the generator,
+semantically review their source rules and approved-reference roles, then rerun
+`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+unrelated changes; source-read-only review still forbids application-source edits.
+Use canonical sources and report a precise blocker for unresolved conflicts.
 
 ## Purpose
 
@@ -28,6 +34,8 @@ derivative. Stop and report drift when they disagree.
 - Frontend/backend consistency.
 - Route, provider, action, refresh, upload, and error paths.
 - Continuous quality gates.
+- Required in-app screen user-guide creation/update and final-source content
+  reconciliation (Master7, Screen user guide completion gate).
 - Migration, compatibility, compile/runtime risk, and owner verification.
 
 ## Explicit exclusions
@@ -75,6 +83,11 @@ or rerun them before completion.
     applied filters, effective bucket labels and single error owner. UI 21 owns
     print preparation. Name actual symbols; report findings/Uncertain evidence
     separately from pending runtime acceptance instead of repeating "Matched".
+18. Completed screens ↔ owning module user-guide topics, EN/AR task steps,
+    actions/states and actual business/financial constraints; content file,
+    reader registration and module sidebar guide entry are present as needed.
+    Follow Master7's scope boundaries for read-only/backend-only and partial
+    phase handoffs; update an existing topic instead of duplicating it.
 
 ## Required outputs
 
@@ -94,6 +107,8 @@ Confirm:
 - authenticated GET/mutation interceptor path checked and duplicate success
   notification ownership checked;
 - translations checked;
+- required screen guide created/updated and matched to final source, with
+  bilingual coverage, topic identities and module guide route/menu entry;
 - mappings and server-owned payload fields checked;
 - merge markers and whitespace checked;
 - unrelated user changes preserved;
@@ -108,6 +123,8 @@ Report:
 - decisions and evidence;
 - frontend, backend, contract, mapping, and calculation changes;
 - action and refresh behavior;
+- screen user-guide content file, route/menu entry, covered topics and source
+  evidence, with owner runtime/visual/print acceptance distinguished;
 - Missing, Conflicting, and Uncertain requirements;
 - migration requirement;
 - possible compile/runtime risks;
@@ -120,3 +137,8 @@ Report:
 Do not report the feature complete while a Missing, Conflicting, or Uncertain
 contract blocks required behavior. A clean diff check is not proof of successful
 build or runtime behavior.
+
+For a completed authorized frontend/full-stack screen implementation, an absent
+or stale in-app user guide fails the completion gate (Master7). Create or update
+it after reconciling the screen and before final handoff; source-read-only and
+backend-only reviews record the follow-up without out-of-scope source edits.

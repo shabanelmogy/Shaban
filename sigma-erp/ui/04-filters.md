@@ -41,6 +41,23 @@ their intrinsic size.
 
 Every list filter strip is the feature's reactive form with the panel attribute:
 
+Import the actual owners separately; the component file is not a barrel:
+
+```ts
+import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+import { FilterActionsDirective, FilterAdvancedDirective } from 'src/app/modules/shared/components/filter-panel/filter-panel.directives';
+```
+
+Register `FilterPanelComponent` and each used directive in the standalone
+consumer's `@Component.imports`. `FilterAdvancedDirective` is needed only for
+an advanced template. `FilterActionsDirective` is a real exported directive
+in `filter-panel.directives.ts`; importing it from `filter-panel.component.ts`
+produces TS2305 and cascading NG1010 errors. Fix that export path first, rather
+than changing `tsconfig.app.json` or adding a shared re-export solely for a
+miswired consumer. `Workshop/Job/components/list` supplies the actual reference
+imports. Source inspection of exports/metadata is required in addition to the
+markup comparison (block1).
+
 ```html
 <form class="job-filters" appFilterPanel
       [formGroup]="filterForm" (ngSubmit)="search()"
@@ -67,8 +84,9 @@ Every list filter strip is the feature's reactive form with the panel attribute:
 Rules:
 
 1. **Fields.** Each field is `div.sigma-filter-field` (label + one control); `--wide` spans two
-   columns, `--full` the whole row, `--check` a checkbox, `--choice` a radio group (below). The main row holds at most six most-used filters (number,
-   date range, main lookup, status, branch); the rest go in `ng-template[appFilterAdvanced]`,
+   columns, `--full` the whole row, `--check` a checkbox, `--choice` a radio group (below). The main row defaults to six columns for the most-used filters (number,
+   date range, main lookup, status, branch); a reviewed inline strip may use seven when a
+   wide date range and three status checks must remain on one row. The rest go in `ng-template[appFilterAdvanced]`,
    which keeps the feature form as parent and renders only when opened.
 2. **One form.** Hidden filters stay in the same `FormGroup`: search, paging, route restore
    and export are unchanged; closing the panel resets nothing.
@@ -93,6 +111,93 @@ Rules:
    class `sigma-filter-panel`) is 34px, with no feature class needed (owner request 2026-10-01: all filter
    boxes the same height). The `*-filters` / `*-filter-form` class rule remains only for legacy strips.
 
+The shared primary button in `.sigma-filter-panel__actions` also consumes
+`--sigma-filter-control-height` for its height/min-height, with border-box sizing
+and zero block padding, matching the existing 34px Reset/Export buttons. The
+PrimaryActionButton owns this context rule; features add no button-height CSS.
+Its default outside filter actions remains unchanged. Budget Search adopts it
+under the owner's 2026-10-05 height correction; visual acceptance is pending.
+
+**Action spacing.** FilterPanelComponent owns the action flex-row gap through
+its numeric `actionGap` input (pixels, default8), exposed internally as
+`--sigma-filter-action-gap`. An explicit owner spacing request may select a
+different value on the form; retain the shared default for other consumers.
+The gap covers Reset and directly projected actions in both LTR/RTL and wrapped
+rows. Keep `ng-container[appFilterActions]` so the buttons participate directly;
+do not copy margins or action-toolbar CSS into a feature. Source inspection does
+not certify visual spacing; desktop/narrow/RTL acceptance remains owner-pending.
+
+**Field spacing.** `columnGap` optionally controls the horizontal gap shared by
+the main and advanced filter grids (default `16px`). Use it for an explicit
+screen density request such as a denser checkbox group; keep the shared
+vertical gap and responsive stacking unchanged. Feature code selects the public
+input, not a local filter margin or grid override.
+
+**Stable editing layout.** New or subsequently reviewed filter forms must use `[stableLayout]="true"`
+on `FilterPanelComponent`. The shared stable modifier top-aligns the main and
+advanced grid fields, bounds PrimeNG dropdown/calendar hosts and roots to their
+field width and lets dropdown labels shrink within it. Text or selected labels
+must not define a field's width. It also reserves an invisible active-count badge
+slot when the count is zero, retaining toggle/chevron geometry while editing.
+The owner's 2026-10-04 instruction requires controls in the same row to retain
+the same vertical alignment, including when feedback appears. Adoption begins
+with Item Issue; screens before it were adjusted by the owner and are not
+bulk-edited again. The shared default remains compatibility-only for untouched
+consumers. Compare the actual label/control start lines for native input,
+dropdown and date range, rather than accepting equal control heights alone.
+Keep label markup/font/spacing consistent and do not push neighboring fields
+down with a validation message. Columns,
+breakpoints, gaps, 34px control height, theme and RTL remain shared. Validated
+filters reserve their inline feedback through `app-field-error reserveMessage`
+(block19), rather than local minimum heights, clipped messages or feature CSS.
+Customers, Suppliers and Staff Balance Summary opt in under the owner's
+2026-10-03 filter-stability request; source-only, visual acceptance pending.
+Item Issue adopts the same shared reference as Workshop Job list: three main
+fields, stableLayout=true and date feedback reserved with
+`reserveMessage="validationMessages.date"`. Existing earlier screens, widths,
+queries, toolbar placement and responsive breakpoints remain unchanged.
+
+**Compact inline actions (owner request, 2026-10-05).** A simple search strip
+may bind `[inlineActions]="true"` on the shared FilterPanelComponent to place
+its existing Reset/actions beside the main grid, aligned with the input line.
+This is default-off and is applied only without an advanced template; advanced
+filters retain their separate toolbar. The shared layout owns a flexible main
+grid and auto-sized actions, removes the empty toolbar-start placeholder and
+uses configured mainColumns above 720px and stacks fields below it, keeping
+actions beside the last input line without compressing several fields into
+unusable narrow columns. Use it for short, simple unvalidated strips: LinkAccounts
+uses one search field or two with its active-tab selector; OpeningBalances uses
+1/2/3 columns for Suppliers, Customers/Deposit and Prepaid. Dense or validated
+filters retain the normal responsive layout. Mandatory
+Reset, busy state, resetRequested, labels, 34px control heights, theme and RTL
+remain unchanged. Never duplicate Reset or restyle the shared toolbar locally.
+**Validated inline actions — explicit owner placement, 2026-10-05.** A reviewed
+short validated strip may combine inlineActions/stableLayout with the optional
+`inlineActionCaption="general.actions"`. The shared toolbar reserves an invisible,
+aria-hidden translated caption with the same single-line label font/line height
+and4px gap, and top-aligns the grid/actions so feedback below a field does not
+move the buttons. Field labels retain full accessible text with visual ellipsis;
+validators and FieldError reserved feedback remain unchanged. Budget uses its
+two configured field columns with Reset/Search/Export beside the input line.
+Below720px this caption mode stacks actions below one-column fields and hides
+the caption, retaining shared wrapping34px buttons/theme/RTL. Empty caption
+retains the original unvalidated inline layout; advanced filters retain their
+separate toolbar. No feature offset/padding or duplicated Reset. Source-only;
+owner desktop/narrow/validation/visual acceptance pending.
+
+Full-width workspace filter cards consume the UI3 workspace modifier so their
+inline edges align with title, tabs and content cards.
+
+**Shared title/filter card paint (owner request, 2026-10-03).** The list filter,
+report filter and `app-feature-title` reuse `--sigma-filter-panel-background`:
+135deg primary5% wash fading to transparent at42%, over the themed filter surface.
+Declare this derived token at both `:root` and `[data-bs-theme='dark']` so it
+resolves the surface in the active theme scope before descendants inherit it.
+All three consumers use the existing themed border/shadow and logical-start
+3px primary accent, with8px radius. Filter geometry/controls remain their owning
+shape's responsibility; title placement is block3/20. Do not copy the paint or
+declare a separate feature/title palette.
+
 **Check and choice fields.** A boolean filter is `div.sigma-filter-field.sigma-filter-field--check`
 with the checkbox **before** its label, aligned on the control line. A radio group is
 `fieldset.sigma-filter-field.sigma-filter-field--choice` with a `legend` and a
@@ -112,6 +217,31 @@ with the checkbox **before** its label, aligned on the control line. A radio gro
   </div>
 </fieldset>
 ```
+
+**Checkbox vertical centering (owner instruction, 2026-10-10).** In a filter row
+with text inputs, dropdowns or a date range, the checkbox square's vertical
+centre must match the centre of the neighbouring **control boxes**. Centre its
+adjacent label with the square. Do not align it to the labels above those boxes,
+the bottom of a grid cell, or the whole field height including validation
+feedback. Keep the native 15px checkbox; do not stretch it to the 34px input
+height. Reserved FieldError feedback must not move the checkbox when shown.
+
+The shared filter-panel owner must account for label space and control height;
+do not copy feature offsets, arbitrary padding, transforms or `!important`
+overrides into new screens. Check alignment with and without date feedback,
+in LTR/RTL, light/dark and wrapped layouts; a checkbox on its own wrapped row
+must not retain space intended for an absent neighbouring label. The owner's
+ProcessedPayrolls screenshot and repeated centering request establish the
+desired visual behaviour. Its current local `.payrolls-filter-pending` override
+(`padding-block-start: 24px`) is implementation debt, not a reusable sizing
+rule or proof of shared conformance. Leave now adopts stable inline actions
+with `inlineActionCaption="general.actions"`. For that combination the shared
+`--check` layout reserves the same 0.72rem/1.5 heading track and 4px gap as
+the adjoining labels, then centres the 15px square and its text in a
+`--sigma-filter-control-height` track. FieldError stays outside this track.
+At 720px and below the heading reservation is removed for standalone checkbox
+rows. Other filter layouts retain their current presentation. This is a
+source-only implementation; owner visual/RTL/theme acceptance remains pending.
 
 **Request building.** Use a typed form, and send only non-empty values. `toListParams(query)` from
 `shared/utils/list-query.ts` drops `''`/`null`/`undefined` and adds paging and sort (block 2).
@@ -137,7 +267,7 @@ private buildFilters(): FeatureListFilters {
 Changing a filter always searches page 1. Date ranges follow block 17: one range picker, and the
 default is the current month from the 1st to its last day (`currentMonthRange()`).
 
-**Check:** the list filter strip is `form[appFilterPanel]` · every filter box the same 34px height ·
+**Check:** the list filter strip is `form[appFilterPanel]` with `stableLayout=true` in new/reviewed screens · actual controls in a row share their start line, with feedback reserved beneath validated fields · checkbox square and adjacent label are centred against neighbouring control boxes, independently of heading/error height · every filter box the same 34px height ·
 fields are `sigma-filter-field` (`--wide`, `--full`, `--check`, `--choice`), at most six in the main
 row, the rest in `ng-template[appFilterAdvanced]` · Reset is handled by `resetRequested` and
 restores the feature defaults · the feature SCSS has no filter colour, border, surface, focus
