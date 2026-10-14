@@ -299,12 +299,7 @@ Source-only visual/RTL/input acceptance remains pending.
 The strip owns its layout, the 34px control height (`--sigma-filter-control-height`), focus,
 dark theme, RTL and narrow-screen stacking. The actions use the shared variants
 `sigma-report-action--search` (primary), `--refresh` (quiet primary), `--reset` (neutral) and
-`--export` (neutral secondary). Export uses global strong-border, text and soft-surface
-tokens; hover/focus uses the primary border, balance text and a 7% primary/surface mix.
-Both themes resolve these same rules through their tokens, without a later dark base
-overriding interactive states. Its icon inherits the label colour; Excel does not require
-a green button. This shared palette follows the owner's 2026-10-02 correction and applies
-to both ordinary and specialized exports. Features never add an export palette of their own.
+`--export` (light-blue secondary). Export and print use one shared output style: 34px height, centered inline-flex content, 6px icon gap, 10px horizontal padding, a 1px solid 4px-radius border, 0.75rem/700 text and no shadow. Its light-blue primary/surface wash, primary/strong-border mix and balance text have theme-aware hover/focus states. Both themes resolve the same rules through their tokens. Icons inherit the action text. This shared style follows the owner's 2026-10-10 decision and applies to ordinary and specialized output actions. Features never add an output palette or geometry of their own.
 Search may use `app-primary-action-button type="submit"`; its shared
 report-strip context uses those same compact dimensions. Direct secondary buttons
 use `btn btn-secondary` with the corresponding report variant, as in Trial Balance.

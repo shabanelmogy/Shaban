@@ -13,41 +13,41 @@ query to Grid rendering, paging, and export.
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:2d02535a738d0a1e03f44f22ff5ac7028554bc00cf9e8517245d3cf9e4c5811e
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
-- master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+- master.5: ## 5. Continuous quality gates | sha256:8d4f483fc5c4e3c0f84bb76153f0b2c5c70972699a9fa69e4fc7ed6e0667831b
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
 - master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:1ee143e6e852683c791622ef3af32d881d057bf39cd40e075837d578707c646b
-- ui.1: ## 1. Feature folders and wiring | sha256:f6595edc4738a78ff11d81e4f2231ee615f9a6b07aa2ab6143a3809dcfbc6769
-- ui.2: ## 2. Service and response wrappers | sha256:5da069710db9da03ce125180ce1588fdf1778ddba4db71c52585b54ab0b10e08
-- ui.3: ## 3. Header | sha256:d1bd034a4a5c0e03ade64663e18cd76ba852e0c806a0e94a80253e0b02e8bccc
-- ui.4: ## 4. Filters | sha256:f7f31cb310d089469b3c802a56afaa6c40580d2401bae56b01e93dd7e97da24b
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:40836082dd49994bd2e8b88b6f888b21d1c4eeabf5e09e95eefa9f4fc2725ca5
+- ui.1: ## 1. Feature folders and wiring | sha256:79e212088175339714601266bbae05767576de0a7a6340330b513a9eb252463d
+- ui.2: ## 2. Service and response wrappers | sha256:9794e35d4273c605ac98288b23095738d03eacfc9af4f7b2fba2f69838e36bc4
+- ui.3: ## 3. Header | sha256:7114dd05b36427d8bdc11579e6eccfc67aebb5612fd1688eb41aeec720243ed2
+- ui.4: ## 4. Filters | sha256:11483ad20ce841276543544f0190c82e588e7bcefefc73df5bcd5d08045c18ed
 - ui.5: ## 5. Columns | sha256:987bc8f2b9e07fcde2040866c7d5e1bdf4ece16f47ff76fc34eca975583dce33
-- ui.6: ## 6. Grid and footer | sha256:eed74255f12bdae7d34c6c6ed32413a41e3f9153a611a5cac59d32784ab4414e
+- ui.6: ## 6. Grid and footer | sha256:eba7e8c13b82b4e274155477d160d3d8eba445b885da81609391d7bee4839063
 - ui.7: ## 7. Action button cycle | sha256:62ab02ec6d136911130f189df3b805427a8b4d952cea916799a6a7640badc197
 - ui.8: ## 8. Export to Excel | sha256:3886776baa1bc912f3a525cc742564fbb9edc8302f8d4036699af624001839d3
 - ui.9: ## 9. Confirm: delete | sha256:b446c09fa7fe12e63f8aa03e99f184ebb14f957fa585576931ddd8f15cb6fd75
 - ui.15: ## 15. View mode | sha256:022f00069635b29f668f8ca24b27ef784df55a57a05ae66594c166e74263184c
-- ui.16: ## 16. Dropdowns, lookups, enums | sha256:ad2f831946e26af101d8c40a4b563c1b3ff24970fdbe53880f68c993b96f4848
+- ui.16: ## 16. Dropdowns, lookups, enums | sha256:32f7a23d394be847f7274000569266f733bcdf3f85aa5e2bc267734680b9846c
 - ui.17: ## 17. Dates | sha256:c3c2dcb258d006774350cdda4bcbc0edf2ac31281f34ea2162ed973c0cc55287
 - ui.19: ## 19. Validation messages | sha256:94a516e370c206deb5d4d80c34a2daa9d1898bb15bb0e8a58ec8c687e63e9a14
-- ui.20: ## 20. Report page | sha256:e68baa186207f64540980a66dad922d5a8d0fdb79e16710e79ea4b53c4008558
+- ui.20: ## 20. Report page | sha256:93a21b17708466271359264af74994baa845426567c84aed868219064006571b
 - ui.21: ## 21. Report print | sha256:2e6cc0be29f3d57b6207c5519aee74fa6b30576e92a4b79312fee0f6deafe171
 - ui.22: ## 22. Loading, empty, error, toast | sha256:244bc2d6f185f10764d640c98de0e0ff53650e96bede01d5a1dffdf96f5303ca
 - ui.23: ## 23. Translations | sha256:2410720acfe260652c5d9c6e0f801aa3881a21f18a1b1a3de4acc7478bcf1c6e
-- ui.24: ## 24. Colors, icons, buttons | sha256:ceab92354823f68c9c61a452f587607f287bcf4ae402b5b569b55ea2b7ec80e6
+- ui.24: ## 24. Colors, icons, buttons | sha256:6729bb2594a33b250ebe2be5fd74ea31ff0680c020d4922da72d2009fd58aba1
 - ui.25: ## 25. RTL and dark theme | sha256:7239bd7a1b0de149e09f0cf704ddc404e46af34f60e3f1548c293b00fbbf3061
 - ui.26: ## 26. Permissions and route access | sha256:468e5ceba58128db01cd338059c6119761123144af55950bfaaf1a2d4866f0ff
 - ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
 - ui.28: ## 28. Request cancellation and stale responses | sha256:6c7c3c8a71a8681f46e2cef26d7efd5872fdbbaffa991f5e7c9adc592f4b385d
-- ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:8a1b6fc2fa0bedff7a3245f9b349945a955c10cfa4a4fc4c76896841aab53cdc
+- ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:52c019490aab53c0d1d9e73a2e36446e9e66c35d999166bf890219be9cde49cf
 - backend.7: ## 7. ListVM scope rule | sha256:24fbfbcf92b61da465eb4b8b4d9aa50f2c48c1f43e8711402843db1ff1a7771e
-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c2e52bf2108b49cd64e5d0c27c34e572bf1182418d777ef56fb96732e3bf82a3
-- backend.9: ## 9. Search model and filters | sha256:80adaa0424534a753b302d2ae386e8374958bea389692e3b856f7ecc8cdf082e
+- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:23f348643a40f97c07438d987af182efc5500e5e20c425c8574dffeb5b58d98a
+- backend.9: ## 9. Search model and filters | sha256:ed70dc50b04cd8d3504475724d2cd14c41290701d83d78aba58eba06dffb1d25
 - backend.10: ## 10. Select and dropdowns | sha256:700a3fc93df824f337cf2bf5c2fe12f866d8aee46c8be35976a2fccf7fa533cb
 - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
 - backend.17: ## 17. Pattern 5 — Reports | sha256:57ec4fd3d996915f15d15c7baad51a573b258d24cd19680dc1c2f10ef437aa73
-- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+- backend.18: ## 18. Edge cases | sha256:f7abc5b7753f5dadd9c00017864c17e86a1c71666715799ba4d9f1e21f359daa
 
 Approved references by read-path shape:
 

@@ -2,6 +2,22 @@
 
 > **Status: Canonical**
 
+### Assembly scanning and data carriers
+
+Inspect the actual DI scan when adding a public type to the Business assembly.
+Current ServerAPI DependencyResolver selects classes broadly and registers
+their implemented interfaces. A public record implicitly implements
+IEquatable<T>, so even a pure data carrier may be registered and activated as a
+service, failing startup on its enum/string constructor arguments. Do not
+register those values or turn off service validation to mask the failure.
+For a carrier whose consumers only construct/read values, use a sealed class
+with constructor-set getter-only properties and no service interfaces, as
+InvoiceAccountingMetadata does. If record equality is needed, explicitly keep
+the type outside the existing scan; do not change the global scan without a
+separate impact review. Verify real service interfaces still register normally.
+Evidence: owner startup validation failure2026-10-13; source correction,
+owner rebuild/start confirmation pending.
+
 The interface is usually empty — it exists to name the closed generic and to be
 injected.
 

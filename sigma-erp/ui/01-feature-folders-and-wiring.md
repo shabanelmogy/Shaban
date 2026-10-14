@@ -557,13 +557,57 @@ Reuse the existing Metronic menu/arrow classes and Sigma theme tokens. Group
 disclosure uses native buttons with `aria-expanded`; appbar Pin stays a separate
 button. Both disclosure and pin clicks stop propagation before Metronic's
 delegated handlers. Other Metronic menus retain their existing engine. No
-sidebar drawer, minimize, navigation or shortcut-storage contract changes.
+sidebar drawer, navigation or shortcut-storage contract changes belong to
+menu disclosure. Desktop minimize follows its explicit-control owner below.
 
 **Check:** select a leaf, close/reopen its main and nested groups; switch siblings;
 repeat through Recent and search/clear; verify Enter/Space, independent Pin,
 RTL/dark and narrow/minimized sidebar behavior. These are owner runtime checks;
 source review does not certify them. Evidence: 2026-10-03 sidebar collapse fix,
 `reviews/SIDEBAR_ACCORDION_COLLAPSE_FEATURE_REVIEW.md`.
+
+### Desktop sidebar minimize — explicit control
+
+**Shared owners:** `SidebarComponent` and `sidebar-logo/SidebarLogoComponent`
+under `_metronic/layout/components/sidebar`. Owner instruction2026-10-14:
+Import Data content appeared below the sidebar and minimize did not remain
+closed. The current hoverable policy expands the sidebar to its full actual
+width while the wrapper reserves only the minimized rail; the click plugin's
+300ms animation guard then releases while the pointer may still be over it.
+Use a persistent explicit minimize/expand control instead of hover reopening.
+
+Light/Dark sidebar defaults set desktop hoverable=false. The sidebar owner
+also removes `data-kt-app-sidebar-hoverable` on configuration application so
+legacy saved configs or a stale true attribute cannot reopen the desktop rail.
+Do not clear/rewrite localStorage or add an Import-only exception. Mobile
+drawer/hover attributes, startup/default-open behavior, menu disclosure and
+pins retain their existing owners.
+
+The logo's one native type=button owns click/Enter/Space. It reads and toggles
+the existing body `data-kt-app-sidebar-minimize` (or the existing configured
+collapse attribute), whose value is `on` when minimized. Derive active icon
+state, translated Open/Minimize labels, aria-expanded and aria-controls from
+that same state. Remove this button's `data-kt-toggle` plugin registration;
+never let both Angular and the Metronic click handler toggle it. Other plugin
+controls are unchanged. Keep the existing theme, focus and geometry classes.
+The desktop control uses existing `d-none d-lg-flex` utilities below/above992px;
+mobile opening/closing stays with the existing drawer controls.
+
+Core sidebar/wrapper SASS and the RTL stylesheet retain width/offset/transition
+ownership, including the75px desktop rail and992px mobile boundary. Do not
+add feature/sidebar-specific page margins, viewport-width calculations,
+ResizeObserver/timer workarounds, fixed widths or z-index patches. Shared
+table wrappers keep horizontal overflow internally. Record the actual
+container/flex cascade; a wide table alone does not prove an outer-width defect.
+Source inspection supports this correction but does not prove runtime fit.
+
+**Owner checks:** minimize with the pointer left over the button/menu, reopen,
+repeat by Enter/Space, navigate between import and other screens, load a wide
+CSV preview, exercise legacy saved hover=true settings and both sides992px
+plus intermediate/short sizes, LTR/RTL/light/dark and the mobile drawer. Common
+bilingual UserGuide guidance describes the explicit control once. Evidence:
+`reviews/SHARED_SIDEBAR_TOGGLE_MAINTENANCE_EVOLUTION_PLAN.md` and the Data Import
+review amendment; compilation/visual/runtime acceptance remains pending.
 
 ### One `HttpClient`
 

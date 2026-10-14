@@ -90,7 +90,7 @@ Rules:
    which keeps the feature form as parent and renders only when opened.
 2. **One form.** Hidden filters stay in the same `FormGroup`: search, paging, route restore
    and export are unchanged; closing the panel resets nothing.
-3. **Reset is mandatory.** The panel always shows Reset (inline-end, before the projected
+3. **Reset is mandatory.** The expanded panel always shows Reset (inline-end, before the projected
    actions) and emits `resetRequested`; the feature restores **its** default values (for
    example current month and status Open), then searches page 1.
 4. **More filters.** Shown only when an advanced template exists: an outlined pill with an icon
@@ -118,6 +118,27 @@ PrimaryActionButton owns this context rule; features add no button-height CSS.
 Its default outside filter actions remains unchanged. Budget Search adopts it
 under the owner's 2026-10-05 height correction; visual acceptance is pending.
 
+**General narrow-screen collapse (owner instruction, 2026-10-11).** Every
+`form[appFilterPanel]` has a shared Filters disclosure below1200px (screen media
+max-width1199.98px), with no per-screen opt-in. It starts expanded and toggles
+the main fields, any already-open advanced fields, Reset and projected actions
+together. It is a native type=button with translated EN/AR label, contextual
+Expand/Collapse accessible name, unique aria-controls and aria-expanded. It
+uses the existing themed toggle/focus/chevron owner and busy gate.
+
+Collapse only changes screen presentation: all currently mounted controls and
+actions remain mounted, values/dirty state and advancedOpen are retained, and
+no Search, Reset, form-disable or submit event is triggered. At1200px and above
+the disclosure is hidden and normal filter content is visible irrespective of
+the narrow-screen collapsed state; narrowing again restores that local state.
+The separate More filters action retains its own semantics. Screen-only hiding
+also leaves print independent of collapsed state. Keep direct main/advanced
+grids and toolbar children so inline/stable/responsive layouts retain their
+existing contracts; features add no collapse handlers or CSS. Shared guidance
+is authored once in UserGuide/content/shared-screen-guidance.ts and shown in
+each module guide's existing overview. Source-only, owner responsive, keyboard,
+form-state, RTL/theme and print acceptance pending.
+
 **Action spacing.** FilterPanelComponent owns the action flex-row gap through
 its numeric `actionGap` input (pixels, default8), exposed internally as
 `--sigma-filter-action-gap`. An explicit owner spacing request may select a
@@ -130,8 +151,33 @@ not certify visual spacing; desktop/narrow/RTL acceptance remains owner-pending.
 **Field spacing.** `columnGap` optionally controls the horizontal gap shared by
 the main and advanced filter grids (default `16px`). Use it for an explicit
 screen density request such as a denser checkbox group; keep the shared
-vertical gap and responsive stacking unchanged. Feature code selects the public
-input, not a local filter margin or grid override.
+responsive stacking unchanged. An explicit vertical density request may select
+the numeric `rowGap` input (pixels, default7) for main and advanced field rows;
+Rental generation initially selected3, then1 under the owner's further
+2026-10-12 spacing correction.
+Label/control gap, reserved validation feedback, control height and toolbar
+section gaps retain their owning rules. Feature code selects the public input,
+not a local filter margin or grid override.
+
+**Choices beside final-row actions (owner Rental correction, 2026-10-12).**
+Feature-owned radio/check groups may project through the reusable
+`appFilterToolbarStart` attribute (`FilterToolbarStartDirective` exported from
+filter-panel.directives.ts). FilterPanel renders them at the toolbar's logical
+start, opposite mandatory Reset and the existing `appFilterActions` projection,
+instead of spending a separate full-width field row followed by an action row.
+The slot is empty by default; existing main/advanced/inline consumers keep their
+arrangement. Import/register the actual directive in standalone consumers.
+
+Keep one feature FormGroup and the existing fieldset/legend/options semantics.
+When visible option captions already explain the group, the legend may use the
+existing Bootstrap `visually-hidden` accessibility utility, retaining its name
+without a redundant heading line. Shared toolbar-start uses minimum control
+height, actionGap, wrapping and min-width0; existing below720 toolbar stacking,
+below1200 collapse, theme/RTL and busy behavior remain. Do not duplicate Reset,
+remove validation reserves, shrink34px controls or add feature toolbar CSS to
+make a card shorter. Rental generation moves its two merge-mode radios into this
+slot and retains all seven filters; source-only, owner visual/keyboard/RTL and
+short-height acceptance pending.
 
 **Stable editing layout.** New or subsequently reviewed filter forms must use `[stableLayout]="true"`
 on `FilterPanelComponent`. The shared stable modifier top-aligns the main and
@@ -184,6 +230,25 @@ the caption, retaining shared wrapping34px buttons/theme/RTL. Empty caption
 retains the original unvalidated inline layout; advanced filters retain their
 separate toolbar. No feature offset/padding or duplicated Reset. Source-only;
 owner desktop/narrow/validation/visual acceptance pending.
+
+**Intermediate inline layout (owner correction, 2026-10-11).** A dense inline
+strip may opt into numeric `responsiveColumns` (default null). At viewport widths
+<=1365px, the shared panel moves actions below the full-width field grid, hides
+the now-unneeded action caption and uses this number of tracks; <=720px uses
+one field track. Other consumers retain their existing breakpoint behavior.
+Leave selects6 intermediate tracks for three span2 fields; Holiday selects2
+for Name/Date Range. Keep existing labels,34px controls, reserved feedback,
+button wrapping, RTL and theme. Do not override this in feature styles.
+
+Related boolean fields can use shared `sigma-filter-checks`: three equal tracks
+within a span3 desktop grid item. In the opted-in intermediate layout and on
+mobile it spans the full field row, retaining three checks on one row even
+when ordinary fields stack. Labels wrap within their own shrinking column;
+never clip labels or overflow the page to retain the row. When this group is
+on a separate row, shared styles remove the empty neighbouring-label track
+and keep the checkbox/label centred in a minimum34px control track. Leave
+uses it for Rejected/Pending Approval/Pending Rejoining. Source-only;
+owner1365/720 boundary, narrow, Arabic and theme acceptance remains pending.
 
 Full-width workspace filter cards consume the UI3 workspace modifier so their
 inline edges align with title, tabs and content cards.

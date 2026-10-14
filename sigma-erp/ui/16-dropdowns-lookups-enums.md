@@ -2,6 +2,17 @@
 
 > **Status: Canonical**
 
+**Lookup identity provenance (Customer Requests review, 2026-10-14).** Trace the
+actual select producer before connecting a legacy form: a controller name is
+not proof of the returned identity's entity type. `Customer/GetSelect` returns
+Individual/Company `Partner` ids with Name/No/CUS00+Id labels, while the old
+CustomerRequest FK targeted `Customer:PersonBase`. Reconcile picker values,
+typed form/payload, EF principal and server validation as one contract (BE8).
+Do not cast or relabel incompatible ids to make the picker appear connected.
+A persisted relationship change needs the owner's legacy-data decision and a
+reported migration; current Customer Requests owner confirms empty/test data.
+This evidence does not authorize bulk changes to other legacy consumers.
+
 **Stable dropdown width (owner rule, 2026-10-01).** Every dropdown's closed field
 has a layout-defined width independent of its placeholder or selected label.
 In forms and filters, fill the allocated responsive grid field (`width: 100%`);

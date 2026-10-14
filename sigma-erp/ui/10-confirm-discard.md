@@ -99,6 +99,17 @@ either disabled or goes through that method before the dialog hides · pending
 confirmation freezes controls · deferred guard rechecks identity/busy state ·
 Cancel restores the same values and dirty state.
 
+**Accepted decision ordering (2026-10-10).** RxJS delivers the confirmation's
+accepted value before its `finalize` releases `closeConfirmationPending`.
+The accepted X/Cancel/Escape subscriber therefore checks the same visible
+session and independent save/load/parsing gates, without treating that
+confirmation's still-pending flag as a new blocker. Otherwise Confirm does
+nothing and the user must close again. Keep duplicate subscriptions blocked
+at the deferred entry and keep cancellation restoration in `finalize`.
+Deduction record/import dialogs adopt this source correction; other consumers
+are reviewed within their own scope. Keyboard and interaction acceptance is
+owner-pending.
+
 ---
 
 

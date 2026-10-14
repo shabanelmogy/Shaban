@@ -22,6 +22,15 @@ actions.
 
 ### Shared primary action — canonical
 
+In every UI3 FeatureTitle context, at <=650px the
+shared primary button selects32px minimum height,10px inline padding,10px font
+and4px icon gap, a small reduction from35px/16px/11px/6px. Visible translated
+label, icon, focus, disabled/loading and RTL/theme behavior remain unchanged.
+The owner's generalization on2026-10-11 supersedes the earlier Leave/Holiday-only
+opt-in. Every primary button projected into app-feature-title inherits it;
+buttons outside titles retain their existing sizing. Never copy this into
+feature CSS.
+
 `shared/components/primary-action-button` is the single owner of solid primary
 action markup and styling. Import its standalone component in each direct
 consumer:
@@ -126,6 +135,8 @@ once for light (`:root`) and dark (`[data-bs-theme='dark']`):
 | `--sigma-debit-*`, `--sigma-credit-*`, `--sigma-balance-value` | accounting accents (non-semantic, block 14) |
 | `--sigma-filter-*`, `--sigma-data-table-*`, `--app-editor-dialog-*` | owned by their shared component |
 
+Shared output actions (Export and Print) use the existing primary-blue palette through the global sigma-output-action role and the existing report output selector. Their 34px height, inline-flex alignment, 6px gap, 10px padding, 1px solid 4px-radius border, 0.75rem/700 text and no-shadow geometry are declared once in src/styles.scss, together with the light-blue surface wash, primary/strong-border mix, balance text and hover/focus wash; native buttons, report variants and shared primary buttons use the same style, labels, loading and disabled behavior. Existing output icon buttons are matched by their Bootstrap/Font Awesome output glyphs for compatibility. Features do not declare an export or print palette.
+
 A feature uses these tokens and declares **no** palette of its own (`--feature-text`,
 `--feature-surface`, … and their dark copies). It may declare one token only for a real domain
 colour that no shared token expresses (for example a vehicle-status colour), with its dark
@@ -180,7 +191,7 @@ or status formulas.
 The typed `SummaryCard` shape carries `id`, `labelKey`, `value`, `icon`,
 `accent`, optional `format` (`number`/`money`/`text`), `suffixKey`,
 `hintKey`/`hintParams` and `secondary`. The component inputs are `cards`,
-`ariaLabel`, `density`, `layout`, `minCardWidth`, `maxHeight`, `selectable`, `selectedId` and
+`ariaLabel`, `density`, `layout`, `columns`, `equalHeight`, `verticalPadding`, `minCardWidth`, `maxHeight`, `selectable`, `selectedId` and
 `disabled`; `cardSelected` emits only the stable card id. It fetches nothing and
 does not derive or mutate business state. `density` is comfortable, compact,
 dense or slim. `layout` defaults to grid; row fits the actual card count into equal
@@ -191,6 +202,20 @@ the shared internal list; it owns its scroll and keyboard/visible focus while
 the surrounding table retains usable height. Natural-height consumers keep
 their existing scroll owner. These inputs change space usage, not card colors
 or business scope.
+
+Optional `columns` (positive integer, null by default) fixes the shared grid to
+that many equal tracks, including row-layout responsive wrapping. Optional
+`equalHeight` (false by default) uses equal fractional rows across the whole
+card grid, keeping all cards the same height. Features select these public
+inputs instead of overriding card-grid internals. Leave details selects two
+columns/equalHeight after the owner's 2026-10-11 correction, retaining all eight
+values/hints/order and original comfortable density. Optional `verticalPadding`
+(nonnegative pixels, null by default) changes only vertical content padding;
+Leave selects10px instead of14px after the owner's second small spacing reduction,
+preserving original fonts/icons/horizontal padding. Defaults preserve every other consumer;
+print retains its natural wrapping. Natural content remains reachable through
+the existing scroll owner if a viewport cannot fit it; source inspection cannot
+certify a no-scroll visual result.
 
 Keep 12px separation between a summary-card region and the following grid. Use
 the parent's existing gap when it already supplies this separation; otherwise

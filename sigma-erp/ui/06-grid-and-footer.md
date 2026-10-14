@@ -438,3 +438,31 @@ not scroll · public CSS variables used only for real feature variation · no
 cross-feature `@use` · no `::ng-deep` into `app-data-table`; only inputs and the listed `--sigma-data-table-*` variables.
 
 ---
+
+### CSV import workspace extraction (2026-10-14)
+
+A reviewed standalone import route with the confirmed ImportResult envelope, no context editor, and a complete locally read or returned failed-record collection uses the shared `app-csv-import-workspace`. The shared owner composes `app-feature-title`, `app-button-import-csv`, `app-primary-action-button`, `app-summary-cards`, `app-state-message` and `app-data-table`; it owns local preview paging, explicit Import execution, busy/finalize state, declared and transport failures, partial result counters and retained diagnostics. Each consumer owns its ordered CSV columns, header aliases, typed row builder, body key and endpoint. Selecting a file never mutates the server; after a mutation attempt the same preview cannot be submitted again, because chunked imports may have partially persisted. The consumer must preserve the backend import envelope and must not invent a list filter, server pager, CRUD action or retry policy. Source-only adoption evidence: Administration/DataImport; owner compile, runtime, API and responsive acceptance remain pending.
+
+The owner's presentation amendment (2026-10-14) extends the existing shared
+`ImportCsvComponent` for all current consumers. Template and local-file controls
+use two equal token-based cards with 14px inset, 12px gaps, 44px icon tiles and
+12px card radius; at a component container width of 580px or less they stack in
+one column. The template card exposes its exact ordered headers in a native
+`details` disclosure beside the existing Download Template action. The file card
+opens its hidden native CSV input through a keyboard-operable shared
+PrimaryActionButton Choose/Change action, shows parsing state, and displays a
+filename only after valid parsing. Replacement selection, parse failure and
+Reset clear that filename. Cards have no whole-card action or drag-and-drop
+contract; file selection remains local reading, never a server upload or save.
+The Administration workspace places these cards and feedback in one bounded
+setup/feedback scroll region capped at 45% of the panel height. Title/subtitle,
+Import/Reset toolbar, preview heading/count and table pager remain fixed; table
+rows keep their own scroll owner. Preview count describes the displayed table
+collection, never saved rows. Existing SummaryCards counters, diagnostics and
+partial-save guards retain their owners and values. Shared logical spacing,
+theme tokens, focus and long-text wrapping own the presentation; consumers add
+no card or table-internal styling. The existing bilingual import guide covers
+the template disclosure, Choose/Change, valid filename, local preview and Reset.
+Source conformance does not certify visual or runtime behavior: owner acceptance
+remains pending for both sides of 580px, intermediate/short-height layouts,
+long filenames/Arabic, LTR/RTL, both themes and direct-dialog consumers.

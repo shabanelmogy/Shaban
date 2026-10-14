@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 19 |
-| Version | 0.77 |
+| Version | 0.78 |
 | Last verified against source | 2026-10-01 (base `Service`, `Repository.QueryReport`, `ListSmBase`, `UpdateBaseVm`, profiles, `DailyServiceLogReportService`) |
-| Last content change | 2026-10-08 — Owner-approved lightweight detail identity bases replace repeated Id/nullable No declarations while preserving flattened response contracts and legacy heavy bases. Block3 and skill synchronized; source-only. History in `../CHANGELOG.md` |
+| Last content change | 2026-10-13 — Assembly-scan data carrier guidance from InvoiceAccountingMetadata startup DI failure. Block5 and skill synchronized; source-only correction, owner restart confirmation pending. History in `../CHANGELOG.md` |
 | Verified by | source inspection only — no build, test, migration, or database run |
 
 Build order for one entity, six steps, five patterns. Open the reference file,

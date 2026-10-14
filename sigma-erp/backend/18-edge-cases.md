@@ -29,12 +29,43 @@ claim convention itself remains the current contract (backlog 11).
 
 ### Input
 
+### Metadata-only AI candidate contracts (2026-10-13)
+
+JSON output mode ensures JSON syntax, not adherence to a form's field contract.
+For shared mock-data assistance, construct the prompt schema and example from
+the actual requested field keys and primitive types. Opaque choice tokens remain
+strings even when numeric-looking; all keys are required in the output object,
+while optional field values may be null. Generic unrelated example keys/tokens
+create avoidable ambiguity. Server validation still owns exact key completeness,
+types, bounds and allowed choices; a prompt schema is guidance, not enforcement.
+
+`MockDataService` is the verified source consumer after owner reports HTTP400
+InvalidProviderResponse in IndividualPartner and Companies. The exact rejected
+provider response was not supplied, so the original field-level cause is not
+proven. One repair request is allowed after invalid JSON/envelope/candidates,
+using fixed rejection codes and requested keys only. Both attempts share the
+original45-second deadline/cancellation and response cap. HTTP/auth failures
+are not retried; no partial output or local deterministic fallback is applied.
+Diagnostics may expose bounded sanitized requested field identifiers, never
+provider bodies, generated values or API credentials. Source-only conformance;
+actual replay remains owner acceptance. Storage/privacy/Save contracts stay
+with their existing owners and frozen feature amendments.
+
+Owner explicitly extends synthetic generation to Card Number/CVV (2026-10-13).
+Frontend marks native card inputs and sends canonical text names/lengths16/3,
+never current card values. For these exact text names, MockDataService schema
+adds ASCII digit pattern, example uses digit-only strings, and prompt preserves
+string serialization/leading zeros. Strict ValidValue checks digits plus the
+supplied bounds; invalid text follows the existing one bounded repair/all-or-
+nothing rejection. No new DTO/endpoint/EF field or business input validator.
+Treat these as synthetic form values, not verification of payment eligibility.
+
 | Case | Expected |
 |---|---|
 | Required string `null`, `""`, or `"   "` | Rejected. `[Required]` alone does not reject whitespace — trim in the service |
 | String at and over max length | Accepted at the limit, rejected above it, and the limit matches `HasMaxLength` |
 | Number at min, at max, out of range | Boundaries accepted, outside rejected |
-| Decimal with more scale than the column | Rounded deliberately, not truncated by chance |
+| Decimal with more scale than the column | Explicit input policy rejects excess precision or domain calculation rounds deliberately; never implicit storage rounding |
 | Negative amount or quantity | Rejected unless the business allows it |
 | Enum sent as an undefined number | Rejected via `Enum.IsDefined`; never silently mapped to the default member |
 | Nullable enum omitted | Distinct from an invalid value |
@@ -46,6 +77,15 @@ claim convention itself remains the current contract (backlog 11).
 | Duplicate value differing only by case or spacing | Matches the documented normalization rule |
 
 ### Records and relationships
+
+**Shared calendar and clock bounds (source-only, 2026-10-12).** Monthly readers
+that accept December9999 reuse `CalendarMonthBounds.FromStart` with a normalized
+first-day midnight. It returns inclusive month end without constructing year10000;
+ordinary lower maximum-year contracts remain unchanged. Clock writers reuse
+`ClockTimePolicy.IsValid` for nullable values in `[00:00,24:00)`; it establishes no
+overnight or punch-order policy. A minute-only editor preserving unchanged
+seconds is a feature transport decision, not permission to truncate stored values.
+Consumers: Staff Duty/OT and Attendance. Database/runtime verification pending.
 
 | Case | Expected |
 |---|---|

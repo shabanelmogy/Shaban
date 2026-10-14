@@ -239,6 +239,26 @@ Rules:
     `DocumentNumberCounter` (`DocumentType.JV`, JV numbering settings, date's yyMM) in
     the same unit of work, not from the row-count generator.
 
+### Nonnegative allocation of positive VAT sources (2026-10-12)
+
+`VatPolicy.AllocateDocumentTax` retains its existing rounded proportional shares
+when their remainder is nonnegative. Many tiny positive lines can round those
+shares above the entire rate tax: 100 lines of0.10 at5% give document tax0.50,
+while99 individual0.005 shares round to0.99. The exceptional positive-source
+case floors non-remainder shares with `FinancialNumberPolicy.FloorMoney` and
+gives the exact remainder to the largest line. Every source tax stays
+nonnegative and their sum remains the document's once-rounded tax. Negative or
+mixed-sign inputs keep their existing behavior; document tax and normal
+allocations are unchanged. Rental generation identified the defect; source
+arithmetic review only, owner compilation/runtime verification pending.
+
+Valid stored amounts may overflow the intermediate `rateTax * lineAmount`
+even when the final proportional tax fits. The shared allocator preserves its
+ordinary multiplication-first path and, only on decimal overflow, multiplies
+the tax by `lineAmount / rateAmount` instead. The largest-line balance still
+owns the exact document total. Consumers validate aggregate storage bounds
+before allocating tax; they do not turn an oversized group into an exception.
+
 Engine structure (`SiGma.Business/Resolver`): `JournalVoucherResolver` is the posting
 engine (build, save, post, unpost, allocations) and keeps delegating members for
 existing callers; lookups are `ILinkAccountLookup` (per-request partner cache, one

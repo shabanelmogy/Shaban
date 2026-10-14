@@ -63,6 +63,53 @@ public class WorkshopSettingController
   `ITaxPolicyService` for common tax settings), never with its own
   `Query<T>().FirstOrDefault()`.
 
+### Independently saved scalar sections and write-only keys (2026-10-13)
+
+When independently saved sections share one settings row, each write owns only
+its declared editable members. A helper's `Repository.Update` marks the full
+row modified; mapping `Ignore` alone does not prevent an unrelated stale scalar
+from overwriting a concurrent section save. After the canonical helper upsert,
+retain modified flags only for that section's changed scalar properties before
+the one `SaveChangesAsync`. A legacy id-based update may use a narrowly justified
+tracked-row override preserving its tenant/id validation and safe response.
+Do not change the shared helper's contract or add a separate settings table.
+
+ApiKeySetting is the verified consumer: Google Maps uses canonical `Mine`,
+DeepSeek uses the same tenant row through its owner, and each section preserves
+the other's value. The optional DeepSeek key remains write-only in public DTOs,
+blank input preserves it, and legacy mappings ignore its persisted member. The
+owner explicitly requested plaintext storage for current development on
+2026-10-13, superseding this task's initial Data Protection decision. Current
+source uses nullable `DeepSeekApiKey` (max2048), with no protection service or
+key-ring dependency. A replacement can be saved after a failed status read. A
+bounded metadata-only provider operation owns no business entity persistence
+and therefore uses a dedicated authenticated service/controller rather than
+generic CRUD. Contracts and limits remain in the feature freeze.
+
+The filtered unique `SubscriptionId` index prevents concurrent first saves from
+creating multiple live rows. Existing duplicates must be reconciled by the owner
+before migration; services never delete them as a save side effect. ApiKeySetting
+adds a nullable key column and that index; migration remains owner work.
+Source-only evidence; plaintext is the current feature-specific owner decision.
+
+ApiKeySetting's mock-data presentation flags ShowMockDataButton and
+ShowMockDataPreview use CLR/database defaults true. Nullable request/helper
+members preserve omitted/null preferences; blank key remains untouched. The
+mock section owns only submitted members via conditional mapping and narrowed
+modified flags, so preferences can be saved before a key exists. Google/legacy
+maps ignore them. For a Boolean database default true, explicitly use the
+installed EF `HasSentinel(true)` so an intentionally submitted false is inserted
+instead of treated as unset. Owner migration adds both Boolean columns with true
+defaults; no migration/snapshot execution occurs in agent work. Read through the
+settings owner returns lean configured-status/model/preferences, never the key.
+
+The later ShowMockDataConfirmation member follows the same nullable-write,
+conditional mapping, owned modified flags, default-true/HasSentinel(true) rules.
+It appears as showConfirmation in the lean mock Settings DTO, independently of
+button/preview flags; old Google/legacy clients ignore/preserve it. Owner migration
+AddMockDataConfirmationPreference adds the Boolean column. No provider/domain
+calculation or confirmation policy is moved into persistence.
+
 ### Several rows
 
 ```csharp
@@ -93,7 +140,7 @@ await UnitOfWork.SaveChangesAsync(cancellationToken);
   |---|---|
   | ~~Read the last row; POST adds a new row on every save~~ — **moved 2026-10-01** to `SingleRowSettingsService` + `getMine`/`saveMine` | Workshop, Broker, DDA, HRM, Limousine, Payment Gateway |
   | Read the last row; own Add/Update override that updates the first row | Cost Centers (`SettingsCostCentersModel`) |
-  | Read the last row; saves with PUT only (first save when no row exists not verified) | API Key (`ApiKeySetting`) |
+  | **Moved 2026-10-13** to single-row `Mine`; independently saved Google/DeepSeek scalars, write-only DeepSeek key (plaintext for development by owner instruction), filtered live-tenant index configured (owner migration pending) | API Key (`ApiKeySetting`) |
   | Own `GetMySetting` + POST or PUT | Common (`SettingsCommonModel`), Document Number (`SettingsDocumentNumberModel`) |
   | Already on `IServiceHelper` | Fields, Notifications, Email Templates |
 

@@ -1,5 +1,95 @@
 ## 13. Modal with tabs
 
+### Shared mock-data form assistance (2026-10-13; owner instruction)
+
+Owner follow-up adds tenant Settings flags ShowButton/ShowPreview, both default
+true. FormSection's existing header actions area now composes the shared
+MockDataActionComponent from the nearest mock form context, generating only
+supported rendered controls inside that section. Section registration suppresses
+the repeated form toolbar; fields outside visible shared sections retain one
+Test data heading action scoped only to those remaining fields. A form without
+shared sections uses that fallback for its editable fields. Existing projected
+Add/other header actions remain. Headings
+and action groups wrap within the existing section at narrow sizes, with logical
+spacing/theme owned by shared components. No per-screen markup copy is needed.
+
+The root shared service loads preferences once for the current auth-token
+session, hides actions until loaded, offers inline Retry on failure, cancels
+stale preference reads after successful Save and resets for a changed session.
+Monotonic cache revisions also reject older independently subscribed settings
+reads that finish after a successful preferences Save; cancellation alone covers
+only the cache-owned request.
+Settings stores the flags through the same tenant settings owner; key input may
+be blank while saving preferences. After a failed settings read, a replacement
+key omits unknown flags and reloads status, preserving existing preferences.
+Generate captures the preview preference: true keeps Review/Apply; false applies
+valid candidates to the draft after generation without mounting a loading or
+preview dialog (owner clarification, 2026-10-13). The section action shows loading
+and a shared secondary Cancel action. Candidate readiness is independent of dialog
+visibility. Frozen controls and root capture gates block click/submit handlers
+during pending work, except the mock Cancel control; teardown removes listeners.
+Both flows retain the independently configured overwrite confirmation, Cancel,
+stale checks and manual business Save. Turning both preview and confirmation off
+opens no mock-data modal.
+Actual UI/runtime acceptance remains owner-pending.
+
+The third default-true tenant option ShowConfirmation controls only the mock
+generator's existing-value overwrite confirmation. Capture it with preview at
+Generate start: disabled bypasses that confirmation, preserving the selected
+preview flow, pending cancellation/stale checks and manual Save. Settings and
+screen discard/domain confirmations retain their owners. This explicit owner
+option supersedes the earlier always-confirm mock-data statement; it is not a
+general switch for other confirmations. Old reads missing the flag default true;
+omitted/null writes preserve it and failed-read key recovery sends no unknown flags.
+
+The owner requested one DeepSeek mock-data capability across editable screens,
+with preview and manual Save. `shared/components/mock-data/MockDataFormComponent`
+(`appMockData`) and `MockDataFieldDirective`, exported by `MockDataFormsModule`,
+own this assistance. Keep existing native form roots, controls, validators,
+handlers, child-row Add actions, Save payloads and editor shells. New supported
+reactive editors import the shared module and mark their root `[formGroup]`
+container with `appMockData`; nested fields use the nearest root. Search/filter,
+report, authentication, secret-settings and View/disabled forms are excluded.
+
+Generate captures the form and control identities, freezes the prior editable
+state with UI10's helper, confirms replacement through the shared confirmation
+service when configured, and opens the padded shared dialog during generation
+and preview only when the preview option is enabled.
+Cancel/teardown cancels the request and restores the prior disabled state;
+Apply rejects stale form/control/value snapshots, rechecks current options and
+validators, uses public control events, and marks applied inputs dirty/touched.
+It never submits or persists business records. Existing dependent lookups and
+backend calculations remain authoritative. Explain skipped candidates and leave
+unsupported/grouped/range/custom widgets with their existing screen owner.
+
+Only field structure, constraints, route patterns and opaque choice tokens go
+to the provider. Current values, record identifiers, secrets and lookup labels
+stay local. Owner explicitly requests synthetic Card Number/CVV candidates:
+typed `mockDataPaymentField="cardNumber"|"cvv"` marks only native card inputs,
+with matching named controls or explicit direct FormControls. This narrow opt-in
+permits a masked password input only for cvv; ordinary passwords/secrets/API keys/
+tokens and unmarked payment inputs remain excluded. Shared adapter supplies
+canonical text names, mock lengths16/3 and validates ASCII digit strings while
+retaining leading zeros. Individual/Company card templates mark both inputs;
+manual validators/input types/payloads remain. These are generation constraints,
+not payment eligibility/type/issuer or new business validation. Server schema/
+example/prompt/strict digits validation follow BE18. Current card values never
+leave the client; cancellation/stale checks/Add-first/manual Save remain.
+Native legacy date/time controls retain string values; PrimeNG
+calendars receive local `Date` values without UTC conversion (UI17). Do not add
+new native temporal controls as a result of this compatibility adapter.
+
+The current adoption inventory is `reviews/AI_MOCK_DATA_ADOPTION.json` (254
+editor roots, including two inline dialogs). Preview reuses EditorDialog's
+public 780px width/540px height and viewport bounds, DataTable's local unpaged
+fill layout, and existing button/state owners; feature SCSS owns toolbar placement
+only. The existing Settings/API Key route gains independent DeepSeek and Google
+sections with one internal content scroll and a fixed action footer. Its legacy
+parent tabs are bounded only for this route: bounding unreviewed settings pages
+would clip their legacy content. This is a source-supported compatibility
+exception recorded in the feature freeze, not a new settings-shell pattern.
+Source conformance only; owner runtime/visual acceptance remains pending.
+
 > **Status: Canonical composite** — use `app-editor-dialog` for the modal shell,
 > `app-editor-tabs` for accessible navigation, the shared declarations and snippet below for
 > modal integration, and block 10 for controlled dirty-close behavior
@@ -45,6 +135,18 @@ remains responsible for mode state, typed active-tab state, matching tab panels,
 forms, validation, dirty detection, confirmation and persistence. Keep the
 feature's own class prefix for projected panel content; never import another
 feature's SCSS or recreate the shared tab-button styles.
+
+**Addressable initial close focus (2026-10-10; UI27).** The optional
+`closeButtonId` input gives the shell's header close button a stable element id;
+the default empty string emits no id and preserves existing consumers. A modal
+that sets `focusOnShow=false` to keep its calendar closed can bind a unique close
+id and, after `shown`, reuse shared `focusField(id, { openOverlay:false })` to
+move keyboard focus inside the dialog without opening a picker. The consumer
+checks its visible session before requesting focus; shell focus trap, Escape,
+closeDisabled and dirty-close ownership stay unchanged. No feature DOM query,
+private close-button markup or calendar focus handler is needed. Deduction
+record and import dialogs are the in-scope consumers; source-only, owner
+keyboard/focus-return/runtime acceptance remains pending.
 
 ```html
 <app-editor-dialog

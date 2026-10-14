@@ -90,6 +90,12 @@ not a late cosmetic review.
 - Body-appended overlays receive appropriately scoped global styling.
 - Responsive behavior is defined by the guide/reference, not copied from a
   fixed screenshot viewport.
+- Apply UI29's responsive consistency gate across all supported size ranges,
+  not only desktop/mobile endpoints: trace the CSS cascade at breakpoint
+  boundaries and intermediate widths, record expected arrangements and open
+  findings, and keep visual acceptance pending until authorized verification.
+  Element alignment, usable widths, spacing, coherent action/check groups and
+  absence of clipping/page overflow must remain consistent in every interval.
 
 ### Performance and data behavior
 
@@ -114,6 +120,13 @@ not a late cosmetic review.
 
 ### Shared pieces, not feature copies
 
+- **Standing owner presentation preference, 2026-10-11:** reusable presentation
+  ideas apply generally through the existing shared owner and are inherited by
+  current consumers. A motivating screen is not an implicit scope restriction.
+  Avoid per-screen opt-in for a general request; an explicitly scoped request or
+  source-supported compatibility conflict may justify a recorded exception.
+  Preserve feature fields/actions and business contracts. Freeze the general
+  decision before edits, then synchronize the owning UI block and skill.
 - Changed feature code uses the shared piece named by its UI block and contains no private
   copy of it. Phase 6 searches the changed files for: `toISOString(` on an API date,
   private `parseDateValue`/`parseRangeString`/`formatApiDate`/`toDateInput`,

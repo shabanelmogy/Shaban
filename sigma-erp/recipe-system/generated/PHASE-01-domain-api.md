@@ -13,28 +13,28 @@ are finalized.
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:2d02535a738d0a1e03f44f22ff5ac7028554bc00cf9e8517245d3cf9e4c5811e
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
-- master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+- master.5: ## 5. Continuous quality gates | sha256:8d4f483fc5c4e3c0f84bb76153f0b2c5c70972699a9fa69e4fc7ed6e0667831b
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
 - master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:8a1b6fc2fa0bedff7a3245f9b349945a955c10cfa4a4fc4c76896841aab53cdc
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:52c019490aab53c0d1d9e73a2e36446e9e66c35d999166bf890219be9cde49cf
 - backend.1: ## 1. Step 1 — Entity | sha256:3d755799b3e4b42bb225a46660377f86994c9d67b9450ca7b9ec9ca126c78f2b
 - backend.2: ## 2. Step 2 — EF configuration | sha256:542434089dccbb109c242e52bd9ccc357f6b6d217efa9b68ed0dad17259e7a48
 - backend.3: ## 3. Step 3 — ViewModels | sha256:29ccd92c16af23938da89ef2524a74076ae75ff380d5758319abc14089eba797
 - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
-- backend.5: ## 5. Step 5 — Interface and service | sha256:b8ac558806ca55c63d2eb1b8ca229fd5f51b6b6784833f6d68268d12489f5b26
+- backend.5: ## 5. Step 5 — Interface and service | sha256:f279fac37e5c752a179db6688a4bac1a43073f9635d33787b3838ae35911f9d8
 - backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
 - backend.7: ## 7. ListVM scope rule | sha256:24fbfbcf92b61da465eb4b8b4d9aa50f2c48c1f43e8711402843db1ff1a7771e
-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c2e52bf2108b49cd64e5d0c27c34e572bf1182418d777ef56fb96732e3bf82a3
-- backend.9: ## 9. Search model and filters | sha256:80adaa0424534a753b302d2ae386e8374958bea389692e3b856f7ecc8cdf082e
+- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:23f348643a40f97c07438d987af182efc5500e5e20c425c8574dffeb5b58d98a
+- backend.9: ## 9. Search model and filters | sha256:ed70dc50b04cd8d3504475724d2cd14c41290701d83d78aba58eba06dffb1d25
 - backend.10: ## 10. Select and dropdowns | sha256:700a3fc93df824f337cf2bf5c2fe12f866d8aee46c8be35976a2fccf7fa533cb
 - backend.11: ## 11. Document numbers (No) | sha256:64b0d4b95e91a9b9dd3abc1f8eb55a0251a388795d6ea0743a61e3c329d1b202
 - backend.12: ## 12. Activate and deactivate | sha256:0ab72d83147f2121f134159c72ce89862f2e6687b34d190aedcb9f48dd277c8d
 - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
 - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:72df618eef97754d2145fd42ce10e3a09b842ec6870bce6a2e7ee3eced51af93
-- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:5e5d2a09422f7ebdf641b142f491d189a67884a605d8990acd51a974f5889991
-- backend.16: ## 16. Pattern 4 — Settings | sha256:f2379884db393f76c984b88a487c4ec4cbad1e492a69a48302d9761d6fa2339e
+- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:1ef93e08a2dc13799842fb2d2eca23d2b3b9f0cc8d89b03e44810c2d50149c9e
+- backend.16: ## 16. Pattern 4 — Settings | sha256:f348b0cd16369c066b96ceee3e956d7220eecb7113bb661ca788a547bfe270d2
 - backend.17: ## 17. Pattern 5 — Reports | sha256:57ec4fd3d996915f15d15c7baad51a573b258d24cd19680dc1c2f10ef437aa73
-- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+- backend.18: ## 18. Edge cases | sha256:f7abc5b7753f5dadd9c00017864c17e86a1c71666715799ba4d9f1e21f359daa
 
 Approved backend references:
 

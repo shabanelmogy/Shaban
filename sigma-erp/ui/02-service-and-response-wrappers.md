@@ -143,3 +143,20 @@ financial calculation. Source-only; owner compiler/failure/Retry acceptance pend
 
 ### Required settings reads (2026-10-09)
 A settings lookup that gates a dependent workflow may expose an opt-in strict read mode. Strict mode throws or returns the declared failure so the caller can block Save/Finish and offer Retry; the legacy optional fallback remains for non-gating previews. Cache successful strict reads separately and do not cache failures. Source-only evidence: Limousine quotation and TripBooking tax settings.
+
+### Currency policy cache invalidation (2026-10-14)
+
+Successful typed currency Create/Update/Delete operations invalidate the existing
+`FinancialNumberPolicyService` cache through its `invalidate()` member. The next
+`load()` obtains the authoritative backend policy; existing `load(force)` callers
+retain their semantics. Keep invalidation in the owning typed currency service,
+after `isSuccess`, rather than copying it into editors or a global interceptor.
+Do not issue an extra policy request or change backend precision/rounding rules
+as part of invalidation. Failed writes retain the cached policy and editor draft.
+Source evidence: `Administration/Currency/services/currency.service.ts` and
+`shared/service/financial-number-policy.service.ts`; owner compilation and
+before/after policy-read acceptance remain pending.
+
+### Shared batch-import transport (2026-10-14)
+
+The root `CsvImportService.post<T>(route, request)` owns repeated CSV batch POST transport: `environment.baseUrl`, the root interceptor-enabled `HttpClient`, typed `CsvImportResult<T>` and `X-Skip-Error-Interceptor` / `X-Skip-Success-Toast`. Use this owner only for a confirmed batch contract whose shared import workspace owns persistent error/partial/success feedback. Screen services remain typed and supply the existing exact route and body key; they do not invent endpoints or alter the import envelope. Ordinary mutation and unrelated CSV consumers retain their existing feedback owner. Evidence: the eleven supported Administration/DataImport services. Source-only; owner compile/authentication/API acceptance pending.

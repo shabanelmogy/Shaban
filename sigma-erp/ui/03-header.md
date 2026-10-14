@@ -6,7 +6,10 @@ Always `app-feature-title` with the Create button in its slot. Never a second
 title in the Metronic toolbar.
 
 `app-feature-title` owns the default title inset: 8px from the panel's top, left,
-and right edges with 16px separation below, matching the component host margin.
+and right edges with an 8px bottom margin, matching the component host margin.
+Owner spacing correction (2026-10-12): reduce the shared default bottom margin
+from16px to8px so the title and following filters sit closer. Preserve the
+parent shell's gap, title geometry and report-shell overrides from block20.
 The shared report/workspace alignment exceptions are defined below. A
 feature must not compensate by re-padding the title or the panel; where the
 title needs a compensating offset, match the responsive panel padding instead.
@@ -58,6 +61,18 @@ Import `PrimaryActionButtonComponent` in the standalone feature and use the
 shared primary action from block 24. The feature supplies translated content
 and behavior; it does not recreate primary-button markup or styling.
 
+**Responsive title actions (owner generalization, 2026-10-11).** Every
+FeatureTitle keeps title and actions on a wrapping row at <=650px. The title
+uses a flexible120px basis and the bounded action group wraps only when the
+available space cannot contain both. Preserve translated labels, icon, action
+order, handlers and RTL/theme; never hide Add or replace its accessible text to
+fit. This supersedes the earlier Leave/Holiday-only opt-in; no
+`responsiveActions` input or feature binding is required. Shared
+PrimaryActionButton owns the small-screen sizing in UI24; features add no CSS.
+Apply UI29's responsive consistency matrix at650 and both neighbouring sizes,
+intermediate/narrow widths, long EN/AR titles and all projected actions.
+Source conformance does not establish visual fit; owner acceptance pending.
+
 The title sits in the shared list shell (block 1); a feature adds no page, panel or header
 class of its own:
 
@@ -93,7 +108,7 @@ silently changing the demonstrated workflow.
 
 **Check:** icon set · title and subtitle translated · Create inside
 `app-feature-title` · shared inline edges match sibling cards/frames (ordinary
-list 8px inset; full-width workspace modifier; report default) · 16px separation
+list 8px inset; full-width workspace modifier; report default) · 8px bottom margin
 below · white glyph in the
 solid title-icon tile · white glyph on the solid Create button.
 

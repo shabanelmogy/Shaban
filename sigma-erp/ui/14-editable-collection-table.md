@@ -2,6 +2,22 @@
 
 > **Status: Canonical**
 
+**Shared mock heading action (owner follow-up, 2026-10-13; UI13):** a table in
+the nearest MOCK_DATA_CONTEXT registers its host/heading visibility and composes
+MockDataAction in its existing toolbar. Existing supported row controls become
+section-scoped; tables without context keep their behavior. Add/Remove, columns,
+row templates, validators and payload owners remain. Actions wrap within the
+existing narrow-screen toolbar. Owner clarification supersedes automatic empty
+Credit Cards preparation: add a row through Add Credit Card/Add Document first,
+then show Generate only when supported rendered controls are available. Removing
+the final row hides it again. Generate never creates rows; mockDataPrepare and
+the empty-row availability bypass are removed. Individual/Company retain their
+existing EditableRows.add path and its prerequisites. View/disabled/global
+settings/pending gates remain; Cancel/failure retains entered values/row count.
+UI13's explicit marked-input exception enables synthetic Card Number/CVV;
+unmarked payment inputs and ordinary password exclusions remain. Source-only;
+owner interaction/visual/RTL/theme acceptance pending.
+
 `shared/components/editable-collection-table` is the single owner of compact
 editable collection chrome. It renders the optional heading icon, title and
 hint, shared primary Add action, collection-level validation alert, translated/required headers, responsive table
@@ -57,6 +73,16 @@ frame; do not add feature-specific cell/dropdown width selectors.
 Every dropdown column declares `width` so selected labels cannot resize the
 closed control or its siblings (block 16). Company Contact Designation uses
 200px and Card Type uses 180px; choose other widths according to field content.
+
+**Credit Cards consumer widths (owner request, 2026-10-13):** Individual/Company
+use the existing column width input for compact CVV76px/Is Default80px and wider
+Name on Card240px/Bank Name220px. Card Type remains180px; remaining tracks flex.
+Both card tables retain1280px minimum frame width so wider name inputs do not
+compress remaining card/date controls; Company changes1100→1280. Existing shared
+7px/9px cell padding,34px controls and frame horizontal overflow remain owners;
+no feature cell CSS/font/order/validation change. Narrow layouts use that frame
+scroll with existing767px toolbar behavior. Source-only visual/RTL/theme and
+long input/error acceptance remains owner-pending.
 
 ```html
 <app-editable-collection-table

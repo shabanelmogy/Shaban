@@ -50,6 +50,16 @@ Consequences for your checks:
 
 ### Automatic input checks (2026-10-01)
 
+**Select identity and principal agreement (UI16; 2026-10-14).** Verify the select
+query's real entity/allowed subtypes against the write FK and EF principal;
+matching integer shapes and controller names alone do not prove ownership.
+Generic live/tenant FK validation does not enforce an allowed subtype, so a
+feature whose choices are subtype-limited adds that exact business predicate.
+Customer/GetSelect supplies Individual/Company Partner ids; Customer Requests
+now validates those types and targets Partner after the owner confirms only
+empty/test data. Retargeting a legacy FK requires a documented existing-data
+decision and owner migration, never a blind copy of ids or automatic data loss.
+
 Before mapping anything, the base `AddAsync` and `UpdateAsync` run `InvalidInputAsync`:
 
 1. **Unique columns.** The service declares them, each with its message key, and the base rejects
@@ -300,6 +310,18 @@ Rules:
   partially applied delete is impossible.
 
 ### Where each check belongs, by pattern
+
+### Shared stored-decimal input validation (2026-10-12)
+
+For nonnegative decimal(18,2) input contracts that reject excess precision,
+reuse `SiGma.Helpers/Filters/NonnegativeStoredDecimalAttribute` and its
+`IsRepresentable` preflight in bulk/import writers before tracking mutations.
+It uses `FinancialNumberPolicy.HasValidMoneyScale`, accepts equivalent trailing
+zeros, rejects magnitudes above 9999999999999999.99, and leaves requiredness to
+`Required`. Do not let database conversion round an explicitly exact input.
+Existing contracts that deliberately round calculated amounts retain their
+domain policy. Source consumers: StaffTimesheet/Deduction write VMs and bulk
+services; Deduction import uses the same VM metadata. Runtime remains pending.
 
 | Check | Normal | Master-detail | Master-detail + financial | Settings |
 |---|---|---|---|---|

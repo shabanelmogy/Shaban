@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 30 |
-| Version | 1.51 |
+| Version | 1.99 |
 | Last verified against source | 2026-09-21 (shared `data-table`, `editor-dialog`, `feature-title`, `base-component.service.ts`, `loading.service.ts`, and `src/styles.scss` re-checked 2026-09-28) |
-| Last content change | 2026-10-02 — Follow Up adopts the frozen professional Summary extension in its existing Details/Summary workspace tabs: responsive 960px maximum, shared server-owned additive KPI cards, shared-grid comparison cells and raw-username drill-down, with active-section Excel and full-document print preserving state. Feature formulas remain in the frozen contract/review. UI 20 and skill synchronized; source-only, owner visual/runtime acceptance pending. History in `../CHANGELOG.md` |
+| Last content change | 2026-10-12 — Shared FeatureTitle default bottom margin reduced16→8px (UI3) following the owner's title/filter spacing correction. Source-only; owner visual/RTL acceptance pending. History in ../CHANGELOG.md |
 | Verified by | source inspection only — no build, test, or browser run |
 
 One page per UI building block. Every block has a **reference file** you can

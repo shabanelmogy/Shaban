@@ -4,6 +4,16 @@
 
 What a source change can and cannot claim.
 
+**Production stylesheet size budgets (owner build evidence, 2026-10-13):**
+`anyComponentStyle` measures emitted CSS for one component, not source SCSS file
+size. The owner supplied4KB failures with a largest16.44KB stylesheet. Sigma's
+production angular.json now warns at10KB and errors at20KB for this budget;
+the owner then supplied an initial-bundle failure at5.22MB against5MB. Initial
+now warns at2MB and errors at6MB; optimizations stay unchanged. Use actual owner build
+sizes when reviewing a bounded budget adjustment; retain warning/error limits
+rather than removing the gate or disabling optimization. Parsing/configuration
+review proves only the policy change, not bundle/CSS reduction or successful compilation.
+
 | Check | Who runs it | Claimable from source review |
 |---|---|---|
 | Pattern conformance to this book | author | yes |
@@ -14,13 +24,46 @@ What a source change can and cannot claim.
 | Unit tests pass | owner | **no** |
 | Runtime behaviour, network headers, `401` cause | owner | **no** |
 | Visual match, light and dark, LTR and RTL | owner | **no** |
-| Responsive behaviour at each breakpoint | owner | **no** |
+| Responsive consistency across supported widths, breakpoint boundaries and intermediate sizes | owner | **no** |
 | Backend persistence and authorization | owner | **no** |
 
 State honestly which of these were not performed. Source inspection is not proof
 of runtime behaviour, and "it looks right in the diff" is not verification — the
 `mangeDetails.cVV` fix in this repository was placed in the wrong translation
 block on the first attempt and read correctly in the diff.
+
+### Responsive consistency gate (owner instruction, 2026-10-11)
+
+Every new or reviewed screen must preserve coherent element sizes, spacing and
+alignment across the entire supported screen-size range. Desktop and mobile
+endpoints alone do not establish responsive conformance. Review each layout
+interval, both sides of every viewport/container breakpoint and representative
+sizes between them, including widths supplied by the owner. Resize through the
+intervals during authorized visual acceptance to expose gaps between rules.
+
+Record a responsive matrix in the screen review: size/range, expected field and
+action arrangement, evidence inspected, findings and visual acceptance status.
+For each arrangement verify:
+
+- Field widths remain usable; labels, selected names, dates and numbers do not
+  overlap controls, get unintentionally clipped or force page overflow.
+- Related controls retain consistent heights, logical edges and spacing;
+  checkboxes align with their adjacent labels and the intended control line.
+- Actions wrap or move as one coherent toolbar and remain reachable. Preserve
+  an explicitly required group arrangement, such as checks on one mobile row,
+  instead of independently stacking its items.
+- Validation feedback, long values, empty/loading/error states and translated
+  Arabic labels do not break the arrangement. Check both directions and themes.
+- Height changes preserve the documented internal scroll owner and fixed
+  header/actions/paginator; no page scrollbar appears (UI1).
+
+Source review must trace the complete CSS cascade, including later shared
+selectors that can override breakpoint rules. A remaining known inconsistency
+is an open finding, not a passed check. Source-only work records visual
+acceptance as pending; it must not claim all-size visual verification. Run
+browser/application acceptance only within the authorization allowed by
+AGENTS.md, otherwise hand the matrix to the owner. The Leave/Holiday1365-to720
+failure demonstrates why checking only the desktop/mobile rules is insufficient.
 
 Owner acceptance pass for a screen built from this book:
 
@@ -71,6 +114,9 @@ Owner acceptance pass for a screen built from this book:
     without a resolved page title, confirm `.app-content` shows no scrollbar and
     that only the documented component (grid rows, form pane, or dialog body)
     scrolls.
+14. Complete the responsive consistency matrix above, including intermediate
+    sizes and breakpoint boundaries; correct observed inconsistencies before
+    accepting the visual result.
 
 **Source-only compile guard — TypeScript library level.** Agents cannot build,
 so check new code against the project's `tsconfig.json` `lib` setting, which is
