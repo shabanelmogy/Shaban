@@ -18,10 +18,10 @@ contract map. It does not authorize source edits.
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
 - master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:40836082dd49994bd2e8b88b6f888b21d1c4eeabf5e09e95eefa9f4fc2725ca5
-- ui.1: ## 1. Feature folders and wiring | sha256:79e212088175339714601266bbae05767576de0a7a6340330b513a9eb252463d
+- ui.1: ## 1. Feature folders and wiring | sha256:266ecc1be4816a83512752346f33e513dd1f595677c8a9facf75d5bba95f6121
 - ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:52c019490aab53c0d1d9e73a2e36446e9e66c35d999166bf890219be9cde49cf
-- backend.18: ## 18. Edge cases | sha256:f7abc5b7753f5dadd9c00017864c17e86a1c71666715799ba4d9f1e21f359daa
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:37bd2668e415291f40a04665709d8e3d9231a899d1d6517030b76d1d8f7ca4b0
+- backend.18: ## 18. Edge cases | sha256:f75b1b27a36fa5ef0d2d671854f15b5fb4b6c0b24674a177448a1c4caca97d29
 
 Approved references, when a shape is already known:
 

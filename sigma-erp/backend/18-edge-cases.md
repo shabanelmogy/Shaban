@@ -5,6 +5,22 @@
 Walk this list before calling an entity finished. Mark a row not applicable
 rather than skipping it silently.
 
+### Correction-record input policy (source-only, 2026-10-14)
+
+The two Data Entry Correction services reuse the internal static
+`Services/HelperServices/CorrectionInputPolicy` for their common write-VM
+DataAnnotations, distinct positive SLA IDs, complete current eligibility checks
+and tenant/folder/GUID/extension stored-path checks. Unchanged historical ID sets
+and saved paths remain compatible; changed selections must be wholly eligible.
+This is a domain-family validator, not a new service interface or DI data carrier.
+Each service still owns tracked writes and request metadata. Their batch writers
+validate every item before mutation and save once, preserving the same invariants
+as single writes; inherited generic batches must not bypass domain validation.
+The 10,000-character request cap leaves historical unconstrained storage intact
+instead of shrinking a column without data evidence. That compatibility choice
+belongs to the correction feature contract. Owner migration/build/runtime and
+shared abandoned-upload expiry verification remain pending.
+
 ### Tenant ownership
 
 `SubscriptionId` is server-owned. `SiGmaDbContext.SaveChangesAsync` stamps it
@@ -132,6 +148,131 @@ Consumers: Staff Duty/OT and Attendance. Database/runtime verification pending.
 | Export whose second page fails | Whole export fails; no partial file |
 | Upload with a wrong extension, oversized, or a spoofed MIME | Rejected server-side, not only in the client |
 | Empty lookup for a dropdown | Success with an empty list — block 10 |
+
+### Generic audit metadata capture (owner request, 2026-10-14)
+
+The owner requested a reusable service for all entities and a backend interceptor
+for the Audit Trail screen. The frozen full-stack contract is
+`reviews/AUDIT_TRAIL_FULL_STACK_CONTRACT_FREEZE.md`. Preserve the current
+`SiGmaDbContext.HandleAudit` tenant/creation/soft-delete owner; the configured
+`AuditTrailSaveChangesInterceptor` calls the generic capture service for tracked
+`EntityBase` entries and stages standalone metadata events in the **same** save
+batch. No nested SaveChanges or separate commit is needed: source No/GUID are
+available before a generated database ID. Use EF's pending write flags, not
+original/current value equality: disconnected Update/UpdateRange entries do not
+have database-original values, so comparing them discards actual UPDATE writes.
+A Modified entry with scalar IsModified flags is recorded as Modified; an
+IsDeleted property marked for writing true is recorded as Deleted, including
+after HandleAudit converts Remove to field-only soft deletion. Physical Deleted
+entries remain Deleted. Unchanged tracked saves are excluded; an explicitly
+forced UPDATE or repeated true deletion-marker write is a write event even when
+the database value is unchanged. Do not add a database read or rewrite EF
+OriginalValues just to classify metadata. This corrects the initial transition/
+value-comparison rule following the owner's missing Update/Delete report
+(2026-10-14). Failed/canceled saves
+detach staged events before retry; success detaches only events and preserves
+the existing business affected-count result. Caller transactions and
+acceptAllChangesOnSuccess retain their owners.
+
+Capture only the frozen event identity/actor/type/action/number/date metadata,
+not field-value snapshots or navigation graphs. The operational event is not
+generic mutable CRUD `EntityBase`: no mutation/deletion API or source FK,
+so source soft deletion cannot remove history. Read with `QueryReport<T>()`
+for tenant scoping. The NameIdentifier claim remains the existing subscription
+contract, not a user ID; historical actors come from captured Name claims.
+Never fabricate a missing source number/date from an event timestamp or a
+temporary key. Global entities, unconfigured contexts, direct SQL/bulk writes
+and separate authentication are outside this tracked-save boundary. Do not
+claim universal coverage or reconstruct pre-deployment history.
+
+This metadata owner must not impose a new length bound on an existing unbounded
+source No or actor claim: explicitly select nvarchar(max), without truncation
+or an indexed max column. BE2's ordinary client-owned string/VM bound rule still
+applies elsewhere. Stable CLR/action names keep their declared bounds. This is
+the source-supported compatibility exception from the frozen generic-capture
+decision, not a rule to make ordinary business inputs unbounded.
+
+Audit Trail uses count-before-page, stable Id ties and a tenant event-ID cutoff
+shared by applied paging and full Excel. New events require a new Search;
+later-page failure aborts output. The cutoff excludes ordinary later inserts,
+but does not claim database snapshot isolation for concurrent transactions.
+Deploy the owner-generated event-table migration before enabling the
+interceptor. Source conformance leaves owner build/save/rollback/retry/transaction
+acceptance pending.
+
+### Outbound message outcomes (2026-10-14)
+
+An operational message log is an append-only event, not a mutable CRUD entity.
+Keep its read controller authenticated and its query on the existing
+`Repository.QueryReport` tenant boundary. Use a lean row contract, filter before
+count/page, stable Id ties and an event-ID cutoff for applied paging/full outputs.
+The cutoff excludes ordinary later inserts; it is not database snapshot isolation.
+An explicitly frozen strict operational read may reject malformed supplied
+date/enum/sort/paging values instead of widening the query. Use FilterHelper for
+optional raw values; the feature owns exact date grammar and strict validation.
+
+When two real email producers share the same SMTP helper, reuse the shared
+`IMessageDeliveryService`/`MessageDeliveryService` transport/outcome owner.
+Its typed internal request carries actual message/SMTP inputs and is never a
+public client-write payload. Validate normalized actual From/To and subject
+against the event's storage bounds before sending. Record those same values;
+do not truncate the address or subject actually sent. An optional contact-name
+snapshot may be bounded explicitly; missing context/CC stays empty. Never persist
+message bodies, credentials, provider exception text or fabricated recipient names.
+
+Check cancellation before starting a new attempt. Once transport completes,
+append its accepted/failed result independently of request cancellation in an
+isolated scope, so event recording cannot save another caller's tracked changes.
+Derive tenant only from authenticated server context and validate the isolated
+scope's tenant. Persist a stable safe translation key for failure text, so display
+and export follow the reader's current language. Internally log append failure
+without emitting provider/credential diagnostics to the user.
+
+SMTP acceptance is authoritative for the transport outcome, not proof of final
+inbox receipt. A later event-write failure must not reclassify an accepted send,
+retry it, or imply that no email went out. Report accepted-but-log-unavailable
+separately from rejected-and-log-unavailable. In a partial batch, retain each
+outcome and disclose earlier accepted count; no automatic resend. A simulation
+is not delivery evidence and creates no Delivered log. New history begins with
+future recorded attempts; deploy the owner-generated migration first.
+
+Source consumers: SMTP test and Fleet service reminders. CC is nullable for the
+existing grid but current transport has no CC input; no CC delivery is claimed.
+Source-only conformance leaves build, real SMTP, cancellation/partial outcomes,
+tenant isolation, log-failure recovery and print/Excel acceptance with the owner.
+
+### Automatic HTTP error history (2026-10-14)
+
+When the owner requests automatic HTTP error history, keep its append-only
+operational entity separate from mutable CRUD and successful-save audit events.
+Capture only authenticated requests with the existing positive subscription
+claim, and scope reads with `QueryReport<T>()`. A middleware owner may capture
+unexpected exceptions and returned5xx once; known business/conflict exceptions
+retain their existing response owner, aborted requests and the log reader's
+own endpoints are excluded. Background/global work and pre-deployment history
+are outside this boundary; do not claim universal capture.
+
+Never save the failed request's tracked business graph. Use a fresh DI scope
+and context, suppress ambient business-transaction enlistment, apply a bounded
+timeout and perform one append save using EF's implicit transaction. Persistence
+failure must preserve the original response/error; fallback logging contains
+type-only metadata, without the exception object. Suppression creates no new
+business transaction and does not change the caller's commit/rollback owner.
+
+Store bounded actor/controller/action/connection/browser metadata, UTC time
+and backend Stopwatch duration. No trusted client-name source means null.
+Request context contains method, route **template**, status and trace reference,
+never actual route/query/body values, credentials or cookies. Diagnostic text
+may include exception type and method identities, excluding raw Message,
+ToString, source paths and SQL. An unexpected exception returns a safe localized
+500 Result when the response has not started; otherwise preserve propagation.
+Use explicit authenticated read-only controller/service contracts, lean
+grid/detail projections and stable count-before-page/Id-tie/cutoff export.
+
+Evidence: frozen `reviews/ERROR_LOGS_FULL_STACK_CONTRACT_FREEZE.md`,
+`ErrorLogsMiddleware`, `ErrorLogWriter`, `ErrorLogEntry` and `ErrorLogsService`.
+New tables require owner-generated migrations before activation. Source-only;
+owner build/tenant/exception/cancellation/store-failure acceptance remains pending.
 
 ### The response contract
 

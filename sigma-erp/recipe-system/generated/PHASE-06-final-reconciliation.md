@@ -22,8 +22,8 @@ broad feature review or implementation.
 - ui.21: ## 21. Report print | sha256:2e6cc0be29f3d57b6207c5519aee74fa6b30576e92a4b79312fee0f6deafe171
 - ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
 - ui.30: ## 30. Backlog, by priority | sha256:40f660b87620c32c9dc93dad29af8974f968dc210f6957179c41d6a4023d0fca
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:52c019490aab53c0d1d9e73a2e36446e9e66c35d999166bf890219be9cde49cf
-- backend.18: ## 18. Edge cases | sha256:f7abc5b7753f5dadd9c00017864c17e86a1c71666715799ba4d9f1e21f359daa
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:37bd2668e415291f40a04665709d8e3d9231a899d1d6517030b76d1d8f7ca4b0
+- backend.18: ## 18. Edge cases | sha256:f75b1b27a36fa5ef0d2d671854f15b5fb4b6c0b24674a177448a1c4caca97d29
 - backend.19: ## 19. Backlog | sha256:b7b2b40c39735d0f149c7df2b3280c32f8c2cb0fdc04b425cd0bafa3a8c1af30
 
 Approved references used by prior phases:

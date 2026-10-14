@@ -220,6 +220,24 @@ form write: the existing capture-input guard corrects text before PrimeNG parses
 once. Partial dates, validators/bounds/order, picker/clear and API transport
 remain with their existing owners. Source conformance is not runtime acceptance.
 
+**Range caret preservation (owner defect report, 2026-10-14).** Manual edits to
+either range endpoint, including its year, retain their caret/selection.
+Owner rejected the first render-based workaround and clarified selecting the
+From year before typing. Shared protectRangeMarker previously blocked a year
+selection overlapping the trailing delimiter space and moved insertText to
+markerEnd (To start). Narrow a selection that includes one endpoint and part
+or all of the delimiter to that endpoint before native replacement/deletion.
+Keep the marker intact. Marker-only/cross-endpoint insertions remain blocked
+with selection retained, while collapsed Backspace/Delete keep their deliberate
+boundary skip. Select-all, history and noncancelable fallback keep their existing
+handling. Remove the unsuccessful afterNextRender/display-binding workaround;
+do not move focus, dispatch synthetic input or duplicate model/parser updates.
+Single-date/month masks, partial text, range validators, bounds, picker and
+clear remain with their existing owners. Source trace proves the prevented
+beforeinput jump; exact browser selection/runtime acceptance is owner-pending.
+Verify From/To word selection with/without adjacent spaces, paste/deletion,
+navigation, RTL/theme/mobile and calendar/clear.
+
 `numberOfMonths` is a **panel** property: it widens the overlay, not the field.
 The range field still occupies exactly one column of the block 4 grid — do not
 compensate for the second month by giving the field a larger `grid-column` span,

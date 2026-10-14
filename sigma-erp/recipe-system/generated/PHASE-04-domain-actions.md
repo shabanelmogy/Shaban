@@ -21,7 +21,7 @@ domain transitions. It is not a container for every button click.
 - ui.9: ## 9. Confirm: delete | sha256:b446c09fa7fe12e63f8aa03e99f184ebb14f957fa585576931ddd8f15cb6fd75
 - ui.10: ## 10. Confirm: discard | sha256:195cd19d0990a68665612f5d0d9d7f5d9c19f48431edeb1f9de575b30592511e
 - ui.11: ## 11. Small modal on top | sha256:766d16df7263c9b35550aa8657b683f39073bb0513063ca7fc3d794bb8798842
-- ui.13: ## 13. Modal with tabs | sha256:2862ecf7774b64be9febe9157a8300885dd4a5d1118de84b78ec541c2e486377
+- ui.13: ## 13. Modal with tabs | sha256:59c3f254a741b8598a407dc016525ed7a34ba7238963da743538e4824e4d6e62
 - ui.15: ## 15. View mode | sha256:022f00069635b29f668f8ca24b27ef784df55a57a05ae66594c166e74263184c
 - ui.22: ## 22. Loading, empty, error, toast | sha256:244bc2d6f185f10764d640c98de0e0ff53650e96bede01d5a1dffdf96f5303ca
 - ui.23: ## 23. Translations | sha256:2410720acfe260652c5d9c6e0f801aa3881a21f18a1b1a3de4acc7478bcf1c6e
@@ -31,7 +31,7 @@ domain transitions. It is not a container for every button click.
 - ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
 - ui.28: ## 28. Request cancellation and stale responses | sha256:6c7c3c8a71a8681f46e2cef26d7efd5872fdbbaffa991f5e7c9adc592f4b385d
 - ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:52c019490aab53c0d1d9e73a2e36446e9e66c35d999166bf890219be9cde49cf
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:37bd2668e415291f40a04665709d8e3d9231a899d1d6517030b76d1d8f7ca4b0
 - backend.5: ## 5. Step 5 — Interface and service | sha256:f279fac37e5c752a179db6688a4bac1a43073f9635d33787b3838ae35911f9d8
 - backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
 - backend.8: ## 8. Validation: duplicates, keys, delete | sha256:23f348643a40f97c07438d987af182efc5500e5e20c425c8574dffeb5b58d98a
@@ -40,7 +40,7 @@ domain transitions. It is not a container for every button click.
 - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:72df618eef97754d2145fd42ce10e3a09b842ec6870bce6a2e7ee3eced51af93
 - backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:1ef93e08a2dc13799842fb2d2eca23d2b3b9f0cc8d89b03e44810c2d50149c9e
 - backend.16: ## 16. Pattern 4 — Settings | sha256:f348b0cd16369c066b96ceee3e956d7220eecb7113bb661ca788a547bfe270d2
-- backend.18: ## 18. Edge cases | sha256:f7abc5b7753f5dadd9c00017864c17e86a1c71666715799ba4d9f1e21f359daa
+- backend.18: ## 18. Edge cases | sha256:f75b1b27a36fa5ef0d2d671854f15b5fb4b6c0b24674a177448a1c4caca97d29
 
 Approved confirmation and workflow references:
 

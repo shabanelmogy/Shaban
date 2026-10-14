@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 19 |
-| Version | 0.78 |
+| Version | 0.82 |
 | Last verified against source | 2026-10-01 (base `Service`, `Repository.QueryReport`, `ListSmBase`, `UpdateBaseVm`, profiles, `DailyServiceLogReportService`) |
-| Last content change | 2026-10-13 — Assembly-scan data carrier guidance from InvoiceAccountingMetadata startup DI failure. Block5 and skill synchronized; source-only correction, owner restart confirmation pending. History in `../CHANGELOG.md` |
+| Last content change | 2026-10-14 — Audit Trail Update/Delete capture uses pending EF write flags for disconnected updates and field-only soft deletes; unchanged saves excluded. Automatic HTTP error/outbound message guidance retained. Block18 and skill synchronized; source-only, owner build/runtime acceptance pending. History in `../CHANGELOG.md` |
 | Verified by | source inspection only — no build, test, migration, or database run |
 
 Build order for one entity, six steps, five patterns. Open the reference file,

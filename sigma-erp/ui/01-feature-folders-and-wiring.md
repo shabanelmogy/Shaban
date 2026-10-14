@@ -553,6 +553,21 @@ The component binds `show` from its disclosure state, using route activity
 and search as defaults; an explicit user choice wins until search rebuilds
 the nodes. Opening a group closes its siblings at that level.
 
+**Opened-group reveal (owner request, 2026-10-14):** both group levels use
+the same shared disclosure path to bring the explicitly opened header to the
+top of `kt_app_sidebar_menu_scroll`, clamped to its available scroll range.
+Measure after Angular renders the open state and sibling collapse. The owner
+consumes one pending header in `ngAfterViewChecked`; validate viewport
+containment and the group's current `show` state, and clear stale pending
+headers when search rebuilds nodes. Write only that viewport's vertical
+`scrollTop`; keep keyboard focus, page position and horizontal scroll.
+Closing, Pin, route/search default disclosure do not request this reveal.
+No `scrollIntoView`, animation timer, focus change or screen-specific opt-in.
+Long groups keep internal scrolling; native range limits may prevent a final
+group from reaching the exact top. Guide text covers both languages.
+Source-only evidence: `reviews/SIDEBAR_GROUP_REVEAL_FEATURE_REVIEW.md`;
+owner runtime/keyboard/mobile/RTL/theme acceptance remains pending.
+
 Reuse the existing Metronic menu/arrow classes and Sigma theme tokens. Group
 disclosure uses native buttons with `aria-expanded`; appbar Pin stays a separate
 button. Both disclosure and pin clicks stop propagation before Metronic's

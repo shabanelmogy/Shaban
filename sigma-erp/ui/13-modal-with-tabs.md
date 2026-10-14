@@ -475,6 +475,23 @@ private readonly driverFieldGroupDefinitions = [
 `app-editor-tabs`, and keep the groups. Use tabs only for real peer groups such
 as Detail + Documents.
 
+### Correction-record family composition (source-only, 2026-10-14)
+
+`Data Entry Corrections/shared/CorrectionEditorComponent` composes the existing
+EditorDialog, FormSection, EditableCollectionTable, FileField and tracker for the
+two correction record APIs; it owns their common description/SLA/attachment draft,
+while each API retains its own persistence and the request alone owns Open/Closed.
+`CorrectionWorkspaceComponent` and `CorrectionApiService` reuse the same list
+lifecycle/transport without a second route or grid implementation. These are
+feature-family owners, not replacement visual controls or a universal CRUD engine.
+
+Tracker cleanup emits its accepted value before finalize releases `cleaning`.
+An accepted close callback therefore checks the same visible session and independent
+load/save/upload gates rather than rejecting its own successfully completed cleanup
+because that flag is still set. Failed cleanup retains the editor for cleanup-only
+Retry; successful Save must never be repeated. Existing shared controls retain
+their appearance and interaction contract; owner runtime acceptance is pending.
+
 ### Routed full-page detail form with a bounded child collection
 
 > **Status: Canonical composite variant** — for records that the decision rule above sends to a

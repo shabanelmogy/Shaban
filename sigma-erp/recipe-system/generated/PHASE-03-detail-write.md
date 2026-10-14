@@ -21,18 +21,18 @@ workflows follow UI block 12; deliberate exceptions are recorded in the review.
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
 - master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:40836082dd49994bd2e8b88b6f888b21d1c4eeabf5e09e95eefa9f4fc2725ca5
-- ui.1: ## 1. Feature folders and wiring | sha256:79e212088175339714601266bbae05767576de0a7a6340330b513a9eb252463d
+- ui.1: ## 1. Feature folders and wiring | sha256:266ecc1be4816a83512752346f33e513dd1f595677c8a9facf75d5bba95f6121
 - ui.2: ## 2. Service and response wrappers | sha256:9794e35d4273c605ac98288b23095738d03eacfc9af4f7b2fba2f69838e36bc4
 - ui.9: ## 9. Confirm: delete | sha256:b446c09fa7fe12e63f8aa03e99f184ebb14f957fa585576931ddd8f15cb6fd75
 - ui.10: ## 10. Confirm: discard | sha256:195cd19d0990a68665612f5d0d9d7f5d9c19f48431edeb1f9de575b30592511e
 - ui.11: ## 11. Small modal on top | sha256:766d16df7263c9b35550aa8657b683f39073bb0513063ca7fc3d794bb8798842
 - ui.12: ## 12. Step form | sha256:f53be24965afaa8dcf58477207a84800f70a148fb1dedb881e4370f7e897d56a
-- ui.13: ## 13. Modal with tabs | sha256:2862ecf7774b64be9febe9157a8300885dd4a5d1118de84b78ec541c2e486377
+- ui.13: ## 13. Modal with tabs | sha256:59c3f254a741b8598a407dc016525ed7a34ba7238963da743538e4824e4d6e62
 - ui.14: ## 14. Editable collection table | sha256:cc13857225df3eaa3af0626a85f4e6d2d585abc98189e9762b53e603f31064fd
 - ui.15: ## 15. View mode | sha256:022f00069635b29f668f8ca24b27ef784df55a57a05ae66594c166e74263184c
 - ui.16: ## 16. Dropdowns, lookups, enums | sha256:32f7a23d394be847f7274000569266f733bcdf3f85aa5e2bc267734680b9846c
-- ui.17: ## 17. Dates | sha256:c3c2dcb258d006774350cdda4bcbc0edf2ac31281f34ea2162ed973c0cc55287
-- ui.18: ## 18. Documents and upload | sha256:bc1d2cb0f5c9da3afba19b07b24e0dbe8141d2e26dab3fc651c405acbf6d63af
+- ui.17: ## 17. Dates | sha256:ad8a9c948aa3f009a557f1ffbf7534aa978987ce33f7d4423f82ef605dab84c0
+- ui.18: ## 18. Documents and upload | sha256:24a56608d73d02e0b8197f4124186f2a5636219a12ad6d79ce6a85581553b411
 - ui.19: ## 19. Validation messages | sha256:94a516e370c206deb5d4d80c34a2daa9d1898bb15bb0e8a58ec8c687e63e9a14
 - ui.22: ## 22. Loading, empty, error, toast | sha256:244bc2d6f185f10764d640c98de0e0ff53650e96bede01d5a1dffdf96f5303ca
 - ui.23: ## 23. Translations | sha256:2410720acfe260652c5d9c6e0f801aa3881a21f18a1b1a3de4acc7478bcf1c6e
@@ -42,7 +42,7 @@ workflows follow UI block 12; deliberate exceptions are recorded in the review.
 - ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
 - ui.28: ## 28. Request cancellation and stale responses | sha256:6c7c3c8a71a8681f46e2cef26d7efd5872fdbbaffa991f5e7c9adc592f4b385d
 - ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:52c019490aab53c0d1d9e73a2e36446e9e66c35d999166bf890219be9cde49cf
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:37bd2668e415291f40a04665709d8e3d9231a899d1d6517030b76d1d8f7ca4b0
 - backend.3: ## 3. Step 3 — ViewModels | sha256:29ccd92c16af23938da89ef2524a74076ae75ff380d5758319abc14089eba797
 - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
 - backend.5: ## 5. Step 5 — Interface and service | sha256:f279fac37e5c752a179db6688a4bac1a43073f9635d33787b3838ae35911f9d8
@@ -54,7 +54,7 @@ workflows follow UI block 12; deliberate exceptions are recorded in the review.
 - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:72df618eef97754d2145fd42ce10e3a09b842ec6870bce6a2e7ee3eced51af93
 - backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:1ef93e08a2dc13799842fb2d2eca23d2b3b9f0cc8d89b03e44810c2d50149c9e
 - backend.16: ## 16. Pattern 4 — Settings | sha256:f348b0cd16369c066b96ceee3e956d7220eecb7113bb661ca788a547bfe270d2
-- backend.18: ## 18. Edge cases | sha256:f7abc5b7753f5dadd9c00017864c17e86a1c71666715799ba4d9f1e21f359daa
+- backend.18: ## 18. Edge cases | sha256:f75b1b27a36fa5ef0d2d671854f15b5fb4b6c0b24674a177448a1c4caca97d29
 
 Approved references by editor shape:
 

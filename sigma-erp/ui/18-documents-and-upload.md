@@ -35,6 +35,18 @@ mode retains the required editor tracker and its cleanup lifecycle. Do not route
 attachment through Media first or duplicate feature file validation/markup. Reviewed Agreement
 documents and Movement View consume this opt-in mode.
 
+**Shared atomic storage failure cleanup (2026-10-14).** `FileStore.Upload` accepts
+an optional cancellation token and removes only the file created by that attempt
+when copying fails or is cancelled, after disposing its stream. A failed
+`CreateNew` must never remove an existing file. Cleanup failure is logged internally
+and preserves the original exception. Atomic multipart callers pass their request
+token and clean earlier successful uploads if a later upload or persistence fails;
+they never remove historical saved paths on that failure. Existing callers retain
+the optional-token signature and normal signature/type/size/tenant validation.
+This shared storage repair serves Media and atomic attachment consumers; source
+conformance does not prove runtime cancellation, disk failure or process-crash
+recovery. No background orphan sweeper is implied.
+
 **Saved-file links (2026-10-03).** Use `app-file-link [path]="savedPath"` for a read-only
 stored-file action. It resolves root-relative/relative or same-origin absolute paths against
 the current API origin, accepts HTTP(S) only and opens with `noopener noreferrer`. It shows no
