@@ -1,0 +1,6 @@
+S039
+Application Users Rights Management
+https://speedautosystems.com/car-rental-software/user-guide/application-users-rights-management/
+
+Application Users Rights Management – Car Rental Software Web App
+After creating a user now you have to provide the acces to the user and from the pop up in the new user window there is an option of roles. Open that role and assign the specific role that you created for the user. You can create multiple roles with diffrent access to the system. These roles can only be created by the admin.

@@ -30,4 +30,4 @@ totals shown in the editor are previews; the backend owns the stored values
 
 ## Close with
 
-Block 29 verification expectations, and the "check" lists of blocks 13 and 14.
+Block 29 verification expectations, [UI13's routed document editor baseline](../13-modal-with-tabs.md#routed-document-editor-baseline), and the "check" lists of blocks 13 and 14. Record applicability and shared-owner conformance in the Phase3 handoff.

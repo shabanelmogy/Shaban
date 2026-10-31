@@ -10,21 +10,21 @@ it does not authorize source edits.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:38d22849a6d25f64baa38c14562b4c85f08b29199ca287825471c3cfdacaf0e7
-- master.1: ## 1. Governance and review principles | sha256:3e69ec4d48c952286dea7792d9e442d37585c15446b7ef02531c8a54053558cf
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:2d02535a738d0a1e03f44f22ff5ac7028554bc00cf9e8517245d3cf9e4c5811e
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
-- master.5: ## 5. Continuous quality gates | sha256:8d4f483fc5c4e3c0f84bb76153f0b2c5c70972699a9fa69e4fc7ed6e0667831b
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041
+- master.1: ## 1. Governance and review principles | sha256:be0dfda4d868895a3f21a5a7b453c5c944c0957932c551e82cb658f3846c392a
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:fe219e07a3e5573053e9a55da8a7beca5a6046a5ac173060962c52fde6d8f239
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:497fbb72e36ba99eb199d4d7f0c606827d16339c9597eeba867813f9833934bb
+- master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.7: ## 7. End-to-end reconciliation and final report | sha256:19e4710cabe88f26cc45a10219fc9e19830eae0d722ca8c6e4bdbbf4ac28524a
-- master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:40836082dd49994bd2e8b88b6f888b21d1c4eeabf5e09e95eefa9f4fc2725ca5
-- ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
-- ui.30: ## 30. Backlog, by priority | sha256:40f660b87620c32c9dc93dad29af8974f968dc210f6957179c41d6a4023d0fca
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:37bd2668e415291f40a04665709d8e3d9231a899d1d6517030b76d1d8f7ca4b0
-- backend.18: ## 18. Edge cases | sha256:f75b1b27a36fa5ef0d2d671854f15b5fb4b6c0b24674a177448a1c4caca97d29
-- backend.19: ## 19. Backlog | sha256:b7b2b40c39735d0f149c7df2b3280c32f8c2cb0fdc04b425cd0bafa3a8c1af30
+- master.7: ## 7. End-to-end reconciliation and final report | sha256:502bc5e46aeafb61b14bd97878651bb2f46bc57f11f31d164759516a7e480dbb
+- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:90e19839bb224a518453a2ed0ae60332160f759860e87fc977968bfb5fdd24a2
+- ui.29: ## 29. Verification expectations | sha256:1ff1411e4cbc36bb44b06ef153a062ad0ddc7d8ca7728bdc7a3deae3ea99656e
+- ui.30: ## 30. Backlog, by priority | sha256:89af03cfacdc32e87a2b6a93dbb3707f34026a2444cdae31880e108acd30eaab
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
+- backend.18: ## 18. Edge cases | sha256:8878697ea5e4b00ab272b14d83fd2091eb9cd129c168a238ab98b88bed22d2a0
+- backend.19: ## 19. Backlog | sha256:794fe9f23e841587c89d71f848f75a2053cbbb544d99ec358a34e3b5b6fbbcff
 
 Approved references are selected only after the affected UI/backend shapes are
 known:
@@ -72,16 +72,37 @@ posting, inventory valuation, permissions, and shared integration behavior.
 - Current Sigma source for the affected writers, readers, persistence, UI,
   reports, and integrations.
 - Relevant canonical documentation and existing feature review artifacts.
+- Master2 analysis-guide review: relevant chapters and original screen
+  explanations from the documentation's `references/speed-analysis/README.md`,
+  plus the applicable dated sidebar/code cycle slice, compared with actual Sigma
+  source/contracts/user-guide topics when present.
 - Known production/data constraints when available.
 - Existing working-tree changes in the affected scope.
 
 ## Procedure
+
+Apply Master2's reference-product functional detail target and Master4's scoped
+coverage rows: map reference fields/groups, filters, actions/dialogs, states,
+validations, document links, charges/calculations and outputs to actual Sigma
+source/guide. Plan partial/missing details rather than treating current minimal
+behavior as the target ceiling. Record exact decision blockers and explicit
+owner exclusions; preserve task authorization and unknown server/financial rules.
 
 1. Define the requested outcome, non-goals, affected workflows, and success
    conditions.
 2. Audit the current capability end to end: domain/entity/configuration,
    persistence, writers, readers, calculations, API, Angular, reports,
    permissions/tenancy, integrations, migrations, and documentation.
+   Before selecting/freezing the target, apply Master2's analysis-guide gate:
+   record sources actually read, applicability, accepted evidence, exclusions
+   and gaps in this plan. Keep Speed descriptions/proposals distinct from Sigma
+   contracts; a supported Not applicable outcome is valid, and tier S only
+   covers the changed element. Existing execution permissions stay unchanged.
+   Map the relevant sidebar section/screen/state to source controllers, dialogs,
+   service declarations and predecessor/successor documents; record the dated
+   file:line/hash evidence and Master4's cycle comparison. Keep documented facts,
+   frontend declarations, inferred sequence and unknown server rules distinct;
+   no collection scripts/external login/domain calls are authorized by this step.
 3. Record every unclear rule in the Logic Ambiguity Register as Confirmed,
    Derived, Missing, Conflicting, or Uncertain. Name the evidence or owner needed
    to resolve each non-confirmed rule.
@@ -118,6 +139,14 @@ posting, inventory valuation, permissions, and shared integration behavior.
 | | | | | | |
 
 ### Logic Ambiguity Register
+
+Record the analysis-guide review beside the current-state evidence. For each
+screen/mode name the guide chapter and original source ID/link, known date or
+version, relevant behavior, Sigma comparison and decision/gap. Do not mark a
+video link as watched or import a reference calculation without confirmation.
+Include the applicable sidebar/code cycle rows from Master4, with accepted,
+excluded or unresolved differences against Sigma; a literal proxy method is
+not evidence of a server invariant or financial posting effect.
 
 | Rule/question | Current evidence | Status | Why it matters | Required decision/source | Owner |
 |---|---|---|---|---|---|

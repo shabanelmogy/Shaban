@@ -1,0 +1,7 @@
+S156
+Roles
+https://speedautosystems.com/uk-vehicle-safety-check-system/user-guide/roles/
+
+Watch source video online
+Roles
+If you have other employees like fleet managers to use this App, you can define their roles here. “+CREATE NEW ROLE” would allow you to create a role and manage permissions. So, the user of this role will sign-in and be limited to the extent you have set and required by his/her job.

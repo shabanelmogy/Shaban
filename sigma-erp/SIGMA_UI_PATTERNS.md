@@ -42,5 +42,5 @@ are in [`ui/00-preamble.md`](ui/00-preamble.md). History is in
 ## Screen types
 
 Start a screen from its type: [`ui/screens/00-catalog.md`](ui/screens/00-catalog.md)
-names the seven screen types, their approved references, and the blocks to read
+names the nine screen types, their approved references, and the blocks to read
 for each.

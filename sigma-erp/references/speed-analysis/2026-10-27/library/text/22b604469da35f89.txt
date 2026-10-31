@@ -1,0 +1,11 @@
+S255
+How to manage Vehicle QR Labels
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-vehicle-qr-labels/
+
+How to manage Vehicle QR Labels
+Go to the panel on the left side and click on the Fleet tab.
+Scroll down and click on the Vehicle QR Labels module.
+A window will open. Now, select plate number and branch name (if any).
+Choose the type of QR label either Door Label or Keychain Label. Then, click on the GENERATE QR LABELS button.
+Now, click on the PRINT QR LABELS button and get QR labels printed.
+Click HERE if you have a query or an issue.

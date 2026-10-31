@@ -1,0 +1,1964 @@
+// Extracted registration; inert review copy, not a standalone runnable module.
+// Source: raw/application.js:56630-58591
+appModule.controller('host.views.cbs.workspaceDashboard.projectTasksModal',
+        [
+            'appSession', '$timeout', '$scope', 'project', 'isInitiateFromCase', 'workspaceId', 'prepareRelease', 'releaseId', '$uibModalInstance', '$uibModal', 'abp.services.app.taskDetail', 'utilities', 'abp.services.app.searchUser', 'abp.services.app.projectTask', 'abp.services.app.release',
+            function (appSession, $timeout, $scope, project, isInitiateFromCase, workspaceId, prepareRelease, releaseId, $uibModalInstance, $uibModal, taskDetailService, utilities, userService, projectTaskService, releaseService) {
+                var vm = this;
+                vm.loading = false;
+                vm.projectTask = {
+                    mileStones: [],
+                    projectId: project.id,
+                    changeRequestId: project.changeRequestId
+                }
+
+                vm.tempTaskCounter = 0;
+
+                vm.totalExtHrs = 0;
+                vm.totalComplimentaryHours = 0;
+                vm.totalWithoutComplimentaryHours = 0;
+                //vm.removeMilestones = function (row) {
+                //    var index = vm.projectTask.mileStones.indexOf(row);
+                //    vm.projectTask.mileStones.splice(index, 1);
+                //};
+                vm.newpoints = [];
+                vm.permissions = {
+                    manageRelease: abp.auth.hasPermission('Pages.CBS.Release.ManageRelease'),
+                    view: abp.auth.hasPermission('Pages.CBS.Projects.Milestones'),
+                    crs: abp.auth.hasPermission('Pages.CBS.Projects.CRs'),
+                    create: abp.auth.hasPermission('Pages.CBS.Projects.Milestones.AddNew'),
+                    edit: abp.auth.hasPermission('Pages.CBS.Projects.Milestones.Edit'),
+                    'delete': abp.auth.hasPermission('Pages.CBS.Projects.Milestones.Delete'),
+                    'generateInvoice': abp.auth.hasPermission('Pages.CBS.Projects.Milestones.GenerateInvoice'),
+                    status: abp.auth.hasPermission('Pages.CBS.Projects.Milestones.Status'),
+                    invoiceStatus: abp.auth.hasPermission('Pages.CBS.Projects.Milestones.InvoiceStatus'),
+                    paymentStatus: abp.auth.hasPermission('Pages.CBS.Projects.Milestones.PaymentStatus')
+
+                };
+
+                vm.canMoveTask = true;
+                vm.workspaceId = workspaceId;
+                vm.prepareRelease = prepareRelease;
+                vm.isInitiateFromCase = isInitiateFromCase;
+                vm.releaseId = releaseId;
+                vm.totalDueHours = 0;
+                vm.totalActualHours = 0;
+                vm.totalEstimatedHours = 0;
+                vm.totalRevisedEstimatedHours = 0;
+                vm.project = project;
+                vm.inputList = [];
+                vm.choices = [];
+                vm.selectedTasks = [];
+                vm.newCrId = null;
+                vm.selectedParent = null;
+                vm.focusEnable = true;
+                vm.taskAction = null;
+                vm.assignedToUser = null;
+                vm.leftArrow = false;
+                vm.rightArrow = false;
+                vm.toolbarActions = false;
+                vm.userType = null;
+                vm.prepareRelease = true;
+                vm.releaseId = 0;
+
+             
+                vm.getTypeName = function (type) {
+                    if (type === 1) {
+                        return 'D';
+                    }
+                    else if (type === 2) {
+                        return 'P';
+                    }
+                    else if (type === 3) {
+                        return 'C';
+                    }
+                    else if (type === 4) {
+                        return 'F';
+                    }
+                    else if (type === 5) {
+                        return 'M';
+                    }
+                    else if (type === 6) {
+                        return 'S';
+                    }
+                    else if (type === 7) {
+                        return 'A';
+                    }
+                    else if (type === 8) {
+                        return 'O';
+                    }
+                };
+                vm.getEndDate = function (endDate) {
+                    const date = new Date(endDate);
+
+                    const day = date.getDate();
+                    const monthNames = [
+                        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+                    ];
+                    const month = monthNames[date.getMonth()];
+
+                    const formattedDate = `${day} ${month}`;
+                    return formattedDate;
+
+                };
+                vm.toogleChild = function (task) {
+                    //task.showChildren = true;
+                    task.showChildren = !task.showChildren;
+                    vm.heightAdjust();
+                }
+                vm.expandChild = function () {
+                    //task.showChildren = true;
+                    //vm.project.tasks.forEach(function (task) {
+                    //    task.showChildren = false;
+                    //});
+                    expandAndCollapseTree(vm.project.tasks, false);
+
+                    vm.heightAdjust();
+                }
+                vm.collapseChild = function () {
+                    expandAndCollapseTree(vm.project.tasks, true);
+                    //vm.project.tasks.forEach(function (task) {
+                    //    task.showChildren = true;
+                    //});
+                    vm.heightAdjust();
+                }
+                function expandAndCollapseTree(projectList, setFormat) {
+                    projectList.forEach(function (task) {
+
+                        if (task.children) {
+                            task.showChildren = setFormat;
+                            expandAndCollapseTree(task.children, setFormat);
+                        }
+                    });
+                }
+                vm.isLeftMove = function () {
+
+                    vm.selectedTasks.some(function (task) {
+                        if (task.parentId == null) {
+                            vm.leftArrow = true;
+
+                            return true; // Stop the loop when the condition is met
+                        }
+                        vm.leftArrow = false;
+                        return false; // Continue the loop if the condition is not met
+                    });
+                }
+                vm.isRightMove = function () {
+
+                    vm.selectedTasks.some(function (task) {
+                        if (task.parentId == null) {
+                            let selectedTaskIndex = vm.project.tasks.findIndex(x => x.id == task.id);
+                            if (selectedTaskIndex == 0) {
+                                vm.rightArrow = true;
+                                return true; // Stop the loop when the condition is met
+                            }
+                        }
+                        else {
+                            let parentTask = nestedSearch(task.parentId);
+                            let taskIndex = parentTask.children.findIndex(x => x.id == task.id);
+                            if (taskIndex == 0) {
+                                vm.rightArrow = true;
+                                return true; // Stop the loop when the condition is met
+                            }
+                        }
+                        vm.rightArrow = false;
+                        //return false; // Continue the loop if the condition is not met
+                    });
+                }
+
+                var myInterval = null;
+
+                var tempRow = {};
+                vm.assignUser = function (task) {
+
+                    task.isEnabled = true;
+                    setTimeout(function () {
+                        $("#uiSelect_" + task.id + " span")[0].click();
+                        tempRow = task;
+                    }, 100);
+                    myInterval = setInterval(vm.focsOut, 1);
+                }
+                vm.focsOut = function () {
+                    $("#uiSelect_" + tempRow.id + " input").focusout(function () {
+                        tempRow.isEnabled = false;
+                        clearInterval(myInterval);
+
+                    });
+                };
+
+                //$("#uiSelect_" + tempRow.id + " input").on("focusout", function () {
+                //
+                //    tempRow.isEnabled = false;
+
+                //});
+                vm.newTask = { title: '', description: '', projectId: vm.project.id };
+
+                vm.createTaskOnBlur = function (task) {
+                    task.description = task.description ? task.description.trim() : "";
+                    if ((task.title) || (task.description)) {
+                        // Call your create task service
+                        taskDetailService.createNewPoint({
+                            taskDetail: task
+                        }).success(function (result) {
+                            init();
+                            task.descriptionAdd = false;
+                            vm.newTask = { title: '', description: '', projectId: vm.project.id };
+                        });
+                    }
+                    //vm.heightAdjust();
+
+                };
+                vm.saveOnBlur = function (task) {
+
+                    if (task.id != 0 && task.title != "") {
+                        taskDetailService.createOrEdit({
+                            taskDetail: task
+                        }).success(function (result) {
+                            task.descriptionAdd = false;
+                            task.id = result.key;
+                        });
+                    }
+                };
+                vm.heightAdjust = function () {
+                    setTimeout(function () {
+                        var textareas = document.querySelectorAll('textarea');
+                        textareas.forEach(function (element) {
+                            element.value = element.value.trim();
+                            element.style.height = "25px"; // Reset the height to auto
+                            element.style.height = (element.scrollHeight) + "px";
+                        });
+                    }, 200);
+                };
+                vm.toggleDescription = function ($event, task) {
+                    //task.descriptionAdd = true;
+                    var element = event.target; // Get the specific textarea element
+                    element.value = element.value.trim();
+                    element.style.height = "auto"; // Reset the height to auto
+                    element.style.height = (element.scrollHeight) + "px";
+                };
+                vm.resetTextareaHeight = function ($event, task) {
+                    var element = event.target; // Get the specific textarea element
+                    element.value = element.value.trim();
+                    element.style.height = "25px";
+                };
+
+                vm.getTasks = function () {
+
+
+                    if (vm.filters.assignToUserId == undefined && vm.filters.assignToUserId == null && vm.filters.status == undefined && vm.filters.status == null) {
+                        vm.canMoveTask = false;
+                    } else {
+                        vm.canMoveTask = true;
+                    }
+                    vm.selectedTasks.length = 0;
+                    vm.changeTaskStatusFilter();
+                    vm.filters.taskType = 0;
+                    taskDetailService.getProjectTasksNew(vm.filters)
+                        .success(function (result) {
+                            vm.project.tasks = result;
+                            vm.calcSummaries();
+                            if (!vm.project.tasks)
+                                vm.project.tasks = [];
+                            vm.addNewTask();
+                        });
+                };
+                vm.searchUsers = function ($select) {
+                    if ($select.search == "")
+                        return null;
+                    userService.searchUsers({ keyword: $select.search }).then(function (response) {
+                        vm.users = response.data.items;
+                    });
+                };
+                vm.addNewTask = function () {
+
+                    if (vm.project.tasks.length == 0 || vm.project.tasks[vm.project.tasks.length - 1].title) {
+                        if (vm.project.tasks.length > 0) {
+                            var maxPriority = vm.project.tasks.reduce(function (max, status) {
+                                return status.priority > max ? status.priority : max;
+                            }, vm.project.tasks[0].priority);
+                        }
+
+                        if (vm.workspaceId) {
+
+                            vm.project.tasks.push({ 'title': '', 'id': 0, projectId: vm.project.id, 'children': [], 'parentId': null, 'type': vm.project.boardType ? vm.project.boardType : 8, 'taskStageId': 15, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': vm.project.tasks.length > 0 ? (maxPriority + 1) : 1, 'addAboveOrBelowTask': null, 'selectTask': null });
+                        }
+                        else {
+
+                            vm.project.tasks.push({ 'title': '', 'id': 0, projectId: vm.project.id, supportRequestId: vm.project.changeRequestId, 'children': [], 'parentId': null, 'type': vm.userType, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': vm.project.tasks.length > 0 ? (maxPriority + 1) : 1, 'addAboveOrBelowTask': null, 'selectTask': null });
+                        }
+                    }
+                };
+
+                vm.selectAllCheckbox = false;
+                vm.isTaskSelected = function (task) {
+                    return task.selected === true;
+                };
+                //multitask selection 
+                vm.toggleTaskSelection = function (task, index) {
+                    if (task.selected) {
+                        if (!vm.selectedTasks.includes(task)) {
+                            vm.selectedTasks.push(task);
+                        }
+                    } else {
+                        vm.selectedTasks = vm.selectedTasks.filter(function (selectedTask) {
+                            return selectedTask !== task;
+                        });
+                    }
+
+                    var allSelected = vm.filteredTasks.filter(t => t.type === null).every(t => t.selected);
+                    vm.selectAll = allSelected;
+                };
+
+
+                vm.toggleSelection = function (row, index) {
+                    arrangeList = [];
+                    if (row.id != 0) {
+
+                        var isRowIdInArray = vm.selectedTasks.some(function (item) {
+                            return item.id === row.id;
+                        });
+
+                        if (isRowIdInArray) {
+
+                            //row.selected = false;
+
+                            // The row ID already exists in the array
+                            document.getElementById('task_' + row.id).style.backgroundColor = 'white';
+                            document.getElementById('input_' + row.id + "_" + index).style.backgroundColor = 'white';
+
+                            if (row.description || row.descriptionAdd) {
+
+                                document.getElementById('inputDes_' + row.id + "_" + index).style.backgroundColor = 'white';
+                            }
+                            if (row.parentId != null) {
+
+                                let parent = nestedSearch(row.parentId);
+                                let indexRemove = parent.children.findIndex(x => x.id === 0);
+                                if (indexRemove > -1) {
+                                    parent.children.splice(indexRemove, 1)
+                                }
+
+                            }
+                            else {
+                                let indexRemove = vm.project.tasks.findIndex(function (item) {
+                                    return item.id === 0;
+                                });
+                                if (indexRemove > -1) {
+                                    vm.project.tasks.splice(indexRemove, 1)
+                                }
+
+                            }
+
+                            var index = vm.selectedTasks.findIndex(function (item) {
+                                return item.id === row.id;
+                            });
+                            if (index > -1) {
+                                vm.selectedTasks.splice(index, 1);
+                            }
+
+                            if (vm.selectedTasks.length > 0 && vm.project.tasks[vm.project.tasks.length - 1].id == 0) {
+
+                                vm.project.tasks.pop();
+
+                            }
+                            else {
+                                if (vm.selectedTasks.length == 0) {
+
+                                    if (!vm.project.tasks)
+                                        vm.project.tasks = [];
+                                    vm.addNewTask();
+                                }
+                            }
+
+                            if (row.children.length > 0) {
+                                if (row.children[row.children.length - 1].id == 0) {
+
+                                    row.children.pop();
+                                }
+
+                            }
+
+                            vm.isLeftMove();
+                            vm.isRightMove();
+                            vm.heightAdjust();
+                        } else {
+
+                            document.getElementById('task_' + row.id).style.backgroundColor = 'rgb(233 233 233)';
+                            document.getElementById('input_' + row.id + "_" + index).style.backgroundColor = 'rgb(233 233 233)';
+                            if (row.description || row.descriptionAdd) {
+
+                                document.getElementById('inputDes_' + row.id + "_" + index).style.backgroundColor = 'rgb(233 233 233)';
+                            }
+                            vm.selectedTasks.push(row);
+                            reArrangeList(vm.project.tasks);
+                            vm.selectedTasks = arrangeList;
+
+                            if (vm.selectedTasks.length > 0 && vm.project.tasks[vm.project.tasks.length - 1].id == 0) {
+                                vm.project.tasks.pop();
+
+                            }
+                            vm.isLeftMove();
+                            vm.isRightMove();
+
+                            //row.selected = true;
+                        }
+                    }
+                };
+
+                var arrangeList = [];
+                function reArrangeList(projectList) {
+                    if (vm.selectedTasks.length > 0) {
+                        projectList.forEach(function (task) {
+                            for (var i = 0; i < vm.selectedTasks.length; i++) {
+                                if (task.id == vm.selectedTasks[i].id && task.priority == vm.selectedTasks[i].priority) {
+                                    arrangeList.push(vm.selectedTasks[i]);
+                                }
+                            }
+                            if (task.children) {
+                                reArrangeList(task.children);
+                            }
+                        });
+                    }
+                }
+                //vm.showTextArea = function (item, index) {
+
+                //    if (item.id != 0) {
+
+                //        item.textAreaVisible = true;
+                //        setTimeout(function () {
+                //            document.getElementById('textArea_' + index).focus();
+                //        }, 200);
+                //    }
+
+                //};
+                //vm.hideTextArea = function (item) {
+                //        item.textAreaVisible = false;
+
+                //};
+                vm.removeNewChoice = function () {
+                    var newItemNo = vm.project.endTasks.length;
+                    if (newItemNo > 0) {
+                        vm.project.endTasks.pop();
+                    }
+                };
+
+                //vm.taskDetail = {
+                //    title: "",
+                //    id: ""
+                //};
+                vm.editTitle = "";
+                vm.filters = {
+                    changeRequestId: vm.project.changeRequestId,
+                    id: vm.project.id,
+                    activeMilestoneId: null,
+                    taskStatusesArray:
+                        [
+                            { id: 1, name: 'New' },
+                            { id: 2, name: 'To Be Discussed' },
+                            { id: 3, name: 'In Progress' }
+                        ],
+                    taskStatuses: [1, 2, 3],
+                    taskType:  0
+                };
+                if ((vm.filters.changeRequestId != null && vm.filters.changeRequestId != 0 && vm.filters.changeRequestId != undefined) || vm.workspaceId) {
+                    vm.filters.taskStatusesArray.push({ id: 4, name: 'Completed' });
+                }
+                //var previousTask = {
+                //    title: ""
+                //};
+                vm.saveAssigned = function (task) {
+                    if (task.id != 0 && task.title != "") {
+                        task.assignedToId = task.assignedToUser.id;
+                        taskDetailService.createOrEdit({
+                            taskDetail: task
+                        }).success(function (result) {
+
+                            task.assignedTo = task.assignedToUser;
+                            task.isEnabled = false;
+                        });
+                    }
+                };
+                vm.handleKeyPress = function (event, task, index) {
+
+
+                    var taskId = task.id;
+                    if (task.title) {
+                        if (event.key === "Enter") {
+                            event.preventDefault();
+                            //if (previousTask != null && previousTask.title == task.title) {
+                            //    previousTask.title = task.title;
+                            //    task.textAreaVisible = false;
+                            //    return;
+                            //}
+                            //previousTask.title = task.title;
+                            task.title = task.title.trim();
+                            taskDetailService.createOrEdit({
+                                taskDetail: task,
+                                addAboveOrBelowTask: task.addAboveOrBelowTask,
+                                selectTaskId: task.selectTask != null ? task.selectTask.id : null
+                            }).success(function (result) {
+
+                                //vm.focusEnable = true;
+                                task.id = result.key;
+                                //document.getElementById('input_' + taskId).blur();
+                            });
+                            //document.getElementById('input_' + taskId).blur();
+                            if (taskId == 0) {
+                                //vm.addNewChoice();
+
+                                if (task.parentId && task.addAboveOrBelowTask == undefined) {
+                                    vm.createProjectChildTask(vm.selectedParent, index);
+
+                                }
+                                else if (task.addAboveOrBelowTask == 2) {
+                                    vm.createProjectTaskUP(task.addAboveOrBelowTask, task.selectTask);
+
+                                }
+                                else if (task.addAboveOrBelowTask == 1) {
+                                    vm.createProjectTaskDown(task.addAboveOrBelowTask, task);
+
+                                }
+                                else {
+                                    vm.addNewTask();
+                                    setTimeout(function () {
+                                        document.getElementById("input_0" + "_" + (index + 1)).focus();
+                                    }, 200);
+                                }
+                            }
+                            else {
+                                document.getElementById('input_' + task.id + "_" + index).blur();
+                                if (task.description) {
+                                    document.getElementById('inputDes_' + task.id + "_" + index).blur();
+                                }
+                            }
+                            vm.heightAdjust();
+
+                        }
+                    }
+                };
+
+
+                vm.toggleInput = function () {
+                    vm.addNewChoice();
+                    vm.showInput = !vm.showInput;
+                    //document.querySelector("#newTaskTitle_1").focus();
+                };
+                vm.handleDes = function (task, $index) {
+                    let isRow = vm.selectedTasks.some(function (item) {
+                        return item.id === task.id;
+                    });
+
+                    task.descriptionAdd = true;
+
+                    setTimeout(function () {
+                        if (isRow) {
+                            document.getElementById('inputDes_' + task.id + "_" + $index).style.backgroundColor = 'rgb(233 233 233)';
+                        }
+                        document.getElementById("inputDes_" + task.id + "_" + $index).focus();
+                    }, 200);
+                };
+                vm.refresh = function () {
+                    if (vm.filters.assignToUserId == undefined && vm.filters.assignToUserId == null && vm.filters.status == undefined && vm.filters.status == null) {
+                        vm.canMoveTask = false;
+                    } else {
+                        vm.canMoveTask = true;
+                    }
+                    vm.selectedTasks.length = 0;
+                    vm.loading = true;
+                    vm.changeTaskStatusFilter();
+                    vm.filters.taskType = 0;
+                    taskDetailService.getProjectTasksNew(vm.filters)
+                        .success(function (result) {
+                            vm.project.tasks = result;
+                            vm.calcSummaries();
+                            if (!vm.project.tasks)
+                                vm.project.tasks = [];
+                            vm.addNewTask();
+                            //vm.project.tasks = list_to_tree(vm.project.tasks);
+
+
+                            vm.loading = false;
+                            //vm.heightAdjust();
+                            //$scope.$apply();
+                        });
+
+
+
+
+                };
+                vm.changeTaskStatusFilter = function () {
+
+                    vm.filters.taskStatuses = [];
+                    if (vm.filters.taskStatusesArray.length > 0) {
+                        angular.forEach(vm.filters.taskStatusesArray, function (value) {
+                            vm.filters.taskStatuses.push(value.id);
+                        });
+                    }
+                }
+
+               /* vm.addEditRelease = function (status, taskId, task) {
+                    if (!vm.releaseId) abp.message.error('Active Release is not selected.');
+                    else {
+                        taskDetailService.addRemoveRelease(taskId, vm.activeRelease, status, null)
+                            .success(function () {
+                                abp.notify.success(app.localize('Release Marked Successfully!'));
+                            })
+                            .error(function (err) {
+                                if (err && err.message) {
+                                    $timeout(function () {
+                                        task.hasReleaseId = !status;
+                                    }, 0);
+                                }
+                            })
+                            .finally(function () {
+                                vm.loading = false;
+                            });
+                    }
+                };*/
+                vm.addEditCritical = function (taskId, critical) {
+                    taskDetailService.addRemoveCritical(taskId, critical);
+                };
+                vm.openmanageTaskModal = function (task) {
+
+                    var modalInstance = $uibModal.open({
+                        templateUrl: '~/App/host/views/cbs/taskDetails/taskManageModal.cshtml',
+                        controller: 'host.views.cbs.task.taskManagerModal as vm',
+                        backdrop: 'static',
+                        resolve: {
+                            options: function () {
+                                return {
+                                    projectId: task.projectId,
+                                    parentId: task.parentId,
+                                    taskId: task.id
+                                };
+                            }
+                        },
+                        size: 'lg'
+                    });
+                    modalInstance.result.then(function (updateTask) {
+                        //vm.refresh();
+                        if (updateTask.parentId) {
+                            let parentTask = nestedSearch(updateTask.parentId);
+                            let taskIndex = parentTask.children.findIndex(t => t.id === updateTask.id);
+                            //let t = parentTask.children[taskIndex];
+
+                            parentTask.children[taskIndex].actualHours = updateTask.actualHours;
+                            parentTask.children[taskIndex].assignedTo = updateTask.assignedTo;
+                            if (updateTask.assignedTo != null) {
+                                parentTask.children[taskIndex].assignedToId = updateTask.assignedTo.id;
+                            }
+                            else {
+                                parentTask.children[taskIndex].assignedToId = null;
+                            }
+                            parentTask.children[taskIndex].resources = updateTask.resources;
+                            parentTask.children[taskIndex].status = updateTask.status;
+                            parentTask.children[taskIndex].taskStage = updateTask.taskStage;
+                            parentTask.children[taskIndex].duration = updateTask.duration;
+                            parentTask.children[taskIndex].revisedDuration = updateTask.revisedDuration;
+                            vm.project.tasks[taskIndex].status = updateTask.status;
+                        } else {
+                            let taskIndex = vm.project.tasks.findIndex(t => t.id === updateTask.id);
+
+                            vm.project.tasks[taskIndex].assignedTo = updateTask.assignedTo;
+                            if (updateTask.assignedTo != null) {
+                                vm.project.tasks[taskIndex].assignedToId = updateTask.assignedTo.id;
+                            }
+                            else {
+                                vm.project.tasks[taskIndex].assignedToId = null;
+                            }
+                            vm.project.tasks[taskIndex].resources = updateTask.resources;
+
+
+                            vm.project.tasks[taskIndex].actualHours = updateTask.actualHours;
+                            vm.project.tasks[taskIndex].status = updateTask.status;
+                            vm.project.tasks[taskIndex].taskStage = updateTask.taskStage;
+                            vm.project.tasks[taskIndex].duration = updateTask.duration;
+                            vm.project.tasks[taskIndex].revisedDuration = updateTask.revisedDuration;
+                        }
+
+                        vm.calcSummaries();
+                    });
+                };
+                vm.statuses = [
+                    { id: 1, name: 'New' },
+                    { id: 2, name: 'To Be Discussed' },
+                    { id: 3, name: 'In Progress' },
+                    { id: 4, name: 'Completed' },
+                    { id: 5, name: 'On Hold' }
+                ];
+
+
+
+                vm.getLocalDate = function (date) {
+                    if (date !== null) {
+                        var localTime = moment.utc(date).toDate();
+                        return moment(localTime).format('DD-MMM-YY');
+                    }
+                    else {
+                        return "";
+                    }
+                };
+
+                vm.clearAssignToUser = function () {
+                    vm.filters.assignToUser = null;
+                    vm.filters.assignToUserId = null;
+                };
+
+                vm.searchUsers = function ($select) {
+                    if ($select.search == "")
+                        return null;
+                    userService.searchUsers({ keyword: $select.search }).then(function (response) {
+                        vm.users = response.data.items;
+                    });
+                };
+
+                //vm.moveLeftTasks = function (task) {
+
+
+                //};
+                //function childMove(tasks) {// task obj
+                //     
+                //        tasks.children.forEach(function (task) {
+                //            console.log(task);
+                //            var isRowIdSelected = vm.selectedTasks.some(function (item) {
+                //                return item.id === task.id;
+                //            });
+                //            if (isRowIdSelected) {
+                //                vm.moveLeftTasks(task);
+                //            }
+                //                childMove(task);
+                //        });
+                //}
+                var tasksDetailEdit = [];
+                vm.moveToUpLevel = function () {
+                    //vm.loading = true;
+
+
+                    //$scope.$apply(function () {
+                    vm.selectedTasks.forEach(function (task) {
+
+                        if (task.children.length > 0) {
+                            if (task.children[task.children.length - 1].id == 0) {
+
+                                task.children.pop();
+                            }
+
+                        }
+
+                        let parentTask = nestedSearch(task.parentId);
+                        let taskIndex = parentTask.children.findIndex(x => x.id == task.id);
+                        parentTask.children.splice(taskIndex, 1);
+
+                        let grandParentTask = nestedSearch(parentTask.parentId);
+
+                        if (grandParentTask !== null) {
+                            let parentTaskIndex = grandParentTask.children.findIndex(x => x.id == parentTask.id);
+                            let parentNextSibling = grandParentTask.children[parentTaskIndex + 1];
+                            if (parentNextSibling === undefined) {
+                                task.priority = parentTask.priority + 1;
+                                task.parentId = parentTask.parentId;
+                            } else {
+                                task.priority = (parentNextSibling.priority + parentTask.priority) / 2;
+                                task.parentId = parentTask.parentId;
+                            }
+                            grandParentTask.children.splice(parentTaskIndex + 1, 0, task);
+                        } else {
+                            let parentTaskIndex = vm.project.tasks.findIndex(x => x.id == parentTask.id);
+                            let parentNextSibling = vm.project.tasks[parentTaskIndex + 1];
+                            if (parentNextSibling === undefined) {
+                                task.priority = parentTask.priority + 1;
+                                task.parentId = parentTask.parentId;
+                            } else {
+                                task.priority = (parentNextSibling.priority + parentTask.priority) / 2;
+                                task.parentId = parentTask.parentId;
+                            }
+                            vm.project.tasks.splice(parentTaskIndex + 1, 0, task);
+                        }
+                        tasksDetailEdit.push(task);
+                    });
+                    taskDetailService.editTaskHierarchy({ tasksDetailEdit: tasksDetailEdit, isIndentOrDedent: 2 }).success(function () {
+                        //taskDetailService.getTasksForProjectByProjectId(vm.project.id)
+                        //    .success(function (result) {
+                        //vm.loading = false;
+                        //   });
+
+                        vm.calcSummaries();
+                        vm.selectedTasks.length = 0;
+                        tasksDetailEdit.length = 0;
+                        if (!vm.project.tasks)
+                            vm.project.tasks = [];
+                        vm.addNewTask();
+                        vm.heightAdjust();
+                    });
+
+
+                    //});
+
+
+
+
+                    //parentTask.children.splice(task, 1);
+                    //task.parentId = parentTask.parentId;
+
+                    //if (!parentNextSibling) {
+                    //    task.priority = parentTask.priority + 1;
+                    //}
+                    //else {
+                    //    task.priority = (parentNextSibling.priority + parentTask.priority) / 2;
+                    //}
+
+                    //if (grandParentTask) {
+                    //    let index = grandParentTask.children.findIndex(t => t.id === parentTask.id) + 1;
+                    //    grandParentTask.children.splice(index, 0, task);
+                    //}
+                    //else {
+                    //    let index = vm.project.tasks.indexOf(parentTask) + 1;
+                    //    vm.project.tasks.splice(index, 0, task);
+                    //}
+                    //----------------------------------------------
+                };
+
+
+                vm.moveToDownLevel = function () {
+                    vm.selectedTasks.forEach(function (task) {
+                        //vm.loading = true;
+                        if (task.children.length > 0) {
+                            if (task.children[task.children.length - 1].id == 0) {
+
+                                task.children.pop();
+                            }
+
+                        }
+
+                        let parentTask = nestedSearch(task.parentId);
+                        if (parentTask === null) {
+                            let taskIndex = vm.project.tasks.findIndex(x => x.id == task.id);
+                            vm.project.tasks.splice(taskIndex, 1);
+                            let previousTask = vm.project.tasks[taskIndex - 1];
+                            task.parentId = previousTask.id;
+                            if (previousTask.children.length === 0) {
+                                task.priority = 1;
+                            } else {
+                                task.priority = previousTask.children[previousTask.children.length - 1].priority + 1;
+                            }
+                            previousTask.children.push(task);
+                        } else {
+                            let taskIndex = parentTask.children.findIndex(x => x.id == task.id);
+                            parentTask.children.splice(taskIndex, 1);
+                            previousTask = parentTask.children[taskIndex - 1];
+                            task.parentId = previousTask.id;
+                            if (previousTask.children.length === 0) {
+                                task.priority = 1;
+                            } else {
+                                task.priority = previousTask.children[previousTask.children.length - 1].priority + 1;
+                            }
+                            previousTask.children.push(task);
+                        }
+                        tasksDetailEdit.push(task);
+                        //task.selected = false;
+                    });
+                    taskDetailService.editTaskHierarchy({ tasksDetailEdit: tasksDetailEdit, isIndentOrDedent: 1 }).success(function () {
+                        //taskDetailService.getTasksForProjectByProjectId(vm.project.id).success(function (result) {
+                        //vm.loading = false;
+                        //   });
+                        vm.calcSummaries();
+                        vm.selectedTasks.length = 0;
+                        tasksDetailEdit.length = 0;
+                        if (!vm.project.tasks)
+                            vm.project.tasks = [];
+                        vm.addNewTask();
+                        vm.heightAdjust();
+                    });
+
+
+
+
+                    //if (task.parentId) {
+                    //    let parent = nestedSearch(task.parentId);
+                    //    parent.children.splice(parent.children.findIndex(x => x.id === task.id), 1);
+                    //}
+                    //else {
+                    //    vm.project.tasks.splice(vm.project.tasks.findIndex(x => x.id === task.id), 1);
+                    //}
+
+                    //task.parentId = previousSibling.id;
+
+                    //if (previousSibling.children.length === 0) {
+                    //    task.priority = 1;
+                    //} else {
+                    //    task.priority = previousSibling.children[previousSibling.children.length - 1].priority + 1;
+                    //}
+
+                    //previousSibling.children.push(task);
+
+                };
+
+                vm.childSortChanged = function (event, ui) {
+                    let u = ui.item.attr('childData-id');
+                    if (!u) return;
+
+                    vm.loading = true;
+
+                    var obj = JSON.parse(u);
+                    let task = nestedSearch(obj.id);
+
+                    let parentTask = nestedSearch(task.parentId);
+                    let perviousIndex = parentTask.children.findIndex(x => x.id === task.id);
+                    let updatedIndex = ui.item.index();
+
+                    if (updatedIndex === 0) { //Moved to Top
+                        task.priority = (parentTask.children[0].priority) / 2;
+                        parentTask.children.splice(perviousIndex, 1);
+                        parentTask.children.splice(updatedIndex, 0, task);
+                    }
+                    else if (updatedIndex === (parentTask.children.length - 1)) { //Moved To Last
+                        task.priority = parentTask.children[parentTask.children.length - 1].priority + 1;
+                        parentTask.children.splice(updatedIndex, 0, task);
+                        parentTask.children.splice(perviousIndex, 1);
+                    }
+                    else {
+
+                        if (updatedIndex > perviousIndex) {
+                            task.priority = (parentTask.children[updatedIndex].priority + parentTask.children[updatedIndex + 1].priority) / 2;
+                            parentTask.children.splice(updatedIndex, 0, task);
+                            parentTask.children.splice(perviousIndex, 1);
+                        } else {
+                            task.priority = (parentTask.children[updatedIndex - 1].priority + parentTask.children[updatedIndex].priority) / 2;
+                            parentTask.children.splice(perviousIndex, 1);
+                            parentTask.children.splice(updatedIndex, 0, task);
+                        }
+                    }
+
+
+                    taskDetailService.updateProjectTaskPriority(task).success(function () {
+                        vm.refresh();
+                        var interval = setInterval(function () {
+
+                            //document.getElementById("task_"+task.id).scrollIntoView();
+                            vm.loading = false;
+                            clearInterval(interval);
+                        },
+                            1500);
+                    });
+                };
+
+                vm.sortChanged = function (event, ui) {
+
+                    let u = ui.item.attr('data-id');
+                    if (!u) return;
+
+                    vm.loading = true;
+
+                    var obj = JSON.parse(u);
+                    let perviousIndex = project.tasks.findIndex(x => x.id === obj.id);
+                    let updatedIndex = ui.item.index();
+                    let task = project.tasks[perviousIndex];
+
+                    if (updatedIndex === 0) {
+                        task.priority = (project.tasks[0].priority) / 2;
+                        project.tasks.splice(perviousIndex, 1);
+                        project.tasks.splice(updatedIndex, 0, task);
+                    }
+                    else if (updatedIndex === (project.tasks.length - 1)) {
+                        task.priority = project.tasks[project.tasks.length - 1].priority + 1;
+                        project.tasks.splice(updatedIndex, 0, task);
+                        project.tasks.splice(perviousIndex, 1);
+                    }
+                    else {
+                        if (updatedIndex > perviousIndex) {
+                            task.priority = (project.tasks[updatedIndex].priority + project.tasks[updatedIndex + 1].priority) / 2;
+                            project.tasks.splice(updatedIndex, 0, task);
+                            project.tasks.splice(perviousIndex, 1);
+                        } else {
+                            task.priority = (project.tasks[updatedIndex - 1].priority + project.tasks[updatedIndex].priority) / 2;
+                            project.tasks.splice(perviousIndex, 1);
+                            project.tasks.splice(updatedIndex, 0, task);
+
+                        }
+                    }
+
+                    taskDetailService.updateProjectTaskPriority(task).success(function () {
+                        vm.refresh();
+                        var interval = setInterval(function () {
+                            //document.getElementById("task_" +task.id).scrollIntoView();
+                            vm.loading = false;
+                            clearInterval(interval);
+                        }, 1500);
+                    });
+
+                    //$scope.$apply();
+                };
+
+                vm.openUpdateStatusAcdProgressModal = function (projectId, parentTaskId, taskId) {
+                    var modalInstance = $uibModal.open({
+                        templateUrl: '~/App/host/views/cbs/taskDetails/updateStatusAndProgressModal.cshtml',
+                        controller: 'host.views.cbs.tasks.updateStatusAndProgress as vm',
+                        backdrop: 'static',
+                        resolve: {
+                            options: function () {
+                                return {
+                                    projectId: projectId,
+                                    parentId: parentTaskId,
+                                    taskId: taskId
+                                };
+                            }
+                        },
+                        size: 'sm'
+                    });
+                    modalInstance.result.then(function (task) {
+                        let parentTask = nestedSearch(task.parentId);
+                        if (parentTask !== null) {
+                            let taskIndex = parentTask.children.findIndex(t => t.id === task.id);
+                            let t = parentTask.children[taskIndex];
+                            t.percentComplete = task.percentComplete;
+                            t.status = task.status;
+                        } else {
+                            let taskIndex = vm.project.tasks.findIndex(t => t.id === task.id);
+                            let t = vm.project.tasks[taskIndex];
+                            t.percentComplete = task.percentComplete;
+                            t.status = task.status;
+                        }
+                    });
+                };
+
+
+                vm.openEditAssignToUserModal = function (task) {
+                    document.getElementById("selectUserDropDown").blur();
+                    document.getElementById("searchButton").blur();
+                    var modalInstance = $uibModal.open({
+                        templateUrl: '~/App/host/views/cbs/taskDetails/editAssignToUserModal.cshtml',
+                        controller: 'host.views.cbs.tasks.createOrEditProjectTaskModal as vm',
+                        backdrop: 'static',
+                        resolve: {
+                            options: function () {
+                                return {
+                                    projectId: task.projectId,
+                                    parentId: task.parentId,
+                                    taskId: task.id
+                                };
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function (updateTask) {
+                        if (updateTask.parentId) {
+                            let parentTask = nestedSearch(updateTask.parentId);
+                            let taskIndex = parentTask.children.findIndex(t => t.id === updateTask.id);
+                            let t = parentTask.children[taskIndex];
+                            t.assignedTo = updateTask.assignedTo;
+                            t.resources = updateTask.resources;
+                        } else {
+                            let taskIndex = vm.project.tasks.findIndex(t => t.id === updateTask.id);
+                            vm.project.tasks[taskIndex].assignedTo = updateTask.assignedTo;
+                            vm.project.tasks[taskIndex].resources = updateTask.resources;
+                        }
+                    });
+                };
+
+                vm.openViewOrEditProjectTaskModal = function (projectId, parentTaskId, taskId) {
+                    document.getElementById("selectUserDropDown").blur();
+                    document.getElementById("searchButton").blur();
+                    var modalInstance = $uibModal.open({
+                        templateUrl: '~/App/host/views/cbs/taskDetails/viewOrEditProjectTaskModal.cshtml',
+                        controller: 'host.views.cbs.tasks.createOrEditProjectTaskModal as vm',
+                        backdrop: 'static',
+                        size: 'xl',
+                        resolve: {
+                            options: function () {
+                                return {
+                                    projectId: projectId,
+                                    parentId: parentTaskId,
+                                    taskId: taskId
+                                };
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function (tasks) {
+
+                        let parentTask = nestedSearch(tasks[0].parentId);
+                        if (parentTask !== null) {
+                            let taskIndex = parentTask.children.findIndex(t => t.id === tasks[0].id);
+                            let t = parentTask.children[taskIndex];
+                            t.title = tasks[0].title;
+                            t.description = tasks[0].description;
+                            t.startDate = tasks[0].startDate;
+                            t.endDate = tasks[0].endDate;
+                            t.assignedTo = tasks[0].assignedTo;
+                            if (tasks[0].assignedTo != null) {
+                                t.assignedToId = tasks[0].assignedToId;
+                            }
+                            else {
+                                t.assignedToId = null;
+                            }
+                            t.resources = tasks[0].resources;
+                            t.critical = tasks[0].critical;
+                        } else {
+                            let taskIndex = vm.project.tasks.findIndex(t => t.id === tasks[0].id);
+                            let t = vm.project.tasks[taskIndex];
+                            t.title = tasks[0].title;
+                            t.description = tasks[0].description;
+                            t.startDate = tasks[0].startDate;
+                            t.endDate = tasks[0].endDate;
+                            t.assignedTo = tasks[0].assignedTo;
+                            if (tasks[0].assignedTo != null) {
+                                t.assignedToId = tasks[0].assignedToId;
+                            }
+                            else {
+                                t.assignedToId = null;
+                            }
+                            t.resources = tasks[0].resources;
+                            t.critical = tasks[0].critical;
+                        }
+                        vm.refresh();
+                    });
+                };
+
+                vm.openUpdateActualHoursModal = function (task) {
+
+                    document.getElementById("selectUserDropDown").blur();
+                    document.getElementById("searchButton").blur();
+
+                    var modalInstance = $uibModal.open({
+                        templateUrl: '~/App/host/views/cbs/taskDetails/updateActualHoursModal.cshtml',
+                        controller: 'host.views.cbs.tasks.updateActualHoursModal as vm',
+                        backdrop: 'static',
+                        resolve: {
+                            options: function () {
+                                return {
+                                    projectId: task.projectId,
+                                    parentId: task.parentId,
+                                    taskId: task.id
+                                };
+                            }
+                        },
+                        size: 'md'
+                    });
+                    modalInstance.result.then(function (updatedTaskDetail) {
+                        let parentTask = nestedSearch(updatedTaskDetail.parentId);
+                        if (parentTask !== null) {
+                            let taskIndex = parentTask.children.findIndex(t => t.id === updatedTaskDetail.id);
+                            let t = parentTask.children[taskIndex];
+                            t.duration = updatedTaskDetail.duration;
+                            t.actualHours = updatedTaskDetail.actualHoursNew;
+                            t.revisedDuration = updatedTaskDetail.revisedDuration;
+                            t.status = updatedTaskDetail.status;
+                        } else {
+                            let taskIndex = vm.project.tasks.findIndex(t => t.id === updatedTaskDetail.id);
+                            let t = vm.project.tasks[taskIndex];
+                            t.duration = updatedTaskDetail.duration;
+                            t.actualHours = updatedTaskDetail.actualHoursNew;
+                            t.revisedDuration = updatedTaskDetail.revisedDuration;
+                            t.status = updatedTaskDetail.status;
+                        }
+                        vm.calcSummaries();
+
+                    });
+                };
+                vm.showInput = false;
+
+
+                //vm.addTask = function (projectId) {
+                //    var new_input = "<div class='dd3-content' style='height: auto!important; background - color: white; '>"+
+                //        "< div class='row margin-bottom-10' >" +
+                //        "< input style=' width: 763px; border: white; ' class='form - control' type='text' > "
+                //    "</div >" +
+                //        "</div >";
+
+
+
+                //    $('#new_chq').append(new_input);
+
+
+                //};
+                vm.createProjectChildTask = function (task, index) {
+
+                    vm.selectedParent = task;
+
+                    if (task.parentId != null) {
+                        let parent = nestedSearch(task.parentId);
+                        let indexRemove = parent.children.findIndex(x => x.id === 0);
+                        if (indexRemove > -1) {
+                            parent.children.splice(indexRemove, 1)
+                        }
+
+                    }
+                    else {
+                        let indexRemove = vm.project.tasks.findIndex(function (item) {
+                            return item.id === 0;
+                        });
+                        if (indexRemove > -1) {
+                            vm.project.tasks.splice(indexRemove, 1)
+                        }
+                    }
+                    var taskLength;
+                    if (task.children.length == 0) {
+                        if (task.children.length > 0) {
+                            var maxPriorityChild = task.children.reduce(function (max, status) {
+                                return status.priority > max ? status.priority : max;
+                            }, task.children[0].priority);
+                        }
+                        if (vm.workspaceId) {
+
+                            task.children.push({ 'title': '', 'id': 0, projectId: vm.project.id, 'parentId': task.id, 'selectTaskId': task.id, 'children': [], 'type': task.type, 'taskStageId': 15, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': 1, 'addAboveOrBelowTask': null, 'selectTask': null });
+                        }
+                        else {
+
+                            task.children.push({ 'title': '', 'id': 0, projectId: vm.project.id, supportRequestId: vm.project.changeRequestId, 'parentId': task.id, 'selectTaskId': task.id, 'children': [], 'type': task.type, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': 1, 'addAboveOrBelowTask': null, 'selectTask': null });
+                        }
+                        taskLength = index == undefined ? (task.children.length - 1) : (index + 1);
+                        setTimeout(function () {
+                            document.getElementById("input_0_" + taskLength).focus();
+                        }, 200);
+                    }
+                    else {
+                        if (task.children[task.children.length - 1].title) {
+                            if (task.children.length > 0) {
+                                var maxPriorityChild = task.children.reduce(function (max, status) {
+                                    return status.priority > max ? status.priority : max;
+                                }, task.children[0].priority);
+                            }
+                            if (vm.workspaceId) {
+
+                                task.children.push({ 'title': '', 'id': 0, projectId: vm.project.id, 'parentId': task.id, 'selectTaskId': task.id, 'children': [], 'type': task.type, 'taskStageId': 15, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': task.children.length > 0 ? (maxPriorityChild + 1) : 1, 'addAboveOrBelowTask': null, 'selectTask': null });
+                            }
+                            else {
+
+                                task.children.push({ 'title': '', 'id': 0, projectId: vm.project.id, supportRequestId: vm.project.changeRequestId, 'parentId': task.id, 'selectTaskId': task.id, 'children': [], 'type': task.type, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': task.children.length > 0 ? (maxPriorityChild + 1) : 1, 'addAboveOrBelowTask': null, 'selectTask': null });
+                            }
+                            taskLength = index == undefined ? (task.children.length - 1) : (index + 1);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + taskLength).focus();
+                            }, 200);
+                        }
+                    }
+                };
+                vm.createProjectTaskUP = function (addAboveOrBelowTask, selectTask) {
+                    if (selectTask.children.length > 0) {
+                        if (selectTask.children[selectTask.children.length - 1].id == 0) {
+                            selectTask.children.splice(selectTask.children.length - 1, 1)
+                        }
+                    }
+                    if (selectTask.parentId != null) {
+                        let parent = nestedSearch(selectTask.parentId);
+                        let indexRemove = parent.children.findIndex(x => x.id === 0 && x.addAboveOrBelowTask === 1);
+                        if (indexRemove > -1) {
+                            parent.children.splice(indexRemove, 1)
+                        }
+
+                    }
+                    else {
+                        let indexRemove = vm.project.tasks.findIndex(function (item) {
+                            return item.id === 0 && item.addAboveOrBelowTask === 1;
+                        });
+                        if (indexRemove > -1) {
+                            vm.project.tasks.splice(indexRemove, 1)
+                        }
+                    }
+                    if (selectTask.parentId == null) {
+                        let index = vm.project.tasks.findIndex(x => x.id === selectTask.id);
+                        let setPriority = 0;
+                        if (index == 0) {
+                            setPriority = vm.project.tasks[index].priority / 2;
+                        }
+                        else {
+                            setPriority = (vm.project.tasks[index].priority +
+                                vm.project.tasks[index - 1].priority) / 2;
+                        }
+                        let addTask;
+                        if (vm.workspaceId) {
+
+                            addTask = { 'title': '', 'id': 0, projectId: vm.project.id, 'children': [], 'parentId': null, 'type': vm.project.boardType ? vm.project.boardType : 8, 'taskStageId': 15, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': setPriority, 'addAboveOrBelowTask': addAboveOrBelowTask, 'selectTask': selectTask };
+                        }
+                        else {
+
+                            addTask = { 'title': '', 'id': 0, projectId: vm.project.id, supportRequestId: vm.project.changeRequestId, 'children': [], 'parentId': null, 'type': vm.userType, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': setPriority, 'addAboveOrBelowTask': addAboveOrBelowTask, 'selectTask': selectTask };
+                        }
+                        if (index == 0) {
+                            vm.project.tasks.splice(index, 0, addTask);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + index).focus();
+                            }, 200);
+                        }
+                        else if (vm.project.tasks[index - 1].title) {
+                            vm.project.tasks.splice(index, 0, addTask);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + index).focus();
+                            }, 200);
+                        }
+
+                    }
+                    else {
+                        let setPriority = 0;
+                        let parent = nestedSearch(selectTask.parentId);
+                        let index = parent.children.findIndex(x => x.id === selectTask.id);
+                        if (index == 0) {
+                            setPriority = parent.children[index].priority / 2;
+                        }
+                        else {
+                            setPriority = (parent.children[index].priority +
+                                parent.children[index - 1].priority) / 2;
+                        }
+                        let addTask;
+                        if (vm.workspaceId) {
+
+                            addTask = { 'title': '', 'id': 0, projectId: vm.project.id, 'children': [], 'parentId': parent.id, 'type': parent.type, 'taskStageId': 15, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': setPriority, 'addAboveOrBelowTask': addAboveOrBelowTask, 'selectTask': selectTask };
+                        }
+                        else {
+
+                            addTask = { 'title': '', 'id': 0, projectId: vm.project.id, supportRequestId: vm.project.changeRequestId, 'children': [], 'parentId': parent.id, 'type': parent.type, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': setPriority, 'addAboveOrBelowTask': addAboveOrBelowTask, 'selectTask': selectTask };
+                        }
+                        if (index == 0) {
+                            parent.children.splice(index, 0, addTask);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + index).focus();
+                            }, 200);
+                        }
+                        else if (parent.children[index - 1].title) {
+                            parent.children.splice(index, 0, addTask);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + index).focus();
+                            }, 200);
+                        }
+                    }
+                };
+                vm.createProjectTaskDown = function (addAboveOrBelowTask, selectTask) {
+                    if (selectTask.children.length > 0) {
+                        if (selectTask.children[selectTask.children.length - 1].id == 0) {
+                            selectTask.children.splice(selectTask.children.length - 1, 1)
+                        }
+                    }
+                    if (selectTask.parentId == null) {
+                        let taskIndex = vm.project.tasks.findIndex(x => x.id === selectTask.id);
+                        if (taskIndex != 0) {
+                            if (vm.project.tasks[taskIndex - 1].id == 0)
+                                vm.project.tasks.splice(taskIndex - 1, 1)
+                        }
+                    }
+                    else {
+                        let parent = nestedSearch(selectTask.parentId);
+                        let taskIndex = parent.children.findIndex(x => x.id === selectTask.id);
+                        if (taskIndex != 0) {
+                            if (parent.children[taskIndex - 1].id == 0)
+                                parent.children.splice(taskIndex - 1, 1);
+                        }
+                    }
+
+                    if (selectTask.parentId == null) {
+                        let index = vm.project.tasks.findIndex(x => x.id === selectTask.id);
+                        let setPriority = 0;
+                        if (index == (vm.project.tasks.length - 1)) {
+                            setPriority = vm.project.tasks[index].priority + 1;
+                        }
+                        else {
+                            setPriority = (vm.project.tasks[index].priority +
+                                vm.project.tasks[index + 1].priority) / 2;
+                        }
+                        let addTask;
+                        if (vm.workspaceId) {
+
+                            addTask = { 'title': '', 'id': 0, projectId: vm.project.id, 'children': [], 'parentId': null, 'type': vm.project.boardType ? vm.project.boardType : 8, 'taskStageId': 15, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': setPriority, 'addAboveOrBelowTask': addAboveOrBelowTask, 'selectTask': selectTask };
+                        }
+                        else {
+
+                            addTask = { 'title': '', 'id': 0, projectId: vm.project.id, supportRequestId: vm.project.changeRequestId, 'children': [], 'parentId': null, 'type': vm.userType, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': setPriority, 'addAboveOrBelowTask': addAboveOrBelowTask, 'selectTask': selectTask };
+                        }
+                        if (index == (vm.project.tasks.length - 1)) {
+                            vm.project.tasks.splice(index + 1, 0, addTask);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + (index + 1)).focus();
+                            }, 200);
+                        }
+                        else if (vm.project.tasks[index + 1].title) {
+                            vm.project.tasks.splice(index + 1, 0, addTask);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + (index + 1)).focus();
+                            }, 200);
+                        }
+                    }
+                    else {
+                        let parent = nestedSearch(selectTask.parentId);
+                        let index = parent.children.findIndex(x => x.id === selectTask.id);
+                        let setPriority = 0;
+                        if (index == (parent.children.length - 1)) {
+                            setPriority = parent.children[index].priority + 1;
+                        }
+                        else {
+                            setPriority = (parent.children[index].priority +
+                                parent.children[index + 1].priority) / 2;
+                        }
+                        let addTask;
+                        if (vm.workspaceId) {
+
+                            addTask = { 'title': '', 'id': 0, projectId: vm.project.id, 'children': [], 'parentId': parent.id, 'type': parent.type, 'taskStageId': 15, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': setPriority, 'addAboveOrBelowTask': addAboveOrBelowTask, 'selectTask': selectTask };
+                        }
+                        else {
+
+                            addTask = { 'title': '', 'id': 0, projectId: vm.project.id, supportRequestId: vm.project.changeRequestId, 'children': [], 'parentId': parent.id, 'type': parent.type, 'status': 1, 'revisedDuration': 0, 'actualHours': 0, 'duration': 0, 'assignedToId': null, 'priority': setPriority, 'addAboveOrBelowTask': addAboveOrBelowTask, 'selectTask': selectTask };
+                        }
+                        if (index == (parent.children.length - 1)) {
+                            parent.children.splice(index + 1, 0, addTask);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + (index + 1)).focus();
+                            }, 200);
+                        }
+                        else if (parent.children[index + 1].title) {
+                            parent.children.splice(index + 1, 0, addTask);
+                            setTimeout(function () {
+                                document.getElementById("input_0_" + (index + 1)).focus();
+                            }, 200);
+                        }
+                    }
+                };
+                vm.openCreateProjectTaskModal = function (projectId, parentTaskId, taskId, addAboveOrBelowTask, selectTaskId) {
+
+                    let parent = nestedSearch(parentTaskId);
+                    let index = null;
+                    if (parent !== null) {
+                        if (parent.children.length > 0)
+                            index = parent.children.findIndex(x => x.id === selectTaskId);
+                        else
+                            index = 0;
+                    } else
+                        index = vm.project.tasks.findIndex(x => x.id === selectTaskId);
+
+                    var modalInstance = $uibModal.open({
+                        templateUrl: '~/App/host/views/cbs/taskDetails/createOrEditProjectTaskModal.cshtml',
+                        controller: 'host.views.cbs.tasks.createOrEditProjectTaskModal as vm',
+                        backdrop: 'static',
+                        resolve: {
+                            options: function () {
+                                return {
+                                    projectId: projectId,
+                                    parentId: parentTaskId,
+                                    taskId: taskId,
+                                    addAboveOrBelowTask: addAboveOrBelowTask,
+                                    selectTaskId: selectTaskId,
+                                    parentTaskName: parent !== null ? parent.name : null,
+                                    parentChildCount: parent && parent.children ? parent.children.length : 0,
+                                    isLeaf: true
+                                };
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function (task) {
+                        //vm.refresh();
+                        var parentfound = false;
+                        task[0].children = [];
+                        if (task[0].parentId == null) {
+                            vm.project.tasks.push(task[0]);
+                            vm.project.tasks.sort(function (a, b) {
+                                return parseFloat(a.priority) - parseFloat(b.priority);
+                            });
+                        }
+                        else {
+                            Recursive(vm.project.tasks, task[0], parentfound);
+                        }
+                        vm.calcSummaries();
+                    });
+                };
+
+                function Recursive(AllTasks, task, parentfound) {
+                    if (parentfound == false) {
+                        for (var i = 0; i < AllTasks.length; i++) {
+                            if (AllTasks[i].id == task.parentId) {
+                                AllTasks[i].children.push(task);
+                                parentfound = true;
+                                break;
+                            }
+                            else {
+                                if (AllTasks[i].children.length > 0) {
+                                    Recursive(AllTasks[i].children, task, parentfound);
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                function nestedSearch(value) {
+                    if (value !== null) {
+                        return vm.project.tasks.reduce(function f(acc, val) {
+                            return (val.id === value) ? val :
+                                (val.children && val.children.length) ? val.children.reduce(f, acc) : acc;
+                        }, null);
+                    } else {
+                        return null;
+                    }
+                }
+
+                function calculateSum(sum, o, key) {
+                    sum += o[key];
+                    if (o.children && o.children.length)
+                        for (let c in o.children)
+                            sum = check(sum, o.children[c], key);
+                    return sum;
+                }
+
+                vm.cancel = function () {
+                    $uibModalInstance.close();
+                };
+
+                vm.deleteTask = function () {
+
+
+                    abp.message.confirm(
+                        app.localize('DeleteWarningMessage'),
+                        function (isConfirmed) {
+                            if (isConfirmed) {
+                                vm.selectedTasks.forEach(function (task) {
+
+
+                                    let taskId = task.id;
+                                    let parentTask = nestedSearch(task.parentId);
+                                    taskDetailService.deleteTask(taskId).success(function () {
+                                        if (parentTask !== null) {
+                                            let index = parentTask.children.findIndex(x => x.id === taskId);
+                                            parentTask.children.splice(index, 1);
+                                        } else {
+                                            let index = vm.project.tasks.findIndex(x => x.id === taskId);
+                                            vm.project.tasks.splice(index, 1);
+                                        }
+
+                                        vm.getTasks();
+                                    });
+                                });
+
+                                vm.calcSummaries();
+                                abp.notify.success(app.localize('SuccessfullyDeleted'));
+                                vm.selectedTasks.length = 0;
+                                if (!vm.project.tasks)
+                                    vm.project.tasks = [];
+                                vm.addNewTask();
+
+                                vm.refresh();
+                            }
+                        }
+                    );
+                };
+
+                //function list_to_tree(list) {
+                //    var map = {}, node, roots = [], i;
+
+                //    for (i = 0; i < list.length; i += 1) {
+                //        map[list[i].id] = i; // initialize the map
+                //        list[i].children = []; // initialize the children
+                //    }
+
+                //    for (i = 0; i < list.length; i += 1) {
+                //        node = list[i];
+                //        if (node.parentId !== null) {
+                //            // if you have dangling branches check that map[node.parentId] exists
+                //            list[map[node.parentId]].children.push(node);
+                //        } else {
+                //            roots.push(node);
+                //        }
+                //    }
+                //    return roots;
+                //}
+
+
+
+                //vm.calculateTotals = function () {
+                //    vm.totalEstimatedHours = 0;
+                //    vm.totalActualHours = 0;
+                //    vm.totalDueHours = 0;
+                //    vm.totalRevisedEstimatedHours = 0;
+
+                //    for (let a in vm.project.tasks) {
+                //        vm.totalEstimatedHours += calculate(0, vm.project.tasks[a], 'duration');
+                //        vm.totalActualHours += calculate(0, vm.project.tasks[a], 'actualHours');
+                //        vm.totalRevisedEstimatedHours += calculate(0, vm.project.tasks[a], 'revisedDuration');
+                //    }
+
+                //    vm.totalDueHours = vm.totalRevisedEstimatedHours - vm.totalActualHours;
+                //    vm.totalPercentage = vm.totalActualHours / vm.totalEstimatedHours * 100;
+                //    return 'Est:' + vm.totalEstimatedHours + 'h, Done: <span class="text-warning">' + vm.totalActualHours + 'h</span> , Due: <span class="text-danger">' + vm.totalDueHours + 'h </span>';
+                //};
+
+                vm.calcSummaries = function () {
+
+                    vm.totalEstimatedHours = 0;
+                    vm.totalActualHours = 0;
+                    vm.totalDueHours = 0;
+                    vm.totalRevisedEstimatedHours = 0;
+
+                    for (let i in vm.project.tasks) {
+                        sumUpDuration(vm.project.tasks[i]);
+                        sumUpRevisedDuration(vm.project.tasks[i]);
+                        sumUpDoneHours(vm.project.tasks[i]);
+                    }
+
+                    for (let i in vm.project.tasks) {
+                        vm.totalEstimatedHours += vm.project.tasks[i].duration;
+                        vm.totalActualHours += vm.project.tasks[i].actualHours;
+                        vm.totalRevisedEstimatedHours += vm.project.tasks[i].revisedDuration;
+                    }
+
+                    vm.totalDueHours = vm.totalRevisedEstimatedHours - vm.totalActualHours;
+                    vm.totalPercentage = vm.totalRevisedEstimatedHours ? (vm.totalActualHours / vm.totalRevisedEstimatedHours * 100) : 0;
+                }
+
+                function sumUpDuration(parentTask) {
+                    if (!parentTask.children || !parentTask.children.length) {
+                        return parentTask.duration;
+                    } else {
+                        let val = 0.0;
+                        for (let i in parentTask.children) {
+                            val += sumUpDuration(parentTask.children[i]);
+                        }
+                        parentTask.duration = val;
+                        return val;
+                    }
+                }
+
+                function sumUpRevisedDuration(parentTask) {
+                    if (!parentTask.children || !parentTask.children.length) {
+                        return parentTask.revisedDuration;
+                    } else {
+                        let val = 0.0;
+                        for (let i in parentTask.children) {
+                            val += sumUpRevisedDuration(parentTask.children[i]);
+                        }
+                        parentTask.revisedDuration = val;
+                        return val;
+                    }
+                }
+
+                function sumUpDoneHours(parentTask) {
+                    if (!parentTask.children || !parentTask.children.length) {
+                        return parentTask.actualHours;
+                    } else {
+                        let val = 0.0;
+                        for (let i in parentTask.children) {
+                            val += sumUpDoneHours(parentTask.children[i]);
+                        }
+                        parentTask.actualHours = val;
+                        return val;
+                    }
+                }
+
+                function calculate(sum, o, key, parentCalc) {
+                    let hasChildren = o.children && o.children.length;
+                    if (hasChildren) {
+                        for (let c in o.children)
+                            sum += calculate(sum, o.children[c], key, true);
+                    }
+
+                    if (!parentCalc) sum = o[key];
+                    else if (!hasChildren) sum += o[key];
+
+                    return sum;
+                }
+
+                vm.calcSum = function (sum, o, key) {
+                    if (o.children && o.children.length)
+                        return calculate(sum, o, key);
+                    else
+                        return o[key];
+                };
+
+
+                $scope.loadFile = function (files) {
+                    vm.allowImport = false;
+                    if (files.length > 0) {
+                        $scope.$apply(function () {
+                            vm.selectedFile = files[0];
+                            readFileData();
+                        });
+                    } else {
+                        vm.refresh();
+                        $scope.$apply();
+                    }
+                };
+
+                let selectedParentTask = null;
+                vm.uploadTasks = function (task) {
+                    selectedParentTask = task;
+                    document.getElementById('dataFile').click();
+                }
+
+                function readFileData() {
+                    (async function () {
+                        vm.loading = true;
+
+                        vm.fileDataList = [];
+                        var file = vm.selectedFile;
+
+                        if (file && ['xlsx', 'xls'].indexOf(file.name.split('.').pop().toLowerCase()) > -1) {
+
+                            var reader = new FileReader();
+                            vm.loading = true;
+
+                            reader.onload = function (e) {
+
+                                var data = e.target.result;
+                                var workbook = XLSX.read(data, { type: 'binary', cellDates: false, cellNF: false, cellText: false, dateNF: 'yyyy-mm-dd' });
+
+                                ;
+                                if (workbook.Strings[0].t.trim() !== "Name") {
+                                    abp.message.error("In-valid Excel File Template must have columns(Name, Notes, Estimation)", "Error");
+                                    vm.loading = false;
+
+                                    $scope.$apply();
+
+                                    return;
+                                }
+
+                                var first_sheet_name = workbook.SheetNames[0];
+
+                                var dataObjects = XLSX.utils.sheet_to_json(workbook.Sheets[first_sheet_name], { raw: true });
+
+                                if (dataObjects.length > 0) {
+
+                                    for (var i = 0; i < dataObjects.length; i++) {
+
+                                        var value = dataObjects[i];
+                                        var record = {
+                                            error: '',
+                                            name: value['Name'] ? value['Name'].toString().trim() : '',
+                                            notes: value['Notes'] ? value['Notes'].toString().trim() : '',
+                                            estimation: value['Estimation'] ? value['Estimation'].toString().trim() : 0
+                                        };
+
+                                        vm.fileDataList.push(record);
+                                    }
+
+                                    if (vm.fileDataList.length > 0) {
+                                        vm.allowImport = true;
+
+                                        ;
+
+                                        let tasks = [];
+                                        vm.fileDataList.forEach(d => {
+                                            tasks.push({
+                                                title: d.name,
+                                                description: d.notes,
+                                                projectId: selectedParentTask.projectId,
+                                                parentId: selectedParentTask.id,
+                                                type: selectedParentTask.type,
+                                                duration: d.estimation,
+                                                taskStageId: selectedParentTask.taskStageId,
+                                                status: selectedParentTask.status
+                                            });
+                                        });
+
+                                        const getTaskBatch = () => {
+                                            return tasks.splice(0, tasks.length > 300 ? 300 : tasks.length);
+                                        }
+
+                                        const saveTasks = function (tsks) {
+                                            taskDetailService.addChildTasks({
+                                                taskList: tsks,
+                                                parentTaskId: selectedParentTask.id
+                                            }).success(r => {
+                                                if (tasks.length == 0) {
+                                                    vm.loading = false;
+                                                    init();
+                                                }
+                                                else
+                                                    saveTasks(getTaskBatch())
+
+                                            }).error(e => {
+                                                abp.message.error(`Error in tasks import from Task: ${tsks[0].title}`);
+                                            });
+                                        }
+
+                                        saveTasks(getTaskBatch());
+                                    }
+                                } else {
+                                    abp.message.error("Something is Wrong Or File is empty !", "Error");
+                                }
+
+                                //vm.loading = false;
+                                //$scope.$apply();
+                            };
+
+                            reader.onerror = function (ex) {
+                                vm.loading = false;
+                                abp.message.warn(
+                                    app.localize(ex),
+                                    'Unknown File'
+                                );
+                            };
+
+                            reader.readAsBinaryString(file);
+
+                        } else {
+                            abp.message.error("Please select Valid file to upload !", "Unknown File");
+                            vm.loading = false;
+                        }
+
+                    })();
+                }
+
+                // get ActiveRelease List for Dropdown
+               /* vm.prepareReleaseChanged = function () {
+                    if (vm.prepareRelease === true) {
+                        releaseService.getActiveReleasesForPD()
+                            .success(function (data) {
+                                if (data.length === 0) {
+                                    //vm.prepareRelease = activeRelease;
+                                    abp.notify.error('No Active Release');
+                                }
+                                else {
+                                    vm.activeReleases = data;
+                                    vm.activeRelease = data[0].id;
+                                    vm.releaseId = vm.activeRelease;
+                                }
+                            });
+                    }
+                }*/
+
+                vm.releaseDetail = function () {
+
+                    vm.loading = true;
+                    taskDetailService.getReleaseTasks(vm.releaseId)
+                        .success(function (data) {
+                            vm.release = data;
+                            vm.released = vm.release.isReleased;
+
+                        })
+                        .finally(function () {
+                            vm.loading = false;
+                        });
+                }
+
+
+                vm.multilineStringToHTML = (s) => utilities.multilineStringToHTML(s);
+                vm.multilineStringToHTMLWordBreak = (s) => utilities.multilineStringToHTMLWordBreak(s);
+
+
+                function init() {
+
+                    vm.refresh();
+                    //vm.addNewChoice();
+                }
+
+                vm.userChanged = function (userId) {
+
+                };
+
+                vm.round = function (val) { return Math.round(val, 2); }
+
+                vm.exportTasksToExcel = function (taskList) {
+
+                    function checkstatuses(status) {
+                        if (status == 1)
+                            return "New";
+                        else if (status == 2)
+                            return "To Be Discussed";
+                        else if (status == 3)
+                            return "InProgress";
+                        else if (status == 4)
+                            return "Completed";
+                        else if (status == 5)
+                            return "OnHold";
+                    }
+
+                    var parentTasks = [];
+                    function getLeafNodes(nodes, result = []) {
+
+                        for (var i = 0, length = nodes.length; i < length; i++) {
+                            if (nodes[i].isLeaf) {
+                                if (vm.filters.taskStatuses.includes(nodes[i].status))
+                                //if (nodes[i].hasReleaseId) {
+                                {
+                                    result.push(nodes[i]);
+                                }
+                                //}
+                            } else {
+                                if (nodes[i].id > 0) {
+
+                                    parentTasks.push({ id: nodes[i].id, title: nodes[i].title });
+                                    result = getLeafNodes(nodes[i].children, result);
+                                }
+                            }
+                        }
+                        return result;
+                    }
+
+                    let leafTasks = getLeafNodes(taskList);
+                    var tab1 = `<table border='1px'>
+                    <tr>
+                    <th>Name</th>
+                    <th>Notes</th>
+                    <th>Parent</th>
+                    <th>Estimated Hours</th>
+                    <th>Done</th>
+                    <th>Percentage</th>
+                    <th>Stage</th>
+                    <th>Status</th>
+
+                    </tr>
+                    `;
+                    leafTasks.forEach(t => {
+                        let row = `<tr>
+                        <td>${t.title}</td>
+                        <td>${t.description}</td>
+                        <td>${parentTasks.length > 0 && t.parentId != null ? parentTasks.find(x => x.id == t.parentId).title : ''}</td>
+                        <td>${t.revisedEstimatedHours}</td>
+                        <td>${t.doneHours}</td>
+                        <td>${t.percentComplete}</td>
+                        <td>${t.taskStage ? t.taskStage.name : ''}</td>
+                        <td>${t.status ? checkstatuses(t.status) : ''}</td>
+                        </tr>`
+                        tab1 += row;
+                    });
+
+                    tab1 += "</table>";
+                    var blob = new Blob([tab1], { type: "application/vnd.ms-excel" })
+                    var blobUrl = URL.createObjectURL(blob);
+
+
+                    var a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = 'ProjectsTask.xls';
+                    a.click();
+
+                };
+                vm.getUserType = function () {
+                    taskDetailService.getUserType(appSession.user.id).success(function (result) {
+
+                        if (result != null)
+                            vm.userType = result.type;
+                        else {
+                            vm.userType = 1;
+                        }
+                    });
+                };
+      
+                vm.getlocalDateTime = function (date) {
+                    if (date != null) {
+                        var localTime = moment.utc(date).toDate();
+                        return moment(localTime).format('DD-MMM-YY');
+                    }
+                    else {
+                        return "";
+                    }
+                };
+                
+                
+                vm.openMoveTaskModal = function (taskList) {
+                    var modalInstance = $uibModal.open({
+                        templateUrl: '~/App/host/views/cbs/projectsDashboard/moveTaskModal.cshtml',
+                        controller: 'host.views.cbs.projectsDashboard.moveTaskModal',
+                        backdrop: 'static',
+                        size: 'md',
+                        resolve: {
+                            taskDetail: function () {
+                                return taskList;
+                            },
+                        }
+
+                    });
+                    modalInstance.result.then(function (result) {
+                        init();
+                    });
+                }          
+
+                vm.getUserType();
+                vm.refresh();
+              
+
+            }
+        ]);

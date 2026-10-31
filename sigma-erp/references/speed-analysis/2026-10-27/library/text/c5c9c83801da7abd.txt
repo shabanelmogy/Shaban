@@ -1,0 +1,31 @@
+S043
+Creating Company Customer Account
+https://speedautosystems.com/car-rental-software/user-guide/creating-company-customer-account/
+
+Watch source video online
+Creating Company Customer Account
+g .Click “Customers” link in left navigation panel
+h. Click “Companies”
+i. On right side you will see the grid containing the Companies accounts
+j. Click the button “+Create New Company” on right top corner to create new company account.
+k. Form will appear to create the account of the company
+I. Company Name is compulsory without which Save button will not be enabled for saving.
+m. Documents Management (Trade License)
+a. Click the “Documents” Tab then Click the “Add” button
+b. After selecting “Trade License”, enter the details of trade license
+c. Attach trade license pictures by clicking the “Camera” button
+n. Billing Info
+i. Click the Billing Info Tab
+ii. Enter the credit period & credit limit.
+iii. Enter tax id in “Tax Id” field
+vi. For monthly invoicing, select one of the invoicing rules:
+Monthly invoicing on month end. It is the most commonly used method for monthly invoicing to companies.
+Date to Date Monthly invoicing will be on the basis of calendar month like if the monthly rental agreement is opened on 18 Jan then invoices will be 18 Jan – 17 Feb, 18 Feb – 17 Mar, 18 Mar – 17 Apr and so on.
+Monthly invoicing on the basis of each 30 days
+v. For monthly invoicing, select one of the invoice types
+Advance Invoicing
+Post (Credit) Invoicing.
+v. Enter Toll Surcharge
+vi. Enter Fine Surcharge
+viii. Enter Fine Surcharge type “Fixed” or “Percentage” of the fine amount
+ix. Select the checkbox “Tax Applicable” else uncheck if the company is Tax exempted

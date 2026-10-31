@@ -3,10 +3,10 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 19 |
-| Version | 0.82 |
-| Last verified against source | 2026-10-01 (base `Service`, `Repository.QueryReport`, `ListSmBase`, `UpdateBaseVm`, profiles, `DailyServiceLogReportService`) |
-| Last content change | 2026-10-14 — Audit Trail Update/Delete capture uses pending EF write flags for disconnected updates and field-only soft deletes; unchanged saves excluded. Automatic HTTP error/outbound message guidance retained. Block18 and skill synchronized; source-only, owner build/runtime acceptance pending. History in `../CHANGELOG.md` |
-| Verified by | source inspection only — no build, test, migration, or database run |
+| Version | 0.85 |
+| Last targeted source verification | 2026-10-23 — documentation current-state pass checked the pattern index, reference paths, ViewModel file-count rule, and report status. This was not a full source verification. |
+| Last content change | 2026-10-30 — BE18 shared quantity/hour/meter policy, explicit input-scale rejection and derived rounding; experimental-data foundation decision. Earlier verification scope remains unchanged. History in `../CHANGELOG.md` |
+| Verification boundary | Targeted source/documentation inspection only; no full source review, build, test, migration, or database run |
 
 Build order for one entity, six steps, five patterns. Open the reference file,
 copy the shape, change the names.
@@ -55,10 +55,10 @@ migration yourself, and never touch `SiGmaDbContextModelSnapshot.cs`.
 
 | # | Pattern | Reference service | Choose when |
 |---|---|---|---|
-| 1 | Normal entity | `Services/BranchService.cs` | One entity, ordinary Add/Update/Detail/List/Select/Delete |
-| 2 | Master-detail, no financial effect | `Services/VouchersServices/PurchaseOrderService.cs` | A header owns detail rows; no journal voucher, no allocation |
-| 3 | Master-detail with financial effect | `Services/VouchersServices/InvoiceService.cs` | Saving also writes a journal voucher, allocations, or accounting state |
-| 4 | Settings | `Services/AdministrationsServices/ChargeSettingsService.cs` | A screen loads and saves a whole configuration set keyed by a logical key |
+| 1 | Normal entity | `SiGma.Business/Services/BranchService.cs` | One entity, ordinary Add/Update/Detail/List/Select/Delete |
+| 2 | Master-detail, no financial effect | `SiGma.Business/Services/VouchersServices/PurchaseOrderService.cs` | A header owns detail rows; no journal voucher, no allocation |
+| 3 | Master-detail with financial effect | `SiGma.Business/Services/VouchersServices/InvoiceService.cs` | A financial-effect workflow; the current approved draft policy distinguishes Save from Approve/Post where applicable. Existing references may still write a journal during Save; record that as historical not-yet-migrated behavior in the feature contract. |
+| 4 | Settings | `SiGma.Business/Services/AdministrationsServices/ChargeSettingsService.cs` | A screen loads and saves a whole configuration set keyed by a logical key |
 | 5 | Report | `QueryReport<T>()` plus a feature service, block 17 | Read-only, reads across tables, returns sections and totals. No CRUD, no `ListVM` |
 
 Pick the **simplest** pattern that fits. Do not add detail reconciliation to a
@@ -78,14 +78,14 @@ document.
 | 7 | [ListVM scope rule](07-listvm-scope-rule.md) | Canonical |
 | 8 | [Validation: duplicates, keys, delete](08-validation-duplicates-keys-delete.md) | Canonical |
 | 9 | [Search model and filters](09-search-model-and-filters.md) | Canonical |
-| 10 | [Select and dropdowns](10-select-and-dropdowns.md) | Transitional |
-| 11 | [Document numbers (No)](11-document-numbers-no.md) | Legacy |
-| 12 | [Activate and deactivate](12-activate-and-deactivate.md) | Transitional |
+| 10 | [Select and dropdowns](10-select-and-dropdowns.md) | Canonical |
+| 11 | [Document numbers (No)](11-document-numbers-no.md) | Canonical reservation; transitional formatting |
+| 12 | [Activate and deactivate](12-activate-and-deactivate.md) | Canonical |
 | 13 | [Pattern 1 — Normal entity](13-pattern-1-normal-entity.md) | Canonical |
-| 14 | [Pattern 2 — Master-detail, no financial effect](14-pattern-2-master-detail-no-financial-effect.md) | Transitional |
+| 14 | [Pattern 2 — Master-detail, no financial effect](14-pattern-2-master-detail-no-financial-effect.md) | Canonical |
 | 15 | [Pattern 3 — Master-detail with financial effect](15-pattern-3-master-detail-with-financial-effect.md) | Canonical |
 | 16 | [Pattern 4 — Settings](16-pattern-4-settings.md) | Canonical |
-| 17 | [Pattern 5 — Reports](17-pattern-5-reports.md) | Transitional |
+| 17 | [Pattern 5 — Reports](17-pattern-5-reports.md) | Canonical |
 | 18 | [Edge cases](18-edge-cases.md) | Canonical |
 | 19 | [Backlog](19-backlog.md) | — |
 

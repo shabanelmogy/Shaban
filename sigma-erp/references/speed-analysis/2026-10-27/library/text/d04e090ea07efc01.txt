@@ -1,0 +1,83 @@
+S175
+Vehicle Leasing Software Features
+https://speedautosystems.com/vehicle-leasing-software/features/
+
+Get Started Now
+Comprehensive Vehicle Leasing ERP
+Speed Vehicle Leasing Software (VLS)
+Home
+»
+Speed Vehicle Leasing Software
+»
+Features
+Speed Vehicle Leasing Software (VLS)
+Speed Vehicle Leasing Software (VLS) Features
+Lease Setup
+Lease Cost Parameters Setup:
+Depreciation
+Insurance Cost
+Registration Cost
+Finance Cost
+Maintenance Cost etc
+Lease Cost Setup Vehicle-wise
+Lease Inquiries Management
+Lease Quotation Module
+Lease Quotation Preparation
+Lease Quotation Customer Approval
+Lease Quotation Revision
+Reports
+Approved Lease Quotations
+Rejected Lease Quotations
+Pending Lease Quotations
+Lease Tariff
+Master Lease Agreement
+Customer Approved Quotation/Sales Order Conversion to Master Lease Agreement
+Master Lease Agreement Internal Approval
+Master Lease Agreement Customer Approval
+Pre-Lease Vehicle Delivery (Temporary Vehicle Delivery)
+Lease Vehicles Procurement
+Vehicle POs Generation from Customer Approved Lease Quotation/Sales Order
+GRN Creation on New Lease Vehicles Receiving
+GRN Conversion to Supplier Bills
+Supplier Payment as per Credit Terms
+Lease Vehicles Preparation
+Newly Procured Lease Vehicles Insurance Management
+Lease Vehicles Registration Management
+Road Toll Registration
+Adding Add-on
+Individual Lease Agreement & Lease Vehicle Delivery
+Individual Lease Agreement preparation from Master Lease Agreement. One Agreement for one Vehicle
+Lease Vehicle Delivery & Collection of Pre-Lease Vehicle (Temporary Vehicle)
+Invoicing
+Lease Invoicing With Below Options:
+One Invoice for whole Master Agreement
+One Invoice for One Individual Lease Agreement i.e. One Invoice for One Lease Vehicle
+Invoicing Selective Vehicles for a Particular Master Lease Agreement
+Traffic Fines Invoicing
+Road Toll Invoicing
+Fuel Invoicing
+Excess Mileage Invoicing
+Early Termination Management
+Fleet Management
+Vehicle QR Labels Generation
+Vehicle Service Plans Creation
+Vehicle Alerts
+Insurance Expiry Alerts
+Registration Expiry Alerts
+Service Due Alerts
+Vehicle Service & Repair Log
+Vehicles Movement Management
+Delivery Movement Opening
+Delivery Movement Closing
+Non-Revenue Movement Opening
+Non-Revenue Movement Closing
+Workshop Movement Opening
+Workshop Movement Closing
+Custody Movement Opening
+Custody Movement Closing
+Vehicle Replacement
+Driver Replacement
+Start 30 Days Free Trial
+Let’s get you Started
+If you want to know more about Speed Vehicle Leasing System (VLS), let’s get connected.
+Get in Touch

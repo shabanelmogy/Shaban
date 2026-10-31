@@ -94,7 +94,7 @@ loads its graph there, and disposes that read scope on success, missing root, ca
 exception. It does not save or share the write context's local transaction or pending changes;
 its result represents persisted data. Keep tracked aggregate updates on the write context
 (block 14). Source-only implementation; owner runtime verification pending. Existing graph
-filtering and traversal findings remain in `reviews/REPOS_UNIT_OF_WORK_LOGIC_FEATURE_REVIEW.md`.
+filtering and traversal findings remain in `reviews/Archive/Completed/2026-10-23/REPOS_UNIT_OF_WORK_LOGIC_FEATURE_REVIEW.md`.
 
 **Standard list = `GetManyAsync` override.** A screen's list overrides
 `GetManyAsync(ListSmBase searchModel)`, which the base controller exposes as
@@ -168,6 +168,19 @@ block 15 rule 8.
 
 ### Failure messages
 
+**Database localization read cost (2026-10-17).** Runtime middleware may need
+multiple resource sources before the endpoint executes. Reuse a successful
+runtime-only options/default snapshot within that scoped request and batch
+General/Mock source projections. Preserve tenant-filtered overrides, exact
+fallback order, missing-catalog failures, cancellation and sequential use of
+the shared DbContext. Publish complete API snapshots only after both sources
+succeed. Never promote tenant dictionaries to a static/global cache or reuse
+runtime option snapshots for mutation validation. Read-only text list/Keys/
+Detail validation can share that successful request snapshot; no cross-request
+cache is implied. Save/Reset retain fresh authoritative checks. A UI runtime request remains a fresh read,
+with no schema or transport change. Count removed reads from source separately
+from owner-measured SQL/network/runtime latency.
+
 A business failure is returned through the base helper, not a new private `Fail` copy:
 
 ```csharp
@@ -183,6 +196,19 @@ otherwise `en-US`), so an Arabic user gets Arabic messages. A literal string is 
 unchanged: that is only for legacy callers. `LocalizeMessage(key)` gives the same lookup for a
 success message. The ≈90 existing private `Fail` helpers and their English literals move to keys
 when their service is next touched; do not add new ones.
+
+**Resource key conversion boundary (owner compiler evidence, 2026-10-17).**
+When replacing a translated resource value passed to a localizer with its key,
+use `nameof(GeneralMessage.MessageProperty)` only for an actual generated string
+message property. Infrastructure members such as `ResourceManager` and `Culture`
+are not message keys. Keep `GeneralMessage.ResourceManager.GetString(key, culture)`
+as a call on the ResourceManager object; wrapping that receiver in `nameof`
+turns it into a string and causes CS1929. Verify converted symbols against the
+generated declarations and inspect the receiver expression, not just a text
+pattern. A failed Business compilation can leave ServerAPI using its previous
+reference assembly, producing dependent missing-namespace/type errors. Confirm
+source declarations and project references before changing those contracts;
+only an owner build establishes that dependent diagnostics have cleared.
 
 **Check:** interface closes the generic and adds only real extras · service
 inherits `Service<…>` · only justified overrides · overrides preserve base

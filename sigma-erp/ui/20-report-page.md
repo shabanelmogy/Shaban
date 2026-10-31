@@ -65,6 +65,15 @@ The fourteen complete Accounts reports use an Accounts-local typed
 controls, grid and cards. Configurations retain feature-owned filter names,
 request/response types, sections, backend totals and existing navigation.
 `FormRecord` owns controls; lookup failures block Search and have local retry.
+For persisted bilingual lookup names, the shared dropdown's optional
+`nameLocalized` becomes `AccountReportFilterOption.labelLocalized`. The existing
+language-keyed `optionsFor` selects that nonblank label for Arabic, falling back
+to the base label; a supplied `labelKey` keeps its prior translation behavior.
+This capability applies to every consumer supplying bilingual metadata and
+requires no per-screen opt-in, new request, selection reset or draft mutation.
+Budget uses its own existing editor with the same stored bilingual values.
+Evidence: GroupDefinition ReportOptions and Budget/BudgetVariance2026-10-23;
+source conformance verified, owner language/print/export acceptance pending.
 Changing filters invalidates output; requests capture the applied snapshot and
 disable the form until completion. Export reads complete source rows and builds
 translated headers at click time. Hierarchies use UI6's optional shared adapter;
@@ -280,6 +289,23 @@ report strip while preserving report1250/640 breakpoints, stable validation,
 RTL/theme and all non-adopter defaults. No feature width or calendar override;
 source conformance only, owner visual/input acceptance pending.
 
+**Ledger field proportions and action-row checkbox (owner instruction, 2026-10-23).**
+The Accounts descriptor's existing `wide` flag also applies to ordinary flex
+report strips above640px through the same shared modifier: grow2/basis340px/
+max600px compared with ordinary grow1/basis170px/max300px. At640px and below,
+retain the shared full-width stacking. Inline grids keep their existing span2
+and mobile span reset; `AccountReportPageComponent.filterColumns` counts wide
+fields as two tracks. The optional checkbox descriptor `withActions` renders
+that control once in the existing shared action template rather than among main
+fields. The normal flex strip's `sigma-report-filter-actions--with-checks` takes
+a full row, aligns the checkbox at logical start and lets buttons wrap at narrow
+widths; existing inline strips retain their action field. FormControlName stays
+under the same form and no value resets. Omission preserves current checkbox
+placement. Ledger selects wide for Account and withActions for Original Currency,
+as explicitly clarified by the owner; other consumers retain defaults. Use the shared
+owner rather than screen CSS or ID selectors. Source-only conformance; owner
+desktop/intermediate/mobile, RTL/theme and focus acceptance remains pending.
+
 Inline strips may supply `--sigma-report-filter-template` as a complete grid
 template, including a dedicated action track when actions stay inline, when equal filter tracks waste space or
 clip choice labels. Its default is the existing column-count template; shared
@@ -369,6 +395,25 @@ monetary values use the shared `formatMoney` owner, and BalancesSummary
 preserves absolute magnitude with a translated Dr/Cr suffix. Print removes any
 card-list bound (`maxHeight: none; overflow: visible`) while retaining every
 card and hint.
+**Projected value controls (owner request, 2026-10-28).** When a summary card
+contains an existing editor control, import `SummaryCardValueDirective` in the
+consumer and project `<ng-template appSummaryCardValue="stable-card-id">` inside
+SummaryCards. The matching nonselectable card replaces only its formatted primary
+value with that template; `$implicit` is the typed SummaryCard. Label, icon,
+accent, hint, secondary value, responsive geometry and print skin stay shared.
+The feature binds its existing typed FormControl, translated accessible input
+name, validators, error and disabled/View lifecycle; the shared card never owns
+discount rules, mutations or form state. Bind the control explicitly when the
+strip is outside the form element. Do not cap an editable strip so validation
+is clipped. Unmatched/absent templates retain normal values; selectable cards
+ignore value templates to avoid controls inside their button. Keep stable unique
+template IDs, natural validation height, RTL/theme and native input focus. The
+strip may sit directly before the fixed editor footer outside the growing form,
+with the table/body owning the remaining space; never imitate card internals or
+remove a gap through guessed negative margins. RentalQuotation's discount card
+uses this additive slot; existing consumers retain their defaults. Source-only;
+responsive spacing, validation, print and keyboard acceptance remain pending.
+
 The row option fits all cards into equal columns on a container wider than
 1100px, wrapping through the shared auto-fit/minimum-width rule below that
 threshold; it does not leave a last card outside the screen. Dense density
@@ -649,7 +694,7 @@ Use the shared report shell and the current filter/action style:
 
 - keep `app-feature-title` inside the report panel;
 - place the complete typed filter form in one `no-print` row;
-- for a single-day report, use one `p-calendar`, default it to today, require
+- for a single-day report, use one `p-datepicker`, default it to today, require
   the value, and serialize it from local year/month/day parts;
 - place Print, Export and Refresh/Search in one `appReportActions` toolbar;
 - use typed `app-data-table` columns for report rows and the shared responsive
@@ -674,7 +719,7 @@ strip above:
   <div class="statement-filter-grid">
     <div class="statement-field statement-date-field">
       <label for="statementDateRange">{{ 'customerStatement.dateRange' | translate }}</label>
-      <p-calendar
+      <p-datepicker
         inputId="statementDateRange"
         formControlName="dateRange"
         selectionMode="range"
@@ -688,7 +733,7 @@ strip above:
         panelStyleClass="sigma-datepicker-panel statement-range-picker"
         [disabled]="loadingReport()"
         appendTo="body"
-      ></p-calendar>
+      ></p-datepicker>
     </div>
     …customer dropdown, include-inactive checkbox…
   </div>
@@ -721,19 +766,19 @@ For a range calendar, keep the popup open after the first date is selected so
 the user can select the end date from the same control:
 
 ```html
-<p-calendar selectionMode="range" [hideOnDateTimeSelect]="false"></p-calendar>
+<p-datepicker selectionMode="range" [hideOnDateTimeSelect]="false"></p-datepicker>
 ```
 
 Keep the range value date-based and make both dates easy to choose when the
 range spans more than one month:
 
 ```html
-<p-calendar
+<p-datepicker
   selectionMode="range"
   dataType="date"
   [numberOfMonths]="2"
   rangeSeparator=" - "
-></p-calendar>
+></p-datepicker>
 ```
 
 Default the range to the **current month**, from the 1st to its last day, the same as lists

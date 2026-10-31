@@ -1,0 +1,20 @@
+S056
+Your Company Letter Head Update
+https://speedautosystems.com/car-rental-software/user-guide/document-number-format-settings/
+
+Document Number Format Settings
+Document Number Format Settings:
+This option is related to the numbers and alphabets used in the system for different purposes like:
+a. Agreements : If you want to add a manual number then simply click the first box. Otherwise select the boxes that you want to add to the agreement number e.g. Branch Code, Agreement Type Code, Year/Month (YYMM) and the numeric part. Then you have to assign the codes for Daily, Weekly and monthly for your easy understanding that by reading the code you can get the idea that what type of agreement it is.
+b. Booking : You have to define the format of booking no and the codes as you did for the Agreements.
+c. Invoice: You have to define how the invoice no will look so you can have a better understanding.
+d. Credit Note No: You have to define the credit note format and the prefix is used for easiness like for credit note you can write the prefix as (CN) so whenever you see a note you can easily identify that it is a credit note.
+e. Debit Note No: Same as the credit note and define the prefix.
+f. Reciept No: You have to define the format and prefix of the receipt number.
+g. Bill No: Define accordingly your business and it will be shown on every bill.
+h. Purchase Order No: If system generates the purchase number define it and it will be shown on the bill
+i. Sale Order No: While selling something you can have the idea of the date and month type of the order no.
+j. Payment No: If you have to payout something then set the format and it will be shown the same.
+k. Customer: You have to select IND for individuals and CMP for the company or any other related prefix for your understanding.
+l. Supplier: For suppliers you can use S or SUP.
+m. Staff: For staff you can use STF or anything that is easy for you to understand.

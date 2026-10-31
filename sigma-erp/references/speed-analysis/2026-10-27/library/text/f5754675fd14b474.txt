@@ -1,0 +1,11 @@
+S256
+How to merge contacts
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-merge-contacts/
+
+How to merge contacts?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Merge Contacts module.
+A dashboard will appear on the right side of the panel. Click on the “+SEARCH & ADD” button.
+Fill the form and click on the OK button.
+Now, select the required contacts and click on the MERGE CONTACTS button.
+Click HERE if you have a query or an issue.

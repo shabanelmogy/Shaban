@@ -2,9 +2,9 @@
 
 > **Status: Transitional** — authentication only; no authorization mechanism exists, backlog 20
 
-**Transitional.** State of the app, re-verified 2026-10-01 (API role policies are commented out; see the deferred plan):
+**Transitional.** State of the app, targeted route check 2026-10-23 (API role policies are commented out; see the deferred plan):
 
-- `app-routing.module.ts` guards the whole layout with
+- `src/app/app.routes.ts` guards the authenticated layout with
   `canActivate: [AuthGuard]`.
 - `AuthGuard` (`modules/auth/services/auth.guard.ts`) is **authentication only**:
   it checks `authService.currentUserValue`, calls `getCurrentUser()` once if

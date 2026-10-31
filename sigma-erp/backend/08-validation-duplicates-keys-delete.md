@@ -86,6 +86,18 @@ SQL deadlocks (1205), whether raised by a query or wrapped by a save, and
 `ConcurrentWriteConflict`. Reload/review is required; never blindly retry an aggregate write.
 
 The service keeps only the rules the base cannot know: a date order, a state, an accounting rule.
+
+**Conditional required inputs (UI16; owner generalization, 2026-10-15).** When
+requiredness depends on a discriminator/type, enforce the frozen feature's
+type-field matrix at the backend write boundary before mapping/mutation.
+Cover Add, Update and batch/direct callers through their shared preparation
+path; frontend hiding/required markers do not replace this check. Preserve
+ordinary annotations, positive/live/tenant FK checks for every supplied
+reference, owned-child checks and existing locks. Emit existing-style localized
+business failures. Do not rewrite historical rows or copy another feature's
+type members, required fields or accounting rules. Purchase Requests' shared
+type-input check is implementation evidence, not a new generic business matrix.
+
 An override that replaces the base Add or Update calls `InvalidInputAsync(vm, id)` itself
 (reference `CompanyService.UpdateCoreAsync`). Sections 1 and 2 below explain what these checks do and
 how to write a rule the base cannot express.

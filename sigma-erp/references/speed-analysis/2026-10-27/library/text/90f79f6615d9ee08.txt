@@ -1,0 +1,11 @@
+S226
+How to define Purchase Order Number
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-purchase-order-number/
+
+How to define Purchase Order Number?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Document No’s tab.
+Scroll down, locate, and Purchase Order Number.
+Scroll down and click on the SAVE button.
+Click HERE if you have a query or an issue.

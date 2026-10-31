@@ -1,0 +1,74 @@
+S132
+Speed Human Resource Management
+https://speedautosystems.com/speed-human-resource-management/
+
+Get in Touch
+We offer advice and support to help you identify employee strengths
+Speed Human Resource Management (HRM)
+Home
+»
+Speed Human Resource Management
+Speed Human Resource Management
+HR is frequently concerned with time-consuming administrative activities, manual processes, and the requirement for quick decision-making. Speed Human Resource Management Software (HRMS) responds to these difficulties by offering Automotive HR Solutions.
+Product: Speed Human Resource Management (HRM)
+Masters Areas, Branches, Departments, Divisions, Grades, Allowances, Designations, Banks, Shifts, Asset Types, Passes Types, Skill Types, Jobs Types, Memo Types, Minimum number of Employees for one Department to be used in Leave Planner, Minimum number of Employees for one Division to be used in Leave Planner, Leave Types along with payment structure, Leave Assigning Authorities
+Employees Management
+Basic Info: Employee Code, Name English, Name Arabic, Father Name, Gender, Date of Birth, Nationality, Email Address, Contact Number Local, Address Local, Contact Number Overseas, Address Overseas, Blood Group, Attendance Machine Code, Employee Photograph (Image Attachment)
+Employment Info: Department, Division, Branch, Designation, Joining Date, Agreement Date, Visa Status, Labor Contract Type, Working Hours, Over Time Eligibility, Ticket Eligibility with period, Basic Salary, Allowances
+Skills Record, Qualification Record, Training Record, Bank Accounts, Nomination
+Definitions of different types of Employee Documents to be managed by system like passport, labor card, labor contract etc
+Employees Documents Management along with scanned images
+Definition of different types of Branch Documents to be managed by system like Trade License, Tenancy Agreement etc
+Branch Documents Management along with scanned images
+Company Assets Stock Management
+Allocation of Company Assets & passes to Staff
+Automatic Alert System for:
+Employees Documents Expiry (Passport, Visa, Labor Card, Health Card etc)
+Branch Documents Expiry (Trade License, Tenancy Agreement etc)
+Company Assets & Passes Expiry (Vehicles Registration & Insurance etc)
+Leave Applications Management
+Leave Applications Processing Management
+Leave Planner
+Ticket Approval Management
+Collection of Company Assets from Staff on different events like annual leave, service ending etc
+Employees Rejoining Management
+Attendance Management
+Automatic with different types of attendance machines
+Manual
+Overtime Management
+Employees Loan Management
+Employees Deductions Management
+Loans
+Warnings
+Recurring Deductions i.e. Employees Uniform Deduction etc
+Payroll Processor
+Pay Slips Generation
+Bank Salary Transfer
+Cash Salary Management
+Separate Salary Processing for:
+Employee leaving for Annual Leave
+Employee with Service Ending (Service End, Resignation, Termination etc)
+Annual Leave Salary & Ticket Encashment Management
+Definition of Public Holidays
+Employees Promotions & Salary Increment Management
+Memos Management
+Supervisor Assignment
+Off days Management
+Employee Ledger
+Service Ending Manager along with Gratuity Calculator
+Arabic & English user interface
+Application User Accounts Definition along with User Types
+Speed HRM Web Interface for Employees
+Employees User IDs & Passwords
+View Pay Slips
+View Memo
+View Warnings
+View Employee Ledger
+Automatic Emails to Employees for Monthly Pay Slips, Memo, Warnings etc
+Employee can update his/her info by web interface along with attachment of scanned documents copies
+Authority control to validate the info updated by Employee on web interface
+Employees Online Requests for different Certificates/Letters
+Managing Employees Online Requests for different Certificates/Letters
+Let’s get you Started
+If you want to know more about Speed Human Resource Management (HRM), let’s get connected.
+Get in Touch

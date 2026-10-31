@@ -1,0 +1,19 @@
+S168
+Vehicle Leasing Software Benefits
+https://speedautosystems.com/vehicle-leasing-software/benefit/decrease-your-workload-with-road-toll-process-automation/
+
+Speed Vehicle Leasing Software (VLS)
+Home
+»
+Speed Vehicle Leasing Software
+»
+Benefit
+»
+Decrease Your Workload with Road Toll Process Automation
+Decrease Your Workload with Road Toll Process Automation
+Being a leasing operator means there is many toll data to be invoiced. It is a very tedious job to invoice road toll manually. Speed Vehicle Leasing Software (VLS) automates this process by using one of the below options:
+Fetching road toll data from toll authority using API provided by the toll authority.
+If there is no API interface provided by the toll authority, we have a smart component that can read toll data from the authority’s web portal.
+If none of the above options is available, we have the facility to upload toll data files provided by the authority.
+Once toll data is inside the system, Speed Vehicle Leasing Software (VLS) automatically allocates it against lease agreements. After allocation, the system generates toll invoices as per billing rules.
+Start 30 Days Free Trial

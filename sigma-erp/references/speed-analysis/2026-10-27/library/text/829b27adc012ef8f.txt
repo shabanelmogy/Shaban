@@ -1,0 +1,18 @@
+S299
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+https://speedautosystems.com/vehicle-mobile-inspection/for-car-rentals/how-to-use/how-to-generate-reports/
+
+Watch source video online
+How to Generate Reports / How to Check Movement History of Vehicles?
+This feature is only available on a web application so you need to use the web app available on https://app.speedautosystems.com/Account/Login so login on this link.
+Click “Movements” link in the left navigation pan This will show you a table on the right containing all movements done over the past in the following manner: –
+Select a default date or period from the drop-down list or give a date range for which you want to see the movements.
+Give plate number of a specific vehicle for which you want to see the movements else leave it blank if you want to see the movements of all vehicles in your fleet.
+Give a specific movement number if known as given in the second column of the table under the heading of “No”.
+Give reference number if known as given in the fourth column of the table.
+By checking the box “Movements with New Damages” will show only those movements, which caused fresh/new damages to vehicles.
+You can export to report in Xcel format by pressing the button given for this purpose on the right upper corner of the table.
+You can view the details pertaining to a specific movement by pressing the “ACTIONS” button attached to it.
+You can see the Check Card of a specific movement by pressing the “ACTIONS” button attached to it.
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Apple App Store? How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Google Play Store? How to Sign Up? How to Sign In? How to add vehicle? How to create vehicle QR Labels? How to create vehicle checklist? How to manage staff? How to give a vehicle to a customer on rental agreement? How to take a car back from a customer on rental agreement closing? How to open vehicle movement on a staff? How to close vehicle movement on a staff? How to generate reports? How to open rental agreement? How to Fix Vehicle Damages? How to Initialize the Application for Effective Use?

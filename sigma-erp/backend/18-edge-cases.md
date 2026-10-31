@@ -45,6 +45,23 @@ claim convention itself remains the current contract (backlog 11).
 
 ### Input
 
+### Shared quantity/hour/meter policy (owner foundation decision,2026-10-30)
+
+Current data is experimental and does not justify preserving accidental numeric
+precision. Reuse `SiGma.Helpers.Helpers.QuantityNumberPolicy` for reviewed
+fractional quantities, hours and meter readings: storage precision18, scale6,
+`HasValidScale` to reject excess input precision and `RoundCalculatedQuantity`
+only at an explicitly owned derived-calculation boundary. Rounding reuses
+`FinancialNumberPolicy.RoundingMode` (half away from zero); the quantity policy
+does not use currency decimal places or reprice money/tax. Keep amounts under
+the financial owner and true counts/identities under their integer contracts.
+Domain owners retain signs, bounds, units and formulas. A justified lower scale
+is permitted explicitly; no feature-local copy of the default precision/helper.
+Reconcile entity/configuration, all write/read DTOs, filters, aggregates,
+snapshots, reports and Angular consumers together before accepting fractions.
+No rounding of submitted values or silent truncation to integers. This policy
+does not authorize migration creation, data reset or database execution.
+
 ### Metadata-only AI candidate contracts (2026-10-13)
 
 JSON output mode ensures JSON syntax, not adherence to a form's field contract.
@@ -153,7 +170,7 @@ Consumers: Staff Duty/OT and Attendance. Database/runtime verification pending.
 
 The owner requested a reusable service for all entities and a backend interceptor
 for the Audit Trail screen. The frozen full-stack contract is
-`reviews/AUDIT_TRAIL_FULL_STACK_CONTRACT_FREEZE.md`. Preserve the current
+`reviews/Archive/Completed/2026-10-23/AUDIT_TRAIL_FULL_STACK_CONTRACT_FREEZE.md`. Preserve the current
 `SiGmaDbContext.HandleAudit` tenant/creation/soft-delete owner; the configured
 `AuditTrailSaveChangesInterceptor` calls the generic capture service for tracked
 `EntityBase` entries and stages standalone metadata events in the **same** save
@@ -174,8 +191,132 @@ detach staged events before retry; success detaches only events and preserves
 the existing business affected-count result. Caller transactions and
 acceptAllChangesOnSuccess retain their owners.
 
-Capture only the frozen event identity/actor/type/action/number/date metadata,
-not field-value snapshots or navigation graphs. The operational event is not
+The owner's 2026-10-22 document-log decision supersedes the earlier metadata-only
+capture boundary: retain identity/actor/type/action/number/date and add a bounded
+reason plus a JSON snapshot of persisted scalar fields. For tracked modifications,
+include a before value only when the source has a proven database-original
+snapshot; a disconnected update with no reliable original shows the submitted
+after value without inventing history. The current `CaptureChanges` implementation
+still tests original/current inequality, which does not itself prove original
+provenance for detached writes. Review and correct that implementation before
+claiming before-value accuracy for every document. Creation/deletion capture
+scalar after/before values. Never traverse navigation graphs, and redact secrets, credentials,
+tokens, card security fields and private keys; omit oversized/unsupported values.
+The caller may annotate a tracked business entity with a semantic action and
+reason before its one SaveChanges. The interceptor infers an approval transition
+or void only from a genuinely changed tracked state field when no explicit
+annotation exists. Ordinary writes remain Created/Modified/Deleted. The shared
+record-log reader stays tenant-scoped and feature endpoints retain their own
+view permission and identity check. Existing metadata-only rows remain valid;
+do not fabricate their missing details. This capture still excludes direct SQL,
+bulk updates, and writes outside the tracked tenant DbContext.
+
+#### Reusing the document action log for another model (owner decision 2026-10-22)
+
+**Unified approval adoption (owner2026-10-24; Master4/UI7).** Save a new document
+as Pending. Only Pending→Approved/Rejected and guarded Approved→Pending are
+legal; Rejected is terminal, with no direct Approved→Rejected shortcut. Keep the
+existing enum values and use one typed decision payload (status, optional reason)
+per model. Reject and UnApprove require a trimmed reason1..500. Persist append-only
+previous/new state, actor, time and reason; do not invent old reasons. The approval
+read context provides identical canApprove/canUnapprove/canReject to the saved
+tab and status dialog. Writers recheck under their model's source/financial lock,
+reject stale/legacy/voided states, and never use a display flag as authorization.
+UnApprove removes the real owned effect atomically: source-only documents check
+downstream references; stock documents prove stock removal and linked issue guards;
+financial documents validate owned unshared journals, allocation/payment/loan
+dependencies and original open fiscal period before unposting. Preserve journal
+identity/history, rebuild only at explicit reapproval, and keep reservations per
+their frozen owner. Pending Save does not post or silently regenerate an old
+journal. The concrete first rollout is PR/PO/GRN/Bill/PurchaseReturn in
+PURCHASING_UNIFIED_APPROVAL_DOMAIN_API_CONTRACT_FREEZE.md; models without a frozen
+approval lifecycle do not gain an endpoint or placeholder journal by imitation.
+
+**Document-cycle review sequence (owner2026-10-24).** For purchasing or another
+linked document cycle, inventory every source/converter/downstream writer before
+changing state or adding Log. Record approval, quantity use, invoicing,
+reservation and financial settlement as separate axes. Quantity Open means no
+effective use, Partially Used means some but not all positive source-line
+capacities used, and Closed means every such line consumed; zero quantity and
+ambiguous legacy identity have explicit non-success states. Do not aggregate
+unlike units or infer quantity completion from invoice value. Invoicing uses
+approved effective invoice quantities against precise source-line identities;
+pending invoice quantities reserve capacity but do not count as invoiced.
+Recheck total approved plus pending reservations under the same writer lock,
+excluding the current document when updating. Delete/Reject/Void and UnApprove
+follow the model's existing guards; returning an invoice to Pending retains its
+reservation. No manual flag or read-time write substitutes for actual coverage.
+
+**Type-directed downstream creation (owner2026-10-24).** A source document's
+Create Receipt/Create Invoice action is backed by a saved source-line key,
+not a browser copy of amounts/descriptions. Keep the source's downstream
+eligibility and each destination's draft/read/preview/write/approve validators
+consistent. Destination writes re-resolve live source ownership, type, approved
+state, supplier/defined branch/effective currency, immutable snapshots and
+remaining quantity under the existing capacity lock. Pending destinations
+reserve, approved destinations consume, rejected/voided/deleted release per
+their frozen lifecycle. Source edit/delete/unapprove/reject guards must include
+all retained downstream paths before releasing upstream reservations.
+Partial editing can change selected lines within the same immutable parent;
+existing line IDs cannot be rebound to another source key. Unknown/malformed
+retained links block capacity rather than silently freeing it. No placeholder
+stock/journal effect or manual completion toggle. The concrete PO mapping is
+Stock/Asset→GRN→Bill and General/Job→direct GeneralBill; exact DTOs and guards
+live in PURCHASE_ORDER_DOWNSTREAM_CREATION_DOMAIN_API_CONTRACT_FREEZE.md.
+
+For each transition trace tenant/branch/currency, parent and child ownership,
+tax and rounding, approval/unapproval/rejection, deletion/void, posting period,
+stock/asset/Job/requisition effects, payment/allocation/loan dependencies and
+report/filter/count/export readers. Review tracked versus bulk/external audit
+capture and source-owned journal/stock identity. Log reads expose only the
+validated document and explicitly owned related records; log adoption does not
+authorize a state transition or manufacture pre-capture history. Document
+source-only evidence, known gaps and owner runtime checks separately. Exact
+model state graphs and source granularity remain feature contracts; do not
+apply purchasing's journal/physical-return behavior to unrelated documents.
+Current implementation evidence: purchasing log/status/source-line handoffs in
+reviews/PURCHASING_*2026_10_24* and PURCHASING_PARTIAL_GRN_BILLING_DOMAIN_API_CONTRACT_FREEZE.md.
+
+Treat automatic write capture and business transitions as separate contracts.
+The configured interceptor records a successful tracked `EntityBase` create,
+modified scalar write, or delete in the source `SaveChanges` batch. A failed,
+canceled, or rolled-back save must leave no event. It does not make approval,
+rejection, return-to-pending, or void legal. Freeze the model's state graph,
+downstream dependencies, reason requirement, effect timing, period/financial or
+stock guards, and legacy rows first (Master block 4; BE14/15). The backend
+rechecks them during each transition; an action menu is not a guard.
+
+For a domain action, annotate the tracked root with a stable semantic action
+name and optional validated reason in `AuditTrailActionContext` before the same
+save. Clear the annotation on completion/failure; do not insert a second audit
+record or commit the log independently. Automatic inference currently recognizes
+only a changed `ApprovalStatus`/`ApprovedStatus` as `ApprovalChanged` and a
+false-to-true `IsVoided` as `Voided`; other status fields remain `Modified`
+without an explicit action. A true soft-delete write is `Deleted`. The log
+describes the performed write and never substitutes for the model's decision
+history, voucher, inventory movement, or approval eligibility.
+
+The feature read endpoint first resolves a live, tenant-owned source document
+and applies its view-access contract. Pass its stable CLR record type and GUID
+to the tenant-scoped `AuditTrailService.GetRecordAsync`. For an aggregate, pass
+only verified child GUIDs owned by that root, including retained soft-deleted
+children when their history belongs in the log. Never accept related GUIDs from
+the browser. The central reader orders by descending event ID; older metadata-
+only rows have no field detail. Decide which child, voucher, allocation, or
+stock events actually belong to this document; do not show unrelated events
+merely because the same workflow touched them.
+
+| Adoption decision | Required evidence before exposing Log |
+|---|---|
+| Write inventory | Identify tracked saves versus SQL/bulk/external writers; list uncovered actions honestly. |
+| Transition contract | Freeze legal states, dependencies, reason and side effects; annotate semantic writes where inference is insufficient. |
+| Record identity | Prove tenant-owned root existence, stable type/GUID and every related child GUID, including deletion retention. |
+| Read contract | Add a typed, authenticated, view-checked endpoint returning central rows; do not expose the generic stream as a public document selector. |
+| Field detail | Keep scalar bounds/redaction and prove before-value provenance; never display a guessed prior value. |
+| UI and help | Reuse UI block 7's read-only viewer, translations, empty/error/retry and document user guide. |
+| Acceptance | Verify create/edit/delete/decision, child removal, failure/rollback/retry, tenant isolation and old rows after the owner applies the audit migration. |
+
+The operational event is not
 generic mutable CRUD `EntityBase`: no mutation/deletion API or source FK,
 so source soft deletion cannot remove history. Read with `QueryReport<T>()`
 for tenant scoping. The NameIdentifier claim remains the existing subscription
@@ -264,12 +405,22 @@ and backend Stopwatch duration. No trusted client-name source means null.
 Request context contains method, route **template**, status and trace reference,
 never actual route/query/body values, credentials or cookies. Diagnostic text
 may include exception type and method identities, excluding raw Message,
-ToString, source paths and SQL. An unexpected exception returns a safe localized
+ToString, source paths and SQL. Numeric SQL provider Number/State/Class may be
+included to identify the failure category without provider text. A composed read
+may stamp a server-owned enum stage on a rethrown exception; the diagnostic owner
+validates the exact enum type and defined value before rendering its name. Never
+append arbitrary Exception.Data values or feature/request strings. Preserve the
+original exception/stack and cancellation; markers must not suppress an error or
+replace failure with empty data. Dashboard's24 sequential read stages are the
+first consumer after a500 report whose safe30-frame stack omitted the service
+and provider category. Source-only; the next owner reproduction must establish
+the actual failing SQL code/stage before any root-cause claim.
+An unexpected exception returns a safe localized
 500 Result when the response has not started; otherwise preserve propagation.
 Use explicit authenticated read-only controller/service contracts, lean
 grid/detail projections and stable count-before-page/Id-tie/cutoff export.
 
-Evidence: frozen `reviews/ERROR_LOGS_FULL_STACK_CONTRACT_FREEZE.md`,
+Evidence: frozen `reviews/Archive/Completed/2026-10-23/ERROR_LOGS_FULL_STACK_CONTRACT_FREEZE.md`,
 `ErrorLogsMiddleware`, `ErrorLogWriter`, `ErrorLogEntry` and `ErrorLogsService`.
 New tables require owner-generated migrations before activation. Source-only;
 owner build/tenant/exception/cancellation/store-failure acceptance remains pending.
@@ -331,6 +482,16 @@ is then a cascade, not a second defect. Fix the first failing upstream project
 (`SiGma.Helpers` → `SiGma.ViewModels`, `SiGma.DataAccess`, `SiGma.Repos` →
 `SiGma.Business` → `SiGma.ServerAPI`, per the `ProjectReference` entries),
 rebuild, and only then read the downstream errors.
+
+Before changing every downstream consumer, group diagnostics by project and
+error code. For `CS0246` on a new type, locate its declaration and confirm an
+explicit `using`/fully qualified name or a global using **in the referencing
+project**. A successful source search for a member does not prove its containing
+assembly compiled. Owner evidence on 2026-10-21: four unresolved `Currency`
+types in `SiGma.Helpers` produced dependent `CS1061`/`CS0117` messages for
+financial-document currency members in DataAccess and Business. Source-only
+repair of the namespace does not prove that the owner's rebuild will clear
+every dependent diagnostic; inspect the fresh error list afterward.
 
 **Check:** every applicable row exercised or explicitly marked not applicable ·
 boundary values tested at the boundary, not near it · cross-tenant cases behave

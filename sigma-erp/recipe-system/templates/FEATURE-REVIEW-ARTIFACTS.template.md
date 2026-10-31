@@ -1,7 +1,16 @@
 # Sigma Feature Review Artifacts: {{Feature}}
 
+| Item | Value |
+|---|---|
+| Status | Draft |
+| Owner verification pending | yes |
+
 Copy this file for one feature review. It records feature-specific evidence and
 decisions; it does not create architectural authority.
+
+Apply Master1's tier before copying: tier S uses a short existing-review entry;
+tier M fills only applicable screen contracts; tier L consumes its Frozen plan.
+Delete inapplicable empty sections instead of filling repetitive N/A tables.
 
 ## Review metadata
 
@@ -26,6 +35,8 @@ decisions; it does not create architectural authority.
 | Direct shared dependencies | |
 | Existing user changes | |
 | Evidence IDs | |
+| Analysis-guide review (Master2/4) | Relevant chapter and original screen-explanation IDs/links actually read, Sigma comparison, accepted/excluded items and gaps, or supported Not applicable |
+| Sidebar/code cycle comparison (Master2/4) | Dated section/state/controller/service sources and file:line/hash, relevant document links/actions, evidence kind, actual Sigma owner/contract comparison and accepted/excluded/unresolved disposition; use Master4's rows |
 | UI shapes | |
 | Backend pattern | |
 | Approved references | |

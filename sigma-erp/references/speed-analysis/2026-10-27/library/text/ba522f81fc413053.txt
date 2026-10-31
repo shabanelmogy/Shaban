@@ -1,0 +1,11 @@
+S243
+How to manage currency parameters
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-currency-parameters/
+
+How to manage currency parameters?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Common tab.
+Here you will see slots for Currency Code, Currency Name, and Decimal Currency Name. Adjust them accordingly.
+Scroll down and click on the SAVE button at the end of the dashboard.
+Click HERE if you have a query or an issue.

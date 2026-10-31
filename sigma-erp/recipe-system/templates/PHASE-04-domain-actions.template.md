@@ -13,6 +13,9 @@ Approved confirmation and workflow references:
 
 Reference roles: the shared confirmation service owns confirmation-only
 interactions; `shared/components/action-button` owns menu rendering;
+`shared/components/document-approval-cycle` owns the common decision/history
+panel and reason flow for frozen approval models (UI7/13), with typed model
+adapters retaining their state/effect/endpoint contracts;
 `Sales/SalesQuotation/components/list` owns the quotation specialization (UI 7);
 `Workshop/Job/components/close-job` is the typed action-dialog reference (UI 13
 and screen 09). Other domain transitions select their owning feature reference

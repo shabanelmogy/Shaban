@@ -1,0 +1,11 @@
+S196
+How to create an office branch in Speed – VLS
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-create-an-office-branch-in-speed-vls/
+
+How to create an office branch in Speed – VLS?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Branches module.
+A dashboard will appear on the right side of the panel. Now, go for the +CREATE NEW BRANCH button on the top right side of the dashboard, click on it.
+A form will open. Fill the form with Branch Code, Branch Name, TRN (Tax Return Number), and State and click on the SAVE button.
+A newly created branch will appear on the dashboard.
+Click HERE if you have a query or an issue.

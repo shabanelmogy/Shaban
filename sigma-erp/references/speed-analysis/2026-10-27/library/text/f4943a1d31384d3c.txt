@@ -1,0 +1,12 @@
+S241
+How to manage Cost Centers
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-cost-centers/
+
+How to manage Cost Centers?
+Cost Centers module allows you to categorize your costs into smaller heads like retail cost or management cost, etc.
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on Cost Centers module.
+A dashboard will appear on the right side of the panel. Click on the “+CREATE NEW COST CENTER” button.
+Fill the form and click on the SAVE button.
+If you want to Edit/Delete any cost, click on the Actions button and choose action accordingly.
+Click HERE if you have a query or an issue.

@@ -3,7 +3,13 @@
 > **Status: Canonical**
 
 Always `app-feature-title` with the Create button in its slot. Never a second
-title in the Metronic toolbar.
+title in the authenticated shell toolbar.
+
+The subtitle is optional. Under Master5's task-content-space gate, omit a
+subtitle that merely repeats the title or explains a routine workflow already
+covered by the in-app guide. Preserve the shared title geometry, actions and
+required record-identifying editor subtitle (block13); do not compensate with
+feature-specific header spacing.
 
 `app-feature-title` owns the default title inset: 8px from the panel's top, left,
 and right edges with an 8px bottom margin, matching the component host margin.
@@ -37,7 +43,7 @@ the same shared title/filter alignment for a direct title and nested tab filters
 OpeningBalances adopts it across all eight tabs. Features add no local width or card
 style overrides. This general owner request supersedes the earlier scoped
 report alignment decision; source-only evidence is recorded in
-`F:/My Work/Sigma/reviews/SHARED_TITLE_FILTER_CARD_FEATURE_REVIEW.md`.
+`F:/My Work/Sigma/reviews/Archive/Completed/2026-10-23/SHARED_TITLE_FILTER_CARD_FEATURE_REVIEW.md`.
 
 **Equal card widths (owner general rule, 2026-10-05).** All full-width cards and
 region frames on the same layout level in a page share the same available width
@@ -51,6 +57,21 @@ summary tiles retain the shared SummaryCards grid/row sizing; align the whole
 summary region with its sibling frames. Apply this rule in new work and subsequent
 screen reviews; the present implementation adopts it in Chart of Accounts and
 LinkAccounts and OpeningBalances, including title, tab, filter and table frames.
+
+**Tabbed editor body alignment (owner reiteration, 2026-10-15).** The existing
+`sigma-editor-panel--workspace` also removes inline padding from nested
+`sigma-editor-body` regions through `src/styles.scss`. Keep vertical spacing,
+flex bounds and internal scroll unchanged. Its title, top FormSection, tab
+strip, active panel and complete summary/footer region then use the same
+available width. Do not add `mx-*` to a width100% FormSection host or reintroduce
+body inline padding locally: margins plus100% width can overflow and misalign
+the card. Purchase Requests adopts the workspace modifier and removes its
+type-section margin. Existing workspace consumers inherit this shared rule;
+ordinary editor body padding remains8px. Individual summary tiles and nested
+tables still use their own shared layouts; this rule aligns sibling region
+edges, not every nested box to the outer page. Verify all tab choices and both
+logical edges at narrow/intermediate widths, LTR/RTL and themes; source review
+does not certify visual acceptance.
 
 The optional shared `sigma-list-summary` placement class on SummaryCards uses
 8px logical inline margins to match ordinary list title/filter/table; direct

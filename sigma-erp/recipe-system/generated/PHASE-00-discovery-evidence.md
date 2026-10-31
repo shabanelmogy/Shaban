@@ -9,19 +9,23 @@ contract map. It does not authorize source edits.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:38d22849a6d25f64baa38c14562b4c85f08b29199ca287825471c3cfdacaf0e7
-- master.1: ## 1. Governance and review principles | sha256:3e69ec4d48c952286dea7792d9e442d37585c15446b7ef02531c8a54053558cf
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:2d02535a738d0a1e03f44f22ff5ac7028554bc00cf9e8517245d3cf9e4c5811e
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
-- master.5: ## 5. Continuous quality gates | sha256:8d4f483fc5c4e3c0f84bb76153f0b2c5c70972699a9fa69e4fc7ed6e0667831b
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041
+- master.1: ## 1. Governance and review principles | sha256:be0dfda4d868895a3f21a5a7b453c5c944c0957932c551e82cb658f3846c392a
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:fe219e07a3e5573053e9a55da8a7beca5a6046a5ac173060962c52fde6d8f239
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:497fbb72e36ba99eb199d4d7f0c606827d16339c9597eeba867813f9833934bb
+- master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:40836082dd49994bd2e8b88b6f888b21d1c4eeabf5e09e95eefa9f4fc2725ca5
-- ui.1: ## 1. Feature folders and wiring | sha256:266ecc1be4816a83512752346f33e513dd1f595677c8a9facf75d5bba95f6121
-- ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:37bd2668e415291f40a04665709d8e3d9231a899d1d6517030b76d1d8f7ca4b0
-- backend.18: ## 18. Edge cases | sha256:f75b1b27a36fa5ef0d2d671854f15b5fb4b6c0b24674a177448a1c4caca97d29
+- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:90e19839bb224a518453a2ed0ae60332160f759860e87fc977968bfb5fdd24a2
+- ui.1: ## 1. Feature folders and wiring | sha256:a652d320ed28518fdd0fd8f3a3320cc12432cb88b9f2e4d6116ec47fb2acb0e9
+- ui.2: ## 2. Service and response wrappers | sha256:b77bf9a3bb3cf04aa561a014e2c24ca816a679b83b29ab7da948d715f79fb260
+- ui.22: ## 22. Loading, empty, error, toast | sha256:ca04ec271de4fec9af2acc9937463577a67a5a3956d14db1b31cf966cf1b6d06
+- ui.29: ## 29. Verification expectations | sha256:1ff1411e4cbc36bb44b06ef153a062ad0ddc7d8ca7728bdc7a3deae3ea99656e
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
+- backend.2: ## 2. Step 2 — EF configuration | sha256:6fc404d5c366c960f1ff9292a0b9ce4b69c6825da3f4416385af0389c0ebc386
+- backend.7: ## 7. ListVM scope rule | sha256:6ae3e69d94ccc02a60bd005f20020b7cd4b9f105b81afa9baf63c427cfa05caa
+- backend.18: ## 18. Edge cases | sha256:8878697ea5e4b00ab272b14d83fd2091eb9cd129c168a238ab98b88bed22d2a0
 
 Approved references, when a shape is already known:
 
@@ -67,6 +71,9 @@ Required inputs:
 - Requested feature and outcome.
 - Frozen Maintenance / Evolution Plan when the Master Guide requires one.
 - All supplied evidence.
+- Relevant analysis-guide chapters and original screen explanations reviewed
+  under Master2, including applicable dated sidebar/code cycle sources, with
+  existing Sigma source/contracts/user-guide topics where present.
 - Directly related source.
 - Master Guide.
 
@@ -75,10 +82,31 @@ route, file, contract, or business decision. Do not guess.
 
 ## Procedure
 
+Apply Master2's reference-product functional detail target and Master4's scoped
+coverage rows. Account for the relevant reference fields/groups, filters,
+actions/dialogs, states, validations, document links, charges/calculations and
+outputs against actual Sigma producers/consumers and guide. Partial/missing
+details feed the plan; current minimal behavior alone is no exclusion. Name
+exact decision blockers and owner exclusions without inventing server rules or
+expanding a bounded/read-only assignment.
+
 1. If a Maintenance / Evolution Plan applies, import its Frozen scope, target
    contracts, impact map, implementation slices, and remaining non-blocking open
    decisions. Do not redesign the target silently in Phase 0.
 2. Assign each screenshot or workflow source an Evidence ID.
+   Apply Master2's mandatory analysis-guide review before freezing/changing
+   contracts for both new and existing screens: start at documentation
+   `references/speed-analysis/README.md`, read the relevant guide/source only,
+   compare Sigma evidence and record applicability, accepted items, exclusions
+   and gaps. A supported Not applicable outcome is valid; tier S needs only the
+   affected part. The Speed guide is not Sigma implementation/policy authority.
+   Select the relevant sidebar section/screen/state and cycle slice; follow its
+   literal controller/dialog/service evidence only as needed. Record snapshot
+   date, source file:line/hash and kind (documented, frontend declaration,
+   inferred sequence or unknown server rule), compare relevant document links
+   and actions with Sigma, and complete Master4's reference-cycle rows. Local
+   methods/proxies do not prove runtime/server/accounting behavior. No automatic
+   collection scripts, external login or domain API calls follow this gate.
 3. Record known screen, mode, role, locale, direction, viewport, date/version,
    and whether it is current or historical.
 4. Extract only functional and content requirements.
@@ -90,6 +118,13 @@ route, file, contract, or business decision. Do not guess.
 10. Mark every row Confirmed, Derived, Missing, Conflicting, or Uncertain.
 11. Select the later phases required by the feature.
 
+For every in-scope screen, complete UI2's **Mandatory screen cache gate** during
+this discovery. Inventory the actual lookup/settings/operational URLs before
+implementation, classify each from its source contract and record its service,
+writers, topic, finite bootstrap, watcher and exception evidence. Use the table
+below in the current review/contract; do not create a separate artifact for a
+small task. No applicable sources requires an explicit reason, not an omitted row.
+
 ## Required outputs
 
 ### Feature Review Manifest
@@ -100,6 +135,8 @@ route, file, contract, or business decision. Do not guess.
 | Source scope | |
 | Existing user changes | |
 | Maintenance / Evolution Plan | Not required / Frozen artifact / Blocked |
+| Analysis-guide review (Master2/4) | Chapter and original source IDs/links actually read, Sigma comparison, applicability, accepted items and gaps, or supported Not applicable |
+| Sidebar/code cycle comparison (Master2/4) | Relevant snapshot/section/state/controller/service and file:line evidence, document links/actions, actual Sigma comparison and disposition; supported Not applicable when appropriate |
 | UI shapes | |
 | Backend pattern | |
 | Approved references | |
@@ -107,11 +144,19 @@ route, file, contract, or business decision. Do not guess.
 | Endpoints | |
 | Actions | |
 | Permission mechanism | |
+| Screen cache gate (UI2 / Master5) | Source matrix location, or explicit not-applicable evidence |
+| Loading conformance (UI22 / Master5) | Actual route/component, per-operation global/local/silent owner, request lifecycle/visibility evidence |
+| Load-speed/query/index gate (Master5; UI29; BE7/2) | Actual request/query/volume inventory, baseline evidence or pending owner plan, candidate index coverage/risks |
 | Applicable phases | |
 | Explicit exclusions | |
 | Unresolved requirements | |
 
 ### Functional Evidence Table
+
+Include the analysis-guide source ID/chapter and original explanation in the
+existing evidence rows. Separate documented behavior, declared features and
+frontend declarations from inferred cycle sequences, reviewer proposals and unknown
+server rules; source absence does not authorize inventing a material rule.
 
 | Evidence | Classification | Required feature behavior | Owning phase | Guide-compliant implementation |
 |---|---|---|---|---|
@@ -123,11 +168,40 @@ route, file, contract, or business decision. Do not guess.
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 
+### Load-speed, query and index evidence (Master5; UI29; BE7/2)
+
+| Route/trigger and actual producer/consumer | Requests/query boundaries, volume and suspected bottleneck | Confirmed fix or preserved contract | Comparable baseline/after evidence or pending measurement plan | Existing index coverage and supported proposal/cost or justified none | Status, acceptance target/evidence and owner follow-up |
+|---|---|---|---|---|---|
+| | | | | | |
+
+Use the current feature artifact. Source inspection is mandatory but does not
+establish measured latency or authorize runtime/database commands. Include
+initial open, paging/search/detail and relevant action/report/export paths;
+preserve feature-specific contracts and classify uncertain evidence explicitly.
+
 ### Unresolved Requirements Register
 
 | Requirement | Status | Missing source or decision | Blocked phase | Safe work that may continue |
 |---|---|---|---|---|
 | | | | | |
+
+### Screen cache adoption evidence (UI2 / Master5)
+
+Also record UI22's loading request/visibility matrix in the same review. Trace
+the actual route import (including reused workspaces and legacy aliases), not
+the apparent feature folder. Classify page/list/detail/save/action/export versus
+auxiliary lookup/dialog and explicit silent reads; no implicit exemption or new
+loader. UI22 owns same-path query navigation and path-departure reset semantics.
+
+| Exact URL and envelope | Classification, evidence and exception reason | Source service, writers/dependencies and topic | Finite read, watch and teardown | Failure/Retry, scope, selected labels and draft evidence | Final status and pending verification |
+|---|---|---|---|---|---|
+| | | | | | |
+
+Keep eligible reference cache, explicit singleton exceptions and direct live
+reads distinct. A source service name, BaseService inheritance or cache service
+injection alone does not prove adoption. Do not enable new sources or cache
+operational quantities, candidates, posting eligibility or currency precision
+because their endpoint name resembles GetSelect. UI2 owns exact eligibility.
 
 ## Continuous gates
 
@@ -139,6 +213,9 @@ route, file, contract, or business decision. Do not guess.
 - A required Maintenance / Evolution Plan is Frozen before implementation phases
   begin; Phase 0 reports any new evidence that would invalidate it.
 - Reference modules are read-only unless explicitly scoped.
+- The cache source matrix is part of the handoff; unresolved material cache
+  contracts block only their affected work. Source-only review records defects
+  without editing application source or demanding unauthorized runtime checks.
 
 ## Expected handoff
 

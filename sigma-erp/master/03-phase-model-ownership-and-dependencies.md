@@ -55,7 +55,8 @@ Owns Delete, activate/deactivate, approve/unapprove, post/unpost, void,
 finalize, remove-child, and comparable transitions. It verifies visibility,
 server authorization, state preconditions, confirmation or typed input, busy
 protection, concurrency, idempotency, recovery, and refresh. A posted financial document is
-voided or credited, never deleted (backend block 15, decision J-1 pending).
+voided or credited, never deleted (backend block 15; owner2026-10-20 flag-only
+Void policy supersedes J-1's reversing-entry requirement).
 
 Before implementing Phase 4, inventory **every public domain action** exposed by
 the approved reference across its interface, service, controller, Angular

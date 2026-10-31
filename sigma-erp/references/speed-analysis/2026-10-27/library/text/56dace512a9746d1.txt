@@ -1,0 +1,9 @@
+S098
+Weekend Settings
+https://speedautosystems.com/car-rental-software/user-guide/weekend-settings/
+
+Weekend Settings
+Weekend Settings:
+If your Company give special promotions or charge extra on weekends then add your weekend days accordingly.
+If you select the option “Mix Weekend with normal rental” then there will be no effect in the system and its charges.
+You can also set a limit of KM for the weekend. If no limit then leave it blank.

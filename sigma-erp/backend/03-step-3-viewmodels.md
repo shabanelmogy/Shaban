@@ -2,7 +2,7 @@
 
 > **Status: Canonical**
 
-Six files per entity in `SiGma.ViewModels/ViewModels/<Entity>/`:
+Four core files per entity in `SiGma.ViewModels/ViewModels/<Entity>/`; additional files are conditional on a frozen consumer contract:
 
 | File | Base | Direction |
 |---|---|---|
@@ -11,7 +11,22 @@ Six files per entity in `SiGma.ViewModels/ViewModels/<Entity>/`:
 | `<Entity>ListVM.cs` | `ListBaseVm` / `ListBaseVmWithName` | server → grid |
 | `<Entity>DetailVM.cs` | `LeanDetailBaseVm` (Id) / `NumberedDetailBaseVm` (Id + nullable No); explicit class for incompatible identity shapes; legacy heavy base only when every inherited field is consumed | server → editor |
 | `<Entity>FullListVm.cs` | `ListBaseVm…` | only for a **named** second consumer (export or picker) whose shape differs from the ListVM, recorded in the contract; otherwise not created (backlog 7) |
-| `<Entity>DeleteVm.cs` | — | `Id` only |
+| `<Entity>DeleteVm.cs` | — | retained only where an existing contract already uses it; this book does not create a new DeleteVm requirement |
+
+### Explainable bulk-action responses (2026-10-23)
+
+When a bulk action reports which records it handled, freeze the per-record
+outcomes as part of its response contract. An affected-row count describes this
+run's changes; it is not proof that every record is now configured. Return one
+terminal outcome per scoped record with minimum identity, displayed values and
+a localized reason. Derive the mutually exclusive outcome counts and total from
+that same result set. Distinguish already-valid and deliberately exempt records
+from unresolved records; do not guess a business classification to fill a result.
+Keep setup/cross-record warnings separate from per-record reasons. Retain legacy
+summary fields only for an identified compatibility consumer and document their
+meaning. The owning shared result UI consumes the same response; no client-side
+reconstruction of missing outcomes. Evidence: account-classification initialization
+and its shared Chart of Accounts/Account Setting result (source-only).
 
 ```csharp
 using SiGma.Helpers.ViewModelsBases.Add;
@@ -120,7 +135,8 @@ enum input lets Required reject a missing type. Issuer and path remain optional 
 Company address columns map to the owned address and supplied country names resolve against
 the tenant's live lookup. Do not accept input columns that the writer silently discards.
 
-**Check:** six files present · correct base per direction · feature write VMs
+**Check:** four core files present · optional `FullListVm` has a named second consumer ·
+any existing `DeleteVm` has an existing contract · correct base per direction · feature write VMs
 declare no server-owned fields · inherited transitional `SubscriptionId` and
 `No` are ignored by every Update map · `[MaxLength]` matches `HasMaxLength` ·
 required/nullable matches the entity and the Angular model · Detail carries only
@@ -143,10 +159,25 @@ keeps the business rules only: duplicates, references, ownership, dates and stat
 registered in `Program`) trims every string of a request body as it is deserialized:
 
 - **Empty text:** it becomes null on a nullable property (`string?`) and stays "" on a non-nullable one.
+- **Exact text content:** `LanguageTextSaveVM.Value` preserves whitespace because
+  translation content can contain meaningful leading/trailing spaces. The shared
+  resolver excludes only that exact declaring type/property, alongside the
+  existing password exception. Identity, source, culture and ordinary form text
+  keep trimming. Empty translation remains a valid explicit missing direct value;
+  server placeholder/markup/length validation still applies. Do not disable
+  trimming for all `Value` properties or accept server-owned request fields.
 - **Passwords:** a property whose name contains "Password" is left as sent.
+- **Email-template content (2026-10-17):** exact
+  `EmailTemplateAddVM.EmailBody` keeps authored HTML/whitespace unchanged.
+  Exact `EmailTemplateAddVM.Subject` also bypasses the resolver so its
+  single-line validator sees raw CR/LF before the owning service trims the
+  validated subject. CC/BCC and ordinary request strings keep normal trimming.
+  Do not exempt every property named Subject/EmailBody or normalize saved HTML
+  through mapping. This narrow exception preserves the existing global owner;
+  source review does not certify the editor or delivery runtime.
 - **Responses:** not touched.
 
-Services therefore write no `Trim()`, `Normalize` or `Optional` helpers. It is not done in
+Except for the exact validated-subject exception above, services therefore write no `Trim()`, `Normalize` or `Optional` helpers. It is not done in
 AutoMapper, because the duplicate checks run before the map and must compare trimmed values.
 
 ---

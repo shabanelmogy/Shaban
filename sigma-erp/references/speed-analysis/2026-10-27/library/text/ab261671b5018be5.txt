@@ -1,0 +1,57 @@
+S301
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+https://speedautosystems.com/vehicle-mobile-inspection/for-car-rentals/how-to-use/how-to-initialize-the-application-for-effective-use/
+
+Watch source video online
+How to Initialize the Application for Effective Use?
+This feature is only available on a web application so you need to use the web app available on https://app.speedautosystems.com/Account/Login so login on this link.
+Administration:
+Administration module is to configure the system as per your business requirements. Click “Administration” link in the left navigation pan It has six options to follow:
+Branches. To add or edit a branch.
+Roles. To create various roles as well as the limit of access to the application as per their assigned role/task. These roles are to be assigned to various users subsequently.
+Users. All users are created, edited or deleted here and assigned the role al Their permissions can also be modified from here also.
+Languages. To add a new language of your region and modify various words used in the application as per your requirement and language.
+Audit Logs. This is a feature which gives a complete picture to the administrator that what activity has been done by a specific user on the application and at what time.
+Settings. This is the basics from where the application is initialized to function properly as per your business requirements.
+These options will function in the way explained in proceeding paras.
+Branches:
+Click “Branches” in the left navigation pan This gives you the list of all the branches if already added otherwise only default Main Branch will appear here.
+To add a branch click “+ CREATE NEW BRANCH” button on the right top corner. Fill in the details and press the “SAVE” button.
+A branch can be deleted or details about a branch can be edited by clicking the “ACTIONS” button attached to that specific branch. A branch can only be deleted until no action is taken from that branch, once any action has been done now that branch can’t be deleted.
+Roles:
+Keeping in view the job being performed by every individual, certain roles are defined here such as Admin, Fleet Manager or Booking Manager etc.
+To create a new Role click “+ CREATE NEW ROLE” on right top corner.
+If you want every new user, being created in the system, to be assigned with the same role as default then select the “Default” checkbox beside it.
+By selecting the “Permissions” tag you can select the level of access, to information, to users assigned to that specific role.
+A user can be edited or deleted by selecting the “ACTIONS” button attached to it less Admin, User, and Customer which can only be edited.
+Users:
+All the users using the application will be added and assigned a specific role here.
+To create a new User click “+ CREATE NEW USER” on right top corner. Fill in all the details.
+To assign a role, select the Roles Tag. Tick all the roles to be assigned to this specific user.
+After having added a user, by clicking the “ACTIONS” button attached to it four options are available, Login as this user, Edit, Permissions and Delete.
+Admin can create a new user password for any user who forgets his/her password by editing the user credentials.
+Languages:
+The feature is equipped with twelve languages by default, if the desired language is not available on the list you can add that language by clicking “+ CREATE NEW LANGUAGE” button on right top corner.
+Click the “ACTIONS” button attached to a language to apply “Change Texts” or “Set as default language”.
+Audit Logs:
+This feature gives a complete report to the administrator about the usage of the application and various actions performed by various users as per the Date Range selected.
+Give the dates in Date Range and Give the User Name or leave it blank to see the report of actions by all users followed by clicking the “REFRESH” button.
+Settings:
+Settings link is basics from where the application is made ready or initialized to work as per your requirements or n
+It has five different tabs leading to various settings:
+Common
+The first tab, which appears in right panel on clicking “Settings” link, is “Common”. Here you will do following actions:-
+Select your time zone.
+Enter date Format.
+Leave other fields as these are and click “SAVE” button.
+Profile
+The Second tab allows you to add your company’s letterhead as well as the logo of the company. The added letterhead will automatically appear on all the correspondence being automatically forwarded to your customers by the application.
+These can be added by clicking the “Choose File” and picking the file where you have saved these.
+Document Nos
+Although this feature is not much needed in VMI yet the Third tab will assist you in formatting your various entries such as Agreement No, which can be generated manually also but if you need the application to automatically generate it for you then what format it should follow can be defined here. Same way numbering of invoices and various vouchers etc.
+User Management
+The Fourth tab works to manage the users’ initial access process to the application.
+Email (SMTP)
+The last Tab allows you to make the settings to allow your application to send various emails to your customers.
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Apple App Store? How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Google Play Store? How to Sign Up? How to Sign In? How to add vehicle? How to create vehicle QR Labels? How to create vehicle checklist? How to manage staff? How to give a vehicle to a customer on rental agreement? How to take a car back from a customer on rental agreement closing? How to open vehicle movement on a staff? How to close vehicle movement on a staff? How to generate reports? How to open rental agreement? How to Fix Vehicle Damages? How to Initialize the Application for Effective Use?

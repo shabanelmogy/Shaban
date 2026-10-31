@@ -1,0 +1,86 @@
+S034
+Speed Car Rental Software - Rental Cancelled Agreements Report
+https://speedautosystems.com/car-rental-software/for-small-car-rentals/rental-cancelled-agreements-report/
+
+List
+List
+Menu
+Setup
+Company Detail
+Control Panel
+Employees
+User Group with System Access Rights
+Application Users
+Change Password
+Change System Background
+DB Connection Info
+Karzansoft
+About System
+Log Off
+Exit
+Customers
+Walk-in Customers (Cash Customers)
+Corporate Customers (Credit Customers)
+Search Customer
+Statement Of Account (Customer)
+Contact Balances
+Vehicles
+Vehicles Master
+Make
+Model
+Vehicle Engine Capacity
+Service Types (Preventive Maintenance)
+Defect Types (Incidental Maintenance)
+Manage Vehicles
+De-Fleet Vehicles
+Operations Dashboard
+Vehicle Movement Log
+Monthly Reporting For Daily Vehicles
+Fleet Utilization Report
+Missing Mileage Report
+Vehicle Wise Estimated Revenue
+Agreement Wise Estimated Revenue
+Vehicle Revenue Sales Log
+Vehicle Revenue Summary
+Day Summary
+Rental
+Rental Agreement Opening
+Rental Agreement Closing
+Rental Agreement Editing
+Rental Agreement Cancellation
+Rental Agreement Reporting Engine
+Rental Agreements Editing Log
+Rental Cancelled Agreements Report
+Movements
+NRM Staff Movement Opening
+NRM Staff Movement Closing
+NRM Staff Movement Reporting Engine
+Garege Movement Opening
+Garege Movement Closing
+Garege Movement Reporting Engine
+Vehicle Replacement Movement
+Traffic Fines
+New Traffic Fine
+Traffic Fines Reporting Engine
+Vouchers
+Invoice
+New Invoice Vouchers
+View Invoice Vouchers
+Due Invoice Vouchers
+Debit Note
+New Debit Note Vouchers
+View Debit Note Vouchers
+Authorize Debit Notes Vouchers
+Credit Note
+New Credit Note Vouchers
+View Credit Note Vouchers
+Authorize Credit Notes Vouchers
+Receipt Voucher
+New Receipt Voucher
+View Receipt Voucher
+Receipts Due for Allocation
+Refund
+New Refund
+Authorize Refund
+View Refund
+Speed – Car Rental Software (Express Edition – Demo)

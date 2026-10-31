@@ -1,0 +1,15 @@
+S297
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+https://speedautosystems.com/vehicle-mobile-inspection/for-car-rentals/how-to-use/how-to-close-vehicle-movement-on-a-staff/
+
+Watch source video online
+How to close vehicle movement on a staff?
+To Check-In a vehicle use the mobile application and check-in process is spread over six steps:-
+Step#1: tap “NRM Check-In” or “Staff Check-In”.
+Step#2: enter the Vehicle Plate Number or just scan the QR code this will fetch the vehicle as well as Driver’s Name automatica Enter fresh mileage on the odometer of vehicle and fuel level, give the location where the vehicle is being checked in. Keep the location of cell phone “On” so that system can record the geographical location automatically.
+Step#3: tick all the items available with the vehicle which were already with the vehicle at the time of check-out.
+Step#4: check the vehicle for exterior damages if any and mark these and take a photo to keep the record by tapping the camera button, complete process is already explained before in Agreement Check-In Process.
+Step#5: repeat the same process for the interior of the vehicle and proceed next.
+Step#6: Enter the notes if required, get driver’s signatures and tap “Finish” to finish the Check-In Process.
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Apple App Store? How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Google Play Store? How to Sign Up? How to Sign In? How to add vehicle? How to create vehicle QR Labels? How to create vehicle checklist? How to manage staff? How to give a vehicle to a customer on rental agreement? How to take a car back from a customer on rental agreement closing? How to open vehicle movement on a staff? How to close vehicle movement on a staff? How to generate reports? How to open rental agreement? How to Fix Vehicle Damages? How to Initialize the Application for Effective Use?

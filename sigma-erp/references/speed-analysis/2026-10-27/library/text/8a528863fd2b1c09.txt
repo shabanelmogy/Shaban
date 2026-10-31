@@ -1,0 +1,11 @@
+S278
+Suppliers
+https://speedautosystems.com/vehicle-leasing-software/user-guide/suppliers/
+
+Suppliers
+Go to the Administration module and click on it.
+Click on Data Import, a drop-down list will appear.
+Click on the Suppliers module, a dashboard will open on the right side of the menu panel.
+Choose an Excel file and click on IMPORT FROM EXCEL button.
+Suppliers Data will be imported automatically.
+You can also download sample Suppliers Data by clicking on the DOWNLOAD SAMPLE FILE button. Click HERE if you have a query or an issue.

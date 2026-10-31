@@ -2,9 +2,30 @@
 
 Phase 6 compares every applicable path.
 
+Performance handoff applies Master5/UI29/BE7/BE2: include the actual route/request
+inventory, confirmed query/read-volume findings and authorized fixes, comparable
+before/after measurements or explicit pending owner measurement, and index
+proposals with existing coverage, key/filter/include rationale, costs and schema
+boundaries. Record a justified no-new-index outcome where appropriate. Source
+query-count reductions do not establish measured load-speed success. Reuse the
+feature's existing report and keep execution authorization unchanged.
+
 ### Mandatory comparisons
 
 - Screenshot evidence ↔ implemented functional behavior.
+- Master2 analysis-guide review ↔ original screen-explanation evidence ↔
+  applicable dated sidebar/code cycle and document-link evidence ↔ actual Sigma
+  owners, accepted contracts and scoped result; reconcile exclusions, conflicts,
+  Missing/Uncertain decisions and supported Not applicable outcomes. An unread
+  source or generic claim that the guide was checked is not review evidence.
+  Reconcile Master4's reference-cycle rows, including out-of-scope links and
+  unsupported server/financial claims; declared frontend methods are not runtime proof.
+- Master2's reference-product functional detail target ↔ Master4's scoped
+  coverage rows ↔ final source and user-guide content. State matched, partial,
+  missing, decision-blocked and owner-excluded details and their remaining
+  slices. An older minimal Sigma contract or implementation does not erase a
+  target gap. Report bounded fixes separately from reference equivalence;
+  never claim the latter while required details remain unaccounted for.
 - Grid columns and action needs ↔ frontend list model ↔ backend ListVM.
 - Filter controls ↔ serialized keys ↔ backend exact lookup keys.
 - Page request ↔ `CountAsync` total ↔ response metadata ↔ Grid pager state.

@@ -1,0 +1,8 @@
+S073
+Opening Speed – Car Rental Software Web App
+https://speedautosystems.com/car-rental-software/user-guide/opening-web-app/
+
+Opening Speed – Car Rental Software Web App
+Open any browser like Chrome, Edge, Firefox, Safari on you PC, MacBook, iPad, iPhone, Android Phone, Android Tablet.
+Open link https://app.speedautosystems.com
+If you don’t have account then signup using the link https://app.speedautosystems.com/TenantRegistration?product=crs

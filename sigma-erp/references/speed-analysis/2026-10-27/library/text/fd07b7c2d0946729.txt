@@ -1,0 +1,12 @@
+S178
+Companies
+https://speedautosystems.com/vehicle-leasing-software/user-guide/companies/
+
+Companies
+Go to the Administration module and click on it.
+Click on Data Import, a drop-down list will appear.
+Click on the Companies module, a dashboard will open on the right side of the menu panel.
+Choose an Excel file and click on IMPORT FROM EXCEL button.
+Companies Data will be imported automatically.
+You can also download Sample Companies Data by clicking on the DOWNLOAD SAMPLE FILE button.
+Click HERE if you have a query or an issue.

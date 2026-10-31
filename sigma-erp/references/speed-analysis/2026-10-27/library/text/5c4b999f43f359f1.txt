@@ -1,0 +1,11 @@
+S062
+Electronic Rental Agreement using Speed
+https://speedautosystems.com/car-rental-software/user-guide/electronic-rental-agreement-using-speed/
+
+Electronic Rental Agreement using Speed – Car Rental Software Mobile App with Signature on Mobile
+To open a agreement from the mobile you have to open the mobile application from your phone with the name of CRS.
+1. There are many options in the mobile application but you have to click on the Agreement Open the 3rd option from Mobile Application.
+2. A new window in the mobile screen will be opened and here you have to enter the details of the ahgreement according to the type of agreement and the customer details as well.
+3. When you press the next button a new window will pop up that will let you update the prices and any other details regarding to the prices.
+4. After saving all the above option application will ask you to take the signatures from the customer on the mobile application.
+Note: You can not see a agreement from mobile application for that you have to visit the web application.

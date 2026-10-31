@@ -1,0 +1,11 @@
+S195
+How to create a new Language
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-create-a-new-language/
+
+How to create a new Language?
+If you didn’t find your language in the given list, then follow the below process.
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Languages module.
+A dashboard will appear on the right side of the panel. Click on the +CREATE NEW LANGUAGE button.
+Choose language and flag. Then, click on the SAVE button.
+Click HERE if you have a query or an issue.

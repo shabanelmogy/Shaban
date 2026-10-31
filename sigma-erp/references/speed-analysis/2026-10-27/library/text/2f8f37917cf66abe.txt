@@ -1,0 +1,10 @@
+S262
+How to Sign-Up for Speed – VLS Web App
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-sign-up-for-speed-vls-web-app/
+
+How to Sign-Up for Speed – VLS Web App?
+Open Speed Web App in any web-browser like Google Chrome, Firefox, or Microsoft Edge.
+Click on the link below:
+https://app.speedautosystems.com/TenantRegistration
+Fill the Sign-Up form. Check the box given below the form, and click on the Submit button.
+Click HERE if you have a query or an issue.

@@ -1,0 +1,26 @@
+S145
+User Guide UK SCS
+https://speedautosystems.com/uk-vehicle-safety-check-system/user-guide/
+
+Opening Speed – UK Vehicle Safety Check System Web App
+Downloading Speed – UK Vehicle Safety Check System (SCS) Android Mobile App
+How to Sign UP
+How to Sign-In
+Forgot Password
+Fleet
+Vehicle
+Vehicle Types
+Vehicle QR Labels
+Inspections
+Administration
+Branches
+Safety Check Templates
+Roles
+Users
+Languages
+Error Logs
+Settings
+Support
+Data Entry Corrections
+Customizations
+Subscriptions & Billing

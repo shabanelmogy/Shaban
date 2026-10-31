@@ -1,0 +1,14 @@
+S041
+Billing Settings of Individual Customer Account
+https://speedautosystems.com/car-rental-software/user-guide/billing-settings-of-individual-customer-account/
+
+Billing Settings of Individual Customer Account
+Open the customer module from the left navigation panel.
+Click on the first tab for individual customers.
+Click on the blue button stating “Create New Individual”
+A pop up will appear and go to the last tab from top stating “Billing Info”.
+1. Here you have to define Credit Period of customer that how much long the credit account can be hold.
+2. You have to select the limit for customer credit in the Credit Limit.
+3. If customer is a tax payment then you can add the customer Tax Return Number in TRN.
+4. If the Customer is tax exempted then select the option and tax will not be applied on that individual.
+5. At last you can enter the Credit or Debit card information for that specific customer.

@@ -23,11 +23,15 @@ Review end-to-end paths:
   response wrapper → grid row → pager or export.
 - Write path: editor mode → detail response → typed form → payload → backend
   validation → transaction or save → success/failure → close and refresh.
-- Action path: visibility → server authorization and state checks → confirmation
+- Action path: visibility → actual authentication/authorization boundary and state checks → confirmation
   or typed input → execution → busy protection → result → recovery and refresh.
 
 A component-only or service-only finding is incomplete when correctness depends
 on another layer.
+
+Inspect the mechanism that actually exists. Sigma currently has authentication
+but no application permission mechanism (UI26); this path does not authorize
+inventing one or treating a hidden control as secured.
 
 ### Business correctness first
 
@@ -54,6 +58,13 @@ The artifacts follow the size of the change, not a fixed list:
 
 When in doubt, take the larger tier. A change that grows during the work moves up a tier, and the missing artifacts are added.
 
+Select the tier before copying a review/planning template. For tier S, record the
+small report and applicable decision in the existing review; do not require a
+separate freeze file. Tier M fills only contracts actually consumed by that
+screen. Tier L uses the plan and applicable phases. This is the entry for both
+new-screen implementation and existing-state review; it changes neither the
+user's authorization mode nor any required business decision.
+
 ### Whole-application review order
 
 The screen-by-screen review of the application follows this order. Each screen is reviewed once, against the books as they are when it is reached:
@@ -66,7 +77,13 @@ The screen-by-screen review of the application follows this order. Each screen i
 
 **Per-screen checklist:**
 1. Pick the screen type (`ui/screens/00-catalog.md`) and the tier (above).
-2. Freeze the contracts the type lists.
+2. Review the relevant analysis guide and original screen explanation under
+   Master2's mandatory analysis-guide gate, including the applicable sidebar/code
+   cycle slice; compare any existing Sigma source, contract and user-guide topic,
+   record accepted/excluded evidence and gaps, then freeze the contracts the type lists.
+   Apply Master2's reference-product functional detail target: map the scoped
+   reference details to actual Sigma coverage and plan missing details rather
+   than treating the current minimal implementation as the target's ceiling.
 3. Adopt every shared piece the type's blocks name (UI backlog 39 and 40, backend backlog 21–24), and remove the feature copies.
 4. Remove the server-owned fields from the payloads (UI block 2).
 5. List the *Authorization candidates* (UI block 26).
@@ -112,6 +129,9 @@ The planning sequence is:
    writers, readers, calculations, endpoints, Angular consumers, reports,
    permissions, tenancy, integrations, migrations, and related documentation.
    Record what already works and what is only partial or legacy.
+   Apply Master2's analysis-guide gate before selecting the target: read the
+   relevant guide chapter and original screen explanation, record applicability
+   and conflicts, and keep reference proposals distinct from Sigma contracts.
 3. **Create a Logic Ambiguity Register.** Every unclear rule is marked Confirmed,
    Derived, Missing, Conflicting, or Uncertain with the source/owner needed to
    resolve it. Implementation must never silently choose an Uncertain rule.

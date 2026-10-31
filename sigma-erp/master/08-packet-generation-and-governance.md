@@ -11,7 +11,9 @@ source dependencies live in `recipe-system/templates/` and
 - Each packet carries source fingerprints.
 - Run `Generate-SigmaRecipes.ps1 -Check` before using a packet.
 - Read-only companions in `recipe-system/`: `Check-Translations.ps1` (en/ar key parity, UI
-  block 23) and `Check-BookReferences.ps1` (every path and cross-reference the books name exists).
+  block 23) and `Check-BookReferences.ps1` (documentation links and block references by
+  default; application paths/types/styles only inside explicitly supplied feature scopes).
+  A documentation check must not trigger a full application-source scan.
 - Keep packets current throughout each task (standing owner instruction,
   2026-10-09). After changing a canonical block, template or manifest dependency/
   reference, regenerate the affected packets in the same task, semantically
@@ -45,7 +47,29 @@ A feature may require several phase packets and one implementation recipe. Phase
 packets establish and reconcile contracts; task recipes implement an approved
 shape.
 
-### Documentation-system evolution procedure
+### Current-state entry and execution skill (owner clarification, 2026-10-23)
+
+The documentation README routes four current needs: create a new screen, review
+an existing screen, inspect deferred decisions, and select the execution skill.
+Both screen paths select the current catalog shape and read only their applicable
+canonical blocks and packet. Apply Master1's proportional tiers before choosing
+artifacts; a small correction does not acquire a full-feature workflow merely
+because that template exists.
+
+The screen skill is a short operational router into those same sources. It must
+not become a second copy of all code examples, feature-specific decisions or
+revision history. Keep its current rules cited to the owning block, and retain a
+dated revision row. Superseded skill text, completed review records and old
+changelog entries belong in clearly labelled archive folders. Active plans and
+unresolved decisions remain discoverable; archive by lifecycle and supersession,
+not age alone. Preserve frozen decisions and update callers when a file moves.
+
+State the current approved target separately from source that has not migrated
+to it. A source verification date names the checked scope; a targeted check does
+not certify every example or an application's runtime. Archive content has no
+independent authority and is read only for a named historical decision.
+
+### Applying a documentation change
 
 1. Change the applicable canonical source.
 2. Update dependencies or templates when semantics change.

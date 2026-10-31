@@ -1,0 +1,32 @@
+S044
+Creating Individual Customer Account
+https://speedautosystems.com/car-rental-software/user-guide/creating-individual-customer-account/
+
+Watch source video online
+Creating an Individual Customer Account
+Click the “Customers” link in the left navigation panel
+Click “Individuals”
+On the right side, you will see the grid containing the individual customer accounts
+Click the button “+Create New Individual” on the right top corner to create a new individual customer account.
+e. a form will appear to create the account of individual customer
+f. First Name, Last Name & Mobile No fields are compulsory without which Save button will not be enabled for saving.
+g. Documents Management (Driving License, National ID, Passport details along with images)
+i. Click the “Documents” Tab then Click the “Add” button
+ii. Click the document type which you want to enter like Driving License, National ID, Passport or any Other Document
+iii. After selecting “Driving License”, enter the details of driving license
+iv. Attach driving license pictures (front & back) by clicking the “Camera” button
+h. Billing Info
+i. Click the Billing Info Tab
+ii. Mostly individual customers have no credit facility. Credit period & credit limit will remain 0.
+iii. Enter individual customer tax id in “Tax Id” field
+iv. For monthly invoicing, select one of the invoicing rules:
+a. Date to Date Monthly invoicing will be on the basis of calendar month like if the monthly rental agreement is opened on 18 Jan then invoices will be 18 Jan – 17 Feb, 18 Feb – 17 Mar, 18 Mar – 17 Apr and so on.
+b. Monthly invoicing on month-end
+c. Monthly invoicing on the basis of each 30 days
+v. For monthly invoicing, select one of the invoice types
+a. Advance Invoicing
+b. Post (Credit) Invoicing
+vi. Enter Toll Surcharge
+vii. Enter Fine Surcharge
+viii. Enter Fine Surcharge type “Fixed” or “Percentage” of the fine amount
+ix. Select the checkbox “Tax Applicable” else uncheck if the customer is Tax exempted

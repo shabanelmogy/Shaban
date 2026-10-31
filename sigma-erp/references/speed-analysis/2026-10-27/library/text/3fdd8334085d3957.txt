@@ -1,0 +1,10 @@
+S060
+Editing Company Customer Account
+https://speedautosystems.com/car-rental-software/user-guide/editing-company-customer-account/
+
+Editing Company Customer Account
+Open the customer module from the left navigation panel.
+Click on the second tab for Companies.
+Click on the blue button stating “Action” with the companies.
+Here a drop down menu will pop up and select edit.
+By clicking edit the details related to that company will appear in a new window and you can edit the company customer account from here.

@@ -1,0 +1,10 @@
+S276
+Statement of Accounts management
+https://speedautosystems.com/vehicle-leasing-software/user-guide/statement-of-accounts-management/
+
+Statement of Accounts management
+Go to the panel on the left side and click on the Staff tab.
+Scroll down and click on the Statement of Account module.
+Select a date range and other parameters. Then, click on the REFRESH button.
+All the details will be displayed. Now, you can either take print or export to excel.
+Click HERE if you have a query or an issue.

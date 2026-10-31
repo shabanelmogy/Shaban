@@ -46,6 +46,15 @@ complete value used by templates and exports.
 
 Values the grid shows but the API does not return are built in one mapper:
 
+For existing loose or nested response shapes, the feature's mapper may reuse
+`shared/utils/grid-row-values.ts`: `readDisplayValue(source, pathSegments)`
+reads a scalar display path and `readBoolean(source, field)` retains only an
+explicit boolean. Missing paths stay empty; do not infer domain aliases,
+identities, statuses or financial values. Keep path selection and any existing
+fallback in the feature mapper. Reuse these helpers instead of copying the
+same defensive path reader into each feature. They do not replace typed DTOs,
+introduce a legacy grid adapter or change the shared table's typed field keys.
+
 ```ts
 private toGridRow(item: CompanyPartnerDTO): CompanyPartnerGridRow {
   const name = item.companyName?.trim() ?? '';
@@ -67,6 +76,12 @@ so the template reference exists before the table renders. Give a status column
 fallback that returns translated text. Export and any render path that bypasses
 the template then still show translated text instead of a raw enum. In the
 template, bind the row with `let-row` (`$implicit`).
+
+Source-use status and percentage are separate read-only columns where the owner
+requests progress. Show the server status as a translated shared badge and the
+nullable percentage with two decimals; No Quantity uses a dash. Saved details
+may repeat the indicators. Never label source conversion as invoicing or approval
+(Master4, BE14; first consumer Purchase Request).
 
 **Column types (shared formatting).** `DataTableColumn.type` formats the field so a feature
 writes no `value` function or template for common cells:

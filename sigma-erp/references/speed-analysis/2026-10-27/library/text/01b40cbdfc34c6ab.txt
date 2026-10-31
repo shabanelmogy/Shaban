@@ -1,0 +1,10 @@
+S061
+Editing Individual Customer Account
+https://speedautosystems.com/car-rental-software/user-guide/editing-individual-customer-account/
+
+Editing Individual Customer Account
+Open the customer module from the left navigation panel.
+Click on the first tab for individual customers.
+Here you can see there is an action button with the customers click on that action button and
+you will get option to Edit the customer.
+From here you can edit any kind of information of the customer you have created already.

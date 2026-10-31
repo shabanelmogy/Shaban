@@ -1,0 +1,11 @@
+S257
+How to Repair Vehicle Damages in Speed – VLS
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-repair-vehicle-damages-in-speed-vls/
+
+How to Repair Vehicle Damages in Speed – VLS
+Go to the panel on the left side and click on the Fleet tab.
+Scroll down and click on the Repair Vehicle Damage module.
+Put the Plate No. in the search bar and click on the SEARCH button.
+Diagram of that vehicle will appear with damages marked on it.
+Remove the marks that you have got repaired.
+Click HERE if you have a query or an issue.

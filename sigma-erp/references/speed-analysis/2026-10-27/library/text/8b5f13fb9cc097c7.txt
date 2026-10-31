@@ -1,0 +1,9 @@
+S050
+Date Format Setting
+https://speedautosystems.com/car-rental-software/user-guide/date-format-setting/
+
+Watch source video online
+Date Format Settings
+Click on the Administration Tab on the left side Navigation panel and then click on Settings Tab.
+Click on the Common tab and select Date Format.
+Select the Date Format according to your region and use “/” in between. E.g DD/MM/YYYY.

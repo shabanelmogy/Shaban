@@ -1,0 +1,11 @@
+S258
+How to select Languages
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-select-languages/
+
+How to select Languages?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Languages module.
+A dashboard will appear on the right side of the panel with several languages enlisted.
+Click on the ACTIONS button.
+Click on the Set as a default language option.
+Click HERE if you have a query or an issue.

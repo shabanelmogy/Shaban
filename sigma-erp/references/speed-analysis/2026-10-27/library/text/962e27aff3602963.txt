@@ -1,0 +1,10 @@
+S252
+How to manage replacement reasons
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-replacement-reasons/
+
+How to manage replacement reasons?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Replacement Reasons module.
+A dashboard will appear on the right side of the panel. Click on the “+CREATE NEW REASON” button.
+Click on the SAVE button.
+Click HERE if you have a query or an issue.

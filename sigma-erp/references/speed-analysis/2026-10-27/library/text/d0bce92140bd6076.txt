@@ -1,0 +1,11 @@
+S212
+How to define Card Transaction Bank Transfer Number
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-card-transaction-bank-transfer-number/
+
+How to define Card Transaction Bank Transfer Number
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Document No’s tab.
+Scroll down, locate, and adjust Card Transaction Bank Transfer Number.
+Scroll down and click on the SAVE button.
+Click HERE if you have a query or an issue.

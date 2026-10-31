@@ -12,6 +12,16 @@ posting-account picker, for example, must not return parent accounts when Save
 requires `AllowChildren == false`. Do not fix this mismatch in Angular by
 filtering labels client-side; the backend lookup is the source of selectable ids.
 
+**Classification is not posting eligibility (2026-10-23).** A grouping record can
+carry classification metadata without becoming selectable for operational writes.
+Keep display-only grouping roles out of posting lookups, including generic lookup
+wrappers, and mirror the predicate in consuming write validation. A deliberate
+read-only lookup opt-in may expose those roles for existing-record display; it
+must not widen child creation or Save eligibility. Removing the last child does
+not itself authorize a posting transition or erase the parent's classification.
+Evidence: AccountSelectionPolicy Apply/IsAllowed, AccountService SelectAsync and
+fixed-root Account type display; source-only, owner execution pending.
+
 ```csharp
 public class DropdownDto
 {
@@ -24,6 +34,18 @@ public class DropdownDto
 This matches the Angular `DropDownSelect { id, value, no? }` exactly, which is why
 templates bind `optionLabel="value"` and `optionValue="id"`. Do not invent a
 different lookup shape.
+
+**Persisted bilingual labels (2026-10-23).** When a consumed lookup needs both
+stored names for live language switching, keep the `Id`/`Value`/`No` contract
+and use a minimal typed `DropdownDto` extension with `NameLocalized`. `Value`
+is the stored base name, not a translation key or a name localized into a
+single request language. The Angular shared dropdown model accepts this optional
+metadata; UI20 owns report-option selection. Numeric semantic filter keys can
+remain stable while names are loaded from tenant settings. Do not cast a
+string-converted EF enum to an integer in SQL projection: materialize the small
+lookup's key/name fields first, then map its numeric identity in memory.
+Evidence: `AccountReportGroupOptionVM`, GroupDefinition `GetReportOptionsAsync`,
+Budget/BudgetVariance; source-only, owner runtime verification pending.
 
 The base implementation is usually enough:
 

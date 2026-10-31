@@ -1,0 +1,10 @@
+S071
+Monthly Invoicing Rules Settings for Monthly Rental
+https://speedautosystems.com/car-rental-software/user-guide/monthly-invoicing-rules-settings-for-monthly-rental/
+
+Monthly Invoicing Rules Settings for Monthly Rental
+Monthly Invoicing Rules Settings for Monthly Rental:
+This option is related to the monthly invoicing that how do you want to charge your customer if the agreement is monthly basis.
+Individual Customers : You can select the invoicing rule according to your company that how you charge your customers. You have to select from 3 invoicing rules. Second option is about the type that do you charge the customer in advance or charge them after the services.
+Corporate Customers:
+Same options as the individual customers you have to select the invoicing rule and the type.

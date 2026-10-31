@@ -1,0 +1,11 @@
+S234
+How to Download/Process Fines
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-download-process-fines/
+
+How to Download/Process Fines
+Go to the panel on the left side and click on the Fleet tab.
+Scroll down and click on the Download/Process Fines module.
+Select a date range and click on the PROCESS button. No of processed fines in total and with agreements will appear.
+You can download this data by clicking on the DOWNLOAD button integrated on the top-right side of the window.
+Click HERE if you have a query or an issue.
+Click here to add your own text

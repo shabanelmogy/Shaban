@@ -1,11 +1,63 @@
 ## 17. Pattern 5 — Reports
 
-> **Status: Canonical**
+> **Status: Canonical.** This block owns the current read-only report and
+> read-model contract. Its real-time subsection adds transport rules for
+> report snapshots; it does not create a CRUD or persistence pattern.
+
+### Real-time operational read models (2026-10-19)
+
+Keep the report's HTTP snapshot authoritative. Reusable SignalR transport belongs
+to `SiGma.ServerAPI/Realtime`: registered `RealtimeTopicDefinition` dependencies,
+`RealtimeHub` tenant/topic groups, and `IRealtimePublisher` invalidations. New
+consumers register a topic and actual persisted dependency types rather than
+copying a hub or broadcasting from every domain service. The hub derives the
+positive tenant from the same NameIdentifier claim as Repository and accepts no
+tenant or client publish argument. Require authentication on new snapshot and
+hub endpoints; accept query-string JWT only on the exact hub path boundary and
+close connections at credential expiration. Do not change unrelated endpoint
+access or invent a permission mechanism.
+
+EF save and transaction interceptors share a scoped `RealtimeCommitTracker`.
+Implicit saves notify after SavedChanges; explicit multi-save transactions
+accumulate and notify after TransactionCommitted. Failed/cancelled saves and
+full rollback discard their staged notifications. Capture dependency types and
+tenant before tracking state is accepted; never query the database in a socket
+broadcast. Bounded/coalesced background delivery carries topic/time only and
+cannot fail a committed domain save. Ambient transactions and writes bypassing
+these EF interceptors rely on the consumer's periodic reconciliation; do not
+claim universal or durable change delivery. A multi-instance deployment needs
+its own configured SignalR backplane. Dashboard is the first source-only
+consumer; owner commit/rollback, cross-tenant and reconnect acceptance pending.
 
 A report is not CRUD. It has no Add, Update or Delete, no `ListVM`, and often no
 entity of its own — it reads across several tables and returns one shaped
 response. The Angular side is blocks 20 and 21 of the UI pattern book
 (`Customers/StatementOfAccount` and friends).
+
+### Operational snapshot performance (source-reviewed2026-10-25)
+
+Reuse database-grouped populations when several sections read the same source:
+Dashboard aggregates branch/fleet/latest-status groups once for vehicle
+headline, fleet and idle summaries, without loading individual vehicles or
+building client ID lists. Keep SQL ordering before stable local regrouping.
+Compatible independent scalar counts may use LINQ Concat/UNION ALL in one
+database command, with each original QueryReport/pending predicate retained,
+explicit zero defaults for empty groups and a server-owned diagnostic stage.
+Dashboard's ten approval counts share that path; unsupported categories remain
+null and pending-estimation operational/tenant counts share one left-joined
+aggregate. Never put a correlated subquery inside an aggregate on SQL Server;
+join a unique relation before counting. Keep sequential scoped-DbContext use,
+cancellation, tenant/soft-delete filters and no cross-request replay cache.
+
+For UTC-day ages, replace repeated date functions only with proven equivalent
+half-open boundaries, including future and exact-midnight behavior. Prefilter
+historical rows only when each excluded row contributes zero to every returned
+measure. Supporting latest-history indexes follow BE2: tenant/vehicle prefixes,
+actual timestamp+Id order and projected Status/Type/IsDeleted coverage. Retain
+nullable live IsDeleted semantics; an IsDeleted=0 filter excludes live NULL
+rows. Preserve existing table mappings (VehicleStatuses keeps its DbSet name)
+and existing indexes. Source index declarations require owner migration review;
+SQL translation, plans, timings and write/storage cost remain owner acceptance.
 
 Shape:
 
@@ -80,6 +132,34 @@ when the form validates; do not silently accept an invalid sequence. Either retu
 effective boundaries or expose a confirmed contract the consumer can use to label
 the same applied buckets in screen, summary, print and Excel. Exact values and
 accounting formulas remain in the feature contract, not this reusable rule (UI 20).
+
+### Hierarchical financial totals
+
+Initialize every node from its own raw amount, including any permitted direct
+posting on a parent. When processing nodes leaf-first, accumulate each mutable
+subtotal into its direct parent exactly once. Forwarding an already accumulated
+subtotal to every ancestor repeats descendants at higher levels. An alternative
+all-ancestor algorithm must use immutable raw snapshots, never mutated totals.
+Use the existing report helper for shared accumulation; preserve the report's
+sign, period, budget and filtered-total contracts. Reconcile each affected column
+and month by source arithmetic: a three-node chain with a leaf100 yields root100;
+a direct parent25 yields root125. This reasoning is source evidence, not an
+executed numeric test or owner accounting acceptance.
+
+### Cash-flow attribution and reconciliation
+
+A change in an accrual account balance does not itself prove cash paid or received.
+Keep working-capital changes, noncash profit adjustments and actual cash
+attribution as distinct constrained calculation roles. Freeze the cash scope,
+opening/closing treatment, signs and overlap rules in the feature contract.
+Use aggregate database queries for cash balances; when attribution requires raw
+journal-leg signs, load a bounded typed projection once rather than losing those
+signs in an account subtotal or querying per row. Resolve only deterministic
+allocations; disclose unresolved cases instead of inventing proportional splits.
+Cash reconciliation and unresolved-case status are independent: offsetting errors
+must not create a false reconciled report. Screen, print and export consume the
+same authoritative totals and diagnostics. This is an implementation invariant,
+not a universal framework-specific accounting policy.
 
 ### Allocation-based financial aging
 

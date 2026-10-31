@@ -1,0 +1,10 @@
+S183
+Define and manage Clauses of lease agreements
+https://speedautosystems.com/vehicle-leasing-software/user-guide/define-and-manage-clauses-of-lease-agreements/
+
+Define and manage Clauses of lease agreements
+Go to the panel on the left side and click on the Lease tab.
+Scroll down and click on the Clauses module.
+Click on the +CREATE NEW CLAUSE TYPE button.
+A new window will be opened. Specify a name and click on the SAVE button.
+Click HERE if you have a query or an issue.

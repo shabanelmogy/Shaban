@@ -1,0 +1,11 @@
+S069
+HOW TO SIGN-IN
+https://speedautosystems.com/car-rental-software/user-guide/how-to-sign-in/
+
+How to Sign-in
+Open URL https://app.speedautosystems.com
+Put your credentials
+Company Code
+Your email id/ user name
+Password
+Note: if you don’t have your user id & password, contact your system administrator

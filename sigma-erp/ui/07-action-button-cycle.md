@@ -7,6 +7,44 @@ table renders the Actions column first and composes the existing
 `ActionButtonComponent`; feature components do not manage `TemplateRef` or
 rebuild column definitions after view initialization.
 
+Existing native/PrimeNG table cells that have not yet adopted DataTable may
+embed the same app-action-button with its optional row input and typed
+moreActions. It renders the same exported template locally; DataTable omits
+row and keeps its existing template-export contract without duplicate buttons.
+This is a bounded compatibility path, not permission for feature-owned Menu
+copies or a second action style. Callbacks receive the actual row, never its
+visual index (Settings Fines/ESalik/EDarb runtime retirement,2026-10-22).
+
+### Shared action menu runtime (owner migration, 2026-10-22)
+
+Keep the same shared ActionButton/exported-template contract. Each rendered
+row uses a PrimeNG popup Menu appended to body, with translated commands built
+from that row's current ActionList. Filter hidden actions, expose disabled
+state, and recheck membership/visible/disabled before invoking the callback.
+Do not retain Bootstrap data-bs-toggle/events or custom DOM portal positioning.
+The publisher owns arrow/Home/End/Enter/Space/Escape behavior, outside dismissal,
+scroll/resize cleanup and overlay positioning. Its show(event) reads the actual
+currentTarget synchronously; do not reuse a visible menu for another row with
+synthetic/delayed event targets. Local row popup instances avoid stale context.
+Keep the compact trigger and body-popup geometry under shared Sigma styles,
+logical RTL/theme, marked print hiding and UI27 conditional focus return.
+No feature switches selectors, action payloads or callback ownership.
+
+**Stable popup model (source correction, 2026-10-23).** Preserve each rendered
+popup's MenuItem references and model array across unrelated template checks.
+A template method that maps to fresh MenuItems on every check makes the
+publisher's identity-tracked item views detach during focus/blur, potentially
+between native pointer-down and click. Cache by the actual popup instance
+with weak ownership; retain the row and action identity in the comparison.
+Re-evaluate visibility, translated labels, icons and disabled predicates on
+each check so mutable rows and busy/language changes remain live; replace
+only changed entries/model. Keep execution-time membership/visible/disabled
+guards and publisher click/keyboard dispatch. Do not execute on mousedown or
+freeze a menu snapshot until reopen. Regression coverage retains the pressed
+link through focus before its first click, plus row switching, live predicates
+and translation/action changes. Synthetic focus/pointer coverage is distinct
+from owner verification of actual mouse/touch interaction (UI29).
+
 ```ts
 private initActions(): void {
   this.moreActions.set([
@@ -77,6 +115,142 @@ click through them.
 | Irreversible status transitions: post, approve, unapprove, finalize, close | Opening a dialog, switching tab or step |
 | Discarding unsaved edits (block 10) | Search, refresh, export, print |
 | Actions with side effects on other records | Adding a blank child row |
+
+### Approval status in the action menu and saved editor
+
+**Source conversion actions (owner2026-10-24; BE18).** Use the existing shared
+row action owner and PrimaryActionButton in saved View for Create Receipt or
+Create Invoice. Consume the server's target-specific eligibility flags in both
+surfaces and pass only the source identity through the destination's typed
+entry; a frontend type test alone is not availability or capacity authority.
+Reuse the destination's editor, controls, source preview, errors/retry and
+save lifecycle. Lock source-owned fields, keep requested quantities/accounts
+editable according to its contract, and preserve drafts on refresh/cancel.
+Never create a second editor or locally synthesize source completion.
+PO uses canCreateGrn for Stock/Asset and canCreateBill for General/Job under
+the frozen downstream-creation contract; no action appears when capacity is
+exhausted or needs review. Domain/type decisions and stock/financial effects
+remain backend/model owned.
+
+**Independent document progress (owner2026-10-24; BE18).** Show approval,
+source quantity use, invoice coverage, draft reservation and payment settlement
+under their own labels. Open/Closed/Partially Used do not imply Approved or
+Paid; a pending invoice reservation is not Invoiced. Consume authoritative
+source-line progress in both displayed badges and server filters/count/export,
+never derive the meaning from row names or a page-local sum. Use the shared
+read-only document-log viewer for a model after its source/child identity and
+capture/read contract are frozen. Existing model actions and their financial
+guards remain authoritative; missing progress must be unavailable/Needs Review
+rather than fabricated. Exact per-model statuses stay in the feature handoff.
+
+> **Canonical presentation for models with a confirmed approval lifecycle**
+> (owner decision 2026-10-21; Master block 4, UI block 13).
+
+Expose an **Approval Status** row action that opens a dedicated modal showing
+the saved record identifier, current step, completed/incomplete/rejected state,
+and actual persisted decision history. Keep an Approval tab in the saved
+editor for the same information. Both surfaces read the same server-owned
+approval status/history and `can*` eligibility; where the model's frozen
+contract permits decisions, show eligible Approve/UnApprove/Reject in both and invoke the same
+typed transition endpoint. Confirm risky decisions through the shared
+confirmation control, guard repeat clicks, handle business and transport
+failures, then refresh both the row and whichever approval surface remains
+open. Do not duplicate status calculation or invent history from the current
+badge. New/unsaved records have no approval action.
+
+This is a presentation pattern, not a universal transition graph. A model
+without persisted approval and endpoints does not gain an approval tab/action
+by imitation. Freeze each model's steps, transition guards, financial effects,
+legacy provenance and decision payload before adoption. The planned
+configurable approval policy is owned by Settings **separately for each
+model**; until it exists, identify the current manual step honestly and do not
+display a fabricated multi-step policy or settings controls in the form.
+
+The owner intends this approval pattern for every ERP document eventually.
+Treat the rollout as per-model domain work, including nonfinancial documents:
+an approval there may only change a validated state or release a defined
+operational action, and must never create a placeholder journal. Financial
+documents post their real source-owned journal on Approve; Void marks that
+journal and document canceled without a reversing entry, after domain guards.
+For a nonfinancial document with no material effect to undo, use its ordinary
+Reject/Cancel lifecycle and omit Void. Add an operational Void only where a
+real released effect must be canceled and the model preserves that audit.
+Do not turn on the shared action for a model until its state, effect timing,
+backend endpoint and historical-row handling are frozen and implemented.
+
+#### Common approval vocabulary and guarded corrections (owner decision 2026-10-22)
+
+Use the same user-facing vocabulary across ERP documents, invoices and
+operational procedures: **Pending** (saved and awaiting decision), **Approved**
+(accepted and its model-owned effect released), and **Rejected** (decision
+declined with a reason). Expose **Approve** for an eligible Pending record;
+**UnApprove** returns an eligible Approved record to Pending; **Reject** moves
+an eligible Pending record to Rejected. **Owner clarification 2026-10-24:** the
+canonical adoption graph is Pending→Approved, Pending→Rejected and guarded
+Approved→Pending. Rejected is terminal; no Rejected→Pending/Approved or direct
+Approved→Rejected shortcut. This supersedes the earlier Purchase Order
+correction example and the suggested rejected-reopen option. Require a trimmed
+nonblank reason of at most500 characters for Reject and UnApprove, using the
+shared typed input panel; Approve uses the shared confirmation-only service.
+The backend persists previous/new status, actor, time and reason; older missing
+history remains null. Both approval surfaces display the same result.
+This is presentation and action terminology, not an instruction to rename
+existing persisted enums: map each model's real draft/not-approved value to
+Pending only after its legacy and effect contract is reviewed.
+
+These labels and graph are common, but eligibility is model-owned. UnApprove
+must be hidden and rejected by the backend if an effective
+journal, stock movement, payment, allocation, issue, receiving, or dependent
+document cannot safely be undone or has already been consumed. A financial
+model may unpost only under its frozen period/downstream guard; a nonfinancial
+model may have no effect to undo. If an irreversible effect needs cancellation,
+use that model's guarded Void/Cancel contract instead of pretending that
+UnApprove restored the prior world. Never delete decision or action-log history.
+Until Settings owns approval policy per model, this is a manual single-step
+vocabulary, not a claim that every ERP model already implements these actions.
+
+Use the existing shared document approval panel for both the saved View's
+Approvals tab and the list's Approval Status dialog; model adapters normalize
+their actual typed contexts/endpoints and do not recreate action/history markup.
+The server `canApprove/canUnapprove/canReject` fields govern buttons. The panel
+owns read/retry, typed reason state, confirmation, stale/cancel/error/busy handling
+and history presentation; owning surfaces reload actual details/row eligibility
+after success. No mutation is enabled in unsaved or dirty edit mode. Current
+adoption is PR/PO/GRN/Bill/PurchaseReturn; Payment/DebitNote have no frozen
+approval lifecycle and acquire none by visual imitation. See the unified
+purchasing contract for the exact stock/journal/reservation guards.
+
+### Document action log (owner decision 2026-10-22)
+
+**One label (owner2026-10-24).** Use **Log** in English and **السجل** in Arabic
+for the document row action and its dialog title, through `documentLog.title`.
+Do not mix Audit Trail and Log across document screens. Decision history
+stays inside Approvals and is distinct from this captured write log. A technical
+audit administration screen can keep its own descriptive title.
+
+Where a document exposes a Log action, open a read-only dialog using the shared
+document-action-log component. Supply its identity and a typed feature loader;
+the feature endpoint checks record existence and view access, then reads the
+tenant-scoped central audit stream. Show actor/time, translated action, optional
+reason, and available field changes; show loading, empty, transport/business
+errors and Retry. Keep the log component and field-change formatter shared so
+similar documents adopt the presentation without copying feature-specific UI.
+For a new consumer, add a saved-row Log action, a typed service method calling
+its feature read endpoint, and a dialog host supplying the saved numeric record
+ID and `loadEntries` callback to `app-document-action-log`. Use the translated
+dialog title with the document number as subtitle. Refresh when record identity
+changes; do not offer Log for an unsaved draft. Map both unsuccessful Result and
+HTTP failure to visible feedback and Retry. Preserve the shared formatter's
+redaction/empty-detail presentation instead of parsing audit JSON per feature.
+The audit stream captures successful tracked create/edit/delete and state writes;
+older metadata-only records and out-of-band/bulk writes cannot gain fabricated
+details. The list action remains separate from Approval Status, which owns
+decision controls and eligibility. A reason-required correction uses a typed
+form dialog and backend guard, not the log viewer. Refresh the row and any open
+log after a successful write or decision; the Log viewer never changes state.
+Backend block 18 owns the per-model write/identity/transition checklist and
+the detached-update before-value verification caveat. Purchase Order Log is
+the first consumer, not a universal permission or approval policy.
 
 ### Quotation action-cycle specialization
 

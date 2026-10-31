@@ -36,7 +36,7 @@ their intrinsic size.
 > **Status: Canonical** — component `shared/components/filter-panel` (`FilterPanelComponent`,
 > `FilterAdvancedDirective`, `FilterActionsDirective`); reference screen
 > `Workshop/Job/components/list` (owner decisions 2026-09-30). Plan:
-> `reviews/SHARED_FILTER_PANEL_MAINTENANCE_EVOLUTION_PLAN.md`. Screens that still carry a
+> `reviews/Archive/Completed/2026-10-23/SHARED_FILTER_PANEL_MAINTENANCE_EVOLUTION_PLAN.md`. Screens that still carry a
 > feature-owned strip move to the panel in their own review.
 
 Every list filter strip is the feature's reactive form with the panel attribute:
@@ -106,7 +106,10 @@ Rules:
    undefined token.
 6. **Layout and motion.** Main grid `mainColumns` (6), advanced grid `advancedColumns` (5, dashed
    primary-tinted panel, 160ms slide-in, none under `prefers-reduced-motion`); both 3 columns
-   under `1250px` and one under `720px`, where the toolbar stacks. Logical properties only.
+   under `1250px` (capped at the explicit main/advanced column count, so one/two-field
+   strips do not acquire empty tracks) and one under `720px`, where the toolbar
+   stacks. Logical properties only. Stable wrappers retain the shared PrimeNG21
+   flex widget hosts; never override Select/DatePicker with display:block (UI24).
 7. **Height.** The shared panel owns it: every single-line control inside `form[appFilterPanel]` (host
    class `sigma-filter-panel`) is 34px, with no feature class needed (owner request 2026-10-01: all filter
    boxes the same height). The `*-filters` / `*-filter-form` class rule remains only for legacy strips.
@@ -305,8 +308,20 @@ with `inlineActionCaption="general.actions"`. For that combination the shared
 the adjoining labels, then centres the 15px square and its text in a
 `--sigma-filter-control-height` track. FieldError stays outside this track.
 At 720px and below the heading reservation is removed for standalone checkbox
-rows. Other filter layouts retain their current presentation. This is a
-source-only implementation; owner visual/RTL/theme acceptance remains pending.
+rows. The owner's RentalAgreement request (2026-10-27) extends the same
+heading/control tracks to direct checkbox fields in mixed stable main or
+advanced grids, independently of inline actions. The shared owner detects
+adjoining labelled fields; consumers need no new opt-in or feature offsets.
+Checkbox-only grids and nested grouped checks keep their existing layout.
+At720px and below, remove the heading reservation for these direct checkbox
+fields as well. Keep the finite control track independent of reserved date
+feedback, native size, associated labels, RTL and theme. This is a source-only
+implementation; owner visual/RTL/theme acceptance remains pending.
+
+For a derived source-use dropdown, include every frozen server status, including
+No Quantity, Open, Partially Used and Closed; clear means all. Preserve the value
+in route state and reset it with other filters. The backend applies it before
+count/page/export (BE9); Purchase Request is the first example.
 
 **Request building.** Use a typed form, and send only non-empty values. `toListParams(query)` from
 `shared/utils/list-query.ts` drops `''`/`null`/`undefined` and adds paging and sort (block 2).

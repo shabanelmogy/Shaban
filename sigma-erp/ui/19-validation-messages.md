@@ -16,6 +16,16 @@ retain their necessary detail.
 - `fileSize`, `fileType`, `maxItems`, `minItems`, `invalidSelection`;
 - `custom` is the fallback.
 
+**Numeric scale (2026-10-30).** `decimalScaleValidator(() => decimalPlaces)` in
+`shared/utils/scalar-validators` accepts optional empty values, requires a finite
+number and rejects excess decimal scale, including exponent notation. It never
+rounds a control. `appQuantityInput`'s classified profiles reuse it (block14),
+and `FieldError` maps `decimalScale` to the neutral bilingual shared message.
+Money retains `financialScaleValidator` and its `financialScale` message;
+`FieldError` recognizes that existing key too. Requiredness, signs, bounds,
+currency precision and domain calculations are separate owners. Reuse the
+shared decimal-place reader rather than copying it into a feature validator.
+
 `uniqueCheckFailed` identifies an unavailable duplicate preflight and remains
 an invalid field until a successful retry; it is never treated as available.
 The shared component shows `validationMessages.checking` with `role="status"`
@@ -106,6 +116,16 @@ or `15` for tax in feature code.
 
 **Preview rounding matches the backend.** A money preview rounds with `roundMoney`
 (`shared/utils/financial-number.util.ts`, half away from zero) exactly where the backend rounds.
+Its shared `roundDecimal` owner interprets the represented decimal coefficient
+and exponent and uses integer quotient/remainder midpoint rounding. Do not add
+an absolute `Number.EPSILON` before binary multiplication: values such as10.075
+can still round toward10.07 instead of10.08 at two places. The correction applies
+to current previews/display, not persisted amounts; floating-point arithmetic
+before rounding remains approximate and never replaces the backend result.
+General helper precision is an integer0..100; policy consumers still own their
+approved narrower scale (money/quantities0..6). Equipment Rental's shared-policy
+review established this source correction on2026-10-30; numeric/runtime acceptance
+remains owner verification, not a test/build claim.
 The document tax is **per tax rate, rounded once** (owner decision D4-4): use
 `documentTax(lines)` from the same file, the preview twin of `VatPolicy.CalculateDocumentTax`.
 When rows display their own tax or gross, use `allocateDocumentTax(lines, decimalPlaces)`
@@ -118,6 +138,16 @@ the current routed consumer, and Close Job's affected invoice row preview also r
 the backend Workshop-linked MiscellaneousInvoice uses the same
 allocation and persists matching rows/header totals. Source conformance is not runtime
 acceptance.
+
+**Positive allocation remainder (2026-10-15).** The shared Angular
+`allocateDocumentTax` also mirrors `VatPolicy`'s exceptional all-positive branch:
+when rounded non-remainder shares exceed a nonnegative rate total, floor those
+shares to currency precision and give the largest source the exact remainder.
+Keep ordinary rounded allocations and signed/zero-net behavior unchanged.
+Purchase Requests exposed the preview mismatch with many tiny positive lines;
+all current helper consumers inherit the correction. This changes no tax rate,
+document tax, payload or backend owner. Source-only; owner numeric/runtime
+acceptance remains pending.
 
 Use the backend's base-currency ledger precision for these monetary previews, not a
 literal two or Common settings' display precision. Job's context returns `moneyDecimalPlaces`

@@ -52,10 +52,9 @@ something specific to that type.
 |---|---|
 | [1](../01-feature-folders-and-wiring.md) | Folder shape, route wiring, container-fill host, no page scroll, one scroll owner per region, base component |
 | [3](../03-header.md) | `app-feature-title` inside the primary card |
-| [24](../24-colors-icons-buttons.md) | Shared `app-summary-cards` for any summary/KPI/total-card region; features pass content, public density/layout/minCardWidth/maxHeight/selection and host placement only |
+| [24](../24-colors-icons-buttons.md) | Shared `app-summary-cards` for any summary/KPI/total-card region; features pass content, public density/layout/minCardWidth/maxHeight/selection and host placement only; shared tokens, icons and buttons |
 | [22](../22-loading-empty-error-toast.md) | Loading, empty, error, and toast states; both failure channels |
 | [23](../23-translations.md) | Translation keys in both vocabularies |
-| [24](../24-colors-icons-buttons.md) | Tokens, icons, shared buttons |
 | [25](../25-rtl-and-dark-theme.md) | RTL and dark theme |
 | [26](../26-permissions-and-route-access.md) | Authentication only; no invented permission API |
 | [27](../27-focus-and-keyboard.md) | Focus and keyboard |

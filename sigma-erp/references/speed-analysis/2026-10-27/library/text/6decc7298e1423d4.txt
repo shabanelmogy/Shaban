@@ -1,0 +1,11 @@
+S246
+How to manage holidays
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-holidays/
+
+How to manage holidays
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Holidays tab.
+Click on the +CREATE NEW HOLIDAY button. And fill the details. Then, click on SAVE button.
+To view, edit, or delete a Holiday click on the ACTIONS button.
+Click HERE if you have a query or an issue.

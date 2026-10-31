@@ -1,0 +1,21 @@
+S052
+Defining Rental Tarif
+https://speedautosystems.com/car-rental-software/user-guide/defining-rental-tarif/
+
+Defining Rental Tarif
+Open the rental option from the left navigation panel.
+Here you will find the first tab of Tariff click on it.
+All the vehicle types that you created will be under it and you have to define the tariff for each and every vehile group.
+There is small blue button with every vehicle group name. When you click on that a new window pops up and you have to define the tariff here:
+1. You have to select the type whether its daily or weekly or monthly select that.
+2. Second tab is about the diffrent option for the same tariff.
+3. Now you have to select the days ranges from 0 till the number of days you want to charge how much for these days.
+a, You can define diffrent rate for diffrent days.
+b, It is charged on daily basis.
+c, Last column is about the young driver rate if you charge extra from young driver then enter the value otherwise leave it blank.
+4. If you charge on hourly basis then enter that data over here.
+5. Half day pricing for half day rent and you cna add it in the same order.
+6. In the second tab there is a second option for Weekend Rental and when yu open that tab here you have to define if you charge extra on the weekends then enter the days and rates accordingly and you can select the hourly range from there.
+7. The third tab is about the protections or you can call it insurance. You can add per day rate from here for the insurances if you charge and you add multiple insurance from here.
+8. Fourth tab is for mileage if you charge on the basis of milleage or if there is a certain limit on milleage than add the limit in allowed and enter the per km rate in Excess option.
+9. the last option in rental tariff is about the extra things or services that you provide with the cars like (GPS, Baby Seat, Wifi or any other thing) you can add there rates from here and you can charge them accordingly.

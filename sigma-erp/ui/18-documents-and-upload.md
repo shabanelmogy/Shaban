@@ -55,6 +55,24 @@ inferring a file from `hasDocument` or a name. This reuses the existing FileStor
 contract; it introduces no new file access policy. Reviewed identity and supporting-file
 readers share it. Preserve historical files independently of current type upload eligibility.
 
+**Aligned file/action row (owner clarification,2026-10-22).** When an existing
+FileField is followed by FileLink for the same path, project that existing link
+inside FileField instead of rendering it on a second line. FileField owns an
+internal `.sigma-file-field__row`: shrinking file box, then the intrinsic-width
+link,8px apart, both on the34px control track. Existing upload/clear icons remain
+inside the file box; full-width FieldError remains below the whole track. An
+empty/invalid link adds no action or phantom gap. Do not add View to consumers
+that did not already expose it or alter FileLink's same-origin URL guard.
+
+Use this composition for existing adjacent pairs; preserve path/control/folder,
+print classes and handlers. EditableCollectionTable owns first-track row-action
+alignment and matching34px Remove height for attachment rows (UI14), including
+when file validation grows the row. Preserve column/table semantics, native
+labels, filename ellipsis/title, RTL/theme, disabled controls and internal table
+scrolling. No local table-cell flex conversion, per-screen attachment stylesheet
+or duplicated upload/cleanup logic. Verify long/empty names, validation and
+narrow widths with real shared controls in both directions/themes.
+
 **File cell (shared, 2026-10-01).** A file control — in a field or in a collection cell — is
 `div.sigma-file-field`, drawn as one 34px control box like the other fields: the hidden
 `input[type=file]`, then `span.sigma-file-field__name` with the file name (`is-empty` when none), then

@@ -55,16 +55,37 @@ posting, inventory valuation, permissions, and shared integration behavior.
 - Current Sigma source for the affected writers, readers, persistence, UI,
   reports, and integrations.
 - Relevant canonical documentation and existing feature review artifacts.
+- Master2 analysis-guide review: relevant chapters and original screen
+  explanations from the documentation's `references/speed-analysis/README.md`,
+  plus the applicable dated sidebar/code cycle slice, compared with actual Sigma
+  source/contracts/user-guide topics when present.
 - Known production/data constraints when available.
 - Existing working-tree changes in the affected scope.
 
 ## Procedure
+
+Apply Master2's reference-product functional detail target and Master4's scoped
+coverage rows: map reference fields/groups, filters, actions/dialogs, states,
+validations, document links, charges/calculations and outputs to actual Sigma
+source/guide. Plan partial/missing details rather than treating current minimal
+behavior as the target ceiling. Record exact decision blockers and explicit
+owner exclusions; preserve task authorization and unknown server/financial rules.
 
 1. Define the requested outcome, non-goals, affected workflows, and success
    conditions.
 2. Audit the current capability end to end: domain/entity/configuration,
    persistence, writers, readers, calculations, API, Angular, reports,
    permissions/tenancy, integrations, migrations, and documentation.
+   Before selecting/freezing the target, apply Master2's analysis-guide gate:
+   record sources actually read, applicability, accepted evidence, exclusions
+   and gaps in this plan. Keep Speed descriptions/proposals distinct from Sigma
+   contracts; a supported Not applicable outcome is valid, and tier S only
+   covers the changed element. Existing execution permissions stay unchanged.
+   Map the relevant sidebar section/screen/state to source controllers, dialogs,
+   service declarations and predecessor/successor documents; record the dated
+   file:line/hash evidence and Master4's cycle comparison. Keep documented facts,
+   frontend declarations, inferred sequence and unknown server rules distinct;
+   no collection scripts/external login/domain calls are authorized by this step.
 3. Record every unclear rule in the Logic Ambiguity Register as Confirmed,
    Derived, Missing, Conflicting, or Uncertain. Name the evidence or owner needed
    to resolve each non-confirmed rule.
@@ -101,6 +122,14 @@ posting, inventory valuation, permissions, and shared integration behavior.
 | | | | | | |
 
 ### Logic Ambiguity Register
+
+Record the analysis-guide review beside the current-state evidence. For each
+screen/mode name the guide chapter and original source ID/link, known date or
+version, relevant behavior, Sigma comparison and decision/gap. Do not mark a
+video link as watched or import a reference calculation without confirmation.
+Include the applicable sidebar/code cycle rows from Master4, with accepted,
+excluded or unresolved differences against Sigma; a literal proxy method is
+not evidence of a server invariant or financial posting effect.
 
 | Rule/question | Current evidence | Status | Why it matters | Required decision/source | Owner |
 |---|---|---|---|---|---|

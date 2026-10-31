@@ -54,6 +54,21 @@ collection declared as `ICollection<TChild>` for patterns 2 and 3 · calculated
 values are real properties when a list, report or filter needs them, not
 `[NotMapped]`.
 
+**Cross-namespace member gate (owner compiler evidence, 2026-10-21).** For
+every newly referenced entity/navigation type, resolve its declared namespace
+in the project that compiles the referencing file. Add that file's explicit
+`using` at the top of the referencing file when the namespace is absent; do
+not repeat a fully qualified namespace beside each property. Use a qualified
+type only when names conflict and a normal import would be ambiguous. A `global using`
+in `SiGma.Business` or `SiGma.DataAccess` does not apply to `SiGma.Helpers`.
+Check the declaring file and the referencing project's own global usings before
+handing off source. In the document-currency change, four `Currency` navigation
+declarations in `SiGma.Helpers.Models.Sales`/`Vouchers` lacked the
+`SiGma.Helpers.Models.Administrations` namespace; their `CS0246` errors made
+downstream `CurrencyId`/`Currency` members appear missing in 139 additional
+errors. Treat the first upstream error as the root, then re-evaluate dependent
+diagnostics after the owner rebuilds.
+
 ### Derived aggregate totals
 
 When an aggregate persists a total derived from its child rows, the aggregate

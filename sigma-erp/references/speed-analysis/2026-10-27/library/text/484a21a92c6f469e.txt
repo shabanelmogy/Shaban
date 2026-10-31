@@ -1,0 +1,160 @@
+S165
+Speed Vehicle Leasing Software
+https://speedautosystems.com/vehicle-leasing-software/
+
+Get Started Now
+Comprehensive Vehicle Leasing ERP
+Speed Vehicle Leasing Software (VLS)
+Home
+»
+Speed Vehicle Leasing Software
+VLS Menu
+Speed Vehicle Leasing Software (VLS)
+Speed Vehicle Leasing Software (VLS)
+If you are a leasing operator with different types of supplementary transportation services like rental, chauffeur, limo, passenger transportation & trying to find some comprehensive software solution then you have come to the right place. We provide a comprehensive solution Speed Vehicle Leasing Software (VLS) which not only provide the automation of leasing operations but also the automation of all your supplementary transportation services. Further we provide the automation of your Finance Department, Sales and HR Department. Benefit of a single platform provides you strong visibility into your business, revenue optimization and cost minimization.
+If your whole operation is leasing without any other supplementary transportation models, Speed Vehicle Leasing System (VLS) will still be very beneficial for you due to automation of all your manual processes like Traffic Fines Process Automation, Road Tolls Process Automation, Fuel Process Automation, Damage Charging Process Automation, Vehicle Inspection Process Automation using Mobile App etc.
+Lease Process Automation
+Speed – Vehicle Leasing Software (VLS) fully automates the Leasing Process. It can be changed as per your specific leasing requirements. Default Leasing Process Automation is as per below steps:
+Lease inquiry handling
+Lease quotation preparation
+Lease quotation internal approval
+Lease quotation revision as per customer request
+Lease quotation customer approval
+Master Lease agreement preparation
+Individual Lease agreement preparation
+Temporary vehicles delivery if required
+Lease vehicles procurement
+Lease vehicles preparation
+Lease vehicles delivery
+Lease invoicing
+Fines, Tolls, Excess Mileage, Damage Invoicing
+Early Lease Termination Handling if there is.
+Lease Agreement Closure
+Lease Agreement Performance Analysis
+Mobility Solution
+Field processes automation which were not cost effective in the past are now feasible due to low cost of mobile internet & low cost of mobile devices. Further, mobile connectivity coverage is almost everywhere. Speed Mobility Solution automates all your remote leasing processes like:
+Vehicle Inspection using Mobile App on:
+Lease Vehicle Delivery
+Lease Replacement
+Lease Vehicle Collection
+Non-Revenue Movement Opening
+Non-Revenue Movement Closing
+Workshop Movement Opening
+Workshop Movement Closing
+Customer digital signature on Mobile App for the acknowledgment of vehicle checkout & check-in
+Drivers Live Tracking on Google Map
+Drivers Tasks Management to optimize Drivers’ Performance
+Drivers Rating by customers while getting signature from customer on Mobile App
+Manual Processes Automation
+Each process optimization & automation improves your profitability. Each manual process is a burden to maintain. Speed – Vehicle Leasing Software (VLS) provides the automation of almost all manual processes like:
+Traffic Fines Process Automation
+Road Tolls Process Automation
+Fuel Process Automation
+Payment Process Automation
+If you want to automate any manual process specific to your business or specific to your country, we can definitely work together to automate it.
+Documents Management System
+It is a cumbersome job to file all the physical documents related to leasing operations. Speed – Vehicle Leasing Software (VLS) has its inbuilt Document Management System (DMS).
+Vehicle Documents:
+Vehicle Registration Card
+Vehicle Insurance Policy
+Corporate Customer Documents:
+Trade License
+Credit Approval Documents
+Chamber of Commerce Certificate
+Individual Customer Documents:
+National ID/Passport
+Driving License
+Speed – Vehicle Leasing Software (VLS) has full electronic file of Lease agreement containing:
+Signed Lease Agreement
+Lessee Documents
+Vehicle Lease Delivery Document
+Vehicle Replacement Vouchers
+Vehicle Check-out & Check-in Documents
+Email & SMS Notification Engine
+Speed – Vehicle Leasing Software (VLS) has a Notification Engine to notify customers, suppliers & employees for different notifications. Notification can be email or SMS or both depending on the type of notification.
+Different types of automatic notification are:
+Invoice emailing on invoice generation
+Statement of Account emailing on month’s end
+Overdue invoice/debt reminder email/SMS
+Vehicle Registration Expiry alert email/SMS
+Vehicle Service Due Reminder email/SMS
+Traffic Fine alert email/SMS
+Credit Card Expiry email/SMS
+Driving License Expiry email/SMS
+National ID/Passport Expiry email/SMS
+Sales Promotion email/SMS
+Agreement email
+Receipt email
+Vehicle Check Card Email on Vehicle Mobile Inspection
+Lease Performance Analysis
+Speed – Vehicle Leasing Software (VLS) provides you Lease Performance Analysis from different angles like:
+Profit per Individual Lease Agreement
+Profit per Master Lease Agreement
+Forecasted (Budgeted) Profit vs Actual Profit
+Profit per each Lease Customer
+We are working to provide you more insights into your lease performance.
+Add-on Systems
+As per your business requirements, you can add any additional add-on systems available on Speed Software Platform.
+Being part of the Speed Platform, each system can talk to other systems without any need of integration. Data flows seamlessly from one system to other system. Different available add-on options are:
+Car Rental System (CRS)
+Limo System (Limo)
+Transportation System (TS)
+Workshop System (WS)
+Financial System (FS)
+Human Resource Management System (HRM)
+Customer Relationship Management System (CRM)
+Interface with SAP, Oracle, Microsoft or Sage
+Speed – Vehicle Leasing Software (VLS) can be interfaced with any known ERP like SAP, Oracle, Microsoft Dynamics, Epicor or Sage using one of three methodologies:
+We provide you our system API & your ERP implementer build the interface using our API
+We share the data in staging database which your ERP implementer use to build the interface
+We build the interface by using your ERP API
+Latest Technology & Regular Updates
+Speed – Vehicle Leasing Software (VLS) including Speed Software Platform is developed using latest technologies. It is a multi-layered, multi-tenant cloud system. Different technologies used are:
+Front End
+AngularJs
+Microsoft Razor View Engine
+CSS/HTML
+SPA
+Back End
+Microsoft .Net
+Web API
+SQL Database
+Multi-Tenancy Structure
+Infrastructure
+Cloud Based
+Microsoft Azure
+Google Cloud
+Google Maps
+Speed Vehicle Leasing Software (VLS) can be used on cloud & can be hosted on your infrastructure. We release regular updates as per the collective knowledge & feedback of our valued customers.
+Multilingual
+To operate the software in a language which is not yours; can add more complexity in already existing complexed business. Further for your domestic regulatory compliance, you may have no option except to generate all legal documents related to Leasing operation into your native language.
+Speed – Vehicle Leasing Software has the facility to operate it in your language. If you don’t like some label or caption; you can change it through the Language Settings Layer.
+Accessible from Anywhere
+Speed – Vehicle Leasing Software (VLS) can be accessed from anywhere using any device laptop, mobile, MacBook, tablet etc. You just need browser & internet connection.
+On a bigger display, you will use software in full screen mode while on a mobile screen, the system will automatically change in mobile mode. This accessibility convenience really improves productivity which may cause improvement in profitability.
+Start 30 Days Free Trial
+Speed Auto Systems
+5.0Based on 36 reviews
+powered by
+review us on
+Bogdan Shishmanov4 years ago
+We received wonderful service by Rent a Car Budget Aqaba Jordan.
+Accounts Sahab4 years ago
+Secretary Yoko Transport4 years ago
+Advanced Rent a Car LLC4 years ago
+TRULY A GREAT PRODUCT. THE OVERALL SERVICE HAS COVERED ALL ASPECTS OF OUR BUSINESS FROM OUR LEASING/RENTAL SYSTEMS TO OUR BACK-END OPERATIONS INCLUDING CRM AND FINANCIALS.
+Roji Mathew4 years ago
+Al Monsef4 years ago
+One Platform solution for all Business functions, Finance, HRM, CRM, Traffic Fines, Tolls, Fuel & Field Processes Automation. We are well satisfied with the product.
+Reception Bottomline4 years ago
+Speed has got best User Friendly Interface Of Car Rental System. The Support and Customer care from Speed is exceptional. Keep up the good work. Thumbs Up!
+Al Sayara Al sareea Car Rental4 years ago
+We're one of the satisfied customers of Speed. Dealing with this company for how many years now. Thanks Omer and team for your assistance every time needed and for your commitment in giving the best service. May God increase and bless you!
+Tanveer Ahmed4 years ago
+Speed Car Rental Systems provided Cloud-based quick and easy access to our data and records. Amazing facility to access from anywhere at any time. Keep it Up
+Shabeer Madathodiyil4 years ago
+Its a very user friendly Software for car rental companies operations and accounts, Great support from Customer care team.
+Highly recommendable Software
+Let’s get you Started
+If you want to know more about Speed Vehicle Leasing System (VLS), let’s get connected.
+Get in Touch

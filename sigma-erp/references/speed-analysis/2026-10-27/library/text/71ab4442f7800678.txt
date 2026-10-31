@@ -1,0 +1,9 @@
+S058
+Driver Replacement on a rental agreement
+https://speedautosystems.com/car-rental-software/user-guide/driver-replacement-on-a-rental-agreement/
+
+Driver Replacement On A Rental Agreement
+Go to the Rental module from the left navigation panel and open the agreements options.
+Here you can see action button with every agreement.
+click on that action button and a drop down menu will come select the replace driver option.
+A new window will pop up you have to enter the new driver details which you are sending on replacement and press save and the new driver is assigned to that agreement.

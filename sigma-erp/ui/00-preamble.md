@@ -3,13 +3,16 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 30 |
-| Version | 1.99 |
-| Last verified against source | 2026-09-21 (shared `data-table`, `editor-dialog`, `feature-title`, `base-component.service.ts`, `loading.service.ts`, and `src/styles.scss` re-checked 2026-09-28) |
-| Last content change | 2026-10-12 — Shared FeatureTitle default bottom margin reduced16→8px (UI3) following the owner's title/filter spacing correction. Source-only; owner visual/RTL acceptance pending. History in ../CHANGELOG.md |
+| Version | 1.104 |
+| Last full source review | 2026-09-21 (the book has not had a full source re-verification since this date) |
+| Targeted source checks | 2026-10-23 — shared `data-table`, `editor-dialog`, `feature-title`, `base-component.service.ts`, `loading.service.ts`, and `src/styles.scss` were re-checked; later entries remain source-only unless they state otherwise |
+| Last content change | 2026-10-30 — UI13 accepted child-close completion, UI21 pending-print cancellation and UI28 context-revision fencing; UI14/19 numeric foundation. Targeted source-only reconciliation; earlier verification scope remains unchanged. History in ../CHANGELOG.md |
 | Verified by | source inspection only — no build, test, or browser run |
 
-One page per UI building block. Every block has a **reference file** you can
-open, a **copy-this** snippet from real code, and a short **check** list.
+Each implementation block has a **reference file** you can open, a
+copy-this snippet where one is useful, and a short check list. Governance and
+verification blocks may provide checklists and evidence rules instead of a
+copyable implementation snippet.
 
 Paths are relative to `SiGmaAngularFrontEnd/src/app/modules`.
 
@@ -197,7 +200,7 @@ silently revert the consumer to the legacy implementation.
 
 | # | Block | Status | Reference |
 |---|---|---|---|
-| 26 | [Permissions and route access](26-permissions-and-route-access.md) | Transitional | `auth.guard.ts`, `app-routing.module.ts` |
+| 26 | [Permissions and route access](26-permissions-and-route-access.md) | Transitional | `auth.guard.ts`, `src/app/app.routes.ts` |
 | 27 | [Focus and keyboard](27-focus-and-keyboard.md) | Canonical | shared confirmation, `p-dialog` |
 | 28 | [Request cancellation and stale responses](28-request-cancellation-and-stale-responses.md) | Canonical | list + dialog components |
 | 29 | [Verification expectations](29-verification-expectations.md) | Canonical | — |

@@ -2,6 +2,34 @@
 
 > **Status: Canonical**
 
+### Shared shell navigation policy (owner2026-10-22)
+
+NavigationPolicyService is the common fallback for registered reactive editor
+forms. The existing appMockData form owner registers its actual FormGroup through
+a lazy getter and its DestroyRef; registration does not depend on the generated
+data feature being enabled. Ignore pristine/disabled/hidden/disconnected forms
+and appFilterPanel; native View/disabled presentation does not become a draft.
+Do not infer every legacy editor is registered: adopt this owner or the existing
+feature guard during its screen review.
+
+LayoutModule keeps one shell CanDeactivate with runGuardsAndResolvers=always.
+Angular21 reruns this exit hook for reused shell routes, including child/query/
+parameter changes; canActivateChild checks writes only. This gives the fallback
+one decision per transition, rather than replay caches across nested guards.
+Where a departing feature CanDeactivate will run, retain its richer dirty/
+attachment/business decision and do not prompt again. Query-only transitions
+without a feature guard rerun still use the shared fallback. Menu, shortcuts,
+imperative Router navigation and browser Back share the actual route guard.
+
+Defer one shared confirmation, capture form identities/lifetimes, freeze each
+registered root subtree once with the existing form-state helper, and recheck
+write state/identity/new drafts before acceptance. Cancel keeps values/dirty state
+and restores intentionally disabled controls; a still-live form made pristine
+while waiting also restores its controls. Never enable a destroyed/replaced
+form. Pending frozen forms still count for beforeunload. Browsers own the generic
+reload/close warning text. Successful save remains the feature's existing
+pristine/save-completed exit contract, not a global markAsPristine shortcut.
+
 Any editable form that can be left with unsaved data needs this. References: routed editor
 `Workshop/Job/components/editor` (`requestClose()`), dialog editor
 `Fleet/Vehicle/components/details` (`requestClose()`); the Company editor uses the same shape.

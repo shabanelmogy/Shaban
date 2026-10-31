@@ -1,0 +1,10 @@
+S266
+How to View/Edit/Delete a Contact Group
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-view-edit-delete-a-contact-group/
+
+How to View/Edit/Delete a Contact Group?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Contact Groups module.
+A dashboard will appear on the right side of the panel. Go to the “ACTIONS” button and click on it.
+A drop-down list with View, Edit and Delete options will appear. Choose action accordingly.
+Click HERE if you have a query or an issue.

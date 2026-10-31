@@ -1,0 +1,114 @@
+{
+  "attempted": 330,
+  "saved": 311,
+  "errors": [
+    {
+      "url": "https://speedautosystems.com/uk-vehicle-safety-check-system/user-guide/error-logs/",
+      "error": "HTTP Error 403: Forbidden"
+    },
+    {
+      "url": "https://speedautosystems.com/car-rental-software/for-small-car-rentals/speedautosystems.com/contact/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/car-rental-software/user-guide/application-users-creation/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/car-rental-software/user-guide/customer-statement-of-account-emailing-2/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/car-rental-software/user-guide/defining-user-roles-with-user-rights/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/car-rental-software/user-guide/downloading-speed-car-rental-software-android-mobile-app/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/car-rental-software/user-guide/electronic-rental-agreement-with-signature/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/car-rental-software/user-guide/rental-planner/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/e-fuel-management-system/adnoc/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/e-fuel-management-system/emirates/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/e-fuel-management-system/enoc/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/e-toll-download-system/abu-dhabi/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/e-toll-download-system/big-fleet-owners/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/e-toll-download-system/dubai/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/e-toll-download-system/taxi-limo-operator/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/e-toll-download-system/usa/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/vehicle-leasing-software/speed-vls-benefits/vls-benefits-details/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/vehicle-leasing-software/vls-benefits/vls-benefits-details/",
+      "error": "HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://speedautosystems.com/vehicle-leasing-software/vls-process/",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "assets_saved": 364,
+  "assets_errors": 8,
+  "documents": [
+    {
+      "url": "https://speedautosystems.com/wp-content/uploads/2017/06/Speed-Limo-Software-LS-Brochure.pdf",
+      "path": "downloads/27ff634ea93f9afe.pdf",
+      "bytes": 15316622,
+      "status": "ok"
+    }
+  ],
+  "products": {
+    "car-rental-software": 100,
+    "e-fuel-management-system": 1,
+    "e-toll-download-system": 3,
+    "financial-system": 8,
+    "garage-management-system": 1,
+    "how-to-use-crs": 1,
+    "how-to-use-vmi": 1,
+    "limo-software": 7,
+    "limo-software-overview": 1,
+    "new-vehicle-mobile-inspection-app-for-automotive-mobility": 1,
+    "payments-automation-for-auto-industry-streamline-with-advance-solution": 1,
+    "speed-auto-systems-integration-with-zatca-e-invoicing-for-all-rental-leasing-companies-in-ksa": 1,
+    "speed-car-rental-software-uk": 1,
+    "speed-crs-cloud-based-car-rental-software": 3,
+    "speed-customer-relationship-management": 1,
+    "speed-human-resource-management": 1,
+    "traffic-fines-downloader": 8,
+    "uk-vehicle-safety-check-system": 24,
+    "vehicle-leasing-software": 120,
+    "vehicle-mobile-inspection": 27
+  }
+}

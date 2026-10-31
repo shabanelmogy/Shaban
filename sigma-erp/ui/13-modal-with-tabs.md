@@ -2,6 +2,15 @@
 
 ### Shared mock-data form assistance (2026-10-13; owner instruction)
 
+FormSection heading grouping (2026-10-17): non-collapsible icon and title/description
+share one nonwrapping flex group; the copy can shrink/wrap within it while the
+actions wrap as a separate group. Reuse existing12px/compact9px gaps and icon
+sizes; never let a narrow card wrap its icon onto a separate row. Shared
+showMockDataAction defaults true; a read-only reference card may explicitly set
+false without changing projected actions, registration, tenant preferences or
+other sections. Email Templates Data Fields is the scoped consumer. Preserve
+RTL/theme/collapsible behavior; owner visual/keyboard acceptance pending.
+
 Owner follow-up adds tenant Settings flags ShowButton/ShowPreview, both default
 true. FormSection's existing header actions area now composes the shared
 MockDataActionComponent from the nearest mock form context, generating only
@@ -32,6 +41,20 @@ Both flows retain the independently configured overwrite confirmation, Cancel,
 stale checks and manual business Save. Turning both preview and confirmation off
 opens no mock-data modal.
 Actual UI/runtime acceptance remains owner-pending.
+
+**Compact heading choices (owner request, 2026-10-15).** When a section consists
+only of a title and a small choice group, project that group through the existing
+`form-section-actions` slot instead of adding a second content row. Use the
+existing group controls/labels and flex wrapping utilities. FormSection's shared
+heading wraps whenever its available width runs out, and its actions are bounded
+to100% width at every breakpoint. If the shared content region is empty,
+`:empty`/`:has` styling hides that empty region and removes only the heading's
+bottom divider/padding/margin. Normal populated sections retain their styling;
+no new feature input or deep selector is needed. Purchase Requests type radios
+adopt this to keep choices beside the title while space permits. Preserve
+keyboard/label semantics, read-only/busy gates, full card edges and printing.
+Verify long EN/AR choices and intermediate widths as well as narrow screens;
+source-only evidence retains owner visual/runtime acceptance.
 
 The third default-true tenant option ShowConfirmation controls only the mock
 generator's existing-value overwrite confirmation. Capture it with preview at
@@ -115,6 +138,29 @@ that fits the rule needs no separate approval; a deliberate exception is recorde
 View reuses the same detail contract and editor, makes controls read-only, hides Save and offers
 Close (or Edit).
 
+For a model with a frozen approval lifecycle, its **saved** routed editor may
+include an Approval tab while the list offers a separate Approval Status action
+modal (UI block 7). The tab and modal share the server status/history and
+  decision eligibility, including Approve/UnApprove/Reject controls required by the
+  model's frozen adoption contract. Reuse the shared document approval panel for
+  both surfaces (UI7), including reason forms and the terminal rejected state;
+  the modal is not a second Create/Edit editor and does not change the
+routed-editor choice above. Do not mount the approval tab for an unsaved draft,
+repeat its name as a visible internal heading, or show Settings policy fields
+inside the model form. Future configurable steps are owned in Settings per
+model; current manual steps are labelled as such.
+
+The shared `DocumentApprovalCycleComponent` owns the approval region's internal
+scroll. Its thin feature adapter fills the bounded dialog body or filled
+FormSection directly, as in PurchaseOrder. Do not place that adapter inside a
+second `.sigma-editor-scroll`: its auto-height child rule conflicts with the
+adapter/panel's zero-basis flex chain and can collapse the approval content.
+Apply this composition to the saved tab and the row status dialog across the
+frozen purchasing rollout (PR/PO/GRN/Bill/PurchaseReturn). Verify actual imports,
+saved ID, matching tab/panel IDs, same GET context and refresh events in both
+surfaces; an existing tab definition alone does not prove working integration
+(owner clarification2026-10-24; source-only runtime acceptance pending).
+
 ```text
 shared/components/editor-dialog/editor-dialog.component.ts
 shared/components/editor-dialog/editor-dialog.component.html
@@ -177,6 +223,112 @@ keyboard/focus-return/runtime acceptance remains pending.
   }
 </app-editor-dialog>
 ```
+
+**Conditional footer projection (Angular 18, 2026-10-22).** Keep a conditional
+`editorDialogHint` in a dedicated `@if` whose only root is the matching hint
+element, as in the example above. Do not place it beside the form or other
+body roots inside one `@if`/`@else`: Angular cannot project that multi-root
+block into the selected footer slot (NG8011). Preserve the original visibility
+condition and keep body content outside the hint slot; do not suppress the
+diagnostic or wrap the whole form in a hint container. Fleet/ServiceLog is the
+upgrade repair example; compiler verification and visual acceptance are separate.
+
+### Shared source-document line picker (owner2026-10-24)
+
+For equivalent document-cycle source-line selection, reuse
+`shared/components/source-document-picker` (`app-source-document-picker`) with
+EditorDialog, DataTable and QuantityInputDirective. No feature copy or new popup
+palette. A blank source number opens eligible documents; an optional initial ID
+opens that document. Read only its lines on demand, retain chosen lines and
+quantities while changing documents, and apply only explicit selection. Cancel
+leaves the parent draft intact; changed selection uses shared discard consent.
+The adapter owns any dirty-parent replacement consent after Apply and the actual
+parent mutation. Do not automatically import a whole order on Load.
+
+Public contract: `documents` is a readonly list of numeric ID/label;
+`initialDocumentId` is optional; `selections` holds document + line + quantity;
+`loadDocument(id)` returns a finite `Observable<Result<SourcePickerDocumentDetails<T>>>`.
+Optional `titleKey`, `lineLabelKey`, `orderedLabelKey`, `receivedLabelKey` and
+`quantityLabelKey` keep source-specific wording accurate (requested/already
+ordered for PR, ordered/received for GRN); defaults preserve existing consumers.
+`layout="table"` is the compact known-source variant: one DataTable with line,
+unit, remaining, checkbox selection and inline quantity to include. It omits the
+document navigator and duplicate selected cards. Default `layout="split"` retains
+multi-document navigation and selection summary. Use the compact variant when
+the caller has already chosen one source; PR conversion now adopts it. Keep row
+objects/arrays stable while typing quantities; resolve selection quantities by
+source ID instead of rebuilding table inputs on each key. Missing stale lines
+remain visible as unavailable rows until explicitly deselected or successfully
+reloaded. Labels remain unique per picker instance; errors/Retry and server
+validation remain the same in both layouts.
+
+When the eligible document list is complete and owned by this picker, optional
+`documentNavigation=true` extends compact table mode with an internal two-step
+flow (GRN adoption, owner2026-10-24). With no initialDocumentId, show only the
+complete document DataTable with per-source selected counts and UI4 FilterPanel
+Search/Reset. An initial ID opens its compact line table directly. Local search
+changes the displayed candidates only after Search; Reset clears it. Back in the
+existing EditorDialog footer returns to the document table without closing,
+discarding, emitting Apply or losing quantities. Insert is available from either
+step for all retained valid picks. Cancel still compares the original session
+baseline. Retained sources missing from a refreshed eligible list stay accessible
+for review/removal; they gain no new eligibility or server capacity authority.
+Loading/error/Retry/empty states stay within the active step; the picker keeps one
+shell and one table scroll region at a time. The compact container uses the same
+12px gap as the shared picker. Default documentNavigation=false preserves external
+list adapters (PR-to-PO), and default split layout retains its existing behavior.
+
+A compact picker whose caller owns an eligible-source list must retain an
+explicit return path: optional `backLabelKey` projects the existing EditorDialog
+footer action; `backRequested` returns cloned working selections and requests the caller's list. The picker compares
+its own selection fingerprint before leaving, and optional
+`backRequiresConfirmation` additionally guards a caller-owned review draft.
+One discard decision covers these changes; Back never emits Apply.
+For an approved multi-source contract, `retainOnBack=true` returns the working
+picks without discard consent because the caller retains them; it does not
+stage or save the parent editor. The caller keeps the original session baseline
+through `discardBaseline` across table/list remounts, so Cancel still guards the
+whole changed selection session. The source list may offer Insert for all retained
+valid picks and shows per-document selection counts. Retain failed/unavailable
+rows as disabled quantity rows that can still be deselected, including a failed
+source read with no current document lines. Keep Cancel
+separate: it closes selection-only callers without mutating their parent draft.
+Multiple-source combination still requires the document's own frozen contract;
+PR-to-PO allows compatible requests for one supplier, PO-to-GRN allows compatible
+orders, and direct General/Job PO-to-Bill allows several orders of the same type,
+supplier, effective currency and compatible bill branch. Bill uses this same
+compact picker with internal document navigation and retained Back. Display all
+selected source numbers and keep editable quantities/accounts in the main editor;
+saved reload/print derive the complete source set from details. Keep source prices
+and eligibility with the backend, preserve entered headers/files and account
+choices across retries, and never let the picker save a bill. Receipt-based Bills
+retain their existing multiple-receipt quantity selection and detail provenance.
+For an editor-owned draft, Apply only stages typed source rows in
+that editor; main Save alone persists, preserving entered header/attachments and
+using the authoritative source command. A dedicated direct conversion may show
+its populated review form before its final command; never persist from the line
+picker itself.
+
+Each line supplies numeric ID, display label/description/unit, ordered/received/
+remaining/unitPrice and typed opaque `data`. Documents supply ID/label/effective
+currencyId/code and lines. `applied` emits cloned selection wrappers; `closed`
+requests unmount; `reloadDocuments` retries the eligible list. `documentLoading`
+and `documentsError` reflect the adapter list read. `applyPending` freezes the
+picker while parent consent runs; `applyError` surfaces parent validation within
+its footer. Mount once under the owning editor with a conditional; DestroyRef
+cancels unfinished reads and discard work. No per-candidate prefetch.
+
+The picker owns positive whole quantities, remaining-balance and consistent
+currency checks, duplicate selection keys, unavailable-line errors and selection
+retention; it never clamps an invalid retained quantity after a source reload.
+Fresh failed/missing source lines need Retry or removal. The adapter restricts
+supplier, type, currency and eligible state; backend remains authoritative for
+identity, price, capacity, atomic source locks and lifecycle. This UI does not
+authorize another document to combine sources if its own contract forbids that.
+Reads are operational and uncached. Do not reuse lookup-cache snapshots for
+available quantity. Keep list/details/selections bounded, logical RTL styling,
+shared secondary/danger actions, named quantity/search controls and EN/AR states.
+Actual visual/keyboard/theme acceptance remains owner-pending after source checks.
 
 ### Shared accessible tabs
 
@@ -275,6 +427,80 @@ report section to remain rendered.
 
 Do not keep a feature-local `onTabKeydown`, tab-button loop, or duplicate tab
 styles after adopting `app-editor-tabs`.
+
+**Full-height record tabs (generalized owner choice, 2026-10-15).**
+For a section whose title repeats its owning tab, reuse FormSection's
+`showTitle=false` to hide the noncollapsible heading label/icon/description on
+screen while preserving projected/mock actions. An actionless header leaves no
+empty row. Keep its required translated title for printed section headings;
+collapsible sections retain their disclosure label. `showHeading=false` still
+removes the whole header and its actions, and is not a title-only substitute.
+Default showTitle=true preserves other consumers; apply the title-only option
+only to repeated section names, not distinct subsections within a tab.
+Evidence: Sales Agreement repeated tab-name correction2026-10-27, shared public
+contract and source-only conformance; owner visual/RTL/theme/print check pending.
+
+For comparable routed documents with peer header/details/documents sections,
+use tabs by default when implementing or reviewing that screen. Replace its stacked
+header/details allocation with a fixed shared workspace tab strip and one
+remaining-space active panel (`flex:1 1 0; min-height:0`). Use separately named
+Basic Information, Details and Documents panels when those sections exist;
+each retains its own bounded field/document scroll or UI14 fill/sticky row
+frame. Do not retain the stacked header's percentage basis inside tabs. Keep
+one parent form and all controls/values when conditional panel views change,
+plus fixed totals/Save/Close outside them. Tab changes are not Save or discard.
+When a panel contains a subscribed read owner, retain its mounted instance
+across tab changes rather than repeating initialization reads. Native hidden
+with the existing shared hidden rule can select the visible panel while keeping
+the same form controls and DocumentCurrency/policy read lifetime. The shared
+print session reveals every required panel and restores visibility afterward;
+do not add a local cache to compensate for remounting. Evidence: SalesQuotation
+tab adoption2026-10-27 and DocumentCurrency initialization/source tracing;
+source-only, owner network/print acceptance pending.
+Prevent switching during upload, Save, cleanup, pending child confirmation or
+other work that must keep its controls mounted. Invalid Save selects the
+owning section before shared invalid-field focus; an empty required collection
+selects its Details tab. Match shared tab/panel IDs and ARIA linkage.
+
+Print must mount every required saved section independent of the active tab,
+hide the tab strip and release pane bounds; never print only the active panel.
+Use the shared print session to prepare this state before output. Verify all
+three modes, entered values across switching, invalid fields in inactive tabs,
+upload/cleanup guards, row overflow and printing from each tab. The owner's
+later generalization makes this the default for comparable peer-section
+documents, not authorization for a bulk migration of every legacy screen.
+Ordered workflows retain UI12 steps; special/three-pane shapes and explicit
+owner exceptions retain their documented architecture.
+
+### Routed document editor baseline
+
+Owner generalization, 2026-10-15: apply the following together to each comparable
+document editor in scope. Select the shape first; this checklist does not turn
+a simple modal, ordered step workflow, settings page or report into this shape.
+The owning blocks below hold the rules/values; this table routes their combined
+implementation and final reconciliation. Record Match, Not Applicable with a
+reason, or a governing exception for every row before handoff.
+
+| Concern | Required adoption | Owning block |
+|---|---|---|
+| Section tabs | Shared workspace EditorTabs; Basic Information, Details and separate Documents when those sections exist; one full-height active panel, one persistent parent form | UI13 full-height tabs above |
+| Type choices | Keep a small choice group beside the title through FormSection header projection; singular enum uses radios/real IDs; wrap without an extra empty content row | UI13 compact heading choices; UI16 |
+| Wide header row | Short inputs together, including Discount when present; Notes on its own full-width row; public grid-column count and shared responsive fallback | UI1 dense document header row |
+| Equal card edges | One shared width/inset for sibling title/type/tabs/content/whole-summary/footer frames in every tab; no extra width100% host margins | UI3 |
+| Row scrolling | Trace every flex host/wrapper to the shared fillHeight/sticky frame; both axes remain in that frame, with fixed section actions; never page scroll | UI14 bounded row scrolling |
+| Type-aware fields | Record feature-specific visibility/requiredness; revalidate retained/new/imported rows immediately and enforce the same rules on server writes | UI16; BE8 |
+| Totals and footer | Existing SummaryCards public sizing, fixed footer and a small host gap below totals; no private card CSS or duplicated gap | UI24 |
+| Invalid Save | Activate the owning tab before shared field focus; missing required lines opens Details | UI13; UI27 |
+| Pending work | Guard tab/type changes during Save/uploads/cleanup/confirmations, retain controls and draft values, preserve dirty-exit and cleanup-only retry owners | UI10/13/18 |
+| View and print | Same record editor in all modes; read-only View; print all required saved sections independent of active tab, with released height/scroll bounds | UI13/15/21 |
+| Responsive/help | Review actual intermediate/breakpoint/short-height layouts, long EN/AR, RTL/themes; update existing in-app guide and leave runtime acceptance explicit | UI29; Master5/7 |
+
+Purchase Requests is the observed consumer for this consolidation; shared
+FormSection/EditorTabs/EditableCollectionTable/SummaryCards/styles remain the
+presentation owners. Do not copy its service, DTOs, enum values, required UOM,
+calculations, linked locks or deferred approval/PO decisions into other domains.
+Shared presentation fixes inherit through their existing owners; screen
+adoption happens in scope, with no claim that all legacy screens are migrated.
 
 ### Screenshot functional evidence + named modal shell
 
@@ -492,6 +718,19 @@ because that flag is still set. Failed cleanup retains the editor for cleanup-on
 Retry; successful Save must never be repeated. Existing shared controls retain
 their appearance and interaction contract; owner runtime acceptance is pending.
 
+**Completed child close events (source-only,2026-10-30).** An embedded editor's
+`closed(saved)` output, emitted only after its own exit guard accepts, is a
+completion event. The parent verifies the same visible child session and hides/
+resets it directly, refreshing once when saved. Do not call the child's or
+parent's `canDeactivate` again inside that output: RxJS emits the accepted
+decision before `finalize` releases discard/cleanup busy flags, so the second
+guard can reject its own completed decision and leave a frozen editor open.
+Keep route-departure guards for independent navigation and keep unconfirmed
+close intents behind the child's existing guard. Equipment Quotation's embedded
+Purchase Order consumers adopt this; the approved Purchase Order owner and its
+save/discard behavior remain unchanged. This is source evidence, not runtime
+verification.
+
 ### Routed full-page detail form with a bounded child collection
 
 > **Status: Canonical composite variant** — for records that the decision rule above sends to a
@@ -543,7 +782,7 @@ visible title:
     (pressed)="addItem()"
   />
 
-  <div class="feature-items-table-area">
+  <div class="feature-items-table-area sigma-editor-pane">
     <app-editable-collection-table
       title="feature.items"
       [headingVisible]="false"
@@ -565,8 +804,11 @@ visible title:
 ```
 
 `app-form-section [fill]="true"` makes the section and its content a bounded
-flex column. The feature table area gets `min-height: 0`, `flex: 1 1 auto`, and
-`overflow: hidden`; `app-editable-collection-table [fillHeight]="true" [stickyHeader]="true"`
+flex column. The feature table area gets `min-height: 0`, `flex: 1 1 0`, and
+`overflow: hidden`, and uses existing `sigma-editor-pane` so it is itself a flex
+column. Apply UI14's complete bounded-row-scrolling chain to every similar
+editor; sizing a block wrapper alone does not bound its table child (2026-10-15).
+`app-editable-collection-table [fillHeight]="true" [stickyHeader]="true"`
 makes its frame the flex child and the single row scroll owner (block 14). No viewport
 arithmetic (`calc(100dvh - …)`) sizes the frame. The summary
 must be `flex: 0 0 auto`, so it remains visible when the row frame acquires a
@@ -692,6 +934,22 @@ in `(onHide)` · nested dropdowns and calendars use their approved body-appended
 overlay contract · rebuild translated field config on `onLangChange` when the
 feature stores translated configuration.
 
+Optional workflow footer actions (2026-10-17; Languages): the existing
+`EditorDialogComponent` exposes readonly `EditorDialogFooterAction[]` through
+`footerActions`, defaulting to an empty array, and emits the selected stable
+action id through `footerActionRequested`. Each action supplies its translated
+label, optional icon and disabled state. The shared shell renders them before
+Cancel/Close using its existing secondary-button owner and disables them during
+Save. The feature owns navigation, validation, dirty-discard and independent
+busy guards. Use this extension for Previous or Save-and-Next; do not repurpose
+Save-and-Print, duplicate the dialog footer, or add feature footer styling.
+An empty array preserves existing consumers. Source conformance does not certify
+keyboard, responsive, RTL or theme acceptance; those remain owner verification.
+The shared actions group wraps within min-width0, aligns to logical end and
+retains its existing8px gap. Previous/Next chevrons mirror through the existing
+global body-overlay owner `[dir='rtl'] .app-editor-dialog`, since the dialog is
+appended to body and feature-host ancestry cannot own its direction selectors.
+
 The shared `app-editor-dialog` owns `appendTo="body"`, modal/drag/resize behavior,
 the header hierarchy and close control, responsive shell sizing, footer action
 markup, primary-icon contrast, focus styling, RTL, dark theme and Escape output.
@@ -717,3 +975,64 @@ feature freeze. Source-only evidence, owner runtime/visual acceptance pending.
 
 ---
 
+
+### Composite source segments and modal lifetime (2026-10-25)
+
+When one receipt line offers several selectable segments (unbilled quantity and
+individual original bill lines), the adapter identity is the complete source
+pair, never the current array index. If SourceDocumentPicker requires numeric
+line IDs, retain a component-lifetime map from that composite key to numeric IDs
+across source refreshes and reopen. Retained unavailable rows have remaining=0;
+do not raise current eligibility to the old selected quantity. Apply only stages
+the editor's rows; the backend rechecks capacity at Save and approval.
+
+A projected collection toolbar action must have a rendered shared toolbar:
+headingVisible=false plus no Add/validation removes that region. Keep the shared
+heading or an owning visible toolbar instead of feature-local positioning. Freeze
+parent mutation while its picker/modal is active, keep failures inside the typed
+action dialog, and restore the form after harmless Cancel. Same-route ID changes
+must reload the new saved record instead of retaining the previous document.
+Read/Retry never overwrites a dirty matching draft. Actions remain guarded by
+matching loaded ID, actual server eligibility, current busy and read-error state.
+
+Evidence: PurchaseReturn Goods editor, SourceDocumentPicker/EditableCollectionTable
+public declarations and the frozen supplier-return contract. Existing shared
+inputs/events are reused; no competing picker or dialog shell was added. Source
+conformance only; visual/RTL/theme/keyboard/runtime acceptance remains pending.
+
+### Hidden tab panels and first-activation reads (2026-10-25)
+
+CSS hiding alone does not defer component creation or its subscribed reads;
+do not mistake it for lazy initialization. Reads required for the whole record
+still start with the record. For an
+expensive independent tab read, start it on first activation and retain the
+loaded instance/data while switching tabs for the same saved record. Reset the
+instance and request state when the record ID, reload or tenant/context changes,
+while preserving busy/dirty/print guards, cancellation, teardown, error and
+Retry. A direct tab link activates the same panel and first-activation read;
+do not duplicate the request in link and tab-change handlers. Keep the tab's
+progress owner and draft state compatible with the shared modal shell; UI22
+still governs whether that read is global, local or silent.
+
+### Shared document-journal read dialog (2026-10-25)
+
+When a document's Journal action must open a read-only dialog, use the neutral
+shared `DocumentJournalComponent` rather than routing the action to View or
+copying Bill journal markup. Its public contract is `recordId:number`,
+`title:string` (translation key), `subtitle:string` (display text), optional
+`typeLabel(value:string|null):string`, required
+`loadJournal(id):Observable<Result<VoucherJournalLine[]>>`, and a closed
+output. The shared shell is `app-editor-dialog` at the approved 1250px ×
+700px size, with no Save action; the table owns Date, Account, Contact, Type,
+Voucher No, Description, Debit and Credit, and `SummaryCards` owns the
+Debit/Credit totals.
+
+The feature supplies the endpoint, type formatting and eligibility. The shared
+component owns only read presentation and lifecycle: one local
+`StateMessage` inside the body-appended dialog, no duplicate table progress indicator,
+finite direct uncached loading, Result and HTTP error/Retry handling,
+loaded-identity/version cancellation fences, reset on `OnChanges`, close
+abort plus closed emission, and shared Close focus. It contains no financial
+rules, allocation policy or source-document inference. Keep View and Print
+owned by their existing feature actions; reading a journal does not mutate or
+approve the document.

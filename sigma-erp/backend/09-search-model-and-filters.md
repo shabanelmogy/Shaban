@@ -2,6 +2,72 @@
 
 > **Status: Canonical**
 
+### Shared advanced column rules (owner-approved, 2026-10-23)
+
+Reserve `Filters[grid]` for the shared JSON `{ columns: [{ field, operator,
+rules: [{ matchMode, value }] }] }`. Existing feature keys and predicates remain.
+Columns combine with AND; a column combines at most five rules with `and`/`or`.
+The shared `GridFilter` rejects malformed JSON, unknown fields/operators, invalid
+typed values, more than64 columns, over16KiB text or over4096 characters per value
+with localized validation400. Zero/false are real values; null is distinct. Text
+supports contains/notContains/startsWith/endsWith/equals/notEquals; numbers support
+equals/notEquals/lt/lte/gt/gte; dates use calendar `yyyy-MM-dd` with
+dateIs/dateIsNot/dateBefore/dateAfter. Enum/bool equality uses stable typed values,
+never SQL comparisons to translated labels. Database collation retains string
+comparison ownership; do not promise JavaScript collation as SQL behavior.
+
+Filter the existing tenant/soft-delete-scoped query before count/order/page and
+reuse the same applied snapshot for export. The compiled response projection's
+flat scalar properties are the default whitelist; client member paths, entity
+types and SQL are never accepted. Explicit server-owned expression maps cover
+source-supported aliases/composite values. Generic `Service.ApplyGridFilters`
+constrains identities through `GridFilterProjection`, retaining existing order and
+materialization. Override the projection when the actual read materializer uses
+different calculations; do not filter default/null placeholders for values filled
+after a page read. A complete existing in-memory aggregation may filter its final
+rows before its existing count/page; do not introduce full materialization solely
+to avoid SQL translation. No grid rules means no added membership query.
+
+**Custom filter reconstruction (source clarification, 2026-10-26).** A list
+override that builds a whitelist/normalized dictionary from the bound filters
+must retain the reserved encoded `grid` value before calling `ListQuery` or the
+shared filter owner. Do not silently drop it while forwarding ordinary screen
+keys. Verify its effect on count, rows, corrected page and full export together;
+the existing shared parser/DTO scalar whitelist remains authoritative. Evidence:
+Sales Fleet's EquipmentService filter reconstruction and current corrective
+contract; SQL/runtime acceptance remains separate from source conformance.
+
+Custom search DTOs retain an initialized query-bound `Filters` auto-property;
+GET uses the bracket key and POST search bodies nest the same `filters.grid`.
+Do not create a second top-level `Grid` alias or global interceptor state. Private
+normalization retains last-value semantics and never replaces MVC's bound instance.
+Unsupported display-only fields are explicit exclusions on both UI and server,
+not a successful unfiltered response. No schema/migration or write DTO change is
+implied by read filtering.
+
+**Nullable response identity (2026-10-27).** The shared membership hook accepts
+both `int` and `int?` response identities: current `ListBaseVm.Id` is nullable
+although the source entity key is not. Lift both sides to `int?` in the SQL
+membership expression; a null projected identity matches no entity. Do not
+reject an otherwise valid column filter or copy a feature override solely to
+work around this shared type boundary. Keep genuine computed display aliases
+and feature-specific scalar projections in their owning feature. Equipment
+Rental's list audit found this boundary before its missing quotation projection;
+source conformance does not establish EF SQL translation or runtime acceptance.
+
+The GET host limits must accommodate the bounded JSON after URL encoding, rather
+than silently rejecting valid multi-rule searches before model binding. The current
+192 KiB request-line/query ceiling leaves room for the worst-case encoding of
+16 KiB JSON and existing screen keys; the parser still enforces its16KiB limit.
+Kestrel's HTTP/2 field and total-header ceilings and IIS request filtering are
+configured together. An external proxy needs equivalent owner verification; these
+are finite transport bounds, not a larger accepted filter contract. See
+[IIS request limits](https://learn.microsoft.com/en-us/iis/configuration/system.webserver/security/requestfiltering/requestlimits/)
+and [Kestrel limits source](https://github.com/dotnet/aspnetcore/blob/main/src/Servers/Kestrel/Core/src/KestrelServerLimits.cs).
+IIS HTTP.sys machine-level limits are independent and can remain smaller than
+web.config; deployment acceptance must verify them and any proxy. Do not change
+registry or host policy implicitly as part of a source-only screen task.
+
 Every list endpoint receives `ListSmBase` from the query string:
 
 ```csharp
@@ -77,6 +143,16 @@ does not establish request replay acceptance. PayrollsReportFilterVM's copying
 setter remains historical behavior for its own scoped follow-up. This replaces the earlier
 claim that SpecificationRequestDto used the same copying setter: it already
 uses the initialized auto-property above.
+
+**Derived consumption filters (owner 2026-10-22).** When a list exposes a
+server-derived source-use status, filter against the same live source/downstream
+capacity rules in SQL before `CountAsync`, ordering and paging. Do not filter a
+materialized page. A null/absent filter returns all statuses; a recognized
+NoQuantity value is a real filter, not an absent value. The all-pages export
+uses that same filtered list query. Purchase Request is the first example.
+For that example, Pending and Approved POs consume source capacity; Rejected
+POs do not. The SQL status filter and the batched percentage/read projection
+must exclude the same rejected orders as the conversion reservation query.
 
 **Two traps.**
 

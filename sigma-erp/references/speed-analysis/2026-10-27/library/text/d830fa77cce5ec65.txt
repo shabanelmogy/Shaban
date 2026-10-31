@@ -1,0 +1,15 @@
+S189
+How to adjust charges for leasing agreements
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-adjust-charges-for-leasing-agreements/
+
+How to adjust charges for leasing agreements
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Charges tab.
+Select module either Rental or Leasing.
+Some default options of charges will appear in a windows.
+Click on the Add Row option given in the below left side of the charges list.
+A new row will appear. Now, choose charges type by clicking on the arrow depicted in the row. Choose further parameter and click on the SAVE button.
+You can change the order of the list by clicking and holding long on the grey area of a row. Drag the row and release it where you want to place.
+To delete a row, click on the cross shown in red color tab in every row.
+Click HERE if you have a query or an issue

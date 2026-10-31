@@ -1,0 +1,7 @@
+S159
+Subcriptions & Billing
+https://speedautosystems.com/uk-vehicle-safety-check-system/user-guide/subscriptions-billing/
+
+Watch source video online
+Subscriptions & Billing
+This module manages all the monetary matters between you and the Speed Auto Systems. So, you can pay your subscription fee, renew the subscription, and see your payment history. This is secured by the “Stripe” and we ensure data privacy as well as sensitive information protection.

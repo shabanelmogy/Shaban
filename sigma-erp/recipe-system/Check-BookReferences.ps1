@@ -4,10 +4,14 @@ param(
     [string]$WorkspaceRoot = 'F:\My Work\Sigma',
     # Also check the operational digest (skill) against the books.
     [string]$SkillPath = 'F:\My Work\Sigma\.agents\skills\sigma-screen-refactor\SKILL.md',
+    # No application traversal by default. Supply only the feature paths in the current task.
+    [string[]]$SourceScope = @(),
     [int]$Show = 60
 )
 
 # Read-only reference check for the canonical books (Master block 8). It never edits a file.
+# Without SourceScope, only documentation links and block references are checked.
+# Source paths/types/styles require explicitly supplied feature paths; no whole-repository scan.
 # Reports, per book file:
 #   1. path  - backticked source paths (files and feature folders) that do not exist in the workspace;
 #   2. type  - backticked type names (Service, Controller, Policy, Component, ...) that no .cs/.ts declares;
@@ -47,14 +51,28 @@ function Get-Entries([string]$Root) {
     return @{ Files = $files; Dirs = $dirs }
 }
 
-Write-Host 'Indexing the workspace (read-only)...'
+Write-Host 'Checking documentation references (read-only)...'
 $allFiles = New-Object System.Collections.Generic.List[string]
 $allDirs = New-Object System.Collections.Generic.List[string]
-foreach ($r in $repoRoots) {
-    if (-not (Test-Path $r)) { Write-Warning "Missing repository root: $r"; continue }
-    $e = Get-Entries $r
-    $allFiles.AddRange($e.Files); $allDirs.AddRange($e.Dirs)
+foreach ($scopePath in $SourceScope) {
+    $resolvedScope = (Resolve-Path -LiteralPath $scopePath -ErrorAction Stop).Path
+    $allowedScope = $false
+    foreach ($repoRoot in $repoRoots) {
+        $resolvedRepo = [System.IO.Path]::GetFullPath($repoRoot).TrimEnd('\')
+        if ($resolvedScope.StartsWith($resolvedRepo + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
+            $allowedScope = $true
+        }
+    }
+    if (-not $allowedScope) { throw "SourceScope must be a feature path inside an application repository, not a repository root: $scopePath" }
+    if ((Get-Item -LiteralPath $resolvedScope).PSIsContainer) {
+        $e = Get-Entries $resolvedScope
+        $allFiles.AddRange($e.Files); $allDirs.AddRange($e.Dirs)
+    } else {
+        $allFiles.Add($resolvedScope.Replace('\', '/').ToLowerInvariant())
+    }
 }
+$checkSource = $SourceScope.Count -gt 0
+if (-not $checkSource) { Write-Host 'Application paths/types/styles: not checked (no SourceScope supplied).' }
 $dirNames = New-Object 'System.Collections.Generic.HashSet[string]'
 foreach ($d in $allDirs) { [void]$dirNames.Add([System.IO.Path]::GetFileName($d)) }
 
@@ -118,19 +136,19 @@ foreach ($md in $targets) {
             $tok = $m.Groups[1].Value.Trim()
             if ($tok -match '[\s*<>{}()|=,;:"]' -or $tok -match '^https?') { continue }
             if ($tok.StartsWith('.') -and $tok -notmatch '^\.sigma-') { continue }
-            if (($tok -match '\.(cs|ts|html|scss|css|json|ps1|md)$') -and ($tok -match '[/\\]|\.(cs|ts|html|scss|ps1)$')) {
+            if ($checkSource -and ($tok -match '\.(cs|ts|html|scss|css|json|ps1|md)$') -and ($tok -match '[/\\]|\.(cs|ts|html|scss|ps1)$')) {
                 if (($tok -match '\.md$') -and ($tok -notmatch '/')) { continue }
                 if (-not (Test-PathToken $tok $md.DirectoryName)) { Add-Finding 'path' $rel ($i + 1) $tok }
             }
-            elseif ($tok -match '^[A-Za-z][\w.-]*(/[\w.-]+)+/?$') {
+            elseif ($checkSource -and $tok -match '^[A-Za-z][\w.-]*(/[\w.-]+)+/?$') {
                 $first = ($tok.TrimStart('/') -split '/')[0].ToLowerInvariant()
                 if (-not $dirNames.Contains($first)) { continue }
                 if (-not (Test-PathToken $tok $md.DirectoryName)) { Add-Finding 'path' $rel ($i + 1) $tok }
             }
-            elseif ($tok -cmatch ('^I?[A-Z][A-Za-z0-9]+' + $typeSuffix + '$')) {
+            elseif ($checkSource -and $tok -cmatch ('^I?[A-Z][A-Za-z0-9]+' + $typeSuffix + '$')) {
                 if (-not $typeNames.Contains($tok) -and $externalTypes -notcontains $tok) { Add-Finding 'type' $rel ($i + 1) $tok }
             }
-            elseif ($tok -match '^\.?(sigma-[a-z0-9_-]+)$') {
+            elseif ($checkSource -and $tok -match '^\.?(sigma-[a-z0-9_-]+)$') {
                 $cls = $Matches[1]
                 if ($cls.EndsWith('-') -or $notCss -contains $cls) { continue }
                 if (-not $cssClasses.Contains($cls)) { Add-Finding 'css' $rel ($i + 1) $tok }
@@ -142,10 +160,11 @@ foreach ($md in $targets) {
             if (($m.Groups[1].Value -match '^[Bb]ackend$') -and ($m.Value -notmatch 'block')) { continue }
             if ($n -gt $ranges[$book]) { Add-Finding 'block' $rel ($i + 1) $m.Value }
         }
-        foreach ($m in [regex]::Matches($line, '\]\(([^)#\s]+\.md)(#[^)]*)?\)')) {
-            $target = $m.Groups[1].Value
+        foreach ($m in [regex]::Matches($line, '\]\(<?([^)>#]+\.md)>?(#[^)]*)?\)')) {
+            $target = [uri]::UnescapeDataString($m.Groups[1].Value)
             if ($target -match '^https?') { continue }
-            if (-not (Test-Path -LiteralPath (Join-Path $md.DirectoryName $target))) { Add-Finding 'link' $rel ($i + 1) $target }
+            $targetPath = if ([System.IO.Path]::IsPathRooted($target)) { $target } else { Join-Path $md.DirectoryName $target }
+            if (-not (Test-Path -LiteralPath $targetPath)) { Add-Finding 'link' $rel ($i + 1) $target }
         }
     }
 }

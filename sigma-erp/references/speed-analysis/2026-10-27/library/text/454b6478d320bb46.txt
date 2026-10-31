@@ -1,0 +1,23 @@
+S296
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+https://speedautosystems.com/vehicle-mobile-inspection/for-car-rentals/how-to-use/how-to-add-vehicle/
+
+Watch source video online
+How to add vehicle?
+For Web App
+Click “Vehicles” in the left navigation panel.
+On the right side, a table containing already added vehicles in the fleet or a blank table, if no vehicle is added so far, will appear.
+To add a new vehicle click “+ CREATE NEW VEHICLE” on right top corner.
+A form will appear to fill in the details of the new vehicle, Plate No, Branch, Make and Model are the compulsory fields to make the save button active.
+Although a long list is available in drop down of Make and Model yet a missing Make and/or Model can be added by clicking the “MISSING MAKE OR MODEL ?” button on right top corner.
+By clicking “ACTIONS” button attached to a vehicle will give three options:-
+Edit. To edit the particulars of that specific vehicle.
+De-Fleet. If a vehicle has been used in any movement and the vehicle is no more in use or not fit to be rented out so it can be de-fleeted from her A de-fleeted vehicle, whenever needed or becoming fit, can be made On-Fleet by selecting de- fleeted vehicles and changing its status by selecting “ACTIONS” Button.
+Delete. If a vehicle was added erroneously and yet not used in any movement so it can be deleted from here.
+For Mobile App
+Vehicles can be added from mobile application For that go to the mobile application, go to VMI Menu, tap “Add Vehicle” that will lead you to the Vehicle adding form:
+Give the plate number.
+Search and add vehicle’s make and model, if make and model don’t exist in this list then go to the web application and follow the procedure explained earlier.
+Give the manufacturing year and tap “SAVE” button.
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Apple App Store? How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Google Play Store? How to Sign Up? How to Sign In? How to add vehicle? How to create vehicle QR Labels? How to create vehicle checklist? How to manage staff? How to give a vehicle to a customer on rental agreement? How to take a car back from a customer on rental agreement closing? How to open vehicle movement on a staff? How to close vehicle movement on a staff? How to generate reports? How to open rental agreement? How to Fix Vehicle Damages? How to Initialize the Application for Effective Use?

@@ -1,0 +1,14 @@
+S291
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+https://speedautosystems.com/vehicle-mobile-inspection/for-car-rentals/how-to-create-vehicle-qr-labels/
+
+Watch source video online
+How to create vehicle QR Labels?
+This feature is only available on the web application so you need to use the web app available on https://app.speedautosystems.com/Account/Login so login on this link.
+By clicking “Vehicle QR labels” you’ll have access to the feature allowing you to generate or print Vehicle(s) QR Labels in following ways:-
+The individual vehicle by selecting a specific plate number and leaving Branch blank.
+All vehicles of the company, by leaving plate no blank and selecting [All] in Branch.
+All vehicles of a specific branch by selecting it in Branch and leaving Plate No blank.
+QR Labels can be generated or printed in two formats or sizes e. for Car Door or Key Chain. These printed QR Codes can be pasted on the desired place in a vehicle and/or Key Chain and can subsequently be used for quick identification of the vehicle.
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Apple App Store? How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Google Play Store? How to Sign Up? How to Sign In? How to add vehicle? How to create vehicle QR Labels? How to create vehicle checklist? How to manage staff? How to give a vehicle to a customer on rental agreement? How to take a car back from a customer on rental agreement closing? How to open vehicle movement on a staff? How to close vehicle movement on a staff? How to generate reports? How to open rental agreement? How to Fix Vehicle Damages? How to Initialize the Application for Effective Use?

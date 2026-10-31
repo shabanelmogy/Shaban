@@ -1,0 +1,14 @@
+S188
+How to add or remove documents required in leasing agreement
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-add-or-remove-documents-required-in-leasing-agreement/
+
+How to add or remove documents required in leasing agreement?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Agreement Documents tab.
+Some default options of Agreement Documents will appear in a windows.
+Click on the Add Row option given in the below left side of the Agreement Documents list.
+A new row will appear. Now, choose Agreement Documents type and click on the SAVE button.
+You can change the order of the list by clicking and holding long on the grey area of a row. Drag the row and release it where you want to place.
+To delete a row, click on the cross shown in red color tab in every row.
+Click HERE if you have a query or an issue.

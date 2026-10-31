@@ -1,0 +1,10 @@
+S096
+Vehicles Documents Management
+https://speedautosystems.com/car-rental-software/user-guide/vehicles-documents-management/
+
+Vehicles Documents Management
+Select the fleet module from the left navigation panel.
+Click on the fleet tab, and then on Vehicles.
+Click on “Create New Vehicle” on the upper right corner.
+A popup window will appear , you will see a “Documents” button click on that button.
+Here you can see a Blue Button on the right side. From this button you can upload the documents of specific vehicle.

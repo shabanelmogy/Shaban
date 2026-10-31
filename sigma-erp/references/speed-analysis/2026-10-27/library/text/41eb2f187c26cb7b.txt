@@ -1,0 +1,12 @@
+S269
+Manage Master Agreements
+https://speedautosystems.com/vehicle-leasing-software/user-guide/manage-master-agreements/
+
+Manage Master Agreements
+Go to the panel on the left side and click on the Lease tab.
+Scroll down and click on the Master Agreements module.
+Here you can see all agreements. For searching a particular agreement, put the details like master agreement number, status, customer, date range, and/or quotation reference number, and then click on REFRESH button.
+All Agreements will appear as a list in the window.
+You can view details or take print by clicking on the ACTIONS button.
+You can also export the data to excel by clicking on the EXPORT TO EXCEL button.
+Click HERE if you have a query or an issue.

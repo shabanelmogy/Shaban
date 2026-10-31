@@ -1,0 +1,11 @@
+S197
+How to create and manage a checklist
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-create-and-manage-a-checklist/
+
+How to create and manage a checklist?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Checklist module.
+A dashboard will appear on the right side of the panel. Click on the “+CREATE NEW CHECKLIST ITEM” button.
+Fill the form and click on the SAVE button.
+If you want to Edit/Delete any checklist item, click on the ACTIONS button accompanies with the checklist item on the dashboard and edit/delete accordingly.
+Click HERE if you have a query or an issue.

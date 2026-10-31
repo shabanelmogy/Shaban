@@ -1,0 +1,83 @@
+S123
+Speed Limo Software Web App
+https://speedautosystems.com/limo-software/web-app/
+
+Speed Limo Software (Limo) Web App
+Get Started Now
+Home
+»
+Speed Limo Software (Limo)
+»
+Speed Limo Software (Limo) Web App
+Speed Limo Software (Limo)
+Speed Limo Software (Limo) Web App
+Speed Limo Software (Limo) Web App is the web application to be used by office staff of Limo Company. This is the main component for managing the Limo Business.
+Limo Trip Types
+Limo Tariff based on:
+Pickup & Drop-off
+Half Day Trip
+Full Day Trip
+Tour Trip
+Limo Tariff Groups
+Tariff
+Limo Bookings
+Base Tariff
+Corporate Tariff
+New Limo Booking
+Limo Trip Dispatchment
+Limo Trip Modification
+Limo Trip Start from Web App
+Limo Trip Stop from Web App
+Limo Dashboard
+New Bookings
+Dispatched Trips
+In Progress Trips
+Completed Trips
+No Show-off Trips
+Cancelled Trips
+Customer Accounts Management:
+Individual Customers (Cash Customers)
+Corporate Customers (Credit Customers)
+Invoice
+Debit Note
+Credit Note
+Refund
+JV
+Statement of Account
+Customers Balances Summary (Outstanding/Credit)
+Customers Balances as of Date
+Receivable Age Analysis Report
+Vehicles Management
+Defining New Vehicle
+Updating Vehicle Record
+Vehicles QR Codes Printing
+De-Fleeting Vehicle
+Service Book Management (Vehicle Service Log)
+Vehicle Service Schedule
+Vehicle Service Record
+Vehicle Service Alerts (Mileage-based & Time-based)
+Vehicle Insurance Management
+Insurance Renewal Record
+Insure Expiry Alerts
+Vehicle Registration Management
+Registration Renewal Record
+Registration Expiry Alerts
+NRM (Staff Movement) Opening
+NRM (Staff Movement) Closing
+NRM (Staff Movement) Editing
+NRM Reporting Engine
+Garage Movement Opening
+Garage Movement Closing
+Garage Movement Editing
+Garage Movement Reporting Engine
+Limo Company Details
+Control Panel
+Branches
+Departments
+User Groups with System Access Rights
+Application Users
+Change Password
+Start 30 Days Free Trial
+Let’s get you Started
+If you want to know more about Speed Limo System (Limo), let’s get connected.
+Get in Touch

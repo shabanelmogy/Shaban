@@ -1,0 +1,9 @@
+S079
+Rental Agreement Extension
+https://speedautosystems.com/car-rental-software/user-guide/rental-agreement-extension/
+
+Rental Agreement Extension
+Go to the Rental module from the left navigation panel and open the agreements options.
+Here you can see action button with every agreement.
+click on that action button and a drop down menu will come select the Extend option.
+The same agreement will be opened in front of you and you can extend the agreement by changing its return date and press save.

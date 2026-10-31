@@ -1,0 +1,12 @@
+S082
+Rental Agreement Opening
+https://speedautosystems.com/car-rental-software/user-guide/rental-agreement-opening/
+
+Watch source video online
+Rental Agreement Opening
+Click the “Rental” link in the left navigation panel
+Click “Agreements”
+Agreement will be shown on right panel
+Click button “+Open Agreement” on right top corner to open a new rental agreement
+Select the agreement type (daily, weekly, monthly) from “Type” field
+Enter data in compulsory fields. Save button will not enable till all compulsory fields are filled.

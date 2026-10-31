@@ -1,0 +1,176 @@
+S031
+Speed Car Rental Software - Rental Contract Extension
+https://speedautosystems.com/car-rental-software/for-medium-size-car-rentals/rental-contract-extension/
+
+List
+List
+Menu
+Setup
+Company Detail
+Control Panel
+Departments
+Branches
+User Group with System Access Rights
+Application Users
+DB Connection Info
+Karzansoft
+Change Password
+Change System Background
+Log Off
+Exit
+Customers
+Walk-in Customers (Cash Customers)
+Corporate Customers (Credit Customers)
+Search Customer
+Statement Of Account (Customer)
+Customers Balances Summary (Outstanding-Credit)
+Customers Balances as of Date
+Receivable Age Analysis Report
+Suppliers
+Suppliers
+Search Supplier
+Statement of Account (Supplier)
+Suppliers Balances Summary
+Payable Age Analysis Report
+Employees
+Employees
+Search Employee
+Statement of Account (Employee)
+Vehicles
+Vehicles Master
+Vehicle Make
+Vehicle Model
+Vehicle Engine Capacity
+Vehicle Service Types (Preventive Maintenance)
+Vehicle Defect Types (Incidental Maintenance)
+SIPP Codes (ACRISS Codes)
+Vehicle Category
+Vehicle Type
+Vehicle Transmission Drive
+Vehicle Fuel Type-AC
+Manage Vehicles
+De-Fleet Vehicles
+Tariff
+Tariff Group
+Tariff Cards
+Tariff Cards Allocation
+Rental
+Rental Agreement Opening
+Rental Contract Extension
+Rental Agreement Cut Short
+Rental Agreement Closing
+Rental Agreement Editing
+Rental Cancel Contract Void
+Rental Agreement Reporting Engine
+Rental Cancelled (Void) Contracts Report
+Rental Contract Editing Log
+Rental Back Dated Contracts
+Rental Contracts Closed with Discount
+Movements
+NRM-NRT (Staff Movement) Opening
+NRM-NRT (Staff Movement) Closing
+NRM-NRT (Staff Movement) Editing
+NRM-NRT (Staff Movement) Reporting Engine
+Garage Movement Opening
+Garage Movement Closing
+Garage Movement Editing
+Garage Movement Reprint
+Garage Movement Reporting Engine
+Vehicle Replacement Movement
+Vehicle Replacement Editing Movement
+Vehicle Custody Movement Opening
+Vehicle Custody Movement Closing
+Vehicle Custody Movements Reporting Engine
+Driver Replacement Movements
+Vouchers
+Invoices
+New Invoice Vouchers
+View Invoice Vouchers
+Due Invoice Vouchers
+Authorize Invoices Vouchers
+Debit Note
+New Debit Note Vouchers
+View Debit Note Vouchers
+Authorize Debit Notes Vouchers
+Credit Note
+New Credit Note Vouchers
+View Credit Note Vouchers
+Authorize Credit Notes Vouchers
+LPO
+Vouchers New LPO
+Vouchers View LPO’s
+Bill
+New Bill Vouchers
+View Bill Vouchers
+Generate Bills for Traffic Fines Vouchers
+Receipt Voucher
+New Receipt Voucher
+View Receipt Voucher
+Receipts Due for Allocation Vouchers
+Payment Voucher
+New Payment Voucher
+View Payment Voucher
+Authorize Payment Vouchers
+Settlement
+New Settlement Voucher
+View Settlement Voucher
+JV
+Traffic Fines
+Traffic Fines Voucher
+View Traffic Fines Voucher
+Invoices Close with Discount
+Operations Reports
+Operations Dashboard
+Operations Report Day Summary
+DRB (Daily Business Report)
+Fleet Utilization Report
+Vehicle Movement Log Report
+Monthly Report for Daily Vehicle Status
+Missing Mileage Report
+Vehicle-Wise Estimated Revenue (Sales) Report
+Operations Reports Alerts
+Operations Reports Audit Trail
+Accounting Setup
+Chart of Accounts
+Fiscal Year
+Cost Centers
+Manage Cost Centers
+Cost Center Report
+Attach Cost Center To Vehicle
+Attach Cost Center To Employee
+Banking
+Banking Manage Bank Accounts
+Banking Cash Deposits
+Banking View Cash Deposits
+Banking Credit Card Transactions Bank Transfers
+Banking View Credit Card Transactions Bank Transfers
+Banking Cheques Payable Management
+Bank Reconciliation
+Prepaid Expense
+Prepaid Expenses Setup
+Prepaid Amortization
+Prepaid Expense Reporting Engine
+Prepaid Amortization Report
+Prepaid Reversal
+Fixed Assets
+Fixed Asset Types Setup
+New Asset
+View Asset
+Depreciation Management
+Depreciation Report
+Fixed Asset Disposal
+Fixed Asset Disposal Report
+Budgeting
+Budgeting Report
+Budget Variance Report
+Financial Reports
+Transaction Journal
+Ledger
+Trial Balance
+Balance Sheet
+PL Statement (Income Statement)
+PL Comparison
+Vehicles Revenue-Expense Log
+Vehicles Income Summary
+Vehicles Profitability Analysis Engine
+Speed – Car Rental Software (Enterprise Edition – Demo)

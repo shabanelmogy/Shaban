@@ -1,0 +1,11 @@
+S095
+Vehicle Replacement on a rental agreement
+https://speedautosystems.com/car-rental-software/user-guide/vehicle-replacement-on-a-rental-agreement/
+
+Vehicle Replacement On A Rental Agreement
+Go to the Rental module from the left navigation panel and open the agreements options.
+Here you can see action button with every agreement.
+click on that action button and a drop down menu will come select the replace vehicle option.
+When you click on it a new window will pop up.
+You have to enter the details of the replacement vehicle and press save and by this you can simply replace the vehicle.
+Note: Replacement can only be made on open agreements.

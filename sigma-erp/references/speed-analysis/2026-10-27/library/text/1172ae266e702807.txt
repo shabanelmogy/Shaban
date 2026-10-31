@@ -1,0 +1,214 @@
+S028
+Speed Car Rental Software (CRS) Features
+https://speedautosystems.com/car-rental-software/features/
+
+Speed Car Rental Software (CRS)
+Get Free Trial
+In-Built Car Inspection Mobile App - Digital Rental Agreement with E-Signature
+Mobile & Tab Enabled
+Home
+»
+Speed Car Rental Software (CRS) | Auto Rental System
+»
+Speed Car Rental Software (CRS) Features
+Speed Car Rental Software (CRS)
+Speed Car Rental Software (CRS) – Features
+Rental Dashboard
+Vehicles
+Total Vehicles in Company
+Hired Vehicles
+Vehicles on Non-Revenue Movements
+Vehicles in Workshop
+Vehicles for Sale
+Total Loss Vehicles
+Idle Vehicles
+Rental Booking
+New Bookings
+Confirmed Bookings
+Booking due to Checkout Today
+Overdue Checkout Bookings
+Rental Agreements
+Open Agreements
+Agreements Opened Today
+Agreement due to Close Today
+Overdue Closing Agreements
+Non-Revenue Movements
+Operational Non-Revenue Movements
+Staff Vehicles
+Sold Vehicles Movements (ownership yet to transfer)
+Workshop Movements
+Vehicles on Preventive Maintenance
+Vehicles on Repair
+Accident Vehicles in Workshop
+Idle Vehicles
+Branch-wise
+Pending Customer Delivery
+Pending Workshop Delivery
+Not Ready Vehicles
+Ready to Go Vehicles
+Vehicles on Custody Movement
+Open Rental Agreements
+Branch-wise
+Daily Rental Agreements
+Weekly Rental Agreements
+Monthly Rental Agreements
+Rental Module
+Rental Agreement Opening
+Rental Agreement Printing
+Electronic Rental Agreement with Electronic Signature
+Rental Agreement Editing
+Rental Advance Amount Management
+Rental Deposit Management
+Rental Agreement Extension
+Rental Agreement Cut Short
+Rental Agreement Upgrade
+Rental Agreement Downgrade
+Vehicle Replacement on Rental Agreement
+Driver Replacement on Rental Agreement
+Rental Agreement Billing History
+Rental Agreement Closing
+Rental Agreement Cancellation
+Retro Agreement Opening/Closing (Backdated Agreements)
+Rental Agreement Log
+Rental Agreements Reporting Engine
+Rental agreements opened on one vehicle
+Rental agreements opened from one branch
+Rental agreements opened in a:
+Day
+Week
+Month
+Quarter
+Year.
+Rental agreements opened on one customer
+Salesperson-wise rental agreements
+Daily Rental Agreements Report
+Weekly Rental Agreements Report
+Monthly Rental Agreements Report
+Closed Agreement Report
+Rental Tariff Module
+Daily Rental Tariff
+Weekend Rental Tariff
+Weekly Rental Tariff
+Monthly Rental Tariff
+Branch-wise Rental Tariff
+User-wise Rental Tariff Discounts Management
+Discount Authorization Codes i.e. OTP (One time passwords) for one-time higher discount authorization
+Rental Bookings Module
+Adding New Rental Booking
+Rental Booking Confirmation
+Rental Booking Editing
+Rental Booking Cancellation
+Rental Booking No-Show
+Opening Rental Agreement from Rental Booking
+Rental Bookings Reporting Engine
+Searching Rental Booking by Booking Number
+Searching Rental Booking by Broker Booking Number
+Rental Bookings on one vehicle
+Branch-wise Rental Bookings Report
+Daily Rental Bookings Report
+Weekly Rental Bookings Report
+Monthly Rental Booking Report
+New Rental Bookings Report
+Confirmed Rental Bookings Report
+Cancelled Rental Bookings Report
+No-Show Rental Bookings Report
+Closed Rental Bookings Report
+Rental Bookings on one specific customer Report
+Fleet Management Module
+Vehicle Types Management
+Adding Vehicles
+Editing Vehicles
+Idle Vehicle Status Change
+Not Ready
+For Sale
+Total Loss
+Pending Customer Delivery
+Pending Workshop Delivery
+Ready to Go (Ready for Rental)
+Vehicles Documents Upload (images)
+Registration Card
+Insurance
+De-Fleeting Vehicle
+Vehicle Deletion
+Vehicles Reporting Engine
+Searching Vehicle by Plate Number
+Searching Vehicle by Fleet Number
+Hired Vehicles Report
+Vehicles on Non-Revenue Movement Report
+Vehicles in Workshop Report
+Vehicles “For Sale” Report
+Total Loss Vehicles Report
+Vehicles on Custody Movement Report
+Pending Customer Delivery Vehicles Report
+Pending Workshop Delivery Vehicles Report
+Not-Ready Vehicles Report
+Ready to Go Vehicles Report (Ready for Rental Vehicles)
+Booked Vehicles Report
+Defleeted Vehicles Report
+Branch-wise Vehicles Report
+Make & Model-wise Vehicles Report
+Model Year-wise Vehicles Report
+Fleet Type-wise Vehicles Report
+Rental Vehicles
+Replacement Fleet Vehicles
+Staff Vehicles
+Etc
+Ownership-wise Vehicles Report
+Own Vehicles
+External Vehicles
+Buyback Vehicles
+Vehicles QR Labels Printing for:
+Door or Windscreen
+Keychains
+Vehicles Service Plan Management
+Default Service Plan
+Make-wise Service Plan
+Model-wise Service Plan
+Vehicle Service Book/Log
+Fleet Alerts
+Insurance Expiry Alerts
+Registration Expiry Alerts
+Service Due Alerts as per defined Service Plans like
+First Service Due
+2nd Service Due
+3rd Service Due & so on
+Mileage Update Alerts for Vehicles which are with customer for more than some threshold period like 3 month so that vehicle can be brought back for the service if service is due.
+Fixing Vehicle Damages
+Movements Module
+Non-Revenue Movements (NRM)
+Operational Non-Revenue Movement Opening
+Operational Non-Revenue Movement Closing
+Staff Vehicle Movement Opening
+Staff Vehicle Movement Closing
+Sold Vehicle Movement Opening
+Sold Vehicle Movement Closing
+Non-Revenue Movements (NRM) Reporting Engine
+Workshop Movement
+Workshop Movement Opening
+Workshop Movement Closing
+Workshop Movements Reporting Engine
+Delivery Movements
+Delivery Movement Opening
+Delivery Movement Closing
+Delivery Movements Reporting Engine
+Custody Movements
+Custody Movement Opening
+Custody Movement Closing
+Custody Movement Report
+Vehicles Movement Log
+Damaged Vehicle Movements Report
+Vouchers Module
+Invoices
+Credit Notes
+Debit Notes
+Receipts
+Rental Agreements Deposits
+Sales Order (Purchase Orders of Customers)
+Bills (Supplier Invoices)
+Purchase Orders
+Payments
+Journal Vouchers (JV)
+Start 30 Days Free Trial
+Let’s get you Started
+If you want to know more about Speed Car Rental System (CRS), let’s get connected.
+Get in Touch

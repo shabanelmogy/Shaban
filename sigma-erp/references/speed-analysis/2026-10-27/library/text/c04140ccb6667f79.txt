@@ -1,0 +1,13 @@
+S042
+Email Sending Settings
+https://speedautosystems.com/car-rental-software/user-guide/charges/
+
+Charges – Car Rental Software Web App
+Charges:
+This option is related to the charges types that are define in the system.
+First option, select the Module for which you are entering the charges.
+Underneath you will find a box in which first Column shows you the types of charges.
+Second column is about the rate type that how are you going to charge it on per day or one time or per KM.
+Third Column Named as Only For closing is the option if you check it then system will only charge or give the option to charge only when the agreement is closing.
+Fourth column represents the mandatory field if you check the boxes in front of charges under mandatory then without entering those charges system will not allow you to proceed further.
+Fifth columns represents the taxable things and if you will check the boxes then that type of charge will be taxable like for fuel it’s not taxable so you leave it blank.

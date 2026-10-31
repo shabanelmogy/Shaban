@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-27",
+  "docx_pages_visually_reviewed": 20,
+  "docx_rendering": "Microsoft Word PDF export and packaged render_docx.py PNG rasterization; packaged LibreOffice unavailable",
+  "html_files_checked": 313,
+  "broken_local_links": 0,
+  "offline_library_search": "passed",
+  "offline_product_filter": "passed",
+  "offline_sample_article_images": 3,
+  "browser_script_errors": 0,
+  "scope": "Public documentation only. No Speed application login, runtime testing, or video transcription."
+}

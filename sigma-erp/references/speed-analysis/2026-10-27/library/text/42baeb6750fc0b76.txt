@@ -1,0 +1,13 @@
+S040
+Billing Settings of Company Account
+https://speedautosystems.com/car-rental-software/user-guide/billing-settings-of-company-account/
+
+Billing Settings of Company Account
+Open the companies module from the left navigation panel.
+Click on the second tab for Companies.
+Click on the blue button stating “Create New Company”
+A pop up will appear and go to the last tab from top stating “Billing Info”.
+1. Here you have to define Credit Period of company that how much long the credit account can be hold.
+2. You have to select the limit for Company credit in the Credit Limit.
+3. YOu can add the company in Tax Return Number in TRN.
+4. Enter the credit card details if the company provides.

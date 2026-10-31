@@ -1,0 +1,16 @@
+S070
+Mandatory Fields Settings
+https://speedautosystems.com/car-rental-software/user-guide/mandatory-fields-settings/
+
+Mandatory Fields Settings
+Mandatory Fields Settings:
+Individual Customers.
+There are some options under it and the boxes that you will check will be marked as mandatory so while creating a new customer without entering those details system will not let you move forward.
+Vehicles:
+It has 2 options and if you select those options then without entering those values while creating a new vehicle system will not let you save it. There are some additional fields available if you want to enter something extra then you can select and enter those things while creating the vehicles.
+Agreement:
+It has two options of Advance Payment and Return Date. If you select both then without entering the advance amount and return date system will not create the agreement. It has some additional fields too that can be added and their names can be changed.
+Staff:
+If you select the option then system will show the expiry date of staff documents in their module.
+Invoice:
+In invoice if you want to add the commission tab then check it otherwise leave it blank.

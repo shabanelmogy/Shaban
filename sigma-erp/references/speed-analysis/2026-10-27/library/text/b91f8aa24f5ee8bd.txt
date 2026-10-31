@@ -1,0 +1,8 @@
+S074
+Rental Agreement Advance Amount Handling
+https://speedautosystems.com/car-rental-software/user-guide/rental-agreement-advance-amount-handling/
+
+Rental Agreement Advance Amount Handling
+whenever you are opening a new agreement the system gives you a option for advance amount. This amount is taken in advance while openeing the agreement and can be used to settle down the due amount.
+This option is available only while opening the agreement.
+When you are opening the agreement fill in all the details and at the end you can see there is a box of advance and you have to enter the amount in it and press save.

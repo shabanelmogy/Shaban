@@ -1,0 +1,11 @@
+S180
+Create and manage vehicle types
+https://speedautosystems.com/vehicle-leasing-software/user-guide/create-and-manage-vehicle-types/
+
+Create and manage vehicle types
+Go to the panel on the left side and click on the Fleet tab.
+Scroll down and click on the Vehicle Types module.
+A window will open. Go the +CREATE NEW VEHICLE TYPE button and click on it.
+A form will appear. Fill it and add specify diagrams. Then, click on the SAVE button. All vehicles will be listed with name and details.
+You can also search here any vehicle by typing vehicle type. To view, edit, or delete, click on the ACTIONS button.
+Click HERE if you have a query or an issue.

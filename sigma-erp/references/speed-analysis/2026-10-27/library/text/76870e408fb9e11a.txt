@@ -1,0 +1,10 @@
+S083
+Rental Agreement Printing
+https://speedautosystems.com/car-rental-software/user-guide/rental-agreement-printing/
+
+Rental Agreement Printing
+Go to the rental module from the left navigation panel.
+Click on the tab stating “Agreements”.
+All the opened and closed agreement can be found here.
+1. Click on the small blue button with the settings sign on it and there will be many options.
+2. Click on the Print option and you can get a print of that agreement from your printer connected to the system.

@@ -2,6 +2,49 @@
 
 > **Status: Canonical**
 
+### Context revisions and deferred actions (source-only,2026-10-30)
+
+The existing data-free scope notification also fences reviewed operational
+sessions: clear prior-context rows/labels/counts, cancel reads (including whole
+composed export/report reads), and keep the outer query trigger alive for a
+fresh request. A pending confirmation captures its context revision before it
+opens; matching an ID alone cannot authorize its callback after a reset, because
+different contexts may reuse that ID. Invalidate editors/action sessions until
+reopened with current data. Never cancel or automatically repeat an independent
+write already sent; its old-session callback must not mutate current-session
+state. Preserve finalization and busy/exit safety. UI21 owns cancelling pending
+print preparation; UI2 owns reference-cache eligibility, watches and clearing.
+Equipment Rental's source audit applies these rules to its actual consumers;
+this is not a new cache opt-in, permission model or runtime proof.
+
+### Routed API read cancellation (owner2026-10-22)
+
+The shared navigationActivityInterceptor supplements component teardown for
+Sigma API page reads. Capture the subscribed request's current navigation ID,
+or last successful navigation ID, using Angular21's Router signals, and its
+parsed target/current URL path. Cancel its subscription only after a different
+NavigationEnd with a different page path. Keep path, matrix and outlet identity;
+ignore query parameters and fragments. Serialize a new UrlTree with the parsed
+root and default empty query/fragment; UrlSegmentGroup.toString alone omits child
+outlet segments and is not a page key. Lists synchronize search/paging in the URL
+while retaining the same page and its bootstrap lookups. Cancelling those reads
+can complete a forkJoin without a value and leave action readiness false (Individual
+Edit contact group regression,2026-10-22). Same-page request replacement remains
+owned by the existing switchMap/identity checks, not navigation IDs alone.
+A rejected navigation must
+not cancel the current page read, and a read begun for the target navigation
+must survive that same navigation's end. No mutation is cancelled on navigation.
+This aborts a pending client HTTP request where supported; it never proves the
+server stopped work or rolled back. Keep local identity/switchMap/teardown guards
+for same-page races and deferred work.
+
+Use KEEP_READ_ON_NAVIGATION only for genuinely session-owned reads: CurrentBranch
+options/current value, runtime localization and its language options, and shared
+mock-data preferences. Preserve their session-version/cancellation owners.
+NAVIGATION_READ_ONLY explicitly classifies a read-only POST; do not guess from
+an endpoint name. Third-party/auth-server/assets requests retain the established
+Sigma API-origin boundary and are not intercepted by this policy.
+
 Every subscription is torn down with `takeUntilDestroyed`, which is the app-wide
 pattern:
 
@@ -14,15 +57,28 @@ this.service.getList(query)
   .subscribe({ … });
 ```
 
+**Independent editor bootstrap reads (2026-10-17).** When opening an editor
+requires both a navigation-identity snapshot and fresh detail, independent
+HTTP requests may join through forkJoin rather than waiting sequentially.
+Validate both envelopes and record/source identity before opening. Carry the
+fresh initial detail through a typed parent/child session and hydrate once;
+Retry/navigation/Reset still use authoritative detail reads. Freeze the key
+snapshot and preserve limits, membership, cancellation, errors and busy gates.
+Never substitute stale list data for fresh detail. Separate HTTP scopes may
+overlap; do not parallelize EF queries on the same backend DbContext. Evidence:
+Languages text-editor bootstrap; actual latency remains owner-measured.
+
 `destroyRef` is `inject(DestroyRef)` in newer components and a constructor
 parameter (`private destroy$: DestroyRef`) in older ones such as the Company
 editor. Either is fine — match the file you are editing.
 
 **Deferred UI work follows the same lifetime.** Inspect the installed Angular
-declarations, not a newer online API or an assumed property. Sigma's current
-Angular17.3.12 `DestroyRef` exposes `onDestroy`, but not `destroyed`; do not read
-`destroyRef.destroyed`. A deferred print after detail rendering can reuse the
-existing RxJS cancellation owner:
+declarations, not a newer online API or an assumed property. The current
+Angular21 `DestroyRef` exposes both `onDestroy` and `destroyed`. Use
+`takeUntilDestroyed` for observable cancellation; use `destroyed` only for a
+narrow deferred-callback guard when the edited source needs that check. A
+deferred print after detail rendering can reuse the existing RxJS cancellation
+owner:
 
 ```ts
 import { timer } from 'rxjs';

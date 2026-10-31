@@ -1,0 +1,3582 @@
+{
+  "name": "CRS",
+  "basis": "Manual transcription of common.views.layout.sidebar selection branches against captured literal feature values and permissions. Not UI observation.",
+  "source": {
+    "file": "raw/application.js",
+    "line": 26935,
+    "endLine": 27012,
+    "start": 1552113,
+    "end": 1555502
+  },
+  "menu": {
+    "name": "CRS",
+    "displayName": "CRS Menu",
+    "items": [
+      {
+        "name": "CRS.Dashboard.Tenant",
+        "order": 0,
+        "icon": "icon-home",
+        "url": "tenant.crs_dashboard",
+        "displayName": "Dashboard",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": []
+      },
+      {
+        "name": "CRS.Agreements.Dashboard2.Tenant",
+        "order": 0,
+        "icon": "icon-home",
+        "url": "tenant.crs_agreements_dashboard2",
+        "displayName": "Agreements Dashboard 2",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": []
+      },
+      {
+        "name": "CRS.Contacts.Tenant",
+        "order": 0,
+        "icon": "icon-users",
+        "displayName": "Customers",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Contacts.Tenant",
+            "order": 0,
+            "icon": "icon-users",
+            "url": "tenant.crs_contacts",
+            "displayName": "Individuals",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Companies.Tenant",
+            "order": 0,
+            "icon": " icon-layers",
+            "url": "tenant.crs_companies",
+            "displayName": "Companies",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.StatementOfAccounts.Tenant",
+            "order": 0,
+            "icon": "fa fa-list-alt",
+            "url": "tenant.crs_customerStatementOfAccounts",
+            "displayName": "Statement of Account",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.OutstandingReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_customersBalancesSummary",
+            "displayName": "Balances Summary",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ReceivableAgeAnalysis.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_receivableAgeAnalysis",
+            "displayName": "Receivable Age Analysis",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CustomersAlerts.Tenant",
+            "order": 0,
+            "icon": "icon-envelope",
+            "url": "tenant.crs_customersAlerts",
+            "displayName": "Alerts",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DebtCollection.Tenant",
+            "order": 0,
+            "icon": "icon-envelope",
+            "url": "tenant.crs_debtCollection",
+            "displayName": "Debt Collection",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.contactPaymentFollowups.Tenant",
+            "order": 0,
+            "icon": "icon-envelope",
+            "url": "tenant.crs_contactPaymentFollowups",
+            "displayName": "Follow Up Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.Suppliers.Tenant",
+        "order": 0,
+        "icon": "fa fa-sitemap",
+        "displayName": "CRM",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Contacts.Tenant",
+            "order": 0,
+            "icon": "fa fa-users",
+            "url": "tenant.crs_contacts",
+            "displayName": "Prospects",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.Contacts.Tenant",
+                "order": 0,
+                "icon": "icon-users",
+                "url": "tenant.crs_contacts",
+                "displayName": "Individuals",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Companies.Tenant",
+                "order": 0,
+                "icon": "fa fa-building",
+                "url": "tenant.crs_companies",
+                "displayName": "Companies",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "CRS.Campaign.Tenant",
+            "order": 0,
+            "icon": "fa fa-bullhorn",
+            "url": "tenant.crs_campaign",
+            "displayName": "Marketing",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.Campaign.Tenant",
+                "order": 0,
+                "icon": "fa fa-send",
+                "url": "tenant.crs_campaign",
+                "displayName": "Campaign",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.CampaignDashboard.Tenant",
+                "order": 0,
+                "icon": "fa fa-line-chart",
+                "url": "tenant.crs_campaignDashboard",
+                "displayName": "Campaign Dashboard",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.CampaignsOverview.Tenant",
+                "order": 0,
+                "icon": "fa fa-dashboard",
+                "url": "tenant.crs_campaignsOverview",
+                "displayName": "Campaigns Overview",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Leads.Tenant",
+                "order": 0,
+                "icon": "fa fa-filter",
+                "url": "tenant.crs_leads",
+                "displayName": "Leads",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "CRS.OutstandingReport.Tenant",
+            "order": 0,
+            "icon": "fa fa-briefcase",
+            "url": "tenant.crs_deals",
+            "displayName": "Sales",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.Deals.Tenant",
+                "order": 0,
+                "icon": "icon-users",
+                "url": "tenant.crs_deals",
+                "displayName": "Deals",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "CRS.TaskMaster.Tenant",
+            "order": 0,
+            "icon": "fa fa-tasks",
+            "url": "tenant.crs_taskMaster",
+            "displayName": "Tasks",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.TaskMaster.Tenant",
+                "order": 0,
+                "icon": "fa fa-list-ul",
+                "url": "tenant.crs_taskMaster",
+                "displayName": "Task Master",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.TaskAssignment.Tenant",
+                "order": 0,
+                "icon": "fa fa-user-plus",
+                "url": "tenant.crs_taskAssignment",
+                "displayName": "Tasks & Asignments",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.TaskDashboard.Tenant",
+                "order": 0,
+                "icon": "fa fa-check-square-o",
+                "url": "tenant.crs_taskDashboard",
+                "displayName": "ToDo Dashboard",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.TaskCategories.Tenant",
+                "order": 0,
+                "icon": "fa fa-tags",
+                "url": "tenant.crs_taskCategories",
+                "displayName": "Task Categories",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "CRS.PayableAgeAnalysis.Tenant",
+            "order": 0,
+            "icon": "fa fa-cogs",
+            "url": "tenant.crs_payableAgeAnalysis",
+            "displayName": "Administration",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.Products.Tenant",
+                "order": 0,
+                "icon": "fa fa-shopping-bag",
+                "url": "tenant.crs_products",
+                "displayName": "Products & Services",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Industries.Tenant",
+                "order": 0,
+                "icon": "fa fa-industry",
+                "url": "tenant.crs_industries",
+                "displayName": "Industries",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.MarketingMedia.Tenant",
+                "order": 0,
+                "icon": "fa fa-newspaper-o",
+                "url": "tenant.crs_marketingMedia",
+                "displayName": "Campaign Types",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "CRS.Suppliers.Tenant",
+        "order": 0,
+        "icon": "icon-layers",
+        "displayName": "Suppliers",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Suppliers.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_suppliers",
+            "displayName": "Suppliers",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.StatementOfAccounts.Tenant",
+            "order": 0,
+            "icon": "fa fa-list-alt",
+            "url": "tenant.crs_supplierStatementOfAccounts",
+            "displayName": "Statement of Account",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.OutstandingReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_suppliersBalancesSummary",
+            "displayName": "Balances Summary",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.PayableAgeAnalysis.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_payableAgeAnalysis",
+            "displayName": "Payable Age Analysis",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.Suppliers.Tenant",
+        "order": 0,
+        "icon": "icon-users",
+        "displayName": "Staff",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Staff.Tenant",
+            "order": 0,
+            "icon": "icon-users",
+            "url": "tenant.crs_staff",
+            "displayName": "Staff",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.StatementOfAccounts.Tenant",
+            "order": 0,
+            "icon": "fa fa-list-alt",
+            "url": "tenant.crs_staffStatementOfAccounts",
+            "displayName": "Statement of Account",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.OutstandingReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_staffBalancesSummary",
+            "displayName": "Balances Summary",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "HRM.EmployeeDutySchedule.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.hrm_emplyeedutyschedule",
+            "displayName": "Staff Duty Schedule",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "HRM.EmployeeOvertime.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.hrm_staffOvertime",
+            "displayName": "Staff Overtime",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Designation.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.CRS_designation",
+            "displayName": "Designations",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Staff.Alerts.Tenant",
+            "order": 0,
+            "icon": "icon-info",
+            "url": "tenant.crs_Staff_Alerts",
+            "displayName": "Alerts",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.EquipmentSales.Tenant",
+        "order": 0,
+        "icon": "icon-wallet",
+        "displayName": "Sales",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Equipments.Tenant",
+            "order": 0,
+            "icon": "icon-users",
+            "url": "tenant.crs_equipments",
+            "displayName": "Fleet",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SalesQuotation.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_salesQuotation",
+            "displayName": "Sales Quotation",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SalesAgreement.Tenant",
+            "order": 0,
+            "icon": "icon-users",
+            "url": "tenant.crs_salesAgreement",
+            "displayName": "Sales Agreement",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DueInstallments.Tenant",
+            "order": 0,
+            "icon": "icon-users",
+            "url": "tenant.crs_dueInstallments",
+            "displayName": "Due Installments",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SalesSettings.Tenant",
+            "order": 0,
+            "icon": "icon-settings",
+            "url": "tenant.crs_salesSettings",
+            "displayName": "Settings",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.Vehicles.Tenant",
+        "order": 0,
+        "icon": "icon-speedometer",
+        "displayName": "Fleet",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Vehicles.Tenant",
+            "order": 0,
+            "icon": "icon-speedometer",
+            "url": "tenant.crs_vehicles",
+            "displayName": "Vehicles",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleTypes.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_vehicleTypes",
+            "displayName": "Vehicle Types",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SourceCodes.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_sourceCodes",
+            "displayName": "Source Codes",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "MCC.VehicleQRLabels.Tenant",
+            "order": 0,
+            "icon": "icon-printer",
+            "url": "tenant.mcc_vehicleqrlabels",
+            "displayName": "Vehicle QR labels",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "MCC.FixMarks.Tenant",
+            "order": 0,
+            "icon": "icon-wrench",
+            "url": "tenant.mcc_fixmarks",
+            "displayName": "Repair Vehicle Damages",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "MCC.RepairedMarks.Tenant",
+            "order": 0,
+            "icon": "icon-wrench",
+            "url": "tenant.mcc_repairedMarks",
+            "displayName": "Repaired Damages History",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ServiceItems.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_serviceItems",
+            "displayName": "Service Items",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Services.Tenant",
+            "order": 0,
+            "icon": "icon-note",
+            "url": "tenant.crs_services",
+            "displayName": "Services",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Alerts.Tenant",
+            "order": 0,
+            "icon": "icon-info",
+            "url": "tenant.crs_alerts",
+            "displayName": "Alerts",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ServiceLog.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_serviceLog",
+            "displayName": "Service Log",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DailyServiceLogs.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_DailyServiceLogs",
+            "displayName": "Daily Service Logs",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ProcessAndDownloadFines.Tenant",
+            "order": 0,
+            "icon": "icon-arrow-down",
+            "url": "tenant.crs_downloadAndProcessFines",
+            "displayName": "Download/Process Fines",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ProcessAndDownloadTolls.Tenant",
+            "order": 0,
+            "icon": "icon-arrow-down",
+            "url": "tenant.crs_downloadAndProcessTolls",
+            "displayName": "Download/Process Tolls",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ProcessAndDownloadDarbTolls.Tenant",
+            "order": 0,
+            "icon": "icon-arrow-down",
+            "url": "tenant.crs_downloadAndProcessDarbTolls",
+            "displayName": "Download/Process Darb Tolls",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Vehicles.VehiclesTracker.Tenant",
+            "order": 0,
+            "icon": "icon-arrow-down",
+            "url": "tenant.crs_vehiclesTracker",
+            "displayName": "Vehicles Tracker",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ServiceBookings.Tenant",
+            "order": 0,
+            "icon": "icon-arrow-down",
+            "url": "tenant.crs_serviceBookings",
+            "displayName": "Service Bookings",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accidents.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_accident",
+            "displayName": "Accidents",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.RepeatedAccidentReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_repeatedAccidentReport",
+            "displayName": "Repeated Accidents",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.TariffGroups.Tenant",
+        "order": 0,
+        "icon": "icon-book-open",
+        "displayName": "Rental",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.TariffGroups.Tenant",
+            "order": 0,
+            "icon": "icon-calculator",
+            "url": "tenant.crs_rentalTariff",
+            "displayName": "Tariff",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.TariffCards.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_tariffCards",
+            "displayName": "Tariff Cards",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.RentalQuotations.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_rentalQuotation",
+            "displayName": " Quotations",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.RentalMasterAgreements.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_rentalMasterAgreements",
+            "displayName": "Master Agreements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Booking.Tenant",
+            "order": 0,
+            "icon": "icon-arrow-down",
+            "url": "tenant.crs_bookings",
+            "displayName": "Bookings",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.RentalPlanner.Tenant",
+            "order": 0,
+            "icon": "icon-arrow-down",
+            "url": "tenant.crs_rentalPlanner",
+            "displayName": "Rental Planner",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Agreements.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.crs_agreements",
+            "displayName": "Agreements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DriverTimeSheetForAgreement.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.crs_driverTimeSheetForAgreement",
+            "displayName": "Driver Time Sheet",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.LeaseQuotations.Tenant",
+        "order": 0,
+        "icon": "icon-layers",
+        "displayName": "Lease",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.TariffGroups.Tenant",
+            "order": 0,
+            "icon": "icon-calculator",
+            "url": "tenant.crs_leaseTariff",
+            "displayName": "Tariff",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CostingParameter.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_costingParameters",
+            "displayName": "Cost Parameters",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CostingSetup.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_costingSetup",
+            "displayName": "Cost Setting",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.LeaseInquiries.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_leaseInquiries",
+            "displayName": "Inquiries",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.LeaseQuotations.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_leaseQuotations",
+            "displayName": "Quotations",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.MasterAgreements.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_masterAgreements",
+            "displayName": "Master Agreements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Agreements.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_leaseAgreements",
+            "displayName": "Agreements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.LeaseClauses.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_clauses",
+            "displayName": "Clauses",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SMSToLeaseCustomer.Tenant",
+            "order": 0,
+            "icon": "icon-envelope",
+            "url": "tenant.crs_smsToLeaseCustomer",
+            "displayName": "SMS to Lease Customer",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.EquipmentRentalAgreements.Tenant",
+        "order": 0,
+        "icon": "icon-book-open",
+        "displayName": "Equipment Rental",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.ERSQuotation.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.crs_ersQuotation",
+            "displayName": " Quotations",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ERSMasterAgreements.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.crs_ersMasterAgreements",
+            "displayName": "Master Agreements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ERSEquipmentDelivery.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.ers_deliveries",
+            "displayName": "Delivery Notes",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ERSTimeSheet.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.crs_ersTimeSheet",
+            "displayName": "Time Sheet",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.Transportation.Tenant",
+        "order": 0,
+        "icon": "icon-map",
+        "displayName": " Transportation",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Transportation.TransAgreements.Tenant",
+            "order": 0,
+            "icon": "icon-map",
+            "url": "tenant.crs_transAgreements",
+            "displayName": "Agreements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Transportation.TransTripSheet.Tenant",
+            "order": 0,
+            "icon": "icon-film",
+            "url": "tenant.crs_transTripsSheet",
+            "displayName": "Trip Sheet",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Transportation.Trips.Tenant",
+            "order": 0,
+            "icon": "icon-pointer",
+            "url": "tenant.crs_trips",
+            "displayName": "Trips",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.TariffGroups.Tenant",
+        "order": 0,
+        "icon": "icon-directions",
+        "displayName": "Movements",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.StaffMovements.Tenant",
+            "order": 0,
+            "icon": "icon-directions",
+            "url": "tenant.crs_staffMovements",
+            "displayName": "NRMs",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkshopMovements.Tenant",
+            "order": 0,
+            "icon": "icon-directions",
+            "url": "tenant.crs_workshopMovements",
+            "displayName": "Workshop Movements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CustodyMovements.Tenant",
+            "order": 0,
+            "icon": "icon-directions",
+            "url": "tenant.crs_custodyMovements",
+            "displayName": "Custody Movements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Deliveries.Tenant",
+            "order": 0,
+            "icon": "icon-directions",
+            "url": "tenant.crs_deliveries",
+            "displayName": "Delivery Movements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CollectionMovements.Tenant",
+            "order": 0,
+            "icon": "icon-directions",
+            "url": "tenant.crs_collectionMovements",
+            "displayName": "Collection Movements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "MCC.Movements.Tenant",
+            "order": 0,
+            "icon": "icon-directions",
+            "url": "tenant.mcc_movements",
+            "displayName": "Movements Log",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.WorkShop.Tenant",
+        "order": 0,
+        "icon": "icon-wrench",
+        "displayName": "Workshop",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.WorkShop.WorkOrders.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.CRS_WorkshopVehicles",
+            "displayName": "Vehicles",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkShop.WorkOrders.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.CRS_WorkOrders",
+            "displayName": "Work Orders",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkShop.JobEstimates.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.CRS_jobEstimations",
+            "displayName": "Job Estimations",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkShop.Jobs.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.CRS_jobs",
+            "displayName": "Jobs",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkShop.LabourActivities.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.CRS_LabourActivities",
+            "displayName": "Labour Activities",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkShop.JobCategories.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.CRS_JobCategories",
+            "displayName": "Job Category",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkShop.LabourTariff.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.CRS_LabourTariff",
+            "displayName": "Labour Tariff",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkShop.LabourTariff.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.CRS_LabourActivitiesReport",
+            "displayName": "Labour Activities Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.WorkShop.WorkShopReports.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "displayName": "Reports",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.WorkShop.InsuranceJobDetailReport.Tenant",
+                "order": 0,
+                "icon": "icon-layers",
+                "url": "tenant.CRS_InsuranceJobDetailReport",
+                "displayName": "Insurance Job Detail",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.WorkShop.WorkshopRevenueAnalysisReport.Tenant",
+                "order": 0,
+                "icon": "icon-layers",
+                "url": "tenant.CRS_RevenueAnalysisReport",
+                "displayName": "Revenue Analysis Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.WorkShop.WorkshopJobProfitAndLossReport.Tenant",
+                "order": 0,
+                "icon": "icon-layers",
+                "url": "tenant.CRS_JobProfitAndLossReport",
+                "displayName": "Job Profit And Loss Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.WorkShop.ExternalGarageWorkDetailReport.Tenant",
+                "order": 0,
+                "icon": "icon-layers",
+                "url": "tenant.CRS_ExternalGarageWorkDetailReport",
+                "displayName": "[External garage work detail report]",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "CRS.Stocks.Tenant",
+        "order": 0,
+        "icon": "icon-wrench",
+        "displayName": "Stock",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.UnitOfMeasures.Tenant",
+            "order": 0,
+            "icon": "icon-directions",
+            "url": "tenant.CRS_unitOfMeasures",
+            "displayName": "Units of Measures",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ItemTypes.Tenant",
+            "order": 0,
+            "icon": "icon-directions",
+            "url": "tenant.CRS_ItemTypes",
+            "displayName": "Item Types",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Items.Tenant",
+            "order": 0,
+            "icon": "icon-graph",
+            "url": "tenant.CRS_Items",
+            "displayName": "Items",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Requisitions.Tenant",
+            "order": 0,
+            "icon": "icon-graph",
+            "url": "tenant.CRS_Requisitions",
+            "displayName": "Item Requisitions",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Issues.Tenant",
+            "order": 0,
+            "icon": "icon-graph",
+            "url": "tenant.CRS_Issues",
+            "displayName": "Item Issues",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Returns.Tenant",
+            "order": 0,
+            "icon": "icon-graph",
+            "url": "tenant.CRS_Returns",
+            "displayName": "Item Returns",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.StockTransfer.Tenant",
+            "order": 0,
+            "icon": "icon-graph",
+            "url": "tenant.CRS_StockTransfer",
+            "displayName": "Stock Transfer",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Stock.Report.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "displayName": "Reports",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.StockReport.Tenant",
+                "order": 0,
+                "icon": "icon-bar-chart",
+                "url": "tenant.CRS_StockReport",
+                "displayName": "Stock Summary Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Stock.Report.StockReportDetailedStockReport.Tenant",
+                "order": 0,
+                "icon": "icon-graph",
+                "url": "tenant.crs_stockReportDetailedStockReport",
+                "displayName": "Detailed Stock Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Stock.Report.PurchaseOrdersDetailReport.Tenant",
+                "order": 0,
+                "icon": "icon-graph",
+                "url": "tenant.crs_stockReportPurchaseOrdersDetail",
+                "displayName": "Purchase Orders Detail Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Stock.Report.StockReportPurchaseDetailBillReport.Tenant",
+                "order": 0,
+                "icon": "icon-graph",
+                "url": "tenant.crs_stockReportPurchaseDetailBillReport",
+                "displayName": "Purchases Detail Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Stock.Report.itemsIssueReport.Tenant",
+                "order": 0,
+                "icon": "icon-graph",
+                "url": "tenant.crs_stockReportItemsIssueReport",
+                "displayName": "Items Issue Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Stock.Report.itemsReturnReport.Tenant",
+                "order": 0,
+                "icon": "icon-graph",
+                "url": "tenant.crs_stockReportItemsReturnReport",
+                "displayName": "Items Return Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Stock.Report.grnPendingReport.Tenant",
+                "order": 0,
+                "icon": "icon-graph",
+                "url": "tenant.crs_stockReportGRNPendingReport",
+                "displayName": "GRN Pending Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Stock.Report.PartsMovingLessMovingAndNotMovingReport.Tenant",
+                "order": 0,
+                "icon": "icon-graph",
+                "url": "tenant.crs_stockReportPartsMovingLessMovingAndNotMovingReport",
+                "displayName": "Parts Moving Less Moving And Not Moving Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "CRS.Limo.Tenant",
+        "order": 0,
+        "icon": "icon-pointer",
+        "displayName": "Limousine",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Limo.TripLocations.Tenant",
+            "order": 0,
+            "icon": "icon-pointer",
+            "url": "tenant.crs_tripLocations",
+            "displayName": "Locations",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Limo.TripTypes.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_limoTripTypes",
+            "displayName": "Trip Types",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Limo.Tariff.Tenant",
+            "order": 0,
+            "icon": "icon-calculator",
+            "url": "tenant.crs_limoTariff",
+            "displayName": "Tariff",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Limo.LimoTariffReport.Tenant",
+            "order": 0,
+            "icon": "icon-calculator",
+            "url": "tenant.crs_limoTariffReport",
+            "displayName": "Tariff Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.LimoQuotations.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_limoQuotation",
+            "displayName": " Quotations",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Limo.Tenant",
+            "order": 0,
+            "icon": "icon-pointer",
+            "url": "tenant.crs_limo",
+            "displayName": "Trips",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Limo.DriversTracker.Tenant",
+            "order": 0,
+            "icon": "icon-pointer",
+            "url": "tenant.crs_driversTracker",
+            "displayName": "Drivers Tracker",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Limo.LimoReports.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "displayName": "Reports",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.Limo.LimoUtilizationReport.Tenant",
+                "order": 0,
+                "icon": "icon-calculator",
+                "url": "tenant.crs_limoUtilizationReport",
+                "displayName": "Utilization Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Limo.ChauffeurForcedAllocationsReport.Tenant",
+                "order": 0,
+                "icon": "icon-bar-chart",
+                "url": "tenant.crs_chauffeurForcedAllocationsReport",
+                "displayName": "Chauffeur Forced Allocations Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "HRM",
+        "order": 0,
+        "icon": "icon-note",
+        "displayName": "HRM",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "HRM.Payroll",
+            "order": 0,
+            "icon": "icon-note",
+            "displayName": "Payroll",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "HRM.Payroll",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_payroll",
+                "displayName": "Process Payroll",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.LeaveSalaryPayroll",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_leaveSalaryPayroll",
+                "displayName": "Process Leave Salary",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.FinalSettlement",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_finalSettlement",
+                "displayName": "Process Final Settlement",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.Payrolls",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_payrolls",
+                "displayName": "Processed Payrolls",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.Payrolls",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_paySlips",
+                "displayName": "Pay Slips",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "HRM.Leaves",
+            "order": 0,
+            "icon": "icon-note",
+            "displayName": "Leaves",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "HRM.MyDashboard",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_myDashboard",
+                "displayName": "Leave Dashboard",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.Leaves",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_leaves",
+                "displayName": "Leaves",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.LeaveType",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_leaveType",
+                "displayName": "Leave Types",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.Shift",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_calendar_holiday",
+                "displayName": " Holidays Calendar",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "HRM.Attendance",
+            "order": 0,
+            "icon": "icon-note",
+            "displayName": "Attendance",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "HRM.Shift",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_shift",
+                "displayName": "Shifts",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.Attendance",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_attendance",
+                "displayName": "Attendance",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.StaffTimeSheet",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_staffTimeSheet",
+                "displayName": "Time Sheet",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "HRM.Overtime",
+            "order": 0,
+            "icon": "icon-note",
+            "displayName": "Overtime",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "HRM.Overtime",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_overtime",
+                "displayName": "Process Overtime",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "HRM.Deduction",
+            "order": 0,
+            "icon": "icon-note",
+            "displayName": "Deductions",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "HRM.Deduction",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_deduction",
+                "displayName": "Deductions",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "HRM.Report",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "displayName": "Reports",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "HRM.Payrolls.Report",
+                "order": 0,
+                "icon": "icon-layers",
+                "url": "tenant.hrm_payrolls_report",
+                "displayName": "Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.Report.DriverTimeSheetReport",
+                "order": 0,
+                "icon": "icon-layers",
+                "url": "tenant.hrm_driverTimeSheet_report",
+                "displayName": "Driver Time Sheet Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "HRM.Administration",
+            "order": 0,
+            "icon": "icon-wrench",
+            "displayName": "Administration",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "HRM.StaffRole",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_staffRole",
+                "displayName": "Staff Roles",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.Department",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_department",
+                "displayName": "Departments",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.LeaveOpeningBalance",
+                "order": 0,
+                "icon": "icon-note",
+                "url": "tenant.hrm_leaveOpeningBalance",
+                "displayName": "Leave Opening Balance",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.AccountLinking",
+                "order": 0,
+                "icon": "icon-calculator",
+                "url": "tenant.hrm_accountLinking",
+                "displayName": "Account Linking",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "HRM.Settings",
+                "order": 0,
+                "icon": "icon-settings",
+                "url": "tenant.hrm_settings",
+                "displayName": "Settings",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "CRS.Receipts.Tenant",
+        "order": 0,
+        "icon": "icon-notebook",
+        "displayName": "Vouchers",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Invoices.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_invoices",
+            "displayName": "Invoices",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CreditNotes.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_creditNotes",
+            "displayName": "Credit Notes",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DebitNotes.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_debitNotes",
+            "displayName": "Debit Notes",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Receipts.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_receipts",
+            "displayName": "Receipts",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Deposits.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_deposits",
+            "displayName": "Deposits",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.PurchaseOrders.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_purchaseRequest",
+            "displayName": "Purchase Requests",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.PurchaseOrders.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_purchaseOrders",
+            "displayName": "Purchase Orders",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.GoodsReceiptNotes.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_stockgoodsReceiptNotes",
+            "displayName": "GRNs",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Bills.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_bills",
+            "displayName": "Bills",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.PurchaseReturns.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_purchaseReturns",
+            "displayName": "Purchase Returns",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Payments.Tenant",
+            "order": 0,
+            "icon": "fa fa-money",
+            "url": "tenant.crs_payments",
+            "displayName": "Payments",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.JVs.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_jvs",
+            "displayName": "JVs",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.LoanAmortization.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_loanAmortization",
+            "displayName": "Custom Amortization Vouchers",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SalaryVouchers.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_salaryVouchers",
+            "displayName": "Salary Vouchers",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.Amortization.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_amortization",
+            "displayName": "Amortization",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Banking.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "displayName": " Provisions ",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.Provisions.Tenant",
+                "order": 0,
+                "icon": "icon-notebook",
+                "url": "tenant.crs_provisions",
+                "displayName": " Provisions ",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "CRS.Provisions.Tenant",
+                "order": 0,
+                "icon": "icon-notebook",
+                "url": "tenant.crs_provisionsPosting",
+                "displayName": "Monthly Posting",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "CRS.Vouchers.Accruals.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_accruals",
+            "displayName": "Accruals",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SalikMonthEndPosting.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_salikMonthEndPosting",
+            "displayName": "Tolls Month-End Posting",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DarbMonthEndPosting.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_darbMonthEndPosting",
+            "displayName": "Darb Month-EndPosting",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.TrafficFines.Tenant",
+            "order": 0,
+            "icon": "icon-fire",
+            "url": "tenant.crs_trafficFines",
+            "displayName": "Traffic Fines",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.Banking.Tenant",
+        "order": 0,
+        "icon": "icon-wallet",
+        "displayName": "Banking",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Banking.BankAccounts.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_bankAccounts",
+            "displayName": "Bank Accounts",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Banking.ChequesReceivables.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_chequesReceivables",
+            "displayName": "Cheques Receivables",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Banking.ChequesPayables.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_chequesPayables",
+            "displayName": "Cheques Payables",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Banking.BankReconciliation.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_bankReconciliation",
+            "displayName": "Bank Reconciliation",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Banking.BankReconciliation.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_reconciliationReport",
+            "displayName": "Reconciliation Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CashDeposits.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_cashBankDeposit",
+            "displayName": "Cash Deposits ",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CreditCardTransTransfers.Tenant",
+            "order": 0,
+            "icon": "icon-docs",
+            "url": "tenant.crs_creditCardTransTransfers",
+            "displayName": "Card Transactions Bank Transfers",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.Loan.Tenant",
+        "order": 0,
+        "icon": "icon-wallet",
+        "displayName": "Loan",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Loan.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_LoanSummary",
+            "displayName": "Loans",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Loan.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_Loan",
+            "displayName": "Loan EMI's",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Loan.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_LoanDetails",
+            "displayName": "Loan Details",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.Accounts.Tenant",
+        "order": 0,
+        "icon": "icon-calculator",
+        "displayName": "Accounts",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Accounts.ChartOfAccounts.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_coa",
+            "displayName": "Chart Of Accounts",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.LinkAccounts.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_linkAccounts",
+            "displayName": "Link Accounts",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.FiscalYear.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_fiscalYear",
+            "displayName": "Fiscal Years",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.OpeningBalances.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_openingBalances",
+            "displayName": "Opening Balances",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.TrialBalance.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_trialBalance",
+            "displayName": "Trial Balance",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.CashFlowStatement.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_cashFlowStatement",
+            "displayName": "Cash Flow Statement",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.BalanceSheet.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_balanceSheet",
+            "displayName": "Balance Sheet",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.MonthwiseBalanceSheet.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_balanceSheetMonthwise",
+            "displayName": "Balance Sheet Month wise",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.IncomeStatement.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_incomeStatement",
+            "displayName": "Income Statement",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.VehicleIncomeStatement.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_vehicleIncomeStatement",
+            "displayName": "Vehicle Income Statement",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.IncomeComparisonReport.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_incomeComparisonReport",
+            "displayName": "Income Comparison Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.IncomeStatement2.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_incomeStatement2",
+            "displayName": "Income Statement 2",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.IncomeStatementYTD.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_incomeStatementYTD",
+            "displayName": "Income Statement YTD",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.IncomeStatementYTD2.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_incomeStatementYTD2",
+            "displayName": "Income Statement YTD 2",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.IncomeStatementFY.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_incomeStatementFY",
+            "displayName": "Income Statement FY",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.IncomeStatementFY2.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_incomeStatementFY2",
+            "displayName": "Income Statement FY 2",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.MonthEndClosing.Tenant",
+            "order": 0,
+            "icon": "icon-bar-chart",
+            "url": "tenant.crs_monthEndClosing",
+            "displayName": "Month Closing",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.Ledger.Tenant",
+            "order": 0,
+            "icon": "icon-calendar",
+            "url": "tenant.crs_ledger",
+            "displayName": "Ledger",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.Journal.Tenant",
+            "order": 0,
+            "icon": "icon-calendar",
+            "url": "tenant.crs_journal",
+            "displayName": "Journal",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.Budget.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_budget",
+            "displayName": "Budget",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Accounts.BudgetVariance.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_budgetVariance",
+            "displayName": "Budget Variance",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.Assets.Tenant",
+        "order": 0,
+        "icon": "icon-diamond",
+        "displayName": "Assets",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.Assets.AssetTypes.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.crs_assetTypes",
+            "displayName": "Asset Types",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Assets.Tenant",
+            "order": 0,
+            "icon": "icon-diamond",
+            "url": "tenant.crs_assets",
+            "displayName": "Assets",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Assets.Depreciation.Tenant",
+            "order": 0,
+            "icon": "icon-calendar",
+            "url": "tenant.crs_depreciation",
+            "displayName": "Depreciation",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Assets.DepreciationSummary.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_depreciationSummary",
+            "displayName": "Depreciation Summary",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Assets.DepreciationDetail.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_depreciationDetail",
+            "displayName": "Depreciation Detail",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.Assets.DepreciationReportFY.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_depreciationReportFY",
+            "displayName": "Depreciation Report FY",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "CRS.VehiclesProfitAndLoss.Tenant",
+        "order": 0,
+        "icon": "icon-bar-chart",
+        "displayName": "Reports",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CRS.VehiclesProfitAndLoss.Tenant",
+            "order": 0,
+            "icon": "icon-graph",
+            "url": "tenant.crs_vehiclesProfitAndLoss",
+            "displayName": "Vehicles Profit/Loss",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehiclePriceBaseOnTariffGroup.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_vehiclePriceBaseOnTariffGroup",
+            "displayName": "Vehicle Price Based On Tariff Group",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehiclesRevenueReport.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_vehiclesRevenueReport",
+            "displayName": "Vehicles Revenue Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleRentalDetailsReport.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_vehicleRentalDetailsReport",
+            "displayName": "Vehicle Rental Details Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.RentalSalesForSixtBahrain.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_rentalSalesForSixtBahrain",
+            "displayName": "Rental Sales For SixtBahrain",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehiclesProfitAndLossByChassisNo.Tenant",
+            "order": 0,
+            "icon": "icon-graph",
+            "url": "tenant.crs_vehiclesProfitAndLossByChassisNo",
+            "displayName": "Vehicles Profit/Loss By Chassis No",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ProfitAndLoss.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_profitAndLoss",
+            "displayName": "Profit/Loss",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CollectionReport.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_collectionReport",
+            "displayName": "Collection",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CollectionAndRefundsReport.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_collectionAndRefundsReport",
+            "displayName": "Collection And Refunds",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CollectionAndRefundsReport2.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_collectionAndRefundsReport2",
+            "displayName": "Collection And Refunds 2",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CustomerWiseCollectionReport.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_customerWiseCollectionReport",
+            "displayName": "Customer Wise Collection Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DailyBusinessReport.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_dailyBusinessReport",
+            "displayName": "Daily Business Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SaleReport.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_saleReport",
+            "displayName": "Sale Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SaleReportBaseOnInvoice.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_saleReportBaseOnInvoice",
+            "displayName": "Sale Report Base On Invoice",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SalesPersonInvoicesReport.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_salesPersonInvoicesReport",
+            "displayName": "Sales Person Invoices Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehiclesPurchaseReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_vehiclesPurchaseReport",
+            "displayName": "Vehicles Purchase Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SalesPersonReport.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "displayName": "Saleperson Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "CRS.SalePersonDiscountReport.Tenant",
+                "order": 0,
+                "icon": "icon-wallet",
+                "url": "tenant.salePersonDiscountReport",
+                "displayName": "Salesperson Discount Report",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "CRS.TaxCollection.Tenant",
+            "order": 0,
+            "icon": "icon-pie-chart",
+            "url": "tenant.crs_taxCollection",
+            "displayName": "Tax Collection",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.TaxReturnUae.Tenant",
+            "order": 0,
+            "icon": "icon-bag",
+            "url": "tenant.crs_taxReturnUae",
+            "displayName": "Tax Return",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleExpenseReport.Tenant",
+            "order": 0,
+            "icon": "fa fa-money",
+            "url": "tenant.crs_vehicleExpenseReport",
+            "displayName": "Expenses",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleExpenseTypeReport.Tenant",
+            "order": 0,
+            "icon": "fa fa-money",
+            "url": "tenant.crs_vehicleExpenseTypeReport",
+            "displayName": "Vehicle Expense Type",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.AgreementsReport.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.report_AgreementsReport",
+            "displayName": "Agreements Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.StaffPerformanceReport.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.report_StaffPerformanceReport",
+            "displayName": "Staff Performance Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CIDReport.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.report_cidReport",
+            "displayName": "CID Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ActiveAgreements.Tenant",
+            "order": 0,
+            "icon": "icon-book-open",
+            "url": "tenant.crs_activeAgreements",
+            "displayName": "Outstanding Agreements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.OverdueAgreementsReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_OverdueAgreementsReport",
+            "displayName": "Overdue Agreements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.AgreementOutstandingInvoicesReport.Tenant",
+            "order": 0,
+            "icon": "icon-wallet",
+            "url": "tenant.crs_agreementOutstandingInvoicesReport",
+            "displayName": "Agreement Outstanding Invoices Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DailyReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_dailyReport",
+            "displayName": "Daily Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DailyRevenueReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_dailyRevenueReport",
+            "displayName": "Daily Revenue Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.FleetUtilizationReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_vehicleStatusReport",
+            "displayName": "Vehicle Status Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.FleetUtilizationReport2.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_vehicleStatusReport2",
+            "displayName": "[Vehicle status report2]",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleUtilizationAndRevenueReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_VehicleUtilizationAndRevenueReport",
+            "displayName": "Vehicle Utilization And Revenue Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleUtilizationReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_VehicleUtilizationReport",
+            "displayName": "Vehicle Utilization Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleUtilizationCncReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_vehicleUtilizationCncReport",
+            "displayName": "Vehicle Utilization (Commercial / Non-Commercial)",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DetailedVehicleUtilizationReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_detailedVehicleUtilizationReport",
+            "displayName": "Detailed Vehicle Utilization Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.TollReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_tollReport",
+            "displayName": "Tolls Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DarbTollReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_darbTollsReport",
+            "displayName": "Darb Tolls Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "TFMS.Fines.DownloadFineDescription.Tenant",
+            "order": 0,
+            "icon": "fa fa-download",
+            "url": "tenant.TFMS_downloadFineDescription",
+            "displayName": "Download Description",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "TFMS.Fines.UpdateFineTimeAUH.Tenant",
+            "order": 0,
+            "icon": "fa fa-download",
+            "url": "tenant.TFMS_updateFineTimeAUH",
+            "displayName": "Update Fine Time AUH",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.FineReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_fineReport",
+            "displayName": "Fines Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SurchargeVarianceReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_surchargeVarianceReport",
+            "displayName": "Surcharge Variance Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ReconcileTolls.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_reconcileTolls",
+            "displayName": "ReconcileTolls",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ReconcileDarbTolls.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_reconcileDarbTolls",
+            "displayName": "Reconcile Darb Tolls",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.TripsWithOvertimeReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_TripsWithOvertime",
+            "displayName": "Trips With Overtime",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.IdleVehicleReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_IdleVehicleReport",
+            "displayName": "Idle Vehicle Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleAgeingReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_VehicleAgeingReport",
+            "displayName": "Vehicle Ageing Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.RentalVehicleOnServiceReplacement.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_rentalVehicleOnServiceReplacement",
+            "displayName": "Rental Vehicles On Service Replacements",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DueDefleetVehiclesReports.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_DueDefleetVehiclesReports",
+            "displayName": "Due For Sale Vehicles",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.VehicleChargedVsDrivenReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_VehicleChargedVsDriven",
+            "displayName": "Vehicle Charged vs Driven",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.NonRevenueMovementReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_NonRevenueMovementReport",
+            "displayName": "Non Revenue KMs Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.EstimateRevenueByVehicleTypeReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_EstimateRevenueByVehicleType",
+            "displayName": "Revenue by Vehicle Type",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.CastleLimoDailyRevenueReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_CastleLimoDailyRevenueReport",
+            "displayName": "Limo Daily Revenue Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.EstimateRevenueByTariffCardReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_EstimateRevenueByTariffCard",
+            "displayName": "Revenue by Tariff Card",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.EstimateRevenueByBranch.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_EstimateRevenueByBranch",
+            "displayName": "Revenue by Branch",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.RevenueAnalysisReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_RevenueAnalysis",
+            "displayName": "Revenue Analysis",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.IncrementalSalesReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_IncrementalSales",
+            "displayName": "Incremental Sales",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.AmortizationReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_amortizationReport",
+            "displayName": "Amortization",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.AmortizationReportFY.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_amortizationReportFY",
+            "displayName": "Amortization FY",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.OutstandingsClearedInNextFYReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.crs_outstandingsClearedInNextFYReport",
+            "displayName": "Outstandings Cleared In Next FY Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.MileageExceptionReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_MileageExceptionReport",
+            "displayName": "Mileage Exception Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.SalesPerformanceReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_SalesPerformanceReport",
+            "displayName": "Sales Performance Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.PointInTimeSalesPerformanceReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_PointInTimeSalesPerformanceReport",
+            "displayName": "Point In Time Sales Performance Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DebitorReconciliationReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_DebitorReconciliationReport",
+            "displayName": "Debitor Reconciliation Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.LeaseAgreementOutStandingReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_LeaseAgreementOutStandingReport",
+            "displayName": "Month end lease Agreement Outstanding Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.PagesTenantReportsExpenseReportsByAccount.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_expenseReportByAccount",
+            "displayName": "Expense Report By Account",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.MonthlyInvoicingReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_MonthlyInvoicingReport",
+            "displayName": "Monthly Invoicing Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.PermanentVehiclesReadytoGoReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_PermanentVehiclesReadytoGoReport",
+            "displayName": "Permanent Vehicles Ready to Go Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.HigherCategoryVehiceReplacementHistoryReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_higherCategoryVehiceReplacementHistoryReport",
+            "displayName": "Higher Category Vehicle Replacement History Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.DriverTimeSheetReport.Tenant",
+            "order": 0,
+            "icon": "icon-notebook",
+            "url": "tenant.report_driverTimeSheetReport",
+            "displayName": "Driver Time Sheet Report",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "Administration",
+        "order": 0,
+        "icon": "icon-wrench",
+        "displayName": "Administration",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": [
+          {
+            "name": "CustomerRequest.Tenant",
+            "order": 0,
+            "icon": "icon-pointer",
+            "url": "tenant.customerRequest",
+            "displayName": "Customer Requests",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.DataImport",
+            "order": 0,
+            "icon": "icon-wrench",
+            "displayName": "Data Import",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": [
+              {
+                "name": "Administration.DataImport.Vehicles",
+                "order": 0,
+                "icon": "icon-speedometer",
+                "url": "tenant.importVehiclesData",
+                "displayName": "Vehicles",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.JVs",
+                "order": 0,
+                "icon": "icon-docs",
+                "url": "tenant.importJVsData",
+                "displayName": "JVs",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.Salik",
+                "order": 0,
+                "icon": "fa fa-road",
+                "url": "tenant.importSalikData",
+                "displayName": "Salik",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.Darb",
+                "order": 0,
+                "icon": "fa fa-road",
+                "url": "tenant.importDarbData",
+                "displayName": "Darb",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.Fines",
+                "order": 0,
+                "icon": "icon-fire",
+                "url": "tenant.importFinesData",
+                "displayName": "Fines",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.Staff",
+                "order": 0,
+                "icon": "icon-users",
+                "url": "tenant.importStaffData",
+                "displayName": "Staff",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.Supplier",
+                "order": 0,
+                "icon": "icon-users",
+                "url": "tenant.importSupplierData",
+                "displayName": "Suppliers",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.CompanyCustomer",
+                "order": 0,
+                "icon": " icon-layers",
+                "url": "tenant.importCompanyCustomerData",
+                "displayName": "Companies",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.IndividualCustomer",
+                "order": 0,
+                "icon": "icon-users",
+                "url": "tenant.importIndividualsData",
+                "displayName": "Individuals",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.Assets",
+                "order": 0,
+                "icon": "icon-users",
+                "url": "tenant.importAssetsData",
+                "displayName": "Assets",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.ImportItemsData",
+                "order": 0,
+                "icon": "icon-speedometer",
+                "url": "tenant.importItemsData",
+                "displayName": "Items",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.ImportRentalAgreementsData",
+                "order": 0,
+                "icon": "icon-book-open",
+                "url": "tenant.importRentalAgreementsData",
+                "displayName": "Rental Agreements",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.ImportClosedRentalAgreementsData",
+                "order": 0,
+                "icon": "icon-book-open",
+                "url": "tenant.importRentalClosedAgreementsData",
+                "displayName": "Closed Rental Agreements",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.ImportRentalAgreementsData",
+                "order": 0,
+                "icon": "icon-book-open",
+                "url": "tenant.importLeaseAgreementsData",
+                "displayName": "Lease Agreements",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              },
+              {
+                "name": "Administration.DataImport.ImportRentalAgreementsData",
+                "order": 0,
+                "icon": "icon-book-open",
+                "url": "tenant.importClosedLeaseAgreementsData",
+                "displayName": "Closed Lease Agreements",
+                "isEnabled": true,
+                "isVisible": true,
+                "items": []
+              }
+            ]
+          },
+          {
+            "name": "Locations.Tenant",
+            "order": 0,
+            "icon": "icon-pointer",
+            "url": "tenant.locations",
+            "displayName": "Branches",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Industry.Tenant",
+            "order": 0,
+            "icon": "icon-social-dropbox",
+            "url": "tenant.industry",
+            "displayName": "Industries",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "ContactGroups.Tenant",
+            "order": 0,
+            "icon": " icon-users",
+            "url": "tenant.contactGroups",
+            "displayName": "Contact Groups",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Currencies.Tenant",
+            "order": 0,
+            "icon": "fa fa-money",
+            "url": "tenant.currencies",
+            "displayName": "Currencies",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "BillingMethods.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.billingMethods",
+            "displayName": "Payment Methods",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CostCenters.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.costCenters",
+            "displayName": "Cost Centers",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "MergeContacts.Tenant",
+            "order": 0,
+            "icon": "icon-layers",
+            "url": "tenant.mergeContacts",
+            "displayName": "Merge Contacts",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.EmailTemplates.Tenant",
+            "order": 0,
+            "icon": "icon-envelope",
+            "url": "tenant.emailTemplates",
+            "displayName": "Email Templates",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "MCC.CheckList.Tenant",
+            "order": 0,
+            "icon": "icon-note",
+            "url": "tenant.mcc_checklist",
+            "displayName": "Checklist",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CRS.ChangeVoucherNo.Tenant",
+            "order": 0,
+            "icon": "icon-note",
+            "url": "tenant.crs_changVoucherNo",
+            "displayName": "Change Voucher No",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "CustomLookups.Tenant",
+            "order": 0,
+            "icon": "icon-note",
+            "url": "tenant.customLookups",
+            "displayName": "Custom Lookups",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Reasons.Tenant",
+            "order": 0,
+            "icon": "icon-pointer",
+            "url": "tenant.reasons",
+            "displayName": "Vehicle Not Ready Reasons",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "ReplacementReasons.Tenant",
+            "order": 0,
+            "icon": "icon-note",
+            "url": "tenant.replacementReasons",
+            "displayName": "Replacement Reasons",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "VoucherReasons.Tenant",
+            "order": 0,
+            "icon": "icon-note",
+            "url": "tenant.voucherReasons",
+            "displayName": "Voucher Reasons",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.CorrectVehcileStatus.Tenant",
+            "order": 0,
+            "icon": "icon-speedometer",
+            "url": "tenant.correctVehcileStatus",
+            "displayName": "Correct Vehicle Status",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.Roles",
+            "order": 0,
+            "icon": "icon-briefcase",
+            "url": "roles",
+            "displayName": "Roles",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.Users",
+            "order": 0,
+            "icon": "icon-users",
+            "url": "users",
+            "displayName": "Users",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.Languages",
+            "order": 0,
+            "icon": "icon-flag",
+            "url": "languages",
+            "displayName": "Languages",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.AuditTrail",
+            "order": 0,
+            "icon": "icon-lock",
+            "url": "tenant.crs_auditTrail",
+            "displayName": "Audit Trail",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.MessageLogs",
+            "order": 0,
+            "icon": "icon-lock",
+            "url": "tenant.crs_messageLogs",
+            "displayName": "Message Logs",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.AuditLogs",
+            "order": 0,
+            "icon": "icon-lock",
+            "url": "tenant.crs_auditLogs",
+            "displayName": "Error logs",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.Settings.Tenant",
+            "order": 0,
+            "icon": "icon-settings",
+            "url": "tenant.settings",
+            "displayName": "Settings",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.SaleOrigin.Tenant",
+            "order": 0,
+            "icon": "icon-briefcase",
+            "url": "tenant.saleOrigins",
+            "displayName": "Sale Origins",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          },
+          {
+            "name": "Administration.SaleOrigin.Tenant",
+            "order": 0,
+            "icon": "icon-users",
+            "url": "tenant.customerProjects",
+            "displayName": "Customer Projects",
+            "isEnabled": true,
+            "isVisible": true,
+            "items": []
+          }
+        ]
+      },
+      {
+        "name": "Support.Tenant",
+        "order": 0,
+        "icon": "icon-support",
+        "url": "tenant.support",
+        "displayName": "Support",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": []
+      },
+      {
+        "name": "ProjectsDashboard.Tenant",
+        "order": 0,
+        "icon": "icon-note",
+        "url": "tenant.projectsDashboard",
+        "displayName": "Project Dashboard",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": []
+      },
+      {
+        "name": "DataEntryCorrections.Tenant",
+        "order": 0,
+        "icon": "icon-note",
+        "url": "tenant.dataEntryCorrections",
+        "displayName": "Data Entry Corrections",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": []
+      },
+      {
+        "name": "Billing.Tenant",
+        "order": 0,
+        "icon": "fa fa-usd",
+        "url": "tenant.Billing",
+        "displayName": "Billing",
+        "isEnabled": true,
+        "isVisible": true,
+        "items": []
+      }
+    ]
+  }
+}

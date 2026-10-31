@@ -1,5 +1,10 @@
 # Sigma Maintenance / Evolution Plan: {{Change}}
 
+| Item | Value |
+|---|---|
+| Status | Draft |
+| Owner verification pending | yes |
+
 This document is the reviewable pre-implementation plan for changing or extending
 an existing Sigma capability. It records decisions; it does not create platform
 authority and it does not authorize uncertain business logic.
@@ -12,12 +17,13 @@ authority and it does not authorize uncertain business logic.
 | Requested outcome | |
 | Plan date | |
 | Plan owner | |
-| Status | Draft / Reviewable / Frozen / Blocked |
 | Master version | |
 | UI book version | |
 | Backend book version | |
 | PLAN packet check result | |
 | Existing working-tree changes | |
+| Analysis-guide review (Master2/4) | Relevant chapters and original screen explanations actually read, current Sigma contract/topic comparison, accepted/excluded evidence and gaps, or supported Not applicable |
+| Sidebar/code cycle comparison (Master2/4) | Applicable dated section/state/controller/service sources and file:line/hash, document links/actions, evidence kind, actual Sigma owners/contracts and disposition in Master4's comparison rows |
 
 ## Scope and boundaries
 

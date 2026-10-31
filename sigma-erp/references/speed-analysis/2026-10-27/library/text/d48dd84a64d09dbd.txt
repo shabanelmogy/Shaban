@@ -1,0 +1,7 @@
+S161
+Users
+https://speedautosystems.com/uk-vehicle-safety-check-system/user-guide/users/
+
+Watch source video online
+Users
+In the “USERS” module you will be able to create a user by clicking on “+CREATE NEW USER.” This will help you to add details of a particular user and assign a specific role. This role can be managed further in the “ROLES” tab.
