@@ -1,13 +1,45 @@
 ## 17. Dates
 
+**Calendar-day difference (2026-11-02).** Reuse
+`calendarDaysBetween(from, to)` from `shared/utils/date-utils.ts` when a frozen
+feature counts whole local calendar dates. Inputs are validated Date values;
+the helper constructs UTC calendar stamps with setUTCFullYear, avoiding both
+daylight-saving elapsed-hour shifts and Date.UTC's remapping of years0–99.
+Keep the feature's own minimum-day/time-order/financial policy; the helper does
+not authorize a different billing duration, timezone conversion or rounding.
+
+**PrimeNG21 compatibility (2026-10-22).** Import `DatePicker`/`DatePickerModule`
+from `primeng/datepicker` and use `<p-datepicker appDatePicker appendTo="body">`.
+The component's `appendTo` is a signal input: bind it in the consumer template;
+the shared directive must not overwrite the signal or write the removed
+`filled` state. Preserve the shared parser, partial numeric editing, structured
+masks, local-date transport and range caret contract below. CSS targets the
+actual panel/day/month hooks in UI24, not obsolete Calendar markup.
+Read the disabled input's signal value, not the function object. Shared picker
+guards also inspect the native input's disabled state so ControlValueAccessor
+form disabling is respected without reading private widget state. Mock-data
+availability checks retain the Angular control's disabled gate and read public
+number/date/checkbox disabled() values.
+
+Native text clear must not own a raw DatePicker: the publisher input handler
+ignores synthetic input without preceding keydown state. Legacy raw editable
+consumers use the publisher showClear action, which updates the CVA, while
+GlobalInputClearService excludes raw DatePicker inputs. The appDatePicker adapter
+already prepares input in capture, including when numeric restriction is off;
+retain its generic-clear and mobile/drop behavior without synthetic keydown or
+duplicate value accessors. Preserve readonly/disabled and explicit clear choices.
+An empty adapted input delegates to publisher clear() and emits the existing
+input event once, yielding null through the CVA even with keepInvalid=true.
+Nonempty partial input retains its original validation/editing contract.
+
 > **Status: Canonical**
 
-`p-calendar`, always appended to body with the shared panel class. **Never** use
+`p-datepicker`, always appended to body with the shared panel class. **Never** use
 a native `<input type="date">`. By default a Sigma calendar is typeable, carries no
 icon, and keeps an invalid partial entry instead of clearing it. Editor shape:
 
 ```html
-<p-calendar
+<p-datepicker
   #dateCal
   inputId="field-date"
   formControlName="date"
@@ -22,7 +54,7 @@ icon, and keeps an invalid partial entry instead of clearing it. Editor shape:
   panelStyleClass="sigma-datepicker-panel"
   styleClass="w-100"
   [placeholder]="'feature.date' | translate"
-></p-calendar>
+></p-datepicker>
 ```
 
 Display format is `dd/mm/yy` in the picker and `dd/MM/yyyy` (`dd/MM/yyyy HH:mm` with time) in
@@ -70,7 +102,7 @@ wrapper and input consume `--sigma-filter-control-height`. Do not add a
 feature-local filter-calendar height.
 
 **Shared date picker (2026-10-01).** Put `appDatePicker` (`shared/directives/date-picker.directive.ts`) on
-every `p-calendar`: it applies `dd/mm/yy`, typeable with `keepInvalid`, button bar, no icon, the
+every `p-datepicker`: it applies `dd/mm/yy`, typeable with `keepInvalid`, button bar, no icon, the
 `sigma-datepicker-panel` class, `appendTo="body"`, no open on focus, and open on click. The element
 then carries only what differs — `inputId`, the control, `[minDate]`/`[maxDate]`, `view="month"
 dateFormat="mm/yy"`. Reference: the Individual editor. The rules below are what the directive
@@ -92,6 +124,20 @@ removed in their reviews.
 Keep `dateFormat="dd/mm/yy"` everywhere, so what the user types is what the box
 shows. Minimum and maximum dates, plus start/end ordering, are still validated
 in the form and on the backend.
+
+**Picker bounds reflect existing date-order rules (2026-10-23).** When a
+document already requires expiry strictly after issue, bind expiry minDate to
+issue plus one local calendar day and issue maxDate to expiry minus one day.
+Inclusive picker bounds therefore exclude equality as well as reversed dates.
+Use existing real-date validation and shared local parser/hydration before
+deriving a limit; absent/invalid/partial opposite input imposes no derived
+bound. Preserve the form/group and server validators, manual editing, existing
+invalid values and payloads. Do not invent today/future restrictions or apply
+strict ordering to a workflow that allows equality. Shift with local setDate,
+not UTC/millisecond arithmetic; keep bound Date references stable for unchanged
+source days so publisher setters do not rebuild months on unrelated changes.
+Company Documents and its existing Driver reuse adopt this parity. Actual
+picker/typing/clear/month-boundary/RTL/theme acceptance remains owner-pending.
 
 Reviewed screens reuse `dateValueValidator`, `dateRangeValidator` and
 `dateTimeValueValidator` from `date-utils.ts`; pair optional validators with
@@ -179,7 +225,7 @@ range that straddles a month boundary needs no paging. A list or report range
 filter defaults to the **current month**, from the 1st to its last day:
 
 ```html
-<p-calendar
+<p-datepicker
   inputId="featureDateRange"
   formControlName="dateRange"
   selectionMode="range"
@@ -191,7 +237,7 @@ filter defaults to the **current month**, from the 1st to its last day:
   appendTo="body"
   panelStyleClass="sigma-datepicker-panel"
   styleClass="w-100"
-></p-calendar>
+></p-datepicker>
 ```
 
 ```ts
@@ -247,14 +293,14 @@ strip.
 
 **A calendar carries no icon (owner decision, 2026-09-28).** Never set
 `[showIcon]`, on filters or in editors. The global sheet hides
-`.p-datepicker-trigger` with `display: none !important` (`src/styles.scss`), so
+`.p-datepicker-dropdown` with `display: none !important` (`src/styles.scss`), so
 `[showIcon]="true"` renders nothing and only leaves reserved dead padding. The
-`p-calendar` host is a full-width block, so an icon-less calendar measures
+`p-datepicker` host is a full-width block, so an icon-less calendar measures
 exactly like a plain text input in the same column. The input is the target: a
 click opens the panel, and the user can also type straight into it.
 
 Do **not** re-show the trigger from a feature stylesheet. A
-`display: inline-flex !important` override on `.p-datepicker-trigger` brings
+`display: inline-flex !important` override on `.p-datepicker-dropdown` brings
 back a separate `36px` button beside the input, which splits the control in two
 and breaks the strip's field distribution. Backlog 32 tracks removing the
 existing `[showIcon]` attributes.
@@ -299,7 +345,7 @@ and local to that workflow; do not auto-open every calendar in the app:
 
 ```ts
 @ViewChild('effectiveDateCalendar')
-private effectiveDateCalendar?: Calendar;
+private effectiveDateCalendar?: DatePicker;
 
 openDatePicker(): void {
   queueMicrotask(() => {
@@ -313,12 +359,12 @@ openDatePicker(): void {
 
 ```html
 <app-editor-dialog (shown)="openDatePicker()">
-  <p-calendar
+  <p-datepicker
     #effectiveDateCalendar
     [showOnFocus]="false"
     appendTo="body"
     ...
-  ></p-calendar>
+  ></p-datepicker>
 </app-editor-dialog>
 ```
 
@@ -330,7 +376,7 @@ no native `<input type="date">` · `appendTo="body"` and
 `yyyy-MM-dd` · no `toISOString()` on a date-only value ·
 `[maxDate]`/`[minDate]` where the business requires it · issue/expiry and
 start/end ordering validated · no `[showIcon]` and no feature re-showing
-`.p-datepicker-trigger` · dialogs bind `[focusOnShow]="false"` and calendars
+`.p-datepicker-dropdown` · dialogs bind `[focusOnShow]="false"` and calendars
 use `[showOnFocus]="false"` plus `(click)` to open · any auto-open waits for
 dialog `shown` and is limited to a confirmed date-first workflow · filter
 calendars use the shared 34px height · a range is one `selectionMode="range"`

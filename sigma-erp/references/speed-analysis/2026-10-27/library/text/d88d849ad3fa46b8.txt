@@ -1,0 +1,15 @@
+S072
+Monthly Rental Agreement Invoicing
+https://speedautosystems.com/car-rental-software/user-guide/monthly-rental-agreement-invoicing/
+
+Monthly Rental Agreement Invoicing
+Monthly Rental Invoicing:
+Go to the Vouchers from left navigation panel and select invoices.
+Here you will see all the invoices which are opened or closed.
+To generate a new invoice click on the blue button on the top right corner stating Generate Invoices.
+It will give you 3 options like
+a. Rental
+b. Fines
+c. Miscellaneous
+For rental agreement we will select the rental option and a new window popup will appear.
+It has same process like daily and weekly and the only difference is that it will be charged after the month as you have selected the settings. First invoice will be available after 1 month and rest will be charged at the agreement closing or if its a long agreement then it will charged on monthly basis every month until the agreement is closed.

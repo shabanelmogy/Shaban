@@ -22,6 +22,140 @@ An external system the owner names as a functional reference (for example the Sp
 demo for Rental workflows) is behavioural evidence only, never implementation authority. Its
 access and usage notes are kept outside the governance book: `reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md`.
 
+### Speed first; Odoo fills missing or unclear concepts (owner instruction, 2026-11-02)
+
+Use the collected **Speed guide, explanations and dated frontend code as the
+primary functional reference**. When a scoped concept, workflow or detail is
+missing or unclear after reviewing its relevant Speed slice, consult the pinned
+official **Odoo documentation as a complementary reference**. This applies to
+concepts as well as fields, states, calculations and document relationships; it
+does not make Odoo the first reference for merely similar features. The owner's
+final instruction supersedes the earlier proposed overlap-based split.
+
+Start at `references/speed-analysis/README.md`; the complementary collection,
+scope, provenance, licence and comparison matrix are reached through
+`references/odoo-rental/README.md`. Record the exact Speed gap, Odoo version/page,
+what it establishes, and the resulting matched/partial/missing/conflicting/
+decision-required/excluded row against actual Sigma source, frozen contract and
+guide. Absence from one file or the curated collection is not proof of absence
+from the external product.
+
+These are functional evidence sources, not implementation authority. Preserve
+Sigma's canonical shared owners and frozen contracts. Reference frontend code
+alone does not establish server validation, permissions, accounting, concurrency
+or complete DTOs; Odoo examples do not fill those contracts automatically. Record
+conflicts and precise missing material decisions before dependent changes. Keep
+the current scope and source-only/external-access/verification boundaries; a
+reference lookup does not authorize implementation or broad collection.
+
+### Reference-product functional detail target (owner clarification, 2026-10-30)
+
+The owner supplies the collected guide, explanations and frontend code of the
+reference product because Sigma is being built to reach its functional detail.
+For every new or reviewed screen, use the relevant reference slice as the target
+for functional coverage, not merely optional inspiration or a list of names.
+Inventory its fields and logical groups, filters, actions/dialogs, state axes,
+validations, document links, charges/calculations and outputs, to the extent the
+evidence actually establishes them. Compare each relevant detail with the real
+Sigma producer/consumer and its current guide in Master4's coverage rows.
+
+A detail absent from current Sigma is a target gap to classify and plan. Its
+absence, or an older deliberately minimal implementation, is not by itself a
+reason to exclude it from the target. Record what is matched, partial, missing,
+blocked by a precise decision, or explicitly excluded by the owner with the
+reason. Carry accepted gaps into dependency-ordered implementation slices;
+do not report reference equivalence while required details remain unaccounted
+for. Tier S remains limited to its affected element; this rule does not broaden
+an explicitly bounded task or automatically include every linked module.
+
+This establishes the functional comparison target, not authority to copy the
+reference's layout, controls or implementation. Sigma's canonical shared owners
+still determine those. A frontend declaration does not reveal server validation,
+permissions, complete DTOs, accounting or concurrency policy. Identify each
+missing material rule and the exact owner decision/evidence needed before its
+dependent implementation. Preserve current frozen contracts until explicitly
+amended; do not silently replace their financial or operational effects.
+Read-only reviews still report/plan gaps without editing application source;
+implementation follows the task's authorization and frozen slice. All external
+access, source-only execution and migration boundaries remain unchanged.
+
+### Mandatory analysis-guide review before screen contracts (owner instruction, 2026-10-27)
+
+For every new screen and every review, maintenance, fix or refactor of an
+existing screen, review the relevant analysis-guide section **before freezing
+or changing the affected contracts**. Start at the documentation's
+[analysis reference entry](../references/speed-analysis/README.md); select only
+the chapters and original screen explanations related to the requested scope.
+Do not preload the whole library. For an existing screen, also read its current
+feature contract and existing Sigma user-guide topic when available.
+
+The collected guide explains **Speed Auto Systems**, and is an analysis
+reference for Sigma work, not a specification of existing Sigma behavior.
+Follow a summary claim to its original screen explanation in the local library
+or supplied source; record the source ID/link, chapter/topic, known date/version
+and applicability. Video links alone are not reviewed video evidence.
+
+In the existing feature review or plan, record the screen/mode, sources actually
+read, relevant fields/filters/actions/states/validations and financial/workflow
+constraints, then compare them with Sigma's current source and frozen decisions.
+Distinguish directly documented behavior, declared features, reviewer proposals
+and unresolved decisions; map usable evidence into Master2's classifications.
+For a tier S task, a short row covering the changed element is sufficient.
+Record a supported Not applicable outcome when no relevant explanation exists;
+name missing or inaccessible material and any decision it leaves unresolved.
+Missing reference content alone does not block independent source-supported
+work; a missing material business/API/financial decision blocks only its
+dependent contract under Master4.
+
+This review is mandatory evidence discovery, not permission to implement all
+guide features, adopt its proposed data model or copy its layout, API,
+permissions or accounting treatment. Canonical Sigma patterns, frozen feature
+decisions and explicit owner instructions retain their authority. Do not invent
+an unavailable permission mechanism from a reference product. External browser
+access, demo mutation, builds, tests and database work retain their existing
+authorization boundaries; the local reference can be read without running the
+external application. At handoff, reconcile the accepted evidence and exclusions
+with the scoped result (Master7); creating/updating Sigma's in-app explanation
+after implementation is a separate completion gate.
+
+#### Sidebar and code cycle reference (owner instruction, 2026-10-28)
+
+The same mandatory gate includes the dated sidebar/JavaScript analysis reached
+from the analysis reference entry. It complements the original explanations;
+neither collection replaces the other. For a new or reviewed screen, identify
+the relevant sidebar section, screen/state and business cycle, read that screen's
+packet and the applicable cycle explanation, then follow only the code/controller,
+dialog and service evidence needed for the affected fields/actions/documents.
+For a tier S edit, the affected element is sufficient. Do not preload all sections
+or make unrelated screens part of implementation merely because the cycle links them.
+
+Before freezing/changing contracts, compare relevant predecessor/successor document
+links, fields, actions, state axes, validations, billing/collection or stock/account
+handoffs with actual Sigma owners, frozen decisions and its existing in-app topic.
+Record the snapshot date, sidebar breadcrumb/state, screen/controller/service IDs
+and source file:line/hash where relied on, evidence kind, applicability, Sigma
+comparison, accepted/excluded items and remaining decisions in the existing review
+or plan (Master4). IDs are scoped to their dated snapshot, not stable product IDs.
+Record a supported Not applicable outcome for an absent/nonmatching slice; absence
+alone does not block independent source-supported work. Reconcile the same rows
+against the delivered scope at handoff (Master7).
+
+Distinguish original documented behavior, observed frontend declarations/template
+bindings, inferred cross-screen sequence and unresolved server rules. A literal
+route, permission check, proxy method or local calculation proves its declaration
+in that captured frontend; it does not prove runtime reachability, server validation,
+permission enforcement, final state transition, DTO completeness, capacity or
+accounting correctness. Mark those unsupported contracts Missing/Uncertain rather
+than treating a declaration or inferred cycle as approved Sigma business behavior.
+Keep duplicate registrations, unmatched calls, disabled/other-product branches and
+known capture limitations visible when they affect a conclusion.
+
+Use the local dated reference for routine reviews. This gate does not authorize
+running its collection scripts, logging in again, calling domain APIs, copying
+credentials, executing captured JavaScript or broadening browser/database/build/test
+permissions. The owner request approves relocation and a review step, not automatic
+implementation of Speed features, UI patterns, permissions or financial policies.
+
 ### Screenshots are not implementation authority
 
 Screenshots must not override the Master Guide, canonical pattern books, or the
@@ -168,7 +302,7 @@ Rules:
    Evidence Table with its screenshot evidence ID and the user request as the
    decision source (quoted, with date).
 3. **Persistence.** A new persisted field is a schema change: follow the
-   migration boundary and tell the owner to run `Add-Migration`. State the
+   migration boundary in Master7 and record the migration or its proposed name. State the
    default or backfill for existing rows; if the user has not given one, it is
    Missing.
 4. **Refactoring an existing screen keeps existing behaviour.** A field, column,
@@ -189,8 +323,8 @@ Rules:
      minimal new element when none fits;
    - records it in the feature artifact as **Reviewer decision (owner standing
      rule)** with the evidence and the alternatives rejected, and reports it;
-   - keeps the migration boundary: a new persisted field is proposed with its
-     suggested `Add-Migration` name, never run.
+   - applies the Master7 migration boundary for a new persisted field and
+     records the proposed or explicitly authorized migration.
 
    The standing rule does **not** cover destroying or rewriting existing data,
    access restrictions, or accounting posting effects. Those still wait for an

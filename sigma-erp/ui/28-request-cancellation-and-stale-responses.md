@@ -2,6 +2,115 @@
 
 > **Status: Canonical**
 
+### Context revisions and deferred actions (source-only,2026-10-30)
+
+The existing data-free scope notification also fences reviewed operational
+sessions: clear prior-context rows/labels/counts, cancel reads (including whole
+composed export/report reads), and keep the outer query trigger alive for a
+fresh request. A pending confirmation captures its context revision before it
+opens; matching an ID alone cannot authorize its callback after a reset, because
+different contexts may reuse that ID. Invalidate editors/action sessions until
+reopened with current data. Never cancel or automatically repeat an independent
+write already sent; its old-session callback must not mutate current-session
+state. Preserve finalization and busy/exit safety. UI21 owns cancelling pending
+print preparation; UI2 owns reference-cache eligibility, watches and clearing.
+Equipment Rental's source audit applies these rules to its actual consumers;
+this is not a new cache opt-in, permission model or runtime proof.
+
+**Local dirty-exit decisions after revocation (Fleet,2026-11-07).** Cancel an
+open confirmation when its adopted access or context expires, and resolve a
+cancelled route-guard decision to false rather than completing without a value.
+An explicit local discard started while already denied remains available; it
+does not grant a business write. Capture access/context inside the subscribed
+defer, and open the confirmation lazily because the shared confirmation service
+opens its portal when called. The decision notifier may skip its one immediate
+denial only when the decision starts denied; later access/context expiry still
+cancels it. Complete this notifier upstream of the cleanup switchMap so it
+cannot cancel cleanup already sent. Cleanup retains its own Media grant check.
+Do not attach this exception to protected reads or domain actions. Fleet RED/
+GREEN covers open-decision cancellation and a new denied local discard within
+the 151-test adoption suite; application visual acceptance remains separate.
+
+### Sent-save success belongs to the draft — 2026-11-12
+
+Keep the identity of an editor draft separate from the revision used to cancel
+its reads. Temporary grant withdrawal, option reload or same-actor reference
+scope refresh may invalidate a read revision without creating a new draft.
+A sent mutation that succeeds must still consume its original draft after
+that withdrawal, preventing another Create when access returns. Use the captured revision and
+payload grants to fence notification. Settle the original draft by its editor
+identity and auth session. If that editor is usable when success arrives,
+complete its normal close or saved-state transition and refresh any affected
+projection the same session can still read. If the editor is denied, record
+the success and reconcile on regrant or explicit exit. A completion must never
+consume a replacement draft. Keep sent requests independent of read
+cancellation and preserve existing finalize/busy safety.
+
+Verify success after a revision with unchanged editor access and after regrant
+that precedes the response. Also cover success while denied followed by
+regrant. Each case should consume the draft once and refresh the permitted
+projection without replaying the write.
+
+### Nested drafts and permission-dependent query snapshots
+
+A child approval, reason or confirmation dialog can own a dirty draft or a
+sent write while its parent owns Close and route navigation. Trace both owners
+in the real template when the view grant or only the action grant is withdrawn.
+Keep access-gated content hidden and preserve a reachable local discard decision
+for a dirty draft in the same session. A denied local discard must not be
+short-circuited by the action grant. If a view is removed, reconcile its
+parent-facing pending state and keep any sent write with its surviving owner
+until settlement. A removed portal must not leave the parent blocked. Cover
+declining and accepting discard, regrant, parent Close/Escape/back, and loss
+of view during a sent action.
+
+A mounted report, preview or export can hold a copy of the applied list
+query. When an optional grant is withdrawn, cancel affected reads and clear
+or rederive every dependent filter, grid rule and sort key before requesting
+data again. Use the same authorized query rules at each consumer, including
+Retry and all-page reads. Preserve unaffected filters. Keep the snapshot and
+permission revision together through response publication and output
+preparation. Verify grant loss with the report already open and a protected
+filter or sort already applied.
+
+### Routed API read cancellation (owner2026-10-22)
+
+For adopted permission-aware reads, use the existing view-policy owner's
+`denied$(requirement)` on each finite read, including composed export/lookup
+work. It fences the subscribed actor/branch-access context even if the next
+actor still has the same view grant. Clear stale output through `dataContext()`
+and permission revisions, retaining an editor draft under its existing actor
+and dirty-exit contract. Keep the outer query subscription alive for a later
+grant/retry. A pending confirmation rechecks access before sending; a mutation
+already sent retains its own outcome lifetime. Do not destroy its stateful
+workspace merely to hide it (UI26; CsvImportWorkspace.permission).
+
+The shared navigationActivityInterceptor supplements component teardown for
+Sigma API page reads. Capture the subscribed request's current navigation ID,
+or last successful navigation ID, using Angular21's Router signals, and its
+parsed target/current URL path. Cancel its subscription only after a different
+NavigationEnd with a different page path. Keep path, matrix and outlet identity;
+ignore query parameters and fragments. Serialize a new UrlTree with the parsed
+root and default empty query/fragment; UrlSegmentGroup.toString alone omits child
+outlet segments and is not a page key. Lists synchronize search/paging in the URL
+while retaining the same page and its bootstrap lookups. Cancelling those reads
+can complete a forkJoin without a value and leave action readiness false (Individual
+Edit contact group regression,2026-10-22). Same-page request replacement remains
+owned by the existing switchMap/identity checks, not navigation IDs alone.
+A rejected navigation must
+not cancel the current page read, and a read begun for the target navigation
+must survive that same navigation's end. No mutation is cancelled on navigation.
+This aborts a pending client HTTP request where supported; it never proves the
+server stopped work or rolled back. Keep local identity/switchMap/teardown guards
+for same-page races and deferred work.
+
+Use KEEP_READ_ON_NAVIGATION only for genuinely session-owned reads: CurrentBranch
+options/current value, runtime localization and its language options, and shared
+mock-data preferences. Preserve their session-version/cancellation owners.
+NAVIGATION_READ_ONLY explicitly classifies a read-only POST; do not guess from
+an endpoint name. Third-party/auth-server/assets requests retain the established
+Sigma API-origin boundary and are not intercepted by this policy.
+
 Every subscription is torn down with `takeUntilDestroyed`, which is the app-wide
 pattern:
 
@@ -14,15 +123,28 @@ this.service.getList(query)
   .subscribe({ … });
 ```
 
+**Independent editor bootstrap reads (2026-10-17).** When opening an editor
+requires both a navigation-identity snapshot and fresh detail, independent
+HTTP requests may join through forkJoin rather than waiting sequentially.
+Validate both envelopes and record/source identity before opening. Carry the
+fresh initial detail through a typed parent/child session and hydrate once;
+Retry/navigation/Reset still use authoritative detail reads. Freeze the key
+snapshot and preserve limits, membership, cancellation, errors and busy gates.
+Never substitute stale list data for fresh detail. Separate HTTP scopes may
+overlap; do not parallelize EF queries on the same backend DbContext. Evidence:
+Languages text-editor bootstrap; actual latency remains owner-measured.
+
 `destroyRef` is `inject(DestroyRef)` in newer components and a constructor
 parameter (`private destroy$: DestroyRef`) in older ones such as the Company
 editor. Either is fine — match the file you are editing.
 
 **Deferred UI work follows the same lifetime.** Inspect the installed Angular
-declarations, not a newer online API or an assumed property. Sigma's current
-Angular17.3.12 `DestroyRef` exposes `onDestroy`, but not `destroyed`; do not read
-`destroyRef.destroyed`. A deferred print after detail rendering can reuse the
-existing RxJS cancellation owner:
+declarations, not a newer online API or an assumed property. The current
+Angular21 `DestroyRef` exposes both `onDestroy` and `destroyed`. Use
+`takeUntilDestroyed` for observable cancellation; use `destroyed` only for a
+narrow deferred-callback guard when the edited source needs that check. A
+deferred print after detail rendering can reuse the existing RxJS cancellation
+owner:
 
 ```ts
 import { timer } from 'rxjs';

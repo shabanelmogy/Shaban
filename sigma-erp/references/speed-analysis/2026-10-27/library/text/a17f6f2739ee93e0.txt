@@ -1,0 +1,10 @@
+S251
+How to manage notifications
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-notifications/
+
+How to manage notifications
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Notifications tab.
+Check or unchecked boxes according to your business and agreement needs.
+Click HERE if you have a query or an issue.

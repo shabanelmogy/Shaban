@@ -1,0 +1,10 @@
+S179
+Create and manage Service Items
+https://speedautosystems.com/vehicle-leasing-software/user-guide/create-and-manage-service-items/
+
+Create and manage Service Items
+Go to the panel on the left side and click on the Fleet tab.
+Scroll down and click on the Service Items module.
+Now, click on the +CREATE NEW SERVICE ITEM button.
+A pop-up window will appear. Put the service item name and click on the SAVE button.
+Click HERE if you have a query or an issue.

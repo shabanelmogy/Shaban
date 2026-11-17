@@ -1,0 +1,137 @@
+S176
+Vehicle Leasing Software User Guide
+https://speedautosystems.com/vehicle-leasing-software/user-guide/
+
+Speed Vehicle Leasing Software (VLS)
+Overview
+Benefits
+Increase your Leasing Business Profitability with Field Processes Automation
+Reduce Your Leasing Operation Cost with Paperless Leasing Operation
+INCREASE YOUR INSURANCE ACCESS REVENUE & DECREASE YOUR VEHICLE REPAIR COST
+Increase Your Productivity by Accessing Leasing System from Your Mobile
+No More Traffic Fines Leakage with Traffic Fines Process Automation
+Decrease Your Workload with Road Toll Process Automation
+Eliminate Redundant Work with Speed – Vehicle Leasing Software API
+Decrease Your IT Cost
+Features
+Request Demo
+Request Quote
+Start 30 Days Free Trial
+Process Flow
+User Guide
+Sign In
+Download Speed Vehicle Leasing Software iOS Mobile App
+Download Speed Vehicle Leasing Software Android Mobile App
+How to Sign-Up for Speed – VLS Web App
+How to Sign-In for Speed – VLS Web App
+How to download Speed – VLS iOS Mobile App
+How to download Speed – VLS Android App
+How to Sign-In for Speed – VLS Mobile App
+Administration
+Data Import Management
+Vehicles
+Staff
+Suppliers
+Companies
+Individuals
+Assets
+Rental Agreements
+Lease Agreements
+How to Create an Office Branch in Speed – VLS
+How to Edit/Delete an office branch in Speed – VLS
+How to Create Contact Groups
+How to View/Edit/Delete a Contact Group
+How to Manage Cost Centers
+How to Manage DivisionsModule
+How to Merge Contacts
+How to Create and Manage Checklist
+How to Change Voucher Number
+What are Custom Lookup
+Manage Vehicle Not Ready reasons
+How to Manage Replacement Reasons
+How to Correct Vehicle Status
+How to Define and Manage Roles
+How to Manage Users
+How to Select Languages
+How to Create New Language
+How to Manage Audit Trails
+How to Manage Message Logs
+How to Manage Error Logs
+Define & Manage Settings
+How to adjust date, time and time zone
+How to manage currency parameters
+How to adjust VAT settings
+How to manage Monthly Rental Calculations
+How to define monthly Invoicing and Lease Invoicing
+Manage sundry settings
+How to manage profile
+How to define Agreement Number & Code
+How to define Booking Number & Code
+How to define Invoice Number & Code
+How to define Credit Note Number
+How to define Debit Note Number
+How to define Receipt Number
+How to define Bill Number
+How to define Purchase Order Number
+How to define Payment Number
+How to define JV Number
+How to define Amortization Number
+How to define Customer Deposit Number
+How to define Depreciation Number
+How to define Mature Cheque Payable Number
+How to define Cancel Cheque Payable Number
+How to define Mature Cheque Receivable Number
+How to define Return Cheque Receivable Number
+How to define Card Transaction Bank Transfer Number
+How to define Charts of Accounts-account Code
+How to define Customers Code
+How to define Suppliers Code
+How to define Staff Code
+How to define Lease Inquiry Code
+How to define Lease Quotation Code
+How to define Lease Master Agreement Number
+User Management
+How to create and manage tolls
+How to create and manage fines
+How to adjust charges for leasing agreements
+How to manage holidays
+How to create and manage Email SMTP
+How to add or remove agreement fields
+How to manage notifications
+How to add or remove documents required in leasing agreement
+Manage Your Customers
+How to manage individual customers
+How to adjust companies as customers
+How to use statement of accounts
+Managing balance summary
+Using receivable age analysis
+Manage Your Suppliers
+How to create and manage suppliers
+How to use the statement of accounts
+Managing Supplier balance summary
+How to use Payable age analysis
+Staff Management
+How to add a new Staff member
+Use of balance summary
+Statement of Accounts management
+Define and manage staff designations
+Fleet Management
+How to add a new Vehicle
+Create and manage vehicle types
+How to manage Vehicle QR Labels
+How to Repair Vehicle Damages in Speed – VLS
+Manage Repaired Damages History
+Create and manage Service Items
+How to define Services
+How to manage Service Log
+How to Download/Process Fines
+How to Download/Process Tolls
+Manage Lease Particulars
+How to define and adjust Tariff
+How to set Cost Parameters
+How to manage Cost Settings
+How to manage Lease Inquiries
+Define and handle Quotations
+Manage Master Agreements
+How to define and manage Agreements
+Define and manage Clauses of lease agreements

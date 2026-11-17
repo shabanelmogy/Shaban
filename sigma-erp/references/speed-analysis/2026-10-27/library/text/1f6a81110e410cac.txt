@@ -1,0 +1,7 @@
+S065
+Forgot Password
+https://speedautosystems.com/car-rental-software/user-guide/forgot-password/
+
+Forgot Password
+If you forgot your password and are unable to log in to the system then click on the Forgot Password option at the bottom of the login pop-up.
+You have to enter you company code and email registered with the system and a password reset link will be sent to your email to reset your password. If you don’t get an email within a few minutes, please re-try. If you receive the email then follow the steps to setup new password.

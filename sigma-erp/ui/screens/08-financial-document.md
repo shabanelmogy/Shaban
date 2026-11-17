@@ -19,7 +19,7 @@
 | 2 | [1](../01-feature-folders-and-wiring.md), [13](../13-modal-with-tabs.md) | Routed editor on the shared shell |
 | 3 | [14](../14-editable-collection-table.md) | Lines through `EditableRows`; derived line cells read-only; totals in `sigma-editor-totals` (or `sigma-report-summary-bar` for Debit/Credit) |
 | 4 | [19](../19-validation-messages.md) | Tax rate read-only from settings; preview `documentTax`; no literal rate |
-| 5 | [7](../07-action-button-cycle.md), [9](../09-confirm-delete.md) | Approve/post/void as domain actions; a posted document is voided or credited, never deleted (J-1) |
+| 5 | [7](../07-action-button-cycle.md), [9](../09-confirm-delete.md) | Approve/post/void as domain actions; posted cancellation marks the retained source/JV voided without a reversing entry (BE15 owner2026-10-20); no posted deletion |
 | 6 | [18](../18-documents-and-upload.md) | Attachments through `DocumentUploadTracker` |
 | 7 | Backend [15](../../backend/15-pattern-3-master-detail-with-financial-effect.md), [8](../../backend/08-validation-duplicates-keys-delete.md) | Transaction, posting, VAT, allocations, `AllExistAsync` |
 

@@ -1,0 +1,10 @@
+S075
+Rental Agreement Advance Receipt
+https://speedautosystems.com/car-rental-software/user-guide/rental-agreement-advance-receipt/
+
+Rental Agreement Advance Receipt
+This option is related to taking the advance amount while opening the agreement.
+When you are opening the agreement from the Rental module from left navigation panel you open a new agreement and fill in all details with the advance amount and when you press save the next screen is for allocating that advance amount.
+Enter the payment methods and details if any and press save the advance amount receipt will be generated.
+To see that invoice you have to go to the vouchers from left navigation panel and open receipts.
+Here you will see the advance amount receipt generated and you can print it as well.

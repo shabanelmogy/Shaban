@@ -82,11 +82,22 @@ This is a replacement requirement, not permission to add a competing list path.
   typed feature paging/sort TypeScript, and feature placement/token SCSS.
 - Optional typed whole-row activation for a confirmed, unambiguous workflow.
 - Optional current-page checkbox selection for a confirmed batch workflow.
-- Exact serialized filter keys and parsers.
+- Exact serialized filter keys and parsers. For protected endpoints, reconcile
+  server allow-lists for direct filters, grid fields and sort fields under the
+  minimum grants, including count, aggregates and export (BE9).
+- Match reference-ID filters to the same live authorized relation as the
+  projection and sort. Verify omitted and partial paging inputs (BE9).
+- With the report already open, revoke an optional lookup grant and verify
+  list/report/export/Retry omit its filters and sort while retaining unaffected
+  inputs. Bind print to the published rows' query and revision (UI21/28).
 - Remote paging, stable sorting, and `TotalCount`.
 - Angular list model, backend ListVM, and displayed columns.
 - Row display transformations and action-state fields.
 - Loading, empty, declared-failure, and transport-failure states.
+- Apply UI2's cache adoption checklist to lookup/filter sources: eligibility,
+  source-owned invalidation/topics, finite bootstrap and one live binding with
+  selected-label retention. Reuse UI22's shared background badge; no local cache
+  or refresh loader. Operational candidates remain direct.
 - Cancellation and stale-response prevention.
 - Delete/action refresh interaction with current paging.
 - Exported columns and export query behavior.
@@ -158,6 +169,24 @@ Conflicting source contracts.
     shared grid formatting and failure handling per UI 8; no partial file.
 
 ## Required outputs
+
+Carry Master5's performance matrix: real query/round-trip and page/response
+volume evidence, confirmed safe query optimizations, UI29's reproducible
+before/after measurements or explicit pending owner checks, and BE2's index
+coverage/proposals/costs or a justified no-new-index result. Do not infer measured
+speed from source query counts or automatically index every filter/sort column.
+
+Reconcile UI22's per-operation loading owner and actual routed consumer, including
+query-only filter/paging navigation, global start/finalize and single rendered
+indicator. Preserve busy/error/Retry and silent retained-cache refresh. Under
+BE7, record enrichment round trips and correct in-scope per-row query duplication
+without weakening action-state guards or caching eligibility; SQL/latency remain
+owner verification when only source is inspected.
+
+Carry the UI2 / Master5 screen cache source matrix into this handoff. Reconcile
+filter/lookup rows against their actual services, writers and mounted bindings;
+record direct-read exclusions and source-only verification explicitly. Do not
+leave the matrix implicit because the list already inherits BaseService.
 
 ### Column and ListVM contract
 

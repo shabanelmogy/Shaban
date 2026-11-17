@@ -1,0 +1,10 @@
+S051
+Deactivating Application User
+https://speedautosystems.com/car-rental-software/user-guide/deactivating-application-user/
+
+Deactivating Application User
+Deactivating Application User:
+This option is to delete or deactivate the user from the system.
+a. Click on the Action button with the user.
+b. Select delete and the system will ask for confirmation then press “YES”.
+the user will now be restricted and will not be able to acces the system.

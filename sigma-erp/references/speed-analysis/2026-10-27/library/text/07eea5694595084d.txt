@@ -1,0 +1,13 @@
+S091
+Updating Vehicles
+https://speedautosystems.com/car-rental-software/user-guide/updating-vehicles/
+
+Updating Vehicles
+Select the fleet module from the left navigation panel.
+Click on the fleet tab, and then on Vehicle.
+Here you will see the action button with every vehicle.
+When you click the action button a window pops up:
+a. You can view the details of vehicle.
+b. you can edit or update the vehicle.
+c. You can update the millage.
+d.You can also see the agreements history made on that specific vehicle.

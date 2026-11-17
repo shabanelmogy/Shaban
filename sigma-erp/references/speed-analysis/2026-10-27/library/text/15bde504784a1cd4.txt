@@ -1,0 +1,11 @@
+S207
+How to define and manage Roles
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-and-manage-roles/
+
+How to define and manage Roles?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Roles module.
+A dashboard will appear on the right side of the panel. Click on the “+CREATE NEW ROLE” button.
+Click on the SAVE button.
+Click on the ACTIONS button if you want to edit a Role.
+Click HERE if you have a query or an issue.

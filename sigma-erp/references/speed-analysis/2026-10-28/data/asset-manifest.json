@@ -1,0 +1,72 @@
+[
+  {
+    "file": "raw/application.js",
+    "url": "https://app.speedautosystems.com/Bundles/App/js?v=-9yYUBz3QYB6yQcQPqU2Vysxan6ecKy52FXKGFn51Xo1",
+    "status": 200,
+    "contentType": "text/javascript; charset=utf-8",
+    "representation": "decoded HTTP text saved as UTF-8 without BOM",
+    "bytes": 22926982,
+    "sha256": "39fd999323fa97551442c5a71dc7e83c975436cace0fb4ee8c0cdeea0e1033c4",
+    "capturedAtUtc": "2026-10-28T15:02:02.3008732Z"
+  },
+  {
+    "file": "raw/common.js",
+    "url": "https://app.speedautosystems.com/Bundles/Common/js?v=dbwFcZipmmV5LHFsKY9-FsS56OIaz9VWl5RBlq8wWBE1",
+    "status": 200,
+    "contentType": "text/javascript; charset=utf-8",
+    "representation": "decoded HTTP text saved as UTF-8 without BOM",
+    "bytes": 11623,
+    "sha256": "f47ab321d5916f82b82bf1fa1b0c3ecb4ba9553ebafc7ad1011d5f8ef0144596",
+    "capturedAtUtc": "2026-10-28T15:02:02.4442311Z"
+  },
+  {
+    "file": "raw/libraries.js",
+    "url": "https://app.speedautosystems.com/Bundles/App/libs/js?v=4jdIeQcdT1j0jqfaQ__7r0gTPUQc1q8s0XK1U6gVXjg1",
+    "status": 200,
+    "contentType": "text/javascript; charset=utf-8",
+    "representation": "decoded HTTP text saved as UTF-8 without BOM",
+    "bytes": 4830741,
+    "sha256": "32e1f57d7c1148e0dd2a7808b922eaa032919aa693cbb171c4dd0fd2efdecd77",
+    "capturedAtUtc": "2026-10-28T15:02:06.0538841Z"
+  },
+  {
+    "file": "raw/metronic.js",
+    "url": "https://app.speedautosystems.com/Bundles/App/metronic/js?v=iangafbNOqmJ5t5wZNgvZN1o5le_0h-D7oll9mbfBP41",
+    "status": 200,
+    "contentType": "text/javascript; charset=utf-8",
+    "representation": "decoded HTTP text saved as UTF-8 without BOM",
+    "bytes": 27890,
+    "sha256": "367220545956357b70771ebf81542c4be75245b1b94faed0cff8f288faa059db",
+    "capturedAtUtc": "2026-10-28T15:02:06.1815394Z"
+  },
+  {
+    "file": "raw/service-proxies-angular.js",
+    "url": "https://app.speedautosystems.com/api/AbpServiceProxies/GetAll?type=angular&v=639287965209338646",
+    "status": 200,
+    "contentType": "application/x-javascript",
+    "representation": "decoded HTTP text saved as UTF-8 without BOM",
+    "bytes": 1746065,
+    "sha256": "b320304e43bcead8f1103c701763c997f5e1f12f3bde020d2c878ab17d3f28a9",
+    "capturedAtUtc": "2026-10-28T15:02:06.6188468Z"
+  },
+  {
+    "file": "raw/service-proxies-jquery.js",
+    "url": "https://app.speedautosystems.com/api/AbpServiceProxies/GetAll?v=639287965209338646",
+    "status": 200,
+    "contentType": "application/x-javascript",
+    "representation": "decoded HTTP text saved as UTF-8 without BOM",
+    "bytes": 1262261,
+    "sha256": "3fae20812ccc44ea611eaa05605a7c90f22900fa214af3c7e46bbad6988fd514",
+    "capturedAtUtc": "2026-10-28T15:02:06.9451282Z"
+  },
+  {
+    "file": "raw/login.js",
+    "url": "https://app.speedautosystems.com/Views/Account/Login.js",
+    "status": 200,
+    "contentType": "application/javascript",
+    "representation": "decoded HTTP text saved as UTF-8 without BOM",
+    "bytes": 5193,
+    "sha256": "f1d0c86e21b3479c198fddbb142a65ff123d00b7b579edd0d9d1bfc2d65fc650",
+    "capturedAtUtc": "2026-10-28T15:02:07.0827467Z"
+  }
+]

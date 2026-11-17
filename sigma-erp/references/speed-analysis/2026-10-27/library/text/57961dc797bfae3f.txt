@@ -1,0 +1,122 @@
+S037
+Car Rental Software User Guide
+https://speedautosystems.com/car-rental-software/user-guide/
+
+Speed Car Rental Software (CRS)
+Overview
+Benefits
+Vehicle Mobile Inspection
+Digital Agreements With Electronic Signatures
+Go Paperless – Go Green
+Automation Of Manual Processes
+Revenue Booster
+Increased Customer Satisfaction
+Enhance Staff Productivity
+A Magic Wand to Control Your Expenses
+Innovative Solutions
+Easy To Use – Easy To Handle
+Stronger Visibility- Robust Control
+Easy Quality Control
+Multilingual Facility
+Drivers Live Tracking
+Customer Notification Engine
+OTA Compliance
+Vehicles QR Codes
+Car Rental Brokers Integration
+Mobile App
+Work Load Balancing
+Legal Scanner Integration
+Drivers Rating
+Speed Car Rental Software (CRS) Features
+Request Demo
+Request Quote
+Speed – Car Rental Software for Small Car Rentals
+Speed – Car Rental Software for Medium Size Car Rentals
+Speed – Car Rental Software for Big Car Rentals
+Start 30 Days Free Trial
+User Guide
+Sign In
+Download Car Rental Software ios App
+Download Car Rental Software Android App
+Car Rental Booking Engine For Your Website
+Car Rental Website Design For Your Car Rental Business
+Frequently Asked Questions
+Opening Speed – Car Rental Software Web App
+Downloading Speed – Car Rental Software iOS Mobile App
+Downloading Speed – Car Rental Software Android Mobile App
+How to Signup
+Signup using Speed – Car Rental Software Web Page
+Signup using Speed – Car Rental Software iOS Mobile App
+Signup using Speed – Car Rental Software Android Mobile App
+How to Sign in
+Forgot Password
+Speed – Car Rental Software Settings
+How to open Settings Panel
+Time-Zone Setting
+Date Format Setting
+Currency Settings
+VAT Setting
+Enabling Weekly & Monthly Rental
+Free Access Rental Hours Setting
+Early Closing of Monthly Rental Setting
+Young or New Driver Settings
+Weekend Settings
+Monthly Invoicing Rules Settings for Monthly Rental
+Rental Extras Settings
+Holidays Setting
+Your Company Logo Update
+Your Company Letter Head Update
+Document Number Format Settings
+Email Sending Settings
+Charges
+Mandatory Fields Settings
+Application Users Management
+Defining User Roles with User Rights
+Application Users Creation
+Application Users Rights Management
+Deactivating Application User
+Defining Vehicle Types
+Managing Vehicles
+Adding Vehicles
+Updating Vehicles
+Deleting Vehicles
+Vehicles Documents Management
+Vehicles QR Codes Generation
+Defining Rental Tariff
+Rental Discounts Management
+Customers Management
+Individual Customer Management
+Creating Individual Customer Account
+Uploading Individual Customer Documents
+Billing Settings of Individual Customer Account
+Editing Individual Customer Account
+Deleting Individual Customer Account
+Company Customer Account Management
+Creating Company Customer Account
+Uploading Company Documents
+Editing Company Customer Account
+Billing Settings of Company Account
+Rental Bookings Management
+Rental Planner
+Rental Agreements Management
+Rental Agreement Opening
+Rental Agreement Printing
+Electronic Rental Agreement with Signature on Signature Pad
+Electronic Rental Agreement using Speed – Car Rental Software Mobile App with Signature on Mobile
+Rental Agreement Editing
+Rental Agreement Advance Amount Handling
+Rental Agreement Deposit Management
+Vehicle Replacement on a rental agreement
+Driver Replacement on a rental agreement
+Rental Agreement Extension
+Rental Agreement Cut-short
+Rental Agreement Log
+Rental Agreement Invoicing
+Daily Rental Agreement Invoicing
+Monthly Rental Agreement Invoicing
+Rental Agreement Receipts
+Rental Agreement Advance Receipt
+Rental Agreement Final Settlement Receipt
+Customer Statement of Account
+Customer Statement of Account Emailing
+Customers Balance Summary

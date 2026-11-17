@@ -1,0 +1,10 @@
+S097
+Vehicles QR Codes Generation
+https://speedautosystems.com/car-rental-software/user-guide/vehicles-qr-codes-generation/
+
+Vehicles QR Codes Generation
+Select the fleet module from the left navigation panel.
+Click on the Vehicle QR Label Tab.
+Click on blue tab “Generate QR Labels” on the top right corner, QR labels will be generated.
+You can generate a single QR label by only entering a plate no of vehicle.
+System allows you to print QR labels in 2 sizes 1 for Door label and other one for KeyChain.

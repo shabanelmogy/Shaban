@@ -1,0 +1,11 @@
+S185
+How to add a new Staff member
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-add-a-new-staff-member/
+
+How to add a new Staff member
+Go to the panel on the left side and click on the Staff tab.
+Scroll down and click on the Staff module. A window will be opened.
+Go to the top-right side of the window and click on the +CREATE NEW STAFF button.
+A form will appear. Fill the details and add essential documents. Then, click on the SAVE button.
+Staff members will be enlisted. You can view, edit, or delete by clicking on the ACTIONS button.
+Click HERE if you have a query or an issue.

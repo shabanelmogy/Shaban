@@ -1,0 +1,10 @@
+S093
+Uploading Individual Customer Documents
+https://speedautosystems.com/car-rental-software/user-guide/uploading-individual-customer-documents/
+
+Uploading Individual Customer Documents
+Open the customer module from the left navigation panel.
+Click on the first tab for individual customers.
+Click on the blue button stating “Create New Individual”
+A pop up will appear and go to the next tab from top stating “Documents”.
+Here you can add any type of documents for the customer. System allows you to upload a file in form of image so you can scan the document and upload it to the system.

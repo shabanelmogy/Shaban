@@ -1,0 +1,13 @@
+S080
+Rental Agreement Final Settlement Receipt
+https://speedautosystems.com/car-rental-software/user-guide/rental-agreement-final-settlement-receipt/
+
+Rental Agreement Final Settlement Receipt
+When a agreement is closed its final receipt is generated in the system automatically.
+To see the receipt you have to go to the vouchers module from the left navigation panel.
+Select the option for receipt and here you will see all the receipt.
+If you want to create a new receipt then click on the blue button on top stating “Create New Receipt”
+If you have closed the agreement then the receipt will be generated automatically.
+Just find it with the agreement number and click on the action button with that receipt.
+Here you have to select the “Allocation (Receivables)” from the drop down menu.
+Here you have to enter the amount in the Allocated Now section and when you press save it will be allocated and the invoice will be generated.

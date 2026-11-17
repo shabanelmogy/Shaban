@@ -1,0 +1,9 @@
+S046
+Young or New Driver Settings
+https://speedautosystems.com/car-rental-software/user-guide/customer-statement-of-account-emailing/
+
+Young or New Driver Settings
+Young New Driver :
+If your car rental charge extra for the new or young drivers then you can select this option, otherwise leave it blank.
+First option is about the experience of driving and you have to enter the no. of years, e.g Less than 2 years etc..
+Second option is about the age of the driver in this option you have to decide that less than this age of customer is considered to be a young driver. e.g 20 years of age is knows as a young driver.

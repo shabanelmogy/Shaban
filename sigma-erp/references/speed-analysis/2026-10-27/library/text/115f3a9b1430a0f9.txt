@@ -1,0 +1,11 @@
+S203
+How to define Agreement Number & Code
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-agreement-number-code/
+
+How to define Agreement Number & Code?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Document No’s tab.
+Adjust Agreement Number and Codes.
+Scroll down and click on the SAVE button.
+Click HERE if you have a query or an issue.

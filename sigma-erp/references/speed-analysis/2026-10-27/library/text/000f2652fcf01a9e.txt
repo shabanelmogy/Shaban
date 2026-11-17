@@ -1,0 +1,11 @@
+S218
+How to define Invoice Number & Code
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-invoice-number-code/
+
+How to define Invoice Number & Code?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Document No’s tab.
+Scroll down and adjust Invoice Number and Codes.
+Scroll down and click on the SAVE button.
+Click HERE if you have a query or an issue.

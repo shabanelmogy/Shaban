@@ -1,0 +1,11 @@
+S271
+Manage sundry settings
+https://speedautosystems.com/vehicle-leasing-software/user-guide/manage-sundry-settings/
+
+Manage sundry settings
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Common tab.
+Scroll down and you will see a list of other settings. Adjust them accordingly.
+Scroll down and click on the SAVE button at the end of the dashboard.
+Click HERE if you have a query or an issue.

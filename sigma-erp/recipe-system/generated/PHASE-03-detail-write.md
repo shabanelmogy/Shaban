@@ -12,49 +12,52 @@ workflows follow UI block 12; deliberate exceptions are recorded in the review.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:38d22849a6d25f64baa38c14562b4c85f08b29199ca287825471c3cfdacaf0e7
-- master.1: ## 1. Governance and review principles | sha256:3e69ec4d48c952286dea7792d9e442d37585c15446b7ef02531c8a54053558cf
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:2d02535a738d0a1e03f44f22ff5ac7028554bc00cf9e8517245d3cf9e4c5811e
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
-- master.5: ## 5. Continuous quality gates | sha256:8d4f483fc5c4e3c0f84bb76153f0b2c5c70972699a9fa69e4fc7ed6e0667831b
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06
+- master.1: ## 1. Governance and review principles | sha256:a2ea89d19643c80d5d6fedef76e1e562333792eee34cf2eaad1e1ada1a4c47e0
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:8e602319017e268b923ed2bb8b7a8d21a1a3252640f23a986d99821842ea0c6f
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
+- master.5: ## 5. Continuous quality gates | sha256:2dc0c50abbb9337e62e6ddea88ae341cfff9ff0da0849dca7f58bf304d9544d1
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:40836082dd49994bd2e8b88b6f888b21d1c4eeabf5e09e95eefa9f4fc2725ca5
-- ui.1: ## 1. Feature folders and wiring | sha256:266ecc1be4816a83512752346f33e513dd1f595677c8a9facf75d5bba95f6121
-- ui.2: ## 2. Service and response wrappers | sha256:9794e35d4273c605ac98288b23095738d03eacfc9af4f7b2fba2f69838e36bc4
-- ui.9: ## 9. Confirm: delete | sha256:b446c09fa7fe12e63f8aa03e99f184ebb14f957fa585576931ddd8f15cb6fd75
-- ui.10: ## 10. Confirm: discard | sha256:195cd19d0990a68665612f5d0d9d7f5d9c19f48431edeb1f9de575b30592511e
-- ui.11: ## 11. Small modal on top | sha256:766d16df7263c9b35550aa8657b683f39073bb0513063ca7fc3d794bb8798842
+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
+- ui.1: ## 1. Feature folders and wiring | sha256:96f5147de3041c0ab098fbd3b6005bb94b38ccde0ac890395818fdf989ca7868
+- ui.2: ## 2. Service and response wrappers | sha256:c2e46bdaf00c1fbee66d6ae2c655f335e348e60efad6a972e6ed6755ea520734
+- ui.7: ## 7. Action button cycle | sha256:687c92bb4681fccf5c48878735d7bbe787bf5fc41dbf9bc1296300698f68dbc6
+- ui.9: ## 9. Confirm: delete | sha256:54b220b80d7129d76c43ee26792787028fb140c1c99b540189776b8ed1c58c20
+- ui.10: ## 10. Confirm: discard | sha256:8c3359f9d561eceee78e24a59277c5b5768cd9edb5f5863f7219d52daaf856b1
+- ui.11: ## 11. Small modal on top | sha256:36fdc93109f5edde973e9db20655074637ded2a1307d0dfc37b55f678c8571a2
 - ui.12: ## 12. Step form | sha256:f53be24965afaa8dcf58477207a84800f70a148fb1dedb881e4370f7e897d56a
-- ui.13: ## 13. Modal with tabs | sha256:59c3f254a741b8598a407dc016525ed7a34ba7238963da743538e4824e4d6e62
-- ui.14: ## 14. Editable collection table | sha256:cc13857225df3eaa3af0626a85f4e6d2d585abc98189e9762b53e603f31064fd
-- ui.15: ## 15. View mode | sha256:022f00069635b29f668f8ca24b27ef784df55a57a05ae66594c166e74263184c
-- ui.16: ## 16. Dropdowns, lookups, enums | sha256:32f7a23d394be847f7274000569266f733bcdf3f85aa5e2bc267734680b9846c
-- ui.17: ## 17. Dates | sha256:ad8a9c948aa3f009a557f1ffbf7534aa978987ce33f7d4423f82ef605dab84c0
-- ui.18: ## 18. Documents and upload | sha256:24a56608d73d02e0b8197f4124186f2a5636219a12ad6d79ce6a85581553b411
-- ui.19: ## 19. Validation messages | sha256:94a516e370c206deb5d4d80c34a2daa9d1898bb15bb0e8a58ec8c687e63e9a14
-- ui.22: ## 22. Loading, empty, error, toast | sha256:244bc2d6f185f10764d640c98de0e0ff53650e96bede01d5a1dffdf96f5303ca
-- ui.23: ## 23. Translations | sha256:2410720acfe260652c5d9c6e0f801aa3881a21f18a1b1a3de4acc7478bcf1c6e
-- ui.24: ## 24. Colors, icons, buttons | sha256:6729bb2594a33b250ebe2be5fd74ea31ff0680c020d4922da72d2009fd58aba1
-- ui.25: ## 25. RTL and dark theme | sha256:7239bd7a1b0de149e09f0cf704ddc404e46af34f60e3f1548c293b00fbbf3061
-- ui.26: ## 26. Permissions and route access | sha256:468e5ceba58128db01cd338059c6119761123144af55950bfaaf1a2d4866f0ff
-- ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
-- ui.28: ## 28. Request cancellation and stale responses | sha256:6c7c3c8a71a8681f46e2cef26d7efd5872fdbbaffa991f5e7c9adc592f4b385d
-- ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:37bd2668e415291f40a04665709d8e3d9231a899d1d6517030b76d1d8f7ca4b0
-- backend.3: ## 3. Step 3 — ViewModels | sha256:29ccd92c16af23938da89ef2524a74076ae75ff380d5758319abc14089eba797
+- ui.13: ## 13. Modal with tabs | sha256:cd104e5563bb5ae0af553c6bf03b7b8f89acdd8b80c8eb1df0befaf32e849ff8
+- ui.14: ## 14. Editable collection table | sha256:85e6841fb90c89f898a6b2a233a46a8d7a757c42dcfe86381d2b21c10ecf4891
+- ui.15: ## 15. View mode | sha256:d65759cb2f87af8e2c60a44951906befcb022b449bb0fc709f0f8af000ed9911
+- ui.16: ## 16. Dropdowns, lookups, enums | sha256:a3da0497ac2b3a9f7ec3f25a6f3c0693ab65ddf5e7f4fb0834ca9dcbcb0efd1a
+- ui.17: ## 17. Dates | sha256:b83f662c6c700953af3243160c84fdd743629d4749a8d8674bf8d1419721cb5a
+- ui.18: ## 18. Documents and upload | sha256:eb265ad8325dc885f5473bc5f1e5cf2541aacc8ded1734b2416c8d2435e44140
+- ui.19: ## 19. Validation messages | sha256:6e7f00d5fed6d68fe924aa9d2bf6b64bba9368624df97317680d14ad6f5870d9
+- ui.22: ## 22. Loading, empty, error, toast | sha256:8a43d6f6e7adf12e07a82fdb67e8f625158509fc0f88fe8f181f4c8a9c17e4a3
+- ui.23: ## 23. Translations | sha256:0cf1190b29df3b524017967f0fba1a4611c683b902cb344278193f5e06de1377
+- ui.24: ## 24. Colors, icons, buttons | sha256:762e32970e629fe1c579f7df4da00cfd9439f939d18adae1137849b452383b4c
+- ui.25: ## 25. RTL and dark theme | sha256:43a3a8e0348d40c7dabf045d26827de50445cb6ba22441e1a7b9db9cdc8f8179
+- ui.26: ## 26. Permissions and route access | sha256:ce3f2c451a72880ac11e264517cb14795d8539ef326b281ce297f75ae5d59223
+- ui.27: ## 27. Focus and keyboard | sha256:8f5713225ff4aecd70093f9ac8e6ba96c91003126335ebad80f925e573fa8586
+- ui.28: ## 28. Request cancellation and stale responses | sha256:b9ee811088e53d9771459815766c135cee973724042db691a7a4444ab5408325
+- ui.29: ## 29. Verification expectations | sha256:1ff1411e4cbc36bb44b06ef153a062ad0ddc7d8ca7728bdc7a3deae3ea99656e
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
+- backend.2: ## 2. Step 2 — EF configuration | sha256:6fc404d5c366c960f1ff9292a0b9ce4b69c6825da3f4416385af0389c0ebc386
+- backend.7: ## 7. ListVM scope rule | sha256:6ae3e69d94ccc02a60bd005f20020b7cd4b9f105b81afa9baf63c427cfa05caa
+- backend.3: ## 3. Step 3 — ViewModels | sha256:1b2fd3b17c42fc35e1d5878bec1bad25b15edd349871a1957c2c1af9252d3bd2
 - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
-- backend.5: ## 5. Step 5 — Interface and service | sha256:f279fac37e5c752a179db6688a4bac1a43073f9635d33787b3838ae35911f9d8
-- backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:23f348643a40f97c07438d987af182efc5500e5e20c425c8574dffeb5b58d98a
-- backend.10: ## 10. Select and dropdowns | sha256:700a3fc93df824f337cf2bf5c2fe12f866d8aee46c8be35976a2fccf7fa533cb
+- backend.5: ## 5. Step 5 — Interface and service | sha256:848b38b971e23945d10cb02d95cd2f94c2f3a176fe126e1a2169dca039be816d
+- backend.6: ## 6. Step 6 — Controller | sha256:f0f56867e3997a688067c5e5ec7f19070f1f4d621a0d5617e4e9639fdf74eba6
+- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:6ea7b47108bd89bf68e821373303b7390ed3b42e664fa831ccc3d5a2c3624f33
+- backend.10: ## 10. Select and dropdowns | sha256:61f5fb1f28d7992cf7610dfbe5a9e4fc6d08fd656230d72ab36067a6f1c04925
 - backend.12: ## 12. Activate and deactivate | sha256:0ab72d83147f2121f134159c72ce89862f2e6687b34d190aedcb9f48dd277c8d
 - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
-- backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:72df618eef97754d2145fd42ce10e3a09b842ec6870bce6a2e7ee3eced51af93
-- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:1ef93e08a2dc13799842fb2d2eca23d2b3b9f0cc8d89b03e44810c2d50149c9e
-- backend.16: ## 16. Pattern 4 — Settings | sha256:f348b0cd16369c066b96ceee3e956d7220eecb7113bb661ca788a547bfe270d2
-- backend.18: ## 18. Edge cases | sha256:f75b1b27a36fa5ef0d2d671854f15b5fb4b6c0b24674a177448a1c4caca97d29
+- backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:a0a4980bbe7adae8b1b5f95016247802b86f664f2f8fa0b43b4f635ab5355659
+- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:936233bb5efd0ec72cbc63cb7184cf4baaf7e2363296b4f143001917536bb6d0
+- backend.16: ## 16. Pattern 4 — Settings | sha256:1464b56b0af2c120542e7f5be144c24b4bf268ab01db1613cfd803bd58817a77
+- backend.18: ## 18. Edge cases | sha256:8878697ea5e4b00ab272b14d83fd2091eb9cd129c168a238ab98b88bed22d2a0
 
 Approved references by editor shape:
 
@@ -64,6 +67,7 @@ Approved references by editor shape:
 - `SiGmaAngularFrontEnd/src/app/modules/shared/components/form-validation-summary`
 - `SiGmaAngularFrontEnd/src/app/modules/shared/components/form-section`
 - `SiGmaAngularFrontEnd/src/app/modules/shared/components/editable-collection-table`
+- `SiGmaAngularFrontEnd/src/app/modules/shared/components/document-approval-cycle`
 - `SiGmaAngularFrontEnd/src/app/modules/Workshop/Job/components/editor`
 - `SiGmaAngularFrontEnd/src/app/modules/Customers/Companies/CompanyPartner/components/details`
 - `SiGmaAngularFrontEnd/src/app/modules/Sales/Fleet/components/details`
@@ -75,6 +79,9 @@ Reference ownership is explicit:
   `shared/components/editor-dialog`;
 - reusable accessible editor tablist, keyboard behavior, RTL navigation and
   tab-button styling: `shared/components/editor-tabs`;
+- approved document decision/history panel shared by saved Approvals tabs and
+  Approval Status dialogs: `shared/components/document-approval-cycle` (UI7/13);
+  feature adapters retain their own frozen server state/effect/endpoint contract;
 - reusable routed step navigation, progress semantics, responsive layout and
   light/dark styling: `shared/components/step-form`;
 - reusable accessible invalid-field summary, count and field actions:
@@ -143,6 +150,12 @@ Use canonical sources and report a precise blocker for unresolved conflicts.
 
 ## Purpose
 
+For editor options/settings, apply UI2's cache adoption checklist: source
+eligibility, finite bootstrap, success-only writer invalidation and one scoped
+watch binding that preserves selected IDs, labels and drafts. Revalidation never
+recalculates business values. UI22's shared background badge owns activity;
+do not add a local cache, permanent replay, spinner or competing socket.
+
 - Keep editor fields, typed forms, Detail/Add/Update DTOs, and persistence
   behavior aligned.
 - Select editor structure from business shape rather than screenshot layout or
@@ -196,6 +209,10 @@ contracts remain unresolved and are not invented in a payload.
    with `app-form-section`; keep the single parent form, forward-validation
    gate and controls in the feature, and render its typed invalid-field list
    through `app-form-validation-summary`.
+   For comparable routed documents, apply UI13's "Routed document editor
+   baseline" as one set, with its UI1/3/14/16/24 and BE8 owners. Record each row
+   as Match, Not Applicable with a reason, or a governing exception. Do not copy
+   the motivating feature's business matrix or deferred workflows.
 2. Freeze Detail, Add, and Update field ownership.
 3. Define typed form controls and nullability.
 4. Compare frontend and backend validation.
@@ -225,6 +242,24 @@ contracts remain unresolved and are not invented in a payload.
 
 ## Required outputs
 
+Reconcile Master5/UI29 performance evidence for detail, initial editor bootstrap,
+save/action refresh and child/option payload size. Review avoidable request
+waterfalls and repeated query work with BE7, preserving drafts/transactions and
+business guards. Record BE2's relevant index evidence or no-new-index reason;
+measure only when authorized and otherwise supply comparable owner checks.
+
+Reconcile UI22's actual detail/save operation lifecycle and visible owner. Pair
+global start/finalize where applicable, remove duplicate loading-only messages
+without removing error/empty/Retry or busy/aria-busy. Required routed initial/
+filter lookups use the page host via shared lookup leases; dialog lookups stay
+local and retained-cache refresh stays silent. A shared import alone
+does not demonstrate that the active route displays the current loader.
+
+Carry the UI2 / Master5 screen cache source matrix into this handoff. Reconcile
+editor options, settings and direct live reads; include bootstrap success before
+watch, selected-label retention, null-context clearing, Retry and draft/financial
+preservation. Evidence is actual source behavior, not shared class names alone.
+
 ### Detail and write contract
 
 | UI field | Form control type | Detail DTO | Add DTO | Update DTO | Server-owned | Validation owner | Status |
@@ -248,14 +283,41 @@ contracts remain unresolved and are not invented in a payload.
 | Escape | | | | |
 | Route/back | | | | |
 
+For a nested reason or confirmation dialog, check the parent exit guard and
+child lifetime on withdrawal of View and of the action grant independently
+(UI28). In the write contract, check stored and replacement branch activity
+where required and tie retained-reference exceptions to the same saved child
+row and value (BE8).
+
 ### Child/upload contract
 
 | Item | Client draft state | Persisted by | Validation | Reconciliation/cleanup | Failure recovery |
 |---|---|---|---|---|---|
 | | | | | | |
 
+### Comparable document presentation reconciliation
+
+When UI13's routed-document baseline applies, record concern, owning block,
+actual shared producer/target consumer, adopted value/behavior, source result
+and owner runtime/visual verification pending. Include every baseline row;
+shared class names alone do not establish conformance. Other editor shapes
+record why this baseline is Not Applicable and use their own owning checklist.
+
 ## Continuous gates
 
+- Apply UI1's full-available-width ownership steps: actual route/host/page/panel
+  selectors, shared block host without local geometry, or the documented
+  flex-parent exception with a growing direct child and preserved scroll/print.
+  Record empty/loading/error/populated source evidence and UI29's responsive
+  acceptance status; no class-name-only layout pass.
+- Inventory inactive-tab subscriptions (UI13). Required record reads remain
+  immediate; independent expensive tab reads start at first activation, retain
+  their instance per record and reset on identity/reload/context with existing
+  busy/draft/Retry/teardown and direct-link behavior. CSS hiding is not lazy loading.
+- Gate detail/approval action enrichment from existing header facts before
+  costly reads (BE7); preserve source-candidate multiplicity/unknown kinds and
+  write-time guards. Keep independent HTTP reads separate from prohibited
+  parallel EF work on one context; printing waits for its actual prerequisites.
 - Add and Update contain client-editable inputs only.
 - View mode does not depend on disabled controls alone for security.
 - Dirty dialogs use controlled visibility; the library must not close first.
@@ -291,6 +353,10 @@ contracts remain unresolved and are not invented in a payload.
   occurs one microtask after dialog `shown`, with focus moved to the calendar
   input.
 - All form and dialog outputs are typed.
+- Classify numeric roles and adopt UI14/19's shared quantity/hour/meter profile,
+  precision constant and decimal-scale validation. Counts/identities and money
+  retain their actual policies; reject excess input precision without rounding.
+  Reconcile the paired backend storage/API before accepting fractions (BE18).
 - Upload files are validated and abandoned files are recoverable.
 - Save produces exactly one success notification; a feature-owned composite
   success explicitly suppresses the mutation interceptor toast.

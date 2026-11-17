@@ -18,6 +18,29 @@ choose server paging or an explicitly complete collection for local presentation
 paging. Do not introduce server paging into an already complete report merely to
 reuse a grid, or infer completeness from Result<T> rather than Results<T>.
 
+**Owner-requested incremental transport (2026-10-31).** An explicit request to
+load a report while scrolling may introduce an additive paged read alongside its
+complete read after freezing the filter, slot/order/count/summary/output contract.
+It remains a read-only report. Limousine Utilization is the scoped adoption:
+first120 chronological calendar rows, then append on scroll using UI6's shared
+incremental capability. Retain zero-activity calendar slots and the366-day bound.
+The first response returns authoritative totals for the whole filter period;
+later windows do not recompute or replace that summary. A partial collection
+never supplies whole-report local column filtering/sorting. Changing filters or
+tenant clears rows/summary/errors, cancels reads and rejects stale/duplicate or
+out-of-order windows. Failure of a later page retains accepted rows with Retry.
+Every data read owns UI22's page loader; references retain their current owners.
+
+Print/Excel explicitly read and validate the complete report for the applied
+filter, even if only the first window has loaded. Never export the partial view
+or derive the total by summing loaded rows. Print uses a separate full-output
+array under ReportPrintSession, preserves the screen collection and releases
+print state on afterPrint/cancel/context. A live multi-request operational report
+is not a transactionally frozen database snapshot; a new Search refreshes its
+summary/windows, and complete output uses its own fresh complete response. Do not
+introduce a report/financial cache or invented snapshot token to conceal this.
+Record payload/render/query tradeoffs and pending timings under UI29.
+
 Every report table in new or reviewed report work uses typed `app-data-table`
 columns. Existing reports migrate when their report is in scope; this rule does
 not authorize a bulk rewrite of reports outside the current review. The shared
@@ -65,12 +88,81 @@ The fourteen complete Accounts reports use an Accounts-local typed
 controls, grid and cards. Configurations retain feature-owned filter names,
 request/response types, sections, backend totals and existing navigation.
 `FormRecord` owns controls; lookup failures block Search and have local retry.
+Explicitly adopted Accounts configurations may provide `accessRequirement` on
+the existing `AccountReportConfig` and on individual filter definitions
+(source adoption,2026-11-07). The shared page consumes the current-session
+evaluator; absence of the optional inputs retains prior caller behavior. Keep
+the real report key and indispensable lookup dependencies in its route and
+configuration. Optional denied sources hide/disable their controls and remove
+their form/raw/applied/recovery values before request construction, Reset and
+output; a hidden field is not made eligible by `getRawValue`. Its lookup is not
+requested and cannot create a required-lookup error. An allowed failed source
+retains the existing Retry contract.
+
+Cancel individual report/lookup/watch and deferred auto-search/print work on
+its captured grant/context, retaining the outer search trigger. A queued action
+must stay cancelled after revoke/regrant; comparing only the final signature
+inside a microtask is insufficient. Check the mounted identity/context at the
+event before an effect can flush. Relevant grant transitions restore missing
+bootstrap and the sanitized searched snapshot; unrelated revisions do not repeat
+operational report reads. Reference/working-context reset clears prior choices,
+outputs and route-derived IDs, while a changed sign-in expires an adopted mounted
+session. Existing data-free cache-context reset remains the owner for legacy
+callers. For links from account-detail sections, the existing page exposes
+`canActivateRow(row)` (source adoption,2026-11-07): it checks current output access,
+mounted context, no report/lookup/print work, the active details view and membership
+of the exact row object in current hierarchical sections. Its computed set is
+rebuilt when sections change, including transformed display rows; a matching
+account ID in an old/copied row does not qualify. Consumers keep their real
+source/destination grants, route policy and business row rules, and recheck in
+both activation visibility and the handler. This adds no link to reports without
+one and does not authorize a write. Source specs exist; build/runtime/visual acceptance is
+separate and pending under the current source-only boundary (UI26/28).
+The existing ReportPage host owns `:host([hidden][inert]) { display:none
+!important; }` so a protected mounted report stays visually hidden despite
+the shell's flex/block display declarations, including print. Both attributes
+identify access-hidden content; ordinary screen-only inactive-tab print
+visibility keeps its existing contract. Reuse this owner, not a per-report
+CSS copy. The actual-template computed-style specification remains unexecuted
+under the source-only boundary.
+For persisted bilingual lookup names, the shared dropdown's optional
+`nameLocalized` becomes `AccountReportFilterOption.labelLocalized`. The existing
+language-keyed `optionsFor` selects that nonblank label for Arabic, falling back
+to the base label; a supplied `labelKey` keeps its prior translation behavior.
+This capability applies to every consumer supplying bilingual metadata and
+requires no per-screen opt-in, new request, selection reset or draft mutation.
+Budget uses its own existing editor with the same stored bilingual values.
+Evidence: GroupDefinition ReportOptions and Budget/BudgetVariance2026-10-23;
+source conformance verified, owner language/print/export acceptance pending.
 Changing filters invalidates output; requests capture the applied snapshot and
 disable the form until completion. Export reads complete source rows and builds
 translated headers at click time. Hierarchies use UI6's optional shared adapter;
 FY2 remains flat. Server-owned context such as Ledger account identity/currency
 is retained outside the grid through `responseContext`, not invented as a new
 transport column. Sections default to independent bounded shared row viewports.
+Accounts reports may supply `hasOutput(response)` when a valid report has
+meaningful opening balances, authoritative totals or a warning without movement
+rows. The shared page uses that same eligibility for both the visible Print /
+Export controls and their handlers; omitted predicates keep the existing
+row-count behavior. Do not invent a transaction row to enable output. Ledger
+opts in and exports each currency's opening/totals even with no activity. Keep
+the base summary separate from original-currency sections and preserve the
+complete response in print/Excel. Source conformance2026-11-05; runtime pending.
+`AccountReportSection.summaryCards` optionally places server-owned totals beside
+their own section using the existing SummaryCards owner. Ledger uses it for each
+original currency, while the base summary stays at the report head. Preserve
+the section's unit, exact amount text, precision and complete output; do not
+combine separate sections' financial totals or recreate summary markup.
+
+The shared Accounts report owner cancels report and lookup reads on tenant /
+session context expiry, clears the prior result and reference selections, and
+restarts finite option bootstrap without replaying IDs from an old route
+snapshot. Required bootstrap uses UI22's page progress owner. Optional
+`watchOptions` on a filter adopts only a source already opted into UI2's shared
+reference cache; Ledger's Branch is the current adoption. Direct operational
+and non-opted-in lookup sources keep their direct reads. Retained reference
+refresh preserves selected labels and uses failure/Retry; it does not rerun or
+reprice the report. Clear its bindings between contexts and on destruction.
 Optional `sectionLayout: 'document'` selects the existing complete-document
 alternative: full-width sections in source order, one keyboard-accessible outer
 `sigma-report-table-frame`, and grids with `fill=false`/`scrollable=false`.
@@ -249,6 +341,15 @@ example `{ id, labelKey, value, icon, accent, format: 'number' }`; use
 values. Labels, hints, secondary values and selection remain descriptor inputs;
 the shared component owns card markup, geometry, palette, formatting and print.
 
+The StockReportPage family exposes optional `inlineFilterActions` (default false)
+for an owner-scoped compact flex strip: retain its existing field/action groups,
+remove their full-width utility and let the fields grow into remaining space
+beside ReportActions. Reuse global report-strip control/field/action sizing and
+narrow-screen stacking without feature CSS. PartsMovingReport adopts this under
+the owner's2026-11-01 same-row and wider-Items requests; other stock reports keep
+their current layout. Retain the same form, actions, busy gates and print hiding.
+Source-only; owner responsive/RTL/visual acceptance pending.
+
 Reports whose owner requests actions on the filter control line may opt into
 `sigma-report-filter-panel--inline` alongside the stable modifier. The shared
 Accounts composition exposes this through optional `inlineFilterActions`, false
@@ -279,6 +380,23 @@ layout creates no implicit second column. This extends the existing FilterPanel 
 report strip while preserving report1250/640 breakpoints, stable validation,
 RTL/theme and all non-adopter defaults. No feature width or calendar override;
 source conformance only, owner visual/input acceptance pending.
+
+**Ledger field proportions and action-row checkbox (owner instruction, 2026-10-23).**
+The Accounts descriptor's existing `wide` flag also applies to ordinary flex
+report strips above640px through the same shared modifier: grow2/basis340px/
+max600px compared with ordinary grow1/basis170px/max300px. At640px and below,
+retain the shared full-width stacking. Inline grids keep their existing span2
+and mobile span reset; `AccountReportPageComponent.filterColumns` counts wide
+fields as two tracks. The optional checkbox descriptor `withActions` renders
+that control once in the existing shared action template rather than among main
+fields. The normal flex strip's `sigma-report-filter-actions--with-checks` takes
+a full row, aligns the checkbox at logical start and lets buttons wrap at narrow
+widths; existing inline strips retain their action field. FormControlName stays
+under the same form and no value resets. Omission preserves current checkbox
+placement. Ledger selects wide for Account and withActions for Original Currency,
+as explicitly clarified by the owner; other consumers retain defaults. Use the shared
+owner rather than screen CSS or ID selectors. Source-only conformance; owner
+desktop/intermediate/mobile, RTL/theme and focus acceptance remains pending.
 
 Inline strips may supply `--sigma-report-filter-template` as a complete grid
 template, including a dedicated action track when actions stay inline, when equal filter tracks waste space or
@@ -369,6 +487,25 @@ monetary values use the shared `formatMoney` owner, and BalancesSummary
 preserves absolute magnitude with a translated Dr/Cr suffix. Print removes any
 card-list bound (`maxHeight: none; overflow: visible`) while retaining every
 card and hint.
+**Projected value controls (owner request, 2026-10-28).** When a summary card
+contains an existing editor control, import `SummaryCardValueDirective` in the
+consumer and project `<ng-template appSummaryCardValue="stable-card-id">` inside
+SummaryCards. The matching nonselectable card replaces only its formatted primary
+value with that template; `$implicit` is the typed SummaryCard. Label, icon,
+accent, hint, secondary value, responsive geometry and print skin stay shared.
+The feature binds its existing typed FormControl, translated accessible input
+name, validators, error and disabled/View lifecycle; the shared card never owns
+discount rules, mutations or form state. Bind the control explicitly when the
+strip is outside the form element. Do not cap an editable strip so validation
+is clipped. Unmatched/absent templates retain normal values; selectable cards
+ignore value templates to avoid controls inside their button. Keep stable unique
+template IDs, natural validation height, RTL/theme and native input focus. The
+strip may sit directly before the fixed editor footer outside the growing form,
+with the table/body owning the remaining space; never imitate card internals or
+remove a gap through guessed negative margins. RentalQuotation's discount card
+uses this additive slot; existing consumers retain their defaults. Source-only;
+responsive spacing, validation, print and keyboard acceptance remain pending.
+
 The row option fits all cards into equal columns on a container wider than
 1100px, wrapping through the shared auto-fit/minimum-width rule below that
 threshold; it does not leave a last card outside the screen. Dense density
@@ -649,7 +786,7 @@ Use the shared report shell and the current filter/action style:
 
 - keep `app-feature-title` inside the report panel;
 - place the complete typed filter form in one `no-print` row;
-- for a single-day report, use one `p-calendar`, default it to today, require
+- for a single-day report, use one `p-datepicker`, default it to today, require
   the value, and serialize it from local year/month/day parts;
 - place Print, Export and Refresh/Search in one `appReportActions` toolbar;
 - use typed `app-data-table` columns for report rows and the shared responsive
@@ -674,7 +811,7 @@ strip above:
   <div class="statement-filter-grid">
     <div class="statement-field statement-date-field">
       <label for="statementDateRange">{{ 'customerStatement.dateRange' | translate }}</label>
-      <p-calendar
+      <p-datepicker
         inputId="statementDateRange"
         formControlName="dateRange"
         selectionMode="range"
@@ -688,7 +825,7 @@ strip above:
         panelStyleClass="sigma-datepicker-panel statement-range-picker"
         [disabled]="loadingReport()"
         appendTo="body"
-      ></p-calendar>
+      ></p-datepicker>
     </div>
     …customer dropdown, include-inactive checkbox…
   </div>
@@ -721,19 +858,19 @@ For a range calendar, keep the popup open after the first date is selected so
 the user can select the end date from the same control:
 
 ```html
-<p-calendar selectionMode="range" [hideOnDateTimeSelect]="false"></p-calendar>
+<p-datepicker selectionMode="range" [hideOnDateTimeSelect]="false"></p-datepicker>
 ```
 
 Keep the range value date-based and make both dates easy to choose when the
 range spans more than one month:
 
 ```html
-<p-calendar
+<p-datepicker
   selectionMode="range"
   dataType="date"
   [numberOfMonths]="2"
   rangeSeparator=" - "
-></p-calendar>
+></p-datepicker>
 ```
 
 Default the range to the **current month**, from the 1st to its last day, the same as lists

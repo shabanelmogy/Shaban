@@ -1,0 +1,7 @@
+S064
+Enabling Weekly & Monthly Rental
+https://speedautosystems.com/car-rental-software/user-guide/enabling-weekly-monthly-rental/
+
+Enabling Weekly & Monthly Rental
+Enable Weekly Monthly :
+Select this option If your car rental allows for Weekly and Monthly rental then select this option otherwise system will only charge on daily basis.

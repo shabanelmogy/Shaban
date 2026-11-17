@@ -1,0 +1,11 @@
+S259
+How to set Cost Parameters
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-set-cost-parameters/
+
+How to set Cost Parameters
+Go to the panel on the left side and click on the Lease tab.
+Scroll down and click on the Cost Parameters module.
+A window will be opened. Go to the top-right side and click on the +CREATE NEW PARAMETERS button.
+A small window will pop-up. Choose the cost parameter name and order. Then click on the SAVE button.
+That parameter will be enlisted in the window. You can view, edit, and remove by clicking on the ACTIONS button.
+Click HERE if you have a query or an issue.

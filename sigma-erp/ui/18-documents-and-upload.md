@@ -55,6 +55,85 @@ inferring a file from `hasDocument` or a name. This reuses the existing FileStor
 contract; it introduces no new file access policy. Reviewed identity and supporting-file
 readers share it. Preserve historical files independently of current type upload eligibility.
 
+**Private authenticated images (source adoption,2026-11-09).** When FileLink
+consumes a private authenticated image endpoint, use its optional
+`protectedImage`, `accessRequirement`, `preview` and `imageAlt` inputs instead
+of a direct static `img`/anchor. The existing FileLink owner fetches the typed
+image blob through the interceptor-enabled HttpClient, retains one object URL,
+and revokes it on path/access/context changes or destruction. Its denied watcher
+also invalidates a completed read and survives rapid revoke/regrant through a
+fresh read; failures retain explicit Retry without a loop. Only JPEG/PNG blobs
+become preview/link targets. Preview reads use UI22's page loading owner, while
+busy/aria-busy/error remain on the file. A viewer already opened by the browser
+cannot be retracted; do not claim that revoking an object URL erases a download.
+Ordinary FileLink consumers retain their existing same-origin static contract.
+The current image opt-in is AccidentImages at `Media/accident-image`, guarded by
+Media.ReadAccidentImage plus the owning editor requirement. The same owner also
+accepts the closed `protectedResource='vehicle-document'` input, using
+`Media/vehicle-document` and Media.ReadVehicleDocument. This resource accepts
+JPEG/PNG/PDF blobs; PDF is linked without an image preview. Callers cannot supply
+arbitrary authenticated URLs, and changing resource expires the previous read.
+The closed resource set also includes `correction-attachment` at
+`Media/correction-attachment`, with Media.ReadCorrectionAttachment and the
+owning correction request/model View grant. This resource accepts the same
+JPEG/PNG/PDF types. A body-appended editor dialog sets `localReadProgress=true`;
+FileLink then renders its existing local StateMessage and does not acquire a
+page lease. Capture that progress scope at subscribed read start for both the
+host and finalize; input changes must not introduce competing progress or
+release another request's count. The default remains page progress for existing
+consumers. Correction ownership/history and schema remain in its feature contract.
+Backend company,
+record/branch and draft-owner checks remain authoritative and are not inferred
+from these inputs. The private server store is outside wwwroot and its former
+static folder is denied; file lifecycle/schema decisions belong to the frozen
+feature contract. Source conformance and source specifications2026-11-09;
+browser/SQL/storage acceptance pending.
+
+**Source-order private documents (source-only,2026-11-10).** The same closed
+FileLink owner accepts `purchase-order-document` with
+`Media.ReadPurchaseOrderDocument` and the source editor's requirement. Canonical
+root-relative `/tenant/PurchaseOrderDocuments/…` paths also select this resource
+in existing saved-file viewers, preventing a static-link fallback for the new
+private files. Reuse the same JPEG/PNG/PDF validation, actor/path/resource
+invalidation, object-URL cleanup and dialog-local progress. Storage, draft
+uploader/claim rules and retained saved ownership remain in the frozen
+LeaseQuotation source-order contract; this does not certify older PO files or
+general PurchaseOrder permission adoption. Source specifications are written;
+runtime/storage/browser acceptance is pending.
+
+**Rental agreement private documents (source-only,2026-11-10).** The closed
+`rental-agreement-document` resource uses `Media/rental-agreement-document`
+and requires RentalAgreement.View and RentalAgreement.GetDocuments. Canonical
+`/tenant/RentalAgreementDocuments/…` paths select the same resource in saved
+viewers. The FileLink owner still checks the allowed JPEG/PNG/PDF content types.
+An adopted mounted document viewer supplies `contextAllowed` and
+`contextCancelled$` when its document can expire while the file link is
+mounted. The predicate guards reads and object URL publication. The notifier
+cancels in-flight reads and revokes published object URLs even if the actor and
+grants remain unchanged. Protected reads in the dialog use local progress.
+Storage and agreement linkage belong to the frozen feature contract. Runtime
+and storage acceptance remain pending.
+
+**Aligned file/action row (owner clarification,2026-10-22).** When an existing
+FileField is followed by FileLink for the same path, project that existing link
+inside FileField instead of rendering it on a second line. FileField owns an
+internal `.sigma-file-field__row`: shrinking file box, then the intrinsic-width
+link,8px apart, both on the34px control track. Existing upload/clear icons remain
+inside the file box; full-width FieldError remains below the whole track. An
+empty/invalid link adds no action or phantom gap. Do not add View to consumers
+that did not already expose it or alter FileLink's same-origin URL guard.
+
+Use this composition for existing adjacent pairs; preserve path/control/folder,
+print classes and handlers. EditableCollectionTable owns vertical middle
+alignment and matching34px Remove height for attachment rows (UI14), including
+when file validation grows the row. The file/View/error group stays together
+and is centered as one unit; adjacent row actions center in the full row under
+the owner's2026-10-31 correction. Preserve column/table semantics, native
+labels, filename ellipsis/title, RTL/theme, disabled controls and internal table
+scrolling. No local table-cell flex conversion, per-screen attachment stylesheet
+or duplicated upload/cleanup logic. Verify long/empty names, validation and
+narrow widths with real shared controls in both directions/themes.
+
 **File cell (shared, 2026-10-01).** A file control — in a field or in a collection cell — is
 `div.sigma-file-field`, drawn as one 34px control box like the other fields: the hidden
 `input[type=file]`, then `span.sigma-file-field__name` with the file name (`is-empty` when none), then
@@ -70,6 +149,17 @@ the document fields plus a file cell (file input, file name/link, upload state).
 separate documents stylesheet: the former `sigma-documents__*` classes this block described do
 **not** exist in `src/styles.scss` (verified 2026-10-01), and screens must not add them.
 `app-documents` (Company) is the current reusable component on that table.
+
+**Document column space (owner request,2026-10-31).** The reusable
+`app-documents` allocates explicit UI14 column widths: type280px, number240px,
+issuer240px, issue/expiry180px each, attachment320px and international140px,
+with a1680px table minimum. This keeps complete day/month/year inputs and wider
+text/file controls available in dialog tabs and other consumers. Use the
+existing column metadata and shared horizontal frame overflow; do not squeeze
+these controls to the dialog width or add feature cell styles. Arbitrarily long
+text/file names retain their normal editing/ellipsis behavior. Dates, validation,
+upload ownership and print behavior are unchanged; visual/RTL/theme acceptance
+remains pending when verification is source-only.
 
 `app-documents` is reusable across a step and a dialog tab. It takes the parent
 form, array name and an `idPrefix`, so one component serves both. The parent creates
@@ -94,6 +184,124 @@ ngOnInit(): void {
 <!-- inside the driver dialog tab -->
 <app-documents [parentForm]="driverDraft" arrayName="documents"></app-documents>
 ```
+
+### Scoped document storage and field lifetime — 2026-11-12
+
+The reusable Company DocumentsComponent accepts optional `uploadFolder`,
+`fileAccessRequirement`, `fileAllowed` and `fileCancelled$`. Its default folder
+remains CustomerDocuments for existing consumers. A parent with a reviewed
+private server contract supplies that folder rather than replacing this table.
+The child passes the access requirement, operation/publication predicate and
+publication cancellation into the existing FileField; it does not implement a
+second uploader or grant access by selecting a folder. DocumentUploadTracker
+still owns sent upload settlement and cleanup. Do not make its publication
+predicate depend on its own uploading busy flag.
+
+WorkshopMovement selects WorkshopMovementDocuments and the closed FileLink
+resource `workshop-movement-document`, requiring WorkshopMovement.View and
+Media.ReadWorkshopMovementDocument. It uses dialog-local read progress and the
+mounted document's context predicate/cancellation notifier. Canonical paths
+select the same protected resource automatically, never a static URL fallback.
+Backend ownership and historical-branch validation are defined in
+AUTHORIZATION_140_144_REMEDIATION_CONTRACT_FREEZE; storage lives outside wwwroot.
+Previously stored public paths are not accepted by new writes. Their known
+WorkshopMovement ownership also denies their static access, including deleted
+ownership history, without opening general CustomerDocuments access.
+Source specifications and integration checks are distinct from pending
+storage/HTTP/browser acceptance; selecting this resource grants no runtime proof.
+
+### Adopted attachment permissions — 2026-11-07
+
+Permission adoption stays in the existing editor tracker and FileField, not
+the shared FileUploadService transport. An adopted editor calls
+`DocumentUploadTracker.setAccessRequirements(uploadPermission?, cleanupPermission?)`.
+Undefined requirements preserve existing consumers. `canUpload()` and
+`canCleanup()` use the same current-session evaluator as UI26; no HTTP per file
+control. Fleet requires Media.UploadMedia plus Media.DeleteMedia before a new
+stored upload and Media.DeleteMedia alone for cleanup.
+
+`FileField.permission` optionally adds the owning editor requirement. Stored
+upload and local removal check that requirement plus the tracker's corresponding
+capability in both presentation and handlers; selectionOnly checks its owning
+requirement without requiring Media grants. The filename and existing FileLink
+remain available under the owning screen's read contract.
+
+An adopted editor can supply `FileField.operationAllowed` to fence both picker
+results and clear events against the mounted document's current lifetime. This
+guard applies when the native file chooser returns as well as when the control
+opens. Keep the separate publication predicate and notifier for the outcome of
+an upload that has already started.
+
+An upload is checked inside defer before HTTP. Its returned path and pending
+tracking survive revocation inside the editor tracker. **Publication correction
+(2026-11-09):** FileField must not apply that returned path, mark the previous
+saved file removed or emit storedFile into a revoked/replaced field. Capture
+actor, control, old value, folder and input identity before sending, and use the
+owning permission's denied notifier to expire publication permanently, including
+rapid revoke/regrant. Compare the capture again before publication. This does
+not cancel the sent POST or forget its path: cleanup remains tracker-owned.
+The optional `publicationCancelled$` and `publicationAllowed` inputs express a
+mounted document/route lifetime. Returning to the same route later cannot revive
+an expired callback. They fence publication, never sent tracker bookkeeping.
+The same publication predicate travels as CAN_PRESENT_API_OUTCOME through the
+optional HttpContext accepted by DocumentUploadTracker.upload and
+FileUploadService.upload, so a late failed upload cannot open a global error
+dialog for the replacement actor/document. Keep the one existing interceptor
+feedback owner for a currently owned upload; do not cancel a sent upload to
+suppress its feedback.
+The earlier storedFile-survives-revocation wording is superseded. Each upload
+operation shares its one sent source in the editor
+tracker with `share` and a `ReplaySubject(1)` connector after defer, with
+`resetOnError`, `resetOnComplete` and `resetOnRefCountZero` all false. The local
+RxJS `shareReplay` resets after errors and would resend the same operation's
+POST on a later subscription; retaining both success and error outcomes prevents
+that replay. An explicit retry creates a new upload operation. A destroyed
+tracker rejects a new subscription before sending HTTP; an already sent POST has
+no tracker-destruction cancellation. Destroying a FileField, unsubscribing its
+consumer or destroying the editor therefore cannot cancel that mutation before
+the returned path reaches pending bookkeeping. Field publication still expires
+on destruction. This does not initiate cleanup after destruction or provide
+durable orphan recovery; server orphan lifecycle remains a separate contract.
+Do not repeat a POST by subscribing twice to the same operation. markRemoved
+remains local. finishSave/discard may succeed without a
+Delete grant when no path needs deletion; each actual new DELETE checks cleanup
+inside defer. Denied/failed paths stay pending and return as failures for the
+existing cleanup-only Retry. A sent successful DELETE is accepted even when the
+grant is later withdrawn. Never gate that cleanup on an editor write permission
+which may have been withdrawn after a successful aggregate Save.
+
+**Cleanup teardown boundary (source reconciliation,2026-11-09).** Keep tracker
+destruction cancellation on the idle-upload wait upstream of `switchMap(work)`.
+Do not start cleanup when destruction itself releases that wait. Once cleanup
+has sent its DELETEs, tracker teardown must not cancel those mutations; the
+consumer suppresses stale UI callbacks and retains the existing per-request
+Media check. Together with the sent-POST lifetime correction (2026-11-10),
+destruction cancels an idle cleanup wait while the sent upload completes without
+starting a deferred DELETE. This creates no durable orphan storage and does not
+authorize cleanup under a replacement actor. Source-written upload/cleanup
+lifetime specifications remain unexecuted under the source-only boundary.
+
+Use EditableRows' row-specific canRemove/onRemoving hooks for attachment rows
+(UI14): a pathless row does not require Media.DeleteMedia, and a denied or
+cancelled removal never marks its path for deletion. These opt-in policies do
+not create a server file-access policy or claim that a hidden control secures a
+static URL. Regression evidence includes denied new requests, sent outcomes,
+cleanup Retry, and unchanged unadopted file layout/controls.
+
+**Replacement permission lifetime (source reconciliation,2026-11-09).** Keep
+FileField's `permission` as the owning editor requirement. Its optional
+`uploadPermission` adds selection/replacement requirements to `canPick` and the
+permanent sent-upload publication expiry watcher, without restricting `canRemove`.
+For a saved vehicle document, replacement requires UploadMedia and DeleteMedia;
+clearing requires the editor and cleanup grants without UploadMedia. Pass a
+row-specific requirement that does not depend on upload busy state: the editor
+disables the form while the upload is sent. A revoked replacement requirement
+must expire publication even after rapid regrant; retain the original control
+and track the new upload for cleanup. Never use control.disabled as this lifetime
+signal or mark the original removed after expiry. Existing consumers that omit
+uploadPermission retain their current contract. Source specifications cover
+cleanup withdrawal during replacement and clearing without upload; execution
+and browser/storage acceptance remain pending.
 
 Upload stores a server path on the row; it does not hold the file in the form. The editor
 provides one `DocumentUploadTracker` (`shared/service/document-upload-tracker.service.ts`), which

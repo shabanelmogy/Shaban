@@ -45,6 +45,18 @@ swaps Cancel for Close and shows an Edit button:
 **Edit** button. A dialog that is strictly a read-only viewer (no edit path, or
 a state where editing is not allowed) binds `[primaryActionVisible]="false"`.
 
+**Read-only close (owner correction,2026-10-31).** A pure viewer does not run
+an editable draft's upload-discard/cleanup path just to leave. Its dialog Close,
+header close, Escape and route guard share a close decision which permits
+cancelling pending detail reads; a read is not an unsaved write. Invalidate the
+view identity, cancel its reads and pending print preparation, then emit the
+accepted close result. Preserve genuine save/upload/cleanup, confirmation and
+active-print safety; never cancel an independent write as a read. Create/Edit
+retain their dirty-discard and attachment cleanup contracts. WorkshopMovement's
+View correction applies this through the existing EditorDialog public
+closeDisabled contract and the feature's read owner (UI13/28), without overriding
+the shared shell or claiming runtime verification from source review.
+
 **Mode-specific lookups.** Request option lists only for controls rendered in
 the active mode. In View, display the names the Detail DTO already carries and
 skip edit-only dropdown lookups; do not show lookup warnings for controls that

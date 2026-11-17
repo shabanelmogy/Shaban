@@ -1,0 +1,11 @@
+S254
+How to manage Users
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-users/
+
+How to manage Users?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Users module.
+A dashboard will appear on the right side of the panel. Click on the “+CREATE NEW USER” button.
+Click on the SAVE button.
+Click on the ACTIONS button if you want to edit a User.
+Click HERE if you have a query or an issue.

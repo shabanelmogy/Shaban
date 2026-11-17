@@ -1,0 +1,15 @@
+S063
+Email Sending Settings
+https://speedautosystems.com/car-rental-software/user-guide/email-sending-settings/
+
+Email Sending Settings
+Email (SMTP)
+The Tab “Email (SMTP)” allows you to make the settings to allow you to send various emails to your customers. By default, after having signed up on our applications, the email will be sent to your customers from speed auto systems but after having done the settings the email will be sent as per your desire from your own email id and your own name. This can be done as:-
+In “Default from (sender) email address” enter your own email address from which you need to send the email.
+In “Default from (sender) display name” enter your desired name to be shown on email.
+In “SMTP host” enter your SMTP host address given by your service provider such as “smtp.gmail.com” if you are using the Gmail suite.
+In SMTP port enter the desired number provided by your service provider such as “587” in most of the cases of Gmail suite.
+Select “Use SSL” if the Gmail suite is being used, again this option is to be used as per requirements of your service provider.
+In “User Name” either enter the same email address already entered in “Default from (sender) email address” above or email address on which the services have been acquired by you.
+Enter the password of the email id on which the service is activated by your service provider.
+After having done above all press the “Save” button below and enter some email id in “Test Email Settings” and press “SEND TEST EMAIL” button, if you receive a mail on given email id the settings have been done correctly otherwise check your settings again. If you are unable to activate your email, contact our Support Team by email, direct call or Speed Support Feature, given on our mobile apps to directly approach us.

@@ -1,0 +1,22 @@
+[
+  {
+    "file": "application.js",
+    "errors": [],
+    "sha256": "39fd999323fa97551442c5a71dc7e83c975436cace0fb4ee8c0cdeea0e1033c4"
+  },
+  {
+    "file": "common.js",
+    "errors": [],
+    "sha256": "f47ab321d5916f82b82bf1fa1b0c3ecb4ba9553ebafc7ad1011d5f8ef0144596"
+  },
+  {
+    "file": "login.js",
+    "errors": [],
+    "sha256": "f1d0c86e21b3479c198fddbb142a65ff123d00b7b579edd0d9d1bfc2d65fc650"
+  },
+  {
+    "file": "service-proxies-angular.js",
+    "errors": [],
+    "sha256": "b320304e43bcead8f1103c701763c997f5e1f12f3bde020d2c878ab17d3f28a9"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "verified_on": "2026-11-02",
+  "commit": "0cc05c25b7614d4d448982fa7d12754ce6462c88",
+  "original_files_checked": 417,
+  "bytes": 6874265,
+  "sha256_and_git_blob_sha1_match": true,
+  "local_markdown_links_checked": 193,
+  "unresolved_captured_assets": 0,
+  "errors": [],
+  "not_verified": [
+    "Published HTTP page availability",
+    "Uncollected RST reference targets",
+    "Videos",
+    "Application runtime"
+  ]
+}

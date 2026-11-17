@@ -1,0 +1,8 @@
+S045
+Currency Settings
+https://speedautosystems.com/car-rental-software/user-guide/currency-settings/
+
+Watch source video online
+Currency Settings
+Click on the Administration Tab on the left side Navigation panel and then click on Settings Tab.
+Click on the Common tab and select Currency Code e.g AED for UAE Dirham, Currency Name e.g Dirham is Dubai Currency name, and Decimal Currency Name e.g Fil for Dirham.

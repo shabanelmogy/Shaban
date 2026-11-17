@@ -1,0 +1,13 @@
+S290
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+https://speedautosystems.com/vehicle-mobile-inspection/for-car-rentals/how-to-create-vehicle-checklist/
+
+Watch source video online
+How to create vehicle checklist?
+This feature is only available on a web application so you need to use the web app available on https://app.speedautosystems.com/Account/Login so login on this link.
+This feature is used to create a list of all those items which are issued with the vehicle as compulsory or optional accessories such as Spare Tire, Jack, Baby Seat and GPS etc.
+To create a new checklist item click “+ CREATE NEW CHECKLIST ITEM” on right top corner.
+Once a checklist item is created you can edit or delete it by clicking “ACTIONS” button attached to it.
+This list would be available to you while checking out the vehicle, just tick the items which are being issued with the vehicle and at the time of check in the selected items will be visible so that their return is ensured.
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Apple App Store? How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Google Play Store? How to Sign Up? How to Sign In? How to add vehicle? How to create vehicle QR Labels? How to create vehicle checklist? How to manage staff? How to give a vehicle to a customer on rental agreement? How to take a car back from a customer on rental agreement closing? How to open vehicle movement on a staff? How to close vehicle movement on a staff? How to generate reports? How to open rental agreement? How to Fix Vehicle Damages? How to Initialize the Application for Effective Use?

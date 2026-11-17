@@ -3,6 +3,199 @@
 > **Status: Canonical** — reusable `app-data-table` with feature-owned data and
 > query state
 
+### Authoritative report footer rows (source-only,2026-11-11)
+
+`DataTableComponent.footerRows: ReadonlyArray<T>` defaults to an empty array.
+A report may supply backend-owned complete-result totals using the same typed
+column shape. The shared table renders them in its own `tfoot` under the same
+column widths and horizontal scroll frame, rather than in a second grid.
+`displayValue` retains the existing column value/money/date/status formatting;
+footer rows do not render interactive cell templates, links, hierarchy toggles,
+selection controls or row actions. Empty selection/action cells retain alignment.
+The first physical column follows the existing logical sticky owner and print
+reset. The shared cell and total tokens own presentation in both themes/RTL.
+
+Footer rows are separate from `value`: they never enter local filtering,
+sorting, pagination, row counts, selection or incremental transport. The report
+must label their complete applied-filter scope; a local column filter does not
+recompute authoritative totals. No frontend summation or inferred grand total.
+Print preparation includes the same footer with every prepared source row,
+using the existing `printAllRows`, inverse scrollable and `sigma-print-flow`
+contracts. Default-empty consumers render no footer rows and retain their data
+and interaction contracts. Vehicle Rental Details is the first adoption;
+source-written alignment/count/format/default specifications were not executed.
+Owner acceptance of scrolling, RTL/themes, pagination and print remains pending.
+
+### Shared percentage columns (owner request, 2026-10-24)
+
+Use `DataTableColumn.type: 'percentage'` for authoritative numeric percentage
+points, e.g.50 means50%, with null/undefined indicating unavailable. Existing
+DataTable owns the presentation using the installed PrimeNG ProgressBar: a
+two-decimal percentage label beside a52px wide,4px high decorative track,
+8px gap, Sigma primary fill and border-token track. The bar can shrink to20px;
+do not add feature templates/paint or a second progress component. Current
+adopters are PR consumptionPercent and PO receiptPercent, including the PO
+report's reused column descriptors.
+
+Zero is a valid empty bar. Missing/non-finite values show an em dash without a
+bar. Only visual fill clamps to0..100: negative/over100 text stays visible,
+never rewrite source numbers or infer business status/threshold colors. No
+animation; fill starts at logical start for RTL. Visible text carries the
+value for accessibility; decorative progress is aria-hidden. Print hides the
+bar, and existing export writes the same two-decimal percent text. Numeric
+filter/sort values remain the raw finite number, not the decorated text or
+clamped fill. Existing value callbacks, templates, hierarchy/link composition
+keep precedence. Columns must deliberately declare their semantic type;
+do not reinterpret tax rates, variances or arbitrary numeric fields as progress.
+Source formatting/filter/export contracts are shared with data-table.format;
+no backend fields, calculations or API changes. Verify owner visual/print
+acceptance separately from source conformance.
+
+**Shared first-column freeze and advanced filtering (owner, 2026-10-23).**
+The shared read table freezes the first **rendered** column at the logical start of
+the scroll frame. The rendered order remains selection (when present), Actions
+(when present), then the declared data columns; the freeze must not reorder those
+columns or add a second frozen business column. Flow/non-scrollable and print
+tables clear the sticky positioning. Header and body cells use the same frozen
+ownership and existing opaque row/header surfaces, so the sticky cell stays above
+the scrolling cells without changing the row scroll owner, widths, themes or RTL
+direction.
+
+The shared PrimeNG column menu applies to flat read tables. Text, numeric, boolean
+and calendar constraints combine through its AND/OR rules, Apply and Clear. A
+complete local `value` is filtered before local paging, using private view values
+and retaining original row objects for actions/selection. Display callbacks remain
+the visible-value owner; money filters are numeric and dates are calendar dates.
+Local report filtering does not recalculate authoritative totals or redefine its
+complete print/export contract. Hierarchies retain their existing ancestor/subtotal
+and expansion contract; do not silently filter a flattened visible branch.
+
+For server/lazy reads, `withGridFilters` preserves the applied feature filter
+snapshot and serializes the same rules under `Filters[grid]` (BE9), before count,
+page and all-pages export. `gridFilters` restores the applied menu state; Reset
+clears it, a changed rule returns to page one, and absent event metadata preserves
+the snapshot. Existing screen filters remain ANDed. Shared count-only paging emits
+the same metadata. Never locally filter a server page, fetch all server pages just
+for filtering, or use an interceptor/ambient global state to hide endpoint ownership.
+The common `ListQuery.filters` type owns optional `grid` alongside its typed screen
+fields, including inline filter shapes; do not require a different API for those
+consumers or weaken typed serialization with an any cast.
+The shared serializer must preserve that generic filter shape at its function
+boundary: `toListParams<TFilters extends object>(query: ListQuery<TFilters>)`.
+Fixing it to `ListQuery<object>` erases the screen keys and causes excess-property
+errors for inline filter literals once the shared optional grid field is present.
+
+The owning typed response/query projection is the server field whitelist. Public
+`filterField`, `filterType` and `filterOptions` cover source-supported scalar
+aliases, stable nullable types and translated enum choices; sorting retains its
+original whitelist. Explicit server expression maps own composite display aliases.
+Action-only/positional or genuinely non-filterable enriched columns use documented
+`filterable:false`; the server rejects unsupported fields/operators with a localized
+400 instead of silently dropping them. Column menus do not create a business field.
+Read projection/filter expression conformance must be checked for custom materializers;
+an AutoMapper map is not evidence that a post-page calculation is filterable.
+
+PrimeNG21 empty constraints must remain inactive, including `notEquals`; the
+shared table scopes its FilterService correction to its own provider. Clear/reset
+restores an empty default constraint for every menu, including after a remote
+snapshot restore. The dynamic report owner's complete flat branch reuses this
+same DataTable; its tree branch retains its own ancestor/expansion contract.
+Stable-choice menus include a translated No value choice for historical nulls.
+Keep its internal marker distinct from Clear, serialize it as a real JSON null,
+restore it on return, and compare missing local values through the scoped filter
+provider. A source-derived badge resolves its translated option before its raw
+field when a complete local report reuses remote column metadata.
+An in-place post-save merge is safe only when it cannot alter membership/order
+or counts under the applied snapshot. Active advanced rules require an
+authoritative refresh when an edited value can enter or leave the result; the
+Language texts fast path therefore also requires no applied grid rules.
+
+Source evidence: shared DataTable/list-query, generic Service.GridFilterProjection,
+typed custom list projections and the 2026-10-23 owner-approved unified contract in
+`reviews/SHARED_TABLE_REMOTE_FILTER_CONTRACT_FREEZE.md`. Runtime/SQL/visual acceptance
+remains owner verification; the source-only review must name compatibility exclusions.
+
+**Exact monetary comparisons (2026-11-04).** An opted-in `exactMoney` column
+retains numeric equals/notEquals/lt/lte/gt/gte menus but uses a text input. For
+complete flat local data, its private view cell is a scale6 BigInt parsed by
+`currencyAmountUnits`; the table-scoped FilterService compares exact units.
+Original rows, selection, callbacks and formatted exports remain unchanged.
+Installed PrimeNG21 sorting compares these nonstring primitives through `<`/`>`;
+do not convert units to Number or serialize the private view rows. No stateKey
+is introduced. Unknown/invalid monetary text cannot become zero. A source read
+aggregate uses `moneyAggregate:true` to preserve its wider output, while filter
+thresholds retain the16-whole/6-fraction monetary text bound and strict lexemes.
+
+For remote adoption, pass the opted-in backend field names to
+`withGridFilters(filters,event,exactMoneyFields)` (and `gridFilterString` when
+used directly), and configure the same names/scale in BE9's GridFilter owner.
+The serializer preserves nonempty whitespace for those fields so the server
+rejects it rather than silently dropping the filter; empty string is Clear.
+Other fields retain their current empty-text behavior. Shared filters do not
+establish SQL/query/runtime conformance; explicitly reconcile both sides and
+complete report/export scope before marking adoption complete.
+
+**PrimeNG21 scroll owner (2026-10-22).** The actual row viewport is
+`.p-datatable-table-container`, a direct child of `.p-datatable`; the old
+`.p-datatable-wrapper` no longer exists. Shared DataTable owns this hook in
+fixed-height, scrollable, fill and flow modes. Preserve the existing height/flex,
+overflow, sticky header and fixed paginator contracts when upgrading it; never
+copy viewport selectors into features. The publisher row-count Select uses
+`.p-paginator-rpp-dropdown`. Do not revive an obsolete selector by re-enabling
+pointer events on a disabled control. Root shared styles give this paginator-role
+Select intrinsic width and no flex growth, overriding full-width form-control
+sizing. Keep it beside the report/page actions whenever their combined width
+fits; retain responsive wrapping and no horizontal overflow at narrow widths.
+Do not change form/filter Select widths or copy a per-screen footer override.
+Rendered shared-control tests complement,
+but do not replace, actual screen/print acceptance (UI29).
+
+**Stable post-save text rows (2026-10-17).** A text editor may return typed
+canonical committed row snapshots to its existing parent. When the active
+query is All, has no Search, and orders by immutable key, overriding text
+cannot change row membership, ordering or count: merge visible matching keys
+without refetching count/page. Require the same query/session/page and complete
+snapshots for every changed key, including Save-and-Next. Reset must reload
+its authoritative direct value before it is complete. Search, Empty filtering,
+value ordering or any incomplete/mismatched result uses the normal server
+refresh. Never infer filtered membership from JavaScript collation or change
+counts locally. Existing explicit Refresh remains authoritative; no backend
+or paginator contract changes. Evidence: Languages text editor/list follow-up.
+
+**All-table vertical centering (explicit owner rule, 2026-10-15).** Every table
+cell, header/body/footer and grouped/rowspan cell is vertically centered,
+including native/legacy tables, shared DataTable, editable collections and
+report output. `src/styles.scss` owns the universal `table th, table td`
+`vertical-align:middle!important` rule to override vendor cell inheritance;
+shared DataTable explicitly centers headers/body, including multiline wrap
+cells. EditableCollectionTable follows UI14's same default, including
+validation-capable control rows. No per-screen opt-in
+is required. Remove contradictory table-cell top/bottom rules or offset padding
+when found in scope; RentalPlanner's group-cell top rule/8px top offset is the
+verified conflict removed with this general change. Keep horizontal alignment,
+column sizes, row spans, sticky/scroll/paging and text wrapping unchanged.
+
+Inputs, text, checkboxes, badges, file controls and row actions are centered as
+their cell content; a field and its validation message form one centered group.
+Do not give cells flex/block display or detach validation text just to center
+one control. Ordinary form-grid top alignment outside tables remains. This rule
+supersedes the prior table top-default/optional-middle guidance, including UI14's
+legacy vertical-align token. Verify rows with mixed content heights, multiline
+text/errors, row spans, empty states, Create/Edit/View, RTL/themes and print;
+source review does not prove runtime/visual acceptance.
+
+**Uniform row centering (owner correction,2026-10-31).** The owner's request to
+center every element vertically supersedes the2026-10-23 first-control-track
+exception. Editable rows with `app-field-error`, `.sigma-field-error` or
+`app-file-field` keep the same middle alignment as all other cells. Remove the
+shared top!important override and standalone-checkbox top offset; do not replace
+them with feature CSS. Complete field/error or file/View/error groups remain in
+normal flow and are centered as units; adjacent text, flags and actions center
+in the full row. Shared toolbar items also align to their vertical center.
+Keep34px controls,15px checkboxes, table semantics and all horizontal/payload
+contracts. UI14 owns the implementation; source-only, mixed/error/RTL/theme/
+narrow/print visual acceptance remains pending.
+
 **Mandatory replacement rule.** New and refactored list pages must use one
 shared `<app-data-table>`. The `ms-lib` `<table-list>` wrapper,
 `TableListComponent`, and feature-local copies of PrimeNG table markup are
@@ -466,3 +659,56 @@ the template disclosure, Choose/Change, valid filename, local preview and Reset.
 Source conformance does not certify visual or runtime behavior: owner acceptance
 remains pending for both sides of 580px, intermediate/short-height layouts,
 long filenames/Arabic, LTR/RTL, both themes and direct-dialog consumers.
+
+**Compact import options in a dense editor (owner scoped request, 2026-10-20).**
+The same ImportCsvComponent exposes optional compact=true; false retains the
+existing card presentation. Select the compact mode for an explicitly scoped
+dense editor, such as Bill Loan Payment Plan. The shared owner renders one
+secondary Import dropdown with Download Template, Choose/Change CSV and exact
+ordered columns. Reuse DropdownPortalDirective and the existing Bootstrap menu
+for body placement, clipping recovery, RTL/theme and outside close. Compact
+ImportCsv handles menu Arrow Up/Down and Escape locally: a body-portaled menu
+no longer has the trigger sibling Bootstrap's delegated key handler expects.
+Escape stops propagation, closes through the native trigger and returns focus,
+so it does not also close the parent loan dialog. Tab/Enter retain native flow.
+Keep one native file input and the existing parser, events, disabled/parsing
+gates, reset, error and valid-filename semantics across both modes. Compact
+host bounds and filename ellipsis belong to ImportCsv, never feature deep CSS;
+retain the full filename for assistive text/title. Features may project this
+control beside Prepare/Add through FormSection header actions; hide the nested
+collection heading/Add when the parent already owns them. Opening options does
+not parse, save or change draft rows. Existing card consumers do not opt into
+compact mode automatically because this owner request is screen-scoped. Source
+checks do not certify popup/focus/RTL/short-height runtime acceptance.
+
+
+### Incremental flat datasets (owner2026-10-31; UtilizationReport)
+
+DataTable owns append-on-scroll presentation for a source-approved bounded page
+contract. Public inputs: incremental=false, hasMore=false, loadMoreError='';
+output loadMoreRequested emits no business payload. Existing loading disables
+requests; printAllRows suppresses the sentinel. This opt-in changes transport
+semantics and therefore does not automatically enable every complete report.
+Keep feature paging/filter identity, totals, cancellation and full output outside
+the grid; no private publisher selectors or page-scroll listener in a feature.
+
+Observe a sentinel in tbody after the last loaded row, never a sticky table
+footer. One request latch and observer generation prevent duplicate requests;
+rebind after append/loading settles so a short initial batch can fill the
+viewport. Stop automatic requests on error and show the shared error plus a
+translated native Retry/Load More button reachable by keyboard. No inline loader
+is added: report data reads retain UI22's page owner. Disconnect observers/cancel
+pending frames on destruction, target replacement and disabled states. Without
+IntersectionObserver the explicit button remains usable. Existing hierarchy
+and printing keep their owners; incremental append is for flat unpaged view data.
+
+Preserve existing source/view-row identity while appending, including local
+format wrappers. Partial collections must not apply local column filters or
+sorting as if they were the entire report: suppress those controls/constraints
+until completeness. For this opt-in alone, recreate the publisher table view at
+a new partial dataset boundary and print/screen switches to discard its retained
+filteredValue cache through the shared template lifecycle, never private access
+or clear-event side effects. Do not remount per append; ordinary grids retain
+stable default behavior. UI20 owns explicit report transport and complete output.
+Source/metadata verification is separate from actual scroll/focus/RTL/theme and
+performance acceptance.

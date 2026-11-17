@@ -1,0 +1,7 @@
+S066
+Free Access Rental Hours Setting
+https://speedautosystems.com/car-rental-software/user-guide/free-access-rental-hours-setting/
+
+Free Access Rental Hours Settings
+Free Acces Rental Hour :
+Every Car Rental provides some leverage to their customers while checking in. Enter the grace period time in minutes, system will not charge anything extra if the vehicle is returned back wihtin the grace period after agreed time.

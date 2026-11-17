@@ -1,0 +1,11 @@
+S277
+Managing Balance Summary
+https://speedautosystems.com/vehicle-leasing-software/user-guide/suppliers-balances-summary/
+
+Managing Supplier Balance Summary
+Go to the panel on the left side and click on the Suppliers tab.
+Scroll down and click on the Balance Summary module. A window will open.
+Select a date range. Choose option of either all, with debit balance, or with credit balance. Then, click on the REFRESH button.
+The customers’ list will be opened.
+To print click on the PRINT button. And to export the data click on the EXPORT button.
+Click HERE if you have a query or an issue.

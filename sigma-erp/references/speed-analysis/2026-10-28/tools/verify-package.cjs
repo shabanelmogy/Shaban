@@ -1,0 +1,23 @@
+// Static artifact integrity checks. Does not run target application code or domain requests.
+const fs=require('fs'),path=require('path'),crypto=require('crypto');const root=path.resolve(__dirname,'..');
+const parser=require(process.env.SPEED_BABEL_PARSER||'C:/Users/user/AppData/Local/npm-cache/_npx/ad9a3fdbcad992c6/node_modules/@babel/parser');
+const read=p=>JSON.parse(fs.readFileSync(path.join(root,p),'utf8').replace(/^\uFEFF/,''));
+function files(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(x=>x.isDirectory()?files(path.join(dir,x.name)):[path.join(dir,x.name)]);}
+const all=files(root),errors=[],manifest=read('data/asset-manifest.json'),cs=read('data/controllers.json'),screens=read('data/sidebar-screen-map.json'),services=read('data/services.json'),lines=new Map();
+let checkedLinks=0,checkedLineAnchors=0;
+for(const m of manifest){const digest=crypto.createHash('sha256').update(fs.readFileSync(path.join(root,m.file))).digest('hex');if(digest!==m.sha256)errors.push('Hash mismatch '+m.file);}
+const original=fs.readFileSync(path.join(root,'raw/application.js'),'utf8');
+for(const c of cs){const s=fs.readFileSync(path.join(root,c.readableFile),'utf8');if(!s.endsWith(original.slice(c.source.start,c.source.end)+';\n'))errors.push('Controller source mismatch '+c.id);}
+for(const file of all.filter(x=>x.endsWith('.md'))){const text=fs.readFileSync(file,'utf8');for(const m of text.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)){let target=m[1].replace(/^<|>$/g,'');if(/^(https?:|mailto:)/.test(target))continue;const [p,anchor]=target.split('#');const abs=path.resolve(path.dirname(file),decodeURIComponent(p));checkedLinks++;if(!fs.existsSync(abs)){errors.push('Broken link '+path.relative(root,file)+' -> '+target);continue;}if(anchor&&/^L\d+$/.test(anchor)&&fs.statSync(abs).isFile()){if(!lines.has(abs))lines.set(abs,fs.readFileSync(abs,'utf8').split('\n').length);checkedLineAnchors++;if(+anchor.slice(1)>lines.get(abs))errors.push('Line outside source '+target);}}}
+const html=fs.readFileSync(path.join(root,'index.html'),'utf8'),dataset=JSON.parse(html.match(/<script type="application\/json" id="dataset">([\s\S]*?)<\/script>/)[1]);
+if(dataset.screens.length!==321)errors.push('HTML screen count mismatch');
+if(JSON.stringify(dataset.controllers)!==JSON.stringify(cs))errors.push('HTML embedded controller data mismatch');
+const inlineScript=html.match(/<script>\n([\s\S]*?)<\/script>/)[1];parser.parse(inlineScript,{sourceType:'script'});
+if(/<(?:script|link)[^>]+(?:src|href)=["']https?:/i.test(html))errors.push('Offline report has external dependency');
+for(const s of screens){if(!s.details.length||!s.details.every(d=>d.template?.status===200&&d.template.controllers.length))errors.push('Screen binding not verified '+s.id);for(const d of s.details)for(const id of d.relatedControllerIds)if(!cs.some(c=>c.id===id))errors.push('Unknown controller '+id);}
+const calls=cs.flatMap(c=>c.serviceCalls),matched=calls.filter(c=>services.some(s=>s.name===c.service&&s.methods.some(m=>m.name===c.method)));
+const duplicates=[...new Set(cs.map(c=>c.name))].filter(name=>cs.filter(c=>c.name===name).length>1).map(name=>({name,ids:cs.filter(c=>c.name===name).map(c=>c.id)}));
+const sensitiveHits=[];
+if(process.env.SPEED_VERIFY_EMAIL&&process.env.SPEED_VERIFY_PASSWORD){for(const file of all){if(fs.statSync(file).size>60*1024*1024)continue;const s=fs.readFileSync(file,'utf8');if(s.includes(process.env.SPEED_VERIFY_EMAIL)||s.includes(process.env.SPEED_VERIFY_PASSWORD))sensitiveHits.push(path.relative(root,file));}if(sensitiveHits.length)errors.push('Supplied credential literal appears in files: '+sensitiveHits.join(', '));}
+const result={verifiedAtUtc:new Date().toISOString(),kind:'static package checks only; no target runtime or domain operations',assetHashesChecked:manifest.length,controllerSlicesChecked:cs.length,markdownLinksChecked:checkedLinks,lineAnchorsChecked:checkedLineAnchors,sidebarScreensChecked:screens.length,templateVerifiedScreens:screens.filter(s=>s.details.every(d=>d.template?.status===200&&d.template.controllers.length)).length,proxyMappedStaticCalls:matched.length,staticCallsTotal:calls.length,unmappedCallExamples:calls.filter(c=>!matched.includes(c)).slice(0,15).map(c=>({service:c.service,method:c.method,source:c.source})),duplicateControllerRegistrations:duplicates,credentialScanPerformed:!!process.env.SPEED_VERIFY_EMAIL,credentialLiteralsFound:sensitiveHits.length,offlineReportScriptParses:true,offlineReportNoExternalDependency:true,errors};
+fs.writeFileSync(path.join(root,'data/verification.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));if(errors.length)process.exitCode=1;

@@ -1,0 +1,11 @@
+S094
+VAT Setting
+https://speedautosystems.com/car-rental-software/user-guide/vat-setting/
+
+VAT Settings
+Click on the Administration Tab on the left side Navigation panel and then click on Settings Tab.
+Click on Common tab and scroll down to tax percentage.
+Enter default tax rate in the box in numbers.
+Select in between Tax Inclusive or Tax Optional.
+*Tax Inclusive is that all your charges are after tax included in them.
+**Tax Optional your Tax is optional and is not included in the price if charged, then charged separately.

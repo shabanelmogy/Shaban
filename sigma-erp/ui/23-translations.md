@@ -2,6 +2,30 @@
 
 > **Status: Canonical**
 
+### Database language switching (2026-10-17)
+
+The shared TranslationService separates an explicit catalog/default refresh
+from selecting an already loaded active language option in TopBar. Bootstrap,
+Retry and language-management completion refresh options; an actual switch
+reads a fresh runtime dictionary directly. Re-selecting the applied language
+is a no-op only outside loading/error recovery and after its DB snapshot was
+applied. Keep only the active DB language, cancel older intents and clear all
+tenant/user snapshots on session exit. Index immutable original key paths on
+registration rather than walking every shipped dictionary for each switch;
+literal dots/ellipsis and unsafe-path validation retain their existing rules.
+Do not replace freshness with a cross-language or time-based cache merely to
+hide latency. Backend read batching belongs to BE5. Source review verifies
+request shape, not a measured improvement; owner timings remain required.
+
+After a text Save, a canonical nonblank, non-review override for the already
+applied language may merge that one key into the active dictionary. Capture
+the authenticated context before writing and require it still matches, with
+no pending runtime switch/error. Use validated original paths and a one-key
+merge, preserving other overrides. Never patch from an unsaved draft or an
+original-filled dictionary. Empty/Reset/other-language cases resolve fallback
+with a fresh runtime read, reusing loaded choices; API-only message edits need
+no UI dictionary reload. Retry repeats only the failed application step.
+
 Two files are maintained:
 `src/app/modules/i18n/vocabs/en.ts` and
 `src/app/modules/i18n/vocabs/ar.ts`. The other five (`ch`, `de`, `es`, `fr`,

@@ -1,0 +1,13 @@
+S242
+How to manage Cost Settings
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-cost-settings/
+
+How to manage Cost Settings
+Go to the panel on the left side and click on the Lease tab.
+Scroll down and click on the Cost Settings module.
+Click on the +CREATE NEW RECORD button.
+A form will appear. Here put the make & model and mark-up percentage.
+Now, define each cost particular individually. Adjust rate type or rate and period carefully.
+In the end, click on the SAVE button. Cost parameters has been set for a particular make & model.
+You can view, edit, or delete each lease record by clicking on the ACTIONS button.
+Click HERE if you have a query or an issue.

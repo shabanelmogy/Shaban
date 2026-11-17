@@ -1,0 +1,10 @@
+S238
+How to Edit/Delete an office branch in Speed – VLS
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-edit-delete-an-office-branch-in-speed-vls/
+
+How to Edit/Delete an office branch in Speed – VLS?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Branches module.
+A dashboard will appear on the right side of the panel. Now, go for the ACTIONS button (integrated with each branch name), and click on it.
+A list with two options Edit/Delete will appear. Click on either option to perform an action.
+Click HERE if you have a query or an issue.

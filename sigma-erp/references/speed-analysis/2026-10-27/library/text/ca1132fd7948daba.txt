@@ -1,0 +1,8 @@
+S059
+Early Closing of Monthly Rental Setting
+https://speedautosystems.com/car-rental-software/user-guide/early-closing-of-monthly-rental-setting/
+
+Early Closing of Monthly Rental Setting
+These settings are related to the monthly invoicing rule.
+You have to enter the days from 0 to 6 and if the agreement is closed within 6 days system will charge daily rate.
+You have to enter days from 7 to 28 and if the agreement is closed before the month than it will be charged on weekly basis.

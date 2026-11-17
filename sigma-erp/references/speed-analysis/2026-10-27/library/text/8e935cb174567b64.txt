@@ -1,0 +1,8 @@
+S090
+Time-Zone Setting
+https://speedautosystems.com/car-rental-software/user-guide/time-zone-setting/
+
+Watch source video online
+Time-Zone Settings
+Click on the Administration Tab on the left side Navigation panel and then click on Settings Tab.
+Click on the Common tab, this tab will give you options to select your time zone.

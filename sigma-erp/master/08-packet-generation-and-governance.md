@@ -11,7 +11,9 @@ source dependencies live in `recipe-system/templates/` and
 - Each packet carries source fingerprints.
 - Run `Generate-SigmaRecipes.ps1 -Check` before using a packet.
 - Read-only companions in `recipe-system/`: `Check-Translations.ps1` (en/ar key parity, UI
-  block 23) and `Check-BookReferences.ps1` (every path and cross-reference the books name exists).
+  block 23) and `Check-BookReferences.ps1` (documentation links and block references by
+  default; application paths/types/styles only inside explicitly supplied feature scopes).
+  A documentation check must not trigger a full application-source scan.
 - Keep packets current throughout each task (standing owner instruction,
   2026-10-09). After changing a canonical block, template or manifest dependency/
   reference, regenerate the affected packets in the same task, semantically
@@ -45,7 +47,51 @@ A feature may require several phase packets and one implementation recipe. Phase
 packets establish and reconcile contracts; task recipes implement an approved
 shape.
 
-### Documentation-system evolution procedure
+### Current-state entry and execution skill (owner clarification, 2026-10-23)
+
+The documentation README routes four current needs: create a new screen, review
+an existing screen, inspect deferred decisions, and select the execution skill.
+Both screen paths select the current catalog shape and read only their applicable
+canonical blocks and packet. Apply Master1's proportional tiers before choosing
+artifacts; a small correction does not acquire a full-feature workflow merely
+because that template exists.
+
+The screen skill is a short operational router into those same sources. It must
+not become a second copy of all code examples, feature-specific decisions or
+revision history. Keep its current rules cited to the owning block, and retain a
+dated revision row. Superseded skill text, completed review records and old
+changelog entries belong in clearly labelled archive folders. Active plans and
+unresolved decisions remain discoverable; archive by lifecycle and supersession,
+not age alone. Preserve frozen decisions and update callers when a file moves.
+
+**Loadable instruction entry (owner-authorized Audit8 remediation, 2026-11-01).**
+The workspace `AGENTS.md` keeps the critical authorization/prohibited-command
+summary and the mandatory read link near its beginning. Its live continuation
+is `F:\My Work\Sigma\.agents\SIGMA_WORKFLOW_RULES.md`: agents read it completely
+before Sigma work through a file tool, rather than assuming automatic project
+instruction discovery includes the companion. Both files form one instruction
+set; this is relocation, not a second authority or an optional historical guide.
+Maintain full workflow rules in the live companion and reconcile the entry's
+summary in the same task when their meaning changes. Keep the automatically
+loaded entry small enough for the host's combined global/project instruction
+budget; do not solve growth only by raising that budget or discarding rules.
+If the live continuation cannot be read, report the missing source and stop
+dependent work instead of inferring authorization.
+
+The screen skill routes tasks and conditional concerns to their complete current
+book blocks. Do not reload archived skill snapshots to execute a new task: the
+books retain the implementation rules. Keep traceable coverage evidence when
+compacting the router and promote any verified missing owner before removing
+its sole live instruction. Process skills such as Superpowers may assist
+planning, diagnosis, execution and review; they complement Sigma's domain skill
+and do not replace project authority, frozen contracts or execution permissions.
+
+State the current approved target separately from source that has not migrated
+to it. A source verification date names the checked scope; a targeted check does
+not certify every example or an application's runtime. Archive content has no
+independent authority and is read only for a named historical decision.
+
+### Applying a documentation change
 
 1. Change the applicable canonical source.
 2. Update dependencies or templates when semantics change.

@@ -1,0 +1,16 @@
+S049
+Daily Rental Agreement Invoicing
+https://speedautosystems.com/car-rental-software/user-guide/daily-rental-agreement-invoicing/
+
+Daily Rental Agreement Invoicing
+Go to the Vouchers from left navigation panel and select invoices.
+Here you will see all the invoices which are opened or closed.
+To generate a new invoice click on the blue button on the top right corner stating Generate Invoices.
+It will give you 3 options like:
+a. Rental
+b. Fines
+c. Miscellaneous
+For rental agreement we will select the rental option and a new window popup will appear.
+If you enter the agreement number or customer number then the related invoice will come under other wise if you only select the date and all the pending invoices will be available under it.
+Select the corresponding invoice and press the generate button and the invoice will be generated.
+Daily invoice are generated when the agreement is closed for complete amount.

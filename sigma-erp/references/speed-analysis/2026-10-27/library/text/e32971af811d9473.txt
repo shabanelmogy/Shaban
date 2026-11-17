@@ -1,0 +1,12 @@
+S247
+How to manage individual customers
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-individual-customers/
+
+How to manage individual customers
+Go to the panel on the left side and click on the Customers tab.
+Scroll down and click on the Individuals module. A window will open.
+Click on the +CREATE NEW INDIVIDUAL button.
+A form will appear. Fill the details, add documents, and billing information. Then, click on the SAVE button.
+Individual customer will appear in a listed format.
+To view, edit, or delete, click on the ACTIONS button.
+Click HERE if you have a query or an issue.

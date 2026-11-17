@@ -1,0 +1,69 @@
+S144
+UK Vehicle Safety Check System (SCS)
+https://speedautosystems.com/uk-vehicle-safety-check-system/features/
+
+Get Started Now
+DVSA UK Vehicle Safety Check Process Automation
+UK Vehicle Safety Check System (SCS)
+UK Vehicle Safety Check System (SCS) – Features
+Overview Benefits Features Pricing Start 15 days Free Trial User Guide Sign In
+Home
+»
+UK Vehicle Safety Check System
+»
+UK scs Features
+UK Vehicle Safety Check System (SCS) – Features
+Before getting started, it would be better to get enough know-how of the App as a stitch on time saves nine. UK Vehicle Safety Check System (SCS) is easier and stress-free.
+Though salient features are listed below, yet we are always open to going for customizable solutions. So, you can ask to add, modify, or remove any feature as per your needs.
+Dashboard
+The dashboard appears as soon as you open the App. So, it is the main interface and is further divided into seven default modules. These seven default modules are;
+1. Fleet
+2. Inspections
+3. Administration
+4. Support
+5. Data Entry Corrections
+6. Customizations
+7. Subscriptions & Billing
+1. Fleet
+The Fleet module allows you to add, edit, and remove vehicles as quickly and easily as you need. It usually deals with the vehicles’ details, management, and current status. A typical “Fleet” module does hold further three options.
+. Vehicles
+Under the “Vehicles” option, you would be able to add a new vehicle by clicking on the “Create New Vehicle” tab. Also, you can see a list of all the added vehicles in certain a hierarchal fashion. Moreover, it will allow you to sort out vehicles based on the status.
+. Vehicle Types
+Here you can add and manage vehicle types. By clicking on “Create New Vehicle Type” you will see a comprehensive form to add details and save. These added vehicle types would help you to assign a certain type to a vehicle when adding a new vehicle in the above-mentioned vehicles module.
+. Vehicle QR Labels Inspections
+Once you have added all the details and type, you can generate distinctive QR labels for each vehicle. Customizable sizes of QR labels will enable you to paste them either on key-chain or the door of your vehicle.
+2. Inspection
+As the name suggests, this module will enlist all the performed inspections in one place. Moreover, you will be able to choose dynamically between date range and vehicle to see what inspections were carried out. For instance, select a date range like 15/05/2020 – 20/05/2020, click on the “Search” tab and get the list of all the vehicles inspected in the meantime.
+3. Administration
+The administration module bestows full control over the management of the SCS App. So, go like a professional and grasp like a boss. The administration panel is also divided into further options.
+. Branches
+UK Vehicle Safety Check System (SCS) is a one-stop-solution. So, it offers you to manage as many branches as you want with this single system. Branches module allows you to add your business branches located at other territories, cities, and even in other countries.
+. Safety Check Templates
+The safety check process requires different things to inspect and record as per the vehicle type. For instance, what required for a PSV is different than the HGV does. So, to record the observations, you need different templates. Speed – UK Safety Check System (SCS) App offers three default templates that you can use initially.
+. Roles
+Roles option enables you to create a certain role with specified permissions. So, you are in full control to create a role and apply limitations or authorities.
+. Users
+Users tab lets you manage all the “users” that are logged in to your system. For instance, you have a manager to perform a daily walk-around vehicle check, you would be able to add him, assigning the role of safety manager from Roles tab, to allow him to use the App effectively.
+. Languages
+You can choose the language as per your region and native inclination. In this option there a dropdown list of languages of which you can select anyone. Is your language not listed? No problem, you can ask us to add it.
+Some additional features are listed below:
+Sign Up From Your Smartphone
+Another valuable feature is the facility to get signed up from your smartphones. All you need would be to install the Safety Check System (SCS) App from google play store and install it in your device. Then, go for sign up and feed the asked details. Here you are ready to go.
+Click Below to go for Speed – Safety Check System (SCS) App on Google Play Store;
+UK (SCS) Google Play
+Sign Up From Web App
+Don’t you want to use a smartphone in your office? No problem. Speed – Safety Check System (SCS) can be signed up from the web browser on your PC as well. So, open the Speed – Safety Check System (SCS) web app in your browser, fill in the Sign-Up form, and it’s all set to start experiencing the automation of vehicle walk-around check.
+Click below to go for the Speed – Safety Check System (SCS) Web App:
+UK (SCS) Web App
+Automatic Form Template As Per DVSA Regulations
+Inspection forms are integrated into the Speed – Safety Check System (SCS). These forms are formulated according to the UK’s Driver and Vehicle Safety Agency (DVSA) requirements. So, you can record every essential observation that the authorities demand.
+Inspection Templates According To The Vehicle Type
+Either you have an HGV, PSV, or a personal Van, Speed – Safety Check System (SCS) provides you with the customized templates. So, the form for HGV inspection would include all the details required for HGV inspection, and so do for PSV and Personal Van.
+All Inspections On Web App
+Once you have done your inspection with the smartphone App, all the inspection data would be available on the Web App. So, after executing a vehicle’s walk-around check, you have to go for Web App which you can open in any browser either on your smartphone or PC. On the Web App, get Signed-In and have all the inspection data ready to treat in either way.
+Modify, Add, Or Remove Any Module
+Yes, the App is totally in your hand. It’s inspection forms are fully customizable. So, you can update any module or sub-module as soon as the DVSA modifies its regulations. Moreover, if you find some modules as extra or essential, you would be able to remove or add it respectively.
+Start 15 Days Free Trial
+Let’s get you Started
+If you want to know more about UK Saftey Check System (SCS), let’s get connected.
+Get in Touch

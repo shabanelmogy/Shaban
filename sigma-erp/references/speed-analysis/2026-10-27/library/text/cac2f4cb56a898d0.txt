@@ -1,0 +1,6 @@
+S181
+Data Import Management
+https://speedautosystems.com/vehicle-leasing-software/user-guide/data-import-management/
+
+Data Import Management
+Data Import module allows you to import (or export) data from (or to) your system. For this purpose, the Data Import module is further divided into sub-modules.

@@ -1,0 +1,13 @@
+S206
+How to define and manage Agreements
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-and-manage-agreements/
+
+How to define and manage Agreements
+Go to the panel on the left side and click on the Lease tab.
+Scroll down and click on the Agreements module.
+Click on the +OPEN NEW LEASE AGREEMENT button.
+A new window will be opened. Fill details, provisions, clauses, and pre-termination instruction. Then, click on the SAVE button.
+All agreements appear in the window as listed.
+You can also export the data to excel by clicking on the EXPORT TO EXCEL button or take print by clicking on the REPORT button.
+By clicking on the blue ACTIONS button, you can perform a vast set of actions.
+Click HERE if you have a query or an issue.

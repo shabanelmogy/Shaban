@@ -1,7 +1,7 @@
 ## 11. Document numbers (No)
 
 > **Status: Canonical reservation; Transitional formatting.** Owner approved the L4 counter
-> correction on 2026-10-02 (`reviews/REPOS_NUMBERING_L4_CONTRACT_FREEZE.md`). The existing
+> correction on 2026-10-02 (`reviews/Archive/Completed/2026-10-23/REPOS_NUMBERING_L4_CONTRACT_FREEZE.md`). The existing
 > CodeCreateService now reserves configured automatic numbers on DocumentNumberCounter.
 > Broader format/branch/date and generator unification remains in the deferred plan
 > `reviews/Deferred/DOCUMENT_NUMBERING_MAINTENANCE_EVOLUTION_PLAN.md`.

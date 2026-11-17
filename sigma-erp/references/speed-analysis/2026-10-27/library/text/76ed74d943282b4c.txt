@@ -1,0 +1,12 @@
+S200
+How to create and manage Suppliers
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-create-and-manage-suppliers/
+
+How to create and manage Suppliers
+Go to the panel on the left side and click on the Customers tab.
+Scroll down and click on the Suppliers module. A window will open.
+Click on the +CREATE NEW SUPPLIER button.
+A form will appear. Fill the details and click on the SAVE button.
+Suppliers will appear in a listed format.
+To view, edit, or delete, click on the ACTIONS button.
+Click HERE if you have a query or an issue.

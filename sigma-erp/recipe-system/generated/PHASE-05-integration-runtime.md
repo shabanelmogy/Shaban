@@ -8,40 +8,45 @@ contracts are connected through the actual application injector and route tree.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:38d22849a6d25f64baa38c14562b4c85f08b29199ca287825471c3cfdacaf0e7
-- master.1: ## 1. Governance and review principles | sha256:3e69ec4d48c952286dea7792d9e442d37585c15446b7ef02531c8a54053558cf
-- master.3: ## 3. Phase model, ownership, and dependencies | sha256:2d02535a738d0a1e03f44f22ff5ac7028554bc00cf9e8517245d3cf9e4c5811e
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
-- master.5: ## 5. Continuous quality gates | sha256:8d4f483fc5c4e3c0f84bb76153f0b2c5c70972699a9fa69e4fc7ed6e0667831b
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06
+- master.1: ## 1. Governance and review principles | sha256:a2ea89d19643c80d5d6fedef76e1e562333792eee34cf2eaad1e1ada1a4c47e0
+- master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
+- master.5: ## 5. Continuous quality gates | sha256:2dc0c50abbb9337e62e6ddea88ae341cfff9ff0da0849dca7f58bf304d9544d1
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.8: ## 8. Packet generation and governance | sha256:685e9463fc13be9a9d9d7ed261ee88f5aee17f3ded08472af4daf0587aa945b1
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:40836082dd49994bd2e8b88b6f888b21d1c4eeabf5e09e95eefa9f4fc2725ca5
-- ui.1: ## 1. Feature folders and wiring | sha256:266ecc1be4816a83512752346f33e513dd1f595677c8a9facf75d5bba95f6121
-- ui.2: ## 2. Service and response wrappers | sha256:9794e35d4273c605ac98288b23095738d03eacfc9af4f7b2fba2f69838e36bc4
-- ui.22: ## 22. Loading, empty, error, toast | sha256:244bc2d6f185f10764d640c98de0e0ff53650e96bede01d5a1dffdf96f5303ca
-- ui.23: ## 23. Translations | sha256:2410720acfe260652c5d9c6e0f801aa3881a21f18a1b1a3de4acc7478bcf1c6e
-- ui.26: ## 26. Permissions and route access | sha256:468e5ceba58128db01cd338059c6119761123144af55950bfaaf1a2d4866f0ff
-- ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
-- ui.28: ## 28. Request cancellation and stale responses | sha256:6c7c3c8a71a8681f46e2cef26d7efd5872fdbbaffa991f5e7c9adc592f4b385d
-- ui.29: ## 29. Verification expectations | sha256:a8d4e22e935094a158791ace96c9effb34032888fd03fa6eb1c9151b5751a0d5
-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:37bd2668e415291f40a04665709d8e3d9231a899d1d6517030b76d1d8f7ca4b0
-- backend.3: ## 3. Step 3 — ViewModels | sha256:29ccd92c16af23938da89ef2524a74076ae75ff380d5758319abc14089eba797
+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
+- ui.1: ## 1. Feature folders and wiring | sha256:96f5147de3041c0ab098fbd3b6005bb94b38ccde0ac890395818fdf989ca7868
+- ui.2: ## 2. Service and response wrappers | sha256:c2e46bdaf00c1fbee66d6ae2c655f335e348e60efad6a972e6ed6755ea520734
+- ui.22: ## 22. Loading, empty, error, toast | sha256:8a43d6f6e7adf12e07a82fdb67e8f625158509fc0f88fe8f181f4c8a9c17e4a3
+- ui.23: ## 23. Translations | sha256:0cf1190b29df3b524017967f0fba1a4611c683b902cb344278193f5e06de1377
+- ui.26: ## 26. Permissions and route access | sha256:ce3f2c451a72880ac11e264517cb14795d8539ef326b281ce297f75ae5d59223
+- ui.27: ## 27. Focus and keyboard | sha256:8f5713225ff4aecd70093f9ac8e6ba96c91003126335ebad80f925e573fa8586
+- ui.28: ## 28. Request cancellation and stale responses | sha256:b9ee811088e53d9771459815766c135cee973724042db691a7a4444ab5408325
+- ui.29: ## 29. Verification expectations | sha256:1ff1411e4cbc36bb44b06ef153a062ad0ddc7d8ca7728bdc7a3deae3ea99656e
+- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
+- backend.3: ## 3. Step 3 — ViewModels | sha256:1b2fd3b17c42fc35e1d5878bec1bad25b15edd349871a1957c2c1af9252d3bd2
 - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
-- backend.5: ## 5. Step 5 — Interface and service | sha256:f279fac37e5c752a179db6688a4bac1a43073f9635d33787b3838ae35911f9d8
-- backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
-- backend.18: ## 18. Edge cases | sha256:f75b1b27a36fa5ef0d2d671854f15b5fb4b6c0b24674a177448a1c4caca97d29
+- backend.5: ## 5. Step 5 — Interface and service | sha256:848b38b971e23945d10cb02d95cd2f94c2f3a176fe126e1a2169dca039be816d
+- backend.6: ## 6. Step 6 — Controller | sha256:f0f56867e3997a688067c5e5ec7f19070f1f4d621a0d5617e4e9639fdf74eba6
+- backend.18: ## 18. Edge cases | sha256:8878697ea5e4b00ab272b14d83fd2091eb9cd129c168a238ab98b88bed22d2a0
 
 Approved wiring references:
 
-- `SiGmaAngularFrontEnd/src/app/pages/routing.ts`
-- `SiGmaAngularFrontEnd/src/app/app.module.ts`
-- `SiGmaAngularFrontEnd/src/app/app-routing.module.ts`
+- `SiGmaAngularFrontEnd/src/main.ts`
+- `SiGmaAngularFrontEnd/src/app/app.config.ts`
+- `SiGmaAngularFrontEnd/src/app/app.routes.ts`
 
-Reference roles: `pages/routing.ts` owns the lazy feature entry;
-`app.module.ts` owns the single interceptor-equipped root client;
-`app-routing.module.ts` is the transitional AuthGuard/access reference from
-UI block 26. LayoutModule is inspected as a consumer when relevant, not copied
-as a feature-level HttpClient provider.
+Reference roles: `main.ts` owns the `bootstrapApplication` entry for the
+standalone `AppComponent`; `app.config.ts` owns the root providers, including
+the single interceptor-equipped `HttpClient` and hash-based router; and
+`app.routes.ts` owns the root route tree and authentication `AuthGuard`;
+the current-session child guard and explicit route/action adoption use the
+shared owners and frozen contract from UI block26. Do not assume authentication
+alone grants feature access or that all existing actions are already adopted.
+Existing lazy feature NgModules, including
+LayoutModule, are inspected as interoperability consumers when relevant, not
+copied as root composition or feature-level `HttpClient` providers.
 
 The Master Guide and canonical pattern books are authoritative. This packet is
 derivative. Stop using a packet that disagrees with canonical sources. Follow
@@ -90,6 +95,10 @@ Required:
 
 ## Procedure
 
+For cache consumers, reconcile UI2's full adoption checklist and UI22's shared
+refresh badge: one source cache/socket, exact topic/feedback/context identity,
+finite bootstrap, live binding teardown and no per-screen activity indicator.
+
 1. Trace the feature from application route to lazy child route.
 2. Verify mode data and component shape agree.
 3. Verify every standalone import used by the template.
@@ -97,7 +106,7 @@ Required:
 5. Verify token and error interceptors are applied.
 6. Follow UI block 1's one-root-client contract: authenticated feature services
    use `providedIn: 'root'` and the interceptor-equipped client configured once
-   in AppModule. LayoutModule and feature injectors do not provide another client.
+   in `app.config.ts`. LayoutModule and feature injectors do not provide another client.
    Reject manual Bearer headers or feature-level `provideHttpClient` forks.
 7. Verify each request has one active interceptor path and each mutation has one
    success-feedback owner; a feature success after a standard mutation must not
@@ -109,10 +118,38 @@ Required:
 12. Inspect only direct consumers of changed models, endpoints, or shared services.
 13. Verify the authenticated document is viewport-bound, every flex ancestor
     can shrink with `min-height: 0`, the route uses the container-fill host,
-    and `.app-content` never scrolls: each region has one internal scroll
-    owner, per block 1.
+    and the browser document stays fixed: the current native Sigma shell/route
+    hierarchy gives each region one internal scroll owner, per block 1.
 
 ## Required outputs
+
+Trace Master5/UI29's actual loading-speed path through route, HTTP, backend and
+rendering. Record duplicate subscriptions/requests, blocking auxiliary reads,
+serial dependencies, payload scope and cancellation; correct only authorized
+confirmed source issues. Report comparable measured results or a pending owner
+plan separately from loader visibility and cache conformance. No runtime or
+database execution is authorized by this gate.
+
+Reconcile UI22's active-route loading matrix against LoadingService, the single
+shell host and effective showPageLoading. Distinguish query/fragment-only updates
+from path departure and trace route reuse/legacy destinations. Request finalizers
+release departing reads; do not reset anonymous counts at NavigationStart or
+NavigationEnd, which can erase retained/target requests (UI22). Preserve local
+busy and write-navigation safety; do not copy Dashboard's explicit silent-page
+metadata into unrelated screens or add a competing loader to mask a mismatch.
+Apply UI22's general single-visible-owner precedence to actual rendered page,
+auxiliary StateMessage and body-appended dialog/save hosts; one shared ring is
+not evidence that two indicators cannot overlap. No per-screen opt-in or early
+busy/count release is allowed as a substitute for shared visibility ownership.
+Required routed initial/filter bootstrap must use the same page host, never an
+inline filter loader. Trace ReferenceLookupStatus identity-lease lifecycle and
+EditorDialog's projected dialog scope separately from request start/end counts;
+retained-cache refresh remains silent (UI22 latest owner clarification).
+
+Reconcile UI2 / Master5's source matrix against the final cache/topic/feedback
+wiring and teardown. Record per-source exceptions and pending owner network or
+runtime checks; neither a registered topic nor an imported cache owner alone
+proves that the consuming screen is connected correctly.
 
 ### Route and mode map
 
@@ -140,10 +177,23 @@ Required:
   one success notification.
 - Routed editors and dialog editors use the route counts defined by their shape.
 - All subscriptions have destruction or cancellation behavior.
+- Operational context reset clears previous rows/counts/labels and cancels
+  composed export/report reads without ending the query trigger. Deferred
+  confirmations capture a context revision; matching an ID alone is insufficient
+  after reset. Already sent writes retain independent safety/finalization (UI28).
+- Use the shared print session's cancelPending for a scheduled preparation frame
+  after context invalidation; do not claim to dismiss active browser printing or
+  create a feature scheduler (UI21).
 - Body-appended overlays retain feature-scoped styling and correct focus.
 - Direct consumers are checked before narrowing a model or renaming a service.
-- Neither the browser document nor `.app-content` scrolls; tall content stays
-  keyboard- and touch-scrollable inside its own component scroll owner.
+- Trace the live route/component → shared host/page/panel → bounded body/table
+  under UI1's full-width gate. Name the winning shared/local display, flex/grid,
+  alignment and width selectors; standard hosts have no feature geometry
+  override. Reconcile empty/loading/error/populated states and UI29's
+  sidebar/width/direction matrix; class names alone are not layout evidence.
+- The browser document stays fixed; tall content remains keyboard- and
+  touch-scrollable inside its owning bounded region in the current Sigma
+  shell/route hierarchy (UI1), without a second outer page scroll.
 - No runtime claim is made from source inspection alone.
 
 ## Expected handoff

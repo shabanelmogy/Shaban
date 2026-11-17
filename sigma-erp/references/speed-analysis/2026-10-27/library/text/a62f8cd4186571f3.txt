@@ -1,0 +1,10 @@
+S055
+Deleting Vehicles
+https://speedautosystems.com/car-rental-software/user-guide/deleting-vehicles/
+
+Deleting Vehicles
+Select the fleet module from the left navigation panel.
+Click on the fleet tab, and then on Vehicles.
+Here you will see the action button with every vehicle.
+When you click the action button a window pops up and there is the last option is for deleting the vehicle from the fleet.
+“If there are any aggrements made then system will not delete it you have to contact support for this”

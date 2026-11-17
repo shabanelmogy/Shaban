@@ -116,6 +116,11 @@ Use the applicable source comment at each reviewed decision point:
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
+Compare the declared endpoint table with actual controller routes and inherited
+HTTP actions (BE6). Record service-only methods separately. For an exposed
+nonassignable action, trace ordinary-user denial and the administrator's
+service response through their actual paths.
+
 ### Migration and compatibility decision
 
 | Change | Entity/EF impact | Migration required | Existing consumers | Owner action |
@@ -135,6 +140,10 @@ Use the applicable source comment at each reviewed decision point:
 - Private persistence helpers have a named transaction owner and use the same
   scoped unit of work and `DbContext` as that owner.
 - Calculations remain backend/domain-owned.
+- Classify reviewed numeric fields by domain (BE18): shared quantity/hour/meter
+  precision and scale rejection, integer counts/identities, financial money
+  policy. Reconcile DTO/storage/readers together; experimental data is not a
+  reason to retain accidental precision. Round only explicitly derived results.
 - Upload paths and abandoned files have an explicit lifecycle.
 - API failure responses remain actionable and typed.
 - No migration or database command is run by the reviewer.

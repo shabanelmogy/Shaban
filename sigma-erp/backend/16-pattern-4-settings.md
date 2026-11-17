@@ -5,6 +5,14 @@
 > `FieldsSettingsService` (single rows), `NotificationsSettingsModelService` and
 > `EmailTemplateService` (several rows by key).
 
+For screen reviews, use the dated [settings usage reference](../references/settings/README.md)
+to locate the applicable page/field and trace its actual frontend/server reader.
+Distinguish saved configuration from proven consumption, defaults from enforced
+validation and presentation from financial policy. The reference catalogs
+current source and partial coverage; it neither replaces this save pattern nor
+proves that a visible option is implemented. A presentation-only reorganization
+does not migrate a legacy settings service or create one save per internal tab.
+
 A settings screen saves settings, not records. Do not force it into record CRUD, and do not
 write a save loop of your own: every settings service persists through `IServiceHelper` and
 saves once. There are exactly **two shapes**:
@@ -131,6 +139,29 @@ await UnitOfWork.SaveChangesAsync(cancellationToken);
   matched.
 - **One save.** A screen that saves several shapes at once (Fields, Notifications) calls the
   helper for each part and saves once at the end, so one failure saves nothing.
+
+### Independent partition snapshots
+
+Freeze the configuration scope before selecting this pattern. A report's date
+or fiscal-year filter does not itself require partitioned settings. When the
+owner chooses one general company definition, use the tenant singleton and let
+all periods read it; partition creation must not create or copy configuration.
+Financial Report Settings changed to this general-company scope by explicit
+owner decision on2026-10-23. Its former annual-copy evidence is historical.
+
+When the owner chooses settings per fiscal year or another persisted partition,
+copy inherited settings as an independent graph with new child identities through
+the owning service. Reuse the caller's transaction when partition creation and
+initialization need several saves. GET never initializes, a repeated explicit
+initializer preserves existing choices, and a soft-deleted source partition is
+not an inheritance candidate. The feature contract owns when copying occurs and
+whether later edits restate that partition's historical reports.
+
+For keyed Save retaining omitted definition rows, validate the effective merged
+set against newly submitted shared references before mutation. Omitted rows must
+not bypass cross-row duplicate or reference-conflict guards. Reconcile owned
+mapping children by set difference so unchanged references keep their identities;
+this does not authorize deletion of an omitted definition row.
 
 **Legacy — moved when the screen is reviewed.**
 - **CRUD base:** about 68 settings services still expose the generic record CRUD

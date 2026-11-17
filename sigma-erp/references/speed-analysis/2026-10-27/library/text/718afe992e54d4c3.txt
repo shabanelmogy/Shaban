@@ -1,0 +1,30 @@
+S198
+How to create and manage Email SMTP
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-create-and-manage-email-smtp/
+
+How to create and manage Email SMTP
+To setup Gmail SMTP account, you need to follow the below given steps.
+Sign-in your Gmail account, go to profile and click on the “Manage your Google Account” tab.
+Go to the panel on LEFT side and click on “Security” tab.
+Go to the panel on LEFT side and click on “Security” tab.
+Go to the bottom right side and click on “GET STARTED.”
+Here you have to put your password.
+Select your country and write your valid phone number.
+Select whether you want to receive code via “Text message” or “Phone call.”
+Click on “NEXT” tab.
+You will receive a code on your phone number. Put that code here and click on “NEXT” tab.
+Now, click on the “TURN ON” tab.
+Now, go back to the account home page.
+Click on “Security” tab.
+Click on “App passwords.”
+You will have to put your password again.
+Click on “Select app” and then select “Other (Custom name).”
+Select your name and click on generate.
+A mini window will appear with password on yellow strap. Copy and save this password.
+Now, go to your account in app.speedautosystems.com and fill the form.
+Write your Gmail address.
+Choose your business’s name
+SMTP host: smtp.gmail.com
+SMTP Port: 25
+Check the “Use SSL” box.
+In the end, after putting username, paste the password that you had copied in Last step. Then, click on the “SAVE” button. Now, send a test email and check whether the SMTP is working aptly.

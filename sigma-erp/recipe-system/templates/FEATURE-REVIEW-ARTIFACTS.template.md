@@ -1,7 +1,16 @@
 # Sigma Feature Review Artifacts: {{Feature}}
 
+| Item | Value |
+|---|---|
+| Status | Draft |
+| Owner verification pending | yes |
+
 Copy this file for one feature review. It records feature-specific evidence and
 decisions; it does not create architectural authority.
+
+Apply Master1's tier before copying: tier S uses a short existing-review entry;
+tier M fills only applicable screen contracts; tier L consumes its Frozen plan.
+Delete inapplicable empty sections instead of filling repetitive N/A tables.
 
 ## Review metadata
 
@@ -26,13 +35,15 @@ decisions; it does not create architectural authority.
 | Direct shared dependencies | |
 | Existing user changes | |
 | Evidence IDs | |
+| Analysis-guide review (Master2/4) | Relevant chapter and original screen-explanation IDs/links actually read, Sigma comparison, accepted/excluded items and gaps, or supported Not applicable |
+| Sidebar/code cycle comparison (Master2/4) | Dated section/state/controller/service sources and file:line/hash, relevant document links/actions, evidence kind, actual Sigma owner/contract comparison and accepted/excluded/unresolved disposition; use Master4's rows |
 | UI shapes | |
 | Backend pattern | |
 | Approved references | |
 | Routes and modes | |
 | Endpoints | |
 | Actions | |
-| Permission mechanism | |
+| Permission mechanism | Link the actual session/route policy and backend authorization contract (UI26, Master4) |
 | Applicable phases | |
 | Skipped phases and reason | |
 | Explicit exclusions | |
@@ -80,6 +91,10 @@ Fields removed from the ListVM:
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
+For protected lists, record the exact server-approved direct filter, grid and
+sort fields, their types and aliases. Reconcile the scoped count, aggregates,
+paging and export under the minimum grants (BE9).
+
 ## Paging and Refresh Contract
 
 | Event | Requested page | Retain filters | Retain sort | Empty-last-page behavior | Refresh target |
@@ -121,6 +136,29 @@ Fields removed from the ListVM:
 |---|---|---|---|---|---|---|---|---|---|
 | | | | | | | | | | |
 
+## Authorization Contract (UI26, Master4)
+
+| Route, surface or action | Method/route and server owner | Permission/policy, assignability and prerequisites | Tenant, record and branch capability | UI condition and post-confirmation recheck | Source evidence and open findings |
+|---|---|---|---|---|---|
+| | | | | | |
+
+| Sent write scenario | Settlement/draft owner | Result visibility | Refresh owner and still-allowed read scope | Evidence or pending check |
+|---|---|---|---|---|
+| Same session loses write while read remains | | | | |
+| Actor/session changes during the request | | | | |
+
+## Applicable Authorization Scenarios (Master5/7)
+
+Reuse a row already holding this evidence instead of duplicating it. Select
+only scenarios relevant to the approved contract and changed paths.
+
+| Scenario and actor/branch capability | Entry path and producer/consumer symbols | Expected values, state and exit | Source evidence or open finding | Executed check or pending acceptance |
+|---|---|---|---|---|
+| Generated document into its next affected action | | | | |
+| View or operation withdrawn then restored on a dirty draft | | | | |
+| Sent write resolves during denial or after restoration | | | | |
+| Generated-document read grant or print expires | | | | |
+
 ## Route, Provider, and Event Contract
 
 | Route/dialog/service | Mode/source | Provider/injector | Interceptor path | Event/result | Consumer | Refresh/exit | Risk |
@@ -161,10 +199,14 @@ Fields removed from the ListVM:
 | Protected GET and mutation carry Authorization through the expected interceptor chain | | |
 | Exactly one success notification per successful mutation/workflow | | |
 | Frontend/backend contracts reconciled | | |
+| Least-privileged operation, saved record/branch and filter/sort scope checked across custom and inherited endpoints | | |
+| Search survives edit-only lookup failure, expired filter overlays close and cancelled exit guard returns false | | |
+| Test signatures, visibility, project inclusion and fixture scope reviewed | | |
+| Operation mapping, latest findings, schema readiness and runtime acceptance linked from coverage | | |
 | English/Arabic translations checked | | |
 | Mapping/server-owned fields checked | | |
 | Merge markers/whitespace checked | | |
-| Build | | |
+| Scoped local build including affected test project | | |
 | Tests | | |
 | Browser/runtime | | |
-| Database/migration | | |
+| Database/migration (Master7) | | Migration ID, target and history/schema/row checks, or pending owner action |

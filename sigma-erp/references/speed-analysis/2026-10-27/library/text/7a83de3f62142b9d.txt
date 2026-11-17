@@ -1,0 +1,10 @@
+S092
+Uploading Company Documents
+https://speedautosystems.com/car-rental-software/user-guide/uploading-company-documents/
+
+Uploading Company Documents
+Open the customer module from the left navigation panel.
+1. Click on the second tab for Companies.
+2. Click on the blue button stating “Create New Company”
+3. A pop up will appear and go to the next tab from top stating “Documents”.
+You can enter the company Trade License or any such document here with the details and the picture as well.

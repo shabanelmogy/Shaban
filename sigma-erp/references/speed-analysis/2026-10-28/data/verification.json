@@ -1,0 +1,333 @@
+{
+  "verifiedAtUtc": "2026-10-28T15:20:25.784Z",
+  "kind": "static package checks only; no target runtime or domain operations",
+  "assetHashesChecked": 7,
+  "controllerSlicesChecked": 1833,
+  "markdownLinksChecked": 12247,
+  "lineAnchorsChecked": 8298,
+  "sidebarScreensChecked": 321,
+  "templateVerifiedScreens": 321,
+  "proxyMappedStaticCalls": 6830,
+  "staticCallsTotal": 7027,
+  "unmappedCallExamples": [
+    {
+      "service": "abp.services.app.commonLookup",
+      "method": "getLocationsForSearch",
+      "source": {
+        "file": "raw/application.js",
+        "line": 28895,
+        "endLine": 28895,
+        "start": 1640969,
+        "end": 1641039
+      }
+    },
+    {
+      "service": "abp.services.app.customizationHost",
+      "method": "approveCustomization",
+      "source": {
+        "file": "raw/application.js",
+        "line": 31316,
+        "endLine": 31318,
+        "start": 1750729,
+        "end": 1750852
+      }
+    },
+    {
+      "service": "abp.services.app.taskDetail",
+      "method": "searchSupportRequest",
+      "source": {
+        "file": "raw/application.js",
+        "line": 31594,
+        "endLine": 31594,
+        "start": 1761770,
+        "end": 1761837
+      }
+    },
+    {
+      "service": "abp.services.app.customizationHost",
+      "method": "approveCustomization",
+      "source": {
+        "file": "raw/application.js",
+        "line": 33494,
+        "endLine": 33496,
+        "start": 1845371,
+        "end": 1845494
+      }
+    },
+    {
+      "service": "abp.services.app.customizationHost",
+      "method": "approveCustomization",
+      "source": {
+        "file": "raw/application.js",
+        "line": 34647,
+        "endLine": 34649,
+        "start": 1894861,
+        "end": 1894984
+      }
+    },
+    {
+      "service": "abp.services.app.subscriptionInvoices",
+      "method": "getSubscriptionInvoicesForEdit",
+      "source": {
+        "file": "raw/application.js",
+        "line": 50704,
+        "endLine": 50704,
+        "start": 2617487,
+        "end": 2617571
+      }
+    },
+    {
+      "service": "abp.services.app.customizationHost",
+      "method": "approveCustomization",
+      "source": {
+        "file": "raw/application.js",
+        "line": 55691,
+        "endLine": 55693,
+        "start": 2840376,
+        "end": 2840499
+      }
+    },
+    {
+      "service": "abp.services.app.customizationHost",
+      "method": "approveCustomization",
+      "source": {
+        "file": "raw/application.js",
+        "line": 69861,
+        "endLine": 69863,
+        "start": 3462679,
+        "end": 3462802
+      }
+    },
+    {
+      "service": "abp.services.app.commonLookup",
+      "method": "getGroupNameForBusinessUnit",
+      "source": {
+        "file": "raw/application.js",
+        "line": 86192,
+        "endLine": 86192,
+        "start": 4122976,
+        "end": 4123027
+      }
+    },
+    {
+      "service": "abp.services.app.abooshi",
+      "method": "getAbooshiData",
+      "source": {
+        "file": "raw/application.js",
+        "line": 93924,
+        "endLine": 93924,
+        "start": 4466018,
+        "end": 4466087
+      }
+    },
+    {
+      "service": "abp.services.app.linkedPrepaidExpense",
+      "method": "DeleteLinkedPrepaidExpense",
+      "source": {
+        "file": "raw/application.js",
+        "line": 95543,
+        "endLine": 95543,
+        "start": 4535123,
+        "end": 4535182
+      }
+    },
+    {
+      "service": "abp.services.app.payment",
+      "method": "getSalaryItemTypes",
+      "source": {
+        "file": "raw/application.js",
+        "line": 95884,
+        "endLine": 95884,
+        "start": 4548054,
+        "end": 4548089
+      }
+    },
+    {
+      "service": "abp.services.app.tenantSettings",
+      "method": "updateAllSettings",
+      "source": {
+        "file": "raw/application.js",
+        "line": 107629,
+        "endLine": 107631,
+        "start": 5059593,
+        "end": 5059701
+      }
+    },
+    {
+      "service": "abp.services.app.accessory",
+      "method": "getBookedVehicles",
+      "source": {
+        "file": "raw/application.js",
+        "line": 116634,
+        "endLine": 116634,
+        "start": 5435633,
+        "end": 5435681
+      }
+    },
+    {
+      "service": "abp.services.app.linkedPrepaidExpense",
+      "method": "DeleteLinkedPrepaidExpense",
+      "source": {
+        "file": "raw/application.js",
+        "line": 127783,
+        "endLine": 127783,
+        "start": 5923626,
+        "end": 5923685
+      }
+    }
+  ],
+  "duplicateControllerRegistrations": [
+    {
+      "name": "host.views.cbs.tasks.index",
+      "ids": [
+        "C0128",
+        "C0129"
+      ]
+    },
+    {
+      "name": "host.views.companies.openAcceptOrCloseRequestModal",
+      "ids": [
+        "C0148",
+        "C0157"
+      ]
+    },
+    {
+      "name": "host.views.marketing.leads.createFarmModal",
+      "ids": [
+        "C0237",
+        "C0737"
+      ]
+    },
+    {
+      "name": "tenant.views.crs.discountCodes.applyDiscountModal",
+      "ids": [
+        "C0304",
+        "C0774"
+      ]
+    },
+    {
+      "name": "tenant.views.crs.chauffeur.agreements.agreementLogsModal",
+      "ids": [
+        "C0455",
+        "C0678"
+      ]
+    },
+    {
+      "name": "tenant.views.crs.banking.chequesReceivables.convertToCdcModal",
+      "ids": [
+        "C0629",
+        "C0630"
+      ]
+    },
+    {
+      "name": "tenant.views.crs.contacts.uploadDocumentModal",
+      "ids": [
+        "C0699",
+        "C0711"
+      ]
+    },
+    {
+      "name": "tenant.views.vouchers.invoices.printTemplates.print",
+      "ids": [
+        "C0722",
+        "C1358"
+      ]
+    },
+    {
+      "name": "tenant.views.crs.lease.masterAgreements.masterAgreementModal",
+      "ids": [
+        "C0887",
+        "C0888"
+      ]
+    },
+    {
+      "name": "tenant.views.vouchers.jvs.printTemplates.print",
+      "ids": [
+        "C1369",
+        "C1393"
+      ]
+    },
+    {
+      "name": "tenant.views.crs.vouchers.jvs.printTemplates.printPreview",
+      "ids": [
+        "C1370",
+        "C1394"
+      ]
+    },
+    {
+      "name": "tenant.views.crs.vouchers.purchaseOrders.vehicleServiceReport",
+      "ids": [
+        "C1403",
+        "C1413"
+      ]
+    },
+    {
+      "name": "tenant.views.vouchers.purchaseOrders.printTemplates.print",
+      "ids": [
+        "C1404",
+        "C1414"
+      ]
+    },
+    {
+      "name": "tenant.views.ers.quotation.createOrEditModal",
+      "ids": [
+        "C1492",
+        "C1493"
+      ]
+    },
+    {
+      "name": "tenant.views.tms.parking.dataSharingLog.sharingLog",
+      "ids": [
+        "C1654",
+        "C1754"
+      ]
+    },
+    {
+      "name": "tenant.views.tms.parking.dataSharingMapping.index",
+      "ids": [
+        "C1655",
+        "C1756"
+      ]
+    },
+    {
+      "name": "tenant.views.tms.parking.report.index",
+      "ids": [
+        "C1657",
+        "C1759"
+      ]
+    },
+    {
+      "name": "tenant.views.tms.parking.report.report",
+      "ids": [
+        "C1658",
+        "C1761"
+      ]
+    },
+    {
+      "name": "tenant.views.tms.parking.sharringSettings.parkingTicketSetting",
+      "ids": [
+        "C1659",
+        "C1762"
+      ]
+    },
+    {
+      "name": "tenant.views.tfms.downloadFineReceiptRTA",
+      "ids": [
+        "C1718",
+        "C1719"
+      ]
+    },
+    {
+      "name": "tenant.views.tms.dashboard.index",
+      "ids": [
+        "C1735",
+        "C1736"
+      ]
+    }
+  ],
+  "credentialScanPerformed": true,
+  "credentialLiteralsFound": 0,
+  "offlineReportScriptParses": true,
+  "offlineReportNoExternalDependency": true,
+  "errors": []
+}

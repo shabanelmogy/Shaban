@@ -1,0 +1,16 @@
+{
+  "sidebar": "CRS",
+  "sections": 28,
+  "sidebarLinks": 321,
+  "matchedSidebarLinks": 321,
+  "routeDeclarations": 681,
+  "uniqueRoutes": 674,
+  "controllers": 1833,
+  "controllersLinkedToSidebar": 948,
+  "controllersOutsideSidebar": 885,
+  "serviceFactories": 481,
+  "serviceMethods": 3929,
+  "templateRequests": 312,
+  "successfulTemplateRequests": 312,
+  "templateVerifiedScreens": 321
+}

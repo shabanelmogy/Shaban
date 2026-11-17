@@ -1,0 +1,8 @@
+S054
+Deleting Individual Customer Account
+https://speedautosystems.com/car-rental-software/user-guide/deleting-individual-customer-account/
+
+Deleting Individual Customer Account
+Open the customer module from the left navigation panel.
+Click on the first tab for individual customers.
+Here you can see there is an action button with the customers click on that action button and you will get option to delete the customer and customer will be deleted from the system.

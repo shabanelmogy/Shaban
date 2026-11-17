@@ -1,0 +1,17 @@
+S084
+Rental Bookings Management
+https://speedautosystems.com/car-rental-software/user-guide/rental-bookings-management/
+
+Rental Bookings Management
+This option is related to the bookings. If you have our booking engine or any other booking engine integrated to our application then all the bookings made through that booking engine will appear here.
+If you want to manually add a booking then:
+Open the rental module from the left navigation panel.
+Here you will find the second tab related to “Bookings”.
+Click on the blue button on the right top stating “Add New Booking”
+A pop up window will appear:
+1. You have to select the type of the booking.
+2. Select the Pickup & Dropoff Date and time.
+3. You have to select the dropoff location but if dont know then click on others.
+4. Then you have to select the vehicle type to get the tariff. In bookings if you want to select a vehilce than you can otherwise it can be procedded without selecting a vehivle.
+5. Select the customer on which you are making a booking.
+6. Column on right side shows you the charges type and its rates. You can add those charges here or leave it blank and press save ad the new booking is created.

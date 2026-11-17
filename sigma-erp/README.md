@@ -1,101 +1,185 @@
-# Sigma Planning and Pattern System
+# وثائق Sigma الحالية
 
-This folder is the entry point for Sigma feature planning, review, maintenance,
-and implementation guidance.
+هذه الوثائق تساعدك على إنشاء شاشة صحيحة أو مراجعة شاشة موجودة وفق آخر قواعد
+العمل والأنماط المعتمدة. اختر احتياجك من الجدول، ثم اقرأ الأجزاء التي تخصه فقط.
 
-For ready-to-copy Arabic commands for common workflows, use:
+| احتياجك | نقطة البداية | النتيجة المطلوبة |
+|---|---|---|
+| إنشاء جديد | [مسار الإنشاء](#إنشاء-جديد) | عقود واضحة، تنفيذ بالمكونات المشتركة، ومطابقة نهائية ودليل مستخدم |
+| مراجعة وضع قائم | [مسار المراجعة](#مراجعة-وضع-قائم) | مقارنة الوضع الفعلي بالمعتمد مع أدلة؛ تنفيذ الإصلاحات عندما يطلبها المالك |
+| مراجع العمل الوظيفية | [المراجع المشتركة](#مراجع-العمل-الوظيفية) | نظام الأرقام والتقريب، وإعدادات العملاء المؤثرة في الفواتير |
+| قرارات مؤجلة | [فهرس القرارات المؤجلة](<F:/My Work/Sigma/reviews/Deferred/README.md>) | معرفة ما ينتظر قرارًا، وما يمكن استكماله، دون إعادة مناقشة قرارات محسومة |
+| مهارات مستخدمة | [مهارة التنفيذ](#المهارات-المستخدمة) | تحميل مهارة المشروع والكتل المطلوبة للمهمة دون تاريخ التعديلات |
 
-`SIGMA_COMMAND_REFERENCE_AR.md`
+## إنشاء جديد
 
-## Canonical authority
+١. اقرأ تعليمات مساحة العمل، ثم اختر نوع الشاشة من
+[كتالوج الشاشات](ui/screens/00-catalog.md). حدّد هل يوجد مالك أو مكوّن يمكن
+توسيعه قبل إنشاء بديل.
 
-Use these current files directly:
+٢. حدّد حجم العمل حسب [قاعدة التناسب](master/01-governance-and-review-principles.md):
+تعديل صغير، شاشة، أو تغيير مشترك. للتغيير الجديد الكبير أو الغامض استخدم
+[حزمة التخطيط](recipe-system/generated/PLAN-00-maintenance-evolution.md).
 
-1. `SIGMA_FEATURE_REVIEW_MASTER.md` — review/planning orchestration, contracts,
-   phases, gates, handoffs, and final reconciliation.
-2. `SIGMA_UI_PATTERNS.md` — Angular/UI implementation authority by UI shape.
-3. `SIGMA_BACKEND_PATTERNS.md` — .NET/domain/persistence/API implementation
-   authority by backend pattern.
-4. `recipe-system/` — derivative generated planning/review packets and reusable
-   artifacts. Generated packets never override the three canonical documents.
-5. `F:\My Work\Sigma\.agents\skills\sigma-screen-refactor\SKILL.md` — the
-   operational checklist digest of the books for screen work. Every skill rule
-   cites its owning book block; a lesson is written to the book and the skill
-   in the same task (see `F:\My Work\Sigma\AGENTS.md`).
+٣. راجع الجزء المرتبط بالشاشة من [دليل التحليل المرجعي](references/speed-analysis/README.md)
+وشرح الشاشة الأصلي، ثم حدد قسمها ودورتها من [تحليل القائمة والكود](references/speed-analysis/2026-10-28/README.md)
+قبل تثبيت العقود. تتبع الروابط والإجراءات والخدمات اللازمة وقارنها بسيجما،
+وسجّل المصادر المؤرخة والملفات التي قرأتها وما
+تثبته والفجوات أو التعارضات؛ الدليل يشرح سبيد للاستفادة منه في تحليل سيجما،
+ولا يقرر وحده سلوك سيجما أو تصميمها. اتبع
+[قاعدة مراجعة دليل التحليل](master/02-screenshot-and-visual-evidence-policy.md#mandatory-analysis-guide-review-before-screen-contracts-owner-instruction-2026-10-27).
 
-Each of the three guides is stored as one file per block in `master/`, `ui/`,
-and `backend/`. The `SIGMA_*.md` file of the same name is a short index; the
-block number stays the citation key ("UI block 17" is `ui/17-*.md`). Version
-history is in `CHANGELOG.md`.
+٤. اكتشف المصدر والأدلة، وجمّد العقود التي ستستهلكها الشاشة: الحقول، واجهات
+البيانات، التحقق، الإجراءات والحسابات عند وجودها. استخدم
+[قرارات العقود](master/04-required-decisions-artifacts-and-contract-invariants.md)
+والمراحل المناسبة؛ لا تنشئ قرارات تجارية من تشابه شاشة أخرى.
 
-Read the version/status metadata from each guide's `00-preamble.md` header; do
-not duplicate those values in secondary indexes.
+٥. نفّذ الشكل المختار بمالكيه المشتركين وقواعد الواجهة والخلفية ذات الصلة.
+قبل استخدام الحزم شغّل فحص اتساقها الموضح أدناه. انتهِ بالمطابقة ودليل المستخدم
+داخل التطبيق وفق [متطلبات التسليم](master/07-end-to-end-reconciliation-and-final-report.md).
 
-## Starting a screen
+صيغة طلب واضحة:
 
-Pick the screen type in `ui/screens/00-catalog.md`. Each of the seven screen
-files names the approved reference, the backend pattern, the contracts to freeze
-first, and the UI blocks to read in order. The screen files add no rule; the
-cited blocks own every rule.
-
-## Which workflow to start with
-
-For a broad but already understood feature, start with Phase 0 and continue only
-through the applicable phases, ending with Phase 6.
-
-For maintenance, extension, or a new cross-cutting capability whose current logic
-must be understood or discussed first, start with:
-
-`recipe-system/generated/PLAN-00-maintenance-evolution.md`
-
-Copy and fill:
-
-`recipe-system/templates/MAINTENANCE-EVOLUTION-ARTIFACT.template.md`
-
-Freeze that plan before implementation. Then Phase 0 consumes the frozen target
-scope/contracts and the normal Phase 0–6 system carries the change through
-implementation and final reconciliation.
-
-Examples that normally need the planning workflow include currency, tax, pricing,
-numbering, approvals, posting, inventory valuation, permission changes, shared
-integration behavior, or any change where existing business logic is incomplete,
-conflicting, or spread across several features.
-
-## Feature review artifact
-
-For one implementation/review run, copy:
-
-`recipe-system/templates/FEATURE-REVIEW-ARTIFACTS.template.md`
-
-Keep unresolved contracts visible until Phase 6; do not replace the artifact with
-a prose-only summary.
-
-## Cases needing more evidence
-
-[UNCERTAIN_CASES.md](UNCERTAIN_CASES.md) records suspected behavior, the evidence
-still needed, the owner decision, and the conditions for revisiting each case.
-Start with that register when continuing a deferred uncertain finding.
-
-## Generated packet verification
-
-From this folder:
-
-```powershell
-.\recipe-system\Generate-SigmaRecipes.ps1 -Check
+```text
+أنشئ شاشة <اسم الشاشة> ونفذها وفق الوثائق الحالية ومهارة Sigma.
+راجع الموجود أولًا، واستخدم المكونات المشتركة، وتوقف عند قرار تجاري جوهري غير محسوم.
 ```
 
-When a canonical source changes, regenerate with:
+## مراجعة وضع قائم
 
-```powershell
-.\recipe-system\Generate-SigmaRecipes.ps1
+قبل فحص مصدر التطبيق، وضّح باختصار نطاق المهمة وحدودها والكتب التي ستتبعها،
+واذكر **دليل سبيد وشرح الشاشة** و**أكواد سبيد المؤرخة** كخطوتين منفصلتين،
+ثم **وثائق أودو إن توفرت وكانت لازمة لتوضيح نقص أو غموض بعد سبيد**. اذكر
+مهارة سيجما ومهارات المنهج المناسبة، وتحقق من توفر سوبر باورز وبيّن نتيجة
+التحقق أو سبب عدم انطباقها. وضّح حدود الفحص المصدري وأي تشغيل مصرح به.
+عند غياب مصدر أو مهارة اذكر ذلك صراحة؛ وفي التقرير سمّ الملفات التي قرأتها
+فعليًا. هذه افتتاحية موجزة وفق
+[القاعدة الرئيسية](master/01-governance-and-review-principles.md#opening-disclosure-and-reference-sequence-owner-clarification-2026-11-05)،
+ولا تحتاج موافقة جديدة أو مستند خطة مستقلًا.
+
+١. حدّد الشاشة وهدف المراجعة، واقرأ العقد الجاري من
+[فهرس المراجعات](<F:/My Work/Sigma/reviews/INDEX.md>) إن وُجد.
+
+٢. راجع الفصل المناسب من [دليل التحليل وشرح الشاشة](references/speed-analysis/README.md)،
+واختر قسم الشاشة من [خريطة القائمة ودورات العمل](references/speed-analysis/2026-10-28/workflows/00-review-cycles.md).
+قارن الشرح وتصريحات الواجهة وروابط مستندات الدورة بمصدر سيجما والعقد الجاري
+ودليل الشاشة الحالي إن وُجد. سجّل
+المصادر والاختلافات والقرارات الناقصة قبل تغيير العقود؛ تنطبق هذه الخطوة
+على الصيانة والإصلاح أيضًا، ويكفي للتعديل الصغير الجزء الذي يمسه.
+
+٣. اختر النوع من الكتالوج، وتتبع المصدر من الحقول إلى الخدمة وواجهة البيانات
+ثم الحفظ أو العرض أو الإجراءات. قارن السلوك والمظهر والعقود بكتلها الحالية.
+اقرأ المرجع الذي يسميه الشكل؛ لا تعتبر كل ما في المصدر القديم نمطًا صحيحًا.
+
+٤. سجّل المؤكد والمفقود والمتعارض، ثم راجع النتيجة النهائية. المراجعة وحدها
+قراءة فقط. إصلاح المصدر يحتاج طلب تنفيذ صريحًا وفق تعليمات مساحة العمل؛
+القوالب والحزم لا تمنح تفويضًا إضافيًا.
+
+```text
+راجع <الشاشة> وفق الوثائق الحالية ومهارة Sigma، واعرض النتائج دون تعديل المصدر.
 ```
 
-Then run `-Check` again and perform semantic review of templates, dependency
-closure, and manifest approved references. A green hash check proves generated
-content synchronization; it does not replace semantic review.
+وعندما تريد التنفيذ:
 
-## Historical archive
+```text
+راجع <الشاشة> ونفذ الإصلاحات المؤكدة، ثم أكمل المطابقة ودليل المستخدم.
+```
 
-The August 2026 snapshot `sigma-erp.rar` was moved out of this folder on
-2026-09-28 by the owner. It is **not canonical** and must not be used as the
-source for current planning or implementation decisions.
+لخطوة محددة استخدم اسم المرحلة وحدودها في تعليمات مساحة العمل؛ الأوامر
+[المفصلة](SIGMA_COMMAND_REFERENCE_AR.md) مرجع إضافي، وليست خطوات مطلوبة كلها.
+
+## مراجع العمل الوظيفية
+
+### الأساس سبيد، وOdoo مكمل للنقص والغموض
+
+نبدأ من **[دليل سبيد وشرحه وكوده المؤرخ](references/speed-analysis/README.md)**.
+إذا بقي مفهوم أو سلوك أو حقل أو حساب غير واضح أو ناقص، نبحث عنه في
+**[وثائق Odoo الرسمية المجموعة](references/odoo-rental/README.md)**، ثم نطابق
+النتيجة مع مصدر سيجما وعقد الميزة ودليل المستخدم. لا نبدأ Odoo لمجرد تشابه
+الموضوع، ولا نستبدل قاعدة مالية أو صلاحية محلية بمثال عام. هذه أولوية المالك
+النهائية بتاريخ ٢ نوفمبر ٢٠٢٦، وتحكمها [قاعدة المراجع](master/02-screenshot-and-visual-evidence-policy.md#speed-first-odoo-fills-missing-or-unclear-concepts-owner-instruction-2026-11-02).
+
+حزمة Odoo 19.0 تحفظ ١١٩ صفحة أصلية و٢٩٧ ملفًا مساعدًا مع الترخيص والبصمات،
+وتضم [دليلًا عربيًا للدورة](references/odoo-rental/2026-11-02/CAR_RENTAL_GUIDE_AR.md)
+و[مصفوفة للفحص والفجوات](references/odoo-rental/2026-11-02/COMPARISON_MATRIX.md).
+فرعا التأجير والأسطول كاملان في اللقطة، والوظائف المساندة محددة النطاق؛ لا
+يعني ذلك أن كل سلوك سيارات متخصص مثبت في Odoo أو منفذ في سيجما.
+
+### نظام دقة الأرقام وتقريب الكميات
+
+راجع [وثيقة نظام الأرقام والتقريب](references/numeric-policy/README.md) عند إنشاء
+حقل رقمي أو مراجعة حساباته. تجمع قواعد الكميات والساعات والعدادات والأعداد
+الصحيحة والمال والعملات والنسب، وتوضح الفرق بين رفض مدخل زائد الدقة وتقريب
+ناتج محسوب وتنسيق العرض، مع أمثلة ومالكي التنفيذ وحدود التغطية الحالية.
+
+### إعدادات العملاء المؤثرة في الفواتير
+
+عند تخطيط الفواتير أو مراجعتها، اقرأ [مرجع إعدادات الفرد والشركة](references/customer-billing/README.md)
+مع العقد الجاري لنوع الفاتورة. يحصر قواعد الفترات وتوقيت الإصدار والتجميع
+والضريبة والائتمان والعملة والخصم والرسوم وتفضيلات العميل، ويميز ما يستخدمه
+المصدر الحالي من الفجوات التي تحتاج قرارًا. المرجع مؤرخ، ولا يمنح بمفرده
+تفويض تنفيذ قواعد مالية جديدة أو تغيير مستندات محفوظة.
+
+### إعدادات النظام واستخدامها في مراجعة الشاشات
+
+اقرأ [مرجع الإعدادات وتقسيمها](references/settings/README.md) و[فهرس حقولها](references/settings/FIELD_CATALOG.md)
+عند مراجعة شاشة تتأثر بإعداد عام أو ترقيم أو حقل أو مستند أو رسم أو تهيئة
+تشغيلية. يوضح المرجع الصفحات الأربع والعشرين والأقسام الداخلية ومالكي النقل
+وأمثلة استهلاك مثبتة، ويميز الحفظ من التطبيق الفعلي وفروق النمط الخلفي.
+يتتبع عقد الشاشة الإعداد حتى مستهلكه؛ ولا يُفترض التفعيل من اسم الخيار وحده.
+
+## القرارات المؤجلة
+
+ابدأ من [فهرس القرارات](<F:/My Work/Sigma/reviews/Deferred/README.md>).
+تبقى الخطة أو المسألة المفتوحة ظاهرة إلى أن يحسمها المالك. وجودها في الفهرس
+لا يعني السماح بتنفيذها. القرارات المكتملة والأدلة السابقة محفوظة في الأرشيف.
+
+## المهارات المستخدمة
+
+المهارة المطلوبة لشاشات Sigma، سواء للمراجعة أو الإنشاء أو الإصلاح، هي:
+
+[مهارة مراجعة وتنفيذ شاشات Sigma](<F:/My Work/Sigma/.agents/skills/sigma-screen-refactor/SKILL.md>)
+
+تحدد المهارة مسار المهمة والكتل التي تُقرأ عند الحاجة. قواعد التنفيذ الكاملة
+تبقى في كتبها؛ سجل المهارة السابق داخل الأرشيف. مهارات المنهج، مثل سوبر باورز
+عند تثبيتها وتوفر مهاراتها، تكمل مهارة سيجما في التخطيط والتشخيص والتنفيذ
+والمراجعة بحسب حاجة المهمة. تظل قواعد المشروع والكتب والعقود وحدود التفويض
+هي المرجع الأعلى؛ لا تمنح المهارة وحدها إذنًا باختبار أو ترحيل أو حفظ إصدار.
+مهارة إنشاء المهارات تُستخدم فقط عند صيانة المهارة نفسها، ولا تُحمّل لتنفيذ
+كل شاشة. مهارات المخرجات، مثل المستندات والجداول، تُختار عند الحاجة إليها.
+
+## أين توجد القاعدة الحالية؟
+
+| السؤال | المالك |
+|---|---|
+| ماذا أفعل، وما حدود التفويض والمراحل؟ | [تعليمات مساحة العمل](<F:/My Work/Sigma/AGENTS.md>) و[الدليل الرئيسي](SIGMA_FEATURE_REVIEW_MASTER.md) |
+| كيف تُبنى الواجهة؟ | [كتاب الواجهة](SIGMA_UI_PATTERNS.md)، ثم الكتل التي يسميها نوع الشاشة |
+| كيف تُبنى الخدمة والعقود والحفظ؟ | [كتاب الخلفية](SIGMA_BACKEND_PATTERNS.md)، ثم أبسط نمط صحيح |
+| ما الخطة أو العقد الخاص بهذه الميزة؟ | [المراجعات والعقود الجارية](<F:/My Work/Sigma/reviews/INDEX.md>) |
+| ما المرجع التحليلي وشرح الشاشة الذي أراجعه قبل الإنشاء أو الصيانة؟ | [دليل التحليل ومكتبة المصادر](references/speed-analysis/README.md)، وفق حدود الأدلة في الكتاب الرئيسي |
+| كيف أراجع دورة مترابطة بحسب القائمة والكود؟ | [تحليل القائمة ودورات العمل](references/speed-analysis/2026-10-28/README.md)، ثم مقارنة المستندات والإجراءات والخدمات بسيجما قبل العقود |
+| ما الذي تغير سابقًا؟ | [سجل التغيير](CHANGELOG.md) و[الأرشيف](archive/README.md)، عند الحاجة التاريخية فقط |
+
+الوضع المعتمد قد يسبق ترحيل بعض الشاشات. كل استثناء أو نقص يظل مسجلًا؛ وجود
+مثال قديم أو فحص مصدر لا يثبت أن التطبيق كله رُحّل أو اختُبر تشغيليًا.
+تواريخ التحقق تسمي نطاقها، ولا تُحدّث لتوحي بفحص شامل لم يحدث.
+
+توضيح المالك بتاريخ ٣٠ أكتوبر ٢٠٢٦: الدليل والكود المرجعيان يخصان البرنامج
+الذي تُبنى سيجما للوصول إلى تفاصيله الوظيفية. في كل شاشة تُعد مقارنة صريحة
+للحقول والمجموعات والمرشحات والإجراءات والحالات والروابط والرسوم والمخرجات،
+ويُخطط للناقص وفق [قاعدة الهدف الوظيفي](master/02-screenshot-and-visual-evidence-policy.md#reference-product-functional-detail-target-owner-clarification-2026-10-30).
+الموجود حاليًا في سيجما ليس سقفًا للهدف. تظل مكونات سيجما مالكة للشكل والتنفيذ،
+وتظل القواعد الخلفية والمالية غير المكشوفة قرارات محددة قبل التنفيذ؛ ولا
+تمنح مراجعة للقراءة فقط تفويض تعديل المصدر.
+
+## فحص الحزم والوثائق
+
+```powershell
+& 'F:\My Work\Shaban Documents\Shaban\sigma-erp\recipe-system\Generate-SigmaRecipes.ps1' -Check
+& 'F:\My Work\Shaban Documents\Shaban\sigma-erp\recipe-system\Check-BookReferences.ps1'
+```
+
+الأول يفحص اتساق الحزم الثماني، والثاني يفحص روابط الوثائق وأرقام الكتل دون
+مسح مصدر التطبيق. فحص مصدر ميزة بعينها يستخدم نطاقًا صريحًا. بعد تعديل كتاب
+أو قالب أو بيان الحزم، تُعاد الحزم بالمولد ثم تُراجع دلاليًا ويُعاد الفحص.
+حدود البناء والاختبارات والتشغيل تظل كما هي في تعليمات مساحة العمل.

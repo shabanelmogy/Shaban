@@ -1,0 +1,10 @@
+S264
+How to use Statement of Accounts
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-use-statement-of-accounts/
+
+How to use Statement of Accounts
+Go to the panel on the left side and click on the Customers tab.
+Scroll down and click on the Statement of Accounts module. A window will open.
+Select a date range, choose option of either ledger support or outstanding, and click on the REFRESH button.
+All details including voucher numbers, debit, credit, and running balance will be opened. You can export or print this detail as well.
+Click HERE if you have a query or an issue.

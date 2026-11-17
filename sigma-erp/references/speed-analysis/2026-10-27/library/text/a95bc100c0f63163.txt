@@ -1,0 +1,14 @@
+S248
+How to manage Lease Inquiries
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-lease-inquiries/
+
+How to manage Lease Inquiries
+Go to the panel on the left side and click on the Lease tab.
+Scroll down and click on the Inquiries module.
+Click on the +CREATE NEW LEASE INQUIRY button.
+A form will appear. Here put the date, sales person name, customer name, contact person (if customer is a company), and then enter the vehicle details. If you want to add more than one vehicle for a single customer, click om the Add Row option below every vehicle detail.
+Now, click on the SAVE button.
+All inquiries will appear as a list in the window.
+You can view, edit, or delete by clicking on the ACTIONS button.
+If you have to search a specific inquiry, put lease inquiry number or customer name and date. Then, click on the REFRESH button.
+Click HERE if you have a query or an issue.

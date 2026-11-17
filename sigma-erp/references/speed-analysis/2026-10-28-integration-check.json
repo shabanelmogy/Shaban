@@ -1,0 +1,45 @@
+{
+  "checkedAtUtc": "2026-10-28T15:45:01.728Z",
+  "scope": "Local documentation and preserved reference artifacts only; no application runtime, domain calls, builds, tests or database operations",
+  "relocatedFilesChecked": 2902,
+  "relocatedFilesHashMismatches": 0,
+  "scopedMarkdownFilesChecked": 18,
+  "scopedLocalLinksChecked": 475,
+  "generatedPacketSemanticReview": [
+    {
+      "packet": "PHASE-00-discovery-evidence.md",
+      "change": "review-step procedure text plus canonical fingerprints"
+    },
+    {
+      "packet": "PHASE-01-domain-api.md",
+      "change": "canonical source fingerprints only"
+    },
+    {
+      "packet": "PHASE-02-read-grid.md",
+      "change": "canonical source fingerprints only"
+    },
+    {
+      "packet": "PHASE-03-detail-write.md",
+      "change": "canonical source fingerprints only"
+    },
+    {
+      "packet": "PHASE-04-domain-actions.md",
+      "change": "canonical source fingerprints only"
+    },
+    {
+      "packet": "PHASE-05-integration-runtime.md",
+      "change": "canonical source fingerprints only"
+    },
+    {
+      "packet": "PHASE-06-final-reconciliation.md",
+      "change": "review-step procedure text plus canonical fingerprints"
+    },
+    {
+      "packet": "PLAN-00-maintenance-evolution.md",
+      "change": "review-step procedure text plus canonical fingerprints"
+    }
+  ],
+  "skillMetadata": "Existing YAML parser validation passed; unchanged frontmatter. Standard Python validator could not run because PyYAML is absent.",
+  "packageAudit": "Independent read-only audit: 12247 package links, 8298 line anchors, 49550 machine path references including 46179 source line ranges valid; no old-location dependency.",
+  "errors": []
+}

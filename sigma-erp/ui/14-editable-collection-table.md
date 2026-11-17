@@ -1,5 +1,40 @@
 ## 14. Editable collection table
 
+**Row-specific removal guards (2026-11-07).** The existing EditableRows utility
+accepts optional `canRemove(row)` in addition to the editor-wide canMutate. It
+checks the actual row before a confirmation and again before removal, after
+resolving its current index. `onRemoving(row,index)` runs only for an accepted
+actual removal, immediately before removing it. Use it for local attachment
+tracking, not an extra DELETE/confirmation implementation. Fleet documents
+require the editor grant plus cleanup access only for a row with a file;
+pathless rows retain ordinary removal. Keep context cancellation, form freeze,
+parent dirty state and existing onRemoved behavior. Omitted hooks preserve the
+existing contract. UI18 owns Media request lifetimes and deferred cleanup.
+The table's optional `removeAllowed(row,index)` applies that same row rule to
+the default Remove button and rechecks it inside remove(index), including
+direct calls. It hides an unavailable row action without removing the row or
+its data; editable/removeDisabled and projected custom actions retain their
+existing ownership. Reuse a feature's one row predicate for this input and
+EditableRows.canRemove rather than duplicating rule logic or file action markup.
+
+**Shared Add-action clearance (owner2026-10-31).** The existing collection
+toolbar-actions group supplies6px block and8px inline padding with border-box
+sizing. This leaves space around Add and its peer actions in every consumer,
+including Transportation's schedule, without changing the shared button's
+geometry,10px action gap, wrapping, split-toolbar order or print suppression.
+Do not add a per-screen margin or opt-in for this shared presentation. Narrow
+widths, RTL and both themes still require owner visual acceptance.
+
+**Shared first-cell freeze (owner slice, 2026-10-23).** The shared editable
+collection table freezes its first rendered cell at the logical start of its
+existing native row frame while horizontal scrolling. The existing projected
+cell order, Actions column, form row identity and validation layout remain intact;
+the table does not reorder cells or replace the native form table with PrimeNG.
+The freeze is presentation-only and follows the table's current RTL/theme and
+scroll ownership. Editable collection rows are never filtered by the read-table
+column menu: every `FormArray` row remains present at its original index so
+validation, focus, removal confirmation and payload mapping keep their contracts.
+
 > **Status: Canonical**
 
 **Shared mock heading action (owner follow-up, 2026-10-13; UI13):** a table in
@@ -26,6 +61,21 @@ empty state, and light/dark styling. The feature projects only its typed data
 cells/actions and retains all domain behavior. CompanyPartner uses the same
 component for contact persons, credit cards, documents, and the driver summary;
 do not copy their former `company-editable-table` markup.
+
+Projected collection toolbar actions reuse the existing
+`appEditableCollectionToolbarAction` slot beside Add (PO source action and GRN
+source selector/Load). Preserve feature-owned form bindings and source guards.
+Collection validation stays in the toolbar action flex flow, with shrinkable
+width and wrapping text; never absolutely center it over projected controls.
+Ordinary toolbars retain wrapping. The explicit GRN owner correction adds
+`toolbarLayout="split"`: a single shrinkable row, projected source controls at
+logical start and the shared Add action at opposite logical end. Collection
+validation sits below that row; source-load errors stay in their own region.
+Use this existing capability for equivalent source/detail toolbars rather than
+copying Add or overriding shared selectors. Default layout remains compatible
+with other heading/action compositions. GRN supplies only its bounded selector/
+group width; shared controls retain labels, theme tokens and logical direction. Owner2026-10-24;
+source-only, rendered responsive/RTL/theme acceptance remains pending.
 
 Shared partner contracts use `DocumentRow`/`CardRow` and factories/mappers from
 `shared/utils/partner-editor-forms.ts`; Company and its Driver editors adopt them.
@@ -99,12 +149,12 @@ long input/error acceptance remains owner-pending.
   <ng-template [appEditableCollectionRow]="parts.controls" let-control>
     <ng-container [formGroup]="control">
       <td>
-        <p-dropdown
+        <p-select
           formControlName="itemId"
           [options]="partOptions()"
           optionLabel="value"
           optionValue="id"
-        ></p-dropdown>
+        ></p-select>
       </td>
       <td class="is-number">
         <p-inputNumber
@@ -125,6 +175,17 @@ The shared component renders each `<tr>` and tracks the row object. The
 `appEditableCollectionRow` template must therefore emit `<td>` cells only; do
 not project another `<tr>`. A reactive row can wrap those cells in
 `<ng-container [formGroup]="control">` because the container adds no DOM node.
+
+Attachment rows retain34px file/View controls (UI18) and matching Remove height.
+Every cell centers vertically in the full row, including the file/View/error
+group and neighboring text/checkbox/actions. FieldError grows below its control
+in normal flow; it is part of the centered group. Keep actual td/table semantics
+and the existing removal/confirmation output; never turn the td into a feature
+flex container or duplicate row Delete inside the file control. The owner's
+2026-10-31 correction below supersedes the old first-track alignment. Attachment tables
+retain fixed table layout so a long unbroken file name shrinks/ellipsizes within
+the existing column allocation; retain explicit colgroup widths and min-width
+scroll contracts. Do not change unrelated text-only table layouts.
 
 When a row needs more than the standard Remove request, project the shared
 action context. The table still owns the action cell and the feature owns the
@@ -147,6 +208,79 @@ typed Edit/Delete behavior:
 ```
 
 ### Contract
+
+### Bounded row scrolling in routed editors (owner clarification, 2026-10-15)
+
+For every new or reviewed similar master-detail editor, verify the complete
+height chain, not just the table inputs. Use the bounded route/form/body from
+UI1 and a remaining-space FormSection host with `[fill]="true"`. Its content
+is already a bounded flex column. Every intervening table-area wrapper must
+also be a bounded flex column: use existing `sigma-editor-pane` from UI1,
+plus only the feature's workspace allocation. A wrapper with `flex:1` and
+`overflow:hidden` but `display:block` does not pass allocated height to its
+fillHeight child: extra rows can grow inside it and be clipped without a
+vertical scrollbar. Do not solve that by increasing a pixel height or enabling
+page scrolling.
+
+Reserve header space independently of row count. In a stacked editor with a
+bounded header share, that header must not shrink to feed the collection's
+intrinsic height; keep its workspace allocation non-shrinking. Give the
+remaining-space details host a zero flex basis (`flex:1 1 0; min-height:0`),
+not an auto basis derived from all rows. Carry the zero basis through the
+intervening table-area wrapper. Otherwise large row counts can consume the
+header allocation and make Basic Information disappear even after the inner
+wrapper becomes a flex column. The feature owns the header share (Purchase
+Requests retains40%); do not impose a universal pixel height or ratio on other
+screen shapes. Verify header visibility and row scrolling together. This rule
+describes the stacked variant: Purchase Requests subsequently moved to the
+owner-selected full-height tabs in UI13 and no longer uses a40% header basis.
+
+```text
+bounded editor body
+  → remaining-space app-form-section [fill]=true
+    → shared section content (flex column, min-height:0)
+      → optional table-area.sigma-editor-pane (flex column, min-height:0)
+        → app-editable-collection-table [fillHeight]=true [stickyHeader]=true
+          → shared fill root → shared frame (overflow-x/y:auto)
+```
+
+The frame owns both horizontal and vertical scrolling, with sticky column
+headers. Keep section title/Add actions above it, and document totals/footer
+outside its scrolling rows. Do not wrap the same collection in
+`sigma-editor-scroll` or add feature selectors for the shared frame. Preserve
+the print lifecycle that releases bounds and prints the complete saved rows.
+Other scrolling sections (such as header fields/documents) have their own
+separately bounded region; they do not scroll these rows.
+
+Source verification traces every rendered wrapper, including conditional
+wrappers, through host and component styles. Owner runtime acceptance must add
+enough rows to exceed the available height, reach the last row with the table's
+vertical scrollbar, reach the last column horizontally, and confirm fixed
+section actions/totals/footer and sticky headings. Cover Create/Edit/View,
+empty/error rows, short heights, responsive boundaries/intermediate widths,
+RTL/themes and complete printing. Source-only checks cannot certify a visible
+scrollbar. Purchase Requests supplies the missing-wrapper evidence; existing
+out-of-scope consumers adopt this rule when implemented or reviewed.
+
+### Complete report print flow (2026-10-27; UI21)
+
+Mark a printed EditableCollectionTable host with the existing `sigma-print-flow`
+class. Its shared print rules release the host, inner fill wrapper and scroll
+frame, override max-height/table/column minimum widths, unstick cells, wrap long
+text and use white paper with dark text in either theme. Toolbar actions,
+validation, required markers and row Actions columns do not print; headings and
+all projected rows remain. Projected business cells/data still belong to the
+consumer. No new input, local shell rule or separate print lifecycle is needed.
+
+The consumer prepares all mode-applicable rows/panels through UI21's existing
+ReportPrintService session, marks every outer bounded wrapper for print flow and
+keeps the on-screen fill/scroll contracts. This class does not fetch, unslice or
+restore rows omitted from the DOM. The component uses ViewEncapsulation.None, so
+its rules are scoped through `app-editable-collection-table.sigma-print-flow`,
+not an ineffective `:host` selector. Lease Agreement adopts this for all four
+saved sections; full multi-page/RTL/theme output remains owner acceptance.
+
+### Public inputs
 
 | Binding | Meaning |
 |---|---|
@@ -304,20 +438,25 @@ part of the row payload, and the backend value replaces the preview after save (
 "Backend, mapping, and calculation rules"; block 19 *Money and tax in forms*). Show it as text
 or a `readonly` input, not as an editable control.
 
-**One height, top-aligned cells (owner request 2026-10-01).** Inputs, dropdowns and calendars in a row are exactly
-`--sigma-editor-control-height` (34px, the same as the editor fields and filters), and cells align to
-the top, so an error under one cell never moves the controls of the others. A checkbox cell sits on
-the control line, using the same 15px box and `accent-color: var(--sigma-primary)` as
-editor checkbox fields (block 1). The shared table owns this; features add no row CSS.
+**One control height and uniform vertical centering (owner correction,2026-10-31).**
+Inputs, dropdowns and calendars retain exactly --sigma-editor-control-height
+(34px). Every header/body/footer cell follows UI6's universal middle alignment,
+including rows with `app-field-error`, existing `.sigma-field-error` or
+`app-file-field`. This supersedes the2026-10-23/24 first-control-line exception:
+remove its shared top!important override and checkbox top offset. Text, badges,
+checkboxes, file controls and actions center in their row; a control and all its
+inline feedback form one centered unit. Full wrapped feedback stays below the
+control in normal flow. The shared toolbar centers its items vertically too.
 
-**Optional centered body cells (Sales Quotation owner request, 2026-10-08).**
-Set `--sigma-editable-cell-vertical-align: middle` on the shared table host when
-the owner requests vertical centering. The shared body-cell rule includes the
-projected fields, read values and generated action cell; headers remain top-aligned
-and other consumers retain the default `top`. A field and its error message
-remain one cell group, so that group is centered when validation increases row
-height. Do not add feature-specific `td` selectors. Sales Quotation adopts this
-option; visual/validation/RTL acceptance remains owner verification.
+Preserve table/td display,7px/9px cell padding,34px Remove on validation/file
+rows,15px standalone checkboxes with zero margin, and existing captioned-check
+wrappers. No consumer opt-in, feature cell CSS, detached error, fixed error
+height or vertical offset. Existing `.sigma-field-error` compatibility remains;
+new feedback still uses UI19's `app-field-error`. Horizontal alignment, widths,
+identity, payload, theme, RTL and print remain owned by their existing contracts.
+Evidence: owner LimousineTariff centering request and the shared source;
+source-only, mixed heights/multiline errors/flags/actions/narrow/RTL/theme/print
+visual acceptance remains pending.
 
 **Numeric cells (owner request 2026-10-04).** Numeric inputs select their value
 on entry through the shared global selection owner (block 27); native
@@ -331,6 +470,52 @@ ownership; feature styles must not recreate the treatment. Job and
 JobEstimation item price/labour charges and numeric View cells adopt it.
 
 **Optional numeric units (Rental Booking owner correction, 2026-10-07).**
+For a composite cell with a selection/title and several labelled controls,
+use shared `app-editable-collection-table__cell-heading` (34px control track,
+8px gap), `__details` (8px grid gap and logical top separation) and
+`__detail-row` (shrinking label,156px control rail,8px gap). The first child label
+centres beside the control; the remaining child owns its input-unit group and
+FieldError below it. Use existing `__input-unit--fixed` for the96px number and54px
+neutral unit rail. Do not leave full-width InputNumbers and empty spacer spans
+inside a wrapping feature flex row. In the default scroll mode allocate enough
+type-column/table minimum width for the labels and controls; preserve horizontal
+frame scroll and row identity. The explicit fitWidth variant below replaces those
+minima with responsive labelled cells. Selection labels use unique inputId/for; editable/read-only/disabled
+and validation stay feature-owned. Keep Rate and Charges in their own standard
+columns even when an auxiliary overtime/mileage field is present. A details
+cell can use a one-column sigma-editor-grid for longer delivery/address fields.
+The shared owner provides geometry/RTL/token inheritance only; no mileage,
+pricing or write rule is introduced. RentalAgreement adopts this in routed and
+embedded entry. Existing consumers without these classes keep their presentation.
+Owner2026-10-28; source-only, narrow/RTL/theme/input/validation acceptance pending.
+
+**Optional fit-width rows (owner2026-10-28).** When the owner explicitly requires
+no horizontal scroll for a bounded editable collection, reuse the existing table's
+`fitWidth=true`. Default false preserves other financial tables' scrolling
+contract. Fit mode ignores `tableMinWidth` and column `minWidth`, uses a fixed
+available-width table with proportional `column.width` values and wrapping
+headers, and removes the shared numeric header's180px preference. Consumers
+provide shrinkable controls and translated `data-column-label` on each projected
+td; the shared actions cell supplies its own translated label. Do not hide form
+overflow, omit fields or write a feature-local table skin.
+
+The shared table owns the named inline container: at640px or below each native
+row becomes a stack of full-width labelled cells, retaining header scope and
+table role for assistive reading, stable row/control identity and one vertical
+frame scroll. Reset logical first-cell stickiness only in that narrow fit mode.
+At400px or below, shared composite detail label/control rows stack too. Keep
+number/unit groups, errors, busy/disabled and feature events unchanged; long
+content wraps. Screen-only container reflow leaves native print presentation.
+Fit styles follow default table rules so width, header and sticky overrides
+actually win. Percent columns are required for the fluid wide variant; do not
+carry a pixel width/minimum that defeats the approved fit contract.
+
+RentalAgreement's shared page/opening form opts in with50/30/20percent type/rate/
+charge columns, superseding only its earlier725px table minimum. Other consumers
+keep their existing opt-in/default contract. No new rows, pricing, API, cache or
+permission rule. Source-only; owner container-width/keyboard/screen-reader/RTL/
+theme/input/validation/print acceptance remains pending.
+
 Pair a shrinking numeric input and `span.app-editable-collection-table__unit`
 inside `app-editable-collection-table__input-unit`. Shared styling retains the
 existing34px control line,6px gap and a non-shrinking10px muted unit with isolated
@@ -343,7 +528,7 @@ checkboxes reuse the existing15px primary accent and34px `__row-check` label.
 Source-only; owner input/RTL/theme/visual acceptance pending.
 
 **Optional equal numeric widths (Rental Booking owner correction, 2026-10-07).**
-Use `__number` on a numeric input inside `__input-unit` or on a shared numeric
+Use `__number` on a numeric input/InputNumber host inside `__input-unit` or on a shared numeric
 value badge, with a consumer-local `--sigma-editable-number-width` on the table
 host. Shared width/max-width/flex bounds apply the same chosen width to input
 and read text; `__input-unit--fixed` centers the number/unit group and keeps
@@ -355,8 +540,9 @@ Booking selects96px within its existing620px table minimum; consumer detail-row
 geometry leaves room for units, not feature-owned input/badge CSS. Source-only;
 owner visual/RTL/theme/input acceptance pending.
 
-**Editable Quantity (application-wide owner instruction, 2026-10-04).** Use
-`p-inputNumber appQuantityInput` with direct `InputNumberModule` and
+**Editable numbers (application-wide owner expansion,2026-10-23).** The former
+quantity-only rule now applies to every editable numeric role. Use
+`p-inputnumber appQuantityInput` with direct `InputNumberModule` and
 `QuantityInputDirective` imports (block 27). The shared directive/styles own
 compact stacked increase/decrease buttons, the 34px control line and numeric
 alignment; feature columns retain their current widths. Keep existing integer
@@ -364,6 +550,38 @@ or decimal precision, min/max/step, typed row controls and validators. Native
 row recalculation moves to `onInput`, which follows the widget's CVA update for
 typing and stepping. Do not replace Remaining Quantity/derived/View text with
 editable widgets or recreate the widget/rail in feature SCSS.
+
+**Shared quantity/hour/meter precision (owner foundation decision,2026-10-30).**
+The product is being established and its current data is experimental: prefer
+one shared contract over preserving accidental per-screen precision. Classify
+each reviewed numeric field by its real domain. Quantities, fractional hours
+and meters use `QUANTITY_DECIMAL_PLACES` (6) from
+`shared/utils/quantity-number-policy`, `quantityKind="quantity|hours|meter"`
+on the existing `appQuantityInput`, and the same constant for the widget's
+`maxFractionDigits` and typed-form scale validation. A genuine whole count uses
+`quantityKind="integer"` and zero fraction digits; identities keep their actual
+transport validator. A domain-specific lower precision requires a recorded
+domain reason, not compatibility with experimental values.
+
+The directive validates scale together with existing min/max and revalidates
+when the role, bounds or widget precision change. `decimalScaleValidator`
+(block19) also covers headless/dynamic typed forms. Neither changes submitted
+values. Sign, range, step and hour-to-charge calculations remain domain-owned;
+fractional hours are decimal hours (1.5 means one and a half hours), not HH.MM.
+Money, tax, exchange rates and percentages retain their distinct policies:
+the appearance directive's generic20-digit fallback is not their domain policy.
+Unclassified controls must be classified when their screen is reviewed; changing
+every numeric widget to a quantity would change financial and identity contracts
+without evidence. This is an inventory gap, not an experimental-data exception.
+
+Backend ownership is BE18's `QuantityNumberPolicy` (18,6 storage/scale and
+explicit derived rounding). General preview rounding is extracted into
+`decimal-number.util`; financial previews retain the same `roundMoney` API and
+results. Reuse these owners instead of feature-local `Math.round` or literal6
+validators. Equipment work sheets and agreement preparation adopt this contract;
+other domain models require their paired API/storage reconciliation before
+accepting fractions. Source conformance is separate from compiler/runtime and
+owner migration verification.
 
 **Read-only numeric blue badge (owner generalization, 2026-10-04).** In new or
 reviewed editable collection rows, every non-editable numeric value uses
@@ -541,3 +759,15 @@ cells, and uses `formControlName` in every cell. Mixing `[formGroup]` on one cel
 
 ### Contextual confirmation forms (2026-10-09)
 `EditableRows` may receive `confirmationForms` when `freezeParentOnConfirmation` is enabled. The optional forms are frozen with the parent through the shared plural helper; the default remains unchanged. Use this only where row operations depend on a separate customer/category/context form. Preserve row identity re-resolution, saved-row confirmation and canMutate checks. Source-only evidence: Limousine tariff context and TripBooking documents.
+
+### Context-cancelled row decisions (2026-11-05)
+
+Pass the editor's context-expiry stream as `confirmationCancelled$` when a
+reviewed editor can outlive its session context. EditableRows tears down only
+its pending removal confirmation, releases `confirmationPending` through
+finalize, and retains its row-identity and `canMutate` checks. Keep the editor
+invalid until reopened; do not restore an expired form through the finalizer.
+The optional stream defaults to no extra cancellation for existing consumers.
+It never owns HTTP writes or cancels a previously sent save. Payment rows and
+Bill line/document rows adopt this hook; UI28 owns the surrounding session and
+independent-write lifetime. Source-only; interaction acceptance is pending.

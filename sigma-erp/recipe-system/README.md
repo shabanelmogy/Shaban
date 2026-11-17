@@ -123,6 +123,9 @@ repeats the drift.
 ## Read-only companion checks
 
 - `Check-Translations.ps1` — en/ar key parity per block (UI block 23).
-- `Check-BookReferences.ps1` — every source path, type name, `sigma-*` class, block number and
-  markdown link named by the books and the skill exists. Run it after a book or skill change;
-  exit code = unresolved paths, blocks and links.
+- `Check-BookReferences.ps1` — checks local Markdown links and canonical block
+  numbers without traversing application source. Run after a book or skill change.
+  Source paths/types/classes are checked only when narrow current-task paths are
+  explicitly supplied through `-SourceScope`; no repository-root scan is accepted.
+  Output identifies skipped source checks; a documentation pass is not a source
+  conformance or runtime pass. Exit code counts unresolved checked paths/blocks/links.

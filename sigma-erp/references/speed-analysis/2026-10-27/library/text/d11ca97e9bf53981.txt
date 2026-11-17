@@ -1,0 +1,11 @@
+S240
+How to manage Audit Trails
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-audit-trails/
+
+How to manage Audit Trails?
+Go to the panel on left side, scroll down to Administration module and click on it.
+Scroll down and click on Audit Trails module.
+Fill in the form with date range, record number, record type, and user, etc.
+Click on the SEARCH button.
+All the Audit Trail details will be opened. You can export this data to excel as well.
+Click HERE if you have a query or an issue.

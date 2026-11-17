@@ -2,15 +2,28 @@
 
 > **Status: Canonical** — translate headers when the export action runs
 
+**Explicit complete read (source-only,2026-10-31).** A source-supported complete
+result may replace repeated page reads for export/print while preserving the
+same predicates, order and authoritative count. Reuse `completeListRows` in
+`shared/utils/list-query`: require a successful Results envelope, an array and
+an integer totalCount equal to the array length; reject incomplete or failed
+responses instead of emitting a partial file. Transportation's three virtual
+trip readers opt into `allRows=true` for their existing complete outputs;
+ordinary paging retains its prior cap and response. This is not permission to
+treat an arbitrary paged endpoint as complete, relax transport bounds globally,
+cache operational reads or claim measured speed. Cancellation, progress and
+errors retain their existing owners; deployed size/SQL/timing acceptance is pending.
+
 Shared helper, signature `onExportToExcel(data, fileName, headers?)` where
 `data` is currently a `Signal<any[]>`. Keep feature rows typed; the `any`
 belongs to the Transitional shared helper boundary (backlog 22), not to the
 feature contract.
 
 Export mapping follows UI1's TypeScript library compatibility rule. The current
-ES2018 library excludes flatMap; complete multi-section reports such as CashFlow
-accumulate typed rows with for...of/push, retaining section/source order and
-click-time translated headers without changing project compiler options.
+Angular21 ES2022 default library includes flatMap. Complete multi-section reports
+such as CashFlow retain their typed for...of/push traversal, section/source order
+and click-time translated headers. A platform upgrade does not authorize changing
+export contents or per-feature compiler options.
 
 **Column headers are UI text, so translate them.** Resolve header text when the
 user clicks Export. Customer Statement dispatches to the selected section's

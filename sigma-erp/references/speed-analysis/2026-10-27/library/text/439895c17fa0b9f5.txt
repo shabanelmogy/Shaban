@@ -1,0 +1,10 @@
+S193
+How to change the Voucher number
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-change-the-voucher-number/
+
+How to change the Voucher number?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Change Voucher No. module.
+A dashboard will appear on the right side of the panel. Select the voucher type, put the current voucher number, and new voucher number.
+Click on the CHANGE button.
+Click HERE if you have a query or an issue

@@ -1,0 +1,12 @@
+S186
+How to add a new Vehicle
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-add-a-new-vehicle/
+
+Fleet module let you manage your vehicle easily and effectively.
+How to add a new Vehicle
+Go to the panel on the left side and click on the Fleet tab.
+Scroll down and click on the Vehicles module.
+A window will open. Go the +CREATE NEW VEHICLE button and click on it.
+A form will appear. Fill it and add documents if needed. Then, click on the SAVE button. All vehicles will be listed with details like make, model, type, and status, etc.
+You can also search here any vehicle by typing plate no, fleet no, make and model, or any other prescribed detail.
+Click HERE if you have a query or an issue.

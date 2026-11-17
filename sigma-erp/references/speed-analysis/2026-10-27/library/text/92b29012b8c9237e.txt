@@ -1,0 +1,11 @@
+S230
+How to define Suppliers Code
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-suppliers-code/
+
+How to define Suppliers Code
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Document No’s tab.
+Scroll down, locate, and adjust Suppliers Code.
+Scroll down and click on the SAVE button.
+Click HERE if you have a query or an issue.

@@ -21,6 +21,9 @@ Reference ownership is explicit:
   `shared/components/editor-dialog`;
 - reusable accessible editor tablist, keyboard behavior, RTL navigation and
   tab-button styling: `shared/components/editor-tabs`;
+- approved document decision/history panel shared by saved Approvals tabs and
+  Approval Status dialogs: `shared/components/document-approval-cycle` (UI7/13);
+  feature adapters retain their own frozen server state/effect/endpoint contract;
 - reusable routed step navigation, progress semantics, responsive layout and
   light/dark styling: `shared/components/step-form`;
 - reusable accessible invalid-field summary, count and field actions:
@@ -89,6 +92,12 @@ Use canonical sources and report a precise blocker for unresolved conflicts.
 
 ## Purpose
 
+For editor options/settings, apply UI2's cache adoption checklist: source
+eligibility, finite bootstrap, success-only writer invalidation and one scoped
+watch binding that preserves selected IDs, labels and drafts. Revalidation never
+recalculates business values. UI22's shared background badge owns activity;
+do not add a local cache, permanent replay, spinner or competing socket.
+
 - Keep editor fields, typed forms, Detail/Add/Update DTOs, and persistence
   behavior aligned.
 - Select editor structure from business shape rather than screenshot layout or
@@ -142,6 +151,10 @@ contracts remain unresolved and are not invented in a payload.
    with `app-form-section`; keep the single parent form, forward-validation
    gate and controls in the feature, and render its typed invalid-field list
    through `app-form-validation-summary`.
+   For comparable routed documents, apply UI13's "Routed document editor
+   baseline" as one set, with its UI1/3/14/16/24 and BE8 owners. Record each row
+   as Match, Not Applicable with a reason, or a governing exception. Do not copy
+   the motivating feature's business matrix or deferred workflows.
 2. Freeze Detail, Add, and Update field ownership.
 3. Define typed form controls and nullability.
 4. Compare frontend and backend validation.
@@ -171,6 +184,24 @@ contracts remain unresolved and are not invented in a payload.
 
 ## Required outputs
 
+Reconcile Master5/UI29 performance evidence for detail, initial editor bootstrap,
+save/action refresh and child/option payload size. Review avoidable request
+waterfalls and repeated query work with BE7, preserving drafts/transactions and
+business guards. Record BE2's relevant index evidence or no-new-index reason;
+measure only when authorized and otherwise supply comparable owner checks.
+
+Reconcile UI22's actual detail/save operation lifecycle and visible owner. Pair
+global start/finalize where applicable, remove duplicate loading-only messages
+without removing error/empty/Retry or busy/aria-busy. Required routed initial/
+filter lookups use the page host via shared lookup leases; dialog lookups stay
+local and retained-cache refresh stays silent. A shared import alone
+does not demonstrate that the active route displays the current loader.
+
+Carry the UI2 / Master5 screen cache source matrix into this handoff. Reconcile
+editor options, settings and direct live reads; include bootstrap success before
+watch, selected-label retention, null-context clearing, Retry and draft/financial
+preservation. Evidence is actual source behavior, not shared class names alone.
+
 ### Detail and write contract
 
 | UI field | Form control type | Detail DTO | Add DTO | Update DTO | Server-owned | Validation owner | Status |
@@ -194,14 +225,41 @@ contracts remain unresolved and are not invented in a payload.
 | Escape | | | | |
 | Route/back | | | | |
 
+For a nested reason or confirmation dialog, check the parent exit guard and
+child lifetime on withdrawal of View and of the action grant independently
+(UI28). In the write contract, check stored and replacement branch activity
+where required and tie retained-reference exceptions to the same saved child
+row and value (BE8).
+
 ### Child/upload contract
 
 | Item | Client draft state | Persisted by | Validation | Reconciliation/cleanup | Failure recovery |
 |---|---|---|---|---|---|
 | | | | | | |
 
+### Comparable document presentation reconciliation
+
+When UI13's routed-document baseline applies, record concern, owning block,
+actual shared producer/target consumer, adopted value/behavior, source result
+and owner runtime/visual verification pending. Include every baseline row;
+shared class names alone do not establish conformance. Other editor shapes
+record why this baseline is Not Applicable and use their own owning checklist.
+
 ## Continuous gates
 
+- Apply UI1's full-available-width ownership steps: actual route/host/page/panel
+  selectors, shared block host without local geometry, or the documented
+  flex-parent exception with a growing direct child and preserved scroll/print.
+  Record empty/loading/error/populated source evidence and UI29's responsive
+  acceptance status; no class-name-only layout pass.
+- Inventory inactive-tab subscriptions (UI13). Required record reads remain
+  immediate; independent expensive tab reads start at first activation, retain
+  their instance per record and reset on identity/reload/context with existing
+  busy/draft/Retry/teardown and direct-link behavior. CSS hiding is not lazy loading.
+- Gate detail/approval action enrichment from existing header facts before
+  costly reads (BE7); preserve source-candidate multiplicity/unknown kinds and
+  write-time guards. Keep independent HTTP reads separate from prohibited
+  parallel EF work on one context; printing waits for its actual prerequisites.
 - Add and Update contain client-editable inputs only.
 - View mode does not depend on disabled controls alone for security.
 - Dirty dialogs use controlled visibility; the library must not close first.
@@ -237,6 +295,10 @@ contracts remain unresolved and are not invented in a payload.
   occurs one microtask after dialog `shown`, with focus moved to the calendar
   input.
 - All form and dialog outputs are typed.
+- Classify numeric roles and adopt UI14/19's shared quantity/hour/meter profile,
+  precision constant and decimal-scale validation. Counts/identities and money
+  retain their actual policies; reject excess input precision without rounding.
+  Reconcile the paired backend storage/API before accepting fractions (BE18).
 - Upload files are validated and abandoned files are recoverable.
 - Save produces exactly one success notification; a feature-owned composite
   success explicitly suppresses the mutation interceptor toast.

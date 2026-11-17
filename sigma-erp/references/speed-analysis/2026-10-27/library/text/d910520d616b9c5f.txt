@@ -1,0 +1,11 @@
+S281
+Using Receivable Age Analysis
+https://speedautosystems.com/vehicle-leasing-software/user-guide/using-receivable-age-analysis/
+
+Using Receivable Age Analysis
+Go to the panel on the left side and click on the Customers tab.
+Scroll down and click on the Receivable Age Analysis module. A window will open.
+Select a date range. Choose options of customer, customer group, customer type, or sales person, etc. then, click on the SEARCH button.
+All the concerning data will be displayed.
+To print click on the PRINT button. And to export the data click on the EXPORT button.
+Click HERE if you have a query or an issue.

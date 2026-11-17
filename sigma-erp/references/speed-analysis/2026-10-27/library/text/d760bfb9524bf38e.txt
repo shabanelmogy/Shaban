@@ -1,0 +1,11 @@
+S048
+Customer Balance Summary
+https://speedautosystems.com/car-rental-software/user-guide/customers-balances-summary/
+
+Customers Balance Summary
+Go to the customers module from left navigation panel and open “Balance Summary”
+Here you have to select the date range and all the remaining balances will come here.
+We have 3 options here:
+1. ALL: In all it shows you the complete data of all the Debit’s and Credit’s in the system with the customer information,
+2. With Debit Balance: It show’s you all the customers with the debit balance to the system. According to our system the Debit Balance shows the amount and customers to whom we have to pay.
+3. With Credit Balance: It show’s you all the customers with Credit balance. If there are some entries in this option then it means we have to charge it from the customer. These are the pending balance.

@@ -1,0 +1,12 @@
+S205
+How to define and adjust Tariff
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-and-adjust-tariff/
+
+Manage Lease Particulars
+The lease module lets you manage all the lease processes.
+How to define and adjust Tariff
+Go to the panel on the left side and click on the Lease tab.
+Scroll down and click on the Tariff module.
+Select a date range and click on the PROCESS button. No of processed fines in total and with agreements will appear.
+You can download this data by clicking on the DOWNLOAD button integrated on the top-right side of the window.
+Click HERE if you have a query or an issue.

@@ -1,0 +1,15 @@
+S085
+Rental Discounts Management
+https://speedautosystems.com/car-rental-software/user-guide/rental-discounts-management/
+
+Rental Discounts Management
+Open the rental module from the left navigation panel.
+Here you will find the second tab related to “Discount Auth Codes”.
+From here you can give access for discounts for some special customers or your employee to increase the sales.
+1. Click on the blue button on top right and you will see a menu.
+2. First you have generate a new code number and it can number or alphabets or both can apply.
+3. After that you have to mention the discount in % and it wont allow to give more than 20%.
+4. Then you have to select that it is for hours or days.
+5. Then you can also select that how many times the same code can be applied.
+6. Then you have to select the employee for which you are generating this discount code.
+7. you can put in the reason if you want for providing the discounts.

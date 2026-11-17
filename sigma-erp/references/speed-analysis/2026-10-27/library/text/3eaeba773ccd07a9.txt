@@ -1,0 +1,18 @@
+S306
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+https://speedautosystems.com/vehicle-mobile-inspection/for-car-rentals/how-to-use/how-to-take-car-back-from-customer-on-rental-agreement-closing/
+
+Watch source video online
+How to take a car back from a customer on rental agreement closing?
+To Check-In a vehicle use the mobile application again and the check-in process is spread over six steps:-
+Step#1: tap “Agreement Check In”.
+Step#2: enter the Vehicle Plate Number or just scan the QR code this will fetch the vehicle as well as customer details automatica Enter fresh mileage on the odometer of vehicle and fuel level, give the location where the vehicle is being checked in. Keep the location of cell phone “On” so that system can record the geographical location automatically.
+Step#3: tick all the items being returned with the vehicle leaving missing items.
+Step#4: check the vehicle for exterior damages if any and mark these using the tools explained in the Check-Out process Step#5. The old damages will be in Blue color and fresh will be marked in Orange color. If the damage is marked incorrectly or erroneously that can be deleted by tapping delete (recycle bin) button. After marking a damage you can take a photo to keep a record:-
+Step#4-a: tap the camera button, take a photo; if the photo is desirable tap “OK” else tap “RETRY”.
+Step#4-b: select the desired portion to save in the photo and tap “DONE” else tap “CANCEL”.
+Step#4-c: enter details pertaining to this photo or leave it blank, to take additional photos of the same damage tap the + Camera button in the lower part and repeat the same process. Tap back button and proceed to Step#5.
+Step#5: repeat the same process for the interior of the vehicle and proceed next.
+Step#6: Enter the notes if required, get customer’s signatures and sign yourself and tap “Finish” to finish the check-in process.
+How to use Vehicle Mobile Inspection for Car Rentals (VMI.Rental)
+How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Apple App Store? How to download Vehicle Mobile Inspection for Car Rentals (VMI.Rental) app from Google Play Store? How to Sign Up? How to Sign In? How to add vehicle? How to create vehicle QR Labels? How to create vehicle checklist? How to manage staff? How to give a vehicle to a customer on rental agreement? How to take a car back from a customer on rental agreement closing? How to open vehicle movement on a staff? How to close vehicle movement on a staff? How to generate reports? How to open rental agreement? How to Fix Vehicle Damages? How to Initialize the Application for Effective Use?

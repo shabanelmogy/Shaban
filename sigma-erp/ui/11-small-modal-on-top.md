@@ -55,6 +55,12 @@ record has no name yet · removal only inside `if (confirmed)`.
 - **The dialog owns:** the load from `source` when it opens, the loading, empty and error
   states (the source call sends `X-Skip-Error-Interceptor`), and the columns and their status
   badge.
+- **Read progress and recovery (2026-10-26):** the body-appended dialog renders its
+  shared local `StateMessage` while loading, with the table mask suppressed (UI22).
+  Both unsuccessful envelopes and transport errors expose the shared Retry action,
+  which calls `loadHistory` through the same source; an active read cannot be started
+  twice. Destruction cancels the read through its existing `DestroyRef`. No global
+  page counter is started behind the dialog and features add no parallel loader.
 - **Columns:** `[showCustomer]="false"` on a customer's own history, `[showVehicle]="false"` on
   a vehicle's.
 - **Rows:** `AgreementHistoryRow` from `shared/models/agreement-history.ts`.

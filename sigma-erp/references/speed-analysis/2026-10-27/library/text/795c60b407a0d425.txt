@@ -1,0 +1,11 @@
+S227
+How to define Receipt Number
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-receipt-number/
+
+How to define Receipt Number?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Document No’s tab.
+Scroll down, locate, and adjust Receipt Number.
+Scroll down and click on the SAVE button.
+Click HERE if you have a query or an issue.

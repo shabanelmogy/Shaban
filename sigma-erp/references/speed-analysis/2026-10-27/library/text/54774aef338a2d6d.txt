@@ -1,0 +1,10 @@
+S187
+How to add or remove agreement fields
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-add-or-remove-agreement-fields/
+
+How to add or remove agreement fields
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Fields tab.
+Check or unchecked boxes according to your business and agreement needs.
+Click HERE if you have a query or an issue.

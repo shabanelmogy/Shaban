@@ -46,6 +46,15 @@ complete value used by templates and exports.
 
 Values the grid shows but the API does not return are built in one mapper:
 
+For existing loose or nested response shapes, the feature's mapper may reuse
+`shared/utils/grid-row-values.ts`: `readDisplayValue(source, pathSegments)`
+reads a scalar display path and `readBoolean(source, field)` retains only an
+explicit boolean. Missing paths stay empty; do not infer domain aliases,
+identities, statuses or financial values. Keep path selection and any existing
+fallback in the feature mapper. Reuse these helpers instead of copying the
+same defensive path reader into each feature. They do not replace typed DTOs,
+introduce a legacy grid adapter or change the shared table's typed field keys.
+
 ```ts
 private toGridRow(item: CompanyPartnerDTO): CompanyPartnerGridRow {
   const name = item.companyName?.trim() ?? '';
@@ -68,6 +77,12 @@ fallback that returns translated text. Export and any render path that bypasses
 the template then still show translated text instead of a raw enum. In the
 template, bind the row with `let-row` (`$implicit`).
 
+Source-use status and percentage are separate read-only columns where the owner
+requests progress. Show the server status as a translated shared badge and the
+nullable percentage with two decimals; No Quantity uses a dash. Saved details
+may repeat the indicators. Never label source conversion as invoicing or approval
+(Master4, BE14; first consumer Purchase Request).
+
 **Column types (shared formatting).** `DataTableColumn.type` formats the field so a feature
 writes no `value` function or template for common cells:
 
@@ -80,6 +95,17 @@ writes no `value` function or template for common cells:
 
 `value` still wins over `type`, and `cellTemplate` remains for anything richer. Reference:
 Job list (`type: 'status' | 'money' | 'dateTime'`, no templates, no formatting helpers).
+
+**Exact money columns (2026-11-04).** After the endpoint and every direct
+consumer adopt decimal strings, declare `type:'money', exactMoney:true`.
+The existing DataTable owns text filter entry, numeric match modes and private
+BigInt comparison units (UI6). Keep the source text for display/actions/export;
+never coerce it to Number. `moneyDecimalPlaces` controls display precision.
+`moneyAggregate:true` allows a read aggregate to display/sort more than16 whole
+digits; it does not enlarge any single financial input or storage column.
+The first adopters are JournalVoucher's base Amount and VoucherJournalLineDto
+readers. Legacy numeric columns keep their current contract until explicitly
+adopted. Scope for hierarchy/incremental data retains UI6's existing boundaries.
 
 **Status badge (shared).** A status cell is `<span class="sigma-status-badge …">` with a
 variant — `--success` (active/open), `--info`, `--warning`, `--danger` (voided/rejected), or

@@ -73,7 +73,7 @@ Three wiring steps, all required:
 
 3. Menu entry, or the page is reachable only by typing the URL.
 
-### Standalone dialog registration and Angular 17 control flow
+### Standalone dialog registration and built-in control flow
 
 **Standalone consumer contract — mandatory source check.** Before adding or
 moving shared controls, inspect the exact imported file's exports and the
@@ -99,12 +99,13 @@ is the source-backed example; owner compilation remains pending.
 
 **TypeScript library compatibility — mandatory source check.** Inspect the
 effective `compilerOptions.lib` before introducing standard JavaScript APIs.
-Current `tsconfig.json` selects `es2018` and `dom`, although `target` is
-`es2022`. The target controls emitted syntax; it does not widen explicit lib
-declarations or supply runtime polyfills. `Array.flatMap`/`Array.flat` and
-`Object.fromEntries` require ES2019 declarations and must not be used under
-the current library contract. Use typed `for...of`/`push` accumulation for
-flattening export rows and typed construction/addControl for form records.
+The Angular21 CLI migration removes the old explicit `es2018`/`dom` override;
+the current `es2022` target selects TypeScript's default ES2022 browser libraries.
+If another config supplies an explicit lib, it still overrides that default.
+Neither target nor declarations supply runtime polyfills. ES2019 through
+ES2022 APIs are now available under the application contract; do not retain
+the former blanket ban on flat/flatMap/fromEntries/replaceAll/at. Typed
+`for...of`/`push` export accumulation and typed form construction remain valid.
 Preserve source order, null handling, headers and values. Do not widen lib or
 add a polyfill to silence a local feature error; such a project compatibility
 change requires its own explicit scope and runtime support review. Template/TS
@@ -121,7 +122,7 @@ their component imports own their compilation. A missing component root can
 also make a valid standalone import appear “not statically analyzable” in the
 parent component's `imports` array.
 
-Use Angular 17 built-in control flow consistently. An `as` alias is allowed
+Use built-in control flow consistently. An `as` alias is allowed
 only on the primary `@if` of a control-flow block; it is invalid on an
 `@else if`. When loading and error states precede an optional response, make
 the response alias the primary condition of a nested `@if` inside the final
@@ -141,7 +142,7 @@ the response alias the primary condition of a nested `@if` inside the final
 }
 ```
 
-Never write `@else if (summary(); as summary)`: Angular 17 rejects it and the
+Never write `@else if (summary(); as summary)`: Angular rejects it and the
 alias is then out of scope for the response markup. Keep aliases scoped to the
 smallest response block and reference the aliased value only inside that block.
 
@@ -149,9 +150,179 @@ smallest response block and reference the aliased value only inside that block.
 `tsconfig.app.json` `files` boundary when required · no `as` alias appears on
 an `@else if` · the fallback state remains reachable when the response is null.
 
+### Sigma authenticated shell — PrimeNG (owner-approved replacement, 2026-10-22)
+
+The owner approved replacing Metronic and starting with the authenticated shell.
+The active shared owner is `app/layout/LayoutComponent`, with
+`app/layout/ShellHeaderComponent`, existing
+`SidebarMenuComponent` and `AppbarShortcutsComponent`. This supersedes the
+Metronic initialization, sidebar rail and toolbar-sizing implementation below;
+those old insets remain historical compatibility evidence, not a new reference.
+The owner's subsequent complete-retirement instruction includes all dependent
+screens. `_metronic` and the unused Builder/demo/KT tree are removed after moving
+the live shell to `app/layout`, domain enums to `modules/shared/enums` and form/Excel
+helpers to `modules/shared/utils/form-export`. All direct consumers, lazy route,
+explicit compile roots and retained tests follow the new owners. Enum values,
+routes, providers, feature form/control names, API payloads and business rules do
+not change. No compatibility re-export barrel may recreate the old tree.
+
+**Complete style retirement (owner2026-10-22, supersedes the earlier layout-only
+slice).** `assets/sass/style.scss` composes only Sigma base, status tokens, native
+controls and utilities, independent of the retired Sass core/components/layout/
+vendor trees. Existing native fields/buttons receive PrimeNG directives through
+their real owning imports; presentation classes/selectors and dynamic class
+consumers migrate together. Shared wrappers retain their public contracts.
+Sigma's shell owns its overflow, native unpadded route/content classes and
+bounded-route scrollbar gutter. Keep historical IDs only where current print
+consumers require them. Routed Receipt now fills its route container rather
+than positioning against historical header/sidebar offsets; embedded/dialog
+sizing stays with its existing owner. With that last dimension consumer removed,
+the measured-header bridge and unused layout-dimension tokens are retired too.
+Do not add a new viewport-height calculation or a fake compatibility offset.
+Footer's optional container-class input remains compatible through native Sigma
+markup; it does not require app-container or the vendor visually-hidden utility.
+
+Error-page Return Home actions also use ordinary Router navigation. Do not
+bootstrap/reinitialize legacy KT menus/drawers/sticky/scroll/toggles through a
+delayed callback after returning to the PrimeNG shell; Angular and the current
+publisher components own that lifetime. Preserve the error page's route,
+theme/background subscriptions and body-class cleanup (runtime retirement,
+2026-10-22).
+
+- Keep one lazy authenticated shell and the complete `pages/routing` catalog,
+  AuthGuard/hash/deep links, existing business provider registry, one HttpClient,
+  translation session, current-branch and loading-service contracts. Do not run
+  LayoutInit/ScriptsInit, template plugin bootstraps or demo drawers/modals in
+  the active shell. Browser titles derive from Router/catalog/translations,
+  independently of whether navigation is visible.
+- LayoutComponent owns one flex viewport: header above workspace; a280px
+  desktop aside from992px, one flexible content region and a fixed footer.
+  The header button explicitly hides/shows the aside, giving its width back to
+  content. Below992px PrimeNG Drawer owns mask/Escape/focus and closes after
+  successful navigation. Render only one menu instance. Use logical CSS and
+  Sigma tokens; never copy Bootstrap layout utilities into this shell.
+  PrimeNG21's Drawer destruction skips mask cleanup when visible already became
+  false during leave. The bounded ShellDrawerCleanupDirective invokes that
+  instance's exported idempotent destroyModal if its mask survives destruction.
+  Retain it until the publisher fixes this lifecycle; do not patch node_modules
+  or sweep arbitrary body masks. Verify immediate mobile-close → desktop resize
+  leaves no mask blocking the next page.
+- Desktop brand region and aside share `--sigma-navigation-width: 280px`
+  from LayoutComponent, including their borders. The logo region begins at
+  logical start; its32px hide/show button is centered on the logical-end border
+  between navigation and content. Below992px use a normal40px drawer button.
+  Preserve accessible expanded/action labels and mirrored directional glyphs.
+  Keep shortcut labels compact at992–1400px and bound wide direct labels to100px
+  without removing their full accessible names, titles or overflow actions.
+- A menu group row ends with its disclosure chevron; the independent Pin is
+  before it, so a hidden Pin never reserves trailing space after the arrow.
+  Custom rows own8px padding and publisher wrappers add none. Native
+  group buttons also have zero margin/padding so their icons and titles align
+  with sibling page links; the custom row alone supplies their common inset.
+  Each nested root/submenu list adds14px logical-start padding and zero logical-end padding.
+  The bounded shared menu rule must override the existing global physical
+  `ul` padding!important; do not change feature lists. Verify both directions
+  against actual nested publisher lists, retaining disclosure/keyboard owners.
+  The owner's third-level Pin adjustment adds8px logical-end margin only to
+  that Pin. Publisher treeitem aria-level2 corresponds to application level3
+  because the top-level group is outside its tree; preserve other levels and
+  the arrow position.
+  Bound each PanelMenu motion grid to `grid-template-columns: minmax(0, 1fr)`;
+  its content wrappers and nested lists have `min-inline-size: 0`.
+  Match the installed publisher's actual `ul[pPanelMenuSub]` list host.
+  Within the row, keep icons and the1.75rem centered Pin
+  fixed while the label uses a zero flex basis and zero minimum inline size
+  with normal whitespace and `overflow-wrap: anywhere`. Long sidebar names
+  appear in full across as many lines as needed; no ellipsis, clipping or line
+  clamp (owner clarification2026-10-24 supersedes earlier truncation).
+  Rows grow naturally while fixed controls remain centered. This keeps third/deeper-level actions within the existing
+  viewport without clipping their focus outlines or changing pin/chevron order
+  (owner2026-10-24; source-only visual acceptance pending).
+- Selecting a sidebar page preserves the current bounded menu scroll position
+  (owner clarification2026-11-01 supersedes selected-page reveal2026-10-31).
+  Keep the existing panel-item objects, child arrays and disclosure alive on
+  ordinary route changes; update active styling in place instead of rebuilding
+  the publisher model. A route signal read by the projected row template keeps
+  its active classes current across OnPush publisher views. Leaf commands cancel
+  pending group alignment without requesting their own reveal; NavigationEnd
+  updates selection without restarting alignment, including real path changes
+  and reselecting the current page. Query/fragment-only route changes also do
+  not start a fresh reveal. Search/language changes may rebuild the
+  model for their own purpose; existing manual-cancellation, remount, keyboard,
+  Pin and native-scroll ownership stay intact. No window scrolling, node
+  reordering, artificial spacer or feature-specific tracker workaround.
+- Active sidebar rows use the existing route-derived active state in the shared
+  SidebarMenuComponent (owner2026-10-23). Paint the whole custom row, including
+  its Pin area, with `--sigma-primary-soft`, a1px border mixing38% primary with
+  `--sigma-border`, and a3px logical-start edge in `--sigma-primary`; retain the
+  existing primary bold label/icon and .5rem radius. Reserve transparent borders
+  on inactive rows too:7px padding and5px logical-start padding plus the borders
+  preserve the previous8px effective inset without selection-induced movement.
+  Both desktop aside and mobile Drawer inherit this single rule, using existing
+  light/dark tokens; do not copy it into individual feature screens.
+- Opening a main or nested sidebar group aligns its heading toward the top of
+  the existing menu scroll viewport, clamped to its available range. PrimeNG
+  invokes the command before disclosure; wait for rendered expanded state and
+  the next layout, then observe the actual menu/motion-container size changes
+  while siblings collapse and children expand. A one-shot pre-motion scroll
+  can be clamped too early. Keep this in SidebarMenuComponent for both aside and
+  Drawer, without moving nodes, adding spacer height or scrolling the page.
+  Manual pointer/wheel/touch/navigation keys, search/pin, another command,
+  route/model rebuild or destruction cancel pending animation-frame work and
+  disconnect the observer. Closing a group does not start alignment. Preserve
+  publisher keyboard/focus/disclosure and native scrollbar/pin geometry
+  (owner2026-10-24; source-only visual acceptance pending).
+- Retain `sigma-app-viewport` lifecycle, `kt_app_root/page/wrapper/main` and
+  content-container IDs as print/consumer compatibility boundaries, without
+  data-kt interactions. `.app-content` remains fallback scroll owner, with
+  zero padding; shared bounded routes fill their box and own their inner scroll.
+  Header responsiveness uses its own inline-size container, independently of
+  the992px navigation breakpoint. The owner correction2026-10-24 supersedes
+  the earlier two-row layout: Toolbar stays nowrap at every width. Narrow the
+  branch/language controls, gaps and secondary captions first. Below768px hide
+  the decorative logo and separate Manage button; Manage stays available in
+  Shortcuts. Keep Recent, navigation, branch, language, theme, account and refresh
+  status on that row. Below480px use32px controls; below360px branch becomes an
+  icon with its full selected name in the title/popup. Compact status badges
+  retain accessible text and full hover titles. Return manager focus to the
+  visible Manage or Shortcuts trigger. Keep names reachable in Select popups
+  and preserve accessible labels. Never infer usability from widths alone.
+  Shortcut CSS and overflow membership must use the same1600px header-width
+  boundary, not different browser-width/media-query rules. Observe the existing
+  header container, disconnect on destruction and close a shortcut popup when
+  switching layouts hides its trigger. Every saved entry stays in overflow when
+  direct shortcuts collapse; preserve saved IDs/order and existing focus helpers.
+  Bound shell Popover/Select surfaces to viewport width; popup content owns its
+  bounded vertical scroll on short screens. Projected content retains component
+  styles; body-appended publisher wrappers use the existing global shell selectors.
+- A native ResizeObserver measures only the header host and publishes
+  `--bs-app-header-height` on the shell root for Receipt's existing fixed top
+  inset. Disconnect on shell destruction. This is not a new route-height
+  formula or permission to copy old viewport calculations. No unused footer or
+  toolbar measurement adapter is needed by the current feature source.
+- Branch/language Selects use typed FormControls as a view of confirmed shared
+  service state. Reset a candidate immediately to the confirmed selection,
+  then let successful service state update it; retain loading/saving/editor
+  guards and recoverable error text/retry. A one-way ngModel binding alone can
+  leave the failed candidate displayed because the confirmed input never changed.
+  Do not change API, default-branch, translation cancellation or failure owners.
+- ThemeModeService retains light/dark/system, storage keys, observable API,
+  data-bs-theme and its existing change event. Native image-attribute updates
+  replace the template ThemeMode plugin. Account/profile remains current Login
+  data, read only; Help/logout and unavailable placeholders keep their contracts.
+  Static template notification samples do not become real notification data.
+- PrimeNG Select/Popover/Drawer own overlay behavior. Shared overlay focus
+  edges follow UI27. Print hides shell chrome and all marked body overlays,
+  releasing frame height/overflow for the existing report lifecycle (UI21).
+
+Canonical sources for this shape: current LayoutComponent, ShellHeaderComponent,
+SidebarMenuComponent, AppbarShortcutsComponent, native ThemeModeService and
+styles.scss shell overlay rules. Evidence and migration boundary:
+`reviews/PRIMENG_SHELL_MAINTENANCE_EVOLUTION_PLAN.md`. Build/rendered tests and
+owner interactive visual acceptance remain distinct.
 ### Global viewport and vertical-scroll ownership
 
-The authenticated Metronic shell must not make the browser document and the
+The authenticated Sigma shell must not make the browser document and the
 feature content competing vertical scroll owners. `LayoutComponent` owns the
 `sigma-app-viewport` body class while the authenticated shell is active. That
 class is bounded to one dynamic viewport, the flex ancestors use `min-height: 0`, and
@@ -208,7 +379,7 @@ body.sigma-app-viewport .app-content {
 }
 ```
 
-Add the class in `LayoutComponent` initialization/config refresh and remove it
+Add the class in `LayoutComponent` initialization and remove it
 on destruction; do not use Metronic's persistent `app-default` class as the
 lifecycle boundary. Authentication and error layouts then keep normal document
 flow. Do not globally hide overflow without leaving one
@@ -221,8 +392,8 @@ pair it with the print lifecycle in block 21.
 
 **A bounded route fills the container the shell already sized — it does not
 recompute the page height.** The shell gives the routed content an exactly-sized
-box: `.app-content` is `flex: 1 1 auto` inside the content wrapper, and its
-`.app-container` child is `flex: 1 1 auto; min-height: 0`. So the route host only
+box: `.sigma-shell__content` owns the bounded content region, and its
+`.sigma-shell__route` child is `flex: 1 1 auto; min-height: 0`. So the route host only
 has to claim it:
 
 ```scss
@@ -234,26 +405,54 @@ has to claim it:
 }
 ```
 
-Do **not** write `height: calc(100dvh - var(--bs-app-header-height) -
-var(--bs-app-toolbar-height) - var(--bs-app-footer-height) - <slack>)`. That is
-the "second page-height calculation" this rule forbids, and it is wrong by
-construction: the shell sizes the toolbar from the toolbar's own padding
-(`toolbar.fixed` is `false`, so Metronic forces `height: auto`), while the calc
-reserves a fixed `--bs-app-toolbar-height`, which is a *reservation* the shell
-keeps in step with the band by hand (`31px` desktop, `55px` base — see *Shell
-vertical insets* below) rather than a measurement of it. The two agree only by
-maintenance, and the per-screen `<slack>` is the fudge factor absorbing whatever
-is left —
-a number that cannot stay correct, because the toolbar's real height depends on
-whether a page title resolves at runtime. The visible symptom is a strip of dead
-space above the footer (calc too short) or a scrollbar in `.app-content` (calc too
-long), and it changes whenever the shell's toolbar or footer is touched.
+Do **not** calculate route height by subtracting header, toolbar, footer or
+per-screen offsets from the viewport. The shell already owns those boundaries;
+a second calculation can leave unused space or overflow when the shell changes.
+Use the container-fill `height: 100%` contract above and bounded internal scroll
+owners. Retired Metronic dimension variables do not describe the current shell.
 
 The shared class `sigma-route-host` is this `:host` block (`host: { class: 'sigma-route-host' }`
 in the component metadata); `Workshop/Job/components/list` is the reference. Do not repeat the
 block in feature SCSS. Legacy screens still carrying a viewport calc are
 unification debt: do not copy the calc, and replace it with `height: 100%` when
 the feature is reviewed.
+
+**Full available width — implementation and handoff gate (owner2026-10-26).**
+For a standard shared list/editor/workspace, implement this exact ownership chain:
+
+1. Trace the live lazy route to its actual component. Declare
+   `host: { class: 'sigma-route-host' }`; the shared `src/styles.scss` owner supplies
+   its block layout and container-fill height. Write no feature `:host` geometry.
+2. Put the shared page (`sigma-list-page` or `sigma-editor-page`) directly inside
+   that host, then its shared panel. Their normal block/column stretch fills the
+   available route width, excluding only the shared page inset. Keep title,
+   filters, summaries and the bounded body on that panel's logical edges.
+3. Inspect the actual shared declarations **and every feature-local override**
+   affecting this chain: display, flex direction/growth, grid tracks, alignment,
+   width/inline-size, max-width/max-inline-size and ancestor wrappers. In
+   particular, a feature `:host { display: flex; }` defaults to a row; a page
+   child with default `flex: 0 1 auto` can become content-width. A shared class
+   name does not cancel a more specific encapsulated host rule. Do not repair
+   this by adding another width rule, `100vw`, viewport calculations or a fixed
+   max-width; remove the conflicting feature geometry and reuse the shared owner.
+4. If the screen has a documented multi-pane exception, put its layout on the
+   **inner workspace**, preserving the outer host/page/panel contract. A new
+   reusable capability belongs to the existing shared owner under Master5;
+   record a source-supported exception before introducing different outer geometry.
+   An approved flex-parent exception must explicitly grow/stretch its direct
+   page child (`min-width: 0; flex: 1 1 auto`, or its shared equivalent) and
+   preserve scroll containment and print release; it is not the standard host.
+5. In the existing screen review, record the route/component, shared and local
+   selectors, before/after winner and width/stretch contract at each link.
+   Reconcile empty, loading, error/Retry and populated states: data must not be
+   what makes the card reach full width. Keep the body/table as the single scroll
+   owner. UI29 owns the responsive/visual acceptance matrix; pending browser
+   verification is explicit and never inferred from class-name or syntax checks.
+
+The Monthly Posting correction is the concrete failure example: deleting its
+local flex host restores the existing shared block host. Do not copy the removed
+host rule into the next screen. This gate applies to new and reviewed screens;
+it does not authorize unrelated screen rewrites or browser/build execution.
 
 #### Shared list page shell
 
@@ -296,6 +495,35 @@ footer SCSS. It uses:
 | Footer | `footer.sigma-editor-footer`: Cancel `sigma-secondary-button`, then the primary action |
 
 The feature keeps only its workspace layout (for example Job's group list and detail panes).
+
+**Preserve working composition during shared adoption (owner correction,
+2026-10-27).** Replacing feature chrome with shared owners does not authorize
+flattening an existing two-pane workspace, removing semantic field groups,
+changing field spans/column counts or moving charges/totals into the same scroll.
+Capture the previous composition from current source, relevant Git history and
+owner evidence before replacing layout rules. Carry its pane placement, group
+order, responsive behavior, internal scroll and print contracts through the
+shared shell unless the owner requests a layout change or a documented defect
+requires one. Record a before/after composition comparison and preserve current
+business bindings; never restore whole historical files over later logic fixes.
+Finding a grid declaration or using shared class names is source evidence only,
+not visual acceptance (Master5; UI29). Rental Agreement's removed workspace and
+Booking's flattened schedule/vehicle/customer groups are the motivating source
+regressions; preserve their existing composed structure rather than copy their
+old palette or fixed overlay positioning.
+
+**Dense document header row (owner generalization, 2026-10-15).** For comparable
+routed document headers, arrange short inputs in one equal-track row when the
+wide-screen space supports readable controls. Include Discount with the other
+short header inputs when that field belongs to the document; Notes keeps
+`sigma-field--full` on a separate row. Set the existing public
+`--sigma-editor-columns` to the visible field count, including conditional
+fields, instead of fixed widths or feature grid CSS. Purchase Requests uses6
+for General and5 for its other types; these counts are evidence, not universal
+defaults. Keep the shared two-column1024px/one-column700px fallback and internal
+scroll; do not force a single unreadable row at narrow widths. Preserve the
+feature's actual field order, validators and data contract. Apply the complete
+comparable-editor checklist in UI13 rather than adopting this row in isolation.
 
 **Shared three-pane editor (owner request, 2026-10-04).** Job and JobEstimation
 use `form.sigma-editor-form--three-pane` and
@@ -350,6 +578,19 @@ An editor or workspace that is not a list uses the same chain with its own regio
   gap and dark values live in `src/styles.scss`; do not restate them in a feature or in
   review notes. Legacy `.card` / `.card-body` wrappers are not used.
 
+**Fixed workspace tools (owner correction, 2026-11-15).** Keep a fixed search/action
+bar as a nonshrinking sibling before its bounded scroll content. The content owns
+`min-block-size: 0` and `overflow: auto`; the parent retains `overflow: hidden`.
+Do not implement this contract with sticky positioning or viewport offsets.
+`PermissionTreeComponent.fixedToolbar` adopts that structure for the Roles preview:
+the shared host fills a bounded flex column, its toolbar remains outside
+`permission-tree__content`, and optional `[permissionTreeContentStart]` status
+content scrolls with the groups. The scroll region is keyboard focusable and
+labelled; print releases its overflow. This input defaults to false because the
+existing Role dialog owns its body scroll and supplies no bounded tree region.
+Logical spacing and Sigma tokens preserve direction and theme. Source compilation
+and Sass checks verify structure; owner visual/keyboard acceptance stays pending.
+
 #### Base component
 
 List and details components extend `BaseComponentService`
@@ -359,110 +600,20 @@ exposes `subscriptionId`, read from `localStorage`. Never put that value in a
 request payload: the tenant is server-owned, and the per-screen cleanup is block 2
 *Write payloads carry client inputs only* (backlog 8 and 19).
 
-#### Shell vertical insets — where the gap above the content comes from
+#### Retired Metronic shell instructions
 
-`.app-content` must carry **no vertical padding**, and in the active shell it
-does not. The default layout config is `LightSidebarConfig` (pinned in
-`layout.service.ts`), which sets `toolbar.fixed` and `footer.fixed` to `false`,
-so Metronic's
-`[data-kt-app-toolbar-enabled=true]:not([data-kt-app-toolbar-fixed=true]) .app-content`
-and `:not([data-kt-app-footer-fixed=true]) .app-main .app-content` rules both
-match and pin `padding-top` and `padding-bottom` to `0`. Do not add a shell
-content inset here; a route owns its own inset.
+The former toolbar-band geometry, cached layout configuration and
+`--bs-app-toolbar-height` synchronization instructions were removed on
+2026-10-23 after complete vendor retirement. They described deleted shell/Sass
+owners and must not guide current work. Current shell composition is owned by
+this block's *Supported platform and root composition* and *Sigma authenticated
+shell — PrimeNG* sections, together with the container-fill/no-page-scroll contract above.
+The decision and source reconciliation remain in
+`reviews/Archive/Completed/2026-10-23/COMPLETE_VENDOR_RETIREMENT_FINAL_RECONCILIATION.md`.
 
-The band that remains between the toolbar and the routed content is the
-**toolbar's own vertical padding**, and it is the whole of the toolbar's vertical
-size rather than a slice of it: the layout config sets
-`app.toolbar.class: 'py-3 py-lg-6'` — `12px` on mobile but `24px` from `992px`
-up — while `toolbar.fixed` is `false`, which makes Metronic's
-`body:not([data-kt-app-toolbar-fixed=true]) .app-toolbar { height: auto }`
-(`assets/sass/layout/_toolbar.scss`) win over the base
-`.app-toolbar { height: var(--bs-app-toolbar-height) }`. So `padding` moves the
-band one-for-one; there is no fixed `55px` box absorbing it. Do not size this band
-from `--bs-app-toolbar-height` — the variable does not size the toolbar here. It
-is a *reservation* other screens read, and it is kept in step with the padding by
-hand (see the companion rule below).
-
-The toolbar does render real content: `toolbar.component.html` shows
-`app-page-title`, and `showPageTitle()` returns true for the `classic` layout
-(the active one) on any route not on its exclusion list. Its alternative toolbar
-layouts (accounting, extended, reports, saas) are commented out, so the page
-title is the only content.
-
-It is tightened in `src/styles.scss`, desktop only, from the layout config's
-`py-lg-6` (`24px` / `24px`) to `16px` above and `8px` below:
-
-```scss
-@media (min-width: 992px) {
-  .app-toolbar {
-    padding-top: 16px !important;
-    padding-bottom: 8px !important;
-  }
-
-  /* 55px (Metronic base) minus the 24px the band gave back. */
-  :root {
-    --bs-app-toolbar-height: 31px;
-  }
-}
-```
-
-The top keeps the title off the app header; the bottom is the gap between the
-title and the routed card, so it only needs a hairline. Mobile is left alone —
-`py-3` is already `12px` / `12px`.
-
-**The `--bs-app-toolbar-height` companion is not optional, and this is the trap.**
-34 feature stylesheets still size their page with the forbidden
-`calc(100dvh - … - var(--bs-app-toolbar-height) - … - <slack>)`, so they reserve a
-fixed height for this band. Reducing the band by `N` without reducing that
-reserved height by `N` leaves each of those routes `N` taller than its container —
-a scrollbar in `.app-content` — including five sibling Movements screens on the
-same review branch. The variable has **no other live consumer**: every other use
-in the Metronic SASS is gated on `toolbar.fixed` / `toolbar.sticky`, both off here,
-so changing it moves nothing else.
-
-A route built on the container-fill host is immune to this band. As those 34
-screens migrate, the companion override can be deleted.
-
-**Changing this band is a shell-level change.** It is allowed, but only with the
-companion kept in step, and only after checking which routes still compute their
-own height:
-
-```
-grep -rl "bs-app-toolbar-height" --include=*.scss src/app/modules | wc -l
-```
-
-The screen-scoped levers are the route's own outer padding and, if a route still
-computes its height, its own `slack` — never the card's internal inset.
-
-**Reduce the gap above a card by removing the OUTER gap — never the card's
-internal inset.** "Make the card higher / reduce the space between the card and
-the TopBar" means the distance *outside* the card: the route's outer padding (and,
-once a route is container-filled, the toolbar band above it). It does **not** mean
-the card's `padding`, which is the gap between the card's border/shadow and its
-own contents. Trimming the internal inset moves the contents, not the card: the
-card's outer edge stays exactly where it was, the border and shadow visibly crowd
-the first child, and the requested change appears to have done nothing. A route
-that pulls its card upward keeps a full internal inset and sets only its outer
-vertical padding to `0`.
-
-Keep any shell override in the stylesheet rather than in the layout config: the
-layout service caches its config under `<appVersion>-layoutConfig` in
-`localStorage`, so a config edit can be invisible to a browser that already stored
-one. `styles.scss` imports the Metronic SASS at the top of the file, so a rule
-added later in that file wins the cascade.
-
-**Check:** `.app-content` carries no vertical padding · the toolbar band is the
-layout config's value on mobile and the single desktop override (`16px` above /
-`8px` below) from `992px` up · no feature stylesheet overrides the toolbar band ·
-`--bs-app-toolbar-height` is kept in step with that band, because the routes that
-still compute their own page height reserve a fixed height from it · the toolbar
-is sized by its padding and not by `--bs-app-toolbar-height` · a route does not
-repeat the shell inset · the gap between the toolbar and the first card is the
-route's own outer padding and nothing else · the space above a card was reduced by
-changing outer padding (shell band or route padding), never the card's internal
-`padding` or the shadow · the card's internal `padding` is unchanged from its
-designed value · changing the toolbar band was checked against the routes that
-still compute their own page height, because it moves every one of them.
+Reducing space above a card changes the route's outer inset or current shell
+placement, not the card's internal padding. Shared owners retain the card's
+internal inset; changing it moves its contents without moving the card edge.
 
 **Routed editor pages:** a record that block 13's decision rule (D4-2) sends to a page uses the
 shared editor page shell above: container-fill host, `min-height: 0`, `overflow: hidden`, a fixed
@@ -479,6 +630,58 @@ must not add a second vertical scrollbar unless a separately bounded collection
 is an explicit business requirement. Horizontal tab/table overflow remains
 allowed. On narrow screens, preserve this single vertical-scroll owner rather
 than falling back to nested page + child scrolling.
+
+**Settings parent/child composition (owner2026-11-01).** Administration Settings
+uses the shared route/page/panel at its parent only. Its real route links remain
+native anchors with an accessible navigation label and current-page state;
+the separately bounded wrapping navigation cannot consume more than25% of the
+card. `sigma-settings-outlet` bounds the lazy child, whose shared route host
+contains `sigma-settings-page`. That shared column keeps FeatureTitle and
+`sigma-editor-footer` outside `sigma-settings-content`, the content scroll
+owner. A child form uses `sigma-editor-form`; do not add another page/card inset
+or a feature host geometry rule. Ordinary settings keep their existing groups;
+Holiday uses a fixed filter and `sigma-list-table`/DataTable fill instead.
+
+For explicitly requested internal vertical groups, reuse
+`sigma-settings-sections`:150–190px navigation,12px gap and shrinkable content;
+below700px stack zero-minimum2:3 tracks. EditorTabs owns orientation, stable
+IDs, keyboard, paint and navigation scrolling (UI13), while the content owns
+its independent scroll. Keep keyed panels/models mounted with matching
+tab/panel IDs and hidden inactive panels; selection performs no HTTP or save.
+Common and Document Number use shared `revealInvalidSettingsSection` with their
+actual section/control map: mark touched, select the invalid field's panel and
+delegate reveal/focus to `focusField` without opening a picker. FieldError owns
+inline feedback. Fields retains its template-driven graph and exposes only
+returned entity blocks. Print releases the shared allocation and shows the
+mounted sections. API Key retains its independent Google/DeepSeek saves and
+guard. This replaces its former parent-only bounded compatibility exception
+for the reviewed Settings unit; it authorizes no backend/API migration.
+Source conformance is separate from owner visual/keyboard/save acceptance.
+
+**Settings field composition (owner2026-11-02).** Inside that bounded content,
+use existing compact FormSection for semantic groups rather than loose large
+headings and accumulated legacy column margins. Keep business groups, controls,
+validation and read/save ownership. A title that repeats the active tab uses
+FormSection's existing showTitle=false; distinct subgroups keep their headings.
+`sigma-settings-fields-grid` owns three equal shrinkable tracks, two when the
+actual content pane is960px or narrower and one at520px or narrower. It uses
+the existing sigma-field controls/34px owner; features do not create a new
+control-height contract or style publisher internals. Separate ordinary inputs
+from Boolean choices within the same semantic group, preserving bound values.
+
+`sigma-settings-options-grid` owns two equal tracks, one when the pane is760px
+or narrower. `sigma-settings-option` is the shared Boolean row:46px minimum,
+10px/12px block/inline padding,10px control/label gap, existing control radius
+and Sigma surface/border/text tokens. Both the checkbox and its full wrapping
+label are centered vertically, including multiline labels; no legacy label
+palette, fixed text height, clipping or feature override. Retain native/PrimeNG
+input-label IDs and focus semantics. FormSection owns card paint/spacing/theme;
+the content owner separates cards by12px. The existing DDA mapping matrix uses
+shared mapping rows instead of nesting independent field grids; it stacks its
+field label above mapping/required below520px. Collection tables retain their
+existing owner and semantics. No second content scrollbar, changed save fragment,
+new request, cache opt-in or numeric/financial policy follows this composition.
+Owner visual/keyboard/RTL/theme acceptance remains distinct from source checks.
 
 **Routed financial collection editors** (Opening Balances) follow the same container-fill chain;
 the editable table is the row-scroll owner through `[fillHeight]` + `[stickyHeader]` (block 14).
@@ -544,95 +747,260 @@ write fields · translated RTL/dark/focus states.
 
 ### Authenticated-shell sidebar disclosure
 
-**Canonical shared owner:** `_metronic/layout/components/sidebar/sidebar-menu/SidebarMenuComponent`.
-Its `isGroupOpen` / `toggleGroup` state and `groupHeader` template own both sidebar
-accordion levels. Keep route highlighting (`here`, leaf `active`, submenu
-`menu-active-bg`) separate from disclosure: never let `RouterLinkActive` and a
-DOM animation plugin both write `show` or submenu display for these groups.
-The component binds `show` from its disclosure state, using route activity
-and search as defaults; an explicit user choice wins until search rebuilds
-the nodes. Opening a group closes its siblings at that level.
+**Canonical shared owner:** existing `SidebarMenuComponent`, using PrimeNG21
+PanelMenu and the one MenuCatalogService tree. Translate/filter the adapter
+without copying route lists or changing catalog/pin identities. Preserve leaf
+exactActive/activeExclusions, recent visits and translated parent/child search;
+rebuild labels on language change. Ctrl/Command+K and slash focus search, opening
+hidden navigation through LayoutComponent when needed; never steal modal focus.
 
-**Opened-group reveal (owner request, 2026-10-14):** both group levels use
-the same shared disclosure path to bring the explicitly opened header to the
-top of `kt_app_sidebar_menu_scroll`, clamped to its available scroll range.
-Measure after Angular renders the open state and sibling collapse. The owner
-consumes one pending header in `ngAfterViewChecked`; validate viewport
-containment and the group's current `show` state, and clear stale pending
-headers when search rebuilds nodes. Write only that viewport's vertical
-`scrollTop`; keep keyboard focus, page position and horizontal scroll.
-Closing, Pin, route/search default disclosure do not request this reveal.
-No `scrollIntoView`, animation timer, focus change or screen-specific opt-in.
-Long groups keep internal scrolling; native range limits may prevent a final
-group from reaching the exact top. Guide text covers both languages.
-Source-only evidence: `reviews/SIDEBAR_GROUP_REVEAL_FEATURE_REVIEW.md`;
-owner runtime/keyboard/mobile/RTL/theme acceptance remains pending.
+PrimeNG owns disclosure/keyboard state. Root multiple=false preserves sibling
+accordion behavior; route/search supply initial expansion. Hide/show and
+desktop/Drawer remounts preserve expanded and collapsed groups plus search text
+through the typed SidebarMenuState owned by the existing LayoutComponent and
+passed to its single mounted menu. This is transient workspace state, not local
+storage or a user/account preference. Snapshot final publisher item.expanded
+after rendering and before rebuilding/destruction, so root sibling auto-collapse
+is retained too. Cache stable catalog group IDs in the adapter; never key saved
+state by translated labels or DOM positions. Keep search expansion separately;
+changing the query resets only search disclosure, and clearing search restores
+normal disclosure. Reopening the same query retains its disclosure. Known saved
+group states take precedence over initial route expansion; route-derived active
+leaf styling remains authoritative. Do not retain another hidden menu instance
+or change Drawer mask/focus ownership merely to preserve state (owner2026-10-24).
+The shared adapter
+honors optional MenuItem.autoExpandOnActive (default true). The main
+Reports group sets false (owner2026-10-23), so duplicate report links do not
+open it automatically on initial rendering or route-driven rebuilds. Manual
+publisher disclosure and search expansion remain available; other groups
+retain active-route expansion. Catalogue expanded remains a group marker,
+not the publisher's initial open state. The custom item
+adapter owns one native anchor per leaf. Do not also set the publisher root
+routerLink: PrimeNG21 renders that root anchor even with an item template.
+Keep publisher roving focus, custom leaf/group elements tabindex=-1 and a
+separate accessible pin. Enter/Space on Pin must not bubble into disclosure.
+Group Enter activates the group button rather than the first Pin; native leaf
+links retain href/modified-click navigation. Retain active exclusions through
+the custom active style rather than a second RouterLinkActive rule.
 
-Reuse the existing Metronic menu/arrow classes and Sigma theme tokens. Group
-disclosure uses native buttons with `aria-expanded`; appbar Pin stays a separate
-button. Both disclosure and pin clicks stop propagation before Metronic's
-delegated handlers. Other Metronic menus retain their existing engine. No
-sidebar drawer, navigation or shortcut-storage contract changes belong to
-menu disclosure. Desktop minimize follows its explicit-control owner below.
+An explicitly opened group requests one pending header reveal. After render,
+consume it only if still connected, within the menu viewport and expanded;
+write only that viewport's scrollTop, clamped by the native range. Closing,
+Pin and route/search expansion do not request movement. Keep focus and page
+position; no scrollIntoView or Metronic measured-scroll plugin. Search stays
+above the flexing internal menu scroll owner.
 
-**Check:** select a leaf, close/reopen its main and nested groups; switch siblings;
-repeat through Recent and search/clear; verify Enter/Space, independent Pin,
-RTL/dark and narrow/minimized sidebar behavior. These are owner runtime checks;
-source review does not certify them. Evidence: 2026-10-03 sidebar collapse fix,
-`reviews/SIDEBAR_ACCORDION_COLLAPSE_FEATURE_REVIEW.md`.
+On a remount with retained disclosure, request one reveal after the adapter has
+rendered. Prefer the active visible leaf, then its deepest visible ancestor,
+then the deepest restored expanded group. Preserve closed ancestors; revealing
+their heading must not open them. Resolve the rendered row through its stable
+catalog ID, and reuse the same bounded frame/resize alignment rather than a
+second scroll owner. A restored leaf or collapsed heading needs no expanded
+attribute; newly opened groups still require rendered expanded=true. Wait for
+nonzero Drawer/row geometry through the existing ResizeObserver, and observe
+the target plus viewport/content/motion containers. Manual input, search, pin,
+navigation and destruction cancel restoration as well as explicit reveal.
+No window scrolling, forced disclosure, focus change or artificial scroll
+spacer (owner correction2026-10-24: retained selection was not brought upward).
 
-### Desktop sidebar minimize — explicit control
+Keep that viewport shrinkable in inline size and vertically scrollable only,
+with `scrollbar-gutter: stable` and 1rem logical-end padding (logical-start
+remains .5rem). The extra end clearance also protects row Pins when the browser
+uses overlay scrollbars, which do not reserve a gutter. Preserve the row,
+nested-list and third-level Pin spacing above; do not move Pins outside rows
+or hide the vertical scrollbar. Owner-reported overlap correction,2026-10-23;
+source conformance only, visual acceptance pending.
 
-**Shared owners:** `SidebarComponent` and `sidebar-logo/SidebarLogoComponent`
-under `_metronic/layout/components/sidebar`. Owner instruction2026-10-14:
-Import Data content appeared below the sidebar and minimize did not remain
-closed. The current hoverable policy expands the sidebar to its full actual
-width while the wrapper reserves only the minimized rail; the click plugin's
-300ms animation guard then releases while the pointer may still be over it.
-Use a persistent explicit minimize/expand control instead of hover reopening.
+### Desktop navigation visibility
 
-Light/Dark sidebar defaults set desktop hoverable=false. The sidebar owner
-also removes `data-kt-app-sidebar-hoverable` on configuration application so
-legacy saved configs or a stale true attribute cannot reopen the desktop rail.
-Do not clear/rewrite localStorage or add an Import-only exception. Mobile
-drawer/hover attributes, startup/default-open behavior, menu disclosure and
-pins retain their existing owners.
+The new header's explicit Angular toggle replaces the historical75px Metronic
+rail/hover attributes. Default desktop navigation is visible, hidden navigation
+returns the full280px to content, and hover does not reopen it. Below992px the
+PrimeNG Drawer owns visibility. Do not add per-feature margins or plugin/body
+attribute toggles. Preserve query/deep-link state and responsive internal scroll.
+### Working-branch bootstrap and switch safety (2026-10-18)
 
-The logo's one native type=button owns click/Enter/Space. It reads and toggles
-the existing body `data-kt-app-sidebar-minimize` (or the existing configured
-collapse attribute), whose value is `on` when minimized. Derive active icon
-state, translated Open/Minimize labels, aria-expanded and aria-controls from
-that same state. Remove this button's `data-kt-toggle` plugin registration;
-never let both Angular and the Metronic click handler toggle it. Other plugin
-controls are unchanged. Keep the existing theme, focus and geometry classes.
-The desktop control uses existing `d-none d-lg-flex` utilities below/above992px;
-mobile opening/closing stays with the existing drawer controls.
+Root CurrentBranchService owns branch state and authenticated-session lifetime;
+by default the content outlet waits for its initial read to settle so UI16 defaults exist
+before a screen's first query. Read failures remain visible in the topbar with
+Retry; they do not invent a preference. Changing a branch commits the returned
+selection only after a successful single-flight save, keeps the previous branch
+on failure, and ignores an ended/replaced session's response, including logout
+and re-login to the same account. It uses the one interceptor-equipped client.
 
-Core sidebar/wrapper SASS and the RTL stylesheet retain width/offset/transition
-ownership, including the75px desktop rail and992px mobile boundary. Do not
-add feature/sidebar-specific page margins, viewport-width calculations,
-ResizeObserver/timer workarounds, fixed widths or z-index patches. Shared
-table wrappers keep horizontal overflow internally. Record the actual
-container/flex cascade; a wide table alone does not prove an outer-width defect.
-Source inspection supports this correction but does not prove runtime fit.
+**Explicit branch-independent reads (owner2026-10-25).** Route data may set
+`requiresBranchContext: false` only when its real request is independent of
+working-branch defaults; Dashboard/Snapshot's ownership/fleetType-only tenant
+read is the approved consumer. `showPageLoading: false` additionally chooses
+silent page presentation; both policies default to true when omitted. The
+Layout reads actual deepest active-route data at initialization/NavigationEnd,
+preserves session recovery, and never resets a global loading counter to hide
+an overlay. Header branch error/Retry and branch-save/write/inert guards remain.
+The existing navigationPolicyGuard enforces branch readiness before activating
+dependent targets, including an immediate departure from Dashboard during
+branch bootstrap. Reuse CurrentBranchService's finite, coalesced load; its
+forkJoin value precedes readiness finalize, so resume activation via the
+firstValueFrom Promise continuation after that synchronous completion/finalize,
+then recheck write/saving guards. An initial failed attempt still settles under
+the existing header recovery contract; do not invent a selected branch.
 
-**Owner checks:** minimize with the pointer left over the button/menu, reopen,
-repeat by Enter/Space, navigate between import and other screens, load a wide
-CSV preview, exercise legacy saved hover=true settings and both sides992px
-plus intermediate/short sizes, LTR/RTL/light/dark and the mobile drawer. Common
-bilingual UserGuide guidance describes the explicit control once. Evidence:
-`reviews/SHARED_SIDEBAR_TOGGLE_MAINTENANCE_EVOLUTION_PLAN.md` and the Data Import
-review amendment; compilation/visual/runtime acceptance remains pending.
+**Branch auxiliary read motion (owner2026-10-25).** ShellHeader binds the real
+CurrentBranchService.loading state (Options/Mine finite forkJoin/finalize) to
+PrimeNG Select's public loading input and loadingicon template. Owner2026-10-26
+unifies request-loading appearance: UI22's shared ring replaces the earlier
+UI24 PendingMotion trigger; keep confirmed labels, disabled
+guards, aria-busy, Result/HTTP errors, Retry and save state. Below360px header
+width the branch trigger usually hides its dropdown icon; its data-loading
+exception shows only that same motion trigger inside the unchanged32px control
+until loading ends. Do not hide the indicator behind the compact CSS or add a
+second progress owner. Requests remain local auxiliary reads, not global page
+loading or newly opted-in reference-cache reads.
+
+The topbar checks currently rendered canonical editor boundaries (routed
+sigma-editor-page, step-form, appMockData form roots and PrimeNG dialog portals)
+before permitting a switch. Hidden/unmounted surfaces do not block. This is a
+UI safety guard, not authorization or a substitute for existing dirty-discard
+rules. Close the editor first; switching never discards it. While saving, the
+shell wrapper is inert; existing screen values are not rewritten afterward.
+New editor shapes must be reconciled with this shared safety boundary. Shared
+bilingual UserGuide guidance describes saved defaults, failures and deferred
+permissions. Source conformance and owner interaction/visual acceptance remain
+separate; see CURRENT_BRANCH_DEFAULTS artifacts.
+
+**Stable rendered-editor state (owner NG0100 evidence, 2026-10-20).** Do not
+evaluate the live DOM boundary predicate from navbar disabled/title/aria or
+conditional template bindings: a routed editor or dialog can mount after the
+navbar was checked and change the answer during Angular's verification pass.
+CurrentBranchService exposes readonly editorOpen for presentation. Its installed
+Angular21 afterEveryRender(read) observer coalesces one deferred microtask, re-reads
+the same rendered-boundary predicate, and publishes in NgZone only on change;
+DestroyRef prevents a queued publish after teardown. Keep hasOpenEditor() live
+at change()/Retry action boundaries so a pending presentation update cannot
+permit switching over a newly opened editor. No timer polling, forced
+detectChanges, feature-specific Bill guard or weakening of the editor boundary.
+Shared EN/AR guidance covers block/re-enable behavior; source-only verification
+does not prove the owner's open/close/navigation runtime acceptance.
+
+### Supported platform and root composition (2026-10-22)
+
+The supported platform baseline is Angular21 with PrimeNG21. The root is a
+standalone `AppComponent`, bootstrapped by `bootstrapApplication` in `main.ts`;
+`app.config.ts` owns providers and `app.routes.ts` owns root routes. Existing
+lazy feature NgModules remain supported interoperability boundaries. New
+features use standalone components and route files; do not recreate AppModule
+or duplicate the root client. Preserve `withHashLocation`, token/error
+interceptor order, the auth startup completion, Zone-based change detection
+and service-worker registration while modernizing wiring. Zoneless adoption
+needs a separate change-detection audit; Angular21's new-app default alone
+does not establish compatibility for existing imperative third-party consumers.
+
+#### Angular21 adoption review gate (2026-10-26)
+
+For every new or reviewed screen, record Angular adoption against each actual
+routed list, editor and dialog consumer. Separate the version declared by
+`package.json`/the lock file, the exact installed package version, and runtime
+evidence such as Angular's `VERSION.full` from an authorized running deployment;
+none substitutes for the others. A matching major version or the presence of
+one modern API does not prove that a consumer is fully modern. Start at the
+active route import and trace the real component before classifying it.
+
+Angular21 components are standalone by default, so absence of
+`standalone: true` is not evidence of NgModule ownership. Establish ownership
+from `standalone: false`, declarations/imports and the actual lazy route graph;
+retained lazy NgModules remain valid compatibility boundaries. For each consumer,
+record source evidence for built-in control flow, typed `signal`/`computed`
+state and `inject` where they improve the existing design. Treat compatible
+constructor injection, observable state and existing control-flow syntax as
+valid exceptions rather than reasons for cosmetic rewrites.
+
+Audit subscription and request lifetime separately: finite completion prevents
+an indefinitely retained subscription, but does not establish safe cancellation
+on route departure or prevent a late callback from changing a destroyed view.
+Apply UI28's actual HTTP/callback cancellation contract to finite reads too.
+Retained subscriptions should use `takeUntilDestroyed` or an equally explicit
+existing owner; source-driven reads
+whose newer value supersedes an older request should use `switchMap` or the
+screen's established equivalent cancellation. Do not infer correct cancellation
+from an import alone. Signal queries such as `viewChild` are stable and preferred
+for new code, while decorator queries remain fully supported; migrate an
+existing `@ViewChild` only when the consumer benefits and preserve the required
+`read` token and timing contract.
+
+Typed reactive forms remain a supported Angular21 choice. Signal Forms are a
+separate experimental v21 API and are not a default migration target. Likewise,
+`httpResource`, zoneless change detection and blanket `OnPush` conversion are
+not screen-modernity requirements. Audit `OnPush` only as a measured migration
+with input identity, imperative callbacks, overlays and third-party controls in
+scope. Preserve Sigma's explicit `provideZoneChangeDetection` setting unless a
+separately authorized change-detection audit proves the replacement safe.
+
+Finally, confirm one root provider composition and one interceptor-equipped
+`HttpClient`; a feature must not create a parallel client/provider chain. Record
+per-consumer conformance, supported compatibility exceptions and pending runtime
+evidence. Use the Angular21 documentation for v21 behavior and status; the
+unversioned current documentation may supplement stable API semantics but must
+not silently replace the supported-version contract:
+
+- [Angular21 components and standalone default](https://v21.angular.dev/guide/components)
+- [Angular21 standalone bootstrap](https://v21.angular.dev/api/platform-browser/bootstrapApplication)
+- [Angular21 built-in control flow](https://v21.angular.dev/api/core/%40if)
+- [Angular21 signals and computed state](https://v21.angular.dev/essentials/signals)
+- [Angular21 inject API](https://v21.angular.dev/api/core/inject)
+- [Angular21 RxJS interop API index](https://v21.angular.dev/reference)
+- [Current stable takeUntilDestroyed API](https://angular.dev/api/core/rxjs-interop/takeUntilDestroyed)
+- [Angular21 queries and supported decorator queries](https://v21.angular.dev/guide/components/queries)
+- [Angular21 reactive forms overview](https://v21.angular.dev/guide/forms)
+- [Angular21 experimental Signal Forms](https://v21.angular.dev/tutorials/signal-forms)
+- [Angular21 root HttpClient provider](https://v21.angular.dev/api/common/http/provideHttpClient)
+- [Angular21 change-detection performance guidance](https://v21.angular.dev/best-practices/performance)
+- [Angular21 runtime Version API](https://v21.angular.dev/api/core/Version)
+
+The application builder preserves the existing flat `dist/sigma` deployment
+through `outputPath: { base: 'dist/sigma', browser: '' }`, assets/web.config,
+service-worker configuration and production budgets. Runtime entries remain
+explicit in `tsconfig.app.json`; Jasmine specs belong to `tsconfig.spec.json`.
+For official schematics that incorrectly resolve project paths relative to an
+explicit source `rootDir`, use a temporary workspace-root setting, run the
+schematic, then restore the exact original setting. Never patch library code
+or weaken compilation to hide a migration failure. Build authorization and
+manual runtime acceptance remain governed by AGENTS/Master7. Historical
+Angular17/18 references elsewhere record earlier compatibility evidence;
+current Angular21 declarations own new API choices. The recurring render hook
+is `afterEveryRender({ read: ... })`; preserve deferred/coalesced publication
+in CurrentBranchService instead of reintroducing mutable DOM template reads.
+Angular21 effects already permit signal writes; remove the deprecated inert
+allowSignalWrites option without changing callbacks or scheduling. Do not copy
+the old flag into a new effect or use its removal to justify changing business state.
+
+### Standalone migration dependency gate
+
+After converting a declaration to standalone, remove an import of its former
+owning NgModule when the template no longer needs it. A component importing that
+module while the module imports/exports the component creates a runtime metadata
+cycle, even when application compilation succeeds. Also remove unused parent
+component imports introduced by a schematic. Audit components **and** NgModule
+imports/exports/declarations, then exercise real lazy login/root and shell metadata
+through the authorized test/runtime workflow. The Angular21 Header/Layout,
+Notifications/Extras, Card1/Cards, ChatInner and DropdownMenus cases are verified
+examples. No schema/diagnostic suppression or speculative provider change.
+
+A template reference on a custom component host (including form[appMockData])
+returns that component, not its DOM element. When a focus/scroll owner needs the
+native element, query with explicit read:ElementRef; a TypeScript ElementRef type
+annotation does not change Angular's runtime query result. Preserve component
+queries where the consumer needs the component API. LeaseAgreement's invalid-save
+form focus is a verified native-query example; do not add a fake nativeElement
+alias to the shared form component to accommodate a mismatched query.
 
 ### One `HttpClient`
 
 > **Status: Canonical** (2026-09-30, backlog 17 resolved)
 
-`app.module.ts` provides the only application `HttpClient`:
+`app.config.ts` provides the only application `HttpClient`:
 
 ```ts
 providers: [
-  provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor])),
+  provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor, navigationActivityInterceptor])),
   …
 ],
 ```
@@ -647,10 +1015,12 @@ through untouched. For an API request:
   `Accept-Language` from the UI language (`ar` → `ar-SA`, else `en-US`), so backend
   messages follow the UI;
 - `errorInterceptor` presents every failure and the standard success toast (block 22).
+- `navigationActivityInterceptor` owns subscribed Sigma write activity and page-read
+  cancellation through the shared navigation policy (blocks 10, 22 and 28).
 
 Do not add a feature-level `provideHttpClient(...)`, import `HttpClientModule` in a feature
-module, or set a manual `Authorization` header. The lazy `AuthModule` keeps its own client for
-the login server. When one request alone gets `401`, check the token and that its URL is built
+module, or set a manual `Authorization` header. The lazy `AuthModule` also resolves the root
+client; Sigma-only interceptors bypass login-server URLs. When one request alone gets `401`, check the token and that its URL is built
 from `environment.baseUrl`.
 
 **Check:** routes file exists · route count matches the editor shape · `models/`

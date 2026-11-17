@@ -1,0 +1,10 @@
+S047
+Customer Statement of Account
+https://speedautosystems.com/car-rental-software/user-guide/customer-statement-of-account/
+
+Customer Statement of Account
+Go to the customers module from left navigation panel and open “Statement Of Account”
+Here you have to select the date range first and after that the customer name or the company name and press search button.
+We have 2 options under it:
+1. Ledger Report: This will show you the every transaction related to that individual or the company. All the agreement and invoices and deposits will come here. It will also show you that is there any Debit or Credit remaining to that contact or is everything is balanced with that particular.
+2. Outstanding Invoices: Here you can see that how much pending amount is there with that particular contact. It will show you all the outstanding invoices.

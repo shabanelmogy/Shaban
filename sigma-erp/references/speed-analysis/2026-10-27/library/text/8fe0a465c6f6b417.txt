@@ -1,0 +1,10 @@
+S194
+How to correct Vehicle Status
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-correct-vehicle-status/
+
+How to correct Vehicle Status?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Correct Vehicle Status module.
+A dashboard will appear on the right side of the panel. Select a vehicle here.
+Click on the CONVERT button.
+Click HERE if you have a query or an issue.

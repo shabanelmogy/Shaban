@@ -1,0 +1,11 @@
+S279
+Use of Balance Summary
+https://speedautosystems.com/vehicle-leasing-software/user-guide/use-of-balance-summary/
+
+Use of Balance Summary
+Go to the panel on the left side and click on the Staff tab.
+Scroll down and click on the Balance Summary module. A window will open.
+Select a date range. Choose option of either all, with debit balance, or with credit balance. Then, click on the REFRESH button.
+The Staff’s list will be opened.
+To report click on the REPORT button. And to export the data to excel click on the EXPORT TO EXCEL button.
+Click HERE if you have a query or an issue.

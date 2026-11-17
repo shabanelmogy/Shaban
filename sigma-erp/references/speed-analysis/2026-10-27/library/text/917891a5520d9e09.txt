@@ -1,0 +1,12 @@
+S199
+How to create and manage fines
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-create-and-manage-fines/
+
+How to create and manage fines
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Fines tab.
+Click on the +CREATE NEW TARIFF FILE button. And fill the details. Then, click on SAVE button.
+Fines Account will appear enlisted in a window.
+To view, edit, or delete a Fines Account click on the ACTIONS button.
+Click HERE if you have a query or an issue.

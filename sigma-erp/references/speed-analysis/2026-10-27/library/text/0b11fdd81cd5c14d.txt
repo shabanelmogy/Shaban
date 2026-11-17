@@ -1,0 +1,10 @@
+S229
+How to define Services
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-services/
+
+How to define Services
+Go to the panel on the left side and click on the Fleet tab.
+Scroll down and click on the Service Items module.
+Now, choose among three options; default, make wise, or model wise.
+Click on the +CREATE NEW SERVICE button. You can also import data by clicking on the IMPORT button on top-right side of the window.
+Click HERE if you have a query or an issue.

@@ -1,0 +1,11 @@
+S078
+Rental Agreement Editing
+https://speedautosystems.com/car-rental-software/user-guide/rental-agreement-editing/
+
+Rental Agreement Editing
+Go to the rental module from the left navigation panel.
+Click on the tab stating “Agreements”.
+All the opened and closed agreement can be found here.
+1. Click on the small blue button with the settings sign on it and there will be many options.
+2. Click on the Edit option from there and you can edit the agreement.
+Note: Once a agreement is closed then there is no option for edit.

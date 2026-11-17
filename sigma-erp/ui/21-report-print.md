@@ -4,20 +4,13 @@
 
 Print is a first-class output, not an afterthought.
 
-**`window.print()` on its own is not enough.** Metronic ships the rule that
-strips the application shell, but it is opt-in via a body class. From
-`assets/sass/core/layout/base/_print.scss`:
-
-```scss
-// Add .app-print-content-only class to body element in order to allow printing only the content area
-@media print {
-  .app-print-content-only {
-    .app-wrapper, .app-page, .app-content, .app-container { padding: 0 !important; margin: 0 !important; }
-    .app-aside, .app-sidebar, .app-header, .app-footer, .app-toolbar,
-    .drawer, .scrolltop, .btn { display: none !important; }
-  }
-}
-```
+**`window.print()` on its own is not enough.** The current shared print owner
+adds the body class and the shared print rules release the shell and bounded
+report regions. The supported selectors are maintained in
+`SiGmaAngularFrontEnd/src/styles.scss`: `app-print-content-only` controls the
+application print frame, `sigma-print-flow` releases bounded report flow, and
+`sigma-dialog-print` isolates a printed dialog report. Do not copy a retired
+vendor Sass partial or create feature-level shell print rules.
 
 Without that class the app header, sidebar and toolbar print alongside the
 report. `ReportPrintService` owns adding it, invoking the browser print dialog,
@@ -53,6 +46,33 @@ stay feature-owned and are retained. Plain `print(options)` remains compatible f
 other confirmed output lifecycles; no reference screen is rewritten solely to adopt
 this helper. This is source-verified preparation behavior, not browser acceptance.
 
+**Cancel pending preparation (source-only,2026-10-30).** The same session exposes
+`cancelPending():boolean`: true cancels its pending animation frame and releases
+`printing`; false means no frame remains to cancel. It does not dismiss an opened
+browser print dialog, run a synthetic `afterPrint`, or release an active print's
+busy state early. Session revision and destroy guards suppress old callbacks.
+A context-invalidated consumer cancels its report read, calls `cancelPending`
+and clears its own prepared rows. Equipment TimeSheet adopts this public API;
+existing `print` callers retain their behavior. No feature scheduler or private
+frame access. Verify actual browser timing separately.
+
+For permission-scoped output, bind the queued print to its read requirement
+through the session's optional cancellation notifier. Include expiry of the
+owning auth session and data context. On a revision that clears the prepared
+rows, cancel the pending frame as well. Pass `canPrint` when access can change
+before the cancellation effect runs. The shared session calls it immediately
+before opening the browser dialog and releases `printing` if it returns false.
+Check loss of access after Print is pressed and before the scheduled frame
+runs. An opened browser dialog keeps its existing `afterPrint` lifecycle.
+
+Bind Print to the revision and applied query that produced the published
+rows. Verify that identity at click and in the final frame. Capturing the
+current revision at click alone can accept rows published by an earlier
+request before the refresh effect clears them. If the authorized report query
+changes during an opened browser print dialog, defer its fresh read until
+`afterPrint` when the same context can still read. Cover both event orders
+with the existing print session (UI28).
+
 **Dialog reports (2026-10-03).** A read-only EditorDialog preview can opt into shared print
 isolation with `dialogClass="sigma-report-print-dialog"` (alongside its feature class) and
 `printSession.print({ bodyClasses: ['sigma-dialog-print'] })`. The shared stylesheet hides the
@@ -76,12 +96,21 @@ inline errors. `appReportActions` already supplies `no-print` to its host:
 Every bounded height or scroll container of the report (the results section, a table frame,
 a scroll wrapper) carries the shared class `sigma-print-flow` (`src/styles.scss`, 2026-10-01).
 In print it releases `height`, `max-height`, `min-height` and `overflow`, so the whole report
-flows onto paper instead of being clipped to one viewport. The universal page reset and
-action hiding belong to `appReportPage` and `appReportActions`. An opt-in
+flows onto paper instead of being clipped to one viewport. Marked routed editor
+page/panel/form/body/scroll layers also become normal block
+flow, with paper colors and no panel border/padding/shadow; unmarked screen
+editors retain their layout. This shared opt-in avoids per-feature print shells.
+The universal page reset and action hiding belong to `appReportPage` and
+`appReportActions`. An opt-in
 `app-form-section.sigma-print-flow` releases its internal fill/content bounds in the shared
 component stylesheet, using white paper and dark text. Mark the shared host rather than
 piercing its internals with feature `ng-deep` rules; existing sections retain their default
-screen behavior. Hide inline errors with
+screen behavior. The same host class on `app-editable-collection-table` releases
+its own inner fill/scroll frame, sticky cells and column minimum widths, wraps
+text, uses paper colors and hides action/validation chrome (UI14). It prints the
+projected rows already present; the consumer still prepares complete tab/panel
+DOM through the shared session. Never pierce its internals from feature SCSS.
+Hide inline errors with
 `no-print`:
 
 ```html

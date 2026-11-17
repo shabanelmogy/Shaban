@@ -1,0 +1,11 @@
+S038
+Managing Vehicles
+https://speedautosystems.com/car-rental-software/user-guide/adding-vehicles/
+
+Adding Vehicles
+Select the fleet module from the left navigation panel.
+Click on the vehicles tab.
+In this window you will see a blue button on the right upper corner named “Create New Vehicle”.
+When you press that button a window pop up will appear.
+In this pop up you have to mention each and every detail of that specific car accordingly.
+Plate no. is a unique as it cant be repeated and make and model of the vehicles are already entered just enter the initials and it will appear in the system.

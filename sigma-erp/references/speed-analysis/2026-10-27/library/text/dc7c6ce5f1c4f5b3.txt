@@ -1,0 +1,12 @@
+S267
+Individuals
+https://speedautosystems.com/vehicle-leasing-software/user-guide/individuals/
+
+Individuals
+Go to the Administration module and click on it.
+Click on Data Import, a drop-down list will appear.
+Click on the Individuals module, a dashboard will open on the right side of the menu panel.
+Choose an Excel file and click on IMPORT FROM EXCEL button.
+Individuals Data will be imported automatically.
+You can also download sample Individuals Data by clicking on the DOWNLOAD SAMPLE FILE button.
+Click HERE if you have a query or an issue.

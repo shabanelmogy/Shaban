@@ -1,0 +1,12 @@
+S077
+Rental Agreement Deposit Management
+https://speedautosystems.com/car-rental-software/user-guide/rental-agreement-deposit-management/
+
+Rental Agreement Deposit Management
+While opening an agreement right under the advance amount there is a section for Deposit as well.
+You have to enter the deposit amount here. This amount can be used for fines or tolls or can also be adjusted for the due amount.
+We can charge this amount throught cash or other means as well.
+For deposits management you have to open Vouchers from the left navigation panel.
+There you will find the option for Deposits open that and you will see all the deposits taken from the customers.
+Click on the action button with the deposit for more options related to that deposit.
+You can use this deposit if needed. It can be refunded or extend or can also be transefred to other agreement with same customer.

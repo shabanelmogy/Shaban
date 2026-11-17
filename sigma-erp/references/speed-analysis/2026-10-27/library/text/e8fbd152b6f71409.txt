@@ -1,0 +1,11 @@
+S225
+How to define monthly Invoicing and Lease Invoicing
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-define-monthly-invoicing-and-lease-invoicing/
+
+How to define monthly Invoicing and Lease Invoicing?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Settings module.
+Go the Common tab.
+Scroll a little down and you will see the heading of Monthly Invoicing and Lease Invoicing. Adjust figures as per your business and fleet requirements.
+Scroll down and click on the SAVE button at the end of the dashboard.
+Click HERE if you have a query or an issue.

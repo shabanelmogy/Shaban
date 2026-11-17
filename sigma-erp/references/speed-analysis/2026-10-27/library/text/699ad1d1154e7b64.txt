@@ -1,0 +1,11 @@
+S184
+Define and manage staff Designations
+https://speedautosystems.com/vehicle-leasing-software/user-guide/define-and-manage-staff-designations/
+
+Define and manage staff Designations
+Go to the panel on the left side and click on the Staff tab.
+Scroll down and click on the Designations module. A window will open.
+A window will open. Go the +CREATE NEW DESIGNATION button and click on it.
+A new small window will pop-up. Write the designation name here and click on the SAVE button. New designation will be available in the list.
+You can view, edit, or delete by clicking the ACTIONS button.
+Click HERE if you have a query or an issue.

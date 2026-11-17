@@ -1,317 +1,452 @@
-# Sigma documentation change log
+# Sigma documentation changes
 
-Version history for the canonical guides. No recipe fingerprints this file, so
-adding a history row never re-stales a packet. Current versions are in each
-guide's `00-preamble.md` header.
+## 2026-11-13 — Authorization scenario evidence and completion wording
 
-## UI Pattern Book
+Master5/7 and the phase templates require applicable producer-to-consumer
+scenarios, dirty withdrawal/restoration, sent-write and exit outcomes, and
+fixture reachability evidence in the existing review. Completion wording
+records operation mapping, source conformance, builds, behavioral execution
+and runtime acceptance separately. The Sigma skill and reusable authorization
+prompt route these checks.
 
-2026-10-14 — Data Entry Corrections: UI13/BE18 and skill record the correction
-family list/editor/transport and static input policy, preserved historical SLA/path
-contracts, one-save validated batches, and accepted cleanup before finalize flag
-release. Shared visual owners are unchanged; source-only, owner migration and
-runtime acceptance pending.
+## 2026-11-13 — Authorization regression checks from Item Issue review
 
-Narrative history moved out of the header on 2026-09-28, so a history edit no
-longer changes the block 0 fingerprint of every packet.
+BE8/9, UI21/28 and Master5/7 document complete write invariants under scoped
+access, active branch and retained-line validation, authorized filter and
+paging scope, nested exit ownership, report query and print identity, and
+fixtures that reach the intended guard. The phase templates route these checks
+and reuse BE6 for actual HTTP actions. Source findings remain tracked in the
+[Item Issue review](<F:/My Work/Sigma/reviews/Authorization/AUTHORIZATION_159_SOURCE_REVIEW_20261113.md>).
 
-| Date | Version | Change |
-|---|---|---|
-| 2026-10-14 | 1.99 (atomic storage failure cleanup) | UI18 and skill record FileStore's optional copy cancellation and cleanup of only an attempt's newly created incomplete file after stream disposal. Atomic Support callers clean earlier uploaded paths on any later upload/persistence failure. CreateNew collisions and historical paths are preserved; cleanup failures log internally without masking the original failure. Existing optional-token callers remain compatible. Source-only; owner disk/cancellation/crash recovery acceptance pending. |
-| 2026-10-14 | 1.99 (opened sidebar group reveal) | UI1/skill record owner-requested upward reveal in the existing menu viewport after Angular rendering and sibling collapse. Both levels inherit one pending-header path with containment/show/search-reset guards and native clamping; page/focus/horizontal position, Pin/closing and default disclosure remain. Common EN/AR guide synchronized; source-only owner runtime/visual acceptance pending. |
-| 2026-10-14 | 1.99 (selected range-year correction) | Owner confirms first caret repair failed and clarifies selecting From year. UI17/shared protectRangeMarker trims a one-endpoint selection overlapping the delimiter before native replacement/deletion; marker-only/cross-endpoint insertions retain selection when blocked. Source reveals old prevented insertText moved to To start. Remove the prior render/display workaround; normal parser/model, deliberate collapsed boundary deletion and noncancelable fallback retained. Skill/common guide synchronized; source-only owner reproduction pending. |
-| 2026-10-14 | 1.99 (range caret repair) | Owner reports From-year typing jumping to To. UI17/shared directive retain guarded range display text and post-normalization selection through the installed Angular render hook, restoring only an unintended end collapse for unchanged active editable text. Superseded/destroy cleanup, normal parser/model, single/month masks, validators, picker and clear retained. Skill/common EN-AR guide synchronized; source-only, exact runtime cause and owner reproduction pending. |
-| 2026-10-14 | 1.99 (explicit desktop sidebar toggle) | Owner reports Import Data below a sidebar that does not stay minimized. UI1 and skill record click-controlled desktop minimize, cleared legacy/cached hover flag, Light/Dark false defaults and one native Angular button using existing body state with EN/AR aria labels. Metronic dual toggle registration removed only for that button; widths/offsets/RTL/mobile/menu/storage retained. Shared bilingual guide synchronized; source-only owner keyboard/runtime/visual acceptance pending. |
-| 2026-10-14 | 1.99 (CSV import presentation) | Owner requests a more attractive template card and remaining Import Data components. UI6 and skill record the existing shared ImportCsv template/local-file cards,14px inset/12px gap/44px icon tiles/12px radius and580px container stacking, ordered-column disclosure, shared Choose/Change and valid-parsed filename lifetime. Workspace setup/feedback stays bounded at45% with fixed Import/Reset/preview/pager; table count remains distinct from backend counters. Existing local preview and partial-save guards preserved; bilingual guide synchronized. Source-only; owner runtime/visual acceptance pending. |
-| 2026-10-14 | 1.99 (currency policy cache) | UI2 and skill record successful typed currency writes invalidating the existing FinancialNumberPolicyService cache. Next load reads server policy; load(force), failure retention and financial rules stay unchanged. Source-only; owner compilation/policy-read acceptance pending. |
-| 2026-10-14 | 1.99 (CSV import workspace) | UI2/6 and skill record the shared CsvImportWorkspace, CsvRowReader and root CsvImportService extraction across eleven Administration imports. Existing endpoint/body contracts retained, explicit preview/import and partial feedback, four missing contracts deferred by owner; source-only owner acceptance pending. |
-| 2026-10-14 | 1.99 (lookup identity provenance) | Customer Requests review traces Customer/GetSelect to Individual/Company Partner ids, correcting the legacy Customer FK only after owner confirms empty/test data. UI16/BE8 and skill require select/principal/subtype validation agreement and owner migration/data decision. Existing shared list/modal/guide owners reused; source-only verification, owner runtime pending. |
-| 2026-10-13 | 1.99 (production initial budget) | Owner supplies initial5.22MB failure against5MB. Existing initial error changes5→6MB; warning2MB, component10/20KB and optimizations retained. UI29/skill synchronized; source-only configuration review, owner production build pending. |
-| 2026-10-13 | 1.99 (production CSS budget) | Owner build log shows component styles exceed4KB up to16.44KB. Existing anyComponentStyle warning/error adjusts2/4→10/20KB with bounded enforcement; initial bundle/optimization retained. UI29/skill synchronized; source-only JSON/schema/diff checks, owner production build pending. |
-| 2026-10-13 | 1.99 (card column widths) | Owner requests smaller CVV/default gap and wider cardholder/bank inputs. Individual/Company select76/80/240/220px through existing UI14 column width inputs; Company frame minimum1100→1280 matches Individual and retains date/card tracks. Shared geometry/scroll/RTL/theme retained, no feature CSS/model change. Guide/skill synchronized; source-only visual acceptance pending. |
-| 2026-10-13 | 1.99 (synthetic card inputs) | Owner wants Card Number/CVV mock values. Shared typed marker enables only matching native card inputs (masked cvv included); canonical text/digit strings16/3 retain leading zeros, existing manual validators/Add-first/Save. Backend schema/example/prompt/strict digits check align without DTO/schema additions. UI13/14/BE18/skill/EN-AR guide synchronized; source-only owner replay pending. |
-| 2026-10-13 | 1.99 (manual Add before mock rows) | Owner clarifies Credit Cards should show mock generation after adding a row, like Add Document. Remove preparation callbacks and empty-row availability bypass; shared scoped action uses existing supported controls and disappears after final Remove. Add/row count/cancellation/manual Save remain. UI14/skill/EN-AR guide synchronized; source-only owner interaction pending. |
-| 2026-10-13 | 1.99 (mock generation and card actions) | Owner clarifies preview off must mount no loading/preview modal; shared button progress/Cancel and editor-scoped pending click/submit gates replace modal gating. UI13/14/skill and bilingual guide synchronized. Shared collection heading action fixes Credit Cards; explicit owner callback prepares a blank draft through existing Add, preserving sensitive exclusions and manual Save. Source-only interaction/visual acceptance pending. |
-| 2026-10-13 | 1.99 (mock confirmation option) | Owner adds independent default-true ShowConfirmation Settings option. Disabled bypasses only mock overwrite confirmation; preview, pending/cancel/stale validation and manual Save remain. UI13/BE16/skill and bilingual guide synchronized with lean/null-preserve tenant persistence and EF true sentinel. Source-only owner AddMockDataConfirmationPreference/runtime pending. |
-| 2026-10-13 | 1.99 (mock display preferences) | Owner requests global Settings button/preview flags and section heading action. Shared FormSection composes context-scoped MockDataAction; no visible shared section retains one fallback heading. Preview off applies to draft with unchanged confirmation/cancel/stale/manual Save. Cached preferences hide actions until loaded, reset per auth session, ignore older reads after Save with revision checks, and support key recovery without overwriting unknown flags. UI13/BE16/skill and bilingual guide synchronized; source-only owner migration/runtime/visual pending. |
-| 2026-10-13 | 1.99 (shared consumer evidence) | Owner requests shared DeepSeek mock data across editable screens with preview/manual Save and a Settings key. UI13/skill record the reusable form/control adapter, metadata-only provider boundary, stale identity/option/validator checks, native temporal compatibility and existing event/Save owners. 254 editor roots adopt it. API Key retains its routed-tab location with scoped parent bounds because unreviewed legacy Settings would clip under generic bounds. Shared EN/AR guidance plus Administration module guide/menu added. Source-only; runtime/visual acceptance pending. |
-| 2026-10-12 | 1.99 | Owner requests less title/filter separation. Shared FeatureTitle default bottom margin16→8px applies to current default consumers, preserving top/inline inset, title geometry, parent gaps and report-specific overrides. UI3/skill and bilingual invoice guide synchronized; source-only owner visual/RTL acceptance pending. |
-| 2026-10-12 | 1.98 (spacing follow-up) | Owner further reduces Rental field-row gap3→1px through existing rowGap, preserving default7px for other consumers and existing label/control/validation geometry. UI4/skill current-consumer evidence synchronized; no new shared behavior. Source-only visual acceptance pending. |
-| 2026-10-12 | 1.98 | Rental owner requests a shorter filter card, raised last-row buttons and smaller vertical field spacing. Shared FilterToolbarStartDirective projects existing form choices opposite Reset/Search; numeric rowGap retains7px by default and Rental selects3px. Empty-slot/advanced/inline consumers, shared34px controls, validation reserves, wrapping, collapse, theme/RTL remain. Rental retains seven fields and accessible merge legend, removing its independent full-width choice row. UI4/skill/guide synchronized; source-only, owner visual/keyboard/short-height/runtime acceptance pending. |
-| 2026-10-11 | 1.97 | Owner generalizes reusable presentation ideas through shared components: all FilterPanels gain below1200 disclosure retaining mounted form/advanced state; all FeatureTitles inherit small-screen same-row action wrapping and primary sizing, superseding Leave/Holiday opt-ins. UI3/4/24, Master5, authoritative instructions, skill and common EN/AR UserGuide overview synchronized. UI29 responsive consistency gate covers boundaries/intermediate widths. Source-only; owner visual/keyboard/RTL/theme/runtime acceptance pending. |
-| 2026-10-10 | 1.96 (discard ordering) | UI10 and skill clarify confirmation emits before finalize releases its pending flag. Deduction accepted close callbacks retain independent save/load/parsing and visible-session gates without blocking themselves; deferred duplicate guards and cancellation restoration remain. Source-only, owner interaction acceptance pending. |
-| 2026-10-10 | 1.96 | Deduction source review adds optional default-empty EditorDialog.closeButtonId. Calendar modals keep focusOnShow=false and use shared focusField after shown to focus the shared close button inside the dialog without opening a picker. Default consumers, trap/Escape/disabled/dirty semantics remain; UI13 and skill synchronized, source-only owner keyboard/runtime acceptance pending. |
-| 2026-10-10 | 1.95 | Owner requests documentation of checkbox vertical centering following ProcessedPayrolls feedback. UI4 and skill require checkbox/adjacent-label centres to match neighbouring input/dropdown/date-control boxes, independently of headings/validation feedback; intrinsic15px checkbox size and responsive/RTL/theme semantics stay. The current feature-local24px padding is debt, not a reusable constant. Documentation only; shared implementation and visual verification pending. |
-| 2026-10-09 | 1.94 (date consumer evidence) | Transportation continuation extends the existing full-year invariant to currentMonthRange local first/last days via setFullYear. TripSheet reuses saved-day hydration and month validation for bounded month shifting/query, avoiding the1900 constructor offset. UI17/skill synchronized; source-only owner compilation/input/route acceptance pending. Affected packets regenerated and semantically reviewed in TRANSPORTATION_FEATURE_REVIEW renewed reconciliation. |
-| 2026-10-09 | 1.94 (consumer evidence) | Master5 extraction gate promotes the existing branch-settings editor to shared/components/branch-tariff-settings, adopted by RentalTariff, LeaseTariff and TariffCard on owner restoration instruction. UI13/skill record the shared controlled modal, successful empty Add, validation-on-Save, existing API scope and deferred route/modal discard. No general control defaults or backend contract change; source-only, owner compilation/runtime/visual acceptance pending. |
-| 2026-10-09 | 1.94 | CommonSettingsService.getMySetting adds optional inline error suppression with default/global feedback preserved. Rental Agreement Deposit uses CommonDTO currency labels/decimals through shared amountInWords, retains input on failure and Retry. UI2/22 and skill synchronized; source-only owner compiler/failure/Retry acceptance and packet regeneration/semantic review pending. |
-| 2026-10-07 | 1.93 | Movements continuation completes Delivery/Custody discard-control freezes and rechecks Collection identity/busy state at deferred subscription. UI10 and skill synchronize lazy confirmation ownership, same-editor restoration and retained values/dirty state. No shared service/API change; source-only owner compiler/navigation/interaction acceptance and recipe regeneration/semantic review pending. |
-| 2026-10-07 | 1.92 | Movements promotes shared optional signed Int32 transport validation (UI19) into scalar-validators; number feedback, signed bounds and string mileage preservation. Skill synchronized; frontend-only, source-only owner compiler/input acceptance and recipe regeneration/semantic review pending. |
-| 2026-10-07 | 1.91 | Transportation source review promotes shared local clock parsing/hydration/validation with unchanged saved fraction preservation (UI17), optional finite-number/GUID syntax validators (UI19), top-level query serializer (UI2) and opt-in DataTable server page-count navigation when TotalCount is unreliable (UI6). Ordinary defaults retained; no all-pages list simulation. UI13/catalog/type01 modal reference corrected because Fleet VehicleService is currently routed. Skill synchronized; producer date/count/business gaps remain feature-owned. Source-only; owner compilation/runtime/visual acceptance and generated-packet regeneration/semantic review pending. |
-| 2026-10-06 | 1.90 | Equipment Rental review finds repeated saved-date hydration and raw ISO restoration in PrimeNG calendars. Shared toPickerDate extracts the existing local-day partnerPickerDate algorithm; that wrapper delegates compatibly. UI17/skill synchronize calendar hydration separate from manual parsing/date transport; in-scope editors/filters adopt it without changing date-time contracts. Source-only, owner compilation/reload/input/route/visual acceptance and recipe regeneration/semantic review pending. |
-| 2026-10-06 | 1.89 | Owner requests more filter-button spacing after LeaseInquiry/Quotation inline placement. Shared FilterPanel actionGap owns the flex gap with default8px; these two consumers select12px without feature CSS or changing other defaults. UI4/skill synchronized; source-only, owner visual/compilation acceptance and packet regeneration/semantic review pending. |
-| 2026-10-06 | 1.88 | Owner-supplied Lease compiler errors identify wrong FilterActionsDirective export paths, missing standalone FieldError registration, unsupported StateMessageKind, removed informational MessageService injection and unsupported DestroyRef.destroyed. UI1/4/22/28 and skill now require exact exports/metadata/input/member/API source checks and cancellable deferred work under installed Angular17.3.12. Consumers repaired without shared aliases, schemas or framework upgrades. Syntax checks do not certify compilation; owner build/runtime acceptance and recipe regeneration/semantic review pending. |
-| 2026-10-06 | 1.87 | Lease conformance review adds optional skip-error options to BaseService.getById for inline detail feedback. Deposit payment-method context adopts it, preserving default/global feedback. UI2/22 and skill synchronized; source-only, owner failure/retry acceptance and recipe regeneration/semantic review pending. |
-| 2026-10-06 | 1.86 | Master5 extraction gate adds shared monthValueValidator over parseMonthValue with optional-empty/date-error semantics; Depreciation adopts it. UI17/skill synchronized, two existing Accounts-family/Timesheet copies stay in backlog39 for their own review. Source-only; owner compilation/input acceptance and packet regeneration pending. |
-| 2026-10-06 | 1.85 | Master5 shared-extraction gate adds composedReadErrorMessage for declared composed-read failures and HTTP Result bodies, adopted by Card Transactions Bank Transfers list/export/report. UI22/skill synchronized; CashDeposit's remaining copy is scoped backlog39. Source-only; owner compilation/failure-path acceptance and packet regeneration pending. |
-| 2026-10-05 | 1.84 | Bank Reconciliation promotes shared voucherTypeText with neutral EN/AR voucherTypeNames keys. UI16/23/skill synchronized; existing Customer Statement local mapping remains backlog39. Unknown-name/null semantics and query/payload enum identity retained. Source-only; owner language/output acceptance and derivative-packet regeneration pending. |
-| 2026-10-05 | 1.83 | Owner requests CashFlow Tree View within its single accounting table. Existing activity arrays form default-expanded roots showing server net amounts, with account/subtotal children and root final total. Shared hierarchy.activateEnabled keeps structural rows plain while preserving keyboard/RTL/printAllRows. Full original Excel traversal remains ES2018-compatible. UI6/20/skill synchronized; source-only, owner compilation/visual acceptance pending. |
-| 2026-10-05 | 1.82 | Owner TS2550 identifies CashFlow flatMap under es2018/dom despite target es2022. Typed for-of/push preserves export content/order. On explicit owner request UI1/8/skill document lib-vs-target compatibility, ES2019 exclusions and source-parser limits, with Budget construction as the earlier example. No compiler configuration/polyfill change; owner compilation pending. |
-| 2026-10-05 | 1.81 | Owner explicitly requests one accounting CashFlow view. Shared DataTable optional rowTone/column width/conditional links present activity headings, authoritative net subtotals/final double rule in one fill table; KPI values relocate into statement rows and the unconsumed Accounts tab adapter is retired. Complete source/ledger links/Excel shape/print retained; other reports unchanged. UI6/20/24/skill synchronized; source-only, owner visual acceptance pending. |
-| 2026-10-05 | 1.80 | Further owner rejection of CashFlowStatement layout supersedes its document adoption: shared workspace activity tabs with icons/counts and one full-width visible fill grid, mounted panels/print-only headings and slim/row/min150/max80 summary. Full-width route modifier reuses the existing owner. Frozen all-section Excel/print, figures/links remain; other reports retain defaults. UI20/24/skill synchronized; source-only, owner visual acceptance pending. |
-| 2026-10-05 | 1.79 | Owner rejects CashFlowStatement design. Accounts-local optional sectionLayout=document adopts the already canonical UI20 complete-response document alternative: full-width sequential operating/investing/financing sections, one shared outer scroll frame, natural-height shared grids and compact empty states. Existing columns, figures, ledger links and complete print/Excel remain; other reports retain default panes. UI20/skill synchronized; source-only, owner visual acceptance pending. |
-| 2026-10-05 | 1.78 | Owner requests OpeningBalances inline search actions/equal card edges across all tabs. Shared sigma-editor-panel--workspace extends UI3 title/filter frame alignment to tabbed editors; OpeningBalances adopts it across eight tabs, with inline filter actions in Customers/Suppliers/Prepaid/Deposit and shared field stacking at720px beside the actions. UI3/4/skill/history synchronized; source-only, owner visual/RTL/narrow-layout acceptance pending. |
-| 2026-10-05 | 1.77 | Owner requests LinkAccounts Reset on the search line and all page cards aligned as a general rule. Shared FilterPanel inlineActions (default off, no advanced filters) owns compact search/actions; shared workspace modifier aligns filter frame inline edges with title/tabs/tables. UI3/4 and skill synchronized. Source-only; owner responsive/RTL/visual acceptance pending. |
-| 2026-10-05 | 1.76 | Owner requests equal page-card widths and Account title/workspace alignment. UI3 and skill require shared sibling card/frame edges, preserving intentional columns/nested cards and summary tiles. Shared sigma-list-panel--workspace removes only title inline inset; Account list adopts it. Source-only; owner responsive/RTL/visual acceptance pending. |
-| 2026-10-05 | 1.75 | Accounts review promotes optional typed DataTable hierarchy/flat indentation and all-descendant print, feature-local typed report composition with server context and complete exports, and EditableRows pending confirmation/mutation recheck. UI6/14/20 and required skill synchronized; existing paged APIs, formulas, full-replacement payloads and non-adopting consumers retained. Source-only; owner build/runtime/visual acceptance pending. |
-| 2026-10-05 | 1.74 | Owner-approved Stock Reports badges retain numeric fields beside derived statuses. Shared DataTable header/body loops now key each column by field plus stable header translation key, avoiding duplicate identities while preserving sort/row/format/export behavior. UI5 and required skill/history synchronized after scoped source comparison. Feature KPI predicates remain frozen in the Stock Reports contract. Source-only; owner runtime/visual acceptance and derivative packet regeneration/semantic review pending. |
-| 2026-10-04 | 1.73 | StockReports eight consumers share a typed feature-family form/request/print/export composition over ReportPage, FeatureTitle, DataTable and SummaryCards. UI20 records complete-response flag/count proof and typed pageSize-to-rows paging adaptation; feature formulas/source proxies remain frozen in the StockReports contract. Skill synchronized. Source-only; owner runtime/visual acceptance and derivative packet regeneration/semantic review pending. |
-| 2026-10-04 | 1.72 | Owner reports ItemRequisition View Quantity at the edge and requests application-wide alignment. Shared editable table numeric headers/plain numeric cells and value text now default to center, respecting explicit column overrides; 17 plain values in five Stock/Workshop templates adopt existing blue highlight. Inputs, values/formatting/calculations, widths/theme/scroll/API remain unchanged. UI14/skill synchronized; source-only, visual acceptance and packet regeneration/semantic review pending. |
-| 2026-10-04 | 1.71 | Owner requests same-row filter alignment and explicit Guide emphasis, then limits adoption to Item Issue onward because previous screens are already adjusted. Item Issue uses existing shared stableLayout and reserved date feedback, matching Workshop Job reference. UI4/skill make stableLayout mandatory for new/subsequently reviewed filters; earlier features and shared default/columns/breakpoints/query behavior are unchanged. Source-only, visual acceptance and derivative packet regeneration/semantic review pending. |
-| 2026-10-04 | 1.70 | Owner requests application-wide editable Quantity numeric inputs with increase/decrease buttons. Shared QuantityInputDirective configures the existing PrimeNG CVA; global styles own the 34px line and 22px stacked rail. All 36 inventoried controls in 28 templates adopt it; integer/decimal bounds, step, validation, number/null transport, calculations and read-only badge owners remain feature-owned. Input IDs/accessibility and post-CVA onInput callbacks are preserved. UI14/27 and skill/history synchronized; derivative packet regeneration/semantic review pending. Source-only, owner build/keyboard/stepping/RTL/theme/narrow-layout acceptance pending. |
-| 2026-10-04 | 1.69 | Owner generalizes the existing Workshop blue numeric highlight to every non-editable numeric cell in new/reviewed editable collection rows. UI14 requires shared value/highlight text and public numeric/center headers, retaining 34px height, 12% primary tint, 700 weight and 6px radius. Requisition Create PR adopts Remaining Quantity/Amount/Tax/Gross; editable inputs, formatting, calculations, payloads, report/DataTable and summary owners remain unchanged. Canonical book and required skill synchronized; derivative packet regeneration/semantic review pending. Source-only, owner visual/RTL/theme/print acceptance pending. |
-| 2026-10-04 | 1.68 | Owner extends immediate numeric replacement to the whole application. Root GlobalNumericFocusService delegates focusin/first-pointer-click selection for native number and PrimeNG spinbutton inputs, including dynamic rows and dialog portals; later clicks preserve caret editing, readonly/disabled controls are excluded, no value/form/calculation writes occur. AppComponent owns start/stop; NumericFocusDirective retains appearance only. UI27 and required skill synchronized, derivative packets regenerated. Source-only; owner keyboard/pointer/runtime acceptance pending. |
-| 2026-10-04 | 1.67 | Owner requests immediate overwrite of numeric values and explicitly promotes it to a general documentation rule. Shared NumericFocusDirective selects on entry/first pointer click without changing forms, values or calculations; later clicks retain caret editing. Nine Workshop native-number consumers opt in. Shared numeric-input appearance and 34px text-only table value treatment align Job/Estimate numeric values with row controls; derived Price/Charges pair centered public header alignment with a themed blue highlight after the owner's styling correction. Three-pane lookup labels shrink inside their column to fix Work Order overflow in Create Job; generic English required wording becomes Required field. UI14/16/19/27 and skill/history synchronized; source-only, owner pointer/Tab/RTL/theme/visual acceptance pending. |
-| 2026-10-04 | 1.66 | Owner requests Job/JobEstimation Create in three columns: Details, Jobs, selected Job details. Shared editor form/body/pane classes own 240–280px/170–200px/remainder columns, one-column master fields, container-responsive 900/620px placement and print release; existing internal scroll, slim totals, fixed footer and typed form hierarchy retained. UI1/13 and skill synchronized; source-only, owner visual/RTL/narrow/print acceptance pending. |
-| 2026-10-04 | 1.65 | Owner requests smaller master-detail totals to preserve row visibility. Shared SummaryCards adds opt-in slim density: horizontal 20px icon/copy, 6px/10px padding, 6px gaps and 1rem figures. Workshop Job/Estimate/WorkOrder select slim/row/min140/max80; shared responsive wrap, keyboard scroll, print release, themes and formatting retained. UI14/24 and skill synchronized; source-only, owner visual acceptance pending. |
-| 2026-10-03 | 1.64 | Workshop shared adapters: real-date/range/time validation with local typed datetime transport; confirmed collection removal rechecks busy state and default Remove supports removeDisabled; FileField emits original-name/path metadata only after successful stored upload; opt-in FormSection sigma-print-flow releases internal fill bounds; public cellClass wrapping preserves full notes and attachment links. UI5/14/17/18/21 and skill synchronized. Feature tax/precision/transition policies remain in frozen Workshop contracts. Source-only, owner runtime/input/print acceptance pending. |
-| 2026-10-03 | 1.63 | Logs Movement Documents and the direct Agreement reader reuse FileField selectionOnly for existing atomic multipart endpoints and FileLink for persisted same-origin files; historical file readability is separate from row upload eligibility. Check Card opts into shared dialog print isolation and ReportPrintSession options while retaining existing consumers. Owner-reported TS4104 fixes filtered dropdown return type to a mutable array. UI16/18/21 and skill synchronized; source-only, owner build/runtime/RTL/theme/print acceptance pending. |
-| 2026-10-03 | 1.62 | Job Invoice on Customer adds shared allocateDocumentTax alongside documentTax, matching VatPolicy per-rate proportional allocation with largest absolute remainder, first tie and zero-net behavior; the affected Close preview also adopts it. Job context returns backend ledger precision from base Currency, distinct from Common display precision. Shared amountInWords uses tenant currency/decimal-currency labels and display precision with existing English voucher wording. Workshop-linked MiscellaneousInvoice persists matching line/header tax and journal values, derived previews stay out of payloads. UI19 and skill/history synchronized; source-only, owner build/runtime/visual/ledger acceptance pending. |
-| 2026-10-03 | 1.61 | Owner applies the agreed early duplicate behavior to every step form. Shared blur validator caches completed normalized-value/edit-id checks, cancels stale work and blocks/retries failures. Shared settling gate commits focused blur edits and awaits pending checks at every forward route/Save; Individual, Company, Staff and legacy Closed Lease consume it with existing validation rules. Shared FieldError owns status/duplicate/failure feedback; UI12/19 and skill synchronized. Source-only; owner runtime acceptance pending. |
-| 2026-10-03 | 1.60 | Owner requests fixed dash/spaces during date-range editing and removes repeated Supplier Statement table titles, asking to document the rule. Shared DatePickerDirective protects/capture-normalizes the exact delimiter with caret preservation before PrimeNG parses once; existing clear/history/single-date/validation semantics remain. UI20 makes tab captions the sole on-screen section title for reviewed tabbed reports, retaining utility-hidden print headings; Supplier Statement adopts it. UI17/20 and skill/history synchronized; source-only, runtime/input/visual acceptance pending. Supplier Balance single-card sizing remains a feature-specific host-placement choice. |
-| 2026-10-03 | 1.59 | Owner reports filters moving while typing and extends repair to Supplier/Staff Balance Summary. FilterPanel opt-in stableLayout owns top alignment, field-bounded PrimeNG controls and a reserved zero-count badge slot; FieldError reserveMessage owns translated wrapped feedback geometry without duplicate alerts/clipping. Customers reserves range errors; Supplier adopts the same frozen More Filters shape as Staff. UI4/19/20, skill and generated packets synchronized. Source-only; visual/runtime acceptance pending. |
-| 2026-10-03 | 1.58 | Sidebar group collapse fix removes competing RouterLinkActive/Metronic disclosure writers. SidebarMenuComponent owns both levels, explicit user choices override route/search defaults, sibling opens close peers, one groupHeader renders native disclosure and independent Pin buttons, and propagation is isolated. UI1 and skill synchronized; source-only, owner runtime/visual acceptance pending. |
-| 2026-10-03 | 1.57 | Customer Statement owner requests the usual Sigma blue for Report Type. Shared opt-in sigma-report-filter-choice owns PrimeNG radio selected/hover/focus states through existing primary/hover/focus tokens; other groups remain unchanged. UI20 and skill rule/history synchronized. Owner-specific row spacing remains in its feature contract. Source-only; visual acceptance pending. |
-| 2026-10-03 | 1.56 | Staff review extracts parseMonthValue into shared date-utils: valid local picker Date or complete MM/YYYY/yyyy-MM normalizes to yyyy-MM, rejecting partial/invalid months and years outside 1–9999 without timezone conversion or short-year coercion. Staff Overtime, Duty Schedule and Timesheet consume it and currentMonthRange()[0]; UI17 and skill rule/history synchronized. Source-only; owner runtime acceptance pending. |
-| 2026-10-03 | 1.55 | Owner requests default 15 table rows, explicitly superseding the earlier 20. Shared DEFAULT_PAGE_SIZE supplies initial/fallback rows and all Suppliers pagers; standard choices become 10/15/20/50/100, including normalization of former standard choices. Explicit user sizes and the 10-row minimum remain; report transport, completeness, totals, print and export scopes stay intact. UI6/20 and skill rule/history synchronized; generated packets regenerated. Source-only; owner runtime acceptance pending. |
-| 2026-10-03 | 1.54 | Owner requests title styling generally like the filter card. FeatureTitle/list-filter/report-filter reuse one root/dark-scoped background token with themed border/shadow, 3px logical-start primary accent and 8px radius; title padding matches list filters while its height/text/icon/actions remain. Canonical report panels align title/filter edges by default, superseding the earlier three-report opt-in; modifier remains compatible. Shared title print is white/readable without shadow. UI3/4/20, skill/history and generated packets synchronized. Source-only; owner visual/runtime acceptance pending. |
-| 2026-10-03 | 1.53 | Suppliers source review extracts ReportPrintService.createSession(DestroyRef) for guarded one-frame preparation, afterPrint/failure restore and scheduled-frame cancellation; reviewed local-paginator reports bind shared grid flow to its readonly printing signal. DataTable forwards changed local firstChange offsets, fixing PrimeNG sort resets that do not emit onPage; lazy grids and print preparation retain their owners. UI6/21 and skill synchronized. Phase5 template corrected to existing UI1 one-root-client wiring; derivative packets regenerated with the generator. Source-only; runtime/visual acceptance pending. |
-| 2026-10-03 | 1.52 | Owner requires one shared summary/KPI/total-card component on every screen type and prefers Dashboard. SummaryCardsComponent extracts the Dashboard KPI shape; Dashboard, FollowUpReport, DebtCollection, Customers/Alerts, BalancesSummary (main and statement dialog) and ReceivableAgeAnalysis adopt it. Public comfortable/compact/dense density, grid/fit-row layout, minimum width and optional internal height bound own responsive sizing. Aging's last-card/smaller-number correction fits twelve cards inside the wide container, wraps below1100px, uses1.05rem values and12px host bottom separation. Monetary formatting/DrCr, Alerts selection, totals/formulas/request scope, tab/paging/print/Excel contracts stay intact. Follow Up is full width and gains translated Details page report. UI 0/14/20/24, catalog and skill updated; generated packets regenerated. Source-only; visual/runtime acceptance pending. |
-| 2026-10-02 | 1.51 | Follow Up adopts the frozen professional Summary extension and paging/alignment refinement within the existing Details/Summary workspace tabs: the responsive Summary maximum is 960px, superseding the provisional 520px example; Summary remains unpaginated while complete-array Details uses the shared controlled local paginator with default 20 rows and shared options, retaining page/size across tabs and resetting offsets on valid Search/filter/Reset/drill-down. The existing aligned-title modifier matches title/filter card widths. Shared totals cards present server-owned additive operational metrics, comparison bars use shared-grid custom cells, and the user action drills into the exact raw username. Active-section Excel exports all filtered rows and full print includes both arrays/KPIs then restores state; formulas remain in the frozen contract/review. UI 6/20 and skill updated; packets regenerated. Source-only; visual/runtime acceptance pending. |
-| 2026-10-02 | 1.50 | Owner chooses one Details tab and one Summary tab for Follow Up, with a narrower summary. Existing shared EditorTabs workspace presentation and DataTable viewport/formatting are reused; summary width stays feature-owned, both arrays remain mounted and complete, Excel follows the active section and print includes both. UI 20 and skill record the scoped adoption; packets regenerated. No new shared disclosure capability. Source-only; visual/runtime acceptance pending. |
-| 2026-10-02 | 1.49 | Report transport/layout guidance reconciled: proven complete responses use `lazy=false`, while frozen paged responses retain `lazy=true`, server paging and authoritative counts. Independent bounded shared-grid panes cover both complete `paginator=false` sections and complete local-paginator sections; no report is made complete by importing the grid. UI 6/20 and skill §6.1 updated; packets regenerated. Documentation only. |
-| 2026-10-02 | 1.48 | Report table guidance reconciled with the frozen bounded layout: every new/reviewed report table uses typed `app-data-table`; full-document flow may use one outer frame with `scrollable=false`, while independently visible sections use separate overflow-hidden boundaries and shared row viewports. Former native report classes are compatibility-only until scoped review, the shared grid owns row palette/hover treatment, and totals stay outside current grid rows unless shared capability is implemented in scope. UI 6/20, report navigation and skill reconciled; packets regenerated. Documentation only. |
-| 2026-10-02 | 1.47 | Report table rule: every report table in new or reviewed work uses typed `app-data-table` columns. Existing reports migrate when their report is scoped; complete-array proof, backend totals, hierarchy and print flow remain required. Missing shared hierarchy capability is solved in the shared component within the report task; no flattening or silent feature table. UI 6/20, report navigation and skill updated; generated packets regenerated from their sources. Documentation only; Follow Up Report remains the scoped application task. |
-| 2026-10-02 | 1.46 | Owner requests matching title/filter widths in Customer Statement and Receivable Age Analysis. Shared sigma-report-panel--aligned-title clears only title inline margins and both requested panels opt in; existing block spacing, panel padding, print, RTL/theme and other consumers remain. UI 3/20, skill and feature review addenda record the scoped choice; packets regenerated. Source-only, owner visual acceptance pending. |
-| 2026-10-02 | 1.45 | Individual review retires 39 unused PersonBase/Partner/PartnerAddress scaffold files under Master 5 G12, with no consumers/runtime/config migration or backend removal. Backlog 43 records source evidence. Final integration reuses the existing mergeSelectOptions helper and complete upload/save/cleanup busy gate. Source-only; owner build/runtime acceptance pending. |
-| 2026-10-02 | 1.44 | Companies review extracts pure mergeSelectOptions for saved selection presentation, adopted by Company editor/Driver countries without changing API/form IDs. UI 16 and skill record incoming-first labels, number/string ID equality and inline Retry; UI 18 records shared busy gating for nested tabs/document mutations during uploads. Source-only; owner build/runtime acceptance pending. |
-| 2026-10-02 | 1.43 | Individual review fixes applied-filter editor/action retention, stable submitted form and busy validation navigation. Existing shared card factory rejects blank required text before trim; FileField forwards its control to FieldError for path validation. UI 10/12/18 and skill reconciled; typed optional/nonnullable numeric inputs match current VMs. Source-only, owner build/runtime acceptance pending. |
-| 2026-10-02 | 1.42 | Owner requests prevention after ReceivableAgeAnalysis re-review: conditional periods escaped FormGroup, first-page 200 rows presented as full local data while totals cover the full set, stale filters, ineffective/custom-labelled boundaries, duplicate feedback and missing structured-date recipe. UI 20 now requires actual report source evidence; 6/8 clarify completeness independent of wrapper name, 29 adds above-cap/conditional/stale-filter acceptance, and report catalog preserves existing transport contracts. Existing rules are verified explicitly instead of treating shared imports as conformance. Skill, phase templates/dependencies and packets updated. Documentation only; application findings remain open. |
-| 2026-10-02 | 1.41 | Owner rejects green Customer Statement export buttons. Shared report export variant now uses global neutral text/border/soft-surface tokens and quiet primary hover/focus; removing the later dark export block preserves interactive states in both themes. Existing shared report consumers inherit the correction without feature palettes or changed export behaviour. UI 20 and skill/packets updated; source-only, visual acceptance pending. |
-| 2026-10-02 | 1.40 | Owner removes the extra heading above Customer Statement tables because tabs already name sections. Panel headings hidden in screen media only, preserving accessible tab labels, filling grid/paginator layout and full-report print headings. UI 20/21 and skill/packets reconciled; source-only. |
-| 2026-10-02 | 1.39 | Owner reports every Customer Statement export using the first tab. Ordinary Excel dispatches all five section arrays through shared dataTableExportRows with current grid columns, click-time translation and section/mode filenames. Availability uses selected count; voucher-type export follows active ledger/advance lines and appears only on applicable sections, existing formula retained. UI 8/20 and skill updated, packets regenerated. Source-only, actual Excel acceptance pending. |
-| 2026-10-02 | 1.38 | Owner asks Customer Statement paginators at the card bottom. Existing shared fill mode bounds each active grid, row wrapper owns scrolling and pager stays outside it; feature flex layers pass remaining height. Shared scrollToStart adapter delegates to public PrimeNG scrollTo for tab navigation. Print selects existing flow mode and prints all sections. UI 6/20/21 and skill/packets updated; source-only, visual acceptance pending. |
-| 2026-10-02 | 1.37 | Owner approves local pagination in Customer Statement tabs with 10/20/50/100 options. Independent controlled pages use shared resolveListPaging and current default size; filter/search resets keep chosen sizes. Print renders all rows for one preparation frame and restores paging through shared print cleanup; exports/totals remain full-response. UI 6/20/21 and skill updated, packets regenerated. Source-only, runtime/print acceptance pending. |
-| 2026-10-02 | 1.36 | Owner asks every Customer Statement tab table to match BalancesSummary. Five native definitions replaced with typed app-data-table columns; optional scrollable=false keeps one external report frame, all response rows and shared print surfaces. Default list grids unchanged. UI 6/20/21 and skill updated; packets regenerated. Source-only, visual/print acceptance pending. |
-| 2026-10-02 | 1.35 | Owner approves Customer Statement tabs and confirms four tabs with the existing Ledger/Outstanding radio buttons. Shared EditorTab optional count badge; report tabs outside the single frame; screen-only inactive-panel hiding keeps all mode-applicable sections printable. UI 13/20/21 and skill updated; generated packets refreshed. Source-only, owner visual/print acceptance pending. |
-| 2026-10-02 | 1.34 | Owner requests shared prevention for BalancesSummary page-size comparison bug, plus documentation/packet updates and total-card width alignment. UI 6 requires resolveListPaging against previous state before signal writes, size-only page-1 reload and unchanged-state skip; feature filters/sort/HTTP stay feature-owned, using UI 28 switchMap/defer. BalancesSummary adopts this without bulk migration or backend changes. Phase-02 template reconciled with canonical shared filter-panel semantics and paging helper; all packets regenerated. Source-only; runtime acceptance pending. |
-| 2026-10-02 | 1.33 | Owner requests empty Customer Statement tables and blank customer/date filters to inspect layout. Initial/Reset values null; existing table headers/empty states render without report values or an automatic statement request; valid filters still gate Search. Owner also moves unchanged TrailBalance source from Reports to Accounts; route/provider imports and current canonical reference paths updated, existing URL preserved. Source-only; owner acceptance pending. |
-| 2026-10-02 | 1.32 | Customer Statement refactor adds opt-in bounded report shell/table styles, reuses shared report filters/totals/print flow, and extracts toFilterParams plus optional inline-error lookup handling through the existing base service. UI 2/16/20 and project skill updated together; other screens adopt during review. Source-only; owner runtime/print/visual acceptance pending. |
-| 2026-10-02 | 1.31 | Owner requested every Individual/Company date use the same shared input and the rule apply to future fields. Required future recipe: appDatePicker with dateInputMask=true for DD/MM/YYYY and MM/YYYY; incomplete year stays invalid. All active Individual/Company dates, including Drivers, use it with matching placeholders and existing bounds/order/transport semantics. Directive opt-in and time/range grammar retained for other existing consumers; adoption remains per screen review. UI 17 and skill reconciled; source-only. |
-| 2026-10-02 | 1.30 | Owner clarified dates must have a date shape, not arbitrary digits. Shared dateInputMask constrains single DD/MM/YYYY fields to two day/month digits and four year digits with slash separators, rejects impossible complete day/month numbers, and leaves partial text invalid instead of short-year parsing. Company and nested Driver Documents opt in; real-date/order validation and picker remain. UI 17 and skill reconciled; source-only. |
-| 2026-10-02 | 1.29 | Owner still entered letters in Company document dates despite preventive guards. Shared date picker now captures native input before PrimeNG parses, removes disallowed characters with caret preservation, and opens PrimeNG's keydown gate for normal input parsing without a preceding key. Listener cleanup and actual-input/disabled/readonly scope retained. Company and nested Driver reuse it. UI 17 and skill reconciled; source-only, owner reproduction/acceptance pending. |
-| 2026-10-01 | 1.28 | Owner requested every date box allow dates only or picker selection. Shared appDatePicker enables its numeric input guard by default; separators follow date format, range and time modes. Partial editing and real-date validation remain. Companies/Driver and Individual consume it; legacy calendars adopt it in screen reviews. UI 17 and skill updated; source-only. |
-| 2026-10-01 | 1.27 | Owner reported unused space after increasing Company Driver height. Draft now uses auto height capped at 90dvh, with existing flex-fill on all projected form/body/scroll links to retain intrinsic sizing and avoid the earlier zero-basis collapse. Width and fields unchanged. UI 13 and skill document the content-sized alternative; source-only. |
-| 2026-10-01 | 1.26 | Owner reported Add Driver inside Companies opens blank. Its zero-basis inner editor had only an auto-height dialog with maxHeight. Shared EditorDialog gains optional height; Company Driver draft uses min(720px, viewport minus 24px) to bound the inner scroll chain. Existing dialogs retain default auto height. UI 13 and skill updated; source-only, owner Add/Edit/View verification pending. |
-| 2026-10-01 | 1.25 | Owner reiterated date-only entry and reported Companies Documents moving upward. Shared numeric date guard now also rejects printable non-date keys, preserving shortcuts/navigation. EditableRows Add replaces native focus with shared focusField after rendering and openOverlay=false, containing focus scroll to real content regions without opening the picker. Books/skill updated; source-supported fixes, runtime reproduction/acceptance pending. |
-| 2026-10-01 | 1.24 | Owner requested fixed Company Contact Designation and a general stable-dropdown-width rule. Designation uses existing shared column width at 180px. UI 16 requires layout-defined width independent of selected text: responsive grid fields fill their allocated width; editable dropdown columns declare width through UI 14. No universal pixel size or bulk rewrite. Books and skill updated; source-only. |
-| 2026-10-01 | 1.23 | Owner extended date-only typing to Individual document Issue/Expiry Date. Shared dateNumericInput replaces their picker-only overrides; typing/paste accepts digits/slashes, picker and existing date validators remain. UI 17 reference and skill history reconciled; source-only. |
-| 2026-10-01 | 1.22 | Owner requested Individual card Active Date/Expiry reject text while retaining manual date editing and picker selection. Both opt into shared dateNumericInput: digits/slashes only for insertion/paste, partial numeric entry retained, real-date validation unchanged. Card Type uses existing fixed column width at 180px. UI 17 and skill updated; source-only. |
-| 2026-10-01 | 1.21 | Owner clarified Individual Documents: Actions is the button heading; Is International is the checkbox heading. The flag moves to its own 136px data column after Attachment; Actions returns to 74px, hidden in View. Existing date/attachment widths and picker-only behavior remain. UI 14 and skill updated; source-only. |
-| 2026-10-01 | 1.20 | Owner requested compact picker-only Individual document dates, a visible International caption and slightly wider Issued By. Date columns use 130px, Issued By 150px; action width 210px supports a shared labelled checkbox beside Remove. Explicit picker-only bindings override the typeable default only for these date fields. UI 14/17 and skill updated; source-only. |
-| 2026-10-01 | 1.19 | Owner requested narrower Individual Issued By and more checkbox/Remove spacing. Issued By uses 120px; shared host variables configure action-column width and projected-action gap, with existing 74px/5px defaults. Individual opts into 100px/12px. UI 14 and skill updated; source-only, visual acceptance pending. |
-| 2026-10-01 | 1.18 | Owner requested Individual Is International beside the action button and a wider Attachment. Individual projects the checkbox and confirmed Remove in the shared action cell; Attachment hint grows to 280px. Optional actionsVisibleInView preserves row data in View without a Remove button; shared checkbox styling also covers row-action groups. UI 14 and skill updated; source-only. |
-| 2026-10-01 | 1.17 | Owner reported Individual Is International checkbox colour differs from the guide. Editable-table checkbox cells now reuse the editor's 15px box and sigma-primary accent in the shared stylesheet; existing control-line alignment remains. UI 14 and skill updated; source-only, visual acceptance pending. |
-| 2026-10-01 | 1.16 | Owner requested fixed Document Type width in Individual, then a slight increase: 200px initially, 240px after the follow-up. Shared EditableCollectionTableColumn gains optional width; the shared table uses fixed layout/colgroup only for consumers declaring it, retains sizing hints and clips long dropdown labels. UI 14 and skill updated; source-only, visual acceptance pending. |
-| 2026-10-01 | 1.15 | Owner reported Individual Documents error badges lift the components. Shared focusField replaces unrestricted scrollIntoView with bounded scrolling of actual auto/scroll regions, skips page roots and clipped shells, keeps visible fields stationary and preserves preventScroll focus/overlay opening. Direct consumers: Individual, Company and nested Driver fields. UI 12/27 and skill updated; source-only, owner reproduction pending. |
-| 2026-10-01 | 1.14 | Owner: "فى شاشة Individual خلى steps تاخد العرض كاملا". Shared StepFormComponent fill option distributes centred markers/labels across equal-width columns and aligns the progress track; Individual opts in. Default consumers retain their presentation and narrow navigation owns its overflow. UI block 12 and skill updated; source-only. |
-| 2026-10-01 | 1.13 | Owner: "نفذ كل الملاحظات" after the comprehensive Individual/Company review. Edit snapshot/whole-form gates; accurate concurrent upload cleanup and retry; shared partner documents/enums; saved-label View; explicit CSV cell boundaries, partial feedback and shared shell; dead customer roots retired with explicit tsconfig reconciliation. Owner-reported ES2018 and removed-root compiler failures corrected in source. UI blocks 12, 18, 22, 23, 29, 30/catalog and skill updated; source-only, owner acceptance pending. |
-| 2026-10-01 | 1.12 | Owner: "شيل الزرار وشيل endpoint". The *Export to Excel CC* button left the Individual and Company lists with its code, models and 23 translation keys. Block 8 now states that a card export, if one returns, is backend-masked and never sends the CVV |
-| 2026-10-01 | 1.11 | Owner: "تمام" on generalising the agreement history. New shared `app-agreement-history-dialog` (loads from `source`, own states, optional customer/vehicle columns, `agreementHistory.*` keys) replaces three copies (block 11): Individual and Company dialogs, and the Vehicle hand-written `p-dialog` table with its ~250 lines of SCSS and an untranslated status text. The feature history keys were removed |
-| 2026-10-01 | 1.10 | Companies parallel-implementation review (`reviews/COMPANIES_PARALLEL_IMPLEMENTATION_FEATURE_REVIEW.md`), rules G5–G9, G11, G15, G17: one `sigma-field--check` per boolean (1); *inactive only* unchecked shows all rows (4); card exports from a backend export-only VM (8); step header and Next both validate forward, badge specs declared with existing keys (12); one row binding style (14); one partner document rule set — type, number, issue and expiry required, folder `CustomerDocuments` — replacing "match the backend VM" (18); no concatenated keys, no cross-feature namespace (23); `tsconfig.app.json` entries only when reported missing (29); backlog 13, 41 updated, 42 added |
-| 2026-10-01 | 1.09 | Companies review: shared typed partner document/card/address factories and payload mappers (14, 18); nested draft uploads transfer to the parent only on draft Save (18); dialog content passes its bounded flex height to the inner editor scroll owner (13). Replaced obsolete tenant-row snippet in block 18 |
-| 2026-10-01 | 1.08 | Shared extraction after the Individual review: `appDatePicker` directive (17), `translateOptions` pipe (16), `app-file-field` component (18), `confirmDiscard`/`confirmDelete` presets and `readListRoute`/`writeListRoute` (9, 10), `StepFormFieldSpec` + `rowFields` + `invalidStepFields` (12); `general.upload`/`general.noFile`; Individual adopts all; backlog 39 counts the remaining copies |
-| 2026-10-01 | 1.07 | Owner screenshot: the file column was squeezed to ~65px and "No file" spilled under the header — the column now has `minWidth: 220px` and the header reads *Attachment* (block 18) |
-| 2026-10-01 | 1.06 | Owner: the upload icon sat in the wrong place in the document rows — the file field was a bordered upload button, bare text and a remove button. It is now one 34px control box (name first, upload and remove icons at the end), like every other control (block 18) |
-| 2026-10-01 | 1.05 | Owner: the date picker did not open from an error badge — `focusField` now clicks the calendar input after the scroll settles, which runs the `showOverlay()` binding (blocks 12, 17) |
-| 2026-10-01 | 1.04 | Owner request: every form control the same height, and an error must not push controls down. `.sigma-field` set only a 34px minimum (PrimeNG dropdowns/calendars grew taller) and stretched with its grid row, so its label row absorbed the extra height of a neighbour's error; the editable table centred cells vertically. Now exact `--sigma-editor-control-height` (34px, was 36px — the filter height) for every single-line control in fields and tables, `align-items: start` on the grid, `align-content: start` on the field, top-aligned table cells, checkbox fields on the control line (blocks 1, 14) |
-| 2026-10-01 | 1.03 | Owner request: an error badge whose field is a dropdown opens the dropdown — `focusField` clicks the PrimeNG container after the smooth scroll settles (block 12) |
-| 2026-10-01 | 1.02 | Owner screenshot: Billing & Cards sections drew over each other — `app-form-section` has `min-height: 0`, so the flex scroll owner squeezed it. `.sigma-editor-scroll > * { flex: 0 0 auto; }` (block 1) |
-| 2026-10-01 | 1.01 | Block 12: the Individual Billing & Cards step had every control in one grid in form-model order (owner: "متلخبطة خالص"); rule — one section per business group, a value beside its calculation type, one row per rental/lease variant |
-| 2026-10-01 | 1.00 | Owner requests: (1) all filter boxes the same height — the 34px rule keyed on a `*-filters` class name, so a `form[appFilterPanel]` without one (Individual list) had mixed heights; `.sigma-filter-panel` now carries the rule (block 4); (2) a step-form error badge must land on its input — new shared `focusField`, and no scroll-to-top after the step change (block 12; the Individual editor scrolled back to the top) |
-| 2026-10-01 | 0.99 | IndividualPartner review (docs-system validation): the editor shell had no one-pane scroll owner, no checkbox field and no file field — added `sigma-editor-scroll`, `sigma-field--check`, `sigma-file-field` in `src/styles.scss` (block 1, 18); `app-field-error` takes a `message` for a rejected file (19); block 8 forbids secrets and full card numbers in exports; the step-form reference moves from Company (pre-shell, backlog 41) to Individual (catalog, screen 03) |
-| 2026-10-01 | 0.98 | Preamble: the "Reference per shape" table duplicated the screen catalog and had drifted (discard reference still `Fleet/Vehicle` while block 10 names the Job editor). It is now "Shared owner per shape" (shared component + what the feature owns); screen references live only in `ui/screens/00-catalog.md` |
-| 2026-10-01 | 0.97 | R8: backlog re-ranked — 17, 27, 34 moved to *Resolved*; item 5 covers the 73 files that still send dates through `toISOString()` |
-| 2026-10-01 | 0.96 | R6 (A4-54), incidents moved out of the blocks: **5** Job list filtered and gated actions by status without showing it (2026-09-30); **16** Jobs *Insurance Company* filter showed a clear icon on an empty field — `nonNullable.control('')` plus blank issuers (2026-09-29); **17** a Job saved 10:00 in Dubai showed 06:00 after reload through `toISOString()`, while Close Job, Lease and Accidents already sent local time (2026-09-30); **19** the Job Time Logs bare `<form>` reloaded the app; literal tax rates in Rental/Lease agreements, closed lease (15), quotations and the receipt card preview; free rate inputs in Rental Agreement, Booking, Lease, Closed Lease, Close Job and Sales Quotation lines (2026-09-29); **22** 60 feature error toasts in 48 files duplicated the interceptor dialog, and three Job dialogs copied a private `extractErrorMessage` (2026-09-30); **29** `flatMap` in the Job Labour Time dialog failed with `TS2550` (2026-09-29); `EditableRows` failed with `TS2322`/`TS2345` at the first owner build (2026-10-01) |
-| 2026-10-01 | 0.95 | R5: block 7 *Quotation action-cycle specialization* receives the failure-prevention register moved from Master block 4 (content unchanged except the error-message row, which now names the interceptor and `apiErrorMessage`) |
-| 2026-10-01 | 0.94 | R3: block 2 Canonical (`Result.id: number | string | null`, `Results` without `entity`); block 9 last-row/page and failure rules; block 10 return to the list with its query parameters (Job reference); block 11 marks the parent dirty; block 27 Staff modal verified, added-row focus; block 28 Job reference; backlog 22 |
-| 2026-10-01 | 0.93 | Block 2: `BaseService.getMine`/`saveMine` (single-row settings) |
-| 2026-10-01 | 0.92 | Block 19: document tax preview `documentTax` (per rate, rounded once, D4-4) |
-| 2026-10-01 | 0.91 | Block 29: generic helpers over `FormArray<TRow>` read rows through one casting getter (`ɵTypedOrUntyped`); found at the first owner build of `EditableRows` |
-| 2026-10-01 | 0.91 | Master-detail step (`reviews/Archive/SIGMA_MASTER_DETAIL_MAINTENANCE_EVOLUTION_PLAN.md`): block 1 shared editor page shell (Job editor reference); block 13 modal-or-routed rule (D4-2), routed variant on `[stickyHeader]`, child draft on signals; block 14 `EditableRows`, confirmation rule, focus/per-row errors/duplicates/max rows, D4-3 full snapshot; block 15 getRawValue and readonly vs disabled; block 18 `DocumentUploadTracker`, `upload`/`remove`, the non-existent `sigma-documents` classes removed; backlog 29 and 40 |
-| 2026-10-01 | 0.90 | Shared-first rewrite (step 2, `reviews/Archive/SIGMA_SHARED_FIRST_MAINTENANCE_EVOLUTION_PLAN.md`): block 4 rewritten around the filter panel (compact strip and flat grid legacy; `--check`/`--choice` fields); 1 shell chain and container-fill reference Job; 2 `toListParams`/`fetchAllPages`; 3 shell snippet; 6 layers table, placement via `sigma-list-table` (8px margin), Fleet Alerts notes moved to a review; 7 interceptor-owned errors; 8 `fetchAllPages`; 12 control flow; 13 routed footer buttons; 14 financial variant on `[fillHeight]`+`[stickyHeader]`, shared summary classes, derived cells; 16 `enumOptions`; 17 shared parse helpers, one range rule; 19 `app-field-error`, *Money and tax in forms*; 20 shared report strip/totals, `money` pipe, current month; 21 `sigma-print-flow`; 22 `app-state-message`; 23 `Check-Translations.ps1`; 24/25 global tokens (D4-6), `sigma-danger-button`; 26/27 re-verified; backlog 33 and 39; preamble references |
-| 2026-10-01 | 0.89 | Block 26: authorization deferred by the owner (`reviews/Deferred/AUTHORIZATION_MAINTENANCE_EVOLUTION_PLAN.md`); each screen review lists *Authorization candidates*; backlog 20 linked |
-| 2026-10-01 | 0.88 | Block 2 *Write payloads carry client inputs only*: no `subscriptionId`, server-owned `no`, audit/flags/status/totals in write payloads; cleanup per screen review with a build, no bulk edit or interceptor strip (owner decision); block 1 cross-reference; backlog 8 and 19 updated |
-| 2026-09-30 | 0.87 | Foundation F2 (`reviews/Archive/SIGMA_FOUNDATION_MAINTENANCE_EVOLUTION_PLAN.md`): block 1 *One `HttpClient`* replaces the LayoutModule-provider rule; block 22 error presentation owned by the interceptor, loader counter; block 28 loader note; block 7 `ActionList<Row>`; block 29 step 11; backlog 17 and 27 resolved, 22 narrowed |
-| 2026-09-30 | 0.86 | `app-data-table` point closed: block 5 column `type` (`date`/`dateTime`/`money`/`number`/`status`) + `status(row)`; block 8 `dataTableExportRows`; block 6 *Customizing the grid* (inputs + listed variables only, no `::ng-deep`), 12 fill copies migrated to `[fill]`, 2 duplicate fixed-height blocks removed, exceptions listed; backlog 34 updated |
-| 2026-09-30 | 0.85 | Job reference review (`reviews/JOB_REFERENCE_FEATURE_REVIEW.md`): block 17 shared `toApiDate`/`toApiDateTime`/`formatDisplayDate`, no `toISOString()` on any API date; block 22 `apiErrorMessage` and "nothing to act on" errors; block 5 shared `sigma-status-badge`, visible Status when filters/actions depend on it, sort whitelist from columns; block 16 enum options from the enum; block 28 dependent lookups via `Subject` + `switchMap`; block 19 preview rounding like the backend (`roundMoney`) |
-| 2026-09-30 | 0.84 | Block 1 *Shared list page shell* (global classes, reference Job list, no feature stylesheet); block 6 `app-data-table [fill]` replaces the Transitional `::ng-deep` fill block; backlog 34 resolved; block 4 uses `sigma-secondary-button` |
-| 2026-09-30 | 0.83 | Block 4: *Shared filter panel* — `form[appFilterPanel]` + `sigma-filter-field` + `appFilterAdvanced`/`appFilterActions`, `--sigma-filter-*` tokens (light/dark) own the strip look; Reset mandatory (`resetRequested`); ownership sentence replaced (feature owns fields only); reference Job list |
-| 2026-09-30 | 0.82 | Block 4 *Main row and More filters* made Canonical (reference Job list): 11 steps — field split, one form, toolbar, toggle markup and pill look, active-count badge, theme-tuned icon chip tokens, dashed advanced panel with reduced-motion, page-defined light/dark filter tokens (no undefined variables), dark inputs/dropdowns/calendars, responsive grids |
-| 2026-09-30 | 0.81 | Block 4 *Main row and More filters*: long filter sets show one row of main filters and a *More filters* toggle (chevron, aria-expanded, active-count badge); references Lease Agreement and Job lists |
-| 2026-09-29 | 0.80 | Block 19: purchase forms take the supplier rate (`SupplierService.getTaxRate`), GRN has no tax input, bill line tax read-only with a ±0.05 `taxAdjustment`, trip tax read-only preview unless Limousine settings allow editing |
-| 2026-09-29 | 0.79 | Block 19 *Tax defaults and previews*: the tax rate is not an input — `readonly`, or a settings-rate/0 `<select>` when tax is optional; check item extended |
-| 2026-09-29 | 0.78 | Block 19 *Tax defaults and previews*: forms take the tax rate from `TaxSettingsService` (default only while not dirty, preview only), no literal rate; check item added |
-| 2026-09-28 | 0.69 | Promoted the `sigma-screen-refactor` skill into this book (owner decisions in `reviews/SIGMA_DOCUMENTATION_SYSTEM_MAINTENANCE_EVOLUTION_PLAN.md`). Block 1: **no page scroll** at any breakpoint, with one scroll owner per region; panel card values; `BaseComponentService`. Block 4: filter strip is a fixed column strip with `gap: 8px`, `padding: 8px 12px`, and `margin: 0 8px 6px`. Block 5: `@ViewChild({ static: true })` + `initColumns()` and the status text fallback. Block 6: grid wrapper `margin: 0 8px`, grid rows as the scroll owner, the Transitional fill block (backlog 34), and the empty-state key. Block 14 and block 29: mobile relaxation replaced by the no-page-scroll rule. Block 15: `[primaryActionVisible]="false"` for read-only dialogs and mode-specific lookups. Block 17: every calendar is typeable with `keepInvalid`, carries no icon, and uses `showOnFocus=false` + click to open in dialogs; no native date inputs; a single range picker that defaults to the current month. Block 22: lookup/loader race, busy-flag bindings, lookup failure diagnosis. Backlog: 1 (teal forks), 32 (no-icon decision), 33 (shared paginator re-verified at `10px 0 12px`), new 34 and 35; duplicate resolved 31 renumbered 31a |
-| 2026-09-21 | 0.68 | 2026-09-21 — block 1's shell-toolbar band is now tightened on desktop (with the companion height override, detailed further down), and block 17 added three filter-calendar rules: a filter date is typeable (`[readonlyInput]="false"` on a list or report filter, `"true"` only on a detail or editor form — verified against all 13 editable usages in the app); a range picker uses `selectionMode="range"` + `[numberOfMonths]="2"`, a panel property that must not be compensated for by widening the field's grid span; and a filter calendar carries no trigger icon — the global sheet hides `.p-datepicker-trigger`, so a feature must not re-show it, because the extra `36px` button splits the box and leaves the input narrower than the field below it. Block 17's canonical editor snippet gained `iconDisplay="input"` (without it, `[showIcon]="true"` renders nothing). Backlog item 32 records the existing deviation: 155 of 176 calendars set `showIcon` with no `iconDisplay` and render no icon. Backlog item 33 records 16 feature stylesheets that override the shared paginator's spacing — every one trimming the bottom to 0–4px against the shared `12px`, which showed the shared default was the outlier. Block 1 gained `#### Shell vertical insets` — `.app-content` carries no vertical padding, and the toolbar band is tightened in `src/styles.scss` on desktop only, from the layout config's `py-lg-6` (`24px` / `24px`) to `16px` above and `8px` below, paired with the mandatory companion `--bs-app-toolbar-height: 31px` (`55px` − `24px`), because 34 feature stylesheets still size their page with `calc(100dvh - … - var(--bs-app-toolbar-height) - … - <slack>)` and reserve a fixed height for that band — reducing the band without reducing the reservation would leave each of those routes `24px` taller than its container. That variable has no other live consumer: every other use in the Metronic SASS is gated on `toolbar.fixed` / `toolbar.sticky`, both off. Because `toolbar.fixed` is false, Metronic's `height: auto` rule beats the base `height: var(--bs-app-toolbar-height)`, so the toolbar is sized by its padding and not by that `55px` variable. Block 1 also gained the **outer-versus-inner** rule: reducing the space above a card means the route's outer padding, never the card's internal `padding` — trimming the internal inset moves the contents while the card's outer edge and shadow stay put, so the card's own `padding` must stay at its designed value. The shared-table block states that a feature grid's bottom margin is a feature-owned placement value (`8px`–`18px` observed) while the paginator's internal spacing stays shared. The bounded-route-frame section gained the **container-fill** requirement: a route host claims the box the shell already sized with `height: 100%`, and must not write a second page-height `calc(100dvh - … - var(--bs-app-toolbar-height) - … - <slack>)` — that calc reserves a fixed `55px` for a toolbar the shell sizes from its own padding, so the per-screen slack cannot stay correct (`Rental/RentalPlanner` and `Staff/designations` are the references). The shell-insets section records that changing the toolbar band is therefore a shell-level change which moves every legacy screen still carrying that calc |
+## 2026-11-13 — Authorization review contract
 
-## Master Guide and Backend Pattern Book
+UI26, BE9 and Master1/4/7 align live instructions and review templates with
+current route and backend permission owners. Review evidence now covers allowed
+query fields, persisted branch capability, sent-write settlement and refresh,
+and separate coverage, review, schema and runtime status. Earlier adoption
+notes are linked from the historical archive.
 
-No narrative history was kept for these guides before 2026-09-28; their
-`Last content change` header rows record the latest change. Add rows here from
-now on.
+## 2026-11-10 — Adopted journal dialog lifecycle
 
-| Date | Guide | Version | Change |
-|---|---|---|---|
-| 2026-10-14 | Backend | 0.82 | Owner reports only Created Audit Trail entries across multiple screens. Generic capture follows pending scalar IsModified flags instead of unreliable original/current equality for disconnected Update/UpdateRange; writing IsDeleted=true stays Deleted after HandleAudit soft-delete conversion. Unchanged tracked saves excluded; explicit forced writes count, with same-save/retry/tenant owners retained. BE18 and skill synchronized; no schema change, owner build/update/delete acceptance pending. |
-| 2026-10-14 | Backend | 0.81 | Owner-approved automatic HTTP error history: append-only tenant event, independent fresh-context save with ambient suppression and bounded timeout, safe type/method diagnostics, cancellation/business-conflict/reader exclusions and explicit read contracts. BE18/skill synchronized; owner AddAutomaticErrorLogs/build/runtime acceptance pending. |
-| 2026-10-14 | Backend | 0.80 | Message Logs adds append-only authenticated tenant event reads and shared MessageDeliveryService for real SMTP test/Fleet reminder producers. BE18/skill record actual normalized inputs, safe translation-key errors, isolated append, cancellation-before-attempt, accepted vs log-saved outcomes and partial accepted counts without resend; simulations/CC are not fabricated. Source-only; owner AddMessageLogs/build/SMTP/failure/tenant/output acceptance pending. |
-| 2026-10-14 | Backend | 0.79 | Owner requests full-stack Audit Trail and generic service via backend interceptor. BE18/skill document same-save metadata capture, preserved HandleAudit/tenant/soft-delete ownership, cleanup/retry and affected-count compatibility, nullable source No/date, unbounded-source schema exception, tracked-save coverage limits and stable server paging/full export. Owner AddAuditTrailEntries migration and build/save/rollback/runtime acceptance pending. |
-| 2026-10-13 | Backend | 0.78 (query consumer evidence) | ListSmBase adopts the existing BE9 initialized dictionary-identity rule after Invoice load review, retaining nullable Filters/PageNo/PageSize and post-binding private normalization. BE9/skill current-consumer evidence synchronized. Owner HTTP diagnosis/replay pending; no new business/schema contract. |
-| 2026-10-13 | Backend | 0.78 (settings consumer evidence) | ApiKeySetting moves to canonical Mine with a write-only DeepSeek key. Owner follow-up explicitly chooses plaintext for current development, removing this task's initial Data Protection implementation/dependency. BE16/skill explain independent scalar ownership, narrowing modified flags after helper upsert, and a justified tracked legacy update preserving concurrent key changes. Filtered live-tenant index configured; owner duplicate reconciliation and AddDeepSeekMockDataKey migration pending. Metadata-only provider service has no business CRUD. Source-only. |
-| 2026-10-13 | Backend | 0.78 (mock display preferences) | ApiKeySetting adds default-true ShowMockDataButton/ShowMockDataPreview with explicit EF true sentinels, preserving false first inserts. Nullable flags and blank key preserve omitted values; prefs-only saves allowed, conditional maps/owned modified flags preserve Google and unrelated writes. Lean settings read through owner; owner AddMockDataDisplayPreferences pending. BE16/skill synchronized, generator unchanged. |
-| 2026-10-13 | Backend | 0.78 (AI candidate consumer evidence) | Owner HTTP400 reports in IndividualPartner/Companies lead to actual-field schema/example, explicit opaque string tokens, one correction inside the existing total45s deadline and bounded safe rejection diagnostics. BE18/skill explain JSON syntax vs schema enforcement; no relaxed validator, deterministic fallback, partial Apply or business Save. Exact original field-level provider cause unproven because provider output was not supplied; owner rebuild/replay pending. Shared EN/AR user-guide recovery steps updated. |
-| 2026-10-13 | Backend | 0.78 | InvoiceAccountingMetadata startup failure proves broad assembly scanning can register record-generated IEquatable as a service. BE5/skill require inspecting actual scan and keeping data carriers out of service registration; getter-only class correction preserves current consumers and global scan. Source-only; owner rebuild/start pending. |
-| 2026-10-08 | Backend | 0.77 | Owner approves lightweight shared detail identity inheritance. LeanDetailBaseVm exposes int Id; NumberedDetailBaseVm adds nullable string No. Adopted by 48 existing standalone DetailVMs with unchanged flattened fields/types/defaults; TaxAdvance keeps nonnullable initialized No over the Id-only base. Legacy DetailBaseVm, generic constraints, maps, endpoints, writes and schema unchanged. BE3 and skill/history synchronized; source-only, owner compilation/mapping/serialization acceptance and generated-packet refresh/semantic review pending. |
-| 2026-10-08 | Master | 1.27 | Owner makes in-app user-guide creation/update part of each completed screen implementation/refactor. Master7 requires final-source EN/AR purpose, prerequisites, steps/actions/states and relevant business/financial limits in the owning module guide, reusing UserGuide components and one module menu entry. Guide coverage/evidence becomes a final reconciliation/report item; read-only/backend-only/intermediate phases retain scope. AGENTS, skill checklist/history and Phase06/artifact templates synchronized; Phase06 regenerated and semantically reviewed. Other pre-existing packet drift remains outside this change. |
-| 2026-10-09 | Master | 1.28 | Owner requires continuous packet updates. Master8, preamble, AGENTS and skill require generator-only refresh on initial drift and book/template/manifest changes, semantic reconciliation of source rules and reference roles, then Check before use/handoff. Standing derivative-maintenance authorization also covers source-read-only reviews without application-source edits. All eight packets regenerated; Phase03 stale Fleet modal reference corrected to UI13/shared composition. |
-| 2026-10-03 | Backend | 0.76 | Staff deletion reported an opaque Partner blocker. Shared InUseAsync now names the matched concrete EF entity via an untracked one-row hierarchy read, with declared fallback; ordinary types retain AnyAsync. Partner/concrete subtype categories have en/ar resources. Actual usages, inheritance-link/owned-row exclusions, soft delete, endpoint/DTO/schema and development diagnostics stay unchanged. BE8 and skill/history synchronized; source-only, owner actual-reference/runtime acceptance pending. |
-| 2026-10-02 | Master | 1.26 | Owner requests preventing report-review omissions. Master 5 requires actual consumer/producer symbols and compared values, distinguishes Uncertain evidence/findings from runtime acceptance, and routes report reviews through UI 20's required source table before/final implementation. Skill and Phase-02/06 evidence/handoffs reconciled. Documentation only. |
-| 2026-10-03 | Backend | 0.75 | Authenticated inherited CheckUnique API is an advisory read of whitelisted UniqueColumns, with typed request/Result entity.isAvailable and positive edit identity exclusion. Shared UniqueValueExistsAsync serves preflight and final writes; Staff email/phone normalization preserves existing save policy. No preflight mutation/lock/number/schema change; authoritative write protections stay. BE8 and skill synchronized. Source-only; owner compilation/runtime acceptance pending. |
-| 2026-10-03 | Backend | 0.74 | Staff owner permits Confirmation on the Joining day. Shared DateAfter adds explicit AllowEqual with a false default, localized on-or-after messages and matching Angular comparison/minimum. Existing document expiry consumers remain strict and optional dates stay optional. BE3 and skill/history synchronized; source-only, owner compilation/runtime acceptance pending. |
-| 2026-10-03 | Backend | 0.73 | Staff review verifies that generic detail service/interface/controller only map and return responses. Their class constraint permits explicit lean Staff/Designation/Timesheet detail contracts without unused tenant/audit fields, preserving existing derived DTOs and specialized constraints. BE 3/5 and skill updated together; source-only, owner compilation/runtime acceptance pending. |
-| 2026-10-02 | Backend | 0.72 | ReceivableAgeAnalysis repair establishes two-sided capacity-bounded remaining amounts before aging, no second subtraction from debit-credit net, allocation and actual-source cutoff parity, and strict AR membership when mapping is missing. BE 17 and skill capture reusable invariants while column formulas remain feature-owned. An explicit complete-response option avoids repeated report calculation and preserves paged callers. Source-only application repair; runtime/accounting acceptance pending. |
-| 2026-10-02 | Backend | 0.71 | Paged report wrappers explicitly declare row/count/page clamp and totals scope. Conditional custom aging filters have off/default semantics, positive increasing integer end-days at the API boundary and consistent effective labels across outputs; exact formulas/defaults remain feature-owned. BE 17 and skill updated after ReceivableAgeAnalysis evidence. Documentation only, no API/accounting code change. |
-| 2026-10-02 | Master | 1.25 | Owner reported Customer Statement diverged from the documented Trial Balance reference and should not need repeated reminders. Master 5 requires source conformance evidence before edits and at handoff in existing artifacts; shared class names alone are insufficient, and book edits cannot retroactively authorize a deviation. AGENTS.md and skill reconciled. Source-only; no runtime/visual certification. |
-| 2026-10-02 | Master | 1.24 | Owner added duplicate CS8669 to Production notes as PROD-04: remove one duplicate when Repos csproj is next edited; low-priority cleanup without behavior change or release blocking. Suppression-policy review remains separate. Skill checklist/history reconciled; documentation only. |
-| 2026-10-02 | Master | 1.23 | Owner added the HTTP reference observation to Production notes. PROD-03 records coordinated Repos/Helpers framework-reference review and consumer/deployment verification as deferred; no current compatibility failure or vulnerability established. Skill checklist/history reconciled; documentation only. |
-| 2026-10-02 | Master | 1.22 | Owner requested a Production notes section. Block 5 now records PROD-01 warning suppression and PROD-02 disabled analyzers as deferred recommendations, with source evidence and proposed verification. Follow-up found no concrete unprotected null failure in inspected Repos examples; the initial high-priority assessment was reduced. Notes neither certify readiness nor authorize execution or establish release blockers. Master index and skill checklist/history reconciled; documentation only. |
-| 2026-10-02 | Backend | 0.70 | Owner reported PUT Company fails with Partner reference not found after removing a driver. MissingReferenceAsync incorrectly treated TPT inherited Id as a selected FK, including zero identities on new nested Update rows. Shared validation now skips IsBaseLinking; genuine reference validation and saved child ownership remain. BE 8 and skill updated; source-only, exact payload reproduction and owner acceptance pending. |
-| 2026-10-01 | Backend | 0.69 | Company delete reported used in Company. Shared InUseAsync now skips EF IsBaseLinking foreign keys: the TPT derived/base row is the same entity, not an external usage. Ordinary reference checks and owned-row deletion remain. BE 8 and skill reconciled; source-only, owner runtime acceptance pending. |
-| 2026-10-01 | Backend | 0.68 | Owner: "نفذ كل الملاحظات". Individual tracked UpdateCore verifies collection/reference ownership and preserves saved child numbers. Owner-reported unchanged PUT failures traced through Individual and Supplier: UnitOfWork sync/async save now reports successful completion, including zero affected rows; SaveUpdateAsync delegates and Supplier reuses it. Owner subsequently confirmed the unchanged save works. Customer import authentication/address-country mapping/ordinary constraints/defined enums/required DOB/safe errors; shared document VM contract and direct nullable-type consumers reconciled. Blocks 3, 5, 14, 19 and skill updated together. Generic engine/row-count numbering/card retention remain separately deferred; other acceptance checks remain source-only. |
-| 2026-10-01 | Backend | 0.67 | Owner: "نفذ الملاحظات" then comprehensive Individual/Company review. Shared `ExecuteUniqueWriteAsync` application lock replaces Company Serializable and covers base UniqueColumns CRUD plus both customer import chunks; authenticated tenant, bounded wait, commit owned success only. Shared Customer group resolver; Added-row empty-only numbering at sync/async save with early-root compatibility; Individual VM/import date checks; smaller ownership/removal/save helpers. Blocks 3, 5, 8, 11, 14, 19 and skill §8.4 updated together. Generator traversal resolved; row-count and generic detached mapping defects remain separate. Source-only, owner verification pending: `reviews/CUSTOMER_SHARED_WRITE_FIXES_PLAN.md` |
-| 2026-10-01 | Backend | 0.66 | Owner initially approved indexes, then removed the transaction wrapper, and finally chose the transaction as the simplest adequate approach. Blocks 8, 14: Company Add/Update and each Company import chunk use direct Serializable transactions around duplicate checks and save; commit success only; reusable-master saves precede mutation. Indexed-view SQL proposal cancelled, no migration introduced. Wrapper/helper removed; Update stays in one method. Source-only reconciliation: `reviews/COMPANY_UNIQUENESS_INDEXES_PLAN.md` |
-| 2026-10-01 | Backend | 0.65 | Owner: "عدل جميع الملاحظات" after the Company service assessment. Blocks 3, 8, 11, 14: matching billing minimums; supplied FK <=0 rejected; Customer group type; shared-context default group saves before aggregate mutations; Serializable check/save for split-table keys including Company import chunks, central 409 on conflicts; number only newly reconciled drivers. Source review only; owner build and concurrency checks pending. Report: `reviews/COMPANY_SERVICE_FINDINGS_FIX.md` |
-| 2026-10-01 | Backend | 0.64 | Owner: "فى داعى ل try catch ?". A unique-index violation (SQL 2601/2627) is answered once by `AccountingConfigurationExceptionMiddleware` with 409 `RecordAlreadyExists`; Company's two try/catch blocks, `IsUniqueConstraintViolation` and `CompanyKeyExists` removed. VehicleType and Account keep theirs until their own review (block 8) |
-| 2026-10-01 | Backend | 0.63 | Owner: "ValidateAsync مش انت عالجتها فى Base" and "متعطلش تعديل مفيد عشان الداتا". The base Add/Update run `InvalidInputAsync`: declared `UniqueColumns`, then every foreign key of the request and its nested rows checked from the EF model (`ReferenceNotFound` + table names). The base update returns 404 when the record is missing. `ValidateAsync` left Individual, Company and Driver; only the date rules stay. `ExistsOrNullAsync` and 8 `Partner*NotFound` keys removed. O1 done: `Company.InActive` removed, Company on `Partner.IsInactive`, its list override gone, the "inactive only" box shows all when unchecked (G6) (blocks 5, 8; backlog 29 resolved) |
-| 2026-10-01 | Backend | 0.62 | Owner: "ممكن Trim يتنقل ل automapper" / "تمام". The trim moved to request reading, not AutoMapper, because duplicate checks run before the map. `TrimIncomingStrings`, a System.Text.Json modifier, trims every request string; an empty text becomes null on `string?` and stays "" otherwise; passwords are excluded. `Normalize`/`Optional` were removed from the Individual, Company, Driver and contact-person services. Contact type and category are set in `ContactProfiler`. A pass-through `AddAsync` override was removed (block 3) |
-| 2026-10-01 | Backend | 0.61 | Owner decision: `Company/credit-card-export` (`GetCreditCardExportAsync`, `CompanyCreditCardExportVM`) removed with the button; backlog 28 updated |
-| 2026-10-01 | Backend | 0.60 | Owner: "AutoMapper get navigation and update شغالين كويس" and "طبق الحل". The AutoMapper docs confirm it clears a destination collection and refers to AutoMapper.Collection. The middle way: the base `UpdateAsync` now checks that saved child ids belong to the record (`ChildRowOwnershipInvalid`, renamed from `CustomerChildOwnershipInvalid`) for every screen, and its collection discovery is one helper. Individual is back on `base.UpdateAsync`, without the tracked load, the reconcile calls or the profile `Ignore()`s. Company keeps the explicit override for its drivers' documents (block 14). Backlog 32: base reconciliation of grandchildren |
-| 2026-10-01 | Backend | 0.59 | Owner: "DetailWithNavigationsAsync … كنت ظابطها فى baseservice - repository". The detail is read by the base `DetailWithNavigationsAsync` (`GetByIdDeepAsync` skips deleted rows and circular loops). The Company and Driver overrides and the `IsDeleted` filters in their detail maps were removed (block 5) |
-| 2026-10-01 | Backend | 0.58 | Owner: "ApplyListFilters ايه لازمتها" / "نفذ الحل على Individual - company". The base gains `SearchColumns`: a list declares the columns of its search box and the base builds the OR. `ApplyListOrder` also sorts a reference navigation by its `Name`. Individual and Company declare their search columns and keep only the agreement-status filter; neither overrides `ApplyListOrder`. Company's contact number is no longer sortable, like Individual's. Block 13 has a "what a list service writes" table (blocks 5, 13) |
-| 2026-10-01 | Backend | 0.57 | Owner: "نفذ … واكتب التانى فى الملاحظات" and "filters والترتيب … موجود فى Base". `RemoveWithChildrenAsync` checks usages from the EF model (`InUseAsync`, `RecordInUse` + `Entity<Type>` names). It replaces `FirstBlockingReferenceAsync`, `CustomerDeleteReferences`, `DriverDeleteReferences`, the Company contact list and 18 blocker keys; Individual and Driver deletes are one line (block 8). The base `ApplyListOrder` sorts by any stored column, with `SortField`/`SortBy` for the rest, and `ListQuery` serves exports. The Driver and contact-person sort overrides were removed; Individual and Company keep only navigation/computed columns. `AgreementStatusFilter` is shared by both customer lists (blocks 5, 13, 14). Backlog 31: the same check for `base.RemoveAsync` |
-| 2026-10-01 | Backend | 0.56 | Owner: "عدل company". `CompanyService` follows the short patterns: one delete pattern with combined blockers; filters no screen sends removed; validation keeps business rules only (VM attributes check required, length and enum inputs; `[EnumDataType]` added on contact category and designation, `[RegularExpression]` on surcharge types); contact type and category set by the server; contact persons now checked by the private `ContactReferences` (one caller, so no file of its own) — they were checked against the customer list, which missed quotations, inquiries, cheques and users; unused `Company/GetDrivers` and `CompanyDrivers` removed; DriverService validation trimmed the same way (block 8, backlog 30) |
-| 2026-10-01 | Backend | 0.55 | Owner: "الحذف فى Individual مختلف" and "بلاش كود زيادة". One delete pattern: blockers, grandchildren if any, `RemoveWithChildrenAsync` with every owned row. The helper now takes one-to-one rows and returns 404 when the record is missing. Individual and Driver now remove their address and billing too, with no tracked load or manual removes. Individual had kept them active after a delete (block 8, 5) |
-| 2026-10-01 | Backend | 0.54 | Owner question on `CustomerDeleteReferences` ("عايز امشى على نمط واحد"): block 8 states one rule — the list stays inline in `RemoveAsync` when one service checks the entity, and moves to a static `<Entity>DeleteReferences.For` file when two or more do; a single-caller class moves back inline |
-| 2026-10-01 | Backend | 0.53 | One agreement history: `AgreementServices/AgreementHistory` (customer, vehicle or driver key; rental and lease; `AgreementHistoryVM` with `IsClosed`) replaces `CustomerAgreementHistory` and the Vehicle query. The Vehicle query missed leases, returned a status text, dropped the middle name and returned a literal not-found message, now `VehicleNotFound` (block 14) |
-| 2026-10-01 | Backend | 0.52 | Owner: "موافق نفذ الخطة". `CustomerAggregateSnapshot` replaced by base `OwnsAll`/`OwnsReference`/`ReconcileOwned`/`ReconcileReference`. The reconcile now checks ownership itself and keeps a removed row in its collection, so its foreign key survives the soft delete. Individual, Company and Driver adopt it (block 14, 5). Shared customer helpers adopted by Individual; Company default-group transactions removed; neutral `Partner*NotFound` keys; `Customer*` history and contact-group DTOs; `DriverDeleteReferences` without the customer list; backlog 30 narrowed |
-| 2026-10-01 | Master | 1.21 | Companies parallel-implementation review, rules G2, G3, G10, G12, G18, G19: status table and closure artifacts (4); code layout, dead roots removed not rebuilt, proportional implementation (5); one owner per feature, stop when another tool changed scoped files (6); schema impact check before the report (7) |
-| 2026-10-01 | Backend | 0.51 | Companies parallel-implementation review, rules G1, G2, G4, G11, G13, G14, G16: one status flag per entity, `Partner.IsInactive` for partners (1); schema impact pointer (2); server-owned values, enum defaults by name, `[EnumDataType]`/`[Required]` on the VM (3); neutral shared keys and DTOs (5); one snapshot engine for every partner aggregate, ownership check to the base service; the default contact group is not wrapped in a transaction, replacing the 0.50 Company note (14); backlog 29, 30 |
-| 2026-10-01 | Backend | 0.50 | Companies review: shared CustomerAggregateSnapshot validates owned IDs and reconciles tracked child/grandchild snapshots; Company/Driver adopt it; CustomerAgreementHistory reused for rental/lease reads with the public Company DTO retained (14). Generic detached Update is not assumed to reconcile nested snapshots |
-| 2026-10-01 | Master | 1.20 | Owner standing rule: block 5 *Shared-extraction gate* — after every phase or task, repeated patterns become shared pieces in the same task, adopted in scope, recorded in the books; block 7 comparison |
-| 2026-10-01 | Backend | 0.49 | Base `ExistsOrNullAsync<T>` (one line per optional reference) and `FirstBlockingReferenceAsync` (ordered delete blockers) — blocks 5, 8; Individual adopts both |
-| 2026-10-01 | Backend | 0.48 | IndividualPartner review: the base list mapped entities without navigations, so ListVM navigation names (branch, contact group) were empty — new `MaterializeListAsync` hook, overridden with `ProjectTo` (block 13, 5); sortable columns through `ApplyListOrder`. Backlog 28: CVV and full card numbers stored and returned (owner decision) |
-| 2026-10-01 | Command reference (non-canonical) | — | §18 and §19 point to UI blocks 1 and 22 instead of restating them; §27 points to the existing deferred currency plan; §30 aligned with Master block 2 rule 6 (the reviewer decides Missing detail and records it; only data destruction, access and accounting wait for the owner) — it still said "ask me" |
-| 2026-10-01 | Backend | 0.47 | Block 15: the owner decided J-1, F2, F4, F8, I1 and I2 (follow Speed Auto Systems unless business correctness requires otherwise — deposits stay a liability); table of decided journal rules; counter-type notes are proportional reversals of the allocated document (`AddProportionalReversal`, `AllocateProportionally`). Block 5 helper row |
-| 2026-10-01 | Master | 1.19 | R8: `recipe-system/Check-BookReferences.ps1` added (read-only: source paths, type names, `sigma-*` classes, block numbers and markdown links named by the books and the skill); first run clean after correcting its own false positives |
-| 2026-10-01 | Backend | 0.46 | R8: backlog re-ranked by business risk; new items 25 (posted documents deletable, J-1), 26 (`PaymentGatewayDetailVM.SecretKey` sent to the browser), 27 (`CancellationToken` only on Add, D5-2); 8 narrowed to the server side after D5-4; resolved items 1, 2, 3, 10, 12, 13, 16, 19 in their own section |
-| 2026-10-01 | Backend | 0.45 | R6 (A4-54), incidents moved out of the blocks: **5** fixed 5, 0.05 and 15 % rates in 20+ services (2026-09-29); **18** `ApprovalStatus` removed from `Job`/`LubricationJob` while `JobEstimationService` still set it (`CS0117`, 2026-09-28), and on the Angular side the Jobs list hid Edit, the Lubrication editor opened locked and Approve/Reject called deleted endpoints (2026-09-29); `Status` added to one side only of the `JobService.GetWorkshopGridAsync` `Concat` (2026-09-29) |
-| 2026-10-01 | Master | 1.18 | R5: block 1 *Proportional process* (D4-5) and *Whole-application review order*; block 2 Speed Auto section moved to `reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md`; block 3 shared pieces per phase and void-not-delete; block 4 decisions refreshed and 22–25 added, quotation register moved to UI 7; block 6 business reasoning field; block 7 comparisons; block 8 read-only scripts |
-| 2026-10-01 | Backend | 0.44 | R2: base `ApplyListFilters`/`ApplyListOrder` hooks (D5-1) and block 13 rewritten with `BranchService` (localized keys, trimmed key, base save); block 15 — `AllExistAsync`, VAT per rate, delete/void rule pending J-1 and the journal decision sheet; block 5 base-helper table and the cancellation gap (D5-2); block 6 `SingleRowSettingsControllerBase`; block 11 numbering pointer, child `No` overwrite |
-| 2026-10-01 | Backend | 0.43 | Block 16: single-row settings derive from `SingleRowSettingsService` and `SingleRowSettingsControllerBase` (`GET`/`PUT {controller}/Mine`, legacy POST upserts); Workshop, Broker, DDA, HRM, Limousine and Payment Gateway moved; Limousine readers read the latest row; backlog 22 |
-| 2026-10-01 | Backend | 0.42 | D4-4: block 15 rule 8 rewritten — document VAT per tax rate rounded once, `VatPolicy.CalculateDocumentTax`/`AllocateDocumentTax` (supersedes the per-line rule of 2026-09-29); block 5; backlog 24 |
-| 2026-10-01 | Master | 1.17 | Block 1 *Business correctness first* (owner rule); block 5 VAT gate |
-| 2026-10-01 | Backend | 0.41 | Master-detail step: block 2 filtered unique index (D4-8) and soft delete does not cascade; block 8 `AllExistAsync`, owned children deleted through `RemoveWithChildrenAsync`; block 14 Canonical (reference fixed), D4-3 full snapshot, Miscellaneous Invoice transaction row corrected; backlog 3 resolved, 23 added |
-| 2026-10-01 | Backend | 0.40 | Block 16 rewritten on the owner decision: single row = update or create, several rows = add or update by key, no delete by omission, all through `IServiceHelper` (`GetSingleAsync`/`UpsertSingleAsync`/`UpsertByKeyAsync` with `scope`, enum-key validation, latest-row resolution); `SyncByKeyAsync` removed; the 2026-10-01 reconcile snippet and its `SyncByKeyAsync` legacy note withdrawn; block 8 settings column; backlog 22 |
-| 2026-10-01 | Backend | 0.39 | Shared-first cleanup: block 1 stale Agreement tax paragraph removed; 3 FullListVm rule; 4 reference `BranchProfiler`, `ReverseMap` count; 7 `DataTableColumn` procedure; 16 reconcile-by-key snippet, `SyncByKeyAsync` legacy, singleton settings; 17 Daily Service Logs baseline moved to its review (drift noted); backlog 7 and 21 |
-| 2026-10-01 | Master | 1.16 | Block 5 *Shared pieces, not feature copies* Phase 6 gate |
-| 2026-09-30 | Backend | 0.38 | Foundation F5: `UpdateBaseVm` carries `Id` only (block 3); Update maps no longer ignore tenant/`No` (block 4); user-entered reference `No` declared per feature; backlog 2 resolved |
-| 2026-09-30 | Backend | 0.37 | Foundation F1: block 5 *Failure messages* (`BusinessFailure`, `Accept-Language`); 7 base totals; 9 case-insensitive filters and `NormalizePaging`; 10 and 12 Canonical; 17 `QueryReport` fails closed (re-verified); 8 and 18 rows; backlog 1, 10, 12, 13, 16 resolved |
-| 2026-09-30 | Master | 1.15 | Block 5 one error-presentation owner; block 4 register row points to `apiErrorMessage` |
-| 2026-09-30 | Master | 1.14 | Block 5 gate: the shared grid is customized only through inputs and `--sigma-data-table-*` variables |
-| 2026-09-30 | Master | 1.13 | Block 5 *Shared list components*: list routes use the shared page shell and `[fill]`; Phase 6 search covers page/panel/alert/button copies and table overrides |
-| 2026-09-30 | Master | 1.12 | Block 5 gate *Shared list components*: filter strips use the shared filter panel; Phase 6 search for feature filter colours/dark rules and undefined tokens |
-| 2026-09-29 | Backend | 0.36 | Block 15: Complete missing links ensures the default customer and supplier groups (single group adopted, else *General …* created) before linking; *Set as default* endpoint; default groups listed first with a badge |
-| 2026-09-29 | Backend | 0.35 | Block 15: *Convert to group account* — a posting account becomes a group; a new sub-account takes over journal lines, links, balances and document account references in one transaction (closed months included, logged) |
-| 2026-09-29 | Backend | 0.34 | Block 15 *Link Accounts completeness*: `ContactGroup.IsDefault` (one per type), customers/suppliers without a group get the default, `LinkAccountLookup` falls back to it and fills an empty group slot with `ApplySlotAsync` (own sub-account under Customer Receivable / Accounts Payable, never the main account) |
-| 2026-09-29 | Backend | 0.33 | Block 15 rule 8: purchase tax follows the supplier (`GetSupplierRatePercentAsync`/`ResolveSupplierRateAsync`: settings rate when tax-registered, else 0) for PO, GRN and bills; `Bill.TaxAdjustment` ±0.05 on the last taxed line; trip booking tax calculated on add/update/finish, manual only with `AllowTaxEditingInLimoTrip`; entered 0 = no tax (optional only) |
-| 2026-09-29 | Master | 1.11 | Block 5 continuous gate *Money and tax*: tax only from `ITaxPolicyService`/`TaxSettingsService`, money rounded at source, Phase 6 search for literal rates in changed files |
-| 2026-09-29 | Backend | 0.32 | Block 5 *Tax in any service*: the tax rule applies to every service pattern (not only block 15 documents); check item added |
-| 2026-09-29 | Backend | 0.31 | Block 15 rule 8: `ITaxPolicyService` is the only tax-rate source (Settings › Common, default 5, 0–100); documents accept only the settings rate or 0 when optional; rate snapshotted per document/line; `VatPolicy.SplitInclusive` for inclusive prices; Limousine manual tax only when its setting allows. Backlog 19 resolved (inclusive pricing and taxable flags remain per screen) |
-| 2026-09-29 | Backend | 0.30 | Deferred work gathered in `reviews/Deferred/` (index README). Backlog 19: VAT rate to be read from program settings (plan); backlog 20: per-document journal findings deferred to the owner review; block 15 rule 8 marks `StandardRatePercent = 5` as interim |
-| 2026-09-29 | Backend | 0.29 | Block 15 rule 8 corrected: the posting engine does not round generated lines (the 0.26 safety net is removed); `ValidateMoneyScaleAsync` rejects unrounded amounts for every voucher, keeping journal = document. Owner pointed to the existing `FinancialNumberPolicy` mechanism |
-| 2026-09-29 | Backend | 0.28 | Block 15 rule 8: domain rounding at computation (line amount, per-line VAT via `VatPolicy`, total = amount + tax), VAT rate is a percentage (`StandardRatePercent = 5`); supplier-bill discount spread over expense lines. Fixed 0.05 % VAT on invoices and bills; bill discount now in the journal |
-| 2026-09-29 | Backend | 0.27 | Backlog 14 links the deferred document-numbering plan; new backlog 18 (no exchange-rate mechanism) links the deferred currency plan. Owner deferred both |
-| 2026-09-29 | Backend | 0.26 | Block 15 *Journal posting policy*: rule 8 money rounding with base-currency precision (generators round parts, engine safety net), rule 9 line branch defaults to the voucher branch, rule 10 JV numbers from the per-tenant counter; engine split into `ILinkAccountLookup`, `IAccountingPeriodService`, `IJournalNumberGenerator` behind the `JournalVoucherResolver` facade. Backlog 14: journal vouchers resolved |
-| 2026-09-29 | Backend | 0.25 | Block 15 *Link Accounts completeness*: before creating an account, a single same-name posting account anywhere in the category is reused; several make the slot Manual. Backlog 17 reworded: invoices bill only rent (correct entry); extra charges go through the Miscellaneous Invoice; module charge-type slots beyond rent are mostly unused |
-| 2026-09-29 | Backend | 0.24 | Block 15: *Journal posting policy* — no-approval documents post their journal on save (`SaveAndPostJVAsync`), approval documents post on approve (`PostAsync`/`UnpostAsync`); generated vouchers (`IsGenerated`) are source-owned and read-only on the JV screen; edit/delete of a posted document reopens and rebuilds or removes its journal; open fiscal year **and** month required for save/post/unpost/void; post re-validates; account default/required cost centers; `JournalPostingException` → 400; resolver lookups return `int?`. Backlog 17: invoice revenue split needs invoice charge lines |
-| 2026-09-29 | Backend | 0.23 | Block 18: *Adding a member to a combined projection* — a DTO projected from several sources and joined with `Concat`/`Union` gets every member assigned on every side (typed `null` when absent); EF otherwise fails at run time. Found on the Jobs grid (`Status` on Job rows only) |
-| 2026-09-29 | Backend | 0.22 | Block 15: *Link Accounts completeness and account placement* — every empty Link Accounts slot is linked to its seed default posting account, else to a new posting account named after the slot under the seed parent or the group matched by name then category/sub-group (charges under Operating Revenues, contacts under receivables/payables, payment methods and banks under Cash & Bank, workshop items under Inventory), else left Manual; created through `AccountService.AddAsync` in one transaction. Seed dictionaries moved to `LinkAccountsDefaultCatalog` |
-| 2026-09-29 | Backend | 0.21 | Block 15: *Sales invoice journal direction* — debit customer with the total, credit each charge/revenue account with its amount, credit VAT (TaxCollected) with the tax; resolve all accounts before saving. `MiscellaneousInvoiceService` posted the reverse and was corrected (owner decision; existing vouchers untouched). New `ChargeTypes` 41–44 for workshop invoices raised by Close Job |
-| 2026-09-29 | UI | 0.77 | Block 19: every `<form>` binds `[formGroup]`; with only `ReactiveFormsModule` a bare `<form (ngSubmit)>` submits natively and reloads the page. Found in the Job Time Logs dialog |
-| 2026-09-29 | UI | 0.76 | Block 29: *Source-only compile guard* — the Angular `tsconfig.json` `lib` is `es2018`, so new code must not use `flat`/`flatMap`, `Object.fromEntries`, `replaceAll`, `at`, `structuredClone` or `findLast`. Found when `flatMap` in the Job Labour Time dialog failed with TS2550 |
-| 2026-09-29 | UI | 0.75 | Block 16: *Empty value is `null`* — a dropdown control starts at `null`, never `''`, and a text-valued option list drops blank values, because PrimeNG 17 shows the clear icon for any non-null model with a matching option. Found on the Jobs Insurance Company filter |
-| 2026-09-29 | Backend | 0.20 | Block 18, *Removing or renaming a member*, item 5: the consumer search covers the Angular app (models, services, columns, filters, action visibility, editor locks, export, translations), because a check on a field the API no longer returns reads `undefined` silently. Found when `Job.ApprovalStatus` was removed: Jobs lost Edit and the Lubrication Job editor opened locked |
-| 2026-09-29 | Master | 1.10 | Block 2, rule 6: owner standing decision for Missing detail — the reviewer resolves it with the closest correct source-supported option or the minimal new element, records it as a reviewer decision with evidence, and reports it; data destruction, access restrictions and accounting effects still wait for the user; a value with no source is shown empty, not invented. Root `AGENTS.md` points to it |
-| 2026-09-28 | UI | 0.74 | Block 1: the `LayoutModule.providers` rule covers every service a screen borrows from another feature (lookup `getSelectList`), not only its own; confirm a provider entry for every injected service. Found on Labour Tariff (`StaffProfileService` unregistered, lookup error) |
-| 2026-09-28 | UI | 0.73 | Block 13: `app-editor-tabs` owns its dark theme under `:host-context([data-bs-theme='dark'])` with dark editor-dialog token fallbacks; features do not darken tabs themselves. Block 30: backlog 38 resolved (the encapsulated stylesheet's plain `[data-bs-theme='dark']` rules never matched, so Opening Balances and Labour Tariff showed a light tab strip) |
-| 2026-09-28 | Backend | 0.19 | Block 18: new section *Removing or renaming a member*. Removing or renaming a property, DTO member, method, or type requires a symbol-wide consumer search in the same change (initializers, LINQ, AutoMapper, EF configuration, other services that create or read the entity), telling same-named members of other types apart, and a suggested migration when the member was persisted. Also how to read cascade build errors (fix the first failing upstream project). Found when `Job.ApprovalStatus` was removed but `JobEstimationService` still set it (`CS0117`), which surfaced as `CS1061` on `ILabourRateService` in `SiGma.ServerAPI` |
-| 2026-09-28 | Backend | 0.18 | Block 16: verified that `ServiceHelper.SyncByKeyAsync` loads and delete-by-omits the whole tenant table and that the reference `ChargeSettingsService` no longer calls it (the block's snippet is superseded by the reference's validate → load → delete/update/add → one save shape); a table holding several settings sets partitioned by a dimension reconciles inside the set's scoped query. Found on Labour Tariff (Default set plus one set per vehicle type) |
-| 2026-09-28 | UI | 0.72 | Block 6 *Current page report format* corrected after review: scoped to new or refactored paged lists; existing `<feature>.pageReport` keys with the right placeholders stay compliant; full PrimeNG placeholder list (verified in PrimeNG 17.18.15 `primeng-paginator.mjs`); `{{…}}` stays valid in hand-built ngx-translate pagers; do not bind `general.showingEntries`; the block 6 example uses `feature.showingEntries`. Block 30: backlog 37 (`general.showingEntries` uses `{total}`; the `Limousine/Location` DOM workaround must be removed with the key fix) |
-| 2026-09-28 | UI | 0.71 | Block 6: new section *Current page report format*; mandate `currentPageReport="<feature>.showingEntries"` with `{first}`, `{last}`, `{totalRecords}` placeholders in `en.ts` and `ar.ts` |
-| 2026-09-28 | UI | 0.70 | Block 13: new *Body padding* section; `app-editor-dialog` gains opt-in `[contentPadded]`, required on new and refactored editors, and the shell-ownership sentence now points to it (it previously claimed the shell owned content padding while the source body had none). Block 30: backlog 36 for editors that pad their own wrapper. Preamble header points to this file instead of block 30 |
-| 2026-09-28 | Master | 1.9 | Block 7: final report adds "Suggested migration name and commit messages" (PascalCase verb-first unique migration name with its `Add-Migration` command; one Conventional Commits message per affected repository; suggest only). Backend `00-preamble` six-steps note points to it |
-| 2026-09-28 | Master | 1.8 | Block 2: new section "Screenshot-backed scope from the user request". A user request that explicitly places a screenshot's missing business in scope approves the Explicit items' existence and labels; type, validation, calculations, transitions, and existing-row values stay Missing until the user decides. Also added a pointer from "Missing screenshot contracts" |
-| 2026-09-28 | All three | Master 1.7, UI 0.69, Backend 0.17 | Split into one file per block (`master/`, `ui/`, `backend/`); unnumbered preamble sections are now fingerprinted as block 0; UI change log moved here; UI screen-type catalog added under `ui/screens/`. Plan: `reviews/SIGMA_DOCUMENTATION_STRUCTURE_MAINTENANCE_EVOLUTION_PLAN.md` |
+UI22 and the Sigma skill route DocumentJournal's optional access requirement,
+mounted actor/record and read expiry through the existing session evaluator.
+This disposable viewer cancels, clears and closes on expiry, including deferred
+focus. Its existing local dialog progress remains the default; explicit page
+progress captures and releases one lease. Provision Transactions adopts the
+inputs; other consumers retain their own contracts. Source specifications are
+written but unexecuted, and runtime/overlay acceptance remains pending.
 
-### Ledger report filter stability — 2026-10-05
+## 2026-11-06 — ERP permission enforcement boundary
 
-UI20 and skill §6.1 document the optional shared report stable modifier and Accounts stableFilterLayout adoption. Ledger fields top-align, lookup labels remain bounded and date/required feedback reserves existing shared message geometry. Other configurations retain defaults. Source-only; owner visual/runtime acceptance pending.
+UI26 and the Sigma skill distinguish the source-implemented ERP permission
+resolver/filter from authentication-only frontend routes. Administrative role/
+direct-grant snapshots do not establish a session permission API. The fixed
+reviewed operation catalogue, fail-closed unknown operations and linked actor
+checks are recorded in the frozen feature contract; build/runtime and owner
+schema acceptance remain pending.
 
-### Journal filter/action line and height — 2026-10-05
+## 2026-11-05 — Currency ledger and settlement adoption boundaries
 
-UI20/skill §6.1 record optional shared inline report grid and equal34px button/control token. Journal's five fields/four actions opt in, using existing shared caption geometry, reserved date feedback, bounded labels/native inputs and responsive1250/640 arrangement. Other report defaults and request/loader behavior retained. Source-only; owner visual acceptance pending.
+BE15 documents exact read aggregation and the existing policy's pure settlement,
+incremental revaluation and weighted carrying-value arithmetic. UI20 records
+opening/totals-only output eligibility and mounted report context cleanup; UI2
+records explicit lookup-binding cleanup. The Sigma skill routes these owners.
+Base and original currency summaries stay separate. Arithmetic and a dated quote
+do not authorize foreign posting without dated events, settlement provenance and
+revaluation contribution persistence. Source-only; owner runtime acceptance is
+pending.
 
+## 2026-11-04 — Exact journal reads and monetary comparisons
 
-### 2026-10-05 — Report table and card width
+UI5/6/19, BE9 and the Sigma skill document opted-in decimal-string list/journal
+readers, scale6 BigInt local comparisons, strict raw remote filter strings and
+decimal SQL predicates. Read aggregates may exceed a single amount without
+enlarging input/storage bounds. JournalVoucher and the shared voucher-journal
+consumers adopt together; legacy numeric consumers keep their existing gates.
+Source/API metadata review is separate from pending owner runtime acceptance.
 
-Owner requests Accounts report tables to match card widths and establishes this in documentation. UI20 now explicitly includes result/table frames in the shared logical-edge invariant; the required skill §2.4/6.1 and revision history are synchronized. Shared report context removes the ordinary-list 8px inline inset from direct sigma-list-table wrappers. Journal uses this correction; fourteen Accounts family reports already stretch result frames within their section containers. Intentional section columns, grid/document scroll owners and report semantics remain. Source-only; owner visual/runtime acceptance pending. Generated recipes refreshed through their owner generator.
+## 2026-11-04 — Exact financial request lexemes
 
+BE3 and the Sigma skill record the narrow dated-rate/quote/snapshot exceptions
+in TrimIncomingStrings so strict parsers see the submitted lexical values.
+Decimal JSON converters validate raw tokens before setters. Ordinary text
+keeps its current normalization. HTTP/runtime acceptance remains pending.
 
-### 2026-10-05 — Report final-column viewport gutter
+## 2026-11-04 — Exact currency money foundations
 
-Owner correction extends table/card alignment into the row viewport. UI6 shared DataTable exposes --sigma-data-table-scrollbar-gutter with stable fallback; UI20 report panels set auto, and report document frames use auto. This removes the permanently reserved empty strip after the final column when no vertical scrollbar is needed, while actual classic scrollbars keep required space. Column minima, native scrolling, fill/flow, paging, totals and print/export remain. Skill rule/history synchronized; recipes regenerated through their generator. Source-only; actual visual acceptance pending.
+BE15/UI19 and the Sigma skill document strict monetary text, BigInteger/BigInt
+intermediates, conserved positive allocation remainder, and currency precision in
+the existing money/grid/export owners. Legacy numeric DTOs, local grid filtering
+and foreign posting retain their explicit adoption gates. Source and algebraic
+review are separate from pending owner runtime acceptance.
 
+## 2026-11-04 — Shared transaction lock execution
 
-### 2026-10-05 — Expand and collapse every report tree
+BE8 and the Sigma skill route the service and persistence participants through
+TransactionWriteLock, preserving resource identity, authenticated tenant,
+cancellation, conflict handling and outer transaction ownership. Evidence is the
+UnitOfWork/CurrencyWriteLock source; runtime concurrency acceptance remains pending.
 
-Owner requires Expand All / Collapse All for all tree reports. UI6/20 and required skill6.1/history document one shared ReportTreeActions toolbar over ReportActions/native secondary buttons. DataTable hierarchy consumers receive automatic controls and recursively initialize all keys before bulk expansion/collapse, preserving hidden descendant state and full print/export scope. Existing shared dynamic Reports TreeNode consumers reuse the toolbar through a recursive local clone; source changes reset that override and repeated actions work after row toggles. This additive compatibility support preserves their legacy body/pager without making it a canonical reference. Flat/indent-only reports retain no controls. EN/AR labels, disabled/print behavior and runtime files entry included; source-only owner visual/keyboard/runtime/print acceptance pending. Generated recipes refreshed through their owner generator.
+## 2026-11-02 — Internal Settings group tabs
 
+Owner follow-up turns repeated Settings groups into internal horizontal tabs
+under the existing main section navigation. UI13 records the EditorTabs
+companion's projected persistent templates, unique IDs, validation reveal,
+single-scroll and print ownership. Six consumers reuse it without changing
+read/save contracts; source checks and owner runtime acceptance remain separate.
 
-### 2026-10-05 — Budget inline filter actions with validation
+## 2026-11-02 — Settings inner field composition
 
-Owner requests Budget Search/actions beside its year/category fields. UI4 and skill3.2/history record optional shared inlineActionCaption with inlineActions/stableLayout: same invisible label geometry, top alignment independent of feedback, existing2columns, and narrow720px stacked actions. Budget opts in; required FieldError, Reset/Search/Export, Loader and existing unvalidated/advanced defaults retained. Source-only; owner visual/validation/runtime acceptance pending. Recipes refreshed through generator.
+Owner follow-up refines the reviewed Settings content with existing compact
+FormSection groups, separate scalar/Boolean grids sized by the actual content
+pane, full wrapping labels centered vertically with their checkbox, and shared
+DDA mapping allocation. UI1 and the skill record ownership and responsive
+thresholds. Existing tab/form/read/save contracts remain; source checks and
+owner visual/runtime acceptance are reported separately.
 
-### 2026-10-05 — Budget Search button height
+Current verification scope and versions are in the book preambles. The archive
+is historical evidence and does not override the current canonical blocks.
 
-UI4 and skill3.2/history record PrimaryActionButton filter-actions height matching existing34px Reset/Export through the shared control token, border-box and zero block padding. Budget adopts the correction without feature CSS; other button contexts retain their defaults. Source-only; visual acceptance pending.
+## 2026-11-01 — Settings workspace and usage reference
 
-### 2026-10-06 — Budget summary alignment
+Owner-authorized Settings presentation work adopts the existing shared shell,
+titles, fixed actions and vertical EditorTabs for Common, Document Number and
+Fields. UI1 records shared parent/child and internal allocation/focus ownership;
+UI13 supersedes the earlier API-Key-only parent exception. BE16 and the skill
+route a dated24-page settings explanation, field catalog and actual-consumption
+examples for future screen reviews. Save/API/domain and migration boundaries
+remain unchanged; source checks do not certify visual/runtime acceptance.
 
-UI3 and skill2.4/history document optional shared sigma-list-summary placement: ordinary-list8px logical inset and direct workspace0 align whole summary regions with sibling cards. Budget adopts it and removes Fiscal Period under the owner request; total/month figures and shared card grammar remain. Source-only; visual acceptance pending.
+## 2026-11-01 — Compact instruction and skill routing
 
-### 2026-10-06 — Budget Variance dropdown and alignment
+Owner-authorized documentation Audit8 remediation keeps the workspace entry
+loadable and its critical execution boundaries early, with the complete previous
+workflow text in a mandatory live companion. Master8 records the combined
+instruction contract and selective skill routing. The screen skill now points
+to complete current owning blocks rather than repeating implementation detail
+and historical revision rows; exact previous files remain in a labelled archive.
+The catalog preserves paged reports under UI20, and the README distinguishes
+process skills such as Superpowers from Sigma domain and artifact skills.
+No application, financial contract, execution permission or Codex config changes.
 
-UI16/20 and skill6.1/history record stable translated report option arrays, optional virtual selectors with matched38px body-overlay rows, and optional inlineFilterActions using the existing report grid/caption/action template. Budget Variance adopts both and hides owner-rejected applied-filter text. Other selectors/layout defaults and financial/filter contracts remain; actual runtime root cause/visual acceptance pending.
+## 2026-10-31 — Tax preview facade conformance
 
-| 2026-10-09 | Limousine continuation: strict required tax reads, plural pending-form snapshots, workflow identity gates and mandatory Limousine guide | UI 2/10/14/19/22 | Book/skill synchronized; source-only owner compilation/runtime/visual/RTL/financial acceptance pending. |
+UI19 now records TaxSettingsService.previewTax's delegation to shared money
+rounding and its optional resolved currency precision, retaining the compatible
+two-place default. Limousine's source audit found the old epsilon/multiply copy
+inside that facade. Input scale validation and backend tax ownership remain
+separate. The skill and derivative packets track this source correction;
+compilation and runtime acceptance remain pending.
+
+## 2026-10-30 — Reference-product functional detail as the per-screen target
+
+Equipment Rental operational conformance adds UI13's accepted child-close
+completion rule: parent consumers do not repeat exit guards before finalize
+releases the child's discard/cleanup flags. Existing route guards and the
+approved Purchase Order owner are preserved. The execution skill and derivative
+packets track this verified reusable source guidance; runtime acceptance remains
+pending. Missing reference business rules are explicitly deferred by the owner
+to client review, rather than silently implemented or declared equivalent.
+
+UI28 also makes context-revision fencing explicit for operational rows,
+deferred confirmations and composed outputs, retaining independent write safety.
+UI21 exposes shared `cancelPending` for a print session's scheduled frame only;
+Equipment TimeSheet adopts it without a feature scheduler or an attempt to
+dismiss an already opened browser print dialog.
+
+Shared numeric foundation added to UI14/19 and BE18 in the same owner session:
+quantities, fractional hours and meters use a shared6-place policy and input
+scale validation; counts/identities and money keep their actual domain owners.
+Derived quantity rounding reuses the central rounding mode. Current data is
+experimental, so accidental historical precision is no compatibility exemption;
+unclassified numeric controls remain an explicit inventory gap on screen review.
+The existing appearance directive is extended rather than replaced, with neutral
+shared field feedback. Final source audit also corrected inherited epsilon-based
+preview rounding at decimal midpoints via the shared represented-decimal integer
+quotient/remainder helper (UI19), without repricing persisted amounts. Execution skill,
+workspace routing and generated packets are updated together. No migration,
+data reset or runtime verification was performed by the agent.
+
+Owner clarification during Equipment Rental planning: the supplied reference
+guide and frontend code describe the product Sigma is being built to match in
+functional detail. Master2 now owns a positive coverage target for every scoped
+new/reviewed screen. Master4 records actual matched/partial/missing details,
+precise decision blockers and explicit owner exclusions; Master7 distinguishes
+bounded fixes from reference equivalence. Current minimal implementation alone
+does not exclude target capabilities. Master1, entry READMEs, workspace rules,
+execution skill and planning/discovery/final packet templates route to that rule.
+Unknown server/accounting/permission rules, current frozen contracts, read-only
+authorization and external/runtime/migration boundaries remain in force. Master
+version1.31 records this targeted documentation update without advancing the
+historical system-verification date. Packets are regenerated only by their owner
+generator and checked against the same canonical roles.
+
+## 2026-10-28 — Sidebar/code cycle evidence in the existing review gate
+
+Moved the complete 2026-10-28 Speed frontend analysis into the existing
+`references/speed-analysis/` entry beside the 2026-10-27 explanations/library.
+The 28-section/321-link snapshot stays byte-identical at relocation; its relative
+links, source identities and capture limits remain intact. Master1/2/4/7 now
+route scoped sidebar/screen/controller/service and document-cycle evidence into
+an explicit comparison against Sigma before contract freeze and at handoff.
+Documented behavior, frontend declarations, inferred sequence and unknown server
+rules stay distinct. Updated entry READMEs, workspace instructions, execution
+skill and planning/discovery/final templates; regenerated affected packets via
+the generator. No application contract, feature implementation or external
+execution authorization is implied. Master version 1.30 records this scoped
+documentation update without changing the historical system-verification date.
+
+## 2026-10-27 — Analysis guide review for new and maintained screens
+
+Master1/2/4/7 require a scoped review of the relevant analysis-guide chapter and
+original screen explanation before freezing/changing contracts for creation or
+existing-screen maintenance/review/fixes. Record actual sources, applicability,
+accepted/excluded evidence and missing decisions, then reconcile at handoff.
+The Speed collection is relocated under `references/speed-analysis/` and remains
+functional evidence, not Sigma source, permission, accounting or implementation
+authority. README, workspace entry, execution skill and planning/discovery/final
+packet templates route to the same gate. No application-source or runtime change
+is implied; the existing in-app guide completion gate remains separate.
+
+## 2026-10-26 — Retained editor reference eligibility
+
+UI2 and the execution skill document the existing ReferenceLookupBindings
+extension `disableRetainedOptions`. Editors opt into disabled historical labels
+when their live source removes a selected identity; fresh source rows retain
+their eligibility, refresh failures keep the prior snapshot, context reset
+clears rows and no form value is rewritten. The default remains compatible with
+historical list filters. Rentals editors/deposit/shared branch settings adopt
+the same owner and Select metadata. Source-only; runtime selection, refresh,
+tenant-context and compiler acceptance remain pending.
+
+## 2026-10-25 — Stable initial Dashboard cards and branch waiting motion
+
+UI1/UI24 and execution skill record final card frames from first paint:
+reserved KPI hints, equal pending/resolved count line boxes, fixed metric value
+columns and360px table cards with accessible internal scroll/sticky headers,
+immediate columns and decorative pending rows. Print releases bounds.
+PendingMotionComponent extracts existing strokes/sweep and is adopted by
+AnimatedCount, table placeholders and ShellHeader's real branch loadingicon;
+compact trigger visibility, disabled/error/Retry/session behavior remain.
+Bilingual Dashboard/Administration guides updated; no read/API/backend change.
+
+## 2026-10-25 — Shared route host width and tab read lifetime
+
+UI1 keeps route width and scrolling with `sigma-route-host`; a local row-flex
+override must not starve a direct page child, and an approved flex parent must
+stretch it while preserving scroll and print behavior. UI13 defines
+first-activation reads for hidden expensive tabs: retain the tab instance for
+one record, reset on record/reload/context changes, and preserve busy, draft,
+guards, error/Retry, cancellation, teardown and direct-link behavior. Evidence:
+JVS frozen editor-opening appendix; source-only and owner runtime acceptance
+remain distinct.
+
+## 2026-10-25 — Read action-candidate gate and compatible source unions
+
+BE7 requires pure list/detail/approval reads to gate expensive action enrichment from projected
+header facts before detail/reservation queries, using authoritative helpers and
+retaining writer rechecks. Compatible unions may use one server query only when
+producer, tenant/history, include-deleted and ambiguity semantics survive;
+unsupported/null kinds remain explicit and one `DbContext` is never queried in
+parallel. Source call reduction is not a claim of SQL-plan or latency improvement.
+
+## 2026-10-25 — Shared document Journal dialog and Bill copy debt
+
+UI13 defines the neutral `DocumentJournalComponent` for Journal actions:
+read-only EditorDialog, journal table and SummaryCards totals, local masked
+StateMessage, direct uncached Result read, Retry, identity/version cancellation,
+OnChanges reset and close abort/emission. Features retain endpoint, type
+formatting and eligibility; financial and allocation rules stay outside the
+shared reader. UI30#39 records the existing Bill journal copy as debt until
+Bill's own review; JournalVoucher adoption does not authorize a bulk migration.
+Evidence: frozen JVS Journal-window appendices; source-only and owner runtime
+acceptance remain pending.
+
+## 2026-10-25 — General screen load-speed, query and index review
+
+The owner's general requirement now applies to every reviewed/new screen through
+Master5/7, UI29, BE7/2, workspace instructions and the screen skill. Record actual
+request/query/volume boundaries, correct confirmed authorized bottlenecks, plan
+or report reproducible comparable before/after measurements, and evaluate exact
+index proposals against existing coverage with read benefit and write/storage
+costs. A justified no-new-index outcome is valid. BE2's former blanket filter/
+sort-column index wording is replaced by this evidence gate. Source call counts,
+loader appearance and cache adoption are separate from measured speed; runtime,
+database and migration authorization remains unchanged. Generated phase packets
+carry discovery and final evidence requirements through the existing generator.
+
+## 2026-10-25 — Bounded page action query budget
+
+BE7 and the screen skill require tracing round trips as well as ListVM size:
+batch page detail/reservation eligibility and compatible scalar reference
+branches without caching action flags, dropping historical/tenant/ledger guards,
+or parallel EF operations on one context. JVs supplies source evidence; actual
+SQL translation, plans and latency remain owner verification.
+
+## 2026-10-25 — Mandatory loading conformance and query-navigation lifetime
+
+UI22, Master5, workspace instructions and the screen skill require request-level
+loading evidence from the actual route/component, with visible owner, subscribed
+start/finalize/cancel, effective showPageLoading, rendered host, busy/error/Retry
+and one visible indicator. SalaryVoucher's active Payrolls route and separate
+legacy list illustrate why folder names do not prove adoption. Global page/
+list/detail/save/domain/delete and report/export data reads retain the shared
+owner; auxiliary/dialog reads, retained cache refresh and Dashboard keep their
+documented local/silent boundaries. No new appearance or global-for-all policy.
+
+The shared approval and action-log readers expose localReadProgress=false by
+default; JVs's body-appended read dialogs set true so the shared StateMessage is
+visible above their mask. Page tabs and existing default consumers retain global
+reads. Each read captures its owner for balanced finalize, with unchanged
+decision/API/event/error/Retry contracts.
+
+The frozen loading amendment replaces ambiguous "route change resets" wording:
+LoadingService compares incoming/current parsed UrlTree roots, including child,
+outlet and matrix paths, excluding query/fragment. Same-path filter/sort/page URL
+updates retain pending progress; actual path departure retains reset. Independent
+write safety and request finalization remain unchanged. Evidence is the shared
+owner and writeListRoute source; no measured runtime/timing improvement is claimed.
+
+## 2026-10-25 — Refined Dashboard pending/count animation
+
+Owner requests better animation. UI24 and the screen skill replace the flat
+pending strip with three staggered breathing strokes and a transform light
+sweep, then a360ms fade/rise and1100ms quartic count. The shared owner reserves
+the final formatted width to avoid digit-width shifts; real pending duration,
+accessible/printed final numbers, RTL, themes and motion fallbacks remain.
+Dashboard's existing bilingual guide is updated; no read/API/backend change.
+
+## 2026-10-25 — Silent Dashboard, waiting-slot motion and snapshot performance
+
+Owner follow-up removes the earlier local initial spinner and confirms a
+decorative moving blank-slot highlight for the real request duration, followed
+by numeric count-up. UI1/22/24 document explicit branch-independent/silent route
+metadata, protected dependent activation and shared pending motion. BE17 records
+SQL-grouped population reuse, scalar approval UNION, equivalent UTC boundaries,
+early zero-contribution filters and supporting latest-history indexes under BE2.
+Source query boundaries reduce24→12; no measured runtime speedup is claimed.
+Owner must create/review/apply AddDashboardSnapshotReadIndexes; no migration or
+snapshot was edited/generated. Screen skill and Dashboard bilingual guide align.
+
+## 2026-10-25 — Dashboard blank-first cards and shared count presentation
+
+UI22/UI24 and the screen skill record the owner's Dashboard-only loading
+request: show card metadata immediately with blank values, then count to the
+authoritative snapshot values. Shared AnimatedCount owns motion, null handling,
+final accessible/printed text and cancellation. SummaryCards adds optional
+valuesPending/animateValues, both false by default for compatibility outside
+the explicit scope. Dashboard retains its direct operational read, error/Retry,
+context clearing and retained-data refresh without starting the shell overlay.
+No backend/API/cache/financial-policy change; source-only acceptance pending.
+
+## 2026-10-25 — Mandatory screen cache evidence at entry and handoff
+
+UI2, Master5, workspace instructions and the screen skill elevate the existing
+per-screen cache adoption checklist into an explicit discovery and completion
+gate. The existing review records exact consumed URLs and typed envelopes,
+consumer/source symbols, classification, successful writer/import invalidation,
+watch/tenant-topic coverage and evidenced direct-read exceptions. Final source
+must demonstrate successful finite bootstrap before a separate watch, selected
+labels and draft preservation, context clearing, failure/Retry and teardown;
+shared names or documentation claims alone do not establish conformance.
+Operational and financial-number-policy reads retain their direct contracts;
+no new source eligibility, cache mechanism or financial policy is introduced.
+UI2 also documents FinancialNumberPolicyService's optional inline-error feedback
+argument and explicit fresh load/Retry, preserving its direct policy contract,
+default caller behavior, invalidation and server-owned precision/rounding.
+Owner clarification follows the JVs cache omission. Documentation/source-only
+evidence remains distinct from pending network/runtime acceptance.
+
+The existing aggregate Customer label source now has complete local producer
+invalidation: Company/IndividualPartner declare Customer as a dependency, and
+their committed-row imports refresh it even after partial failure. The shared
+operator honors declared dependencies independently of the writer's own cache
+opt-in. This completes coherence for an existing source without enabling a
+Company/IndividualPartner cache. UI2 and the skill record the same contract.
+
+## 2026-10-23 — Settings scope follows the owner contract
+
+BE16 and the screen skill distinguish report period filters from configuration
+scope. The owner changes Financial Report Settings to one general company
+definition, including cash flow; fiscal-year creation no longer owns a copy.
+The generic independent-partition pattern remains conditional, and earlier
+annual-copy feature records are historical. Source-only verification.
+
+## 2026-10-23 — Explainable bulk-action coverage
+
+BE10 and the screen skill keep grouping classification independent of posting
+eligibility. Generic lookups and write predicates retain the same restriction;
+read-only display opt-ins do not widen child creation or domain transitions.
+Evidence is the all-account classification handoff; source-only verification.
+
+BE3 and the screen skill distinguish changed-row counts from complete coverage.
+Explicit per-record outcomes/reasons own mutually exclusive category counts and
+the total; setup/cross-record warnings remain separate. Existing compatibility
+fields keep their documented meanings. Evidence is account classification's
+initialization response and shared result consumers; source-only verification.
+
+## 2026-10-23 — Space for important task content
+
+Owner clarification: compact explanations preserve full-width search/filter
+strips and sibling-card alignment. Financial Report Settings restores separate
+full-width year/cash strips; the skill and bilingual guide reflect that correction.
+
+Master5 records the owner's general preference for concise explanations,
+nonduplicated selections, useful field/table proportions and conditional empty
+warning columns. Full choices and actionable warnings remain accessible and
+visible through existing shared owners; shared control sizes are preserved.
+UI3 clarifies optional subtitles; the screen skill mirrors the gate. Financial
+Report Settings adopts public inline-filter and multiselect-summary inputs,
+with a bilingual guide update. Source-only; visual acceptance remains pending.
+
+## 2026-10-23 — Fiscal-year settings snapshots and cash-flow diagnostics
+
+BE16 records independent inherited partition graphs, no read seeding, and merged
+retained/incoming definition validation before owned mapping reconciliation.
+BE17 distinguishes cash attribution from accrual balances and keeps unresolved
+cases independent of reconciliation difference across screen/print/export.
+The screen skill mirrors these reusable gates. Evidence is the owner-approved
+Financial Report Settings implementation; source-only, owner execution pending.
+
+## 2026-10-23 — Financial hierarchy accumulation
+
+BE17 and the screen skill now record one bottom-up direct-parent accumulation
+for mutable financial subtotals, or immutable raw snapshots when propagating to
+all ancestors. Every node retains its own raw postings. Evidence is the shared
+AccountReportHelper and nine income/monthwise report consumers; source arithmetic
+reviewed, compiler/runtime/accounting acceptance pending.
+
+## 2026-10-23 — Persisted bilingual report lookup names
+
+BE10 and UI20 record the shared optional localized-name lookup contract. Stored
+base/Arabic names travel together with stable numeric identities; the report
+option owner switches labels without another request or resetting drafts, while
+existing translation-key consumers keep their behavior. Small enum-key lookups
+materialize converted keys before mapping numeric IDs. The screen skill mirrors
+the guidance. Evidence is the account classification report amendment and
+Budget/BudgetVariance source; runtime/language/print/export acceptance pending.
+
+## 2026-10-23 — Namespace and import resolution gate
+
+Owner-reported CS0246 errors in account classification exposed a missing local
+DropdownDto import in LinkAccountsService. Master5 now explicitly checks the
+declared namespace, consuming imports or actual global imports, owning project
+reference and source inclusion, and distinguishes producer errors from dependent
+project errors. The workspace source-review checklist, screen skill and Phase6
+template carry the same gate. Evidence remains source-only; this does not
+authorize builds or claim compiler success.
+
+## 2026-10-23 — Current-state documentation and execution entry
+
+The owner asks for four practical routes: create a new screen, review an existing
+screen, inspect deferred decisions, and use the required execution skill.
+Master1/8 and the screen digest now route tasks proportionally and read conditional
+blocks. UI metadata, print/auth/lifetime references and backend status/DTO/reference
+selection reflect their current supported owners. Artifact templates use the
+approved statuses. Documentation-reference checks default to documentation only.
+Superseded skill text, earlier changelog entries and completed review records are
+archived with updated links. Business contracts and application source are unchanged.
+
+Earlier entries, including their original source-only and owner-verification
+qualifications, are preserved in
+[the previous changelog](archive/2026-10-23/CHANGELOG-before-current-state.md).

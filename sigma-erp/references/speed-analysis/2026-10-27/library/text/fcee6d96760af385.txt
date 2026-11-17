@@ -1,0 +1,10 @@
+S245
+How to manage Error Logs
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-error-logs/
+
+How to manage Error Logs?
+Go to the panel on the left side, scroll down to the Administration module and click on it.
+Scroll down and click on the Error Logs module.
+Select a date range and click on the REFRESH button.
+All error logs will appear on the screen as a list. You can export this data to excel.
+Click HERE if you have a query or an issue.

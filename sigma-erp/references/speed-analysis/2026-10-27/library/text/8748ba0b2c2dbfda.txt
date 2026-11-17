@@ -1,0 +1,10 @@
+S253
+How to manage Service Log
+https://speedautosystems.com/vehicle-leasing-software/user-guide/how-to-manage-service-log/
+
+How to manage Service Log
+Go to the panel on the left side and click on the Fleet tab.
+Scroll down and click on the Service Log module.
+Now, put all or few parameters like plate number, date range, workshop, or service item. Then, click on the REFRESH button.
+A complete list of the service log will be displayed in the window. You can print or export this data by clicking on the REPORT button.
+Click HERE if you have a query or an issue.

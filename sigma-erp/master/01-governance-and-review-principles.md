@@ -1,5 +1,39 @@
 ## 1. Governance and review principles
 
+### Opening disclosure and reference sequence (owner clarification, 2026-11-05)
+
+Before investigating application source, give a short task-specific opening
+that states the scope and authorization mode, the Master Guide and applicable
+UI/backend books, and the following items explicitly:
+
+- **Speed guide and original explanations:** the relevant local chapter and
+  screen explanations to inspect under Master2.
+- **Speed code:** the dated sidebar/screen cycle and its linked controller,
+  dialog and service evidence. Keep this a separate step from reading the guide.
+- **Odoo documentation, when available:** identify the pinned local collection
+  through `references/odoo-rental/README.md`; consult the relevant documents for
+  scoped gaps or ambiguity remaining after Speed. State when no complementary
+  source applies or is available, with the reason. Do not treat Odoo as an
+  alternative starting point or expand scope to unrelated features.
+- **Skills:** name the Sigma screen skill and relevant available process skills.
+  Check Superpowers availability; when installed and its relevant skills are
+  available, read and use them within the existing authorization. If unavailable
+  or inapplicable, state that and the evidence or reason. A name in an instruction
+  is not proof of installation, and absence from the session list alone does not
+  prove absence from the machine. Do not install a skill as part of this check.
+- **Verification boundary:** state source checks, applicable scoped local builds,
+  and any separately authorized execution. Skills and reference documents grant
+  no extra permission.
+
+After scoped discovery, name the selected screen/backend shapes and exact
+reference slices. Compare the Speed guide, Speed code and applicable Odoo
+evidence with actual Sigma source, accepted contracts and its user guide before
+changing or freezing contracts. Record matched, partial, missing, decision-blocked
+and owner-excluded details under Master2/4/7. Distinguish intended reading from
+completed reading; the handoff names sources actually read and availability gaps.
+The opening is a concise disclosure, not a new approval or a separate plan
+artifact. Keep tier S limited to its affected element.
+
 ### One feature, several review paths
 
 A phase is a review boundary, not an independent feature. No phase result may
@@ -23,11 +57,15 @@ Review end-to-end paths:
   response wrapper → grid row → pager or export.
 - Write path: editor mode → detail response → typed form → payload → backend
   validation → transaction or save → success/failure → close and refresh.
-- Action path: visibility → server authorization and state checks → confirmation
+- Action path: visibility → actual authentication/authorization boundary and state checks → confirmation
   or typed input → execution → busy protection → result → recovery and refresh.
 
 A component-only or service-only finding is incomplete when correctness depends
 on another layer.
+
+Inspect the mechanism that actually exists. Sigma currently has authentication
+but no application permission mechanism (UI26); this path does not authorize
+inventing one or treating a hidden control as secured.
 
 ### Business correctness first
 
@@ -42,6 +80,48 @@ or accounting treatment the reviewer cannot confirm (tax authority, auditor), sa
 who must confirm, instead of defaulting to current behaviour. Example: VAT is rounded once per
 tax rate on the document (D4-4), although most documents rounded per line.
 
+### Experimental data and clean-start design (owner instruction, 2026-11-09; clarified 2026-11-16)
+
+All current Sigma application data, including local and hosted development/test
+databases, is experimental. This is a project-wide baseline, not a rule limited
+to numeric values or permission fixtures. Prefer the correct business model,
+required relationships and permission boundaries for a clean start. Do not add
+compatibility paths, fallback behavior, parallel writers/readers or weakened
+relationships/validation solely to preserve old experimental rows. Correct the
+owning implementation and scoped data instead of carrying invalid experimental
+records through a second application path.
+
+When a correct change needs schema preparation, document the required migration
+and clean-start steps under the existing explicit migration boundary. Scoped
+experimental-data repair follows the standing permission below; do not invent
+historical assignments or hide invalid records behind fallback calculations.
+Preserve unrelated source work and data. If the owner later explicitly designates
+a production environment, freeze its data-preservation requirements separately
+before changing its data.
+
+### Standing access to Sigma experimental databases (owner instruction, 2026-11-16)
+
+Within the requested Sigma task, agents may directly inspect/read and write the
+project's experimental local or hosted development/test databases, including
+scoped data repairs and deletion of experimental duplicates, without repeated
+permission requests. This permission covers necessary in-scope database work;
+it does not expand a review/plan into implementation or change the requested
+feature scope. Experimental-data cleanup supports the correct clean-start model
+instead of application compatibility paths for old experimental rows.
+
+Before executing, confirm the actual server/database/environment and bound the
+operation to the intended tenant, records and selection rule. Preserve financial
+correctness, references, permissions and unrelated data. Record the actual
+operation, affected row counts and resulting integrity checks under Master7;
+distinguish executed changes from proposed commands and unresolved schema work.
+
+This standing permission does not authorize production or out-of-project
+databases, schema changes/migrations, a full data reset or dropping a database.
+Keep the existing explicit migration boundary. Tests, lint, browser/application
+execution, commits, pushes and deployments retain their existing authorization
+requirements. The rule adds no recurring approval step for the scoped
+experimental-database operations it already authorizes.
+
 ### Proportional process (owner decision D4-5, 2026-10-01)
 
 The artifacts follow the size of the change, not a fixed list:
@@ -53,6 +133,13 @@ The artifacts follow the size of the change, not a fixed list:
 | **L** | A new feature, a module, or a cross-cutting change (shared component, base class, policy) | The Maintenance / Evolution Plan, then the full artifact set of block 4 |
 
 When in doubt, take the larger tier. A change that grows during the work moves up a tier, and the missing artifacts are added.
+
+Select the tier before copying a review/planning template. For tier S, record the
+small report and applicable decision in the existing review; do not require a
+separate freeze file. Tier M fills only contracts actually consumed by that
+screen. Tier L uses the plan and applicable phases. This is the entry for both
+new-screen implementation and existing-state review; it changes neither the
+user's authorization mode nor any required business decision.
 
 ### Whole-application review order
 
@@ -66,10 +153,16 @@ The screen-by-screen review of the application follows this order. Each screen i
 
 **Per-screen checklist:**
 1. Pick the screen type (`ui/screens/00-catalog.md`) and the tier (above).
-2. Freeze the contracts the type lists.
+2. Review the relevant analysis guide and original screen explanation under
+   Master2's mandatory analysis-guide gate, including the applicable sidebar/code
+   cycle slice; compare any existing Sigma source, contract and user-guide topic,
+   record accepted/excluded evidence and gaps, then freeze the contracts the type lists.
+   Apply Master2's reference-product functional detail target: map the scoped
+   reference details to actual Sigma coverage and plan missing details rather
+   than treating the current minimal implementation as the target's ceiling.
 3. Adopt every shared piece the type's blocks name (UI backlog 39 and 40, backend backlog 21–24), and remove the feature copies.
 4. Remove the server-owned fields from the payloads (UI block 2).
-5. List the *Authorization candidates* (UI block 26).
+5. Record the actual route and operation permission contract and any adoption gaps (UI26, Master4).
 6. Apply *Business correctness first* to every decision.
 7. Record the review, with the owner-run checks.
 
@@ -112,6 +205,9 @@ The planning sequence is:
    writers, readers, calculations, endpoints, Angular consumers, reports,
    permissions, tenancy, integrations, migrations, and related documentation.
    Record what already works and what is only partial or legacy.
+   Apply Master2's analysis-guide gate before selecting the target: read the
+   relevant guide chapter and original screen explanation, record applicability
+   and conflicts, and keep reference proposals distinct from Sigma contracts.
 3. **Create a Logic Ambiguity Register.** Every unclear rule is marked Confirmed,
    Derived, Missing, Conflicting, or Uncertain with the source/owner needed to
    resolve it. Implementation must never silently choose an Uncertain rule.
