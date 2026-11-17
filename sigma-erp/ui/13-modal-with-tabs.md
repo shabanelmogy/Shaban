@@ -1,5 +1,40 @@
 ## 13. Modal with tabs
 
+### Access changes while a body-appended editor is open — 2026-11-06
+
+Adopted editors pass the explicit `accessRequirement` to the existing
+`EditorDialogComponent` (or its explicit `accessBlocked` state for a composed
+policy). The owner hides/inerts its projected body and hint, renders the shared
+access state and prevents mutation footer/primary commands while the requirement
+is unsatisfied. Preserve the mounted draft and an already sent write's outcome;
+do not destroy the editor or force navigation to enforce a later UI snapshot.
+Keep Close/Cancel under the existing closeDisabled/dirty decision contract.
+
+The access boundary wrapper uses `display:contents` so existing forms retain
+their flex/scroll ownership, with `[hidden]` explicitly `display:none!important`.
+Hiding the route container alone does not cover portals appended to `body`.
+Audit the adopted surface's nested preview/dialog/select overlays too: close a
+publisher select through its public owner API or give a nested editor the same
+owner requirement plus its own permission. MockData's `mockDataAccessRequirement`
+and route/generation checks follow this rule; generation completion after lost
+access must release a no-preview form freeze without applying proposed values.
+UI26 owns the session policy; backend checks remain authoritative.
+
+For a mounted editor whose document can expire while the same actor still has
+route access, pass MockData's optional `mockDataPublicationAllowed` callback and
+`mockDataCancelled$` notifier (2026-11-10). The callback rechecks the parent
+document lifetime before generation, response, preview and Apply. The notifier
+cancels a pending replace confirmation or generation, closes a completed preview
+and releases its form freeze without changing the original draft. It remains
+subscribed after generation completes; replacing the notifier unsubscribes the
+old one. Undefined inputs retain existing consumers. Permission grants alone
+do not establish mounted document identity. Source-written specifications cover
+pending no-preview and completed-preview expiry; runtime execution is pending.
+Each active generation also retains its access-denial watch after the finite
+response completes, until Apply/Cancel releases it. Denial destroys the generated
+candidates and closes the preview; a rapid regrant cannot revive that preview.
+The parent notifier covers identity expiry even if the same grants remain valid.
+
 ### Shared mock-data form assistance (2026-10-13; owner instruction)
 
 FormSection heading grouping (2026-10-17): non-collapsible icon and title/description
@@ -85,6 +120,24 @@ It never submits or persists business records. Existing dependent lookups and
 backend calculations remain authoritative. Explain skipped candidates and leave
 unsupported/grouped/range/custom widgets with their existing screen owner.
 
+**Current-year mock dates (owner instruction, 2026-11-02).** The shared field
+adapter constrains generated `date`, `dateTime` and `month` candidates to the
+device's current local calendar year, intersecting the real field's existing
+minimum/maximum. It sends these effective bounds through the existing metadata;
+the backend's strict candidate validation enforces them. Do not hardcode a year
+or alter actual control bounds, validators, manual input or Save. Exclude a field
+whose allowed range has no intersection with that year, preserving its value.
+Time-only candidates retain their existing time bounds. Backend example dates
+must use effective bounds first and a dynamic current year for unbounded callers.
+Keep ordinary cross-field/domain validation and manual review authoritative.
+
+An editable field derived from other generated inputs may opt out through
+`[mockDataIgnore]="true"` on its existing shared field adapter. Its ordinary
+manual editing, validation and persistence remain with the feature. For example,
+Rental Agreement's day-count shortcut is derived from dates and also changes the
+return date when committed; generate the source dates rather than an independent
+random count that could overwrite them outside their allowed year.
+
 Only field structure, constraints, route patterns and opaque choice tokens go
 to the provider. Current values, record identifiers, secrets and lookup labels
 stay local. Owner explicitly requests synthetic Card Number/CVV candidates:
@@ -102,15 +155,21 @@ Native legacy date/time controls retain string values; PrimeNG
 calendars receive local `Date` values without UTC conversion (UI17). Do not add
 new native temporal controls as a result of this compatibility adapter.
 
+Settings follow-up2026-11-01: the reviewed24-page Administration Settings unit
+now uses UI1's shared parent/child bounded composition. Its previous API-Key-only
+parent exception below is superseded for this unit; Google/DeepSeek save/guard
+and mock-data contracts remain. Common, Document Number and Fields adopt the
+existing vertical EditorTabs without introducing another tab implementation.
+
 The current adoption inventory is `reviews/AI_MOCK_DATA_ADOPTION.json` (254
 editor roots, including two inline dialogs). Preview reuses EditorDialog's
 public 780px width/540px height and viewport bounds, DataTable's local unpaged
 fill layout, and existing button/state owners; feature SCSS owns toolbar placement
-only. The existing Settings/API Key route gains independent DeepSeek and Google
-sections with one internal content scroll and a fixed action footer. Its legacy
-parent tabs are bounded only for this route: bounding unreviewed settings pages
-would clip their legacy content. This is a source-supported compatibility
-exception recorded in the feature freeze, not a new settings-shell pattern.
+only. The existing Settings/API Key route retains independent DeepSeek and Google
+sections with one internal content scroll and a fixed action footer. After the
+2026-11-01 Settings review, its parent and the other23 children use UI1's shared
+settings allocation. The former API-Key-only parent bound remains historical
+evidence in its feature freeze, not the current settings-shell contract.
 Source conformance only; owner runtime/visual acceptance remains pending.
 
 > **Status: Canonical composite** — use `app-editor-dialog` for the modal shell,
@@ -401,7 +460,7 @@ Do not add feature SCSS or page tokens only to darken the tabs.
 `app-editor-tabs` has two canonical appearances. `underline` is the default for
 modal/detail editors. `workspace` is the routed dense-workspace appearance and
 is the single source of the rounded tab strip, icon tile, active underline,
-hover/focus treatment, horizontal overflow, RTL keyboard behavior and dark
+hover/focus treatment, compact width sharing, RTL keyboard behavior and dark
 state used by both Opening Balances and Link Accounts. Use it as:
 
 ```html
@@ -420,10 +479,112 @@ workspace is refactored, remove its local tab button loop and point it to this
 shared appearance so all routed workspaces stay visually and behaviorally
 consistent.
 
+**Horizontal tabs share one compact row without a scrolling rail
+(owner2026-10-31).** Both appearances keep one horizontal row and share the
+available container width with content-sized `flex:1 1 auto` buttons, zero minimum
+width and a100% maximum. Use3px strip gaps,6px block/4px inline button padding,4px content gaps and
+36px minimum button height. Horizontal workspace icon tiles use20px/5px radius
+and12px glyphs; count badges use18px minimum width and3px inline padding.
+Translated labels remain on one line, preserving the11px label font. Size each
+button from its content rather than forcing equal tracks that wrap longer names.
+At extremely narrow widths, ellipsize the label inside its shrinkable region;
+keep the full translated text in the DOM/accessibility name and the button title.
+The horizontal host does not shrink in a flex column. Keep every tab, icon,
+count and focus state reachable; clipping overflow alone is not a fix for
+oversized nonwrapping buttons. Do not hide labels, add a feature override or
+require per-screen opt-in. The owner's explicit follow-up chose smaller widths
+and spaces to retain one row, superseding the proposed multirow wrapping; the
+next clarification reduced inline padding to4px and retained single-line labels.
+RTL-aware Left/Right, Home/End, roving focus, IDs and typed events retain their
+current contract. Vertical tabs retain their bounded vertical scroll/Up/Down
+behavior and existing density. Verify long EN/AR labels, counts and short/narrow
+layouts in both themes; source checks are not visual acceptance.
+
+**Vertical section navigation (owner2026-10-31, TripBooking).** The existing
+EditorTabs owner exposes `orientation: 'horizontal' | 'vertical'`, default
+`horizontal`. Use `orientation="vertical"` for an explicitly requested side
+column; do not rotate or copy tab markup in feature CSS. The owner publishes
+matching aria-orientation, uses Up/Down independent of RTL in vertical mode,
+retains Home/End and roving focus, and keeps RTL-aware Left/Right in horizontal
+mode. Disabled behavior and typed activeTabChange/IDs stay unchanged. Vertical
+labels wrap, the strip scrolls inside its allocated block size, and workspace
+selection uses a logical-start marker; existing theme tokens own the paint.
+
+**Stable vertical navigation viewport (owner bug report2026-10-31).** The
+vertical EditorTabs host is a bounded flex column with overflow:clip, and its
+tablist fills that allocated block size with min-block-size:0. Only the tablist
+scrolls; disable its scroll anchoring and reserve its scrollbar gutter so panel
+replacement or selection does not resize or scroll a second hidden host. Keep
+the existing keyed buttons mounted when changing the active panel. For vertical
+arrow/Home/End navigation, focus with preventScroll and reveal an offscreen tab
+only within that tablist, without scrolling clipped ancestors or the page. A
+visible tab requires no scroll. This immediate tab-navigation operation belongs
+to EditorTabs; form validation continues using focusField and its rendering/
+overlay lifetime. Horizontal tabs retain their existing behavior. Source-only
+conformance does not establish the runtime cause or visual acceptance of a
+reported jump; check pointer, keyboard, narrow/short layouts and theme/RTL.
+
+The feature owns only the inner sidebar/content allocation under UI1's unchanged
+route/page/panel chain. Preserve the requested tab hierarchy: TripBooking keeps
+its existing General/Documents tabs horizontal, and uses vertical tabs only for
+the six existing groups inside General (booking, schedule, pricing, vehicle/driver,
+guest and additional information). Each level has independent active state and
+unique tab/panel ID prefixes. Validation activates both the parent and the owning
+child section before focusing its invalid control, including cross-field errors;
+switching panels preserves the parent FormGroup and its draft.
+TripBooking uses150–190px navigation beside the selected group's shrinkable
+content,12px gap, and stacks the still-vertical navigation above content below700px.
+For these six inner tabs, the narrow stack allocates two fractional tracks to
+navigation and three to content, both with zero minima, so the navigation and
+field region can scroll independently in short viewports without consuming each
+other's whole height.
+Totals/footer stay outside that workspace; print hides navigation and releases
+its grid into ordinary flow while the existing print session prepares panels.
+Keep the same fields, parent form, validation-tab activation and draft state in
+Create/Edit/View. This opt-in capability changes no other consumer's default
+orientation; source-only, keyboard/RTL/theme/short-height/print visual acceptance
+remains pending.
+
 Read-only reports may reuse `appearance="workspace"` for section navigation.
+
+**Internal Settings groups (owner2026-11-02).** When a settings section has
+several existing groups, compose its inner horizontal tabs with
+`editor-tabs/SettingsGroupTabsComponent` and direct
+`ng-template[appSettingsGroup]` declarations. The companion delegates navigation,
+paint and keyboard behavior to EditorTabs; it owns only group template lifetime,
+selection and bounded content allocation. Supply a unique idPrefix per parent
+section, a translated label, stable group key/groupLabel, and groupControls for
+reactive invalid-field navigation. Required directive/component imports belong
+to each actual standalone consumer. A single group needs no extra tab strip.
+
+Render every projected group through NgTemplateOutlet and hide inactive panels,
+keeping their FormGroup/controls and draft mounted. Each nesting level has its
+own state and matching tab/panel IDs. The real section activates first, then
+the existing revealInvalidSettingsSection callback selects the matching inner
+group through its public revealControl method, before shared focusField runs.
+Retain one content scroll owner: the inner group body, while its enclosing
+settings-content/panel is bounded; a form-type context card stays fixed above
+its field-group tabs. Do not move Save into groups or perform reads/saves on
+tab selection. Repeated FormSection titles use showTitle=false, preserving
+their actions and print headings. Print hides strips and releases every mounted
+panel. Common, Document Number, Fields, Notifications, User Management and
+Forms/Fields supply the adoption evidence. Source-only checks do not certify
+keyboard/short-height/RTL/theme/focus/save acceptance.
 Their panel visibility and full-report print contract follow blocks 20 and 21;
 the editor `@switch` example above is not suitable when printing requires every
 report section to remain rendered.
+
+**Settings tab search (owner 2026-11-03).** Use the shared TabSearch for
+routed Settings links and the EditorTabs `searchLabel` input for internal
+strips. A strip with one tab needs no search. Match the translated label in
+the current language with the same text normalization as menu search. Use
+the shared single-line field, clear behavior and a translated live empty
+state above the existing navigation viewport. Keep selection, panel IDs,
+mounted form controls and drafts while typing. The tab stop falls back to
+the first result when the selected tab is filtered out. Arrow/Home/End
+navigation uses the result set; a programmatic activation excluded by the
+query clears that strip's search. Enter in search does not submit the owning
+form. Search is local to its strip, with no reads, saves or print output.
 
 Do not keep a feature-local `onTabKeydown`, tab-button loop, or duplicate tab
 styles after adopting `app-editor-tabs`.
@@ -555,15 +716,47 @@ descendants; they can collapse under an auto-height dialog. The shared shell
 still owns maximum height, header/footer and content bounds; the inner editor
 scrolls. Default dialogs retain auto height when the input is omitted. Do not
 patch `.p-dialog-content` or copy viewport-height selectors into a feature.
+Recheck this contract when converting a content-sized form to tabs: adding a
+zero-basis form/body/scroll chain without setting the shared height can hide the
+entire projected body. WorkshopMovement's2026-10-31 first correction used a680px
+viewport-bounded height. Creation retains that workspace; after the owner's
+size correction, View uses the fully auto-basis content-sized alternative below.
+Syntax parsing alone does not verify nonzero geometry or appropriate empty space.
 
 **Content-sized dialog alternative.** For a form that should fit its content
 without blank space, omit `height`, keep a shell `maxHeight`, and use existing
-`flex-fill` (`flex: 1 1 auto`) on every projected link of that editor chain:
+`sigma-u-flex-fill` (`flex: 1 1 auto`) on every projected link of that editor chain:
 form, body and inner scroll region. This retains intrinsic content sizing while
 allowing the inner region to shrink/scroll at the shell limit; keep `min-height: 0`
 and overflow ownership from the shared classes. Do not leave a zero-basis child
 in the auto-height chain. Company Driver draft uses this alternative with
 `maxHeight="90dvh"` after the owner requested removal of unused space.
+
+**Compact action forms (owner screenshot, 2026-11-15).** Choose a single-column
+field layout through the shared `--sigma-editor-columns` contract. Keep loading,
+error, explanation and multiline field blocks full-span (`sigma-field--full`)
+so the shared intermediate two-column breakpoint cannot place them side by
+side. A Reason textarea can keep native rows and maxlength, with its description
+associated by aria-describedby. Use the existing content-sized form/body/scroll
+chain above; when EditorDialog owns padding, existing `sigma-u-p-0` on its body
+avoids a second workspace inset. Shared `sigma-u-m-0` keeps an alert inside that
+grid aligned with its fields. The current utility owner is
+`assets/sass/_sigma-utilities.scss`; do not use the retired unprefixed flex-fill
+name. Native shared utilities own those values, not feature CSS. Preserve the
+shared shell/footer, access boundary and request behavior. Compilation does not
+establish nonzero geometry, scrolling, focus or visual acceptance (UI29).
+
+Item Return's basic/items panels adopt this content-sized alternative in
+Create/Edit/View (owner2026-11-01); all three projected links keep the shared
+auto-basis utility. Its approval adapter retains a definite bounded shell height
+because that independent panel uses a zero-basis scroll chain. The same editor
+uses the existing workspace tab appearance, as requested against Link Accounts,
+and one compact FormSection card around Items in every mode. Hide the repeated
+tab/collection titles through the owners' existing showTitle/headingVisible
+inputs; the FormSection keeps its editable mock action while the collection
+keeps Add/Remove and validation. No feature tab/card CSS or private toolbar.
+Source conformance only; content sizing, tab switching and long-row scrolling
+remain owner visual acceptance.
 
 > **Status: Canonical** (2026-09-28)
 

@@ -17,7 +17,73 @@ print preparation; UI2 owns reference-cache eligibility, watches and clearing.
 Equipment Rental's source audit applies these rules to its actual consumers;
 this is not a new cache opt-in, permission model or runtime proof.
 
+**Local dirty-exit decisions after revocation (Fleet,2026-11-07).** Cancel an
+open confirmation when its adopted access or context expires, and resolve a
+cancelled route-guard decision to false rather than completing without a value.
+An explicit local discard started while already denied remains available; it
+does not grant a business write. Capture access/context inside the subscribed
+defer, and open the confirmation lazily because the shared confirmation service
+opens its portal when called. The decision notifier may skip its one immediate
+denial only when the decision starts denied; later access/context expiry still
+cancels it. Complete this notifier upstream of the cleanup switchMap so it
+cannot cancel cleanup already sent. Cleanup retains its own Media grant check.
+Do not attach this exception to protected reads or domain actions. Fleet RED/
+GREEN covers open-decision cancellation and a new denied local discard within
+the 151-test adoption suite; application visual acceptance remains separate.
+
+### Sent-save success belongs to the draft — 2026-11-12
+
+Keep the identity of an editor draft separate from the revision used to cancel
+its reads. Temporary grant withdrawal, option reload or same-actor reference
+scope refresh may invalidate a read revision without creating a new draft.
+A sent mutation that succeeds must still consume its original draft after
+that withdrawal, preventing another Create when access returns. Use the captured revision and
+payload grants to fence notification. Settle the original draft by its editor
+identity and auth session. If that editor is usable when success arrives,
+complete its normal close or saved-state transition and refresh any affected
+projection the same session can still read. If the editor is denied, record
+the success and reconcile on regrant or explicit exit. A completion must never
+consume a replacement draft. Keep sent requests independent of read
+cancellation and preserve existing finalize/busy safety.
+
+Verify success after a revision with unchanged editor access and after regrant
+that precedes the response. Also cover success while denied followed by
+regrant. Each case should consume the draft once and refresh the permitted
+projection without replaying the write.
+
+### Nested drafts and permission-dependent query snapshots
+
+A child approval, reason or confirmation dialog can own a dirty draft or a
+sent write while its parent owns Close and route navigation. Trace both owners
+in the real template when the view grant or only the action grant is withdrawn.
+Keep access-gated content hidden and preserve a reachable local discard decision
+for a dirty draft in the same session. A denied local discard must not be
+short-circuited by the action grant. If a view is removed, reconcile its
+parent-facing pending state and keep any sent write with its surviving owner
+until settlement. A removed portal must not leave the parent blocked. Cover
+declining and accepting discard, regrant, parent Close/Escape/back, and loss
+of view during a sent action.
+
+A mounted report, preview or export can hold a copy of the applied list
+query. When an optional grant is withdrawn, cancel affected reads and clear
+or rederive every dependent filter, grid rule and sort key before requesting
+data again. Use the same authorized query rules at each consumer, including
+Retry and all-page reads. Preserve unaffected filters. Keep the snapshot and
+permission revision together through response publication and output
+preparation. Verify grant loss with the report already open and a protected
+filter or sort already applied.
+
 ### Routed API read cancellation (owner2026-10-22)
+
+For adopted permission-aware reads, use the existing view-policy owner's
+`denied$(requirement)` on each finite read, including composed export/lookup
+work. It fences the subscribed actor/branch-access context even if the next
+actor still has the same view grant. Clear stale output through `dataContext()`
+and permission revisions, retaining an editor draft under its existing actor
+and dirty-exit contract. Keep the outer query subscription alive for a later
+grant/retry. A pending confirmation rechecks access before sending; a mutation
+already sent retains its own outcome lifetime. Do not destroy its stateful
+workspace merely to hide it (UI26; CsvImportWorkspace.permission).
 
 The shared navigationActivityInterceptor supplements component teardown for
 Sigma API page reads. Capture the subscribed request's current navigation ID,

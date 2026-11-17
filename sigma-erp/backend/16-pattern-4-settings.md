@@ -5,6 +5,14 @@
 > `FieldsSettingsService` (single rows), `NotificationsSettingsModelService` and
 > `EmailTemplateService` (several rows by key).
 
+For screen reviews, use the dated [settings usage reference](../references/settings/README.md)
+to locate the applicable page/field and trace its actual frontend/server reader.
+Distinguish saved configuration from proven consumption, defaults from enforced
+validation and presentation from financial policy. The reference catalogs
+current source and partial coverage; it neither replaces this save pattern nor
+proves that a visible option is implemented. A presentation-only reorganization
+does not migrate a legacy settings service or create one save per internal tab.
+
 A settings screen saves settings, not records. Do not force it into record CRUD, and do not
 write a save loop of your own: every settings service persists through `IServiceHelper` and
 saves once. There are exactly **two shapes**:

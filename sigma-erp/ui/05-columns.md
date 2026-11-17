@@ -96,6 +96,17 @@ writes no `value` function or template for common cells:
 `value` still wins over `type`, and `cellTemplate` remains for anything richer. Reference:
 Job list (`type: 'status' | 'money' | 'dateTime'`, no templates, no formatting helpers).
 
+**Exact money columns (2026-11-04).** After the endpoint and every direct
+consumer adopt decimal strings, declare `type:'money', exactMoney:true`.
+The existing DataTable owns text filter entry, numeric match modes and private
+BigInt comparison units (UI6). Keep the source text for display/actions/export;
+never coerce it to Number. `moneyDecimalPlaces` controls display precision.
+`moneyAggregate:true` allows a read aggregate to display/sort more than16 whole
+digits; it does not enlarge any single financial input or storage column.
+The first adopters are JournalVoucher's base Amount and VoucherJournalLineDto
+readers. Legacy numeric columns keep their current contract until explicitly
+adopted. Scope for hierarchy/incremental data retains UI6's existing boundaries.
+
 **Status badge (shared).** A status cell is `<span class="sigma-status-badge …">` with a
 variant — `--success` (active/open), `--info`, `--warning`, `--danger` (voided/rejected), or
 the neutral base (closed/inactive) — defined once in `src/styles.scss` for light and dark. No

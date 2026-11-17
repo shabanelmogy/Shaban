@@ -2,6 +2,18 @@
 
 > **Status: Canonical** — translate headers when the export action runs
 
+**Explicit complete read (source-only,2026-10-31).** A source-supported complete
+result may replace repeated page reads for export/print while preserving the
+same predicates, order and authoritative count. Reuse `completeListRows` in
+`shared/utils/list-query`: require a successful Results envelope, an array and
+an integer totalCount equal to the array length; reject incomplete or failed
+responses instead of emitting a partial file. Transportation's three virtual
+trip readers opt into `allRows=true` for their existing complete outputs;
+ordinary paging retains its prior cap and response. This is not permission to
+treat an arbitrary paged endpoint as complete, relax transport bounds globally,
+cache operational reads or claim measured speed. Cancellation, progress and
+errors retain their existing owners; deployed size/SQL/timing acceptance is pending.
+
 Shared helper, signature `onExportToExcel(data, fileName, headers?)` where
 `data` is currently a `Signal<any[]>`. Keep feature rows typed; the `any`
 belongs to the Transitional shared helper boundary (backlog 22), not to the

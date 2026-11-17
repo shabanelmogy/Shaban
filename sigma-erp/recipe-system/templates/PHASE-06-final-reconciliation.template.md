@@ -81,7 +81,19 @@ implementation alone cannot erase a target gap. Execution permissions stay intac
 5. View fields ↔ Detail DTO.
 6. Form controls ↔ Add/Update DTOs ↔ server ownership.
 7. Save ↔ validation ↔ persistence/transaction ↔ close and refresh.
-8. Actions ↔ backend authorization/state ↔ confirmation/input ↔ recovery.
+8. Actions ↔ actual grants and prerequisites ↔ persisted branch capability and
+   backend state ↔ post-confirmation recheck ↔ sent-write settlement and current
+   read-scope refresh. Link latest findings, schema readiness and runtime
+   acceptance from the authorization coverage record (UI26, Master7).
+   For applicable cases, check a view-only branch on a shared definition, a
+   conditional field changed by another writer, and a live reference in an
+   inaccessible branch (BE8). Cover failure of an optional lookup, Escape
+   before blur, success after a permission revision, and queued print at access
+   expiry (UI10/16/21/28). Record what the fixture actually exercises (Master5).
+   Apply Master7's authorization regression checks to the actual HTTP routes,
+   denial layers, write invariants, bounded queries, nested exits and
+   report/print lifetimes. Trace the fixture to the intended guard and outcome
+   (BE6/8/9, UI21/28, Master5).
 9. Service failures ↔ component handling for both failure channels.
 10. Routes/modes ↔ editor shape and dirty exit.
 11. Upload UI ↔ storage and cleanup contract.
@@ -118,8 +130,10 @@ page/local/silent owner, start/finalize on success/failure/cancel/destroy,
 same-path query navigation, effective shell visibility, no duplicate spinner,
 and retained busy/error/Retry. Record backend per-page action enrichment query
 budgets under BE7 when touched, with source improvements separate from measured
-SQL/latency. Missing evidence or known unapproved source gaps prevent completion;
-this gate authorizes no build, database or browser commands.
+SQL/latency. Resolve known in-scope source gaps and record missing evidence.
+Use Master5 for scoped local builds and Master7 for explicitly requested
+migration creation, application and verification. Browser execution requires
+its own authorization.
 
 Apply UI22's single-visible-owner correction: reconcile page + lookup,
 lookup-only, dialog read + background page work, and dialog save + local lookup
@@ -192,6 +206,12 @@ Report:
 - owner manual checks;
 - prohibited or owner-only commands not run.
 
+Before handoff, reconcile the applicable scenario rows under Master5/7.
+Check generated-document continuation, dirty revoke/regrant and sent outcomes
+against final source. Trace each regression fixture to its intended assertion.
+State operation mapping, source conformance, build, behavioral execution and
+runtime acceptance separately, with the exact pending step or open finding.
+
 ## Completion gate
 
 Do not report the feature complete while a Missing, Conflicting, or Uncertain
@@ -204,9 +224,8 @@ first-activation/retained-tab lifetime against final source, including direct
 links, reload/identity changes, cancellation and print prerequisites. Reconcile
 BE7's conditional detail/approval enrichment and any composed source query
 against unchanged tenant/history, multiplicity/ambiguity and writer guards.
-Pending runtime measurements under an existing source-only boundary are reported
-honestly; they are not silently marked passed or treated as permission to run
-forbidden commands. An index proposal is distinct from an implemented/applied
+Report pending runtime measurements as pending. Use the applicable execution
+authorization for each check. An index proposal is distinct from an implemented/applied
 index, and a source query reduction is distinct from measured speed improvement.
 
 For a completed authorized frontend/full-stack screen implementation, an absent

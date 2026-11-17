@@ -97,6 +97,20 @@ copying the GET into a feature service. The feature handles both failure channel
 uses local loading, and keeps the warning visible (block 22); default consumers
 continue using the global error interceptor.
 
+Classify required read lookups separately from edit-only lookups. Keep Search
+available when an edit-only lookup fails or is loading. Give the edit lookup
+its own retry/error state and gate the controls and submissions that depend on
+it. Use the read DTO's saved labels in read-only mode (UI26).
+
+Distinguish a required edit source from a lookup needed only when assigning or
+changing an optional value. Give the conditional source its own loading, error
+and retry state. A failure must leave successful required options usable.
+Keep a saved label from the detail DTO when the contract permits retaining the
+value. Allow Save with a permitted empty or unchanged value. If a draft
+contains a change that needs the source, preserve the entered value and block
+that submission until the requirement is met or the user explicitly reverts
+the change. Apply the same rule when permission is withdrawn.
+
 ```ts
 export interface DropDownSelect {
   id: number | string;
@@ -133,6 +147,19 @@ full options, filtering, selection and clear behavior remain. Other selectors
 retain nonvirtual rendering. Budget Variance Account adopts it after the owner's
 opening/responsiveness report; runtime root cause and visual acceptance remain
 pending. Do not add feature panel CSS or truncate the source options.
+
+The same shared 38px virtual-row geometry is available to ordinary large
+single-line reference selectors through `sigma-select-panel--virtual` on their
+body-appended panel (2026-11-01). Pair the class with the public
+`virtualScroll=true` and `virtualScrollItemSize=38` inputs; the report alias
+remains compatible. Item Return's Job and Item editors adopt it for the owner's
+dropdown-opening delay, preserving the complete option arrays, existing filter,
+clear, values, disabled state and server eligibility. This bounds rendered option
+rows, not response size or server query work. Do not apply fixed row geometry to
+grouped/multiline custom templates without verifying their actual heights.
+Source conformance does not establish measured opening latency, keyboard,
+RTL/theme or scrolling acceptance; verify first/last choices and filtering with
+representative large data. Other selectors retain their existing contracts.
 
 **Selectable records and historical labels.** Source ordinary entity choices
 from the owning select endpoint (or the confirmed typed domain lookup below),

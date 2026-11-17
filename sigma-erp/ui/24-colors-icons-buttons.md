@@ -33,6 +33,29 @@ and native actions; do not fix this theme cascade with a feature-local skin
 or `!important` (owner screenshot2026-10-24: blue Reject with red text;
 source correction, visual acceptance pending).
 
+### Permission catalogue tools (owner screenshot follow-up, 2026-11-15)
+
+`PermissionTreeComponent` owns its catalogue toolbar across consumers. The owner's
+subsequent same-day correction groups the labelled local search, Granted only,
+the existing select-all/visible control, selected/total count and Expand all/
+Collapse all in one flex row, aligned to the bottom of the search input. The
+search has a220px flex basis and grows up to32rem; the filter/action groups
+shrink and wrap only as needed within the actual pane width. This supersedes
+the earlier two-row presentation. Use12px toolbar padding,10px block/14px inline
+gaps, Sigma surface/border/text tokens, and a separate compact34px-minimum count
+badge with centered tabular numerals. Native InputText/Button
+directives and `sigma-field`/`sigma-secondary-button` retain the shared34px
+control geometry. Visible action labels remain alongside decorative icons;
+native labels, checked/indeterminate/disabled states and keyboard handlers keep
+their existing owners. Do not change selection behavior as presentation work.
+
+The existing `fixedToolbar` mode keeps this entire bar outside its bounded scroll
+content (UI1). Content retains16px trailing padding; dialog consumers retain
+their owning body scroll. Logical spacing and wrapping preserve RTL and narrow
+panes; the existing print rule hides the expansion actions. Reuse the shared
+toolbar rather than copying a feature variant. Compilation and source evidence
+remain distinct from visual/keyboard/theme acceptance (UI27/29).
+
 ### Shared scrollbar presentation (owner request 2026-10-23)
 
 The general scrollbar skin is owned by
@@ -520,7 +543,9 @@ The typed `SummaryCard` shape carries `id`, `labelKey`, `value`, `icon`,
 `accent`, optional `format` (`number`/`money`/`text`), `suffixKey`,
 `hintKey`/`hintParams` and `secondary`. The component inputs are `cards`,
 `ariaLabel`, `density`, `layout`, `columns`, `equalHeight`, `verticalPadding`, `minCardWidth`, `maxHeight`, `selectable`, `selectedId` and
-`disabled`; `cardSelected` emits only the stable card id. It fetches nothing and
+`disabled`; `cardSelected` emits only the stable card id. A money card may carry
+`moneyDecimalPlaces` from its owning financial snapshot; the shared owner uses
+that precision and defaults to two for legacy callers. It fetches nothing and
 does not derive or mutate business state. `density` is comfortable, compact,
 dense or slim. `layout` defaults to grid; row fits the actual card count into equal
 `minmax(0, 1fr)` tracks above a 1100px container width, then wraps through

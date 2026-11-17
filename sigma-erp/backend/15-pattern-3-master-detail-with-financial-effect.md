@@ -137,6 +137,72 @@ A proportional reversal rounds each share to the money precision and gives the r
 largest line (`FinancialNumberPolicy.AllocateProportionally`), so it equals the allocated amount.
 Implementation order and status: `reviews/VOUCHERS_JOURNALS_MAINTENANCE_EVOLUTION_PLAN.md`.
 
+**Exact currency arithmetic (2026-11-04).** The approved currency plan extends
+`FinancialNumberPolicy` through its Currency partial: decimal money text is
+validated before parsing can discard excess scale; amounts have at most16 whole
+digits and currency scale0–6, dated rates have16 whole digits and12 places.
+Signs, empty values and requiredness remain domain contracts. Use
+`TryParseCurrencyAmount`, `FormatCurrencyAmount` and `SumCurrencyAmounts` for
+adopting exact-money boundaries. They do not change legacy18,2 storage or
+convert existing numeric DTOs automatically. `ConvertCurrencyAmount` uses
+BigInteger coefficient/scale arithmetic and one half-away-from-zero rounding at
+the result boundary, with an explicit money range check. No static-rate fallback.
+
+The existing `AllocateProportionally` now aligns decimal weight coefficients and
+uses BigInteger for sum/product/division, then checks the resulting money shares.
+It keeps the first largest absolute weight as remainder owner. For a nonnegative
+total and nonnegative weights, if rounded non-remainder shares exceed the total,
+truncate those shares toward zero and give the exact remainder to that owner;
+this matches the VAT allocator's existing positive-remainder safeguard. Signed
+weight behavior otherwise retains the same algebra and zero-sum behavior. Do not
+add a second allocation engine or repair an unbalanced journal inside posting.
+Source checks and algebraic review do not prove runtime numeric acceptance.
+
+**Read aggregates and currency-position arithmetic (2026-11-05).**
+`SumCurrencyReadAmounts` uses aligned BigInteger coefficients to sum reporting
+balances without the16-whole-digit limit of a single writable amount. It rejects
+an unrepresentable decimal result instead of allowing implicit decimal rounding.
+Use it only at read aggregation boundaries; `SumCurrencyAmounts` and input money
+limits remain unchanged. Ledger adopts it for opening, movement and closing in
+the base domain and each original-currency domain separately; no mixed-currency
+total and no reconstruction of originals from a current/static rate.
+
+The `FinancialNumberPolicy.Settlement` partial owns pure quantity/carrying-value
+consumption, settlement, incremental revaluation and moving weighted bank-value
+arithmetic under the approved currency feature contract. The last consumption
+takes the exact stored remainder. Results distinguish historical value,
+carrying value, additional gain/loss and reclassified unrealized amounts. They
+do not select a rate, classify a source, store a contribution, authorize posting
+or create a journal. A writer still needs dated effective events, currency and
+account identities, individual revaluation contributions, common locking,
+idempotence and atomic journal/source persistence. A net unrealized amount does
+not replace contributions with opposite gains/losses or their actual accounts.
+Keep foreign posting/allocation closed until those writer/reader contracts are
+adopted together. Source review is separate from owner numeric/runtime acceptance.
+
+`AllocateCurrencyDocumentTax` is the exact-money document VAT owner for adopted
+currency contracts. It groups validated rounded amounts by the percentage rate,
+taxes each group once with BigInteger sum/product/ratio and one rounding, then
+delegates allocation to `AllocateProportionally`. Its result has the same line
+order, first-largest remainder and positive-source safeguard. The rate remains a
+settings-owned percentage (0–100, at most six effective fractional places), not
+an amount or a client-authoritative rate. It rejects out-of-range money instead
+of relying on decimal multiplication or ratio-first overflow fallbacks. Keep
+legacy `VatPolicy` callers on their frozen adoption boundary; do not change their
+storage or DTOs implicitly. UI19's exact text preview mirrors this owner.
+
+**Owned generated draft currency (2026-11-04).** An adopted source writer uses
+`SiGmaDbContext.EnsureEditableSourceJournalAsync` before changing a
+tracked source when its saved unposted journal must change with it. Resolve
+save-capable account lookups against a detached candidate first. Persist the
+source's accepted dated snapshot under the currency lock, rebuild the original
+document-currency lines, and use `SaveCurrencyDraftJVAsync` in the same outer
+transaction. That helper rechecks ownership, state and allocation, inherits the
+saved source evidence, and converts the base amounts exactly once. Never select
+a newer quote for the generated journal, edit it through the manual journal
+screen, or add a balancing amount. This route does not authorize foreign
+posting/settlement; those remain separate financial adoption gates.
+
 ### Sales invoice journal direction
 
 A customer invoice debits the customer (receivable) account with the total, credits

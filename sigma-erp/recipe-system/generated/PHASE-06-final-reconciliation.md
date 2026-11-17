@@ -8,29 +8,33 @@ broad feature review or implementation.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041
-- master.1: ## 1. Governance and review principles | sha256:be0dfda4d868895a3f21a5a7b453c5c944c0957932c551e82cb658f3846c392a
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:fe219e07a3e5573053e9a55da8a7beca5a6046a5ac173060962c52fde6d8f239
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06
+- master.1: ## 1. Governance and review principles | sha256:a2ea89d19643c80d5d6fedef76e1e562333792eee34cf2eaad1e1ada1a4c47e0
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:8e602319017e268b923ed2bb8b7a8d21a1a3252640f23a986d99821842ea0c6f
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:497fbb72e36ba99eb199d4d7f0c606827d16339c9597eeba867813f9833934bb
-- master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
+- master.5: ## 5. Continuous quality gates | sha256:2dc0c50abbb9337e62e6ddea88ae341cfff9ff0da0849dca7f58bf304d9544d1
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.7: ## 7. End-to-end reconciliation and final report | sha256:502bc5e46aeafb61b14bd97878651bb2f46bc57f11f31d164759516a7e480dbb
-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:90e19839bb224a518453a2ed0ae60332160f759860e87fc977968bfb5fdd24a2
-- ui.1: ## 1. Feature folders and wiring | sha256:a652d320ed28518fdd0fd8f3a3320cc12432cb88b9f2e4d6116ec47fb2acb0e9
-- ui.2: ## 2. Service and response wrappers | sha256:b77bf9a3bb3cf04aa561a014e2c24ca816a679b83b29ab7da948d715f79fb260
-- ui.13: ## 13. Modal with tabs | sha256:3e16a6bce55a413ca9014e0c9cc30e09026b941b07a8e074aa8e8da37f134476
-- ui.20: ## 20. Report page | sha256:60cc1f81bd050093d532aec836e2b776aed48492bfae8ca2a7e4a2c5aaf8379d
-- ui.21: ## 21. Report print | sha256:2a59ad13a43e02220d8645104703ef871d319a8f87489b668521306c6d3ee1f5
-- ui.22: ## 22. Loading, empty, error, toast | sha256:ca04ec271de4fec9af2acc9937463577a67a5a3956d14db1b31cf966cf1b6d06
+- master.7: ## 7. End-to-end reconciliation and final report | sha256:a93f85d7b18cb79110399ab69c5d768ff19539a1aacbd7439126909cab1b0161
+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55
+- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
+- ui.1: ## 1. Feature folders and wiring | sha256:96f5147de3041c0ab098fbd3b6005bb94b38ccde0ac890395818fdf989ca7868
+- ui.2: ## 2. Service and response wrappers | sha256:c2e46bdaf00c1fbee66d6ae2c655f335e348e60efad6a972e6ed6755ea520734
+- ui.13: ## 13. Modal with tabs | sha256:cd104e5563bb5ae0af553c6bf03b7b8f89acdd8b80c8eb1df0befaf32e849ff8
+- ui.20: ## 20. Report page | sha256:0a26bd9cddc464de5a9525a6cdcbb9fc7e7c738852c77f1eb5acf0213489cbd3
+- ui.21: ## 21. Report print | sha256:e8f6ef5b03400e4a9bf5dd01d658d5384f39af61473f3f64d29da5763d2bd1f8
+- ui.22: ## 22. Loading, empty, error, toast | sha256:8a43d6f6e7adf12e07a82fdb67e8f625158509fc0f88fe8f181f4c8a9c17e4a3
+- ui.28: ## 28. Request cancellation and stale responses | sha256:b9ee811088e53d9771459815766c135cee973724042db691a7a4444ab5408325
 - ui.29: ## 29. Verification expectations | sha256:1ff1411e4cbc36bb44b06ef153a062ad0ddc7d8ca7728bdc7a3deae3ea99656e
-- ui.30: ## 30. Backlog, by priority | sha256:89af03cfacdc32e87a2b6a93dbb3707f34026a2444cdae31880e108acd30eaab
+- ui.30: ## 30. Backlog, by priority | sha256:154cf976b06e9031b4063231c1f0893ff034c7b7e3c89f1bbee564712d37cf7e
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
 - backend.2: ## 2. Step 2 — EF configuration | sha256:6fc404d5c366c960f1ff9292a0b9ce4b69c6825da3f4416385af0389c0ebc386
+- backend.6: ## 6. Step 6 — Controller | sha256:f0f56867e3997a688067c5e5ec7f19070f1f4d621a0d5617e4e9639fdf74eba6
 - backend.7: ## 7. ListVM scope rule | sha256:6ae3e69d94ccc02a60bd005f20020b7cd4b9f105b81afa9baf63c427cfa05caa
+- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:6ea7b47108bd89bf68e821373303b7390ed3b42e664fa831ccc3d5a2c3624f33
+- backend.9: ## 9. Search model and filters | sha256:e8208878685bd880c99eb2f2816e6f491ff2cd9ce17ab0f850655b509aba7525
 - backend.18: ## 18. Edge cases | sha256:8878697ea5e4b00ab272b14d83fd2091eb9cd129c168a238ab98b88bed22d2a0
-- backend.19: ## 19. Backlog | sha256:794fe9f23e841587c89d71f848f75a2053cbbb544d99ec358a34e3b5b6fbbcff
+- backend.19: ## 19. Backlog | sha256:383786ba4420103ae9caedc8d30a99026c1e59c534236a97f68b4061766af9a8
 
 Approved references used by prior phases:
 
@@ -106,7 +110,19 @@ implementation alone cannot erase a target gap. Execution permissions stay intac
 5. View fields ↔ Detail DTO.
 6. Form controls ↔ Add/Update DTOs ↔ server ownership.
 7. Save ↔ validation ↔ persistence/transaction ↔ close and refresh.
-8. Actions ↔ backend authorization/state ↔ confirmation/input ↔ recovery.
+8. Actions ↔ actual grants and prerequisites ↔ persisted branch capability and
+   backend state ↔ post-confirmation recheck ↔ sent-write settlement and current
+   read-scope refresh. Link latest findings, schema readiness and runtime
+   acceptance from the authorization coverage record (UI26, Master7).
+   For applicable cases, check a view-only branch on a shared definition, a
+   conditional field changed by another writer, and a live reference in an
+   inaccessible branch (BE8). Cover failure of an optional lookup, Escape
+   before blur, success after a permission revision, and queued print at access
+   expiry (UI10/16/21/28). Record what the fixture actually exercises (Master5).
+   Apply Master7's authorization regression checks to the actual HTTP routes,
+   denial layers, write invariants, bounded queries, nested exits and
+   report/print lifetimes. Trace the fixture to the intended guard and outcome
+   (BE6/8/9, UI21/28, Master5).
 9. Service failures ↔ component handling for both failure channels.
 10. Routes/modes ↔ editor shape and dirty exit.
 11. Upload UI ↔ storage and cleanup contract.
@@ -143,8 +159,10 @@ page/local/silent owner, start/finalize on success/failure/cancel/destroy,
 same-path query navigation, effective shell visibility, no duplicate spinner,
 and retained busy/error/Retry. Record backend per-page action enrichment query
 budgets under BE7 when touched, with source improvements separate from measured
-SQL/latency. Missing evidence or known unapproved source gaps prevent completion;
-this gate authorizes no build, database or browser commands.
+SQL/latency. Resolve known in-scope source gaps and record missing evidence.
+Use Master5 for scoped local builds and Master7 for explicitly requested
+migration creation, application and verification. Browser execution requires
+its own authorization.
 
 Apply UI22's single-visible-owner correction: reconcile page + lookup,
 lookup-only, dialog read + background page work, and dialog save + local lookup
@@ -217,6 +235,12 @@ Report:
 - owner manual checks;
 - prohibited or owner-only commands not run.
 
+Before handoff, reconcile the applicable scenario rows under Master5/7.
+Check generated-document continuation, dirty revoke/regrant and sent outcomes
+against final source. Trace each regression fixture to its intended assertion.
+State operation mapping, source conformance, build, behavioral execution and
+runtime acceptance separately, with the exact pending step or open finding.
+
 ## Completion gate
 
 Do not report the feature complete while a Missing, Conflicting, or Uncertain
@@ -229,9 +253,8 @@ first-activation/retained-tab lifetime against final source, including direct
 links, reload/identity changes, cancellation and print prerequisites. Reconcile
 BE7's conditional detail/approval enrichment and any composed source query
 against unchanged tenant/history, multiplicity/ambiguity and writer guards.
-Pending runtime measurements under an existing source-only boundary are reported
-honestly; they are not silently marked passed or treated as permission to run
-forbidden commands. An index proposal is distinct from an implemented/applied
+Report pending runtime measurements as pending. Use the applicable execution
+authorization for each check. An index proposal is distinct from an implemented/applied
 index, and a source query reduction is distinct from measured speed improvement.
 
 For a completed authorized frontend/full-stack screen implementation, an absent

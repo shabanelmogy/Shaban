@@ -22,6 +22,32 @@ An external system the owner names as a functional reference (for example the Sp
 demo for Rental workflows) is behavioural evidence only, never implementation authority. Its
 access and usage notes are kept outside the governance book: `reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md`.
 
+### Speed first; Odoo fills missing or unclear concepts (owner instruction, 2026-11-02)
+
+Use the collected **Speed guide, explanations and dated frontend code as the
+primary functional reference**. When a scoped concept, workflow or detail is
+missing or unclear after reviewing its relevant Speed slice, consult the pinned
+official **Odoo documentation as a complementary reference**. This applies to
+concepts as well as fields, states, calculations and document relationships; it
+does not make Odoo the first reference for merely similar features. The owner's
+final instruction supersedes the earlier proposed overlap-based split.
+
+Start at `references/speed-analysis/README.md`; the complementary collection,
+scope, provenance, licence and comparison matrix are reached through
+`references/odoo-rental/README.md`. Record the exact Speed gap, Odoo version/page,
+what it establishes, and the resulting matched/partial/missing/conflicting/
+decision-required/excluded row against actual Sigma source, frozen contract and
+guide. Absence from one file or the curated collection is not proof of absence
+from the external product.
+
+These are functional evidence sources, not implementation authority. Preserve
+Sigma's canonical shared owners and frozen contracts. Reference frontend code
+alone does not establish server validation, permissions, accounting, concurrency
+or complete DTOs; Odoo examples do not fill those contracts automatically. Record
+conflicts and precise missing material decisions before dependent changes. Keep
+the current scope and source-only/external-access/verification boundaries; a
+reference lookup does not authorize implementation or broad collection.
+
 ### Reference-product functional detail target (owner clarification, 2026-10-30)
 
 The owner supplies the collected guide, explanations and frontend code of the
@@ -276,7 +302,7 @@ Rules:
    Evidence Table with its screenshot evidence ID and the user request as the
    decision source (quoted, with date).
 3. **Persistence.** A new persisted field is a schema change: follow the
-   migration boundary and tell the owner to run `Add-Migration`. State the
+   migration boundary in Master7 and record the migration or its proposed name. State the
    default or backfill for existing rows; if the user has not given one, it is
    Missing.
 4. **Refactoring an existing screen keeps existing behaviour.** A field, column,
@@ -297,8 +323,8 @@ Rules:
      minimal new element when none fits;
    - records it in the feature artifact as **Reviewer decision (owner standing
      rule)** with the evidence and the alternatives rejected, and reports it;
-   - keeps the migration boundary: a new persisted field is proposed with its
-     suggested `Add-Migration` name, never run.
+   - applies the Master7 migration boundary for a new persisted field and
+     records the proposed or explicitly authorized migration.
 
    The standing rule does **not** cover destroying or rewriting existing data,
    access restrictions, or accounting posting effects. Those still wait for an

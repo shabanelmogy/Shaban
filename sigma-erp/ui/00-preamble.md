@@ -3,10 +3,10 @@
 | | |
 |---|---|
 | Status | **Draft canonical.** Binding for new work; open items in block 30 |
-| Version | 1.104 |
+| Version | 1.105 |
 | Last full source review | 2026-09-21 (the book has not had a full source re-verification since this date) |
 | Targeted source checks | 2026-10-23 — shared `data-table`, `editor-dialog`, `feature-title`, `base-component.service.ts`, `loading.service.ts`, and `src/styles.scss` were re-checked; later entries remain source-only unless they state otherwise |
-| Last content change | 2026-10-30 — UI13 accepted child-close completion, UI21 pending-print cancellation and UI28 context-revision fencing; UI14/19 numeric foundation. Targeted source-only reconciliation; earlier verification scope remains unchanged. History in ../CHANGELOG.md |
+| Last content change | 2026-10-31 — UI19 TaxSettingsService preview facade uses shared represented-decimal money rounding with optional resolved currency precision. Targeted source-only reconciliation; earlier verification scope remains unchanged. History in ../CHANGELOG.md |
 | Verified by | source inspection only — no build, test, or browser run |
 
 Each implementation block has a **reference file** you can open, a

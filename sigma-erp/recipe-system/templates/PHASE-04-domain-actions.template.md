@@ -109,9 +109,23 @@ affected slice rather than authorizing an invented transition.
 
 ### Authorization comparison
 
-| Action | UI presentation rule | Backend enforcement | Tenant/ownership check | Missing control |
+| Action | UI rule and post-confirmation recheck | Backend route, grant/policy and prerequisites | Tenant, saved record and branch capability | Source evidence/open finding |
 |---|---|---|---|---|
 | | | | | |
+
+For an action that validates a balance or source quantity, record both the
+actor's authorized target and the business scope needed by the invariant.
+Check the complete branch effects or shared-source usage under the existing
+write boundary and test with an effective movement outside the actor's document
+scope (BE8). Trace a reason portal and its parent's close state through view
+loss, action grant loss and sent-write settlement (UI28).
+
+Trace each generated document into the next affected read, approval or reversal
+using the actor and branch capabilities permitted by the frozen contract.
+Record actual producer and consumer symbols and their query/write modes.
+Include withdrawal and restoration on a dirty draft and settlement of a sent
+request where applicable. Reconcile the expected values, write count and
+exit destination under Master5/7.
 
 ## Continuous gates
 
@@ -124,7 +138,10 @@ affected slice rather than authorizing an invented transition.
 - Errors preserve actionable server messages and define recovery.
 - Every mutation produces at most one success notification. A feature may own a
   composite final success only when the mutation suppresses the interceptor toast.
-- Refresh behavior respects the owning Grid page or editor state.
+- Reconcile sent-write settlement, notification and refresh separately. If the
+  same session loses write but retains read access, refresh only its current
+  authorized projection after success. A replaced session receives no prior
+  feature outcome (UI26/28).
 - Action labels, focus, keyboard behavior, RTL, and themes are checked now.
 
 ## Expected handoff

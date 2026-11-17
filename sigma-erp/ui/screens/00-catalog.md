@@ -13,7 +13,7 @@ questions below and record the choice in the feature contract.
 
 | Question about the feature | Screen type |
 |---|---|
-| Is the output a read-only document with filters, sections, and totals, with no row actions and no server paging? | [07 Report](07-report.md) |
+| Is the output a read-only document with filters, sections, and totals, with no CRUD row actions? Preserve the existing response/count/output contract under [UI20](../20-report-page.md); transport paging alone does not change the screen type. | [07 Report](07-report.md) |
 | Is it an accounting document — header, lines, totals and a journal (invoice, bill, credit/debit note, receipt, payment, journal voucher)? | [08 Financial document](08-financial-document.md) |
 | Is it a small form that runs one domain action on an existing record (close, extend, void, deliver, log time)? | [09 Action dialog](09-action-dialog.md) |
 | Is the domain intrinsically parent/child, and is the main operation navigating nodes rather than paging records? | [04 Hierarchy tree workspace](04-hierarchy-tree-workspace.md) |

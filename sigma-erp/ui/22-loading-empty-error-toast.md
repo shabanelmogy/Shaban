@@ -52,6 +52,22 @@ default consumers. JVs's status/log dialogs adopt true while its saved approval
 tab keeps false. Reuse these inputs rather than copying read logic or adding a
 feature loader. No API/business/cache contract changes.
 
+**Adopted document journal dialog (source-only,2026-11-10).**
+`DocumentJournalComponent` keeps its existing local dialog progress by default
+through `localReadProgress=true`. A deliberate false uses the page count;
+capture that choice at read start and release exactly that lease in finalize.
+The table suppresses a second loading mask. Its optional `accessRequirement`
+uses the existing session evaluator, original mounted actor, record identity
+and read sequence for Load/Retry/output and deferred close-button focus.
+Expiry cancels the read, clears output and closes this disposable viewer;
+reopening creates a new context. Pass the requirement and blocked state into
+the existing EditorDialog instead of adding a second overlay owner. No write
+or draft lifetime is cancelled. Existing consumers without the optional
+requirement retain their current access contract; this does not certify their
+adoption. Provision Transactions is the first explicit consumer. Source
+specifications cover denied read, rapid expiry, actor replacement, lease
+release and focus cancellation; execution and overlay acceptance are pending.
+
 **Shared transaction-currency display (source2026-10-26).** DocumentCurrency
 feeds its actual base-policy and partner-read flags into ReferenceLookupStatus:
 page-default progress and inherited EditorDialog local scope, with host aria-busy.
@@ -72,6 +88,16 @@ supplier details, financial policy or prices and does not change any form amount
 This general shared adoption is inherited by Sales documents and current consumers; source ownership
 does not establish runtime visibility, latency or currency/accounting acceptance.
 
+**Document-currency conversion preview (2026-11-04).** The same owner uses
+`LOOKUP_LOADING_SCOPE` for its operational conversion read. Page scope pairs
+the subscribed read's start/finalize with the global loader; dialog scope feeds
+`previewReadLoading` into its existing local ReferenceLookupStatus. That read
+ends before opening the confirmation. Keep `previewing`/pending and disabled
+guards across confirmation, without showing a request loader while waiting for
+the user's answer. Replacement, cancellation, HTTP/business failure and destroy
+release the captured read owner. Never cache this quote read or add a feature
+spinner. Source conformance is separate from pending overlay/runtime acceptance.
+
 Inspect the effective route's `showPageLoading` value and the actual shell host;
 starting a global counter cannot display an overlay on a route that explicitly
 suppresses it. Do not copy Dashboard's false value to ordinary lists/editors.
@@ -81,7 +107,7 @@ a duplicate loading StateMessage does not remove those states.
 
 Review route-driven lifecycle as well as HTTP pairing. Same-path query/fragment
 changes, including `writeListRoute` filter/sort/page updates, must preserve
-pending progress. Actual path departure retains the reset defined below. Do
+pending progress. Actual path departure releases requests through their finalizers. Do
 not work around a shared lifecycle mismatch with feature timers or delayed
 starts. Missing request/visibility evidence or a known unapproved mismatch is
 a finding under Master5, not proof of completion. Source inspection establishes
@@ -98,11 +124,11 @@ notifies inside NgZone; its false seed remains synchronous for requireSync
 consumers. Use the service's immediate isLoading getter for imperative guards,
 not the last published visual value. A same-turn start/end must not leave a
 stale busy state, and reset/new starts must resolve from the current count.
-Destroying the owner prevents queued publication and releases its route watch.
+Destroying the owner prevents queued publication.
 
 This is a shared publication boundary, not a feature delay or minimum spinner
 duration. Preserve request timing, paired finalize, overlap counting, query-only
-navigation lifetime, actual-path reset, one visible host and independent write
+navigation lifetime, request-owned finalization, one visible host and independent write
 safety. Do not hide aria-busy, force detectChanges or disable development checks
 to mask NG0100. Evidence: Amortization ngOnInit → LoadingService.startLoading →
 LayoutComponent aria-busy. The shared report tree guard uses immediate state;
@@ -239,15 +265,16 @@ this.service.getList(query)
 fetches, destructive or domain row actions (accept, reject, delete, void),
 editor detail loading, editor save, and report/export data reads. `LoadingService` counts (2026-09-30): the spinner
 stays until every `startLoading()` has had its `endLoading()`, `endLoading()` never goes below
-zero. A NavigationStart whose parsed route-path tree differs from the current
-router URL resets the count; query/fragment-only changes on that same path do not.
-The comparison preserves child, outlet and matrix paths through
-`new UrlTree(router.parseUrl(url).root).toString()`, excluding query and fragment,
-on both the incoming URL and `router.url`. Do not compare only the primary
-segment or reset for every NavigationStart. A filter/sort/page URL update may
-arrive after its HTTP read has subscribed; resetting then would hide active
-progress. This route distinction changes no NavigationActivityService write
-safety or feature busy guard.
+zero. **Request-owned navigation lifetime (source correction2026-11-05):**
+neither NavigationStart nor NavigationEnd resets this anonymous counter.
+NavigationStart may be followed by a refused guard or navigation error, leaving
+the current page and requests alive. NavigationEnd can arrive after target
+requests have started; resetting there would erase their counts too. Existing
+component teardown and UI28's navigation read cancellation release departing
+reads through their own finalize, preserving overlapping target requests.
+Same-path query/fragment changes preserve those reads. Explicit reset remains
+available but is not a routing lifecycle hook or a substitute for finalization.
+Independent NavigationActivityService write safety and feature busy guards remain.
 
 Pair each subscribed start with exactly one end in
 `finalize`. Required routed lookups (for example `loadLookups()` next to
@@ -257,7 +284,7 @@ start/end counts; dialog lookups remain local. This supersedes the earlier rule
 that a slow required lookup never blocks the page.
 For switchMap/deferred reads, begin within the corresponding subscribed request
 lifetime and finalize that same request on replacement/cancel/error/destroy.
-Route reset is not a substitute for the request's finalization. Source review
+An anonymous route reset must not replace the request's finalization. Source review
 does not establish runtime duration or successful overlap/cancellation behavior.
 
 **Local busy flags** for per-action state: `searching`, `saving`, `revising`,
@@ -306,11 +333,39 @@ to 44px through `--sigma-state-loading-size`; padding uses
 `--sigma-state-loading-padding`. These presentation hooks retain shared
 ownership; features do not copy loading markup or palettes.
 
+**Short loading regions (owner2026-11-01).** Keep the critical loading CSS in
+`src/index.html` as the single shared appearance owner. Its absolute/fixed overlay
+is a named size container, with zero-minimum grid tracks, so the card adapts to
+the actual available region rather than the browser height. At region content
+height160px or less, use a horizontal28px ring/text row,8px12px padding,
+zero minimum status height and no inner card scrollbar. At56px or less use
+a20px ring and4px8px padding. Long compact labels ellipsize while retaining
+their full accessible text and translated title on StateMessage's label.
+EditorDialog's save overlay uses8px inset padding. Preserve ordinary card
+appearance outside these constraints, native form scrolling, single-progress
+ownership, busy/error/Retry, request counting and lifecycle. Never solve this
+with a feature-local spinner, fixed modal height, or hiding form content.
+Current shared overlay consumers inherit it without a new screen opt-in.
+Source-only conformance does not establish runtime geometry acceptance.
+
+**Compact local dialog progress (owner2026-11-01 follow-up).** Ordinary local
+loading StateMessages inside PrimeNG dialogs use a horizontal28px ring/label,
+8px gap,8px12px padding,12px text with1.4 line-height and zero minimum block
+height. The critical CSS owner targets the actual local StateMessage loading
+branch without per-feature opt-in. Exclude hosts carrying sigma-loading-card:
+startup/page/save overlay cards retain their region-sized policy above. Keep
+long local labels wrapping with their full accessible text/title; do not add
+size containment or fixed height to intrinsically sized dialog content merely
+to shrink loading. Empty/error appearance, existing request/progress owner,
+busy/disabled/error/Retry, theme, reduced motion and forced colors stay intact.
+No new spinner, loading host, timer or feature palette is introduced. Verify
+compact and long-label dialog loading separately from source conformance.
+
 Consume UI24 theme tokens and UI25 logical sizing. Retain the translated status
 and aria-busy semantics and hide decorative rings from assistive technology.
 Stop rotation for reduced motion; forced colors use system colors. Bound long
 labels/card overflow within the content region and hide the global overlay in
-print. LoadingService counts/path-departure reset (query/fragment updates retain
+print. LoadingService request counts (query/fragment updates retain
 active progress), callers' finalize, local busy guards,
 navigation safety and error handling are unchanged. Source conformance was
 reviewed; browser/theme/responsive/motion acceptance remains pending (UI29).
@@ -473,7 +528,7 @@ The error interceptor never releases an anonymous page count: it did not start
 one. Each subscribed owner releases exactly its own start in finalize on
 success/false/error/unsubscribe. Otherwise an uncounted auxiliary error or a
 double release can hide another pending read. Feedback and401 behavior remain
-with the interceptor; route-path reset, render-safe publication and write
+with the interceptor; request-owned finalization, render-safe publication and write
 navigation safety remain unchanged. No request caching or API/business change
 follows this appearance correction.
 
@@ -673,6 +728,13 @@ colour, spacing and `role`, with shared default messages (`general.loading`,
   … table …
 }
 ```
+
+For compact inline feedback, `StateMessage.compact=true` removes the panel's
+reserved minimum height and padding, uses start alignment and smaller shared
+icon/text sizing, and preserves its alert/status semantics and wrapping. The
+default panel presentation is unchanged; loading keeps its existing geometry.
+The chassis profit/loss report uses this within its filter field and retries
+through its existing Refresh or Export action (2026-11-16, source-only).
 
 The public `StateMessageKind` contract currently accepts only `loading`,
 `empty` and `error`; `warning`/`info` are not supported inputs. A failed detail

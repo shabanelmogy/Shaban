@@ -1,5 +1,13 @@
 ## 17. Dates
 
+**Calendar-day difference (2026-11-02).** Reuse
+`calendarDaysBetween(from, to)` from `shared/utils/date-utils.ts` when a frozen
+feature counts whole local calendar dates. Inputs are validated Date values;
+the helper constructs UTC calendar stamps with setUTCFullYear, avoiding both
+daylight-saving elapsed-hour shifts and Date.UTC's remapping of years0–99.
+Keep the feature's own minimum-day/time-order/financial policy; the helper does
+not authorize a different billing duration, timezone conversion or rounding.
+
 **PrimeNG21 compatibility (2026-10-22).** Import `DatePicker`/`DatePickerModule`
 from `primeng/datepicker` and use `<p-datepicker appDatePicker appendTo="body">`.
 The component's `appendTo` is a signal input: bind it in the consumer template;

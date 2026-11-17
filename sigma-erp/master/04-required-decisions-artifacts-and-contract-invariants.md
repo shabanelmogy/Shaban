@@ -70,7 +70,7 @@ Make every applicable decision before writing code. Record its evidence.
 | 11 | Backend pattern | Choose the simplest valid pattern |
 | 12 | Entity base class | Select the base matching persistence and subscription behavior |
 | 13 | Duplicate key | Use the real business key, update excluding self, and a matching unique index |
-| 14 | FK and delete checks | Validate every required FK and inventory every inbound delete reference |
+| 14 | FK and delete checks | Record required references, branch view or transaction scope, and the coverage of inbound usage checks (BE8) |
 | 15 | Filter contract | Documented keys (case-insensitive binding), clamped page size, `CountAsync` total; feature keys in `ApplyListFilters` |
 | 16 | Translations | Matching keys in English and Arabic |
 | 17 | Service registration | `providedIn: 'root'`; API URLs on `environment.baseUrl` (the one interceptor-enabled `HttpClient`, UI block 1) |
@@ -80,7 +80,7 @@ Make every applicable decision before writing code. Record its evidence.
 | 21 | Maintenance/evolution plan | Broad or cross-cutting changes with ambiguous/current behavior must have a Frozen Maintenance / Evolution Plan before implementation; unresolved required decisions remain Blocked |
 | 22 | Child collection contract | Full snapshot (D4-3): every row sent, saved rows with their id, missing rows removed |
 | 23 | Money and VAT | Server totals; VAT per tax rate on the document, rounded once (D4-4) |
-| 24 | Authorization candidates | Actions needing a permission listed with their endpoints (UI block 26) |
+| 24 | Authorization contract | Actual route/action, backend operation and stable permission key or policy, prerequisites, assignability, record/branch scope and source evidence (UI26) |
 | 25 | Business correctness | Every recommended rule states its business reasoning (block 1) |
 | 26 | Approval presentation and policy ownership | For a model with a real approval contract, freeze its steps, state/history source, eligible actions, tab and status-modal surfaces, and future Settings policy boundary (UI blocks 7 and 13). Do not infer approval for a model that lacks it |
 | 27 | Document action log adoption | For a model exposing Log, record tracked/untracked write coverage, semantic action/reason ownership, tenant-checked root and related-child identities, view endpoint, shared read-only viewer, and historical-detail limits (BE18; UI7). The log does not authorize transitions or replace decision history |
@@ -105,7 +105,10 @@ fields unless a displayed row or action genuinely consumes them.
 | | | | | | |
 
 Key casing is contractual. Verify absence, false, zero, empty string, date, enum,
-and multi-select behavior explicitly.
+and multi-select behavior explicitly. For protected list endpoints, record the
+server-allowed direct filter, grid and sort fields separately, with types and
+aliases. Reconcile access scope and result membership across count, page,
+aggregates and export (BE9).
 
 ### Detail and write contract
 
@@ -115,6 +118,8 @@ and multi-select behavior explicitly.
 
 The client must not send subscription, document number, audit, delete, approval,
 or calculated total fields unless an explicit contract says the user owns them.
+For a field with a conditional grant, record how the final write checks the
+stored baseline and how it handles a concurrent change (BE8).
 
 ### Action-state contract
 
@@ -229,8 +234,16 @@ row without a recorded reason. Do not copy redundant overrides from a reference.
 The quotation/action failure-prevention register lives with the quotation action cycle (UI
 block 7).
 
-Visibility is not authorization. If the app has no authorization mechanism, do
-not invent one and do not describe a hidden control as secured.
+### Authorization contract (UI26)
+
+| Route, surface or action | Method/route and backend owner | Permission/policy, assignability and prerequisites | Tenant, record and branch capability | UI presentation and post-confirmation recheck | Source evidence and open findings |
+|---|---|---|---|---|---|
+| | | | | | |
+
+Cover direct navigation and each consumed action, lookup, export and document
+read. Where access depends on a saved record, use its authoritative scope.
+Record unavailable keys or unadopted paths as gaps. Link to the existing source
+contract and keep the scope proportional to the affected paths.
 
 ### Route and integration contract
 

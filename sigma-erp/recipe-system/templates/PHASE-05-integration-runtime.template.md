@@ -14,8 +14,11 @@ Approved wiring references:
 Reference roles: `main.ts` owns the `bootstrapApplication` entry for the
 standalone `AppComponent`; `app.config.ts` owns the root providers, including
 the single interceptor-equipped `HttpClient` and hash-based router; and
-`app.routes.ts` owns the root route tree and the transitional `AuthGuard`
-access boundary from UI block 26. Existing lazy feature NgModules, including
+`app.routes.ts` owns the root route tree and authentication `AuthGuard`;
+the current-session child guard and explicit route/action adoption use the
+shared owners and frozen contract from UI block26. Do not assume authentication
+alone grants feature access or that all existing actions are already adopted.
+Existing lazy feature NgModules, including
 LayoutModule, are inspected as interoperability consumers when relevant, not
 copied as root composition or feature-level `HttpClient` providers.
 
@@ -103,7 +106,9 @@ database execution is authorized by this gate.
 
 Reconcile UI22's active-route loading matrix against LoadingService, the single
 shell host and effective showPageLoading. Distinguish query/fragment-only updates
-from path departure and trace route reuse/legacy destinations. Preserve local
+from path departure and trace route reuse/legacy destinations. Request finalizers
+release departing reads; do not reset anonymous counts at NavigationStart or
+NavigationEnd, which can erase retained/target requests (UI22). Preserve local
 busy and write-navigation safety; do not copy Dashboard's explicit silent-page
 metadata into unrelated screens or add a competing loader to mask a mismatch.
 Apply UI22's general single-visible-owner precedence to actual rendered page,

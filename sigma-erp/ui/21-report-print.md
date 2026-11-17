@@ -56,6 +56,23 @@ and clears its own prepared rows. Equipment TimeSheet adopts this public API;
 existing `print` callers retain their behavior. No feature scheduler or private
 frame access. Verify actual browser timing separately.
 
+For permission-scoped output, bind the queued print to its read requirement
+through the session's optional cancellation notifier. Include expiry of the
+owning auth session and data context. On a revision that clears the prepared
+rows, cancel the pending frame as well. Pass `canPrint` when access can change
+before the cancellation effect runs. The shared session calls it immediately
+before opening the browser dialog and releases `printing` if it returns false.
+Check loss of access after Print is pressed and before the scheduled frame
+runs. An opened browser dialog keeps its existing `afterPrint` lifecycle.
+
+Bind Print to the revision and applied query that produced the published
+rows. Verify that identity at click and in the final frame. Capturing the
+current revision at click alone can accept rows published by an earlier
+request before the refresh effect clears them. If the authorized report query
+changes during an opened browser print dialog, defer its fresh read until
+`afterPrint` when the same context can still read. Cover both event orders
+with the existing print session (UI28).
+
 **Dialog reports (2026-10-03).** A read-only EditorDialog preview can opt into shared print
 isolation with `dialogClass="sigma-report-print-dialog"` (alongside its feature class) and
 `printSession.print({ bodyClasses: ['sigma-dialog-print'] })`. The shared stylesheet hides the

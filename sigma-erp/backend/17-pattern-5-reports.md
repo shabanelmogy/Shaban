@@ -303,3 +303,24 @@ on every request · tenant predicate verified against the stamping write path ·
 the filter absent returns the same rows as before it existed.
 
 ---
+
+
+### Explicit incremental calendar report windows (owner2026-10-31)
+
+When the owner requests append-on-scroll transport, keep the complete endpoint
+for full output and add a bounded page contract; UI20 owns its report semantics.
+Reuse the same validated filter/tenant/live/foreign-key query source. Calendar
+reports count slots from the accepted inclusive date range, not only activity
+rows; preserve zero rows, chronological order and existing hour labels. Bound
+the database aggregate to the requested slot timestamp window and construct
+only those output rows, rather than materializing a complete report then Skip.
+Limousine Utilization defaults to120 rows, caps at240 and normalizes negative
+offsets to0; its366-day bound yields at most8784 hourly or366 daily slots.
+
+Return the full-period SQL count/sums on offset0 only and nullable summary on
+later pages; never compute totals from a partial window or cache financial data.
+Independent aggregate reads run serially on the same DbContext. Preserve the
+original complete endpoint's output and calculations. Multiple live page reads
+do not imply transactional snapshot consistency. Record query boundaries and
+FK preflights per page, index coverage/cost hypotheses and pending SQL-plan/IO/
+timing evidence; no implicit schema/index/migration authorization follows.

@@ -225,6 +225,12 @@ preservation. Evidence is actual source behavior, not shared class names alone.
 | Escape | | | | |
 | Route/back | | | | |
 
+For a nested reason or confirmation dialog, check the parent exit guard and
+child lifetime on withdrawal of View and of the action grant independently
+(UI28). In the write contract, check stored and replacement branch activity
+where required and tie retained-reference exceptions to the same saved child
+row and value (BE8).
+
 ### Child/upload contract
 
 | Item | Client draft state | Persisted by | Validation | Reconciliation/cleanup | Failure recovery |

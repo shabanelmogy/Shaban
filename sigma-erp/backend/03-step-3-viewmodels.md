@@ -167,6 +167,13 @@ registered in `Program`) trims every string of a request body as it is deseriali
   server placeholder/markup/length validation still applies. Do not disable
   trimming for all `Value` properties or accept server-owned request fields.
 - **Passwords:** a property whose name contains "Password" is left as sent.
+- **Exact financial lexemes (2026-11-04):** the dated-rate Add/Update,
+  rate-quote and journal-currency-snapshot contracts retain their raw strings
+  in this resolver. Their strict parsers must reject whitespace instead of
+  accepting a normalized price/date/quote. This is a finite type exception;
+  names and ordinary form text keep trimming. Exact decimal JSON converters
+  validate raw tokens before setters and need no string-trimming exception.
+  Evidence: currency rate/preview API trace; source-only, runtime pending.
 - **Email-template content (2026-10-17):** exact
   `EmailTemplateAddVM.EmailBody` keeps authored HTML/whitespace unchanged.
   Exact `EmailTemplateAddVM.Subject` also bypasses the resolver so its

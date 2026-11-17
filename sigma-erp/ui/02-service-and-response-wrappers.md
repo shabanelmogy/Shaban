@@ -20,6 +20,19 @@ their direct contracts, apart from the explicitly approved display-only Dashboar
 snapshot exception below. Do not cache all GET requests or infer eligibility from
 an endpoint's name.
 
+**Authorization revision and opted-in lookup freshness (verified2026-11-06).**
+An actor's permission/branch revision can change while identity, tenant and
+working branch stay the same. `ReferenceLookupCacheService` observes the shared
+`AccessViewPolicyService.revision`, and checks it synchronously before a cached
+read. A changed revision marks existing opted-in entries stale, cancels their
+older read generation and uses the same retained-data refresh/watch owner. It
+does not reset editor drafts, cancel sent writes, or opt additional financial or
+operational reads into caching. Cache values are display data, never proof of a
+branch grant. The branch selector still uses its operational current-branch
+owner, and the server evaluates the current scope on each request. Evidence:
+reference-lookup-cache.service.spec.ts regression fails on an unchanged cached
+result before the change, then the focused suite passes after revalidation.
+
 Extend `BaseService` and pass the controller name once.
 
 ```ts
@@ -204,6 +217,14 @@ policy caller or a background watch that changes an open document's precision.
 The policy retains its own direct service/cache contract, `invalidate()` and
 server-owned precision/rounding; it is not opted into ReferenceLookupCacheService.
 Failed reads preserve draft values and remain actionable through Retry.
+**Policy memo recovery (2026-11-05):** coalesce pending requests and retain only
+successful nonnull policy objects. Failed Result/malformed bodies, HTTP failures
+and navigation's empty completion must release the memo for the next load; keep
+the failure envelope/error for current subscribers. Compare request identity so
+an older forced/feedback-mode request cannot clear a newer memo. Preserve the
+existing context cancellation, explicit force and currency-write invalidation.
+Evidence: FinancialNumberPolicyService and its request-recovery spec; execution
+and runtime acceptance remain pending.
 
 Source evidence: `Administration/Currency/services/currency.service.ts` and
 `shared/service/financial-number-policy.service.ts`; owner compilation and
@@ -400,6 +421,15 @@ from a watch callback. Initial detail/bootstrap merges keep their existing role.
 Do not set defaults, emit control changes, cascade supplier changes or recalculate
 source quantities/tax/finance from a cache emission. Retain options after refresh
 failure and offer per-failed-source retry without an automatic retry loop.
+
+For an owner that remains mounted across tenant/session changes,
+`ReferenceLookupBindings.clear()` releases its current source subscriptions and
+resets their aggregate loading/error/Retry state before a fresh-context bind.
+The owner first cancels old finite reads and clears old option/selection arrays;
+clear is not permission to retain an ID from a previous context. Destruction
+uses the same cleanup. The Accounts report owner adopts this reset while
+keeping non-opted-in sources on direct reads (UI20,2026-11-05). Runtime/network
+acceptance remains separate from source evidence.
 
 **Retained editor choices (source correction2026-10-26).** The final optional
 `ReferenceLookupBindings.bind` argument `disableRetainedOptions` defaults false,

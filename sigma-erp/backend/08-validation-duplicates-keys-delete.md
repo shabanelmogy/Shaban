@@ -148,6 +148,66 @@ Rules:
 - for a child collection, uniqueness is usually **within the parent**, so include
   the parent key in the predicate.
 
+### Shared transaction lock execution (currency implementation, 2026-11-04)
+
+The SQL command and `Unique:{owner.FullName}:{subscriptionId}` resource construction
+live in `SiGma.Helpers/Helpers/TransactionWriteLock.cs`. `UnitOfWork.ExecuteUniqueWriteAsync`
+retains transaction ownership and its localized result contract. A final persistence
+boundary that must participate in the same invariant uses the helper with the same
+owner type and authenticated subscription inside the current transaction; it does
+not copy the SQL, start an independent connection, commit an outer transaction, or
+replace this lock with an in-memory guard. The helper returns SQL Server's lock
+result; its caller owns timeout/conflict presentation and cancellation propagation.
+Source evidence: UnitOfWork and CurrencyWriteLock callers. Runtime race/deadlock
+acceptance remains owner-pending; arbitrary SQL and future bypass writers remain
+outside the participating-writer guarantee above.
+
+### Conditional grants and concurrent writes
+
+When an update grant depends on whether a stored field changes, check the
+value that the write will actually replace. Keep the operation's declared
+prerequisite in the authorization catalogue. Bind the final comparison to the
+write through a shared transaction boundary or an optimistic guard that
+rejects a changed baseline. A successful action-filter precheck alone leaves
+time for another writer to change that value. Apply the same invariant to each
+participating writer. Use the existing transaction owner where possible.
+
+When a catalog update can race with a soft delete, guard the live state at
+persistence or coordinate both writers through the same boundary. Limit update
+mapping to its owned fields so a stale edit cannot restore deletion or audit
+state. Review the outcome of a conflicting write separately from normal access
+denial.
+
+### Branch activity, retained references, and complete write invariants
+
+Treat transaction access and business eligibility as separate checks. If the
+feature contract requires active branches, validate activity on each required
+branch at the write boundary, including the stored branch and replacement
+branch for a move. Exercise the administrator path because its branch snapshot
+can include inactive branches. If the contract allows an inactive reference
+to remain unchanged, prove retention with the same owned persisted row ID and
+the same reference value. An added or replaced child row must meet the current
+reference rules even if another stored row used that value.
+
+For approval, reversal and other writes that depend on balance, remaining
+quantity or prior use, identify the business scope of the invariant before
+choosing the query. Authorize the actor, operation and target record or branch
+first. Under the existing write boundary, calculate the complete relevant
+effects for the authorized target branch or proven shared source within the
+authenticated tenant. A transfer can affect that branch even when the actor
+cannot open the full transfer. Consumption of a shared request can span
+branches the actor cannot transact in. Scope these internal reads to the
+authorized branch or proven source and the needed records and fields, with
+tenant, live-state and effective-status predicates. Return only the allowed
+result and validation feedback. Preserve document access rules and apply the
+feature's accepted policy for unattributed rows.
+
+For applicable regressions, exercise the ordinary actor through the real
+transaction scope with an effective movement crossing that scope. Check
+inbound and outbound effects, consumption at a shared source from another
+branch, and the same target under administrator access. Compare the balance or
+consumed quantity for authorized actors operating on the same data.
+
 ### Advisory unique-value preflight (owner decision 2026-10-03)
 
 Step forms may check a declared unique field after entry through authenticated
@@ -249,13 +309,28 @@ Also validate:
 - **selectability**, when inactive rows exist but must not be chosen — add
   `&& x.IsActive == true` to the predicate.
 
-A client-supplied navigation object is never proof of anything. Read the id and
-verify it.
+Verify the submitted ID against the tenant, live-state and selectability
+rules for that reference. Use the feature's documented activity predicate for
+new assignments and define whether an unchanged historical reference can stay.
+Cover an inactive, nondeleted row separately from a deleted row.
+
+A branch on a tenant-shared definition can be a reference rather than an
+execution branch. When its contract requires branch view access, validate it
+against that access and the tenant's active branches. Trace the actual HTTP
+action through branch-scope selection and the EF query. A write request may
+enable transaction-only filtering even while it validates a readable reference.
+An operation that registers a movement still requires its approved transaction
+scope. [Permissions and route access](../ui/26-permissions-and-route-access.md)
 
 ### 3. Reference check before delete (automatic, 2026-10-01)
 
-A record that something still points at is never deleted. The base finds those references in the
-EF model, so nobody lists them by hand and a reference added later is checked with no code.
+The base discovers inbound references from the EF model. For a tenant-shared
+definition, live references in every branch of the same tenant must block
+deletion. Check whether the actual EF query filters can hide a dependent row
+from this invariant. Where necessary, use a narrowly scoped existence check
+that preserves tenant and live-state filtering. Keep the actor's normal access
+checks on the record being removed. Return a generic in-use result for a
+reference the actor cannot view, with no document or branch details.
 
 `RemoveWithChildrenAsync(id, ct, owned…)` does the whole delete:
 

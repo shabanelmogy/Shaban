@@ -27,12 +27,14 @@ feature's existing report and keep execution authorization unchanged.
   target gap. Report bounded fixes separately from reference equivalence;
   never claim the latter while required details remain unaccounted for.
 - Grid columns and action needs ↔ frontend list model ↔ backend ListVM.
-- Filter controls ↔ serialized keys ↔ backend exact lookup keys.
+- Filter controls ↔ serialized keys ↔ server allow-lists for direct filters,
+  grid fields and sort ↔ tenant/branch scope, count, aggregates and export (BE9).
 - Page request ↔ `CountAsync` total ↔ response metadata ↔ Grid pager state.
 - View fields ↔ Detail DTO.
 - Form controls ↔ Add/Update DTOs ↔ server ownership rules.
 - Save flow ↔ validation ↔ transaction ↔ response ↔ close/refresh.
-- Actions ↔ backend authorization/state rules ↔ confirmation/input ↔ recovery.
+- Actions ↔ effective operation grants, prerequisites and persisted record/branch
+  capability ↔ backend enforcement and state ↔ recheck after confirmation ↔ recovery.
 - Approved-reference action inventory ↔ target classification ↔ complete
   backend-to-UI vertical slice for every Supported action.
 - Override-justification table ↔ every scoped service/controller `override`.
@@ -48,12 +50,47 @@ feature's existing report and keep execution authorization unchanged.
 - Successful mutations ↔ exactly one success-feedback owner; failures ↔ exactly one error owner.
 - Changed feature code ↔ the shared pieces of its blocks (block 5 *Shared pieces, not feature
   copies*), with feature copies removed.
-- Restricted actions ↔ the *Authorization candidates* list in the review (UI block 26).
+- Authorization contract ↔ active route/request and server owner ↔ least-privileged
+  access, including view-only branches where applicable (UI26, Master4).
+- Sent mutation ↔ settlement of the original write/draft ↔ result visibility ↔
+  refresh for the same session that still has read access. Cover write revocation
+  during the request and session replacement as distinct cases (UI26/28).
+- Authorization regression evidence for applicable paths ↔ actual HTTP action
+  and denial layer (BE6) ↔ complete branch effects and shared-source quantities
+  under the write boundary, activity and retained-row identity (BE8) ↔ bounded
+  authorized queries and pagination (BE9) ↔ nested local exit, open-report
+  grant changes and print row identity (UI21/28). Use fixtures that reach the
+  guard being checked (Master5).
+- Authorization handoff ↔ operation mapping, latest source-review findings and
+  their disposition, schema readiness and runtime acceptance. Record pending
+  evidence explicitly and link it from the existing coverage record (UI26).
 - Every decision taken ↔ its business reasoning (block 1).
 - The change ↔ the shared-extraction gate (block 5): what was extracted, or why nothing qualified.
 - When a Maintenance / Evolution Plan was required, Frozen target contracts ↔
   final source behavior, migration/compatibility decisions, implementation
   slices, and verification evidence.
+
+### Scenario reconciliation and completion wording
+
+Reuse the feature's existing reconciliation rows for the applicable scenarios
+chosen under Master5. Each row names the actor and branch capabilities, actual
+entry path and affected producer/consumer symbols, expected state, source
+evidence or finding, and executed check or pending acceptance. A defect
+corrected in a producer requires a fresh comparison of its affected consumers.
+Retain a reference to the latest finding and its disposition.
+
+Distinguish operation mapping, source conformance, build, executed behavioral
+checks and runtime acceptance in the report. A row is source-conformant when
+the compared final symbols implement its contract and no known contradiction
+remains in that path. Missing evidence is recorded as uncertain. A successful
+build establishes compilation for its target. Test execution requires its own
+result and runtime acceptance requires its own evidence.
+
+When an in-scope source defect remains, report the affected path as incomplete
+with its next action. When source work is reconciled and behavioral or runtime
+checks remain pending, say so in the completion sentence. A coverage count
+records operation mappings and carries the linked review status separately.
+Preserve the existing task and execution boundaries.
 
 ### Screen user guide completion gate (owner instruction, 2026-10-08)
 
@@ -98,7 +135,7 @@ a bulk retrofit of screens outside the current task.
    record the guide handoff requirement; screen implementation completion
    includes the guide before final reconciliation.
 
-### Source-only diff review
+### Scoped diff and build review
 
 Before completion:
 
@@ -115,8 +152,9 @@ Before completion:
 - check that the required in-app guide exists and matches the final screen,
   including its module menu link and English/Arabic content;
 - preserve unrelated changes;
-- distinguish source verification from build, runtime, browser, and database
-  verification.
+- record source verification and scoped local build results separately. A test
+  project build checks compilation. Keep unexecuted tests, runtime, browser and
+  database checks explicitly pending.
 
 ### Final report
 
@@ -146,17 +184,35 @@ contract blocks required behavior.
 
 Before the report, list every change in the diff to an entity property or its nullability, a
 `[MaxLength]`, an EF `HasMaxLength`/`IsRequired`/index/relationship configuration, and every
-removed column. Any one of them makes `Add-Migration <Name>` a required report line, with the
-reason and the data to check before applying it: values longer than a new limit, nulls in a
-column that becomes required, a data copy before a column is dropped. A task with such a change
-cannot close without that line.
+removed column. Report the applied migration ID or the proposed `Add-Migration <Name>` command,
+along with the reason and the relevant data checks. Examples include values longer than a new
+limit, nulls in a required column, and a data copy before dropping a column.
 
-### Suggested migration name and commit messages
+### Migration handoff and suggested commit messages
 
-The agent never creates a migration or a commit; it suggests the names the owner
-uses, so every change arrives with a ready, consistent name.
+A direct request to create or apply an EF migration authorizes the requested
+step and its verification. Creation includes the generated designer and model
+snapshot. Review the model diff and generated SQL, verify the target database
+and applied baseline, then apply the explicit migration ID. Verify the new
+history entry, constraints and affected rows. Record the target, migration ID,
+data handling and remaining runtime checks. For an authorized experimental
+data backfill, use a valid same-tenant reference and document how it was chosen.
 
-**Migration name** — only when the report says `Add-Migration` is required:
+**Experimental-data operation evidence (owner,2026-11-16).** Master1 grants
+standing permission for task-scoped reads, writes, data repairs and deletion of
+experimental duplicates in confirmed Sigma local/hosted development/test
+databases. Do not request that permission again. Record the actual server/
+database/environment, tenant and record-selection rule, executed operation and
+affected row counts, resulting reference/financial/permission checks and
+remaining uncertainty. Keep proposed commands and pending schema work separate
+from executed data changes. This data permission does not authorize production/
+out-of-project targets, schema changes/migrations, a full data reset or database
+drop; the explicit migration handoff above remains in force.
+
+For a pending schema change, record the reason and proposed migration name.
+Commit messages remain suggestions.
+
+**Migration name** — use these conventions for proposed and created migrations:
 
 - PascalCase, starting with a verb that names the schema change: `Add`,
   `Remove`, `Rename`, `Change`, `Link`, `Create`, `Drop`. Describe the schema
@@ -167,7 +223,7 @@ uses, so every change arrives with a ready, consistent name.
 - One migration per coherent schema change. When one feature change touches
   several entities, name the feature change, for example
   `AddApprovalStatusToWorkshopDocuments`.
-- Give the ready command: `Add-Migration <Name>`.
+- For a pending migration, give the ready command `Add-Migration <Name>`.
 
 **Commit messages** — one per affected repository, because the frontend, the
 backend, and the documentation layer are separate repositories:

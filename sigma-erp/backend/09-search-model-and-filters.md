@@ -2,6 +2,43 @@
 
 > **Status: Canonical**
 
+### Authorization boundary for list inputs
+
+For a protected list, reconcile three server-side allow-lists: direct filter
+keys, advanced grid fields and sort fields. Use typed values and explicit
+server-owned aliases. Reject unsupported inputs before applying them to a query.
+A lookup grant authorizes the documented selector and its approved fields. A
+client-supplied entity member or navigation path needs its own reviewed field
+mapping before it can influence results.
+
+Apply the same authorized field and record scope before row selection, count,
+aggregates, ordering and paging. Export uses that scoped query contract and the
+applied filter snapshot. Review the endpoint for a user with the minimum list
+and selector grants, including requests carrying an unsupported field or alias.
+The response projection controls which values are returned. Filters and sort
+also control what a caller can infer from result membership, totals and order.
+
+For a filter on a reference ID, use the same live, authorized related records
+as the label and sort, where the contract limits the reference to visible
+records. A raw foreign-key predicate can still affect membership or totals for
+a hidden or deleted reference. Verify the filter, count and sort with that
+reference unavailable. For a paged endpoint, check omitted and partial
+paging inputs against the documented defaults and maximum, including inherited
+service behavior. All-page report or export reads still use the scoped and
+bounded page contract.
+
+When adopting a custom endpoint, inventory the inherited reads on its
+controller and other controllers that expose the same records. Record each
+actual grant and projection, including generic list, detail, navigation and
+export paths. The custom endpoint's allow-list covers only that endpoint.
+Assign each approved direct key to one predicate owner. When reusing the generic
+predicate, pass the normalized value. When a typed feature predicate owns the
+key, keep it out of generic property reflection. Check the composed query for
+duplicate conditions and align the live-row predicate with the detail and
+lookup contracts. Cover padded text and nullable live-state flags where the
+schema permits them. Verify projected grid keys and sort fields independently
+before count, paging and export.
+
 ### Shared advanced column rules (owner-approved, 2026-10-23)
 
 Reserve `Filters[grid]` for the shared JSON `{ columns: [{ field, operator,
@@ -15,6 +52,20 @@ equals/notEquals/lt/lte/gt/gte; dates use calendar `yyyy-MM-dd` with
 dateIs/dateIsNot/dateBefore/dateAfter. Enum/bool equality uses stable typed values,
 never SQL comparisons to translated labels. Database collation retains string
 comparison ownership; do not promise JavaScript collation as SQL behavior.
+
+**Exact monetary filter opt-in (2026-11-04).** `GridFilter.Apply` accepts the
+optional named `exactMoneyFields` dictionary of server field names and maximum
+scales0–6. Only matching decimal projections adopt strict JSON string values
+through `FinancialNumberPolicy.TryParseCurrencyAmount`; the same six numeric
+operators remain parameterized decimal comparisons before count/page. Reject
+JSON numbers, exponent/grouping/whitespace/plus/excess scale for opted-in fields;
+do not silently omit a malformed rule. Null keeps its existing explicit equality
+semantics. Other scalar/decimal fields retain their existing numeric contract.
+The client must retain raw monetary text in UI6's serializer, including invalid
+nonempty whitespace, so the server actually validates it. The first remote
+adopter is JournalVoucherListVM.Amount with scale6 comparison thresholds;
+its separate nonnegative minAmount screen filter uses ledger scale2. Neither
+comparison field changes stored precision or recalculates document money.
 
 Filter the existing tenant/soft-delete-scoped query before count/order/page and
 reuse the same applied snapshot for export. The compiled response projection's

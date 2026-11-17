@@ -1,7 +1,142 @@
 # Sigma documentation changes
 
+## 2026-11-13 — Authorization scenario evidence and completion wording
+
+Master5/7 and the phase templates require applicable producer-to-consumer
+scenarios, dirty withdrawal/restoration, sent-write and exit outcomes, and
+fixture reachability evidence in the existing review. Completion wording
+records operation mapping, source conformance, builds, behavioral execution
+and runtime acceptance separately. The Sigma skill and reusable authorization
+prompt route these checks.
+
+## 2026-11-13 — Authorization regression checks from Item Issue review
+
+BE8/9, UI21/28 and Master5/7 document complete write invariants under scoped
+access, active branch and retained-line validation, authorized filter and
+paging scope, nested exit ownership, report query and print identity, and
+fixtures that reach the intended guard. The phase templates route these checks
+and reuse BE6 for actual HTTP actions. Source findings remain tracked in the
+[Item Issue review](<F:/My Work/Sigma/reviews/Authorization/AUTHORIZATION_159_SOURCE_REVIEW_20261113.md>).
+
+## 2026-11-13 — Authorization review contract
+
+UI26, BE9 and Master1/4/7 align live instructions and review templates with
+current route and backend permission owners. Review evidence now covers allowed
+query fields, persisted branch capability, sent-write settlement and refresh,
+and separate coverage, review, schema and runtime status. Earlier adoption
+notes are linked from the historical archive.
+
+## 2026-11-10 — Adopted journal dialog lifecycle
+
+UI22 and the Sigma skill route DocumentJournal's optional access requirement,
+mounted actor/record and read expiry through the existing session evaluator.
+This disposable viewer cancels, clears and closes on expiry, including deferred
+focus. Its existing local dialog progress remains the default; explicit page
+progress captures and releases one lease. Provision Transactions adopts the
+inputs; other consumers retain their own contracts. Source specifications are
+written but unexecuted, and runtime/overlay acceptance remains pending.
+
+## 2026-11-06 — ERP permission enforcement boundary
+
+UI26 and the Sigma skill distinguish the source-implemented ERP permission
+resolver/filter from authentication-only frontend routes. Administrative role/
+direct-grant snapshots do not establish a session permission API. The fixed
+reviewed operation catalogue, fail-closed unknown operations and linked actor
+checks are recorded in the frozen feature contract; build/runtime and owner
+schema acceptance remain pending.
+
+## 2026-11-05 — Currency ledger and settlement adoption boundaries
+
+BE15 documents exact read aggregation and the existing policy's pure settlement,
+incremental revaluation and weighted carrying-value arithmetic. UI20 records
+opening/totals-only output eligibility and mounted report context cleanup; UI2
+records explicit lookup-binding cleanup. The Sigma skill routes these owners.
+Base and original currency summaries stay separate. Arithmetic and a dated quote
+do not authorize foreign posting without dated events, settlement provenance and
+revaluation contribution persistence. Source-only; owner runtime acceptance is
+pending.
+
+## 2026-11-04 — Exact journal reads and monetary comparisons
+
+UI5/6/19, BE9 and the Sigma skill document opted-in decimal-string list/journal
+readers, scale6 BigInt local comparisons, strict raw remote filter strings and
+decimal SQL predicates. Read aggregates may exceed a single amount without
+enlarging input/storage bounds. JournalVoucher and the shared voucher-journal
+consumers adopt together; legacy numeric consumers keep their existing gates.
+Source/API metadata review is separate from pending owner runtime acceptance.
+
+## 2026-11-04 — Exact financial request lexemes
+
+BE3 and the Sigma skill record the narrow dated-rate/quote/snapshot exceptions
+in TrimIncomingStrings so strict parsers see the submitted lexical values.
+Decimal JSON converters validate raw tokens before setters. Ordinary text
+keeps its current normalization. HTTP/runtime acceptance remains pending.
+
+## 2026-11-04 — Exact currency money foundations
+
+BE15/UI19 and the Sigma skill document strict monetary text, BigInteger/BigInt
+intermediates, conserved positive allocation remainder, and currency precision in
+the existing money/grid/export owners. Legacy numeric DTOs, local grid filtering
+and foreign posting retain their explicit adoption gates. Source and algebraic
+review are separate from pending owner runtime acceptance.
+
+## 2026-11-04 — Shared transaction lock execution
+
+BE8 and the Sigma skill route the service and persistence participants through
+TransactionWriteLock, preserving resource identity, authenticated tenant,
+cancellation, conflict handling and outer transaction ownership. Evidence is the
+UnitOfWork/CurrencyWriteLock source; runtime concurrency acceptance remains pending.
+
+## 2026-11-02 — Internal Settings group tabs
+
+Owner follow-up turns repeated Settings groups into internal horizontal tabs
+under the existing main section navigation. UI13 records the EditorTabs
+companion's projected persistent templates, unique IDs, validation reveal,
+single-scroll and print ownership. Six consumers reuse it without changing
+read/save contracts; source checks and owner runtime acceptance remain separate.
+
+## 2026-11-02 — Settings inner field composition
+
+Owner follow-up refines the reviewed Settings content with existing compact
+FormSection groups, separate scalar/Boolean grids sized by the actual content
+pane, full wrapping labels centered vertically with their checkbox, and shared
+DDA mapping allocation. UI1 and the skill record ownership and responsive
+thresholds. Existing tab/form/read/save contracts remain; source checks and
+owner visual/runtime acceptance are reported separately.
+
 Current verification scope and versions are in the book preambles. The archive
 is historical evidence and does not override the current canonical blocks.
+
+## 2026-11-01 — Settings workspace and usage reference
+
+Owner-authorized Settings presentation work adopts the existing shared shell,
+titles, fixed actions and vertical EditorTabs for Common, Document Number and
+Fields. UI1 records shared parent/child and internal allocation/focus ownership;
+UI13 supersedes the earlier API-Key-only parent exception. BE16 and the skill
+route a dated24-page settings explanation, field catalog and actual-consumption
+examples for future screen reviews. Save/API/domain and migration boundaries
+remain unchanged; source checks do not certify visual/runtime acceptance.
+
+## 2026-11-01 — Compact instruction and skill routing
+
+Owner-authorized documentation Audit8 remediation keeps the workspace entry
+loadable and its critical execution boundaries early, with the complete previous
+workflow text in a mandatory live companion. Master8 records the combined
+instruction contract and selective skill routing. The screen skill now points
+to complete current owning blocks rather than repeating implementation detail
+and historical revision rows; exact previous files remain in a labelled archive.
+The catalog preserves paged reports under UI20, and the README distinguishes
+process skills such as Superpowers from Sigma domain and artifact skills.
+No application, financial contract, execution permission or Codex config changes.
+
+## 2026-10-31 — Tax preview facade conformance
+
+UI19 now records TaxSettingsService.previewTax's delegation to shared money
+rounding and its optional resolved currency precision, retaining the compatible
+two-place default. Limousine's source audit found the old epsilon/multiply copy
+inside that facade. Input scale validation and backend tax ownership remain
+separate. The skill and derivative packets track this source correction;
+compilation and runtime acceptance remain pending.
 
 ## 2026-10-30 — Reference-product functional detail as the per-screen target
 

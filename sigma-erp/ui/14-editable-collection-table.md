@@ -1,5 +1,30 @@
 ## 14. Editable collection table
 
+**Row-specific removal guards (2026-11-07).** The existing EditableRows utility
+accepts optional `canRemove(row)` in addition to the editor-wide canMutate. It
+checks the actual row before a confirmation and again before removal, after
+resolving its current index. `onRemoving(row,index)` runs only for an accepted
+actual removal, immediately before removing it. Use it for local attachment
+tracking, not an extra DELETE/confirmation implementation. Fleet documents
+require the editor grant plus cleanup access only for a row with a file;
+pathless rows retain ordinary removal. Keep context cancellation, form freeze,
+parent dirty state and existing onRemoved behavior. Omitted hooks preserve the
+existing contract. UI18 owns Media request lifetimes and deferred cleanup.
+The table's optional `removeAllowed(row,index)` applies that same row rule to
+the default Remove button and rechecks it inside remove(index), including
+direct calls. It hides an unavailable row action without removing the row or
+its data; editable/removeDisabled and projected custom actions retain their
+existing ownership. Reuse a feature's one row predicate for this input and
+EditableRows.canRemove rather than duplicating rule logic or file action markup.
+
+**Shared Add-action clearance (owner2026-10-31).** The existing collection
+toolbar-actions group supplies6px block and8px inline padding with border-box
+sizing. This leaves space around Add and its peer actions in every consumer,
+including Transportation's schedule, without changing the shared button's
+geometry,10px action gap, wrapping, split-toolbar order or print suppression.
+Do not add a per-screen margin or opt-in for this shared presentation. Narrow
+widths, RTL and both themes still require owner visual acceptance.
+
 **Shared first-cell freeze (owner slice, 2026-10-23).** The shared editable
 collection table freezes its first rendered cell at the logical start of its
 existing native row frame while horizontal scrolling. The existing projected
@@ -151,15 +176,13 @@ The shared component renders each `<tr>` and tracks the row object. The
 not project another `<tr>`. A reactive row can wrap those cells in
 `<ng-container [formGroup]="control">` because the container adds no DOM node.
 
-Attachment rows retain one34px control track (UI18): file box and projected
-View align horizontally, and the shared table's Remove uses that same height
-at the top of its action cell. FieldError grows below the track without moving
-Remove down to the middle of the larger row. Keep actual td/table semantics
+Attachment rows retain34px file/View controls (UI18) and matching Remove height.
+Every cell centers vertically in the full row, including the file/View/error
+group and neighboring text/checkbox/actions. FieldError grows below its control
+in normal flow; it is part of the centered group. Keep actual td/table semantics
 and the existing removal/confirmation output; never turn the td into a feature
-flex container or duplicate row Delete inside the file control.
-The2026-10-23 validation-row refinement below extends this first-track behavior
-to all cells in FieldError/FileField rows; the global middle rule requires the
-shared scoped important override. Attachment tables
+flex container or duplicate row Delete inside the file control. The owner's
+2026-10-31 correction below supersedes the old first-track alignment. Attachment tables
 retain fixed table layout so a long unbroken file name shrinks/ellipsizes within
 the existing column allocation; retain explicit colgroup widths and min-width
 scroll contracts. Do not change unrelated text-only table layouts.
@@ -415,37 +438,25 @@ part of the row payload, and the backend value replaces the preview after save (
 "Backend, mapping, and calculation rules"; block 19 *Money and tax in forms*). Show it as text
 or a `readonly` input, not as an editable control.
 
-**One control height and stable validation rows (owner correction,2026-10-23).**
+**One control height and uniform vertical centering (owner correction,2026-10-31).**
 Inputs, dropdowns and calendars retain exactly --sigma-editor-control-height
-(34px). UI6's middle default still owns headers, empty rows and body rows
-without inline feedback/FileField. For every shared editable body row containing
-`app-field-error`, existing `.sigma-field-error` feedback, or `app-file-field`, the shared stylesheet top-aligns every
-cell with a scoped important override of the global middle rule. A wrapped
-error expands below the first control line without lowering neighboring
-controls, read badges, files or generated actions. Preserve table/td display,
-7px/9px cell padding, full inline errors, horizontal alignment and payloads.
+(34px). Every header/body/footer cell follows UI6's universal middle alignment,
+including rows with `app-field-error`, existing `.sigma-field-error` or
+`app-file-field`. This supersedes the2026-10-23/24 first-control-line exception:
+remove its shared top!important override and checkbox top offset. Text, badges,
+checkboxes, file controls and actions center in their row; a control and all its
+inline feedback form one centered unit. Full wrapped feedback stays below the
+control in normal flow. The shared toolbar centers its items vertically too.
 
-The shared Remove uses the34px control height on these rows. A direct standalone
-15px checkbox is block-level with logical top margin equal to half the
-control-height/checkbox-height difference; its square stays centered on the
-first control line. Captioned checks keep the existing34px __row-check wrapper.
-Outside these rows, standalone checkboxes retain zero margins and middle
-alignment. This generalizes the2026-10-22 file/action-only exception and
-supersedes whole-field/error centering for these validation-capable rows only.
-No consumer opt-in, feature row CSS, detached error, fixed error height or
-legacy --sigma-editable-cell-vertical-align extension point. Verify required,
-date-order and upload errors, multiline feedback, flags/actions, View, narrow
-widths, RTL/themes and print; source conformance is not runtime acceptance.
-
-**Existing inline feedback compatibility (owner correction,2026-10-24).** The
-same three row predicates cover the existing `.sigma-field-error` marker:
-cell alignment, shared Remove height and standalone checkbox offset. This
-prevents conditional handwritten feedback from centering a taller control/error
-group beside another field. All shared consumers inherit it without opt-in;
-ordinary rows retain middle alignment. New or reviewed feedback still uses
-UI19's `app-field-error`; compatibility is not a new markup pattern. Evidence:
-Link Accounts Prepaid Expense and the shared stylesheet; source-only visual
-acceptance pending.
+Preserve table/td display,7px/9px cell padding,34px Remove on validation/file
+rows,15px standalone checkboxes with zero margin, and existing captioned-check
+wrappers. No consumer opt-in, feature cell CSS, detached error, fixed error
+height or vertical offset. Existing `.sigma-field-error` compatibility remains;
+new feedback still uses UI19's `app-field-error`. Horizontal alignment, widths,
+identity, payload, theme, RTL and print remain owned by their existing contracts.
+Evidence: owner LimousineTariff centering request and the shared source;
+source-only, mixed heights/multiline errors/flags/actions/narrow/RTL/theme/print
+visual acceptance remains pending.
 
 **Numeric cells (owner request 2026-10-04).** Numeric inputs select their value
 on entry through the shared global selection owner (block 27); native
@@ -748,3 +759,15 @@ cells, and uses `formControlName` in every cell. Mixing `[formGroup]` on one cel
 
 ### Contextual confirmation forms (2026-10-09)
 `EditableRows` may receive `confirmationForms` when `freezeParentOnConfirmation` is enabled. The optional forms are frozen with the parent through the shared plural helper; the default remains unchanged. Use this only where row operations depend on a separate customer/category/context form. Preserve row identity re-resolution, saved-row confirmation and canMutate checks. Source-only evidence: Limousine tariff context and TripBooking documents.
+
+### Context-cancelled row decisions (2026-11-05)
+
+Pass the editor's context-expiry stream as `confirmationCancelled$` when a
+reviewed editor can outlive its session context. EditableRows tears down only
+its pending removal confirmation, releases `confirmationPending` through
+finalize, and retains its row-identity and `canMutate` checks. Keep the editor
+invalid until reopened; do not restore an expired form through the finalizer.
+The optional stream defaults to no extra cancellation for existing consumers.
+It never owns HTTP writes or cancels a previously sent save. Payment rows and
+Bill line/document rows adopt this hook; UI28 owns the surrounding session and
+independent-write lifetime. Source-only; interaction acceptance is pending.

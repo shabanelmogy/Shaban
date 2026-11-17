@@ -116,6 +116,11 @@ Use the applicable source comment at each reviewed decision point:
 |---|---|---|---|---|---|---|
 | | | | | | | |
 
+Compare the declared endpoint table with actual controller routes and inherited
+HTTP actions (BE6). Record service-only methods separately. For an exposed
+nonassignable action, trace ordinary-user denial and the administrator's
+service response through their actual paths.
+
 ### Migration and compatibility decision
 
 | Change | Entity/EF impact | Migration required | Existing consumers | Owner action |

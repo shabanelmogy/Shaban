@@ -3,14 +3,15 @@
 | | |
 |---|---|
 | Status | **Canonical.** Binding for Sigma feature review and implementation orchestration |
-| Version | 1.31 |
+| Version | 1.32 |
 | Last verified against documentation system | 2026-10-01 (completion plan R5–R8; history in `CHANGELOG.md`) |
 | Verification | Documentation structure and source inspection only |
-| Last content change | 2026-10-30 — Reference-product functional detail is the scoped target for every screen; explicit coverage/gap planning and final equivalence evidence (blocks 1/2/4/7) |
+| Last content change | 2026-11-01 — Loadable workspace entry with mandatory live workflow companion; compact skill routing, historical coverage and process-skill boundaries (block 8) |
 
-Version 1.31 clarifies the reference-product functional detail target in Master2,
-its coverage/gap rows in Master4 and final reconciliation in Master7. This is a scoped documentation change;
-the historical system-wide verification date above is not advanced by it.
+Version 1.32 records the compact instruction/skill routing contract in Master8.
+The functional-detail target, coverage rows and final reconciliation remain in
+Master2/4/7. This scoped documentation change does not advance the historical
+system-wide verification date above.
 
 This guide defines how a Sigma feature is scoped, reviewed, implemented, and
 reconciled across Angular and .NET. It owns global review rules and contract

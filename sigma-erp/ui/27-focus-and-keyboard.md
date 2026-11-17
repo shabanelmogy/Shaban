@@ -36,6 +36,25 @@ modal now uses `app-editor-dialog`, verified 2026-10-01.) Block 13 shows the can
 Filter forms submit on Enter because they are real `<form>` elements with
 `type="submit"` on Search. Keep that; do not intercept Enter.
 
+### Deferred field focus in protected editors (2026-11-09)
+
+For an adopted protected editor, pass the existing `focusField` owner's optional
+`cancelOn`, `destroyRef` and `allowed` options. Capture the actor/document identity
+when scheduling, cancel permanently on access denial or route identity change,
+and recheck that identity before each frame and delayed overlay click. A rapid
+regrant must not revive an expired focus operation. Both animation frames and
+the scroll-settle timer belong to this lifetime; release notifier/destroy
+registrations on cancellation or completion. Hidden/inert or detached targets
+must not receive a delayed click. Keep existing invalid-tab selection and
+`openOverlay` behavior; do not add feature-local timers or a second focus owner.
+Accidents provides the adopted consumer and source specifications; execution
+and keyboard/portal acceptance remain pending.
+
+EditableRows passes its existing `confirmationCancelled$`, DestroyRef and current
+row/mutation eligibility to that same focus owner when adding a row. Removing
+the row or expiring its context before the queued frames must not focus a newly
+reused field id. It keeps `openOverlay:false`; no second focus implementation.
+
 Shared invalid-field focus also accepts the actual `[contenteditable="true"]`
 element used by an installed rich-text editor. Give that editable element its
 stable field id and translated accessible label through the editor's public

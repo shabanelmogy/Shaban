@@ -2,10 +2,99 @@
 
 > **Status: Canonical** — declare `ActionList<Row>` for typed actions (2026-09-30)
 
+### Explicit current-session permissions — 2026-11-06
+
+For an adopted action, declare its actual backend `permission` requirement in
+`ActionList<Row>`/`ButtonModel` or the existing shared button input. The shared
+owner combines this with the row's visible/disabled/busy policy and rechecks
+permission at execution. Use the shared `appAuthorize` view directive where an
+existing action owner does not render the section. All use UI26's current
+session decision; do not fetch an administrative snapshot or issue HTTP per
+row/control. Permission names come from the frozen endpoint catalogue, not
+titles, icons or a generic assumption that POST means Create.
+
+Missing an explicit requirement preserves a non-permission control's ordinary
+contract (for example Cancel/Search); it does not establish authorization
+adoption. Reconcile every business action in the screen inventory, including
+editor Save/switch-to-edit and native buttons, before opening that screen to
+ordinary users. A route view key alone does not adopt its write actions.
+Existing domain-state guards and backend checks remain necessary even for the
+tenant administrator. Source conformance and runtime/visual acceptance are
+separate evidence; see the current-access contract and acceptance report.
+
 One `ActionList[]`. Pass it to `app-data-table` through `[actions]`. The shared
 table renders the Actions column first and composes the existing
 `ActionButtonComponent`; feature components do not manage `TemplateRef` or
 rebuild column definitions after view initialization.
+
+### Shared document approval status — 2026-11-15
+
+For an adopted business-document row, reuse `injectApprovalStatusAction<Row>`
+from `shared/authorization/approval-status-action.ts`. It accepts the catalog
+document type, the actual source read requirement, a current-row predicate and
+the screen's busy predicate. It validates a positive saved identifier and
+rechecks access, row ownership and busy state when invoked. Nullable or string
+identifiers are accepted only when they resolve to a safe positive integer.
+Pass the persisted document identifier for an aggregate or prepared operation.
+
+The helper opens `DocumentApprovalStatusDialogService` in the current screen,
+using the shared `EditorDialog` and `DocumentApprovalWorkflowPanelComponent`.
+The panel consumes the existing central workflow endpoints and delegates stage
+presentation, confirmation, reason validation, write state and refresh to
+`DocumentApprovalCycleComponent`. Reading stages requires the source read grant.
+The server controls current-stage decisions. Direct
+policy/workflow reads keep dialog-local progress and no additional cache.
+
+An existing native status dialog embeds the same workflow panel and retains
+its native action owner. Combine native and workflow pending state. A successful
+workflow write emits `changed`; an ordinary read emits only `pendingChange`.
+The panel's `refreshKey` can follow the loaded native record to refresh stages
+after a native action. Do not trigger a native reload from every read completion.
+The host owns display lifetime and destruction, while the central endpoints
+continue enforcing source, assignment, branch and expected-attempt versions.
+
+**Inline stage decisions (owner,2026-11-16).** Display configured/current stages
+as shared DataTable rows with order, name, status, actor, decision date and reason.
+Use ActionList on the eligible row, checking both the response-wide capability
+and that row's `canDecide`, current row identity, access and busy state. Keep later
+stages visible without actions. The status viewer has no separate Start step or
+required workspace navigation; the first decision uses the server's preview
+version and expected stage order under the approval feature contract. Reading
+never creates an attempt. Retain one approval confirmation and the rejection
+reason form; collapse nonempty decision history separately.
+
+For feature-authorized stage reversal, use the same row ActionList and server
+`canUnapprove` capability. Bind the required reason draft to both its selected
+row and workflow version, recheck access before submission, and expire stale
+row capability. Reuse the decision response and clear native action capabilities
+that no longer hold after reopening a level. Source effects, sequence guards and
+who may reverse remain in the feature's frozen contract, enforced by the server.
+
+Apply the authoritative workflow mutation response to the stage rows. A workflow-only
+viewer does not reload the same workflow after success. Native document owners
+may refresh once when completion changes their available native action; do not
+re-read stages solely because a refreshed native DTO has a new object identity.
+Use a semantic native status/void refresh key. Context/access changes and explicit
+Retry still invalidate reads; sent-write lifetime and accounting effects remain
+with their existing owners. Source conformance does not prove runtime latency.
+
+**Single direct action (owner-scoped choice,2026-10-31).** DataTable exposes
+`singleActionAsIcon:boolean` (default false) and forwards it to the existing
+ActionButton input of the same name. When enabled and exactly one action is
+visible for a row, render its icon as one native Sigma secondary icon button,
+with a translated title/aria-label and the current disabled predicate. Zero
+visible actions render nothing; multiple actions keep the existing menu.
+Direct clicks and menu commands call the same execution method, which rechecks
+action membership, visibility and disabled state before invoking its callback.
+Native Enter/Space behavior applies to the direct button; it declares no popup
+semantics. Actions remain outside exported data and hidden in print.
+
+The owner explicitly requested the sole View eye button in Workshop Vehicles'
+Recent Movements table. That consumer enables the shared input; default menu
+consumers keep their existing interaction. Do not add a feature action template,
+rebuild columns or duplicate action guards to obtain this presentation. Check
+zero/one/multiple visible actions, changing busy state, both languages/themes
+and keyboard/focus behavior; source-only checks are not visual acceptance.
 
 Existing native/PrimeNG table cells that have not yet adopted DataTable may
 embed the same app-action-button with its optional row input and typed
@@ -216,9 +305,35 @@ The server `canApprove/canUnapprove/canReject` fields govern buttons. The panel
 owns read/retry, typed reason state, confirmation, stale/cancel/error/busy handling
 and history presentation; owning surfaces reload actual details/row eligibility
 after success. No mutation is enabled in unsaved or dirty edit mode. Current
-adoption is PR/PO/GRN/Bill/PurchaseReturn; Payment/DebitNote have no frozen
-approval lifecycle and acquire none by visual imitation. See the unified
+adoption includes PR/PO/GRN/Bill/PurchaseReturn and the later owner-authorized
+Payment lifecycle (its current contract and server remain authoritative).
+DebitNote does not acquire approval by visual imitation. See the unified
 purchasing contract for the exact stock/journal/reservation guards.
+
+**Mounted approval access (source-only,2026-11-07).** Adopt current-session
+access through `DocumentApprovalCycleComponent.accessRequirement` for reading
+and `decisionRequirement` for decisions; `accessBlocked` expires the mounted
+owner when its parent data context ends. These optional inputs retain legacy
+consumers' defaults and never infer a resource or operation. A decision also
+requires reading its current context, even when the decision requirement is a
+separate key. The panel owns finite-read cancellation and revision/regrant
+recovery, instead of adapters cancelling a read while leaving unchanged inputs
+that cannot restart it. A pending decision defers revalidation until its own
+finalizer; busy changes must not clear successful output or cause a GET loop.
+
+Keep the reason editor mounted and hide/inert its body portal when either
+requirement is denied; preserve the reason draft for same-context regrant.
+Expire the old context permanently and ignore its late callbacks. Confirmations
+are lazy and access/context-cancelled with a false decision; one new local
+discard remains possible after existing denial (UI28), including when both
+requirements are absent. Recheck permission and server eligibility before a
+new decision. Do not put read cancellation on a sent mutation; a same-context
+success still finishes once after permission withdrawal. Gate workspace links
+through the existing route policy for adopted consumers. A list modal sets
+`localReadProgress` because its overlay covers the page host (UI22); the saved
+routed tab keeps the page owner. Payment is the scoped adopter and source
+regression specs are present; compile, test execution and application visual
+acceptance remain pending. This does not establish adoption of other consumers.
 
 ### Document action log (owner decision 2026-10-22)
 

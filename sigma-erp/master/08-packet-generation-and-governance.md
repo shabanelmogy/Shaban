@@ -64,6 +64,28 @@ changelog entries belong in clearly labelled archive folders. Active plans and
 unresolved decisions remain discoverable; archive by lifecycle and supersession,
 not age alone. Preserve frozen decisions and update callers when a file moves.
 
+**Loadable instruction entry (owner-authorized Audit8 remediation, 2026-11-01).**
+The workspace `AGENTS.md` keeps the critical authorization/prohibited-command
+summary and the mandatory read link near its beginning. Its live continuation
+is `F:\My Work\Sigma\.agents\SIGMA_WORKFLOW_RULES.md`: agents read it completely
+before Sigma work through a file tool, rather than assuming automatic project
+instruction discovery includes the companion. Both files form one instruction
+set; this is relocation, not a second authority or an optional historical guide.
+Maintain full workflow rules in the live companion and reconcile the entry's
+summary in the same task when their meaning changes. Keep the automatically
+loaded entry small enough for the host's combined global/project instruction
+budget; do not solve growth only by raising that budget or discarding rules.
+If the live continuation cannot be read, report the missing source and stop
+dependent work instead of inferring authorization.
+
+The screen skill routes tasks and conditional concerns to their complete current
+book blocks. Do not reload archived skill snapshots to execute a new task: the
+books retain the implementation rules. Keep traceable coverage evidence when
+compacting the router and promote any verified missing owner before removing
+its sole live instruction. Process skills such as Superpowers may assist
+planning, diagnosis, execution and review; they complement Sigma's domain skill
+and do not replace project authority, frozen contracts or execution permissions.
+
 State the current approved target separately from source that has not migrated
 to it. A source verification date names the checked scope; a targeted check does
 not certify every example or an application's runtime. Archive content has no

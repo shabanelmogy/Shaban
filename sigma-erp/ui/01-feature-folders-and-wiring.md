@@ -238,6 +238,19 @@ theme/background subscriptions and body-class cleanup (runtime retirement,
   Rows grow naturally while fixed controls remain centered. This keeps third/deeper-level actions within the existing
   viewport without clipping their focus outlines or changing pin/chevron order
   (owner2026-10-24; source-only visual acceptance pending).
+- Selecting a sidebar page preserves the current bounded menu scroll position
+  (owner clarification2026-11-01 supersedes selected-page reveal2026-10-31).
+  Keep the existing panel-item objects, child arrays and disclosure alive on
+  ordinary route changes; update active styling in place instead of rebuilding
+  the publisher model. A route signal read by the projected row template keeps
+  its active classes current across OnPush publisher views. Leaf commands cancel
+  pending group alignment without requesting their own reveal; NavigationEnd
+  updates selection without restarting alignment, including real path changes
+  and reselecting the current page. Query/fragment-only route changes also do
+  not start a fresh reveal. Search/language changes may rebuild the
+  model for their own purpose; existing manual-cancellation, remount, keyboard,
+  Pin and native-scroll ownership stay intact. No window scrolling, node
+  reordering, artificial spacer or feature-specific tracker workaround.
 - Active sidebar rows use the existing route-derived active state in the shared
   SidebarMenuComponent (owner2026-10-23). Paint the whole custom row, including
   its Pin area, with `--sigma-primary-soft`, a1px border mixing38% primary with
@@ -565,6 +578,19 @@ An editor or workspace that is not a list uses the same chain with its own regio
   gap and dark values live in `src/styles.scss`; do not restate them in a feature or in
   review notes. Legacy `.card` / `.card-body` wrappers are not used.
 
+**Fixed workspace tools (owner correction, 2026-11-15).** Keep a fixed search/action
+bar as a nonshrinking sibling before its bounded scroll content. The content owns
+`min-block-size: 0` and `overflow: auto`; the parent retains `overflow: hidden`.
+Do not implement this contract with sticky positioning or viewport offsets.
+`PermissionTreeComponent.fixedToolbar` adopts that structure for the Roles preview:
+the shared host fills a bounded flex column, its toolbar remains outside
+`permission-tree__content`, and optional `[permissionTreeContentStart]` status
+content scrolls with the groups. The scroll region is keyboard focusable and
+labelled; print releases its overflow. This input defaults to false because the
+existing Role dialog owns its body scroll and supplies no bounded tree region.
+Logical spacing and Sigma tokens preserve direction and theme. Source compilation
+and Sass checks verify structure; owner visual/keyboard acceptance stays pending.
+
 #### Base component
 
 List and details components extend `BaseComponentService`
@@ -604,6 +630,58 @@ must not add a second vertical scrollbar unless a separately bounded collection
 is an explicit business requirement. Horizontal tab/table overflow remains
 allowed. On narrow screens, preserve this single vertical-scroll owner rather
 than falling back to nested page + child scrolling.
+
+**Settings parent/child composition (owner2026-11-01).** Administration Settings
+uses the shared route/page/panel at its parent only. Its real route links remain
+native anchors with an accessible navigation label and current-page state;
+the separately bounded wrapping navigation cannot consume more than25% of the
+card. `sigma-settings-outlet` bounds the lazy child, whose shared route host
+contains `sigma-settings-page`. That shared column keeps FeatureTitle and
+`sigma-editor-footer` outside `sigma-settings-content`, the content scroll
+owner. A child form uses `sigma-editor-form`; do not add another page/card inset
+or a feature host geometry rule. Ordinary settings keep their existing groups;
+Holiday uses a fixed filter and `sigma-list-table`/DataTable fill instead.
+
+For explicitly requested internal vertical groups, reuse
+`sigma-settings-sections`:150–190px navigation,12px gap and shrinkable content;
+below700px stack zero-minimum2:3 tracks. EditorTabs owns orientation, stable
+IDs, keyboard, paint and navigation scrolling (UI13), while the content owns
+its independent scroll. Keep keyed panels/models mounted with matching
+tab/panel IDs and hidden inactive panels; selection performs no HTTP or save.
+Common and Document Number use shared `revealInvalidSettingsSection` with their
+actual section/control map: mark touched, select the invalid field's panel and
+delegate reveal/focus to `focusField` without opening a picker. FieldError owns
+inline feedback. Fields retains its template-driven graph and exposes only
+returned entity blocks. Print releases the shared allocation and shows the
+mounted sections. API Key retains its independent Google/DeepSeek saves and
+guard. This replaces its former parent-only bounded compatibility exception
+for the reviewed Settings unit; it authorizes no backend/API migration.
+Source conformance is separate from owner visual/keyboard/save acceptance.
+
+**Settings field composition (owner2026-11-02).** Inside that bounded content,
+use existing compact FormSection for semantic groups rather than loose large
+headings and accumulated legacy column margins. Keep business groups, controls,
+validation and read/save ownership. A title that repeats the active tab uses
+FormSection's existing showTitle=false; distinct subgroups keep their headings.
+`sigma-settings-fields-grid` owns three equal shrinkable tracks, two when the
+actual content pane is960px or narrower and one at520px or narrower. It uses
+the existing sigma-field controls/34px owner; features do not create a new
+control-height contract or style publisher internals. Separate ordinary inputs
+from Boolean choices within the same semantic group, preserving bound values.
+
+`sigma-settings-options-grid` owns two equal tracks, one when the pane is760px
+or narrower. `sigma-settings-option` is the shared Boolean row:46px minimum,
+10px/12px block/inline padding,10px control/label gap, existing control radius
+and Sigma surface/border/text tokens. Both the checkbox and its full wrapping
+label are centered vertically, including multiline labels; no legacy label
+palette, fixed text height, clipping or feature override. Retain native/PrimeNG
+input-label IDs and focus semantics. FormSection owns card paint/spacing/theme;
+the content owner separates cards by12px. The existing DDA mapping matrix uses
+shared mapping rows instead of nesting independent field grids; it stacks its
+field label above mapping/required below520px. Collection tables retain their
+existing owner and semantics. No second content scrollbar, changed save fragment,
+new request, cache opt-in or numeric/financial policy follows this composition.
+Owner visual/keyboard/RTL/theme acceptance remains distinct from source checks.
 
 **Routed financial collection editors** (Opening Balances) follow the same container-fill chain;
 the editable table is the row-scroll owner through `[fillHeight]` + `[stickyHeader]` (block 14).

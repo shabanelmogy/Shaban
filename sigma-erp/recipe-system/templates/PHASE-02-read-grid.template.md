@@ -82,7 +82,14 @@ This is a replacement requirement, not permission to add a competing list path.
   typed feature paging/sort TypeScript, and feature placement/token SCSS.
 - Optional typed whole-row activation for a confirmed, unambiguous workflow.
 - Optional current-page checkbox selection for a confirmed batch workflow.
-- Exact serialized filter keys and parsers.
+- Exact serialized filter keys and parsers. For protected endpoints, reconcile
+  server allow-lists for direct filters, grid fields and sort fields under the
+  minimum grants, including count, aggregates and export (BE9).
+- Match reference-ID filters to the same live authorized relation as the
+  projection and sort. Verify omitted and partial paging inputs (BE9).
+- With the report already open, revoke an optional lookup grant and verify
+  list/report/export/Retry omit its filters and sort while retaining unaffected
+  inputs. Bind print to the published rows' query and revision (UI21/28).
 - Remote paging, stable sorting, and `TotalCount`.
 - Angular list model, backend ListVM, and displayed columns.
 - Row display transformations and action-state fields.

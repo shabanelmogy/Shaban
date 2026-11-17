@@ -2,6 +2,18 @@
 
 > **Status: Canonical**
 
+Cancelled result subscriptions use UI9's shared confirmation teardown: close
+only their own unresolved dialog without accepting discard. Retain the existing
+identity/context checks, frozen-form restoration and independent write safety.
+A cancelled CanDeactivate confirmation returns false. For a decision stream
+cancelled with takeUntil, apply defaultIfEmpty(false) after the cancellation
+operators and before any cleanup or write starts (UI28).
+
+Commit the focused edit before evaluating `form.dirty` in an editable
+form with `updateOn: 'blur'`. An initial edit can still be pending when
+Escape or a route guard runs. Check Escape and navigation with the first
+changed field still focused. Confirm that cancelling discard keeps the value.
+
 ### Shared shell navigation policy (owner2026-10-22)
 
 NavigationPolicyService is the common fallback for registered reactive editor
