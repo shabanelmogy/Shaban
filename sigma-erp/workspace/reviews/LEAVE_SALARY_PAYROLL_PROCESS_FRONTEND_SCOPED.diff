@@ -1,0 +1,1044 @@
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\payroll-process.routes.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\payroll-process.routes.ts"
+index e998e24..3eb63b8 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\payroll-process.routes.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\payroll-process.routes.ts"	
+@@ -5,5 +5,5 @@ const preventUnsavedPayrollExit: CanDeactivateFn<PayrollProcessComponent> = comp
+   component.canDeactivate();
+ 
+ export const PayrollProcess_Routes: Routes = [
+-  { path: '', component: PayrollProcessComponent, canDeactivate: [preventUnsavedPayrollExit] },
++  { path: '', component: PayrollProcessComponent, data: { payrollType: 'Payroll' }, canDeactivate: [preventUnsavedPayrollExit] },
+ ];
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.html" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.html"
+index 57e99ae..58bca43 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.html"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.html"	
+@@ -1,7 +1,10 @@
+ <section class="sigma-list-page">
+   <div class="sigma-list-panel">
+     <header class="sigma-list-header">
+-      <app-feature-title [title]="'payrollProcess.title' | translate" [subtitle]="'payrollProcess.subtitle' | translate" icon="bi bi-wallet2">
++      <app-feature-title
++        [title]="(isLeaveSalary ? 'leaveSalaryPayrollProcess.title' : 'payrollProcess.title') | translate"
++        [subtitle]="(isLeaveSalary ? 'leaveSalaryPayrollProcess.subtitle' : 'payrollProcess.subtitle') | translate"
++        icon="bi bi-wallet2">
+         @if (displayedRun(); as run) {
+           <span class="sigma-status-badge" role="status">
+             {{ 'payrollProcess.processedPeriod' | translate: { period: run.period, overtime: run.overtimePeriod } }}
+@@ -26,7 +29,7 @@
+     </header>
+ 
+     <form class="payroll-process-filters" appFilterPanel [formGroup]="filterForm" (ngSubmit)="process()"
+-      [mainColumns]="preview()?.id ? 2 : 1" [stableLayout]="true" [inlineActions]="true" inlineActionCaption="general.actions"
++      [mainColumns]="preview()?.id ? (isLeaveSalary ? 3 : 2) : (isLeaveSalary ? 2 : 1)" [stableLayout]="true" [inlineActions]="true" inlineActionCaption="general.actions"
+       [busy]="busy() || readOnly()" (resetRequested)="reset()" novalidate>
+       <div class="sigma-filter-field">
+         <label class="required" for="payroll-month">{{ 'payrollProcess.month' | translate }}</label>
+@@ -36,6 +39,40 @@
+           [attr.aria-invalid]="filterForm.controls.month.invalid && filterForm.controls.month.touched" />
+         <app-field-error [control]="filterForm.controls.month" [messages]="{ payrollPeriod: 'payrollProcess.periodRange' }" reserveMessage="validationMessages.date" />
+       </div>
++      @if (isLeaveSalary) {
++        <div class="sigma-filter-field">
++          <label class="required" for="leave-salary-staff">{{ 'leaveSalaryPayrollProcess.staff' | translate }}</label>
++          <div class="d-flex gap-2 align-items-start">
++            <p-dropdown class="flex-grow-1" inputId="leave-salary-staff" formControlName="staffId" [options]="staffOptions()"
++              optionValue="id" optionLabel="value" [filter]="true" filterBy="no,value" [loading]="staffLoading()"
++              [placeholder]="'leaveSalaryPayrollProcess.selectStaff' | translate" appendTo="body" styleClass="w-100"
++              [emptyMessage]="(staffLoading() ? 'leaveSalaryPayrollProcess.loadingStaff' : 'leaveSalaryPayrollProcess.noEligibleStaff') | translate"
++              [emptyFilterMessage]="'leaveSalaryPayrollProcess.noEligibleStaff' | translate"
++              (onChange)="staffChanged($event.value)">
++              <ng-template pTemplate="selectedItem" let-option>
++                <span>{{ option.no ? option.no + ' — ' : '' }}{{ option.value }}</span>
++              </ng-template>
++              <ng-template pTemplate="item" let-option>
++                <span>{{ option.no ? option.no + ' — ' : '' }}{{ option.value }}</span>
++              </ng-template>
++            </p-dropdown>
++            <button type="button" class="sigma-secondary-button sigma-icon-button text-danger"
++              [disabled]="busy() || filterForm.controls.staffId.disabled || !filterForm.controls.staffId.value"
++              [attr.aria-label]="'leaveSalaryPayrollProcess.clearStaff' | translate"
++              [title]="'leaveSalaryPayrollProcess.clearStaff' | translate" (click)="clearStaff()">
++              <i class="bi bi-trash3-fill text-reset" aria-hidden="true"></i>
++            </button>
++          </div>
++          <app-field-error [control]="filterForm.controls.staffId" reserveMessage="validationMessages.required" />
++          @if (staffLoading()) { <app-state-message kind="loading" [message]="'leaveSalaryPayrollProcess.loadingStaff' | translate" /> }
++          @if (staffError()) {
++            <app-state-message kind="error" [message]="staffError() | translate" />
++            <button type="button" class="sigma-secondary-button" [disabled]="busy() || staffLoading()" (click)="retryStaff()">
++              <i class="bi bi-arrow-repeat" aria-hidden="true"></i>{{ 'payrollProcess.retry' | translate }}
++            </button>
++          }
++        </div>
++      }
+       @if (preview()?.id) {
+         <div class="sigma-filter-field">
+           <label for="payroll-revision">{{ 'payrollProcess.history' | translate }}</label>
+@@ -53,7 +90,7 @@
+         </button>
+         @if (!readOnly()) {
+           <app-primary-action-button type="submit" icon="bi bi-gear" [label]="'payrollProcess.process' | translate"
+-            [disabled]="busy()" [loading]="processing()" />
++            [disabled]="!canProcess()" [loading]="processing()" />
+           <app-primary-action-button type="button" icon="bi bi-floppy-fill" [label]="'general.save' | translate"
+             [disabled]="saveDisabled()" [loading]="saving()" (pressed)="save()" />
+         }
+@@ -73,6 +110,13 @@
+       </ng-container>
+     </form>
+ 
++    @if (isLeaveSalary) {
++      <div class="sigma-alert" role="note">
++        <i class="bi bi-info-circle" aria-hidden="true"></i>
++        <span>{{ 'leaveSalaryPayrollProcess.policyNotice' | translate }}</span>
++      </div>
++    }
++
+     @if (actionError()) {
+       <app-state-message kind="error" [message]="actionError()" />
+       @if (canRetry()) {
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.ts"
+index 7437e20..fd1e123 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.ts"	
+@@ -32,7 +32,9 @@ import { currentMonthRange, formatDisplayDate, monthValueValidator, parseMonthVa
+ import { focusField } from 'src/app/modules/shared/utils/focus-field';
+ import { freezeFormState } from 'src/app/modules/shared/utils/form-state';
+ 
+-import { PayrollRevisionOption, PayrollRevisionSummary, PayrollRun, PayrollRunRow } from '../../models/payroll-run';
++import {
++  PayrollRevisionOption, PayrollRevisionSummary, PayrollRun, PayrollRunRow, PayrollStaffOption, PayrollType,
++} from '../../models/payroll-run';
+ import { PayrollProcessService } from '../../services/payroll-process.service';
+ import { PayrollRunLogsComponent } from '../logs/payroll-run-logs.component';
+ 
+@@ -66,6 +68,8 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+   private logPreview: PayrollRun | null = null;
+   private restoreNotesForm: (() => void) | null = null;
+   private notesRun: PayrollRun | null = null;
++  private acceptedStaffId: number | null = null;
++  private contextRejected = false;
+ 
+   @ViewChild('staffTemplate', { static: true })
+   protected staffTemplate!: TemplateRef<DataTableCellContext<PayrollRunRow>>;
+@@ -77,7 +81,11 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+       Validators.required, monthValueValidator, payrollPeriodValidator,
+     ]),
+     revision: this.fb.control<number | null>(null),
++    staffId: this.fb.control<number | null>(null),
+   });
++  readonly payrollType: PayrollType = this.activatedRoute.snapshot.data['payrollType'] === 'LeaveSalary'
++    ? 'LeaveSalary' : 'Payroll';
++  readonly isLeaveSalary = this.payrollType === 'LeaveSalary';
+   readonly preview = signal<PayrollRun | null>(null);
+   readonly historicalRun = signal<PayrollRun | null>(null);
+   readonly viewedRevision = signal<number | null>(null);
+@@ -93,6 +101,9 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+   readonly discardPending = signal(false);
+   readonly actionError = signal('');
+   readonly revisionsError = signal('');
++  readonly staffLoading = signal(false);
++  readonly staffError = signal('');
++  readonly staffOptions = signal<PayrollStaffOption[]>([]);
+   readonly revisionSummaries = signal<PayrollRevisionSummary[]>([]);
+   readonly revisionOptions = signal<PayrollRevisionOption[]>([]);
+   readonly baseColumns = signal<ReadonlyArray<DataTableColumn<PayrollRunRow>>>([]);
+@@ -103,6 +114,7 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+   private initialRunId: number | null = null;
+ 
+   readonly busy = computed(() => this.processing() || this.loadingRun() || this.saving() || this.historyLoading() || this.discardPending() || this.logsVisible() || !!this.notesContext());
++  readonly canProcess = computed(() => !this.busy() && !this.readOnly() && this.contextReady());
+   readonly displayedRun = computed(() => this.historicalRun() ?? this.preview());
+   readonly rows = computed(() => this.displayedRun()?.rows ?? []);
+   readonly columns = computed<ReadonlyArray<DataTableColumn<PayrollRunRow>>>(() => {
+@@ -115,11 +127,12 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+     if (notes) columns.push(notes);
+     return columns;
+   });
+-  readonly saveDisabled = computed(() => this.busy() || this.readOnly() || !!this.historicalRun() || !!this.preview()?.isSaved || !!this.preview()?.isPaid);
++  readonly saveDisabled = computed(() => this.busy() || this.readOnly() || !this.contextReady()
++    || !!this.historicalRun() || !!this.preview()?.isSaved || !!this.preview()?.isPaid);
+   readonly canExport = computed(() => !this.busy() && !!this.displayedRun()?.isSaved && this.rows().length > 0);
+   readonly hasRowIssues = computed(() => this.rows().some(row => row.issues.length > 0));
+   readonly screenNotes = computed<ReadonlyArray<string>>(() => {
+-    const messages = ['payrollProcess.policyNotice'];
++    const messages = [this.isLeaveSalary ? 'leaveSalaryPayrollProcess.policyNotice' : 'payrollProcess.policyNotice'];
+     if (this.historicalRun()) messages.push('payrollProcess.historicalNotice');
+     else if (this.preview()?.requiresSettlement) messages.push('payrollProcess.settlementNotice');
+     else if (this.preview()?.isPaid) messages.push('payrollProcess.paidNotice');
+@@ -146,11 +159,19 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+     this.destroyRef.onDestroy(() => { this.disposed = true; });
+     this.initColumns();
+     this.bindRevisionReads();
++    if (this.isLeaveSalary) {
++      this.filterForm.controls.staffId.addValidators(Validators.required);
++      this.filterForm.controls.staffId.updateValueAndValidity({ emitEvent: false });
++      this.loadStaffOptions();
++    }
+     this.translate.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateRevisionOptions());
+     const params = this.activatedRoute.snapshot.queryParamMap;
+     const rawRunId = params.get('runId');
+     this.readOnly.set(params.get('mode') === 'view');
+-    if (this.readOnly()) this.filterForm.controls.month.disable({ emitEvent: false });
++    if (this.readOnly()) {
++      this.filterForm.controls.month.disable({ emitEvent: false });
++      if (this.isLeaveSalary) this.filterForm.controls.staffId.disable({ emitEvent: false });
++    }
+     if (rawRunId !== null) {
+       this.openedFromList.set(true);
+       const id = Number(rawRunId);
+@@ -158,11 +179,14 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+         this.initialRunId = id;
+         this.loadRun(id);
+       } else {
++        this.contextRejected = true;
+         this.readOnly.set(true);
+-        this.filterForm.controls.month.disable({ emitEvent: false });
++        this.filterForm.disable({ emitEvent: false });
+         this.actionError.set('payrollProcess.invalidRun');
+       }
+     } else if (this.readOnly()) {
++      this.contextRejected = true;
++      this.filterForm.disable({ emitEvent: false });
+       this.actionError.set('payrollProcess.invalidRun');
+     }
+   }
+@@ -170,20 +194,24 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+   process(): void {
+     if (this.busy() || this.readOnly()) return;
+     const period = this.validPeriod();
+-    if (!period) return;
++    const staffId = this.validStaffId();
++    if (!period || (this.isLeaveSalary && !staffId)) return;
+     this.confirmDiscardIfNeeded()
+       .pipe(takeUntilDestroyed(this.destroyRef))
+       .subscribe(confirmed => {
+-        if (confirmed && !this.busy() && parseMonthValue(this.filterForm.controls.month.value) === period) this.calculate(period);
++        if (confirmed && !this.busy()
++          && parseMonthValue(this.filterForm.controls.month.value) === period
++          && this.selectedStaffId() === staffId) this.calculate(period, staffId);
+       });
+   }
+ 
+   save(): void {
+     if (this.saveDisabled()) return;
+     const period = this.validPeriod();
+-    if (!period) return;
++    const staffId = this.validStaffId();
++    if (!period || (this.isLeaveSalary && !staffId)) return;
+     const run = this.preview();
+-    if (!run || run.period !== period) {
++    if (!run || run.period !== period || run.type !== this.payrollType || run.staffId !== staffId) {
+       this.actionError.set('payrollProcess.processFirst');
+       this.retryAction = null;
+       return;
+@@ -198,11 +226,11 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+     this.saving.set(true);
+     const restore = freezeFormState(this.filterForm, this.destroyRef);
+     this.loading.startLoading();
+-    this.service.save({ period, expectedVersion: run.version })
++    this.service.save({ period, type: this.payrollType, staffId: staffId ?? undefined, expectedVersion: run.version })
+       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+         this.saving.set(false);
+         this.loading.endLoading();
+-        if (!this.disposed) restore();
++        this.restoreFormWithLocks(restore);
+       }))
+       .subscribe({
+         next: result => {
+@@ -210,6 +238,10 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+             this.failAction(result.message?.trim() || 'payrollProcess.saveError', 'save');
+             return;
+           }
++          if (!this.matchesContext(result.entity, period, staffId)) {
++            this.failAction('leaveSalaryPayrollProcess.routeMismatch', 'process');
++            return;
++          }
+           this.applyPreview(result.entity);
+         },
+         error: error => this.failAction(apiErrorMessage(error, 'payrollProcess.saveError'), error?.status === 409 ? 'process' : 'save'),
+@@ -220,7 +252,9 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+     if (this.busy() || this.readOnly()) return;
+     this.confirmDiscardIfNeeded().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
+       if (!confirmed || this.busy()) return;
+-      this.filterForm.reset({ month: currentMonthRange()[0], revision: null });
++      this.filterForm.controls.staffId.enable({ emitEvent: false });
++      this.filterForm.reset({ month: currentMonthRange()[0], revision: null, staffId: null });
++      this.acceptedStaffId = null;
+       this.preview.set(null);
+       this.historicalRun.set(null);
+       this.viewedRevision.set(null);
+@@ -230,7 +264,7 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+       this.revisionSummaries.set([]);
+       this.updateRevisionOptions();
+       const period = this.validPeriod();
+-      if (period) this.calculate(period);
++      if (period && !this.isLeaveSalary) this.calculate(period, null);
+     });
+   }
+ 
+@@ -258,7 +292,9 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+   closeLogs(): void {
+     if (!this.logsVisible()) return;
+     this.logsVisible.set(false);
+-    if (!this.disposed && !this.busy() && this.preview() === this.logPreview) this.restoreLogForm?.();
++    if (!this.disposed && !this.busy() && this.preview() === this.logPreview && this.restoreLogForm) {
++      this.restoreFormWithLocks(this.restoreLogForm);
++    }
+     this.restoreLogForm = null;
+     this.logPreview = null;
+   }
+@@ -278,7 +314,9 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+   closeNotes(): void {
+     if (!this.notesContext()) return;
+     this.notesContext.set(null);
+-    if (!this.disposed && !this.busy() && this.displayedRun() === this.notesRun) this.restoreNotesForm?.();
++    if (!this.disposed && !this.busy() && this.displayedRun() === this.notesRun && this.restoreNotesForm) {
++      this.restoreFormWithLocks(this.restoreNotesForm);
++    }
+     this.restoreNotesForm = null;
+     this.notesRun = null;
+   }
+@@ -288,7 +326,10 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+     const run = this.displayedRun();
+     if (!run) return;
+     const rows = dataTableExportRows(run.rows, this.baseColumns(), key => this.translate.instant(key));
+-    onExportToExcel(signal(rows), `Payroll_${run.period}_Revision_${run.revisionNumber}`);
++    const filename = run.type === 'LeaveSalary'
++      ? `LeaveSalary_${run.staffId}_${run.period}_Revision_${run.revisionNumber}`
++      : `Payroll_${run.period}_Revision_${run.revisionNumber}`;
++    onExportToExcel(signal(rows), filename);
+   }
+ 
+   backToPayrolls(): void {
+@@ -304,6 +345,18 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+     if (!this.busy() && this.preview()) this.revisionsRequest.next(this.preview());
+   }
+ 
++  retryStaff(): void {
++    if (!this.busy() && !this.staffLoading()) this.loadStaffOptions();
++  }
++
++  staffChanged(staffId: number | null): void {
++    this.requestStaffSelection(staffId);
++  }
++
++  clearStaff(): void {
++    if (!this.busy() && !this.filterForm.controls.staffId.disabled) this.requestStaffSelection(null);
++  }
++
+   viewRevision(revisionNumber: number | null): void {
+     if (this.busy()) {
+       this.filterForm.controls.revision.setValue(this.viewedRevision(), { emitEvent: false });
+@@ -328,7 +381,7 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+         this.historyLoading.set(false);
+         this.loading.endLoading();
+-        if (!this.disposed) restore();
++        this.restoreFormWithLocks(restore);
+       }))
+       .subscribe({
+         next: result => {
+@@ -337,6 +390,12 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+             this.failHistory(result.message?.trim() || 'payrollProcess.historyError', revisionNumber);
+             return;
+           }
++          if (result.entity.id !== candidate.id || result.entity.revisionNumber !== revisionNumber
++            || result.entity.period !== candidate.period || result.entity.type !== candidate.type
++            || result.entity.staffId !== candidate.staffId) {
++            this.failHistory('leaveSalaryPayrollProcess.routeMismatch', revisionNumber);
++            return;
++          }
+           this.historicalRun.set(result.entity);
+           this.viewedRevision.set(revisionNumber);
+           this.filterForm.controls.revision.setValue(revisionNumber, { emitEvent: false });
+@@ -354,18 +413,18 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+     return parseMonthValue(this.filterForm.controls.month.value);
+   }
+ 
+-  private calculate(period: string): void {
+-    if (this.busy() || this.readOnly()) return;
++  private calculate(period: string, staffId: number | null): void {
++    if (this.busy() || this.readOnly() || !this.contextReady()) return;
+     this.actionError.set('');
+     this.retryAction = null;
+     this.processing.set(true);
+     const restore = freezeFormState(this.filterForm, this.destroyRef);
+     this.loading.startLoading();
+-    this.service.calculate({ period })
++    this.service.calculate({ period, type: this.payrollType, staffId: staffId ?? undefined })
+       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+         this.processing.set(false);
+         this.loading.endLoading();
+-        if (!this.disposed) restore();
++        this.restoreFormWithLocks(restore);
+       }))
+       .subscribe({
+         next: result => {
+@@ -373,6 +432,10 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+             this.failAction(result.message?.trim() || 'payrollProcess.processError', 'process');
+             return;
+           }
++          if (!this.matchesContext(result.entity, period, staffId)) {
++            this.failAction('leaveSalaryPayrollProcess.routeMismatch', 'process');
++            return;
++          }
+           this.applyPreview(result.entity);
+         },
+         error: error => this.failAction(apiErrorMessage(error, 'payrollProcess.processError'), 'process'),
+@@ -390,7 +453,7 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+       .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+         this.loadingRun.set(false);
+         this.loading.endLoading();
+-        if (!this.disposed) restore();
++        this.restoreFormWithLocks(restore);
+       }))
+       .subscribe({
+         next: result => {
+@@ -399,6 +462,13 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+             this.retryAction = 'load';
+             return;
+           }
++          if (!this.matchesRouteContext(result.entity)) {
++            this.contextRejected = true;
++            this.readOnly.set(true);
++            this.filterForm.disable({ emitEvent: false });
++            this.actionError.set('leaveSalaryPayrollProcess.routeMismatch');
++            return;
++          }
+           this.filterForm.controls.month.setValue(toPickerDate(`${result.entity.period}-01`), { emitEvent: false });
+           this.applyPreview(result.entity);
+         },
+@@ -410,6 +480,12 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+   }
+ 
+   private applyPreview(run: PayrollRun): void {
++    if (this.isLeaveSalary) {
++      this.acceptedStaffId = run.staffId;
++      this.ensureSavedStaffOption(run);
++      this.filterForm.controls.staffId.setValue(run.staffId, { emitEvent: false });
++      if (run.id) this.filterForm.controls.staffId.disable({ emitEvent: false });
++    }
+     this.preview.set(run);
+     this.historicalRun.set(null);
+     this.viewedRevision.set(null);
+@@ -437,12 +513,14 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+           const samePreview = !this.disposed && this.preview() === candidate && !this.processing() && !this.saving() && !this.historyLoading();
+           // Release the decision before its accepted continuation starts a request.
+           this.discardPending.set(false);
+-          if (samePreview) restore();
++          if (samePreview) this.restoreFormWithLocks(restore);
+           return confirmed && samePreview;
+         }),
+         finalize(() => {
+           this.discardPending.set(false);
+-          if (!this.disposed && this.preview() === candidate && !this.processing() && !this.saving() && !this.historyLoading()) restore();
++          if (!this.disposed && this.preview() === candidate && !this.processing() && !this.saving() && !this.historyLoading()) {
++            this.restoreFormWithLocks(restore);
++          }
+         }),
+       );
+     });
+@@ -501,6 +579,99 @@ export class PayrollProcessComponent extends BaseComponentService implements OnI
+     this.retryRevision = revisionNumber;
+   }
+ 
++  private selectedStaffId(): number | null {
++    return this.isLeaveSalary ? this.filterForm.controls.staffId.getRawValue() : null;
++  }
++
++  private validStaffId(): number | null {
++    if (!this.isLeaveSalary) return null;
++    const control = this.filterForm.controls.staffId;
++    if (control.invalid || !Number.isInteger(control.getRawValue()) || Number(control.getRawValue()) <= 0) {
++      control.markAsTouched();
++      focusField('leave-salary-staff');
++      return null;
++    }
++    return control.getRawValue();
++  }
++
++  private contextReady(): boolean {
++    return !this.isLeaveSalary || (!this.staffLoading() && !this.staffError());
++  }
++
++  private matchesContext(run: PayrollRun, period: string, staffId: number | null): boolean {
++    return run.period === period && this.matchesRouteContext(run) && run.staffId === staffId;
++  }
++
++  private matchesRouteContext(run: PayrollRun): boolean {
++    return run.type === this.payrollType
++      && (this.isLeaveSalary ? !!run.staffId && run.staffId > 0 : run.staffId === null);
++  }
++
++  private requestStaffSelection(staffId: number | null): void {
++    if (!this.isLeaveSalary || this.busy() || this.filterForm.controls.staffId.disabled) return;
++    if (staffId === this.acceptedStaffId) return;
++    const previous = this.acceptedStaffId;
++    this.filterForm.controls.staffId.setValue(previous, { emitEvent: false });
++    this.confirmDiscardIfNeeded().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
++      if (!confirmed || this.busy() || this.filterForm.controls.staffId.disabled) return;
++      this.acceptedStaffId = staffId;
++      this.filterForm.controls.staffId.setValue(staffId, { emitEvent: false });
++      this.clearRunState();
++    });
++  }
++
++  private clearRunState(): void {
++    this.preview.set(null);
++    this.historicalRun.set(null);
++    this.viewedRevision.set(null);
++    this.filterForm.controls.revision.setValue(null, { emitEvent: false });
++    this.revisionsRequest.next(null);
++    this.revisionSummaries.set([]);
++    this.updateRevisionOptions();
++    this.actionError.set('');
++    this.retryAction = null;
++  }
++
++  private loadStaffOptions(): void {
++    if (!this.isLeaveSalary || this.staffLoading()) return;
++    this.staffLoading.set(true);
++    this.staffError.set('');
++    this.service.getLeaveSalaryStaff().pipe(
++      takeUntilDestroyed(this.destroyRef),
++      finalize(() => this.staffLoading.set(false)),
++    ).subscribe({
++      next: result => {
++        if (!result.isSuccess) {
++          this.staffError.set(result.message?.trim() || 'leaveSalaryPayrollProcess.staffLoadError');
++          return;
++        }
++        const saved = this.staffOptions().find(option => option.id === this.preview()?.staffId);
++        const options = result.entities ?? [];
++        this.staffOptions.set(saved && !options.some(option => option.id === saved.id) ? [saved, ...options] : options);
++      },
++      error: error => this.staffError.set(apiErrorMessage(error, 'leaveSalaryPayrollProcess.staffLoadError')),
++    });
++  }
++
++  private ensureSavedStaffOption(run: PayrollRun): void {
++    if (!run.staffId || this.staffOptions().some(option => option.id === run.staffId)) return;
++    const row = run.rows[0];
++    this.staffOptions.update(options => [{ id: run.staffId!, no: row?.code ?? null, value: row?.name ?? '' }, ...options]);
++  }
++
++  private restoreFormWithLocks(restore: () => void): void {
++    if (this.disposed) return;
++    restore();
++    if (this.contextRejected) {
++      this.filterForm.disable({ emitEvent: false });
++      return;
++    }
++    if (this.readOnly()) this.filterForm.controls.month.disable({ emitEvent: false });
++    if (this.isLeaveSalary && (this.readOnly() || !!this.preview()?.id)) {
++      this.filterForm.controls.staffId.disable({ emitEvent: false });
++    }
++  }
++
+   private initColumns(): void {
+     this.notesColumn.set({ field: 'issues', header: 'payrollProcess.rowNotes', width: '64px',
+       headerClass: 'text-center', cellClass: 'text-center align-middle', cellTemplate: this.notesTemplate });
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\models\\payroll-run.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\models\\payroll-run.ts"
+index c386ab7..f3814aa 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\models\\payroll-run.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\models\\payroll-run.ts"	
+@@ -1,5 +1,9 @@
++export type PayrollType = 'Payroll' | 'LeaveSalary';
++
+ export interface PayrollCalculateRequest {
+   period: string;
++  type: PayrollType;
++  staffId?: number;
+ }
+ 
+ export interface PayrollSaveRequest extends PayrollCalculateRequest {
+@@ -24,6 +28,8 @@ export interface PayrollRunRow {
+ export interface PayrollRun {
+   id: number | null;
+   period: string;
++  type: PayrollType;
++  staffId: number | null;
+   version: string;
+   revisionNumber: number;
+   isSaved: boolean;
+@@ -48,6 +54,12 @@ export interface PayrollRun {
+   totalNet: number;
+ }
+ 
++export interface PayrollStaffOption {
++  id: number;
++  no: string | null;
++  value: string;
++}
++
+ export interface PayrollRevisionSummary {
+   revisionNumber: number;
+   savedAt: string | null;
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\services\\payroll-process.service.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\services\\payroll-process.service.ts"
+index b9b358f..8510191 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\services\\payroll-process.service.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\services\\payroll-process.service.ts"	
+@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
+ import { Observable } from 'rxjs';
+ 
+ import { Result } from 'src/app/modules/shared/models/result';
++import { Results } from 'src/app/modules/shared/models/results';
+ import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+ import { environment } from 'src/environments/environment';
+ 
+@@ -10,6 +11,7 @@ import {
+   PayrollRevisionSummary,
+   PayrollRun,
+   PayrollRunLog,
++  PayrollStaffOption,
+   PayrollSaveRequest,
+ } from '../models/payroll-run';
+ 
+@@ -53,4 +55,10 @@ export class PayrollProcessService extends BaseService {
+   getLogs(id: number): Observable<Result<PayrollRunLog[]>> {
+     return this.http.get<Result<PayrollRunLog[]>>(`${this.baseUrl}PayrollRuns/${id}/logs`, this.inlineOptions);
+   }
++
++  getLeaveSalaryStaff(): Observable<Results<PayrollStaffOption>> {
++    return this.http.get<Results<PayrollStaffOption>>(
++      `${this.baseUrl}PayrollRuns/leave-salary-staff`, this.inlineOptions,
++    );
++  }
+ }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.html" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.html"
+index 969013a..8bebfd2 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.html"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.html"	
+@@ -7,7 +7,7 @@
+         icon="bi bi-wallet2"
+       >
+         <app-primary-action-button
+-          [label]="'payrolls.actions.processPayroll' | translate"
++          [label]="processActionLabel() | translate"
+           icon="bi bi-calculator"
+           [disabled]="busy()"
+           (pressed)="openNewProcess()"
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts"
+index 834d254..c8f0c0a 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts"	
+@@ -85,16 +85,20 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+   readonly dateRange = this.fb.control<Date[] | string | null>(currentMonthRange(), dateRangeValidator);
+   readonly filterForm = this.fb.group({
+     dateRange: this.dateRange,
+-    type: this.fb.nonNullable.control<'Payroll'>('Payroll'),
++    type: this.fb.nonNullable.control<PayrollListFilters['type']>('Payroll'),
+     pendingApproval: this.fb.nonNullable.control(false),
+   });
+-  readonly typeOptions: Array<{ id: 'Payroll'; key: string }> = [
++  readonly typeOptions: Array<{ id: PayrollListFilters['type']; key: string }> = [
+     { id: 'Payroll', key: 'payrolls.types.payroll' },
++    { id: 'LeaveSalary', key: 'payrolls.types.leaveSalary' },
+   ];
+ 
+   readonly columns: ReadonlyArray<DataTableColumn<PayrollRunListRow>> = [
+     { field: 'date', header: 'payrolls.columns.date', type: 'date', sortable: true },
+-    { field: 'type', header: 'payrolls.columns.type', value: () => this.translate.instant('payrolls.types.payroll') },
++    { field: 'type', header: 'payrolls.columns.type', value: row => this.translate.instant(
++      row.type === 'LeaveSalary' ? 'payrolls.types.leaveSalary' : 'payrolls.types.payroll',
++    ) },
++    { field: 'staffName', header: 'payrolls.columns.staff', value: row => this.staffText(row), cellClass: 'sigma-data-table__cell--wrap' },
+     { field: 'amount', header: 'payrolls.columns.amount', type: 'money', sortable: true },
+     { field: 'isApproved', header: 'payrolls.columns.status', type: 'status', status: row => this.status(row) },
+   ];
+@@ -187,7 +191,7 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+ 
+   openNewProcess(): void {
+     if (this.busy()) return;
+-    void this.router.navigate(['/ProcessPayroll'], {
++    void this.router.navigate([this.activeFilters.type === 'LeaveSalary' ? '/ProcessLeaveSalary' : '/ProcessPayroll'], {
+       queryParams: { ...this.returnQueryParams(), returnTo: '/ProcessedPayrolls' },
+     });
+   }
+@@ -196,7 +200,7 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+     if (this.busy()) return;
+     const current = this.currentRow(row);
+     if (!current || (mode === 'edit' && current.isPaid)) return;
+-    void this.router.navigate(['/ProcessPayroll'], {
++    void this.router.navigate([current.type === 'LeaveSalary' ? '/ProcessLeaveSalary' : '/ProcessPayroll'], {
+       queryParams: { ...this.returnQueryParams(), runId: current.id, mode, returnTo: '/ProcessedPayrolls' },
+     });
+   }
+@@ -325,7 +329,10 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+           return;
+         }
+         const exportRows = dataTableExportRows(run.rows, this.savedRunColumns, key => this.translate.instant(key));
+-        onExportToExcel(signal(exportRows), `Payroll-${run.period}-R${run.revisionNumber}`);
++        const filename = run.type === 'LeaveSalary'
++          ? `LeaveSalary-${run.staffId}-${run.period}-R${run.revisionNumber}`
++          : `Payroll-${run.period}-R${run.revisionNumber}`;
++        onExportToExcel(signal(exportRows), filename);
+       },
+       error: error => this.operationError.set(apiErrorMessage(error, 'payrolls.errors.exportRun')),
+     });
+@@ -438,7 +445,14 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+     const dateRange = fromText || toText
+       ? (from && to ? [from, to] : `${fromText} - ${toText}`)
+       : state.text('dateRange') === 'all' ? null : currentMonthRange();
+-    this.filterForm.patchValue({ dateRange, type: 'Payroll', pendingApproval: state.flag('pendingApproval') }, { emitEvent: false });
++    const type = state.text('type') === 'LeaveSalary' ? 'LeaveSalary' : 'Payroll';
++    this.filterForm.patchValue({ dateRange, type, pendingApproval: state.flag('pendingApproval') }, { emitEvent: false });
++    this.activeFilters = {
++      type,
++      dateFrom: fromText || undefined,
++      dateTo: toText || undefined,
++      pendingApproval: state.flag('pendingApproval') ? true : null,
++    };
+     const paging = state.paging();
+     this.pageNo.set(Math.floor(paging.pageNo));
+     this.pageSize.set(Math.min(100, Math.floor(paging.pageSize)));
+@@ -461,4 +475,15 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+       sortField: this.sortField(), sortOrder: this.sortOrder(),
+     };
+   }
++
++  processActionLabel(): string {
++    return this.activeFilters.type === 'LeaveSalary'
++      ? 'payrolls.actions.processLeaveSalary'
++      : 'payrolls.actions.processPayroll';
++  }
++
++  private staffText(row: PayrollRunListRow): string {
++    if (!row.staffName && !row.staffCode) return '';
++    return row.staffCode ? `${row.staffCode} — ${row.staffName ?? ''}` : row.staffName ?? '';
++  }
+ }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\models\\list.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\models\\list.ts"
+index 397a199..e13079a 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\models\\list.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\models\\list.ts"	
+@@ -1,6 +1,8 @@
+ import { ListQuery } from 'src/app/modules/shared/utils/list-query';
+ 
+-export type PayrollType = 'Payroll';
++import { PayrollType } from '../../PayrollProcess/models/payroll-run';
++
++export type { PayrollType };
+ export type PayrollListSortField = 'date' | 'amount';
+ 
+ /** Saved current revision only; extra properties support identity and action gates. */
+@@ -8,6 +10,8 @@ export interface PayrollRunListRow {
+   id: number;
+   date: string;
+   type: PayrollType;
++  staffCode: string | null;
++  staffName: string | null;
+   amount: number;
+   isApproved: boolean;
+   isPaid: boolean;
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\i18n\\vocabs\\ar.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\i18n\\vocabs\\ar.ts"
+index 2c53b3e..8f5dbea 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\i18n\\vocabs\\ar.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\i18n\\vocabs\\ar.ts"	
+@@ -3,6 +3,18 @@ export const locale = {
+   lang: 'ar',
+ 
+   data: {
++    leaveSalaryPayrollProcess: {
++      title: 'معالجة راتب الموظف غير النشط',
++      subtitle: 'احتساب راتب شهر لموظف غير نشط مع نفس دورة نسخ الرواتب',
++      staff: 'الموظف',
++      selectStaff: 'اختر موظفًا غير نشط',
++      clearStaff: 'مسح اختيار الموظف',
++      loadingStaff: 'جارٍ تحميل الموظفين المتاحين…',
++      staffLoadError: 'تعذر تحميل الموظفين المتاحين. أعد المحاولة قبل الحساب.',
++      noEligibleStaff: 'لا يوجد موظفون غير نشطين متاحون للاختيار.',
++      policyNotice: 'نطاق المراجعة الأولى: راتب شهر كامل لموظف غير نشط باستخدام حساب الرواتب الشهرية. يحتاج تعويض الإجازات ومستحقات نهاية الخدمة والحساب النسبي لتاريخ الخروج سياسة مستقلة. الحفظ والاعتماد لا يصرفان الراتب ولا يرحّلان قيدًا.',
++      routeMismatch: 'يتبع هذا المسير نوع معالجة آخر. افتحه من قائمة مسيرات الرواتب.',
++    },
+     payrolls: {
+       title: 'مسيرات الرواتب',
+       subtitle: 'مراجعة واعتماد النسخ المحفوظة للرواتب الشهرية',
+@@ -13,10 +25,12 @@ export const locale = {
+       },
+       types: {
+         payroll: 'الرواتب',
++        leaveSalary: 'راتب الموظف غير النشط',
+       },
+       columns: {
+         date: 'التاريخ',
+         type: 'النوع',
++        staff: 'الموظف',
+         amount: 'المبلغ',
+         status: 'الحالة',
+       },
+@@ -32,6 +46,7 @@ export const locale = {
+         log: 'سجل العمليات',
+         exportRun: 'تصدير إلى Excel',
+         processPayroll: 'معالجة الرواتب',
++        processLeaveSalary: 'معالجة راتب الموظف غير النشط',
+       },
+       approval: {
+         title: 'اعتماد نسخة الرواتب؟',
+@@ -120,6 +135,7 @@ export const locale = {
+         loadError: 'تعذر تحميل سجل عمليات الرواتب.',
+       },
+       issues: {
++        duplicatePayrollScope: 'يوجد راتب محفوظ لهذا الموظف في نوع المسير الآخر للشهر نفسه. يلزم تحديد سياسة تسوية مستقلة قبل إعداد راتب آخر.',
+         missingSalary: 'لا توجد حزمة راتب كاملة سارية لهذا الشهر.',
+         invalidSalary: 'بنود الراتب غير صالحة أو لا تساوي الإجمالي المحفوظ.',
+         ambiguousSalary: 'تحتوي نسخة الراتب على بنود مكررة.',
+@@ -1236,6 +1252,13 @@ export const locale = {
+       user: 'المستخدم',
+     },
+     sideMenu: {
++      hrm: 'الموارد البشرية',
++      payrolls: {
++        processPayroll: 'معالجة الرواتب',
++        processLeaveSalary: 'معالجة راتب الموظف غير النشط',
++        processedPayrolls: 'مسيرات الرواتب المحفوظة',
++        paySlips: 'قسائم الرواتب',
++      },
+       stock: 'المخزون',
+       stockGuide: 'دليل المخزون',
+       stocks: {
+@@ -13374,7 +13397,7 @@ export const locale = {
+         totalMinutes: 'إجمالي الدقائق',
+         empty: 'لم يتم تسجيل وقت بعد.',
+         minutesInvalid: 'أدخل عدد دقائق صحيحًا أكبر من صفر.',
+-        locked: 'هذا العمل مغلق؛ سجلات الوقت للعرض فقط.',
++        locked: 'هذا العمل مغلق أو ملغى؛ سجلات الوقت للعرض فقط.',
+         loadError: 'تعذر تحميل سجلات الوقت.',
+         saveError: 'تعذر حفظ سجل الوقت.',
+         removeTitle: 'حذف سجل الوقت؟',
+@@ -13477,7 +13500,7 @@ export const locale = {
+       deleteTitle: 'حذف العمل؟',
+       deleteMessage: 'سيتم حذف العمل ولن يظهر في القائمة. لا يمكن حذف عمل مستخدم في مستندات مشتريات أو مخزون أو فواتير أو قيود.',
+       cancelTitle: 'إلغاء العمل؟',
+-      cancelMessage: 'سيصبح العمل للقراءة فقط، ولن يمكن تعديله أو إغلاقه أو حذفه بعد الإلغاء.',
++      cancelMessage: 'لن يمكن تعديل العمل أو إغلاقه أو حذفه بعد الإلغاء. تمنع مستندات المشتريات أو المخزون أو الفواتير أو القيود المرتبطة الإلغاء.',
+       recordTypes: { job: 'عمل', lubricationJob: 'عمل التشحيم' },
+       statuses: { open: 'مفتوح', closed: 'مغلق', cancelled: 'ملغى' },
+       qualityCheck: {
+@@ -13487,6 +13510,19 @@ export const locale = {
+         cleanupFailed: 'تعذرت إزالة مرفق تم رفعه. حاول مرة أخرى قبل الإغلاق.',
+         uploading: 'جارٍ رفع المرفق…',
+       },
++      logs: {
++        title: 'سجل العمل', recordSubtitle: 'العمل {{no}}', addEntry: 'إضافة إدخال جديد', addEntryTitle: 'إضافة إدخال لسجل العمل',
++        date: 'التاريخ والوقت', user: 'المستخدم', detail: 'التفاصيل', attachments: 'المرفقات', empty: 'لا توجد إدخالات في السجل.',
++        loadingError: 'تعذر تحميل سجل العمل.', saveFailed: 'تعذر حفظ إدخال السجل.',
++        cleanupFailed: 'تعذر حذف مرفق مرفوع. أعد المحاولة قبل الإغلاق.', uploading: 'جارٍ رفع المرفق…',
++        discardTitle: 'تجاهل إدخال السجل؟', discardMessage: 'ستفقد إدخال السجل غير المحفوظ.',
++        removeAttachmentMessage: 'حذف هذا المرفق؟',
++        events: {
++          added: 'تمت إضافة العمل', updated: 'تم تعديل العمل', invoiced: 'تم إنشاء فاتورة العميل', closed: 'تم إغلاق العمل',
++          cancelled: 'تم إلغاء العمل', qualityCheck: 'تقرير فحص جودة المركبة', manual: 'إدخال يدوي',
++          timeAdded: 'تمت إضافة وقت العمالة', timeRemoved: 'تم حذف وقت العمالة',
++        },
++      },
+       ownership: { own: 'مملوكة', external: 'خارجية', buyBack: 'إعادة شراء' },
+       types: {
+         RoutineService: 'صيانة دورية', MechanicalService: 'خدمة ميكانيكية', ElectricalService: 'خدمة كهربائية',
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\i18n\\vocabs\\en.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\i18n\\vocabs\\en.ts"
+index 1688232..f41350e 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\i18n\\vocabs\\en.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\i18n\\vocabs\\en.ts"	
+@@ -4,6 +4,18 @@ import { tollsInvoice } from "src/app/_metronic/shared/enums/tollsInvoice";
+ export const locale = {
+   lang: 'en',
+   data: {
++    leaveSalaryPayrollProcess: {
++      title: 'Leave Salary Payroll Process',
++      subtitle: 'Calculate monthly salary for one inactive employee with payroll revision history',
++      staff: 'Staff',
++      selectStaff: 'Select an inactive employee',
++      clearStaff: 'Clear selected employee',
++      loadingStaff: 'Loading eligible employees…',
++      staffLoadError: 'Eligible employees could not be loaded. Retry before calculating.',
++      noEligibleStaff: 'No available inactive employees were found.',
++      policyNotice: 'First-review scope: a complete month of salary for an inactive employee, using the monthly payroll calculation. Leave encashment, termination benefits and exit-date proration require a separate policy. Save and approval do not pay salary or post a journal.',
++      routeMismatch: 'This payroll belongs to another process type. Open it from the payrolls list.',
++    },
+     payrolls: {
+       title: 'Payrolls',
+       subtitle: 'Review and approve saved monthly payroll revisions',
+@@ -14,10 +26,12 @@ export const locale = {
+       },
+       types: {
+         payroll: 'Payroll',
++        leaveSalary: 'Leave Salary',
+       },
+       columns: {
+         date: 'Date',
+         type: 'Type',
++        staff: 'Staff',
+         amount: 'Amount',
+         status: 'Status',
+       },
+@@ -33,6 +47,7 @@ export const locale = {
+         log: 'Operation log',
+         exportRun: 'Export to Excel',
+         processPayroll: 'Process Payroll',
++        processLeaveSalary: 'Process Leave Salary',
+       },
+       approval: {
+         title: 'Approve payroll revision?',
+@@ -121,6 +136,7 @@ export const locale = {
+         loadError: 'The payroll operation log could not be loaded.',
+       },
+       issues: {
++        duplicatePayrollScope: 'This employee already has a saved salary in the other payroll type for this month. A separate settlement policy is required before preparing another salary.',
+         missingSalary: 'No complete salary package is effective for this month.',
+         invalidSalary: 'Salary components are invalid or do not equal the stored gross.',
+         ambiguousSalary: 'This salary revision has duplicate component rows.',
+@@ -14989,7 +15005,7 @@ export const locale = {
+         totalMinutes: 'Total Minutes',
+         empty: 'No time logged yet.',
+         minutesInvalid: 'Enter whole minutes, more than 0.',
+-        locked: 'This job is closed; its time logs are read-only.',
++        locked: 'This job is closed or cancelled; its time logs are read-only.',
+         loadError: 'The time logs could not be loaded.',
+         saveError: 'The time log could not be saved.',
+         removeTitle: 'Delete time log?',
+@@ -15092,7 +15108,7 @@ export const locale = {
+       deleteTitle: 'Delete job?',
+       deleteMessage: 'The job is deleted and no longer appears in the list. A job used by purchase, stock, invoice or voucher documents cannot be deleted.',
+       cancelTitle: 'Cancel job?',
+-      cancelMessage: 'The job will become read-only and cannot be edited, closed or deleted after cancellation.',
++      cancelMessage: 'The job cannot be edited, closed or deleted after cancellation. Linked purchase, stock, invoice or voucher documents block cancellation.',
+       recordTypes: { job: 'Job', lubricationJob: 'Lubrication Job' },
+       statuses: { open: 'Open', closed: 'Closed', cancelled: 'Cancelled' },
+       qualityCheck: {
+@@ -15102,6 +15118,19 @@ export const locale = {
+         cleanupFailed: 'An uploaded attachment could not be removed. Try again before closing.',
+         uploading: 'Uploading attachment…',
+       },
++      logs: {
++        title: 'Job Log', recordSubtitle: 'Job {{no}}', addEntry: 'Add New Entry', addEntryTitle: 'Add Job Log Entry',
++        date: 'Date and Time', user: 'User', detail: 'Detail', attachments: 'Attachments', empty: 'No log entries.',
++        loadingError: 'The job log could not be loaded.', saveFailed: 'The log entry could not be saved.',
++        cleanupFailed: 'An uploaded attachment could not be removed. Retry before closing.', uploading: 'Uploading attachment…',
++        discardTitle: 'Discard log entry?', discardMessage: 'Your unsaved log entry will be lost.',
++        removeAttachmentMessage: 'Remove this attachment?',
++        events: {
++          added: 'Job Added', updated: 'Job Updated', invoiced: 'Customer Invoice Created', closed: 'Job Closed',
++          cancelled: 'Job Cancelled', qualityCheck: 'Vehicle Quality Check Report', manual: 'Manual Entry',
++          timeAdded: 'Labour Time Added', timeRemoved: 'Labour Time Removed',
++        },
++      },
+       ownership: { own: 'Own', external: 'External', buyBack: 'Buy Back' },
+       types: {
+         RoutineService: 'Routine Service', MechanicalService: 'Mechanical Service', ElectricalService: 'Electrical Service',
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\UserGuide\\content\\hrm-guide.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\UserGuide\\content\\hrm-guide.ts"
+index 808f1b8..3860f70 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\modules\\UserGuide\\content\\hrm-guide.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\UserGuide\\content\\hrm-guide.ts"	
+@@ -3,8 +3,8 @@ import type { GuideSection } from '../models/user-guide.model';
+ export const HRM_GUIDE: GuideSection = {
+   id: 'hrm', titleKey: 'sideMenu.hrm', title: { en: 'Human Resources and Payroll', ar: 'الموارد البشرية والرواتب' },
+   overview: {
+-    en: 'Prepare effective-dated staff salaries and overtime, calculate the payroll month, save a revision and approve that exact revision. Disbursement is a separate workflow. Saved history and operation logs preserve every successful payroll change.',
+-    ar: 'جهّز رواتب الموظفين بتواريخ سريانها والعمل الإضافي، ثم احسب شهر الرواتب واحفظ نسخة واعتمد النسخة نفسها. الصرف دورة مستقلة. يحتفظ سجل النسخ وسجل العمليات بكل تغيير ناجح على المسير.',
++    en: 'Prepare effective-dated salaries, overtime and deductions, calculate the payroll month, save a revision and approve that exact revision. General payroll covers continuing employees; Leave Salary prepares one inactive employee using the same monthly calculation. Disbursement is separate. Saved history and operation logs preserve successful payroll changes.',
++    ar: 'جهّز الرواتب بتواريخ سريانها والعمل الإضافي والخصومات، ثم احسب الشهر واحفظ نسخة واعتمد النسخة نفسها. تشمل الرواتب العامة الموظفين المستمرين، وتعالج شاشة راتب الموظف غير النشط موظفًا واحدًا بنفس الحساب الشهري. الصرف مستقل. تحفظ النسخ وسجل العمليات التغييرات الناجحة على المسير.',
+   },
+   steps: [
+     { title: { en: 'Prepare staff inputs', ar: 'جهّز بيانات الموظفين' }, description: { en: 'Use dated salary revisions, recorded overtime and complete deduction schedules.', ar: 'استخدم تعديلات الراتب المؤرخة والعمل الإضافي المسجل وجداول الخصومات المكتملة.' }, icon: 'bi bi-people' },
+@@ -31,12 +31,31 @@ export const HRM_GUIDE: GuideSection = {
+         { en: 'An older unpaid revision becomes Superseded after a changed Save. Its historical approval remains visible, but cannot authorize payment of the new revision. Paid figures stay locked; recalculated differences require a separate settlement.', ar: 'تصبح النسخة السابقة غير المصروفة «مستبدلة» بعد حفظ تغييرات. تظل موافقتها التاريخية ظاهرة لكنها لا تسمح بصرف النسخة الجديدة. تظل القيم المصروفة مقفلة، وتتطلب الفروق المعاد حسابها تسوية مستقلة.' },
+       ],
+     },
++    {
++      titleKey: 'sideMenu.payrolls.processLeaveSalary', title: { en: 'Leave Salary Payroll Process', ar: 'معالجة راتب الموظف غير النشط' },
++      route: '/ProcessLeaveSalary', icon: 'bi bi-person-dash',
++      purpose: { en: 'Prepare one inactive employee’s complete monthly salary with the same save, revision and approval cycle as general payroll. This first-review scope is shown on the screen.', ar: 'إعداد راتب شهر كامل لموظف غير نشط بنفس دورة الحفظ والنسخ والاعتماد المتبعة في الرواتب العامة. يظهر نطاق المراجعة الأولى هذا داخل الشاشة.' },
++      steps: [
++        { en: 'Prepare a complete salary effective in the chosen month, recorded overtime and deduction schedules. The employee must be currently inactive and available in Staff; this current status does not specify a historical leaving date.', ar: 'جهّز راتبًا كاملًا ساريًا في الشهر المحدد والعمل الإضافي وجداول الخصومات. يجب أن يكون الموظف غير نشط حاليًا ومتاحًا في بيانات الموظفين؛ ولا تحدد هذه الحالة الحالية تاريخ خروج سابقًا.' },
++        { en: 'Choose Month and Staff. Search the employee options by name or code. If loading fails, use Retry before calculating. A saved employee remains visible in historical runs even when no longer available for a new calculation.', ar: 'اختر الشهر والموظف. ابحث في الخيارات بالاسم أو الكود. إذا فشل التحميل فاستخدم إعادة المحاولة قبل الحساب. يظل الموظف المحفوظ ظاهرًا في المسيرات السابقة حتى لو لم يعد متاحًا لحساب جديد.' },
++        { en: 'Press Process to preview the server calculation. Review Basic, Allowances, Gross, Overtime, Additional, Deductions and Net Pay, and open each red Notes icon when present. Resolve the source issue and Process again.', ar: 'اضغط معالجة لمعاينة حساب الخادم. راجع الأساسي والبدلات والإجمالي والإضافي والإضافات والخصومات والصافي، وافتح أيقونة الملاحظات الحمراء عند ظهورها. عالج الملاحظة في بياناتها المصدر ثم أعد المعالجة.' },
++        { en: 'The trash icon clears only the selected employee before a run is saved. Changing or clearing the employee asks you to discard any unsaved calculation; Cancel keeps it. After saving, Staff is fixed for that run. Reset starts a new selection.', ar: 'تمسح أيقونة السلة اختيار الموظف فقط قبل حفظ المسير. يحتاج تغيير الموظف أو مسحه موافقة على تجاهل أي حساب غير محفوظ؛ ويحتفظ الإلغاء بالحساب. بعد الحفظ يثبت الموظف لهذا المسير. تبدأ إعادة التعيين اختيارًا جديدًا.' },
++        { en: 'Save stores the reviewed calculation after rechecking its inputs. The run is separate by employee, month and type. Changed unpaid inputs create a new revision and clear current approval; unchanged saves do not add revisions.', ar: 'يحفظ زر حفظ الحساب الذي راجعته بعد إعادة فحص بياناته. ينفصل المسير بحسب الموظف والشهر والنوع. ينشئ تغيّر البيانات قبل الصرف نسخة جديدة ويزيل الموافقة الحالية؛ ولا يضيف الحفظ دون تغييرات نسخًا.' },
++        { en: 'Browse Saved revisions, export a saved snapshot to Excel and open the operation log. In Payrolls choose Type Leave Salary, Search, then review or approve the saved current revision. Returning to the list keeps its applied filters and page.', ar: 'اعرض النسخ المحفوظة وصدّر لقطة محفوظة إلى Excel وافتح سجل العمليات. في قائمة المسيرات اختر نوع راتب الموظف غير النشط ثم ابحث وراجع النسخة الحالية المحفوظة أو اعتمدها. تحتفظ العودة إلى القائمة بمرشحاتها المطبقة وصفحتها.' },
++      ],
++      notes: [
++        { en: 'This screen uses the complete-month payroll formula. It does not calculate leave encashment, termination benefits or proration for an exit date. Missing or ambiguous salary data, absence rules and mid-month changes needing a policy block Save.', ar: 'تستخدم الشاشة معادلة راتب الشهر الكامل. لا تحسب تعويض رصيد الإجازات أو مستحقات نهاية الخدمة أو الراتب النسبي لتاريخ الخروج. تمنع البيانات الناقصة أو غير المحددة وقواعد الغياب وتغييرات منتصف الشهر التي تحتاج سياسة الحفظ.' },
++        { en: 'If the employee already appears in the other payroll type’s current saved revision for the same month, a note blocks another Save. The same guard applies to general payroll. A separate settlement policy is needed before preparing overlapping salary amounts.', ar: 'إذا ظهر الموظف في النسخة الحالية المحفوظة لنوع المسير الآخر للشهر نفسه، تمنع ملاحظة حفظ راتب آخر. يطبق الحارس نفسه في الرواتب العامة. يلزم تحديد سياسة تسوية مستقلة قبل إعداد مبالغ رواتب متداخلة.' },
++        { en: 'Save and Approve do not pay the salary or post journal entries. Paid figures remain locked. Payment, journals and settlements are separate later workflows.', ar: 'الحفظ والاعتماد لا يصرفان الراتب ولا يرحّلان قيودًا. تظل القيم المصروفة مقفلة. الصرف والقيود والتسويات دورات لاحقة مستقلة.' },
++      ],
++    },
+     {
+       titleKey: 'sideMenu.payrolls.processedPayrolls', title: { en: 'Payrolls and approvals', ar: 'مسيرات الرواتب والموافقات' },
+       route: '/ProcessedPayrolls', icon: 'bi bi-check2-square',
+-      purpose: { en: 'Review saved monthly runs and approve the current revision for the separate disbursement workflow.', ar: 'مراجعة مسيرات الشهور المحفوظة واعتماد النسخة الحالية لدورة الصرف المستقلة.' },
++      purpose: { en: 'Review saved Payroll or Leave Salary monthly runs and approve the current revision for the separate disbursement workflow.', ar: 'مراجعة مسيرات الرواتب العامة أو راتب الموظف غير النشط المحفوظة واعتماد النسخة الحالية لدورة الصرف المستقلة.' },
+       steps: [
+-        { en: 'Set Date Range and Type Payroll; choose Pending Approval when needed, then Search. Date refers to the final day of the payroll month. Excel above the list includes every matching payroll, not only the visible page.', ar: 'حدد نطاق التاريخ ونوع الرواتب، واختر بانتظار الموافقة عند الحاجة ثم ابحث. يشير التاريخ إلى آخر يوم من شهر الرواتب. يشمل Excel أعلى القائمة كل المسيرات المطابقة، وليس الصفحة الظاهرة فقط.' },
++        { en: 'Set Date Range and Type Payroll or Leave Salary; choose Pending Approval when needed, then Search. Leave Salary rows also show the saved employee code and name. Date refers to the final day of the month. Excel above the list includes every matching run, not only the visible page.', ar: 'حدد نطاق التاريخ ونوع الرواتب العامة أو راتب الموظف غير النشط، واختر بانتظار الموافقة عند الحاجة ثم ابحث. تعرض صفوف راتب الموظف غير النشط كود الموظف واسمه المحفوظين أيضًا. يشير التاريخ إلى آخر يوم من الشهر. يشمل Excel أعلى القائمة كل المسيرات المطابقة، وليس الصفحة الظاهرة فقط.' },
++        { en: 'The process button follows the type you applied with Search. View and Edit open each saved run in its own process screen.', ar: 'يتبع زر المعالجة النوع الذي طبقته بزر البحث. يفتح العرض والتعديل كل مسير محفوظ في شاشة معالجته.' },
+         { en: 'View opens the stored rows read-only. Edit opens the current unpaid run: Process again and Save changed figures as a new revision. Approve requires confirmation and rechecks the current saved version.', ar: 'يفتح «عرض» الصفوف المخزنة للقراءة فقط. يفتح «تعديل» المسير الحالي غير المصروف: أعد المعالجة واحفظ القيم المتغيرة كنسخة جديدة. يحتاج «اعتماد» تأكيدًا ويتحقق مجددًا من النسخة الحالية المحفوظة.' },
+         { en: 'Export to Excel in a row exports that saved payroll’s employee lines. Operations log shows creation, recalculation/replacement and approval with the user, UTC-derived display time, revision and amounts.', ar: 'يصدر Excel الخاص بالصف بنود الموظفين في المسير المحفوظ. يعرض سجل العمليات الإنشاء وإعادة الحساب والاستبدال والاعتماد مع المستخدم والتوقيت ورقم النسخة والمبالغ.' },
+       ],
+@@ -47,6 +66,7 @@ export const HRM_GUIDE: GuideSection = {
+     },
+   ],
+   questions: [
++    { question: { en: 'Does Leave Salary mean a leave-days payout?', ar: 'هل راتب الموظف غير النشط يعني تعويض أيام الإجازة؟' }, answer: { en: 'For the first review, it means a complete monthly salary for one inactive employee. Leave-days payout and termination calculations need a separately agreed policy.', ar: 'في المراجعة الأولى يعني راتب شهر كامل لموظف غير نشط واحد. يحتاج تعويض أيام الإجازة وحساب نهاية الخدمة سياسة مستقلة متفقًا عليها.' } },
+     { question: { en: 'Which salary is used for an older month?', ar: 'أي راتب يُستخدم لشهر سابق؟' }, answer: { en: 'The latest salary effective in that payroll period, not a future salary revision. Saved payroll revisions retain their original figures.', ar: 'آخر راتب سارٍ في فترة الرواتب، وليس تعديل راتب مستقبليًا. تحتفظ النسخ المحفوظة بأرقامها الأصلية.' } },
+     { question: { en: 'Does recalculation cancel the whole run?', ar: 'هل إعادة الحساب تلغي المسير كاملًا؟' }, answer: { en: 'No. Changed unpaid payroll creates a new revision and supersedes the old revision. The new revision needs approval.', ar: 'لا. تنشئ تغييرات المسير غير المصروف نسخة جديدة تستبدل السابقة. تحتاج النسخة الجديدة موافقة.' } },
+     { question: { en: 'Does Save or Approve mean the salary was paid?', ar: 'هل الحفظ أو الموافقة يعني أن الراتب صُرف؟' }, answer: { en: 'No. Payment is separate; it must use the current approved revision and keep that paid snapshot immutable.', ar: 'لا. الصرف مستقل، ويجب أن يستخدم النسخة الحالية المعتمدة ويحافظ على ثبات اللقطة المصروفة.' } },
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\pages\\routing.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\pages\\routing.ts"
+index 77b8f8d..e4c9a8a 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\pages\\routing.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\pages\\routing.ts"	
+@@ -1224,6 +1224,12 @@ export const Routing: Routes = [
+     loadChildren: () =>
+       import('../modules/HRM/Payroll/Payrolls/payrolls.routes').then(m => m.Payrolls_Routes),
+   },
++  {
++    path: 'ProcessLeaveSalary',
++    loadChildren: () =>
++      import('../modules/HRM/Payroll/leaveSalaryPayrollProcess/leave-salary-payroll-process.routes')
++        .then(m => m.LeaveSalaryPayrollProcess_Routes),
++  },
+   {
+     path: 'Attendance',
+     loadChildren: () =>
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\_metronic\\layout\\components\\toolbar\\toolbar.component.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\_metronic\\layout\\components\\toolbar\\toolbar.component.ts"
+index bc94f17..76e3200 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\frontend\\src\\app\\_metronic\\layout\\components\\toolbar\\toolbar.component.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\_metronic\\layout\\components\\toolbar\\toolbar.component.ts"	
+@@ -150,6 +150,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
+     const isDepreciationDetail = routePath === '/depreciationDetail';
+     const isRental = /^\/(RentalAgreement|RentalBooking|RentalQuotation|MasterAgreement|RentalTariff|TariffCard|DriverTimeSheet|RentalPlanner)(\/|$)/.test(routePath);
+     const isUserGuide = /^\/UserGuide(\/|$)/.test(routePath);
++    const isPayroll = /^\/(ProcessPayroll|ProcessLeaveSalary|ProcessedPayrolls)(\/|$)/.test(routePath);
+     return (
+       this.appPageTitleDisplay &&
+       !isLimousine &&
+@@ -182,6 +183,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
+       !isDepreciationDetail &&
+       !isRental &&
+       !isUserGuide &&
++      !isPayroll &&
+       viewsWithPageTitles.some((t) => t === this.appToolbarLayout)
+     );
+   }
+diff --git "a/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\leaveSalaryPayrollProcess\\leave-salary-payroll-process.routes.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\leaveSalaryPayrollProcess\\leave-salary-payroll-process.routes.ts"
+new file mode 100644
+index 0000000..455e943
+--- /dev/null
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\leaveSalaryPayrollProcess\\leave-salary-payroll-process.routes.ts"	
+@@ -0,0 +1,15 @@
++import { CanDeactivateFn, Routes } from '@angular/router';
++
++import { PayrollProcessComponent } from '../PayrollProcess/components/process/payroll-process.component';
++
++const preventUnsavedLeaveSalaryExit: CanDeactivateFn<PayrollProcessComponent> = component =>
++  component.canDeactivate();
++
++export const LeaveSalaryPayrollProcess_Routes: Routes = [
++  {
++    path: '',
++    component: PayrollProcessComponent,
++    data: { payrollType: 'LeaveSalary' },
++    canDeactivate: [preventUnsavedLeaveSalaryExit],
++  },
++];

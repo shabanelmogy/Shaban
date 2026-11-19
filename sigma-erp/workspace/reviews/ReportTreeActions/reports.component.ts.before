@@ -1,0 +1,70 @@
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  input,
+  Input,
+  Output,
+} from '@angular/core';
+import {
+  FormGroup,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
+import { TreeTableModule } from 'primeng/treetable';
+import { BaseComponentService } from '../../service/base-component.service';
+import { DynamicFilterConfig, DynamicReportConfig } from '../../models/reports';
+import { InputNumberModule } from "primeng/inputnumber";
+import { RadioButtonModule } from "primeng/radiobutton";
+import { ReportActionsComponent } from '../report-actions/report-actions.component';
+import { ReportPageComponent } from '../report-page/report-page.component';
+
+@Component({
+  selector: 'app-reports',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    DropdownModule,
+    CalendarModule,
+    CheckboxModule,
+    TreeTableModule,
+    TableModule,
+    ButtonModule,
+    TranslateModule,
+    InputNumberModule,
+    RadioButtonModule,
+    ReportActionsComponent,
+    ReportPageComponent,
+],
+  templateUrl: './reports.component.html',
+  styleUrl: './reports.component.scss',
+})
+export class ReportsComponent extends BaseComponentService {
+
+  config = input<DynamicReportConfig>();
+  totals = input<{ title: string; value: number; id: string }[]>();
+  data = input<any[]>();
+  dynamicFilterConfig = input<DynamicFilterConfig[]>();
+  @Input() form!: FormGroup;
+
+  @Output() clickSearch = new EventEmitter<any>();
+
+  constructor() {
+    super();
+  }
+
+  onSearch() {
+    this.clickSearch.emit(this.form.value);
+  }
+
+  onCancel() {
+    this.form.reset();
+  }
+
+}

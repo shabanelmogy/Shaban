@@ -1,0 +1,112 @@
+{
+  "en": {
+    "companyContactPeople": {
+      "title": "Company Contact People",
+      "manage": "Manage company contact people",
+      "addNew": "Create Contact Person",
+      "empty": "No contact people found",
+      "showingEntries": "Showing {first} to {last} of {totalRecords} entries",
+      "loadError": "Contact people could not be loaded.",
+      "exportError": "Contact people could not be exported.",
+      "confirmDeleteTitle": "Delete Contact Person",
+      "confirmDeleteSubtitle": "Remove this contact person",
+      "confirmDeleteQuestion": "Do you want to delete this contact person?",
+      "confirmDeleteWarning": "Linked records may prevent deletion."
+    },
+    "companyDrivers": {
+      "title": "Company Drivers",
+      "manage": "Manage drivers",
+      "addNew": "Create Driver",
+      "empty": "No drivers found",
+      "showingEntries": "Showing {first} to {last} of {totalRecords} entries",
+      "loadError": "Drivers could not be loaded.",
+      "exportError": "Drivers could not be exported.",
+      "confirmDeleteTitle": "Delete Driver",
+      "confirmDeleteSubtitle": "Remove this driver",
+      "confirmDeleteQuestion": "Do you want to delete this driver?",
+      "confirmDeleteWarning": "Linked records may prevent deletion."
+    },
+    "companyContactPeopleForm": {
+      "createTitle": "Create Contact Person",
+      "editTitle": "Edit Contact Person",
+      "viewTitle": "View Contact Person",
+      "description": "Contact identity and communication details",
+      "details": "Contact Details",
+      "detailsError": "The contact person could not be loaded.",
+      "discardTitle": "Discard contact changes?",
+      "discardMessage": "Your unsaved contact changes will be lost.",
+      "discard": "Discard"
+    },
+    "companyDriversForm": {
+      "createTitle": "Create Driver",
+      "editTitle": "Edit Driver",
+      "viewTitle": "View Driver",
+      "description": "Driver identity, contact details and documents",
+      "detailsError": "The driver could not be loaded.",
+      "lookupError": "Country options could not be loaded. Available values remain usable.",
+      "cleanupError": "The driver was saved, but some unused attachments could not be removed.",
+      "discardTitle": "Discard driver changes?",
+      "discardMessage": "Your unsaved driver changes will be lost.",
+      "discard": "Discard",
+      "genders": {
+        "Male": "Male",
+        "Female": "Female"
+      }
+    }
+  },
+  "ar": {
+    "companyContactPeople": {
+      "title": "مسؤولو الاتصال بالشركات",
+      "manage": "إدارة مسؤولي الاتصال بالشركات",
+      "addNew": "إضافة مسؤول اتصال",
+      "empty": "لا يوجد مسؤولو اتصال",
+      "showingEntries": "عرض {first} إلى {last} من {totalRecords} إدخال",
+      "loadError": "تعذر تحميل مسؤولي الاتصال.",
+      "exportError": "تعذر تصدير مسؤولي الاتصال.",
+      "confirmDeleteTitle": "حذف مسؤول الاتصال",
+      "confirmDeleteSubtitle": "إزالة مسؤول الاتصال المحدد",
+      "confirmDeleteQuestion": "هل تريد حذف مسؤول الاتصال؟",
+      "confirmDeleteWarning": "قد تمنع السجلات المرتبطة عملية الحذف."
+    },
+    "companyDrivers": {
+      "title": "سائقو الشركات",
+      "manage": "إدارة السائقين",
+      "addNew": "إضافة سائق",
+      "empty": "لا يوجد سائقون",
+      "showingEntries": "عرض {first} إلى {last} من {totalRecords} إدخال",
+      "loadError": "تعذر تحميل السائقين.",
+      "exportError": "تعذر تصدير السائقين.",
+      "confirmDeleteTitle": "حذف السائق",
+      "confirmDeleteSubtitle": "إزالة السائق المحدد",
+      "confirmDeleteQuestion": "هل تريد حذف هذا السائق؟",
+      "confirmDeleteWarning": "قد تمنع السجلات المرتبطة عملية الحذف."
+    },
+    "companyContactPeopleForm": {
+      "createTitle": "إضافة مسؤول اتصال",
+      "editTitle": "تعديل مسؤول الاتصال",
+      "viewTitle": "عرض مسؤول الاتصال",
+      "description": "بيانات مسؤول الاتصال ووسائل التواصل",
+      "details": "بيانات الاتصال",
+      "detailsError": "تعذر تحميل مسؤول الاتصال.",
+      "discardTitle": "تجاهل تعديلات مسؤول الاتصال؟",
+      "discardMessage": "ستفقد تعديلات مسؤول الاتصال غير المحفوظة.",
+      "discard": "تجاهل"
+    },
+    "companyDriversForm": {
+      "createTitle": "إضافة سائق",
+      "editTitle": "تعديل السائق",
+      "viewTitle": "عرض السائق",
+      "description": "بيانات السائق والتواصل والمستندات",
+      "detailsError": "تعذر تحميل السائق.",
+      "lookupError": "تعذر تحميل خيارات الدول. تظل القيم المتاحة قابلة للاستخدام.",
+      "cleanupError": "تم حفظ السائق، لكن تعذرت إزالة بعض المرفقات غير المستخدمة.",
+      "discardTitle": "تجاهل تعديلات السائق؟",
+      "discardMessage": "ستفقد تعديلات السائق غير المحفوظة.",
+      "discard": "تجاهل",
+      "genders": {
+        "Male": "ذكر",
+        "Female": "أنثى"
+      }
+    }
+  }
+}

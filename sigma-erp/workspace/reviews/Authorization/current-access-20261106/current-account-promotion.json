@@ -1,0 +1,51 @@
+{
+  "IdentityId": "40a14fce-9c80-493c-9faa-9bd0bb51c457",
+  "Stage": "Verified",
+  "Email": "string1005@string1005.com",
+  "Checks": [
+    {
+      "AtUtc": "2026-11-06T11:04:38.8768299Z",
+      "Name": "Exactly the authorized account and configured Admin role matched",
+      "Passed": true
+    },
+    {
+      "AtUtc": "2026-11-06T11:04:44.2606260Z",
+      "Name": "ERP owner provision returned success",
+      "Passed": true
+    },
+    {
+      "AtUtc": "2026-11-06T11:04:44.2686408Z",
+      "Name": "ERP owner matches the existing identity and tenant",
+      "Passed": true
+    },
+    {
+      "AtUtc": "2026-11-06T11:04:44.5101819Z",
+      "Name": "Identity linked and promoted atomically with password and tenant preserved",
+      "Passed": true
+    },
+    {
+      "AtUtc": "2026-11-06T11:04:45.6317604Z",
+      "Name": "ERP owner activated",
+      "Passed": true
+    },
+    {
+      "AtUtc": "2026-11-06T11:04:47.3187813Z",
+      "Name": "Existing login credentials accepted",
+      "Passed": true
+    },
+    {
+      "AtUtc": "2026-11-06T11:04:55.6739232Z",
+      "Name": "Current access recognizes linked tenant administrator",
+      "Passed": true
+    },
+    {
+      "AtUtc": "2026-11-06T11:05:05.1505315Z",
+      "Name": "Roles and permissions administration workspace is accessible",
+      "Passed": true
+    }
+  ],
+  "SubscriptionId": 1007,
+  "RegistrationId": "afeaa7fa-3852-4cf9-a1c6-99e2d154cc6d",
+  "ErpUserId": 24,
+  "VerifiedAtUtc": "2026-11-06T11:05:05.1531806Z"
+}

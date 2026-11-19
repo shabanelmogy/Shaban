@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-07",
+  "scope": "Movements frontend and directly changed shared validator/vocabularies",
+  "verification": "Source parsing and declaration comparison only; no compilation, tests or runtime",
+  "summary": {
+    "typescript": 53,
+    "templates": 15,
+    "localImports": 518,
+    "publicBindings": 384,
+    "members": 2308
+  },
+  "problems": [],
+  "literalVocabularyKeys": 624,
+  "missingVocabularyKeys": [],
+  "scopedWhitespace": "passed",
+  "ownerAcceptancePending": true
+}

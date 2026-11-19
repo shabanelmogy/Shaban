@@ -1,0 +1,82 @@
+[
+  {
+    "packet": "PHASE-00-discovery-evidence.md",
+    "only_master0_master8_provenance": true,
+    "changed_lines": [
+      "-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+      "+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06",
+      "-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+      "+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55"
+    ]
+  },
+  {
+    "packet": "PHASE-01-domain-api.md",
+    "only_master0_master8_provenance": true,
+    "changed_lines": [
+      "-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+      "+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06",
+      "-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+      "+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55"
+    ]
+  },
+  {
+    "packet": "PHASE-02-read-grid.md",
+    "only_master0_master8_provenance": true,
+    "changed_lines": [
+      "-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+      "+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06",
+      "-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+      "+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55"
+    ]
+  },
+  {
+    "packet": "PHASE-03-detail-write.md",
+    "only_master0_master8_provenance": true,
+    "changed_lines": [
+      "-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+      "+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06",
+      "-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+      "+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55"
+    ]
+  },
+  {
+    "packet": "PHASE-04-domain-actions.md",
+    "only_master0_master8_provenance": true,
+    "changed_lines": [
+      "-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+      "+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06",
+      "-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+      "+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55"
+    ]
+  },
+  {
+    "packet": "PHASE-05-integration-runtime.md",
+    "only_master0_master8_provenance": true,
+    "changed_lines": [
+      "-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+      "+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06",
+      "-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+      "+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55"
+    ]
+  },
+  {
+    "packet": "PHASE-06-final-reconciliation.md",
+    "only_master0_master8_provenance": true,
+    "changed_lines": [
+      "-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+      "+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06",
+      "-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+      "+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55"
+    ]
+  },
+  {
+    "packet": "PLAN-00-maintenance-evolution.md",
+    "only_master0_master8_provenance": true,
+    "changed_lines": [
+      "-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+      "+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06",
+      "-- master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+      "+- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55"
+    ]
+  }
+]

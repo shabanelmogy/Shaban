@@ -1,0 +1,86 @@
+[
+  {
+    "title": "sideMenu.voucherss.invoices",
+    "link": "/Invoice"
+  },
+  {
+    "title": "invoice.guideTitle",
+    "link": "/UserGuide/invoice"
+  },
+  {
+    "title": "sideMenu.voucherss.creditNotes",
+    "link": "/CreditNote"
+  },
+  {
+    "title": "sideMenu.voucherss.debitNotes",
+    "link": "/DebitNote"
+  },
+  {
+    "title": "sideMenu.voucherss.receipts",
+    "link": "/Receipt"
+  },
+  {
+    "title": "sideMenu.voucherss.deposits",
+    "link": "/CashDeposit"
+  },
+  {
+    "title": "sideMenu.voucherss.purchaseRequests",
+    "link": "/PurchaseRequest"
+  },
+  {
+    "title": "sideMenu.voucherss.purchaseOrders",
+    "link": "/PurchaseOrder"
+  },
+  {
+    "title": "sideMenu.voucherss.grns",
+    "link": "/GoodsReceivedNote"
+  },
+  {
+    "title": "sideMenu.voucherss.bills",
+    "link": "/Bill"
+  },
+  {
+    "title": "sideMenu.voucherss.purchaseReturns",
+    "link": "/PurchaseReturn"
+  },
+  {
+    "title": "sideMenu.voucherss.payments",
+    "link": "/Payment"
+  },
+  {
+    "title": "sideMenu.voucherss.jvs",
+    "link": "/JournalVoucher"
+  },
+  {
+    "title": "sideMenu.voucherss.salaryVouchers",
+    "link": "/SalaryVoucher"
+  },
+  {
+    "title": "sideMenu.voucherss.amortization",
+    "link": "/Amortization"
+  },
+  {
+    "title": "sideMenu.provisionss.provisions",
+    "link": "/Provision"
+  },
+  {
+    "title": "sideMenu.provisionss.monthlyPosting",
+    "link": "/MonthlyPosting"
+  },
+  {
+    "title": "sideMenu.voucherss.accruals",
+    "link": "/Bill"
+  },
+  {
+    "title": "sideMenu.voucherss.tollsMonthEndPosting",
+    "link": "/Bill"
+  },
+  {
+    "title": "sideMenu.voucherss.darbMonthEndPosting",
+    "link": "/Bill"
+  },
+  {
+    "title": "sideMenu.voucherss.trafficFines",
+    "link": "/TrafficFine"
+  }
+]

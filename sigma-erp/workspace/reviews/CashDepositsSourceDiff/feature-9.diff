@@ -1,0 +1,42 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/create.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/create.ts (current)
+index abfa4e4..1037a5f 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/create.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/create.ts (current)	
+@@ -1,16 +1,24 @@
+-export interface CashDepositCreateDTO {
+-  id: string;
+-  subscriptionId: number;
+-  isDeleted: boolean;
+-  isActive: boolean;
+-  isValid: boolean;
+-  isChanged: boolean;
+-  deletedAt: string;
+-  deletedBy: string;
+-  createdAt: string;
+-  createdBy: string;
++import { CashDepositSourceType } from './list';
++
++export interface CashDepositLineInput {
++  id?: number;
++  sourceType: CashDepositSourceType;
++  sourceReceiptId: number | null;
++  sourcePaymentId: number | null;
++  depositedNow: number;
++}
++
++export interface CashDepositAddInput {
+   date: string;
+-  bankId?: number;
+-  refNo?: string;
++  bankId: number;
++  paymentMethodId: number;
++  branchId: number | null;
++  refNo: string | null;
++  description: string | null;
++  cashDepositDetails: CashDepositLineInput[];
++}
++
++export interface CashDepositUpdateInput extends CashDepositAddInput {
++  id: number;
+ }
+ 

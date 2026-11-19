@@ -1,0 +1,20 @@
+export interface CashDepositDetailCreateDTO {
+  id: string;
+  subscriptionId: number;
+  isDeleted: boolean;
+  isActive: boolean;
+  isValid: boolean;
+  isChanged: boolean;
+  deletedAt: string;
+  deletedBy: string;
+  createdAt: string;
+  createdBy: string;
+  cashDepositId: number;
+  date: string;
+  no?: string;
+  description?: string;
+  amount: number;
+  dueAmount: number;
+  depositedNow: number;
+}
+

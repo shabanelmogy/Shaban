@@ -1,0 +1,253 @@
+diff --git a/SiGma.Business/IServices/ICustomerRequestService.cs b/SiGma.Business/IServices/ICustomerRequestService.cs
+index e854cdb3..0ea64308 100644
+--- a/SiGma.Business/IServices/ICustomerRequestService.cs
++++ b/SiGma.Business/IServices/ICustomerRequestService.cs
+@@ -3,11 +3,8 @@ using SiGma.ViewModels.ViewModels.CustomerRequest;
+ 
+ namespace SiGma.Business.IServices
+ {
+-    public interface
+-        ICustomerRequestService : IService<CustomerRequestAddVM, CustomerRequestUpdateVM, CustomerRequestDetailVM, CustomerRequestListVM>
++    public interface ICustomerRequestService : IService<CustomerRequestAddVM, CustomerRequestUpdateVM, CustomerRequestDetailVM, CustomerRequestListVM>
+     {
+-
+-
++        Task<Result> CloseAsync(int id, CancellationToken cancellationToken);
+     }
+-
+-}
+\ No newline at end of file
++}
+diff --git a/SiGma.Business/MapperConfig/CustomerRequestProfiler.cs b/SiGma.Business/MapperConfig/CustomerRequestProfiler.cs
+index 97933018..8d04ef88 100644
+--- a/SiGma.Business/MapperConfig/CustomerRequestProfiler.cs
++++ b/SiGma.Business/MapperConfig/CustomerRequestProfiler.cs
+@@ -7,10 +7,16 @@ namespace SiGma.Business.MapperConfig
+         public CustomerRequestProfiler()
+         {
+ 
+-            CreateMap<CustomerRequest, CustomerRequestDetailVM>().ReverseMap();
+-            CreateMap<CustomerRequest, CustomerRequestListVM>().ReverseMap();
+-            CreateMap<CustomerRequestAddVM, CustomerRequest>().ReverseMap();
+-            CreateMap<CustomerRequestUpdateVM, CustomerRequest>().ReverseMap();
++            CreateMap<CustomerRequestAddVM, CustomerRequest>();
++            CreateMap<CustomerRequestUpdateVM, CustomerRequest>();
++            CreateMap<CustomerRequest, CustomerRequestDetailVM>()
++                .ForMember(d => d.CustomerName, o => o.MapFrom(s => s.Customer == null ? null :
++                    !string.IsNullOrWhiteSpace(s.Customer.Name) ? s.Customer.Name :
++                    !string.IsNullOrWhiteSpace(s.Customer.No) ? s.Customer.No : "CUS00" + s.Customer.Id));
++            CreateMap<CustomerRequest, CustomerRequestListVM>()
++                .ForMember(d => d.CustomerName, o => o.MapFrom(s => s.Customer == null ? null :
++                    !string.IsNullOrWhiteSpace(s.Customer.Name) ? s.Customer.Name :
++                    !string.IsNullOrWhiteSpace(s.Customer.No) ? s.Customer.No : "CUS00" + s.Customer.Id));
+         }
+     }
+ }
+diff --git a/SiGma.Business/Services/CustomerRequestService.cs b/SiGma.Business/Services/CustomerRequestService.cs
+index 9c41f84a..8ffcf8f5 100644
+--- a/SiGma.Business/Services/CustomerRequestService.cs
++++ b/SiGma.Business/Services/CustomerRequestService.cs
+@@ -1,3 +1,4 @@
++using Microsoft.AspNetCore.Http;
+ using SiGma.ViewModels.ViewModels.CustomerRequest;
+ 
+ namespace SiGma.Business.Services
+@@ -10,5 +11,71 @@ namespace SiGma.Business.Services
+             IStringLocalizer<GeneralMessage> localization) : base(unitOfWork, mapper, localization)
+         {
+         }
++
++        public override async Task<Result> AddAsync(CustomerRequestAddVM vm, CancellationToken cancellationToken)
++        {
++            if (await InvalidCustomerAsync(vm.CustomerId, cancellationToken) is { } invalid)
++                return invalid;
++            return await base.AddAsync(vm, cancellationToken);
++        }
++
++        protected override async Task<IEnumerable<CustomerRequestListVM>> MaterializeListAsync(IQueryable<CustomerRequest> query)
++            => await query.ProjectTo<CustomerRequestListVM>(Mapper.ConfigurationProvider).ToListAsync();
++
++        public override async Task<Result<CustomerRequestDetailVM>> DetailAsync(int id)
++        {
++            var detail = await UnitOfWork.Repository.Query<CustomerRequest>(x => x.Id == id)
++                .AsNoTracking()
++                .ProjectTo<CustomerRequestDetailVM>(Mapper.ConfigurationProvider)
++                .FirstOrDefaultAsync();
++            return detail == null
++                ? BusinessFailure<CustomerRequestDetailVM>("FailedToFound", StatusCodes.Status404NotFound)
++                : new Result<CustomerRequestDetailVM> { IsSuccess = true, Entity = detail };
++        }
++
++        protected override async Task<Result> UpdateCoreAsync(CustomerRequestUpdateVM vm)
++        {
++            var entity = await UnitOfWork.Repository.FindByIdAsync<CustomerRequest>(vm.Id);
++            if (entity == null)
++                return BusinessFailure("FailedToFound", StatusCodes.Status404NotFound);
++            if (await InvalidInputAsync(vm, vm.Id) is { } invalid)
++                return invalid;
++            if (await InvalidCustomerAsync(vm.CustomerId) is { } invalidCustomer)
++                return invalidCustomer;
++
++            // Track only editable inputs; a concurrent Close must never be reverted by a full-row update.
++            Mapper.Map(vm, entity);
++            return await SaveUpdateAsync(entity);
++        }
++
++        private async Task<Result?> InvalidCustomerAsync(int? customerId, CancellationToken cancellationToken = default)
++        {
++            if (customerId.HasValue && !await UnitOfWork.Repository.ExistsAsync<Partner>(
++                    x => x.Id == customerId.Value &&
++                         (x.PartnerType == PartnerType.Individual || x.PartnerType == PartnerType.Company),
++                    cancellationToken: cancellationToken))
++                return BusinessFailure("CustomerRequestCustomerInvalid");
++            return null;
++        }
++
++        public async Task<Result> CloseAsync(int id, CancellationToken cancellationToken)
++        {
++            var entity = await UnitOfWork.Repository.FindByIdAsync<CustomerRequest>(id, cancellationToken);
++            if (entity == null)
++                return BusinessFailure("FailedToFound", StatusCodes.Status404NotFound);
++            if (entity.Status == CustomerRequestStatus.Closed)
++                return new Result { IsSuccess = true, Id = entity.Id, Message = LocalizeMessage("CustomerRequestClosed") };
++            if (entity.Status != CustomerRequestStatus.Open)
++                return BusinessFailure("CustomerRequestCloseInvalidState");
++
++            entity.Close();
++            var saved = await UnitOfWork.SaveChangesAsync(cancellationToken);
++            return new Result
++            {
++                IsSuccess = saved,
++                Id = entity.Id,
++                Message = LocalizeMessage(saved ? "CustomerRequestClosed" : "FailedToUpdate")
++            };
++        }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/SiGma.DataAccess/Configuration/CustomerRequestConfig.cs b/SiGma.DataAccess/Configuration/CustomerRequestConfig.cs
+index 3c4b5b2f..8a082db5 100644
+--- a/SiGma.DataAccess/Configuration/CustomerRequestConfig.cs
++++ b/SiGma.DataAccess/Configuration/CustomerRequestConfig.cs
+@@ -1,3 +1,5 @@
++using SiGma.Helpers.Enum;
++
+ namespace SiGma.DataAccess.Configuration
+ {
+     public sealed class CustomerRequestConfig : IEntityTypeConfiguration<CustomerRequest>
+@@ -5,6 +7,11 @@ namespace SiGma.DataAccess.Configuration
+         public void Configure(EntityTypeBuilder<CustomerRequest> builder)
+         {
+             builder.ToTable(nameof(CustomerRequest));
++            builder.Property(x => x.Detail).HasMaxLength(1000);
++            builder.Property(x => x.Status).HasDefaultValue(CustomerRequestStatus.Open);
++            builder.HasIndex(x => new { x.SubscriptionId, x.Status, x.Id });
++            builder.HasOne(x => x.Customer).WithMany().HasForeignKey(x => x.CustomerId)
++                .OnDelete(DeleteBehavior.Restrict);
+         }
+     }
+ 
+diff --git a/SiGma.Helpers/Models/Administrations/CustomerRequest.cs b/SiGma.Helpers/Models/Administrations/CustomerRequest.cs
+index 898cfc65..db30e062 100644
+--- a/SiGma.Helpers/Models/Administrations/CustomerRequest.cs
++++ b/SiGma.Helpers/Models/Administrations/CustomerRequest.cs
+@@ -1,11 +1,13 @@
+ ﻿namespace SiGma.Helpers.Models.Administrations
+ {
+-    // Contact Management
+     public class CustomerRequest : EntityBase
+     {
+         public int? CustomerId { get; set; }
+-        public Customer? Customer { get; set; }
++        public Partner? Customer { get; set; }
+         [MaxLength(1000)] public string? Detail { get; set; }
++        public CustomerRequestStatus Status { get; private set; } = CustomerRequestStatus.Open;
++
++        public void Close() => Status = CustomerRequestStatus.Closed;
+     }
+ }
+ 
+diff --git a/SiGma.ServerAPI/Controller/CustomerRequestController.cs b/SiGma.ServerAPI/Controller/CustomerRequestController.cs
+index 77c45024..5804b843 100644
+--- a/SiGma.ServerAPI/Controller/CustomerRequestController.cs
++++ b/SiGma.ServerAPI/Controller/CustomerRequestController.cs
+@@ -9,7 +9,8 @@ namespace SiGma.ServerAPI.Controller
+         public CustomerRequestController(ICustomerRequestService service) : base(service)
+         {
+         }
+-
+-
++        [HttpPost("{id:int}/Close")]
++        public async Task<IActionResult> CloseAsync(int id, CancellationToken cancellationToken)
++            => ToActionResult(await Service.CloseAsync(id, cancellationToken));
+     }
+ }
+diff --git a/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestDetailVm.cs b/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestDetailVm.cs
+index a374ff1c..7d4c8e58 100644
+--- a/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestDetailVm.cs
++++ b/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestDetailVm.cs
+@@ -1,13 +1,14 @@
+ using SiGma.Helpers.ViewModelsBases.Detail;
+-using SiGma.ViewModels.ViewModels.Customer;
+-using System.ComponentModel.DataAnnotations;
++using SiGma.Helpers.Enum;
+ 
+ namespace SiGma.ViewModels.ViewModels.CustomerRequest
+ {
+-    public class CustomerRequestDetailVM : DetailBaseVm
++    public class CustomerRequestDetailVM : LeanDetailBaseVm
+     {
+         public int? CustomerId { get; set; }
+-        [MaxLength(1000)] public string? Detail { get; set; }
+-        public CustomerDetailVM? Customer { get; set; }
++        public string? CustomerName { get; set; }
++        public string? Detail { get; set; }
++        public DateTime? CreatedAt { get; set; }
++        public CustomerRequestStatus Status { get; set; }
+     }
+ }
+diff --git a/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestFullListVm.cs b/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestFullListVm.cs
+deleted file mode 100644
+index 2ecae5dc..00000000
+--- a/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestFullListVm.cs
++++ /dev/null
+@@ -1,13 +0,0 @@
+-using SiGma.Helpers.ViewModelsBases.List;
+-using SiGma.ViewModels.ViewModels.Customer;
+-using System.ComponentModel.DataAnnotations;
+-
+-namespace SiGma.ViewModels.ViewModels.CustomerRequest
+-{
+-    public class CustomerRequestFullListVM : ListBaseVm
+-    {
+-        public int? CustomerId { get; set; }
+-        [MaxLength(1000)] public string? Detail { get; set; }
+-        public CustomerDetailVM? Customer { get; set; }
+-    }
+-}
+diff --git a/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestListVm.cs b/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestListVm.cs
+index f792713a..bdc88c34 100644
+--- a/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestListVm.cs
++++ b/SiGma.ViewModels/ViewModels/CustomerRequest/CustomerRequestListVm.cs
+@@ -1,13 +1,13 @@
+-using SiGma.Helpers.ViewModelsBases.List;
+-using SiGma.ViewModels.ViewModels.Customer;
+-using System.ComponentModel.DataAnnotations;
++using SiGma.Helpers.Enum;
+ 
+ namespace SiGma.ViewModels.ViewModels.CustomerRequest
+ {
+-    public class CustomerRequestListVM : ListBaseVm
++    public class CustomerRequestListVM
+     {
+-        public int? CustomerId { get; set; }
+-        [MaxLength(1000)] public string? Detail { get; set; }
+-        public CustomerDetailVM? Customer { get; set; }
++        public int Id { get; set; }
++        public string? CustomerName { get; set; }
++        public DateTime? CreatedAt { get; set; }
++        public string? Detail { get; set; }
++        public CustomerRequestStatus Status { get; set; }
+     }
+ }

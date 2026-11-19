@@ -1,0 +1,1084 @@
+{
+  "Notes": [
+    "Initial dynamic-source 500 corrected by leaf-type query fix and retested200.",
+    "Interrupted fixture grant state reconciled before no-grants sequence.",
+    "Current-access endpoint initially404 before implementation; now200.",
+    "A malformed tenant-claim test was rejected by the existing JWT consistency validation401 before reaching the actor check; the original403 assertion was corrected and retested."
+  ],
+  "UniqueCheckCount": 83,
+  "AttemptCount": 95,
+  "LatestChecks": [
+    {
+      "Check": "Activate grant does not permit Delete",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Assign role plus independent direct grant",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Authenticated actor branch context needs no domain grant",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Create and link ordinary ERP/Identity user",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Create grant does not permit Update",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Create limited role",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access ignores foreign user and tenant selectors",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access ordinary endpoint is available",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access owner endpoint is available",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access rejects a mismatched company claim",
+      "Status": 401,
+      "Expected": 401,
+      "Passed": true
+    },
+    {
+      "Check": "Current access rejects foreign ERP actor even for signed admin",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Current access rejects identity and ERP link mismatch",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Current access rejects inactive ERP user",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Current access removes withdrawn direct grant without relogin",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access returns empty keys without grants",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access returns typed inactive-user reason",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access revision changes after permissions change",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access revision stays stable for unchanged effective policy",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access still requires authentication",
+      "Status": 401,
+      "Expected": 401,
+      "Passed": true
+    },
+    {
+      "Check": "Current access uses active role plus direct grant union",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Deactivate limited role through versioned snapshot",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Dynamic document read without source grant denied",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Dynamic route accepts source key without generic duplicate key",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Explicit Activate permits test branch deactivation",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Explicit Create permits new test branch",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Explicit Delete permits test fixture soft deletion",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Explicit Update permits test branch change",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Grant actual dynamic source permission",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Granted generic view is allowed without new login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Granted reviewed custom operation is allowed",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Inactive ERP user cannot use existing access token",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Inactive role immediately denies its grant",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Invalid identity password returns recoverable ERP save",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Legacy role writer returns Gone",
+      "Status": 410,
+      "Expected": 410,
+      "Passed": true
+    },
+    {
+      "Check": "No grants denies generic view",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "No grants deny dashboard while shell remains available",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary shell bootstrap: CurrentBranch/Mine",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary shell bootstrap: CurrentBranch/Options",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary shell bootstrap: Language/Options",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary shell bootstrap: Localization/Runtime?languageCode=en",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary user cannot administer permissions",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary user cannot receive reserved system owner assignment",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary user login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Owner deactivates ordinary user",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Owner reactivates linked ordinary user",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Owner reads ordinary user access",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Pending Identity user cannot be activated early",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Protected owner role cannot be deactivated",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Protected tenant owner cannot be deactivated",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Protected tenant owner cannot be deleted",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Reactivate limited role",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Reactivated ordinary user regains permitted view",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Reactivated role permits view without new login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Read actual runtime permission catalogue",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Read effective access after role deactivation",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Recovered ordinary user can sign in",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Refresh owner acceptance session",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Remove dynamic document permission",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Repeat ordinary-user registration returns original user",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Repeat registration returns original active company",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Reset unfinished dynamic-grant fixture before retest",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Resume same ERP user with valid identity password",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Same registration rejects changed company details",
+      "Status": 409,
+      "Expected": 409,
+      "Passed": true
+    },
+    {
+      "Check": "Second tenant cannot read first tenant user access",
+      "Status": 404,
+      "Expected": 404,
+      "Passed": true
+    },
+    {
+      "Check": "Second tenant owner login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Second tenant owner permission workspace",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Second tenant registration / isolation fixture",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Self access does not grant administrative workspace",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: ",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: Branch.Activate",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: Branch.Create",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: Branch.Delete",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: Branch.Update",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Stale role snapshot cannot overwrite new version",
+      "Status": 409,
+      "Expected": 409,
+      "Passed": true
+    },
+    {
+      "Check": "Stale user-access snapshot rejected",
+      "Status": 409,
+      "Expected": 409,
+      "Passed": true
+    },
+    {
+      "Check": "Unassignable compatibility operation fails closed",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Unknown dynamic approval document rejected",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Unknown permission key rejected",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Update grant does not permit Activate",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "User cannot sign in with another tenant code",
+      "Status": 401,
+      "Expected": 401,
+      "Passed": true
+    },
+    {
+      "Check": "View grant does not permit Create",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Withdraw direct permission",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Withdrawn custom permission immediately denies access",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    }
+  ],
+  "Date": "2026-11-06",
+  "LatestFailedCount": 0,
+  "HistoricalAttempts": [
+    {
+      "Check": "Second tenant registration / isolation fixture",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Second tenant owner login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Second tenant owner permission workspace",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Second tenant cannot read first tenant user access",
+      "Status": 404,
+      "Expected": 404,
+      "Passed": true
+    },
+    {
+      "Check": "Create and link ordinary ERP/Identity user",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary user login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "No grants denies generic view",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary user cannot administer permissions",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Owner reads ordinary user access",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Create limited role",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Assign role plus independent direct grant",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Granted generic view is allowed without new login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Granted reviewed custom operation is allowed",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Withdraw direct permission",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Withdrawn custom permission immediately denies access",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Deactivate limited role through versioned snapshot",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Inactive role immediately denies its grant",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Read effective access after role deactivation",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Reactivate limited role",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Reactivated role permits view without new login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Stale role snapshot cannot overwrite new version",
+      "Status": 409,
+      "Expected": 409,
+      "Passed": true
+    },
+    {
+      "Check": "Unknown permission key rejected",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Protected owner role cannot be deactivated",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Protected tenant owner cannot be deleted",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Protected tenant owner cannot be deactivated",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary user cannot receive reserved system owner assignment",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Legacy role writer returns Gone",
+      "Status": 410,
+      "Expected": 410,
+      "Passed": true
+    },
+    {
+      "Check": "Unknown dynamic approval document rejected",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Repeat registration returns original active company",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Same registration rejects changed company details",
+      "Status": 409,
+      "Expected": 409,
+      "Passed": true
+    },
+    {
+      "Check": "Repeat ordinary-user registration returns original user",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "User cannot sign in with another tenant code",
+      "Status": 401,
+      "Expected": 401,
+      "Passed": true
+    },
+    {
+      "Check": "View grant does not permit Create",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: Branch.Create",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Explicit Create permits new test branch",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Create grant does not permit Update",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: Branch.Update",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Explicit Update permits test branch change",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Update grant does not permit Activate",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: Branch.Activate",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Explicit Activate permits test branch deactivation",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Activate grant does not permit Delete",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: Branch.Delete",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Explicit Delete permits test fixture soft deletion",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Set direct grant: ",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Dynamic document read without source grant denied",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Grant actual dynamic source permission",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Dynamic route accepts source key without generic duplicate key",
+      "Status": 500,
+      "Expected": 200,
+      "Passed": false
+    },
+    {
+      "Check": "Dynamic document read without source grant denied",
+      "Status": 200,
+      "Expected": 403,
+      "Passed": false
+    },
+    {
+      "Check": "Reset unfinished dynamic-grant fixture before retest",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Dynamic document read without source grant denied",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Grant actual dynamic source permission",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Dynamic route accepts source key without generic duplicate key",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Remove dynamic document permission",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Owner deactivates ordinary user",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Inactive ERP user cannot use existing access token",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Owner reactivates linked ordinary user",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Reactivated ordinary user regains permitted view",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Read actual runtime permission catalogue",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Authenticated actor branch context needs no domain grant",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Unassignable compatibility operation fails closed",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Stale user-access snapshot rejected",
+      "Status": 409,
+      "Expected": 409,
+      "Passed": true
+    },
+    {
+      "Check": "Refresh owner acceptance session",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Invalid identity password returns recoverable ERP save",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Pending Identity user cannot be activated early",
+      "Status": 400,
+      "Expected": 400,
+      "Passed": true
+    },
+    {
+      "Check": "Resume same ERP user with valid identity password",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Recovered ordinary user can sign in",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access owner endpoint is available",
+      "Status": 404,
+      "Expected": 200,
+      "Passed": false
+    },
+    {
+      "Check": "Current access owner endpoint is available",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access ordinary endpoint is available",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary shell bootstrap: CurrentBranch/Options",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary shell bootstrap: CurrentBranch/Mine",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary shell bootstrap: Language/Options",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Ordinary shell bootstrap: Localization/Runtime?languageCode=en",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Self access does not grant administrative workspace",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Current access still requires authentication",
+      "Status": 401,
+      "Expected": 401,
+      "Passed": true
+    },
+    {
+      "Check": "Current access returns empty keys without grants",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "No grants deny dashboard while shell remains available",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Current access uses active role plus direct grant union",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access revision changes after permissions change",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access removes withdrawn direct grant without relogin",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access rejects inactive ERP user",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Current access returns typed inactive-user reason",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Deactivate limited role through versioned snapshot",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Inactive role immediately denies its grant",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Read effective access after role deactivation",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Reactivate limited role",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Reactivated role permits view without new login",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Stale role snapshot cannot overwrite new version",
+      "Status": 409,
+      "Expected": 409,
+      "Passed": true
+    },
+    {
+      "Check": "Current access ignores foreign user and tenant selectors",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access revision stays stable for unchanged effective policy",
+      "Status": 200,
+      "Expected": 200,
+      "Passed": true
+    },
+    {
+      "Check": "Current access rejects foreign ERP actor even for signed admin",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    },
+    {
+      "Check": "Current access rejects a mismatched company claim",
+      "Status": 401,
+      "Expected": 403,
+      "Passed": false
+    },
+    {
+      "Check": "Current access rejects a mismatched company claim",
+      "Status": 401,
+      "Expected": 401,
+      "Passed": true
+    },
+    {
+      "Check": "Current access rejects identity and ERP link mismatch",
+      "Status": 403,
+      "Expected": 403,
+      "Passed": true
+    }
+  ]
+}

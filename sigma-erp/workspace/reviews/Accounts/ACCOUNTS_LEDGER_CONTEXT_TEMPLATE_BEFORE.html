@@ -1,0 +1,259 @@
+<section appReportPage class="sigma-report-page--fill sigma-print-flow">
+  <div class="sigma-report-panel sigma-print-flow">
+    <app-feature-title
+      [title]="config.titleKey | translate"
+      [icon]="config.icon"
+    ></app-feature-title>
+
+    <form
+      class="sigma-filter-form sigma-report-filter-panel no-print"
+      [class.sigma-report-filter-panel--stable]="config.stableFilterLayout"
+      [formGroup]="filterForm"
+      (ngSubmit)="search()"
+    >
+      @for (filter of config.filters; track filter.key) {
+        @if (filter.kind === 'checkbox') {
+          <label class="sigma-report-filter-check" [for]="controlId(filter)">
+            <p-checkbox
+              [inputId]="controlId(filter)"
+              [formControlName]="filter.key"
+              [binary]="true"
+            ></p-checkbox>
+            <span>{{ filter.labelKey | translate }}</span>
+          </label>
+        } @else {
+          <div
+            class="sigma-report-filter-field"
+            [class.sigma-report-filter-field--wide]="filter.wide"
+          >
+            <label [for]="controlId(filter)">
+              {{ filter.labelKey | translate }}
+              @if (filter.required) { <span aria-hidden="true">*</span> }
+            </label>
+
+            @switch (filter.kind) {
+              @case ('date-range') {
+                <p-calendar
+                  appDatePicker
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  selectionMode="range"
+                  [numberOfMonths]="2"
+                  dataType="date"
+                  dateFormat="dd/mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  [hideOnDateTimeSelect]="false"
+                  placeholder="dd/mm/yyyy - dd/mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('date') {
+                <p-calendar
+                  appDatePicker
+                  [dateInputMask]="true"
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  dateFormat="dd/mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  placeholder="dd/mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('month') {
+                <p-calendar
+                  appDatePicker
+                  [dateInputMask]="true"
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  view="month"
+                  dateFormat="mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  placeholder="mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('select') {
+                <p-dropdown
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  [options]="optionsFor(filter)"
+                  optionLabel="label"
+                  optionValue="value"
+                  [filter]="true"
+                  [showClear]="true"
+                  appendTo="body"
+                  [placeholder]="filter.labelKey | translate"
+                ></p-dropdown>
+              }
+              @case ('number') {
+                <p-inputNumber
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  [min]="filter.min"
+                  [max]="filter.max"
+                  [minFractionDigits]="0"
+                  [maxFractionDigits]="0"
+                  [useGrouping]="false"
+                />
+              }
+              @case ('text') {
+                <input
+                  pInputText
+                  [id]="controlId(filter)"
+                  type="text"
+                  [formControlName]="filter.key"
+                  [placeholder]="filter.labelKey | translate"
+                />
+              }
+            }
+            <app-field-error
+              [control]="filterForm.controls[filter.key]"
+              [reserveMessage]="config.stableFilterLayout
+                ? (filter.kind === 'date-range' || filter.kind === 'date' || filter.kind === 'month'
+                  ? 'validationMessages.date' : filter.required ? 'validationMessages.required' : '')
+                : ''"
+            />
+          </div>
+        }
+      }
+
+      <div
+        appReportActions
+        class="sigma-report-filter-actions"
+        [ariaLabel]="'general.actions' | translate"
+      >
+        @if (config.showBack) {
+          <button type="button" class="btn btn-secondary sigma-report-action--reset" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="back()">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            {{ 'general.back' | translate }}
+          </button>
+        }
+        <app-primary-action-button
+          type="submit"
+          [label]="'general.search' | translate"
+          icon="bi bi-search"
+          [loading]="loadingReport()"
+          [disabled]="printing() || loadingLookups() || hasRequiredLookupError()"
+        ></app-primary-action-button>
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="refresh()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          {{ 'general.refresh' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--reset" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="reset()">
+          <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+          {{ 'general.reset' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" [disabled]="printing() || !response() || !rowCount() || loadingReport() || loadingLookups()" (click)="print()">
+          <i class="bi bi-printer" aria-hidden="true"></i>
+          {{ 'general.print' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" [disabled]="printing() || !response() || !rowCount() || loadingReport() || loadingLookups()" (click)="export()">
+          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i>
+          {{ 'general.exportExcel' | translate }}
+        </button>
+      </div>
+    </form>
+
+    @if (lookupErrors().size) {
+      <div class="accounts-report-lookup-error no-print" role="alert">
+        <app-state-message kind="error" message="accountReports.lookupError"></app-state-message>
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="retryLookups()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          {{ 'accountReports.retryLookups' | translate }}
+        </button>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <app-state-message class="no-print" kind="error" [message]="errorMessage()"></app-state-message>
+    }
+
+    @if (appliedFilterItems().length) {
+      <div class="accounts-report-applied-filters" aria-live="polite">
+        @for (item of appliedFilterItems(); track item.labelKey) {
+          <span><strong>{{ item.labelKey | translate }}:</strong> {{ item.value }}</span>
+        }
+      </div>
+    }
+
+    @if (responseContext()) {
+      <p class="mb-0" role="status">{{ responseContext() }}</p>
+    }
+
+    @if (summaryCards().length) {
+      <app-summary-cards
+        [ariaLabel]="'accountReports.summary' | translate"
+        [cards]="summaryCards()"
+        [density]="config.summaryDensity || 'dense'"
+        layout="row"
+        [minCardWidth]="150"
+        [maxHeight]="config.summaryMaxHeight ?? null"
+      ></app-summary-cards>
+    }
+
+    <div
+      class="accounts-report-results sigma-print-flow"
+      [class.accounts-report-results--document]="config.sectionLayout === 'document'"
+      [class.sigma-report-table-frame]="config.sectionLayout === 'document'"
+      [attr.tabindex]="config.sectionLayout === 'document' ? 0 : null"
+      [attr.role]="config.sectionLayout === 'document' ? 'region' : null"
+      [attr.aria-label]="config.sectionLayout === 'document' ? (config.titleKey | translate) : null"
+    >
+      @if (loadingReport()) {
+        <app-state-message kind="loading"></app-state-message>
+      } @else if (!response()) {
+        @if (!errorMessage()) {
+          <app-state-message kind="empty" [message]="config.searchPromptKey || 'accountReports.searchPrompt'"></app-state-message>
+        }
+      } @else {
+        <div class="accounts-report-sections sigma-print-flow" [attr.data-count]="sections().length">
+          @for (section of sections(); track section.id) {
+            <section
+              class="accounts-report-section sigma-print-flow"
+              [id]="config.id + '-panel-' + section.id"
+              [attr.aria-labelledby]="section.titleKey ? config.id + '-' + section.id + '-heading' : null"
+              [attr.aria-label]="!section.titleKey ? (config.titleKey | translate) : null"
+            >
+              @if (section.titleKey) {
+                <h2 [id]="config.id + '-' + section.id + '-heading'">{{ section.titleKey | translate }}</h2>
+              }
+              @if (config.sectionLayout === 'document' && !section.rows.length) {
+                <app-state-message kind="empty" message="general.noData"></app-state-message>
+              } @else {
+                <app-data-table
+                  class="accounts-report-grid"
+                  [style.--sigma-data-table-min-width]="section.minWidth || '42rem'"
+                  [value]="sectionRows(section)"
+                  [columns]="section.columns"
+                  [dataKey]="section.dataKey || 'accountId'"
+                  [hierarchy]="section.hierarchy"
+                  [rowTone]="section.rowTone"
+                  [printAllRows]="printing()"
+                  [lazy]="false"
+                  [paginator]="false"
+                  [fill]="config.sectionLayout !== 'document'"
+                  [scrollable]="config.sectionLayout !== 'document' && !printing()"
+                  [loading]="false"
+                  [showEmpty]="true"
+                  emptyMessage="general.noData"
+                ></app-data-table>
+              }
+            </section>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+<app-editor-dialog [visible]="visible" [title]="'payrollProcess.logs.title' | translate"
+  [subtitle]="'payrollProcess.logs.subtitle' | translate: { period: period, id: runId }"
+  icon="bi bi-clock-history" mode="view" [primaryActionVisible]="false" [contentPadded]="true"
+  width="1040px" height="560px" dialogClass="payroll-run-logs-dialog"
+  [closeLabel]="'general.close' | translate" (closeRequested)="close()" (escapeRequested)="close()">
+  @if (error()) {
+    <app-state-message kind="error" [message]="error()" />
+    <button type="button" class="sigma-secondary-button" [disabled]="loadingLogs()" (click)="retry()">
+      <i class="bi bi-arrow-repeat" aria-hidden="true"></i>{{ 'payrollProcess.retry' | translate }}
+    </button>
+  }
+  <div class="sigma-list-table">
+    <app-data-table [value]="rows()" [columns]="columns" dataKey="id" [fill]="true" [lazy]="false"
+      [paginator]="false" [loading]="loadingLogs()" [showEmpty]="!error()" emptyMessage="payrollProcess.logs.empty"
+      style="--sigma-data-table-min-width: 1030px" />
+  </div>
+</app-editor-dialog>

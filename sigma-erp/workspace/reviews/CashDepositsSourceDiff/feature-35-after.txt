@@ -1,0 +1,23 @@
+using SiGma.Helpers.Enum;
+
+namespace SiGma.ViewModels.ViewModels.CashDepositDetail
+{
+    public class CashDepositDetailDetailVM
+    {
+        public int Id { get; set; }
+        public CashDepositSourceType SourceType { get; set; }
+        public int? SourceReceiptId { get; set; }
+        public int? SourcePaymentId { get; set; }
+        public DateTime Date { get; set; }
+        public string? VoucherLabel { get; set; }
+        public string? No { get; set; }
+        public string? Description { get; set; }
+        public decimal Amount { get; set; }
+        public decimal Deposited { get; set; }
+
+        /// <summary>Server-calculated: Amount - Deposited.</summary>
+        public decimal DueAmount { get; set; }
+
+        public decimal DepositedNow { get; set; }
+    }
+}

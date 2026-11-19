@@ -1,0 +1,254 @@
+[
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/cashdeposit.routes.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-0.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.html",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-1.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.scss",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-2.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.spec.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-3.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-4.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/list/list.component.html",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-5.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/list/list.component.spec.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-7.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/list/list.component.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-8.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/create.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-9.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/details.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-10.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/list.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-11.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-12.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/cashdepositdetail.routes.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-13.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/components/details/details.component.html",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-14.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/components/details/details.component.scss",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-15.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/components/details/details.component.spec.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-16.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/components/details/details.component.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-17.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/components/list/list.component.html",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-18.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/components/list/list.component.scss",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-19.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/components/list/list.component.spec.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-20.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/components/list/list.component.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-21.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/models/create.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-22.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/models/details.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-23.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/models/list.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-24.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/services/cashdepositdetail.service.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-25.diff",
+    "status": "removed",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositAddVm.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-26.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositDetailVm.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-28.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositListVm.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-30.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositUpdateVm.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-31.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDepositDetail/CashDepositDetailAddVm.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-33.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDepositDetail/CashDepositDetailDetailVm.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-35.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDepositDetail/CashDepositDetailUpdateVm.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-38.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.Business/Services/BanksServices/CashDepositService.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-39.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.Business/MapperConfig/CashDepositProfiler.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-40.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.ServerAPI/Controller/CashDepositController.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-42.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.Business/IServices/ICashDepositService.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-43.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SigmaBackend/SiGma.Helpers/Models/Banking/CashDepositDetail.cs",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/feature-44.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INITIAL_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/pages/routing.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/integration-0.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INTEGRATION_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/layout.module.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/integration-1.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INTEGRATION_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/components/toolbar/toolbar.component.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/integration-2.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INTEGRATION_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/i18n/vocabs/en.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/integration-3.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INTEGRATION_SOURCE_SNAPSHOT.json"
+  },
+  {
+    "file": "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/i18n/vocabs/ar.ts",
+    "diff": "F:/My Work/Sigma/reviews/CashDepositsSourceDiff/integration-4.diff",
+    "status": "modified",
+    "originalSnapshot": "CASH_DEPOSITS_INTEGRATION_SOURCE_SNAPSHOT.json"
+  }
+]

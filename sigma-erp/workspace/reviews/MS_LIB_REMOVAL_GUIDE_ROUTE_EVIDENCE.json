@@ -1,0 +1,299 @@
+[
+  {
+    "group": "invoices",
+    "module": "Vouchers/TrafficFines/TrafficFine",
+    "titleKey": "recordListsGuide.Vouchers_TrafficFines_TrafficFine",
+    "en": "Traffic Fines",
+    "ar": "المخالفات المرورية",
+    "route": "/TrafficFine",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/SalaryVouchers/SalaryVoucher",
+    "titleKey": "recordListsGuide.Vouchers_SalaryVouchers_SalaryVoucher",
+    "en": "Salary Vouchers",
+    "ar": "سندات الرواتب",
+    "route": "/SalaryVoucher",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Receipts/Receipt",
+    "titleKey": "recordListsGuide.Vouchers_Receipts_Receipt",
+    "en": "Receipts",
+    "ar": "المقبوضات",
+    "route": "/Receipt",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/PurchaseReturns/PurchaseReturnDetail",
+    "titleKey": "recordListsGuide.Vouchers_PurchaseReturns_PurchaseReturnDetail",
+    "en": "Purchase Returns",
+    "ar": "مرتجعات الشراء",
+    "route": "/PurchaseReturnDetail",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/PurchaseReturns/PurchaseReturn",
+    "titleKey": "recordListsGuide.Vouchers_PurchaseReturns_PurchaseReturn",
+    "en": "Purchase Returns",
+    "ar": "مرتجعات الشراء",
+    "route": "/PurchaseReturn",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/PurchaseRequests/PurchaseRequestDetail",
+    "titleKey": "recordListsGuide.Vouchers_PurchaseRequests_PurchaseRequestDetail",
+    "en": "Purchase Requests",
+    "ar": "طلبات الشراء",
+    "route": "/PurchaseRequestDetail",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/PurchaseRequests/PurchaseRequest",
+    "titleKey": "recordListsGuide.Vouchers_PurchaseRequests_PurchaseRequest",
+    "en": "Purchase Requests",
+    "ar": "طلبات الشراء",
+    "route": "/PurchaseRequest",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/PurchaseOrders/PurchaseOrderDetail",
+    "titleKey": "recordListsGuide.Vouchers_PurchaseOrders_PurchaseOrderDetail",
+    "en": "Purchase Orders",
+    "ar": "أوامر الشراء",
+    "route": "/PurchaseOrderDetail",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/PurchaseOrders/PurchaseOrder",
+    "titleKey": "recordListsGuide.Vouchers_PurchaseOrders_PurchaseOrder",
+    "en": "Purchase Orders",
+    "ar": "أوامر الشراء",
+    "route": "/PurchaseOrder",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Provisions/ProvisionDetail",
+    "titleKey": "recordListsGuide.Vouchers_Provisions_ProvisionDetail",
+    "en": "Provisions",
+    "ar": "المخصصات",
+    "route": "/ProvisionDetail",
+    "unavailable": true
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Invoices/MiscInvoiceItem",
+    "titleKey": "recordListsGuide.Vouchers_Invoices_MiscInvoiceItem",
+    "en": "Invoices",
+    "ar": "الفواتير",
+    "route": "/MiscInvoiceItem",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Invoices/MiscellaneousInvoice",
+    "titleKey": "recordListsGuide.Vouchers_Invoices_MiscellaneousInvoice",
+    "en": "Invoices",
+    "ar": "الفواتير",
+    "route": "/MiscellaneousInvoice",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Invoices/InvoiceBase",
+    "titleKey": "recordListsGuide.Vouchers_Invoices_InvoiceBase",
+    "en": "Invoices",
+    "ar": "الفواتير",
+    "route": "/InvoiceBase",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Provisions/Provision",
+    "titleKey": "recordListsGuide.Vouchers_Provisions_Provision",
+    "en": "Provisions",
+    "ar": "المخصصات",
+    "route": "/Provision",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Payments/PaymentDetail",
+    "titleKey": "recordListsGuide.Vouchers_Payments_PaymentDetail",
+    "en": "Payments",
+    "ar": "المدفوعات",
+    "route": "/PaymentDetail",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Payments/Payment",
+    "titleKey": "recordListsGuide.Vouchers_Payments_Payment",
+    "en": "Payments",
+    "ar": "المدفوعات",
+    "route": "/Payment",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/JVs",
+    "titleKey": "recordListsGuide.Vouchers_JVs",
+    "en": "JVs",
+    "ar": "قيود اليومية",
+    "route": "/JournalVoucher",
+    "unavailable": false
+  },
+  {
+    "group": "fleet",
+    "module": "Fleet/ServiceChecklistItem1",
+    "titleKey": "recordListsGuide.Fleet_ServiceChecklistItem1",
+    "en": "Service Checklist Items",
+    "ar": "بنود قائمة فحص الخدمة",
+    "route": "/ServiceChecklistItem1",
+    "unavailable": false
+  },
+  {
+    "group": "billing",
+    "module": "Billing/BillSettings",
+    "titleKey": "recordListsGuide.Billing_BillSettings",
+    "en": "Bill Settings",
+    "ar": "إعدادات الفواتير",
+    "route": "/BillSettings",
+    "unavailable": false
+  },
+  {
+    "group": "billing",
+    "module": "Billing/BillDetail",
+    "titleKey": "recordListsGuide.Billing_BillDetail",
+    "en": "Bill Details",
+    "ar": "تفاصيل الفواتير",
+    "route": "/BillDetail",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/DebitNotes/DebitNote",
+    "titleKey": "recordListsGuide.Vouchers_DebitNotes_DebitNote",
+    "en": "Debit Notes",
+    "ar": "إشعارات المدين",
+    "route": "/DebitNote",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/CreditNote",
+    "titleKey": "recordListsGuide.Vouchers_CreditNote",
+    "en": "Credit Notes",
+    "ar": "إشعارات الدائن",
+    "route": "/CreditNote",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Bills/BillDetail",
+    "titleKey": "recordListsGuide.Vouchers_Bills_BillDetail",
+    "en": "Bills",
+    "ar": "فواتير الموردين",
+    "route": "/BillDetail",
+    "unavailable": true
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/GRNs/GoodsReceivedNoteDetail",
+    "titleKey": "recordListsGuide.Vouchers_GRNs_GoodsReceivedNoteDetail",
+    "en": "GRNs",
+    "ar": "أذونات استلام البضائع",
+    "route": "/GoodsReceivedNoteDetail",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/GRNs/GoodsReceivedNote",
+    "titleKey": "recordListsGuide.Vouchers_GRNs_GoodsReceivedNote",
+    "en": "GRNs",
+    "ar": "أذونات استلام البضائع",
+    "route": "/GoodsReceivedNote",
+    "unavailable": false
+  },
+  {
+    "group": "invoices",
+    "module": "Vouchers/Bills/Bill",
+    "titleKey": "recordListsGuide.Vouchers_Bills_Bill",
+    "en": "Bills",
+    "ar": "فواتير الموردين",
+    "route": "/Bill",
+    "unavailable": false
+  },
+  {
+    "group": "lease",
+    "module": "Agreements Dashboard 2/PreTerminationRule",
+    "titleKey": "recordListsGuide.Agreements_Dashboard_2_PreTerminationRule",
+    "en": "Pre-termination Rules",
+    "ar": "قواعد الإنهاء المبكر",
+    "route": "/PreTerminationRule",
+    "unavailable": false
+  },
+  {
+    "group": "lease",
+    "module": "Agreements Dashboard 2/ProvisionDetail",
+    "titleKey": "recordListsGuide.Agreements_Dashboard_2_ProvisionDetail",
+    "en": "Provision Details",
+    "ar": "تفاصيل المخصصات",
+    "route": "/ProvisionDetail",
+    "unavailable": false
+  },
+  {
+    "group": "customers",
+    "module": "Customers/OpeningBalanceCustomer",
+    "titleKey": "recordListsGuide.Customers_OpeningBalanceCustomer",
+    "en": "Customer Opening Balances",
+    "ar": "الأرصدة الافتتاحية للعملاء",
+    "route": "",
+    "unavailable": true
+  },
+  {
+    "group": "customers",
+    "module": "Customers/PDCReceivable",
+    "titleKey": "recordListsGuide.Customers_PDCReceivable",
+    "en": "PDC Receivables",
+    "ar": "الشيكات المستحقة",
+    "route": "",
+    "unavailable": true
+  },
+  {
+    "group": "lease",
+    "module": "Agreements Dashboard 2/Clause",
+    "titleKey": "recordListsGuide.Agreements_Dashboard_2_Clause",
+    "en": "Clauses",
+    "ar": "البنود",
+    "route": "/Clause",
+    "unavailable": false
+  },
+  {
+    "group": "administration",
+    "module": "Administration/Users",
+    "titleKey": "recordListsGuide.Administration_Users",
+    "en": "Users",
+    "ar": "المستخدمون",
+    "route": "/User",
+    "unavailable": false
+  },
+  {
+    "group": "administration",
+    "module": "Administration/Roles",
+    "titleKey": "recordListsGuide.Administration_Roles",
+    "en": "Roles",
+    "ar": "الأدوار",
+    "route": "/Role",
+    "unavailable": false
+  }
+]

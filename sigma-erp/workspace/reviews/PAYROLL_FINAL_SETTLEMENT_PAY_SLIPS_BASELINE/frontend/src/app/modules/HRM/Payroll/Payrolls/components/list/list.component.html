@@ -1,0 +1,113 @@
+<section class="sigma-list-page">
+  <div class="sigma-list-panel">
+    <header class="sigma-list-header">
+      <app-feature-title
+        [title]="'payrolls.title' | translate"
+        [subtitle]="'payrolls.subtitle' | translate"
+        icon="bi bi-wallet2"
+      >
+        <app-primary-action-button
+          [label]="processActionLabel() | translate"
+          icon="bi bi-calculator"
+          [disabled]="busy()"
+          (pressed)="openNewProcess()"
+        />
+      </app-feature-title>
+    </header>
+
+    <form
+      class="payrolls-filters"
+      appFilterPanel
+      [stableLayout]="true"
+      [mainColumns]="3"
+      [formGroup]="filterForm"
+      [busy]="busy()"
+      (ngSubmit)="search()"
+      (resetRequested)="resetFilters()"
+    >
+      <div class="sigma-filter-field">
+        <label for="payrolls-date-range">{{ 'payrolls.filters.dateRange' | translate }}</label>
+        <p-calendar appDatePicker
+          inputId="payrolls-date-range"
+          formControlName="dateRange"
+          selectionMode="range"
+          [numberOfMonths]="2"
+          [readonlyInput]="false"
+          [keepInvalid]="true"
+          [showButtonBar]="true"
+          dateFormat="dd/mm/yy"
+          [placeholder]="'payrolls.filters.dateRange' | translate"
+          panelStyleClass="sigma-datepicker-panel"
+          styleClass="w-100"
+          appendTo="body"
+        />
+        <app-field-error [control]="dateRange" reserveMessage="validationMessages.date" />
+      </div>
+      <div class="sigma-filter-field">
+        <label for="payrolls-type">{{ 'payrolls.filters.type' | translate }}</label>
+        <p-dropdown
+          inputId="payrolls-type"
+          formControlName="type"
+          [options]="typeOptions | translateOptions"
+          optionLabel="label"
+          optionValue="id"
+          styleClass="w-100"
+          appendTo="body"
+        />
+      </div>
+      <div class="sigma-filter-field sigma-filter-field--check">
+        <input id="payrolls-pending" type="checkbox" formControlName="pendingApproval" />
+        <label for="payrolls-pending">{{ 'payrolls.filters.pendingApproval' | translate }}</label>
+      </div>
+      <ng-container appFilterActions>
+        <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="exportExcel()">
+          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i>
+          {{ 'general.exportExcel' | translate }}
+        </button>
+        <app-primary-action-button
+          type="submit"
+          [label]="'general.search' | translate"
+          icon="bi bi-search"
+          [loading]="loadingList()"
+          [disabled]="actionPending()"
+        />
+      </ng-container>
+    </form>
+
+    @if (errorMessage()) {
+      <app-state-message kind="error" [message]="errorMessage()" />
+      <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="retry()">
+        {{ 'general.retry' | translate }}
+      </button>
+    }
+
+    <div class="sigma-list-table">
+      <app-data-table
+        [value]="data()"
+        [columns]="columns"
+        [actions]="actions"
+        dataKey="id"
+        [lazy]="true"
+        [paginator]="true"
+        [first]="(pageNo() - 1) * pageSize()"
+        [rows]="pageSize()"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        [totalRecords]="totalRecords()"
+        [loading]="loadingList()"
+        [showEmpty]="!listError()"
+        [sortField]="sortField()"
+        [sortOrder]="sortOrder()"
+        [fill]="true"
+        currentPageReport="payrolls.showingEntries"
+        emptyMessage="payrolls.empty"
+        (lazyLoad)="onLazyLoad($event)"
+      />
+    </div>
+  </div>
+  <app-payroll-run-logs
+    [visible]="logRun() !== null"
+    [runId]="logRun()?.id ?? null"
+    [period]="logPeriod()"
+    (closed)="closeLog()"
+  />
+</section>

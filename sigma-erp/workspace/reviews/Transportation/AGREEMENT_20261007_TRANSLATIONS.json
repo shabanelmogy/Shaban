@@ -1,0 +1,17 @@
+{
+  "transportationAgreement": {
+    "generalSection": {"en": "Agreement information", "ar": "بيانات الاتفاقية"},
+    "amount": {"en": "Amount", "ar": "المبلغ"},
+    "isExtra": {"en": "Extra trip", "ar": "رحلة إضافية"},
+    "emptyItems": {"en": "No schedule items", "ar": "لا توجد بنود للجدول"},
+    "removeItemTitle": {"en": "Remove schedule item", "ar": "حذف بند من الجدول"},
+    "removeItemMessage": {"en": "Remove this item from the agreement?", "ar": "هل تريد حذف هذا البند من الاتفاقية؟"},
+    "reportTitle": {"en": "Transportation agreements report", "ar": "تقرير اتفاقيات النقل"},
+    "appliedReportHint": {"en": "All agreements matching the applied filters", "ar": "كل الاتفاقيات المطابقة لمعايير البحث المطبقة"},
+    "errors": {
+      "export": {"en": "Failed to load all matching agreements for output.", "ar": "تعذر تحميل كل الاتفاقيات المطابقة للتصدير أو التقرير."},
+      "lookups": {"en": "Some selection options could not be loaded. Retry to continue.", "ar": "تعذر تحميل بعض خيارات الاختيار. أعد المحاولة للمتابعة."},
+      "closed": {"en": "This agreement is closed and cannot be edited.", "ar": "هذه الاتفاقية مغلقة ولا يمكن تعديلها."}
+    }
+  }
+}

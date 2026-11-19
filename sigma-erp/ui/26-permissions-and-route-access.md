@@ -157,6 +157,17 @@ lists and editors. Journal voucher create/edit are the current named packages;
 remaining adopted compound route requirements can be inspected from the route
 registry. Each later package needs source reconciliation before publication.
 
+**Data capabilities inside an authorized response.** A permission that hides data
+within an endpoint the actor may already call (not an endpoint of its own) is an
+assignable capability: add it to `CapabilityPermissions.Entries` so the catalogue
+lists it, give it a `PermissionPrerequisites` entry (normally the read action), and
+translate its action under `authorization` actions. The owning controller evaluates
+it from `CurrentAccessService` (tenant admin or granted key; any failure denies)
+and passes a boolean to the service, which omits the gated values (null) and
+returns a flag such as `CanViewCharges`. The UI follows that server flag for
+columns, totals, print and export; never rely on hiding alone. Example:
+`TripsWithOvertimeReports.ViewCharges`.
+
 Use complete literal translation keys for conditional rules and requirement
 groups. A static map translates each known server condition; use a translated
 generic condition for an unknown identifier. The shared API error dialog maps

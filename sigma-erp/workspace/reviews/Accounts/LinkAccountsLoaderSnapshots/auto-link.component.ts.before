@@ -1,0 +1,208 @@
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Subscription, finalize } from 'rxjs';
+
+import { EditorDialogComponent } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { DataTableColumn, DataTableComponent } from 'src/app/modules/shared/components/data-table/data-table.component';
+import { SummaryCardsComponent } from 'src/app/modules/shared/components/summary-cards/summary-cards.component';
+import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+
+import {
+  LinkAccountsAutoLinkAction,
+  LinkAccountsAutoLinkItemVM,
+  LinkAccountsAutoLinkPlanVM,
+  LinkAccountsEnumOptionVM,
+} from '../../models/list';
+import { LinkAccountsService } from '../../services/linkaccounts.service';
+
+/**
+ * Complete Missing Links. Previews, per empty Link Accounts slot, the existing
+ * posting account that will be linked, the account that will be created (and
+ * its parent group), or why the slot stays manual; Apply runs the same plan on
+ * the server in one transaction.
+ */
+@Component({
+  selector: 'app-link-accounts-auto-link',
+  standalone: true,
+  imports: [CommonModule, TranslateModule, EditorDialogComponent, DataTableComponent, SummaryCardsComponent, StateMessageComponent],
+  templateUrl: './auto-link.component.html',
+  styleUrl: './auto-link.component.scss',
+})
+export class LinkAccountsAutoLinkComponent implements OnChanges {
+  private readonly service = inject(LinkAccountsService);
+  private readonly confirmation = inject(ConfirmationDialogService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
+  private request?: Subscription;
+
+  @Input() visible = false;
+  @Input() accountTypes: LinkAccountsEnumOptionVM[] = [];
+  /** `true` when links were applied, so the host reloads its tabs. */
+  @Output() readonly closed = new EventEmitter<boolean>();
+  @Output() readonly appliedCompleted = new EventEmitter<string>();
+
+  readonly actions = LinkAccountsAutoLinkAction;
+  readonly plan = signal<LinkAccountsAutoLinkPlanVM | null>(null);
+  readonly loading = signal(false);
+  readonly loadFailed = signal(false);
+  readonly applying = signal(false);
+  readonly applied = signal(false);
+  readonly confirmationPending = signal(false);
+  readonly errorMessage = signal<string | null>(null);
+  readonly resultMessage = signal<string | null>(null);
+  readonly canApply = computed(() => {
+    const plan = this.plan();
+    return !!plan && !this.applied() &&
+      plan.linkExistingCount + plan.createAccountCount + (plan.defaultGroupChanges?.length ?? 0) > 0;
+  });
+
+  readonly columns: ReadonlyArray<DataTableColumn<LinkAccountsAutoLinkItemVM>> = [
+    { field: 'type', header: 'linkAccounts.autoLink.section', value: row => this.translate.instant(this.typeLabel(row.type)) },
+    { field: 'slotLabel', header: 'linkAccounts.autoLink.slot' },
+    { field: 'action', header: 'linkAccounts.autoLink.action', type: 'status', status: row => ({ label: this.actionLabel(row), tone: row.action === LinkAccountsAutoLinkAction.Manual ? 'warning' : 'info' }) },
+    { field: 'accountName', header: 'linkAccounts.autoLink.account', value: row => row.action === LinkAccountsAutoLinkAction.Manual ? row.reason || '—' : [row.accountCode, row.accountName].filter(Boolean).join(' — ') + (row.action === LinkAccountsAutoLinkAction.CreateAccount ? ' / ' + this.translate.instant('linkAccounts.autoLink.under') + ' ' + [row.parentCode, row.parentName].filter(Boolean).join(' — ') : '') },
+  ];
+  readonly summaryCards = computed<ReadonlyArray<SummaryCard>>(() => {
+    const plan = this.plan();
+    return plan ? [
+      { id: 'link', labelKey: 'linkAccounts.autoLink.countLink', value: plan.linkExistingCount, icon: 'bi bi-link-45deg', format: 'number', accent: 'primary' },
+      { id: 'create', labelKey: 'linkAccounts.autoLink.countCreate', value: plan.createAccountCount, icon: 'bi bi-plus-circle', format: 'number', accent: 'primary' },
+      { id: 'manual', labelKey: 'linkAccounts.autoLink.countManual', value: plan.manualCount, icon: 'bi bi-person', format: 'number', accent: 'warning' },
+    ] : [];
+  });
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['visible'] && this.visible) this.loadPlan();
+  }
+
+  loadPlan(): void {
+    if (this.applying() || this.confirmationPending()) return;
+    this.request?.unsubscribe();
+    this.plan.set(null);
+    this.loadFailed.set(false);
+    this.applied.set(false);
+    this.errorMessage.set(null);
+    this.resultMessage.set(null);
+    this.loading.set(true);
+    this.request = this.service
+      .getAutoLinkPlan()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.loading.set(false))
+      )
+      .subscribe({
+        next: (result) => {
+          if (!result.isSuccess || !result.entity) {
+            this.errorMessage.set(result.message?.trim() || 'linkAccounts.saveFailed');
+            this.loadFailed.set(true);
+            return;
+          }
+          this.plan.set(result.entity);
+        },
+        error: (error: unknown) => {
+          this.errorMessage.set(this.extractServerMessage(error));
+          this.loadFailed.set(true);
+        },
+      });
+  }
+
+  requestApply(): void {
+    const plan = this.plan();
+    if (!plan || !this.canApply() || this.loading() || this.applying() || this.confirmationPending()) return;
+    this.confirmationPending.set(true);
+
+    this.confirmation
+      .confirm({
+        severity: 'warning',
+        title: { key: 'linkAccounts.autoLink.confirmTitle' },
+        message: {
+          key: 'linkAccounts.autoLink.confirmMessage',
+          params: {
+            link: plan.linkExistingCount,
+            create: plan.createAccountCount,
+          },
+        },
+        icon: 'bi bi-diagram-3',
+        confirmLabel: { key: 'linkAccounts.autoLink.apply' },
+        cancelLabel: { key: 'general.cancel' },
+        confirmIcon: 'bi bi-magic',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false)))
+      .subscribe((confirmed) => {
+        if (confirmed && this.visible && this.plan() === plan && !this.loading() && !this.applying() && this.canApply()) this.apply();
+      });
+  }
+
+  close(): void {
+    if (this.applying() || this.confirmationPending()) return;
+    this.request?.unsubscribe();
+    this.closed.emit(this.applied());
+    if (this.applied()) this.appliedCompleted.emit(this.resultMessage() || 'linkAccounts.autoLink.applied');
+  }
+
+  onEscape(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.close();
+  }
+
+  typeLabel(type: number): string {
+    const key = this.accountTypes.find((option) => option.id === type)?.key;
+    return key ? `linkAccounts.${key.charAt(0).toLowerCase()}${key.slice(1)}` : String(type);
+  }
+
+  actionLabel(item: LinkAccountsAutoLinkItemVM): string {
+    switch (item.action) {
+      case LinkAccountsAutoLinkAction.LinkExisting:
+        return 'linkAccounts.autoLink.actionLink';
+      case LinkAccountsAutoLinkAction.CreateAccount:
+        return 'linkAccounts.autoLink.actionCreate';
+      default:
+        return 'linkAccounts.autoLink.actionManual';
+    }
+  }
+
+  private apply(): void {
+    this.applying.set(true);
+    this.errorMessage.set(null);
+    this.service
+      .applyAutoLink()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.applying.set(false))
+      )
+      .subscribe({
+        next: (result) => {
+          if (!result.isSuccess || !result.entity) {
+            this.errorMessage.set(result.message?.trim() || 'linkAccounts.saveFailed');
+            return;
+          }
+          this.plan.set(result.entity);
+          this.resultMessage.set(result.message?.trim() || null);
+          this.applied.set(true);
+        },
+        error: (error: unknown) =>
+          this.errorMessage.set(this.extractServerMessage(error)),
+      });
+  }
+
+  private extractServerMessage(error: unknown): string | null {
+    return apiErrorMessage(error, 'linkAccounts.saveFailed');
+  }
+}

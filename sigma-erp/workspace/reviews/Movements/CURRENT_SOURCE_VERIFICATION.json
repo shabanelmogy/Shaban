@@ -1,0 +1,255 @@
+{
+  "status": "Implemented — source-only",
+  "ownerVerificationPending": true,
+  "limitations": "Syntax, AST/source comparisons only; no Angular application compilation, tests, lint or runtime.",
+  "syntaxErrors": [],
+  "missingTranslations": [],
+  "unusedImports": [],
+  "semanticChanges": [
+    {
+      "file": "src/app/modules/Movements/collectionMovement/components/details/details.component.ts",
+      "members": [
+        "CollectionMovementDetailsComponent.loadDropdowns",
+        "CollectionMovementDetailsComponent.retryAgreement",
+        "CollectionMovementDetailsComponent.onSave"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/CustodyMovement/components/details/details.component.ts",
+      "members": [
+        "CustodyMovementDetailsComponent.retryLookups",
+        "CustodyMovementDetailsComponent.save"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/CustodyMovement/components/list/list.component.ts",
+      "members": [
+        "CustodyMovementsComponent.search",
+        "CustodyMovementsComponent.resetFilters",
+        "CustodyMovementsComponent.loadList",
+        "CustodyMovementsComponent.onLazyLoad",
+        "CustodyMovementsComponent.exportToExcel",
+        "CustodyMovementsComponent.openEditor"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/DeliveryMovement/components/details/details.component.ts",
+      "members": [
+        "DeliveryMovementDetailsComponent.retryLookups",
+        "DeliveryMovementDetailsComponent.retryAgreement",
+        "DeliveryMovementDetailsComponent.save"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/DeliveryMovement/components/list/list.component.ts",
+      "members": [
+        "DeliveryMovementsComponent.search",
+        "DeliveryMovementsComponent.resetFilters",
+        "DeliveryMovementsComponent.loadList",
+        "DeliveryMovementsComponent.onLazyLoad",
+        "DeliveryMovementsComponent.exportToExcel",
+        "DeliveryMovementsComponent.openEditor"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/logsMovement/components/list/list.component.ts",
+      "members": [
+        "LogsMovementListComponent.onSearch",
+        "LogsMovementListComponent.resetFilters",
+        "LogsMovementListComponent.onLazyLoad",
+        "LogsMovementListComponent.exportToExcel",
+        "LogsMovementListComponent.printReport"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/logsMovement/components/view/view.component.ts",
+      "members": [
+        "MovementCheckCardComponent.confirmUploadDiscard",
+        "MovementCheckCardComponent.resetUploadDialog",
+        "MovementCheckCardComponent.openUpload",
+        "MovementCheckCardComponent.saveUpload",
+        "MovementCheckCardComponent.uploadGeneration"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/NRM/components/details/details.component.ts",
+      "members": [
+        "NRMDetailsComponent.syncState",
+        "NRMDetailsComponent.loadLookups",
+        "NRMDetailsComponent.save",
+        "NRMDetailsComponent.cancelLookups"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/Workshop/components/details/details.component.ts",
+      "members": [
+        "DetailsComponent.save"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/WorkshopMovement/components/details/details.component.ts",
+      "members": [
+        "WorkshopMovementDetailsComponent.documentsEditor",
+        "WorkshopMovementDetailsComponent.documentsBusy",
+        "WorkshopMovementDetailsComponent.syncState",
+        "WorkshopMovementDetailsComponent.loadLookups",
+        "WorkshopMovementDetailsComponent.save",
+        "WorkshopMovementDetailsComponent.discardUploads",
+        "WorkshopMovementDetailsComponent.retryCleanup",
+        "WorkshopMovementDetailsComponent.messages",
+        "WorkshopMovementDetailsComponent.savedMessage",
+        "WorkshopMovementDetailsComponent.savedCleanupFinished",
+        "WorkshopMovementDetailsComponent.cancelLookups",
+        "WorkshopMovementDetailsComponent.documentsEditorRef",
+        "WorkshopMovementDetailsComponent.documentDecisionFreeze",
+        "WorkshopMovementDetailsComponent.completeSavedMovement"
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service.ts",
+      "members": [
+        "WorkshopMovementService.addWorkshopMovement"
+      ]
+    }
+  ],
+  "topLevelChanges": [
+    {
+      "file": "src/app/modules/Movements/CustodyMovement/components/list/list.component.ts",
+      "removed": [],
+      "added": [
+        "import { freezeFormState } from 'src/app/modules/shared/utils/form-state';"
+      ],
+      "classHeadersChanged": false
+    },
+    {
+      "file": "src/app/modules/Movements/DeliveryMovement/components/list/list.component.ts",
+      "removed": [],
+      "added": [
+        "import { freezeFormState } from 'src/app/modules/shared/utils/form-state';"
+      ],
+      "classHeadersChanged": false
+    },
+    {
+      "file": "src/app/modules/Movements/logsMovement/components/list/list.component.ts",
+      "removed": [],
+      "added": [
+        "import { freezeFormState } from 'src/app/modules/shared/utils/form-state';"
+      ],
+      "classHeadersChanged": false
+    },
+    {
+      "file": "src/app/modules/Movements/logsMovement/components/view/view.component.ts",
+      "removed": [
+        "import { freezeFormState } from 'src/app/modules/shared/utils/form-state';"
+      ],
+      "added": [
+        "import { freezeFormStates } from 'src/app/modules/shared/utils/form-state';"
+      ],
+      "classHeadersChanged": false
+    },
+    {
+      "file": "src/app/modules/Movements/NRM/components/details/details.component.ts",
+      "removed": [
+        "import { EMPTY, Observable, Subject, catchError, defer, finalize, forkJoin, of, switchMap, tap, timer } from 'rxjs';"
+      ],
+      "added": [
+        "import { EMPTY, Observable, Subject, catchError, defer, finalize, forkJoin, of, switchMap, tap, takeUntil, timer } from 'rxjs';"
+      ],
+      "classHeadersChanged": false
+    },
+    {
+      "file": "src/app/modules/Movements/WorkshopMovement/components/details/details.component.ts",
+      "removed": [
+        "import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, TemplateRef, inject, signal } from '@angular/core';",
+        "import { EMPTY, Observable, Subject, catchError, defer, finalize, forkJoin, map, of, switchMap, tap, timer } from 'rxjs';"
+      ],
+      "added": [
+        "import { ChangeDetectionStrategy, Component, DestroyRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, TemplateRef, effect, inject, signal } from '@angular/core';",
+        "import { MessageService } from 'primeng/api';",
+        "import { EMPTY, Observable, Subject, catchError, defer, finalize, forkJoin, map, of, switchMap, tap, takeUntil, timer } from 'rxjs';"
+      ],
+      "classHeadersChanged": false
+    },
+    {
+      "file": "src/app/modules/UserGuide/content/movements-guide.ts",
+      "removed": [
+        "const MOVEMENTS_TOPICS: ReadonlyArray<GuideTopic> = [\n    {\n        titleKey: 'sideMenu.movementss.collectionMovements',\n        title: { en: 'Collection movements', ar: 'حركات الاستلام' },\n        route: '/CollectionMovement', icon: 'bi bi-box-arrow-in-down',\n        purpose: { en: 'Record collection movement details with the agreement and vehicle context.', ar: 'تسجيل تفاصيل حركة الاستلام مع سياق الاتفاقية والمركبة.' },\n        steps: [\n            { en: 'Choose the movement type, agreement and date, then complete the optional vehicle, driver, fuel and notes fields.', ar: 'حدد نوع الحركة والاتفاقية والتاريخ ثم أكمل بيانات المركبة والسائق والوقود والملاحظات الاختيارية.' },\n            { en: 'Save only after the agreement lookups finish. View opens the saved movement without editing it.', ar: 'احفظ بعد اكتمال خيارات الاتفاقية. يفتح العرض الحركة المحفوظة دون تعديل.' },\n        ],\n        notes: [{ en: 'Cancelling a discard prompt keeps the values and dirty state in the editor.', ar: 'يؤدي إلغاء تأكيد التجاهل إلى الاحتفاظ بالقيم وحالة التعديل داخل المحرر.' }],\n    },\n    {\n        titleKey: 'sideMenu.movementss.deliveryMovements',\n        title: { en: 'Delivery movements', ar: 'حركات التسليم' },\n        route: '/DeliveryMovement', icon: 'bi bi-box-arrow-up',\n        purpose: { en: 'Record a delivery movement with its agreement, driver and vehicle context.', ar: 'تسجيل حركة التسليم مع سياق الاتفاقية والسائق والمركبة.' },\n        steps: [\n            { en: 'Select an agreement and wait for its context before saving. Date, fuel and mileage use the movement form values.', ar: 'حدد الاتفاقية وانتظر تحميل سياقها قبل الحفظ. يستخدم التاريخ والوقود والعداد قيم نموذج الحركة.' },\n            { en: 'Use View for the saved read-only record. Close a dirty editor through the discard confirmation.', ar: 'استخدم العرض للسجل المحفوظ للقراءة فقط. أغلق المحرر المعدل من خلال تأكيد التجاهل.' },\n        ],\n        notes: [],\n    },\n    {\n        titleKey: 'sideMenu.movementss.custodyMovements',\n        title: { en: 'Custody movements', ar: 'حركات العهدة' },\n        route: '/CustodyMovement', icon: 'bi bi-arrow-left-right',\n        purpose: { en: 'Record custody movement dates, branches, vehicles and mileage.', ar: 'تسجيل تواريخ حركات العهدة وفروعها ومركباتها وعداداتها.' },\n        steps: [{ en: 'Complete the required date, branch and vehicle fields, then save. Print is available from a loaded View record.', ar: 'أكمل التاريخ والفرع والمركبة المطلوبة ثم احفظ. يتاح الطبع من سجل العرض المحمل.' }],\n        notes: [],\n    },\n    {\n        titleKey: 'sideMenu.movementss.workshopMovements',\n        title: { en: 'Workshop movements', ar: 'حركات الورشة' },\n        route: '/WorkshopMovement', icon: 'bi bi-tools',\n        purpose: { en: 'Record workshop work, vehicle mileage, supplier workshop and supporting documents.', ar: 'تسجيل أعمال الورشة وعداد المركبة والورشة الموردة والمستندات الداعمة.' },\n        steps: [\n            { en: 'Complete the movement fields and add documents through the shared document control. Save waits for uploads and cleanup to finish.', ar: 'أكمل حقول الحركة وأضف المستندات من خلال عنصر المستندات المشترك. ينتظر الحفظ اكتمال الرفع والتنظيف.' },\n            { en: 'If discard cleanup fails, keep the editor open and use Retry cleanup.', ar: 'إذا فشل تنظيف التجاهل، يبقى المحرر مفتوحًا ويمكن استخدام إعادة المحاولة.' },\n        ],\n        notes: [],\n    },\n    {\n        titleKey: 'sideMenu.movementss.nrms',\n        title: { en: 'NRMs', ar: 'حركات NRM' },\n        route: '/NRM', icon: 'bi bi-car-front',\n        purpose: { en: 'Record internal vehicle movements for the supported NRM types.', ar: 'تسجيل الحركات الداخلية للمركبات لأنواع NRM المدعومة.' },\n        steps: [{ en: 'Choose the date, vehicle and movement type, then complete fuel, mileage, staff and notes before saving.', ar: 'حدد التاريخ والمركبة ونوع الحركة ثم أكمل الوقود والعداد والموظف والملاحظات قبل الحفظ.' }],\n        notes: [],\n    },\n    {\n        titleKey: 'sideMenu.movementss.movementLog',\n        title: { en: 'Movement log', ar: 'سجل الحركات' },\n        route: '/LogsMovement', icon: 'bi bi-journal-text',\n        purpose: { en: 'Search movement history and inspect the loaded check card and supporting records.', ar: 'البحث في تاريخ الحركات ومراجعة بطاقة الفحص والسجلات الداعمة المحملة.' },\n        steps: [\n            { en: 'Apply the date and movement filters, then use Report or Excel for the applied result. View opens a source-specific check card when available.', ar: 'طبق مرشحات التاريخ والحركة ثم استخدم التقرير أو Excel للنتيجة المطبقة. يفتح العرض بطاقة فحص خاصة بالمصدر عند توفرها.' },\n            { en: 'Supporting-document upload is available only when the loaded record permits it; closing a dirty upload dialog asks before discarding it.', ar: 'يتاح رفع المستند الداعم فقط عندما يسمح السجل المحمل؛ ويطلب الإغلاق تأكيدًا عند وجود رفع معدل.' },\n        ],\n        notes: [],\n    },\n];"
+      ],
+      "added": [
+        "const MOVEMENTS_TOPICS: ReadonlyArray<GuideTopic> = [\n    {\n        titleKey: 'sideMenu.movementss.collectionMovements',\n        title: { en: 'Collection movements', ar: 'حركات الاستلام' },\n        route: '/collectionMovement', icon: 'bi bi-box-arrow-in-down',\n        purpose: { en: 'Record collection movement details with the agreement and vehicle context.', ar: 'تسجيل تفاصيل حركة الاستلام مع سياق الاتفاقية والمركبة.' },\n        steps: [\n            { en: 'Use movement number, agreement number, plate, type and date range to search. Search applies the filters; Reset returns to the current month. Excel exports every matching page.', ar: 'ابحث برقم الحركة أو الاتفاقية أو اللوحة والنوع ونطاق التاريخ. يطبق البحث المرشحات؛ ويعيد الضبط الشهر الحالي. يصدر Excel جميع الصفحات المطابقة.' },\n            { en: 'Open a new collection and enter its required date and time. Type, agreement, vehicle, driver, receiving branch, fuel, mileage and notes are optional. A blank type means Agreement Collection.', ar: 'افتح حركة استلام جديدة وأدخل التاريخ والوقت المطلوبين. النوع والاتفاقية والمركبة والسائق وفرع الاستلام والوقود والعداد والملاحظات اختيارية. يعني النوع الفارغ استلام اتفاقية.' },\n            { en: 'Selecting an agreement loads its customer and vehicle context. Wait for loading to finish; use Retry on a failed lookup, then Save. View reads a saved movement; Delete requires confirmation and refreshes the current search.', ar: 'يحمل اختيار الاتفاقية بيانات العميل والمركبة. انتظر اكتمال التحميل؛ وأعد المحاولة عند فشل الخيارات ثم احفظ. يقرأ العرض حركة محفوظة؛ ويتطلب الحذف تأكيدًا ويحدث البحث الحالي.' },\n        ],\n        notes: [\n            { en: 'Mileage is text and preserves the value entered, including zero. View does not offer Edit.', ar: 'العداد نص يحتفظ بالقيمة المدخلة بما فيها الصفر. لا يتيح العرض التعديل.' },\n            { en: 'Cancelling a discard prompt keeps the values and edits. A failed save keeps the draft open for correction or Retry.', ar: 'يحتفظ إلغاء تأكيد التجاهل بالقيم والتعديلات. يبقي فشل الحفظ المسودة مفتوحة للتصحيح أو إعادة المحاولة.' },\n        ],\n    },\n    {\n        titleKey: 'sideMenu.movementss.deliveryMovements',\n        title: { en: 'Delivery movements', ar: 'حركات التسليم' },\n        route: '/DeliveryMovement', icon: 'bi bi-box-arrow-up',\n        purpose: { en: 'Record a delivery movement with its agreement, driver and vehicle context.', ar: 'تسجيل حركة التسليم مع سياق الاتفاقية والسائق والمركبة.' },\n        steps: [\n            { en: 'Search by movement number, agreement, plate, type and date range. Reset restores the current month; Excel includes every matching page.', ar: 'ابحث برقم الحركة والاتفاقية واللوحة والنوع ونطاق التاريخ. يعيد الضبط الشهر الحالي؛ ويتضمن Excel جميع الصفحات المطابقة.' },\n            { en: 'Open a new delivery, select its required type and agreement, and enter the date and time. Wait for agreement context to load before saving; driver, fuel and mileage are optional.', ar: 'افتح تسليمًا جديدًا وحدد النوع والاتفاقية المطلوبين وأدخل التاريخ والوقت. انتظر تحميل بيانات الاتفاقية قبل الحفظ؛ والسائق والوقود والعداد اختيارية.' },\n            { en: 'Use View for the saved record. Close an edited draft through the discard confirmation; Cancel keeps its values.', ar: 'استخدم العرض للسجل المحفوظ. أغلق المسودة المعدلة من خلال تأكيد التجاهل؛ ويحتفظ الإلغاء بقيمها.' },\n        ],\n        notes: [{ en: 'Mileage is text. Delivery offers Create and View; the displayed status does not provide a return or close action.', ar: 'العداد نص. يتيح التسليم الإنشاء والعرض؛ ولا توفر الحالة المعروضة إجراء إرجاع أو إغلاق.' }],\n    },\n    {\n        titleKey: 'sideMenu.movementss.custodyMovements',\n        title: { en: 'Custody movements', ar: 'حركات العهدة' },\n        route: '/CustodyMovement', icon: 'bi bi-arrow-left-right',\n        purpose: { en: 'Record custody movement dates, branches, vehicles and mileage.', ar: 'تسجيل تواريخ حركات العهدة وفروعها ومركباتها وعداداتها.' },\n        steps: [\n            { en: 'Search by movement number, plate, branch and date range. Reset restores the current month and Excel exports all matching rows.', ar: 'ابحث برقم الحركة واللوحة والفرع ونطاق التاريخ. يعيد الضبط الشهر الحالي ويصدر Excel جميع الصفوف المطابقة.' },\n            { en: 'Complete the required date and time, branch and vehicle, then optionally choose an agreement, fuel and enter mileage and notes. Save after the choices finish loading.', ar: 'أكمل التاريخ والوقت والفرع والمركبة المطلوبة ثم اختر الاتفاقية والوقود وأدخل العداد والملاحظات اختياريًا. احفظ بعد اكتمال تحميل الخيارات.' },\n            { en: 'Use View to read the saved details. Print loads the selected movement before opening the print dialog.', ar: 'استخدم العرض لقراءة التفاصيل المحفوظة. يحمل الطبع الحركة المحددة قبل فتح حوار الطباعة.' },\n        ],\n        notes: [{ en: 'Mileage accepts a whole number from -2147483648 to 2147483647, or an empty value. This screen offers no Edit or Delete.', ar: 'يقبل العداد عددًا صحيحًا من ‎-2147483648 إلى 2147483647 أو قيمة فارغة. لا تتيح هذه الشاشة التعديل أو الحذف.' }],\n    },\n    {\n        titleKey: 'sideMenu.movementss.workshopMovements',\n        title: { en: 'Workshop movements', ar: 'حركات الورشة' },\n        route: '/WorkshopMovement', icon: 'bi bi-tools',\n        purpose: { en: 'Record workshop work, vehicle mileage, supplier workshop and supporting documents.', ar: 'تسجيل أعمال الورشة وعداد المركبة والورشة الموردة والمستندات الداعمة.' },\n        steps: [\n            { en: 'Search by movement number, type, plate, date range and supplier workshop. Reset returns to the current month; Excel exports all matching rows.', ar: 'ابحث برقم الحركة والنوع واللوحة ونطاق التاريخ والورشة الموردة. يعيد الضبط الشهر الحالي؛ ويصدر Excel جميع الصفوف المطابقة.' },\n            { en: 'Open a movement and enter its required date and time and vehicle. Fuel, integer mileage, driver, supplier workshop, type, purchase order reference and notes complete its context.', ar: 'افتح حركة وأدخل التاريخ والوقت والمركبة المطلوبة. يكمل الوقود والعداد الصحيح والسائق والورشة الموردة والنوع ومرجع أمر الشراء والملاحظات بياناتها.' },\n            { en: 'Add a document with type, number, issue date and expiry date. Expiry must be after issue. Attach a file if needed and wait for uploads before saving; removing an edited document asks for confirmation.', ar: 'أضف مستندًا بالنوع والرقم وتاريخ الإصدار والانتهاء. يجب أن يأتي الانتهاء بعد الإصدار. أرفق ملفًا عند الحاجة وانتظر اكتمال الرفع قبل الحفظ؛ ويتطلب حذف مستند معدل تأكيدًا.' },\n            { en: 'Save closes after attachment cleanup succeeds. If cleanup fails, keep the editor open and use Retry; the saved movement is not saved again. View and Print load the selected saved movement.', ar: 'يغلق الحفظ بعد نجاح تنظيف المرفقات. إذا فشل التنظيف يبقى المحرر مفتوحًا لاستخدام إعادة المحاولة؛ ولا تعاد عملية حفظ الحركة المحفوظة. يحمل العرض والطبع الحركة المحفوظة المحددة.' },\n        ],\n        notes: [\n            { en: 'Purchase order reference is limited to 100 characters and notes to 2000. Mileage is an optional whole number between -2147483648 and 2147483647. Document number and issuer allow 100 characters each.', ar: 'مرجع أمر الشراء محدود بـ100 حرف والملاحظات بـ2000. العداد عدد صحيح اختياري من ‎-2147483648 إلى 2147483647. يسمح رقم المستند وجهة الإصدار بـ100 حرف لكل منهما.' },\n            { en: 'The workshop selector uses suppliers; the Workshop master is a separate screen. No Edit, Delete or return action is provided here.', ar: 'تستخدم خيارات الورشة الموردين؛ وشاشة تعريف الورش منفصلة. لا تتوفر هنا إجراءات تعديل أو حذف أو إرجاع.' },\n        ],\n    },\n    {\n        titleKey: 'sideMenu.movementss.nrms',\n        title: { en: 'NRMs', ar: 'حركات NRM' },\n        route: '/NRM', icon: 'bi bi-car-front',\n        purpose: { en: 'Record internal vehicle movements for the supported NRM types.', ar: 'تسجيل الحركات الداخلية للمركبات لأنواع NRM المدعومة.' },\n        steps: [\n            { en: 'Search by movement number, type, date range, plate and staff. Reset restores the current month; Excel includes all matching rows.', ar: 'ابحث برقم الحركة والنوع ونطاق التاريخ واللوحة والموظف. يعيد الضبط الشهر الحالي؛ ويتضمن Excel جميع الصفوف المطابقة.' },\n            { en: 'Enter the required date and time, vehicle and movement type, then optionally complete fuel, mileage, staff and notes. Wait for choices to load before Save.', ar: 'أدخل التاريخ والوقت والمركبة والنوع المطلوبة ثم أكمل الوقود والعداد والموظف والملاحظات اختياريًا. انتظر تحميل الخيارات قبل الحفظ.' },\n            { en: 'View reads the saved movement. Print opens the selected saved details for printing.', ar: 'يقرأ العرض الحركة المحفوظة. يفتح الطبع التفاصيل المحفوظة المحددة للطباعة.' },\n        ],\n        notes: [{ en: 'Fuel and mileage are text limited to 50 characters each; notes allow 2000. This screen offers no Edit, Delete or close transition.', ar: 'الوقود والعداد نصان محدودان بـ50 حرفًا لكل منهما؛ والملاحظات بـ2000. لا تتيح هذه الشاشة التعديل أو الحذف أو إجراء إغلاق للحركة.' }],\n    },\n    {\n        titleKey: 'workshopMaster.title',\n        title: { en: 'Workshop master', ar: 'تعريف الورش' },\n        route: '/Workshop', icon: 'bi bi-tools',\n        purpose: { en: 'Maintain named workshop master records separately from movement supplier workshops.', ar: 'إدارة سجلات تعريف الورش بأسمائها بصورة مستقلة عن الورش الموردة في الحركات.' },\n        steps: [\n            { en: 'Search by name or number, or Reset the filters. Excel exports the complete applied result.', ar: 'ابحث بالاسم أو الرقم أو أعد ضبط المرشحات. يصدر Excel النتيجة المطبقة كاملة.' },\n            { en: 'Create requires a nonblank name of up to 250 characters. Use View for saved details or Edit to change the name; Edit allows up to 50 characters.', ar: 'يتطلب الإنشاء اسمًا غير فارغ حتى 250 حرفًا. استخدم العرض للتفاصيل المحفوظة أو التعديل لتغيير الاسم؛ ويسمح التعديل حتى 50 حرفًا.' },\n            { en: 'Save refreshes the current list. Canceling discard preserves unsaved edits.', ar: 'يحدث الحفظ القائمة الحالية. يحتفظ إلغاء تأكيد التجاهل بالتعديلات غير المحفوظة.' },\n        ],\n        notes: [{ en: 'The screen provides Create, View and Edit. It does not provide Delete or select the supplier on Workshop Movement.', ar: 'توفر الشاشة الإنشاء والعرض والتعديل. لا توفر الحذف ولا تختار المورد في حركة الورشة.' }],\n    },\n    {\n        titleKey: 'sideMenu.movementss.movementLog',\n        title: { en: 'Movement log', ar: 'سجل الحركات' },\n        route: '/logsMovement', icon: 'bi bi-journal-text',\n        purpose: { en: 'Search movement history and inspect the loaded check card and supporting records.', ar: 'البحث في تاريخ الحركات ومراجعة بطاقة الفحص والسجلات الداعمة المحملة.' },\n        steps: [\n            { en: 'Start with today’s date range. Search by movement number, reference, plate and type; More filters adds date mode, contact, Open/Close status, mileage-difference threshold and new damages. Reset restores today and the Out date mode.', ar: 'ابدأ بنطاق تاريخ اليوم. ابحث برقم الحركة والمرجع واللوحة والنوع؛ وتضيف المرشحات الإضافية وضع التاريخ وجهة الاتصال وحالة الفتح أو الإغلاق وحد فرق العداد والأضرار الجديدة. يعيد الضبط اليوم ووضع تاريخ الخروج.' },\n            { en: 'Search applies the filters to paging. Report and Excel include all matching rows from that applied search, even when draft filters were changed afterward.', ar: 'يطبق البحث المرشحات على الصفحات. يتضمن التقرير وExcel جميع الصفوف المطابقة لذلك البحث المطبق حتى إذا تغيرت مسودة المرشحات بعده.' },\n            { en: 'View opens the available source details in Basic details, Documents, Checklist, Exterior, Interior and Signatures. Check Card opens a print preview for Agreement, Collection, Delivery, NRM and Workshop Movement.', ar: 'يفتح العرض تفاصيل المصدر المتاحة في التفاصيل الأساسية والمستندات وقائمة الفحص والخارج والداخل والتوقيعات. تفتح بطاقة الفحص معاينة للطبع للاتفاقية والاستلام والتسليم وNRM وحركة الورشة.' },\n            { en: 'In an eligible Agreement’s Documents tab, add or replace a supporting file by selecting its target and a JPEG, PNG or PDF, then Save. Identity documents are read-only. A failed upload keeps the draft; canceling discard keeps it editable.', ar: 'في تبويب مستندات اتفاقية مؤهلة، أضف ملفًا داعمًا أو استبدله باختيار المستند المطلوب وملف JPEG أو PNG أو PDF ثم احفظ. مستندات الهوية للقراءة فقط. يحتفظ فشل الرفع بالمسودة؛ ويبقيها إلغاء التجاهل قابلة للتحرير.' },\n        ],\n        notes: [\n            { en: 'Checklist labels and blank diagrams do not prove recorded answers or damage positions. Unavailable signatures and contact numbers stay blank in Check Card.', ar: 'لا تثبت أسماء عناصر الفحص والرسوم الفارغة إجابات مسجلة أو مواضع أضرار. تبقى التوقيعات وأرقام الاتصال غير المتاحة فارغة في بطاقة الفحص.' },\n            { en: 'Open/Close is a search filter; this screen does not close or reopen movements. Wait for loading before printing and use Retry if a source or lookup fails.', ar: 'الفتح والإغلاق مرشح بحث؛ ولا تغلق هذه الشاشة الحركات أو تعيد فتحها. انتظر اكتمال التحميل قبل الطبع وأعد المحاولة عند فشل المصدر أو الخيارات.' },\n        ],\n    },\n];"
+      ],
+      "classHeadersChanged": false
+    }
+  ],
+  "importPathErrors": [],
+  "componentImportsReviewed": [
+    "src/app/modules/Movements/collectionMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/collectionMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/CustodyMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/CustodyMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/DeliveryMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/DeliveryMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/logsMovement/components/check-card-report/check-card-report.component.ts",
+    "src/app/modules/Movements/logsMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/logsMovement/components/view/view.component.ts",
+    "src/app/modules/Movements/NRM/components/details/details.component.ts",
+    "src/app/modules/Movements/NRM/components/list/list.component.ts",
+    "src/app/modules/Movements/Workshop/components/details/details.component.ts",
+    "src/app/modules/Movements/Workshop/components/list/list.component.ts",
+    "src/app/modules/Movements/WorkshopMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/WorkshopMovement/components/list/list.component.ts"
+  ],
+  "files": [
+    "src/app/modules/Movements/collectionMovement/collection-movement.routes.ts",
+    "src/app/modules/Movements/collectionMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/collectionMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/collectionMovement/models/create.ts",
+    "src/app/modules/Movements/collectionMovement/models/details.ts",
+    "src/app/modules/Movements/collectionMovement/models/list.ts",
+    "src/app/modules/Movements/collectionMovement/services/collection-movement.service.ts",
+    "src/app/modules/Movements/CustodyMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/CustodyMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/CustodyMovement/custodymovement.routes.ts",
+    "src/app/modules/Movements/CustodyMovement/models/create.ts",
+    "src/app/modules/Movements/CustodyMovement/models/details.ts",
+    "src/app/modules/Movements/CustodyMovement/models/list.ts",
+    "src/app/modules/Movements/CustodyMovement/services/custodymovement.service.ts",
+    "src/app/modules/Movements/DeliveryMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/DeliveryMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/DeliveryMovement/deliverymovement.routes.ts",
+    "src/app/modules/Movements/DeliveryMovement/models/agreement-context.ts",
+    "src/app/modules/Movements/DeliveryMovement/models/create.ts",
+    "src/app/modules/Movements/DeliveryMovement/models/details.ts",
+    "src/app/modules/Movements/DeliveryMovement/models/list.ts",
+    "src/app/modules/Movements/DeliveryMovement/services/deliverymovement.service.ts",
+    "src/app/modules/Movements/logsMovement/components/check-card-report/check-card-report.component.ts",
+    "src/app/modules/Movements/logsMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/logsMovement/components/view/view.component.ts",
+    "src/app/modules/Movements/logsMovement/logs-movement-routes.ts",
+    "src/app/modules/Movements/logsMovement/models/check-card-report.ts",
+    "src/app/modules/Movements/logsMovement/models/list.ts",
+    "src/app/modules/Movements/logsMovement/services/logs-movement.service.ts",
+    "src/app/modules/Movements/NRM/components/details/details.component.ts",
+    "src/app/modules/Movements/NRM/components/list/list.component.ts",
+    "src/app/modules/Movements/NRM/models/create.ts",
+    "src/app/modules/Movements/NRM/models/details.ts",
+    "src/app/modules/Movements/NRM/models/list.ts",
+    "src/app/modules/Movements/NRM/nrm.routes.ts",
+    "src/app/modules/Movements/NRM/services/nrm.service.ts",
+    "src/app/modules/Movements/Workshop/components/details/details.component.ts",
+    "src/app/modules/Movements/Workshop/components/list/list.component.ts",
+    "src/app/modules/Movements/Workshop/models/create.ts",
+    "src/app/modules/Movements/Workshop/models/details.ts",
+    "src/app/modules/Movements/Workshop/models/list.ts",
+    "src/app/modules/Movements/Workshop/services/workshop.service.ts",
+    "src/app/modules/Movements/Workshop/workshop.routes.ts",
+    "src/app/modules/Movements/WorkshopMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/WorkshopMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/WorkshopMovement/models/create.ts",
+    "src/app/modules/Movements/WorkshopMovement/models/details.ts",
+    "src/app/modules/Movements/WorkshopMovement/models/list.ts",
+    "src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service.ts",
+    "src/app/modules/Movements/WorkshopMovement/workshopmovement.routes.ts",
+    "src/app/modules/UserGuide/content/movements-guide.ts"
+  ]
+}

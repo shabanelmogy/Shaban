@@ -1,0 +1,210 @@
+{
+  "date": "2026-11-01",
+  "kind": "source-only syntax, binding inventory, route and section-map checks; no Angular compilation/runtime",
+  "head": "0882de30e6b7ab89a304623f7ea40aeaf55849a1",
+  "templates": 25,
+  "typescriptFiles": 30,
+  "pages": [
+    {
+      "name": "agreement-document",
+      "controlDeclarations": 3,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "d0d2e2bb53f8e3e432f5e98b4637cc946acdf9ed77129e1d28c7a8367083434e",
+      "afterSha256": "6e524ccaab9c680da585d05ef9f423bedd423e6188f10d6d2e10e6d2cb26cc61"
+    },
+    {
+      "name": "api-key",
+      "controlDeclarations": 1,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "a25607527b59da989066cd10409bf91c13665d5acdd230df308e1d513b415240",
+      "afterSha256": "216b9eb75adefacca242687c850d86c3f2fd28ee6912b6ed1a1482b862784d47"
+    },
+    {
+      "name": "approvals",
+      "controlDeclarations": 3,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "d49ab67902db497d48b99e09836384671ebd8c40fb1cc0b550e17acc5da36e9e",
+      "afterSha256": "f0d8a539bcceda2fbcb720def87f33defc49f398e40fe74c65f6fbbeef9a9d61"
+    },
+    {
+      "name": "broker",
+      "controlDeclarations": 3,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "490ab89f25bbe87d85a80f9ea82c35ca9e5386c54bbac87631adef2002b16f82",
+      "afterSha256": "aeb2d8e668facfbabb8db8b77a86e5265390101efa8a49fe5a666564ff9ab81c"
+    },
+    {
+      "name": "charges",
+      "controlDeclarations": 7,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "f9600544e9fc5a044987ae0c1bd59ba6106f92b18bb778856694f5b42b0cc0f3",
+      "afterSha256": "b5564ff6055caad39ab88bdb7393b656d972bc799adbc2b02b83200c604eaf9d"
+    },
+    {
+      "name": "common",
+      "controlDeclarations": 230,
+      "formBindingsPreserved": true,
+      "sectionCount": 11,
+      "beforeSha256": "c126a14f58fdcf57e3f5d43a45cf7d89af32cf5d6134dc7dc2f1bb2955679538",
+      "afterSha256": "6bbece326b0e41ab91283bac90c2c8b4fb001428f8e5c1a6037e2f2b21864435"
+    },
+    {
+      "name": "cost-centers",
+      "controlDeclarations": 2,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "509e6af541979ec1305ea121c0c61b4806eae53e8acec3fc36b95d5afa52faea",
+      "afterSha256": "da909d72e76c45dd454b31622a6e35d260318921ea6cdba4f6bfc8dd57e928d6"
+    },
+    {
+      "name": "dda",
+      "controlDeclarations": 12,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "43331208290c3535860062d138626fc370899dc92c3cc2d80ad64a6cf871fce7",
+      "afterSha256": "eb617ca593a531b237fa81180a6adc0951b62bf57bbfab7a6d51e412d5852dd1"
+    },
+    {
+      "name": "document-number",
+      "controlDeclarations": 164,
+      "formBindingsPreserved": true,
+      "sectionCount": 8,
+      "beforeSha256": "663ed9c304b0f28f05e9bcaf1897a18a05907bca86e8b1f56cf8b1de01072d27",
+      "afterSha256": "5324ee54d5d24cc6f546a2440ad6983937ed7b1d8f1beb97bb3d157f35fbcddd"
+    },
+    {
+      "name": "e-darb",
+      "controlDeclarations": 15,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "c20f41646a5c9e7ba8335c4527289fb20968d0ac7393600d2f9d9a59bf95d9c9",
+      "afterSha256": "be1fd7ead4083c5764358effa191321d95a6cf315eeb10642bb74108387379ab"
+    },
+    {
+      "name": "e-salik",
+      "controlDeclarations": 19,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "e9f0425de6f072c988ec3acfc722594172e99d00b8b0dd0f9567994b849a4f1f",
+      "afterSha256": "b4dbbba3f4e6dcec1f9732e0f91ce4b327d7b3f310eeac8e22b330766f6b9dcd"
+    },
+    {
+      "name": "equipment",
+      "controlDeclarations": 1,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "6d7c8556f41a0c4efb1cf5909e69321a14e27ab6a7192ece107370002b79e6c2",
+      "afterSha256": "cea9d14bf3ed0561cdc82ee37feaeda9aa6163f48cfc5f16fa38699d860b8ac5"
+    },
+    {
+      "name": "fields",
+      "controlDeclarations": 23,
+      "formBindingsPreserved": true,
+      "sectionCount": 19,
+      "beforeSha256": "35697864f69bc2f37912973fb63c4cf131e7b6c5bfdf08d16adaef76d64097f5",
+      "afterSha256": "28f7c6f04c2a0b089eb56555419163e9dfd8dae9b9c05d8b49c8149e4dd27514"
+    },
+    {
+      "name": "fines",
+      "controlDeclarations": 2,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "50d246e2613ed7967754f5382b8a5bb0a6f9d00050c218389c078d2f73ea3dc5",
+      "afterSha256": "2db32fb3eb206e0d19edc71c68b415a5ab2ad211f381dab4d04225652aa3624a"
+    },
+    {
+      "name": "forms-and-fields",
+      "controlDeclarations": 3,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "3a8c999f67caa7809da358cab3404719bfb747c1e4d6ad93a60453d5acfa03ed",
+      "afterSha256": "9d375a15657e33e246a970f5b6a3b9aad8c9cf5b04d1ab398145e965b3834128"
+    },
+    {
+      "name": "holidays-setting",
+      "controlDeclarations": 3,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "8f2987a68638542557aff718e8faaa6a5a92b6411d4fcea759191cb190d0eb0e",
+      "afterSha256": "5dde641f05d88689a38239d9f43551b4fdd053f1a42a765c73f05f0551dcafa4"
+    },
+    {
+      "name": "hrm",
+      "controlDeclarations": 3,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "783e1a935383755f8bcb203725de120851f357182fd484d6e75f3ff62b105f05",
+      "afterSha256": "3fdf20d164cfcf0d8ae30a45424a0acbb6fc402ad7d24d805f05a518cbc89dde"
+    },
+    {
+      "name": "limousine",
+      "controlDeclarations": 15,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "e4e5430b15b126193f5b52833b2f7c8ef06c300c156764f4f09ac6be43d1a6dc",
+      "afterSha256": "f9eb3438444b5b8764f24e9985429d1bc2dd462fe979cb99e6b1fbe19341e1bf"
+    },
+    {
+      "name": "nation-id-format",
+      "controlDeclarations": 2,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "61102cb61229f45788587f464ec095ac980a90224c9e7cfaacb26be665516dae",
+      "afterSha256": "d9a32de321c835f729961c8da79aa8ab589439163d50c12e3ddf644755fd9f3a"
+    },
+    {
+      "name": "notifications",
+      "controlDeclarations": 8,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "988486664c98a561b2c68daf7344f5af19622df84b58f7d507ddcd2c32d0c9a7",
+      "afterSha256": "350bfa1035423f22c1828334bf0f70bdaf9383120695619ce9301e031d871ae1"
+    },
+    {
+      "name": "payment-gateway-setting",
+      "controlDeclarations": 4,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "316c72d3ad358cf6728b7c6b3b9836c8d4a2180486b1756a64a59a1340aa695a",
+      "afterSha256": "b3365dcc4fd53b074bdccffb62a5a19af8e0857dbc27d774b95175eadf1cf97c"
+    },
+    {
+      "name": "profile",
+      "controlDeclarations": 2,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "0fa6e96584f10926ce615490f60cec64447620a61052622cb6db1620aa237ab5",
+      "afterSha256": "e7aa170a674c69da04ad40859ffcecc5365592e6d0c018a71b01a186ba5eeb22"
+    },
+    {
+      "name": "settings-layout",
+      "controlDeclarations": 0,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "33dbaa3fbea1d28fe2212024f9832166828b454e91c75e40b58f37aa36414e55",
+      "afterSha256": "437a0bc08c59b9aa078138004eae5001aa2c912cf73f725a37e1ff6456ee203b"
+    },
+    {
+      "name": "user-management",
+      "controlDeclarations": 4,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "1b7b71b808981c181ab8bf80e662c16156f90215bfe559ef87a961a2729c9ea3",
+      "afterSha256": "ed868a34be2640b7c2cebf01e063f4981ef4aaf6a944a8e050ec2188c6b658bb"
+    },
+    {
+      "name": "workshop",
+      "controlDeclarations": 7,
+      "formBindingsPreserved": true,
+      "sectionCount": 0,
+      "beforeSha256": "e6e7eb23e5ca8997f9c9edccca359418fd9096234dd4d5dbee128752f0102c52",
+      "afterSha256": "dad85471c5a152bb709c5316bf7cfcce265d864bef7371a6f10c24c2d0ad2deb"
+    }
+  ],
+  "issues": []
+}

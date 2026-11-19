@@ -1,0 +1,102 @@
+diff --git a/sigma-erp/ui/01-feature-folders-and-wiring.md b/sigma-erp/ui/01-feature-folders-and-wiring.md
+index 49cec7a..4a3fc50 100644
+--- a/sigma-erp/ui/01-feature-folders-and-wiring.md
++++ b/sigma-erp/ui/01-feature-folders-and-wiring.md
+@@ -75,6 +75,20 @@ Three wiring steps, all required:
+ 
+ ### Standalone dialog registration and Angular 17 control flow
+ 
++**TypeScript library compatibility — mandatory source check.** Inspect the
++effective `compilerOptions.lib` before introducing standard JavaScript APIs.
++Current `tsconfig.json` selects `es2018` and `dom`, although `target` is
++`es2022`. The target controls emitted syntax; it does not widen explicit lib
++declarations or supply runtime polyfills. `Array.flatMap`/`Array.flat` and
++`Object.fromEntries` require ES2019 declarations and must not be used under
++the current library contract. Use typed `for...of`/`push` accumulation for
++flattening export rows and typed construction/addControl for form records.
++Preserve source order, null handling, headers and values. Do not widen lib or
++add a polyfill to silence a local feature error; such a project compatibility
++change requires its own explicit scope and runtime support review. Template/TS
++parser success proves syntax only, not library/type compatibility. CashFlow
++export and Budget form construction are the source-backed repair examples.
++
+ This application currently has an explicit `files` boundary in
+ `SiGmaAngularFrontEnd/tsconfig.app.json`. When a new standalone dialog or
+ feature component produces Angular's “missing from the TypeScript compilation”
+@@ -261,6 +275,24 @@ footer SCSS. It uses:
+ 
+ The feature keeps only its workspace layout (for example Job's group list and detail panes).
+ 
++**Shared three-pane editor (owner request, 2026-10-04).** Job and JobEstimation
++use `form.sigma-editor-form--three-pane` and
++`div.sigma-editor-body--three-pane` with three rendered siblings:
++`sigma-editor-pane--master`, `sigma-editor-pane--jobs`, and
++`sigma-editor-pane--detail` (each also `sigma-editor-pane`). The shared owner
++in `src/styles.scss` uses 240–280px / 170–200px / remaining-width columns,
++10px gaps and bounded full-height panes. Master fields use
++`sigma-editor-grid sigma-editor-pane-fields` inside `sigma-editor-scroll`
++for one field column; the Jobs list and selected detail retain their own
++internal scroll, fixed summary and outside Save/Cancel footer. An Angular
++`ng-container formArrayName` groups the latter two without a DOM grid wrapper,
++preserving the existing control hierarchy. A named inline-size container on
++the form responds to available width: at 900px the master spans the first
++column and Jobs/details stack in the second; at 620px all three stack in source
++order. Print releases this layout. Features do not copy these grid/breakpoint
++rules. One component serves Create/Edit/View; content and financial contracts
++remain unchanged. Source-only; owner desktop/narrow/RTL/print acceptance pending.
++
+ **Check boxes (G9, 2026-10-01).** Every boolean field is its own
+ `<div class="sigma-field sigma-field--check">` with the input before its label. Two check boxes
+ never share one field or one label.
+@@ -487,6 +519,30 @@ title · compact toolbar · internal tree scroll · responsive tree/detail split
+ selection restored after refresh · nested actions stop propagation · shared
+ confirmation/actions · `finalize` cleanup · both failure channels · no server-owned
+ write fields · translated RTL/dark/focus states.
++
++### Authenticated-shell sidebar disclosure
++
++**Canonical shared owner:** `_metronic/layout/components/sidebar/sidebar-menu/SidebarMenuComponent`.
++Its `isGroupOpen` / `toggleGroup` state and `groupHeader` template own both sidebar
++accordion levels. Keep route highlighting (`here`, leaf `active`, submenu
++`menu-active-bg`) separate from disclosure: never let `RouterLinkActive` and a
++DOM animation plugin both write `show` or submenu display for these groups.
++The component binds `show` from its disclosure state, using route activity
++and search as defaults; an explicit user choice wins until search rebuilds
++the nodes. Opening a group closes its siblings at that level.
++
++Reuse the existing Metronic menu/arrow classes and Sigma theme tokens. Group
++disclosure uses native buttons with `aria-expanded`; appbar Pin stays a separate
++button. Both disclosure and pin clicks stop propagation before Metronic's
++delegated handlers. Other Metronic menus retain their existing engine. No
++sidebar drawer, minimize, navigation or shortcut-storage contract changes.
++
++**Check:** select a leaf, close/reopen its main and nested groups; switch siblings;
++repeat through Recent and search/clear; verify Enter/Space, independent Pin,
++RTL/dark and narrow/minimized sidebar behavior. These are owner runtime checks;
++source review does not certify them. Evidence: 2026-10-03 sidebar collapse fix,
++`reviews/SIDEBAR_ACCORDION_COLLAPSE_FEATURE_REVIEW.md`.
++
+ ### One `HttpClient`
+ 
+ > **Status: Canonical** (2026-09-30, backlog 17 resolved)
+@@ -526,4 +582,3 @@ manual Bearer header workaround · menu entry.
+ action bodies, `console.log("Delete2")`, 0-byte SCSS.
+ 
+ ---
+-
+diff --git a/sigma-erp/ui/08-export-to-excel.md b/sigma-erp/ui/08-export-to-excel.md
+index 05f227f..f25515d 100644
+--- a/sigma-erp/ui/08-export-to-excel.md
++++ b/sigma-erp/ui/08-export-to-excel.md
+@@ -7,6 +7,11 @@ Shared helper, signature `onExportToExcel(data, fileName, headers?)` where
+ belongs to the Transitional shared helper boundary (backlog 22), not to the
+ feature contract.
+ 
++Export mapping follows UI1's TypeScript library compatibility rule. The current
++ES2018 library excludes flatMap; complete multi-section reports such as CashFlow
++accumulate typed rows with for...of/push, retaining section/source order and
++click-time translated headers without changing project compiler options.
++
+ **Column headers are UI text, so translate them.** Resolve header text when the
+ user clicks Export. Customer Statement dispatches to the selected section's
+ typed grid columns (block 20); it does not cache translated object keys:

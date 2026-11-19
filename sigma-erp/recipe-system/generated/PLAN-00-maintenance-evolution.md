@@ -11,20 +11,20 @@ it does not authorize source edits.
 ## Canonical provenance
 
 - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06
-- master.1: ## 1. Governance and review principles | sha256:a2ea89d19643c80d5d6fedef76e1e562333792eee34cf2eaad1e1ada1a4c47e0
+- master.1: ## 1. Governance and review principles | sha256:4af3c22f52464c9696ac85adb7f000d9c89d1bd76ecabfffa2662030d5fa66b2
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:8e602319017e268b923ed2bb8b7a8d21a1a3252640f23a986d99821842ea0c6f
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
-- master.5: ## 5. Continuous quality gates | sha256:2dc0c50abbb9337e62e6ddea88ae341cfff9ff0da0849dca7f58bf304d9544d1
+- master.5: ## 5. Continuous quality gates | sha256:db683d8cd9d81f554a0a9711335795c930c8e0846d9bc73fcf40f1da6084171f
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.7: ## 7. End-to-end reconciliation and final report | sha256:a93f85d7b18cb79110399ab69c5d768ff19539a1aacbd7439126909cab1b0161
-- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55
+- master.7: ## 7. End-to-end reconciliation and final report | sha256:2b8f1fba057c9e4a3f8e7a06476c13d2f010addbd786693fda0e418a1519d760
+- master.8: ## 8. Packet generation and governance | sha256:ad1ffed7bdf0b87f1c739ec1c7146a76c8a7d516f4d50e666cdeef3a7fb98b1c
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
-- ui.29: ## 29. Verification expectations | sha256:1ff1411e4cbc36bb44b06ef153a062ad0ddc7d8ca7728bdc7a3deae3ea99656e
+- ui.29: ## 29. Verification expectations | sha256:857fd2de21235042c2d3c3d8af841d8bed3580a97bed2ff1680f6a3c2c291f04
 - ui.30: ## 30. Backlog, by priority | sha256:154cf976b06e9031b4063231c1f0893ff034c7b7e3c89f1bbee564712d37cf7e
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
-- backend.18: ## 18. Edge cases | sha256:8878697ea5e4b00ab272b14d83fd2091eb9cd129c168a238ab98b88bed22d2a0
-- backend.19: ## 19. Backlog | sha256:383786ba4420103ae9caedc8d30a99026c1e59c534236a97f68b4061766af9a8
+- backend.18: ## 18. Edge cases | sha256:13d0548154a54a05fda8d1276d7d19529ee31b2b79d7945ab1363e7f18abb6f0
+- backend.19: ## 19. Backlog | sha256:82bdfe247692ed298743d856e1dd6ac186a81e264d6197fdae04427f3a5de14b
 
 Approved references are selected only after the affected UI/backend shapes are
 known:
@@ -231,7 +231,8 @@ the default/backfill behavior for existing records.
 - Historical data, migration, API compatibility, and direct consumers are named.
 - Implementation slices are dependency ordered and map back to canonical phases.
 - Verification is defined before implementation and distinguishes source review
-  from owner-run build, runtime, browser, migration, and database evidence.
+  from scoped build, test and lint results (Master5), migration evidence
+  (Master7), and owner-run runtime, browser and database acceptance.
 
 ## Expected handoff
 

@@ -1,0 +1,35 @@
+const fs = require('fs');
+const root = 'F:/My Work/Sigma/SigmaBackend/SiGma.Helpers/Localization/Shared/';
+const keys = {
+  LimousineBillingTripInvalid: ['One or more selected trips are missing, duplicated or unavailable.', 'رحلة أو أكثر من الرحلات المحددة غير موجودة أو مكررة أو غير متاحة.'],
+  LimousineBillingBalanceInvalid: ['The trip or its existing invoices have inconsistent amounts or tax. Review the saved records before billing.', 'مبالغ الرحلة أو ضريبة فواتيرها السابقة غير متسقة. راجع السجلات المحفوظة قبل إصدار فاتورة.'],
+  LimousineBillingAmountPositive: ['The invoice portion must be greater than zero.', 'يجب أن يكون مبلغ جزء الفاتورة أكبر من صفر.'],
+  LimousineBillingAmountExceedsRemaining: ['The invoice portion exceeds the remaining trip amount. Refresh and review the balance.', 'مبلغ جزء الفاتورة يتجاوز المتبقي من إجمالي الرحلة. حدّث البيانات وراجع الرصيد.'],
+  LimousineBillingMoneyScaleInvalid: ['Use the configured base currency precision for the invoice portion.', 'استخدم دقة العملة الأساسية المحددة لمبلغ جزء الفاتورة.'],
+  LimousineBillingCustomerInvalid: ['The trip customer is missing or no longer available.', 'عميل الرحلة غير محدد أو لم يعد متاحًا.'],
+  LimousineBillingDriverInvalid: ['The trip driver is no longer available.', 'سائق الرحلة لم يعد متاحًا.'],
+  LimousineBillingDateRangeInvalid: ['The start date must not be after the end date.', 'يجب ألا يكون تاريخ البداية بعد تاريخ النهاية.'],
+  LimousineBillingSelectionRequired: ['Select at least one trip and enter a valid invoice date.', 'حدد رحلة واحدة على الأقل وأدخل تاريخ فاتورة صالحًا.'],
+  LimousineBillingInvoiceNotFound: ['The limousine invoice was not found.', 'لم يتم العثور على فاتورة الليموزين.'],
+  LimousineBillingTripTotalBelowBilled: ['The new trip total or tax conflicts with amounts already invoiced. Review the invoices before changing the trip price.', 'إجمالي الرحلة أو الضريبة الجديد يتعارض مع المبالغ المفوترة بالفعل. راجع الفواتير قبل تعديل سعر الرحلة.'],
+  LimousineBillingTripHasInvoices: ['A trip with existing invoices cannot be cancelled or deleted.', 'لا يمكن إلغاء أو حذف رحلة لها فواتير قائمة.'],
+  LimousineInvoiceTripRequired: ['A trip is required for every limousine invoice.', 'يجب تحديد رحلة لكل فاتورة ليموزين.'],
+  LimousineInvoiceDateRequired: ['A valid invoice date is required.', 'تاريخ فاتورة صالح مطلوب.'],
+  LimousineInvoiceDuplicateTrip: ['Select each trip only once within the same submission.', 'حدد كل رحلة مرة واحدة فقط داخل عملية الحفظ نفسها.'],
+  LimousineInvoiceTripNotFound: ['A selected trip was not found or is unavailable.', 'لم يتم العثور على رحلة محددة أو أنها غير متاحة.'],
+  LimousineInvoiceAccountingLocked: ['This invoice has a posted, approved, voided, allocated or unavailable journal. Use the accounting correction workflow.', 'هذه الفاتورة لها قيد مرحّل أو معتمد أو ملغى أو مرتبط بتخصيص أو غير متاح. استخدم إجراء التصحيح المحاسبي.'],
+  LimousineInvoiceReferenceInvalid: ['A required invoice reference is missing or unavailable.', 'أحد المراجع المطلوبة للفاتورة غير محدد أو غير متاح.'],
+};
+const escape = value => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+for (const [index, file] of ['GeneralMessage.resx', 'GeneralMessage.ar-SA.resx'].entries()) {
+  let source = fs.readFileSync(root + file, 'utf8');
+  let additions = '';
+  for (const [key, values] of Object.entries(keys)) {
+    if (source.includes('name="' + key + '"')) continue;
+    additions += '  <data name="' + key + '" xml:space="preserve">\n    <value>' + escape(values[index]) + '</value>\n  </data>\n';
+  }
+  source = source.replace('</root>', additions + '</root>');
+  fs.writeFileSync(root + file, source);
+  console.log(file + ': ' + Object.keys(keys).length + ' invoice keys reconciled');
+}
+fs.writeFileSync('F:/My Work/Sigma/reviews/Limousine/INVOICE_BACKEND_TRANSLATION_REQUIREMENTS.json', JSON.stringify(keys, null, 2) + '\n');

@@ -1,0 +1,1022 @@
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report.models.ts
+import { Observable } from 'rxjs';
+
+import {
+  DataTableColumn,
+  DataTableHierarchy,
+} from 'src/app/modules/shared/components/data-table/data-table.component';
+import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Result } from 'src/app/modules/shared/models/result';
+import { Results } from 'src/app/modules/shared/models/results';
+
+export type AccountReportFilterValue = Date | Date[] | string | number | boolean | null | undefined;
+export type AccountReportFilterRaw = Readonly<Record<string, AccountReportFilterValue>>;
+export type AccountReportFilterKind =
+  | 'date-range'
+  | 'date'
+  | 'month'
+  | 'select'
+  | 'number'
+  | 'text'
+  | 'checkbox';
+
+export interface AccountReportFilterOption {
+  value: string | number;
+  label?: string;
+  labelKey?: string;
+}
+
+export interface AccountReportFilterDefinition {
+  key: string;
+  labelKey: string;
+  kind: AccountReportFilterKind;
+  initialValue: AccountReportFilterValue;
+  required?: boolean;
+  min?: number;
+  max?: number;
+  wide?: boolean;
+  options?: ReadonlyArray<AccountReportFilterOption>;
+  loadOptions?: () => Observable<Results<DropDownSelect>>;
+  requiredLookup?: boolean;
+}
+
+export interface AccountReportBuildResult<TFilter extends object> {
+  filter?: TFilter;
+  errorKey?: string;
+  focusKey?: string;
+}
+
+export interface AccountReportSection<TRow extends object> {
+  id: string;
+  titleKey?: string;
+  icon?: string;
+  rows: ReadonlyArray<TRow>;
+  columns: ReadonlyArray<DataTableColumn<TRow>>;
+  hierarchy?: DataTableHierarchy<TRow>;
+  dataKey?: string;
+  minWidth?: string;
+}
+
+export interface AccountReportConfig<
+  TResponse extends object,
+  TFilter extends object,
+  TRow extends object,
+> {
+  id: string;
+  titleKey: string;
+  icon: string;
+  exportFileName: string;
+  sectionLayout?: 'panels' | 'document' | 'tabs';
+  summaryDensity?: 'comfortable' | 'compact' | 'dense' | 'slim';
+  summaryMaxHeight?: number;
+  filters: ReadonlyArray<AccountReportFilterDefinition>;
+  load: (filter: TFilter) => Observable<Result<TResponse>>;
+  buildFilter: (raw: AccountReportFilterRaw) => AccountReportBuildResult<TFilter>;
+  sections: (
+    response: TResponse,
+    appliedFilters: AccountReportFilterRaw,
+  ) => ReadonlyArray<AccountReportSection<TRow>>;
+  summaryCards?: (response: TResponse) => ReadonlyArray<SummaryCard>;
+  responseContext?: (response: TResponse) => string;
+  normalizeResponse?: (response: TResponse) => TResponse;
+  exportRows?: (
+    response: TResponse,
+    sections: ReadonlyArray<AccountReportSection<TRow>>,
+    translate: (key: string) => string,
+  ) => Array<Record<string, string | number>>;
+  loadErrorKey?: string;
+  searchPromptKey?: string;
+  autoSearch?: boolean;
+  showBack?: boolean;
+}
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report-page.component.ts
+import { CommonModule, Location } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  Input,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  FormControl,
+  FormRecord,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { catchError, defer, finalize, forkJoin, map, of, Subject, switchMap } from 'rxjs';
+
+import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
+import {
+  DataTableComponent,
+  dataTableExportRows,
+} from 'src/app/modules/shared/components/data-table/data-table.component';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { EditorTab, EditorTabsComponent } from 'src/app/modules/shared/components/editor-tabs/editor-tabs.component';
+import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import { ReportActionsComponent } from 'src/app/modules/shared/components/report-actions/report-actions.component';
+import { ReportPageComponent } from 'src/app/modules/shared/components/report-page/report-page.component';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { SummaryCardsComponent } from 'src/app/modules/shared/components/summary-cards/summary-cards.component';
+import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ReportPrintService } from 'src/app/modules/shared/service/report-print.service';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import {
+  dateRangeValidator,
+  dateValueValidator,
+  formatDisplayDate,
+  parseDateRange,
+  parseDateValue,
+  parseMonthValue,
+} from 'src/app/modules/shared/utils/date-utils';
+import { focusField } from 'src/app/modules/shared/utils/focus-field';
+import {
+  AccountReportConfig,
+  AccountReportFilterDefinition,
+  AccountReportFilterOption,
+  AccountReportFilterRaw,
+  AccountReportFilterValue,
+  AccountReportSection,
+} from './account-report.models';
+
+interface ReportRequest<TFilter extends object> {
+  filter: TFilter;
+  raw: AccountReportFilterRaw;
+}
+
+interface ReportOutcome<TResponse extends object, TFilter extends object> {
+  request: ReportRequest<TFilter>;
+  response?: TResponse;
+  declaredMessage?: string;
+  error?: unknown;
+}
+
+@Component({
+  selector: 'app-account-report-page',
+  standalone: true,
+  imports: [
+    CalendarModule,
+    CheckboxModule,
+    CommonModule,
+    DataTableComponent,
+    DatePickerDirective,
+    DropdownModule,
+    FeatureTitleComponent,
+    EditorTabsComponent,
+    FieldErrorComponent,
+    InputTextModule,
+    InputNumberModule,
+    PrimaryActionButtonComponent,
+    ReactiveFormsModule,
+    ReportActionsComponent,
+    ReportPageComponent,
+    StateMessageComponent,
+    SummaryCardsComponent,
+    TranslateModule,
+  ],
+  templateUrl: './account-report-page.component.html',
+  styleUrl: './account-report-page.component.scss',
+  host: { class: 'sigma-route-host sigma-print-flow' },
+})
+export class AccountReportPageComponent<
+  TResponse extends object,
+  TFilter extends object,
+  TRow extends object,
+> extends BaseComponentService implements OnInit {
+  @Input({ required: true }) config!: AccountReportConfig<TResponse, TFilter, TRow>;
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
+  private readonly reportPrint = inject(ReportPrintService);
+  private readonly location = inject(Location);
+  private readonly requests = new Subject<ReportRequest<TFilter>>();
+  private readonly printSession = this.reportPrint.createSession(this.destroyRef);
+  private readonly sectionRowCache = new WeakMap<AccountReportSection<TRow>, TRow[]>();
+
+  readonly printing = this.printSession.printing;
+  readonly filterForm = new FormRecord<FormControl<AccountReportFilterValue>>({});
+  readonly response = signal<TResponse | null>(null);
+  readonly appliedFilters = signal<AccountReportFilterRaw>({});
+  readonly loadingReport = signal(false);
+  readonly loadingLookups = signal(false);
+  readonly lookupErrors = signal<ReadonlySet<string>>(new Set());
+  readonly lookupOptions = signal<Readonly<Record<string, ReadonlyArray<AccountReportFilterOption>>>>({});
+  readonly errorMessage = signal('');
+  readonly hasSearched = signal(false);
+  readonly selectedSectionId = signal('');
+
+  readonly sections = computed<ReadonlyArray<AccountReportSection<TRow>>>(() => {
+    const response = this.response();
+    return response ? this.config.sections(response, this.appliedFilters()) : [];
+  });
+  readonly summaryCards = computed(() => {
+    const response = this.response();
+    return response && this.config.summaryCards ? this.config.summaryCards(response) : [];
+  });
+  readonly sectionTabs = computed<ReadonlyArray<EditorTab>>(() =>
+    this.sections().map(section => ({
+      key: section.id,
+      label: section.titleKey || this.config.titleKey,
+      icon: section.icon,
+      count: this.flattenRows(section).length,
+    })),
+  );
+  readonly activeSectionId = computed(() => {
+    const sections = this.sections();
+    return sections.find(section => section.id === this.selectedSectionId())?.id || sections[0]?.id || '';
+  });
+  readonly responseContext = computed(() => {
+    const response = this.response();
+    return response && this.config.responseContext ? this.config.responseContext(response) : '';
+  });
+  readonly rowCount = computed(() =>
+    this.sections().reduce((count, section) => count + this.flattenRows(section).length, 0),
+  );
+  readonly hasRequiredLookupError = computed(() =>
+    this.config.filters.some(
+      (filter) => filter.requiredLookup && this.lookupErrors().has(filter.key),
+    ),
+  );
+
+  ngOnInit(): void {
+    this.initializeForm();
+    this.bindRequests();
+    this.filterForm.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.invalidateOutput());
+    this.loadLookups(this.config.autoSearch ?? false);
+  }
+
+  controlId(filter: AccountReportFilterDefinition): string {
+    return `${this.config.id}-${filter.key}`;
+  }
+
+  optionsFor(filter: AccountReportFilterDefinition): AccountReportFilterOption[] {
+    const options = filter.options ?? this.lookupOptions()[filter.key] ?? [];
+    return options.map((option) => ({
+      ...option,
+      label: option.labelKey ? this.translate.instant(option.labelKey) : option.label,
+    }));
+  }
+
+  search(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups() || this.hasRequiredLookupError()) return;
+    const raw = this.rawFilters();
+    const result = this.config.buildFilter(raw);
+    if (this.filterForm.invalid || !result.filter) {
+      this.filterForm.markAllAsTouched();
+      this.errorMessage.set(result.errorKey || 'accountReports.invalidFilters');
+      const focusKey = result.focusKey || Object.keys(this.filterForm.controls).find(key => this.filterForm.controls[key].invalid);
+      if (focusKey) focusField(`${this.config.id}-${focusKey}`);
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.response.set(null);
+    this.hasSearched.set(true);
+    this.loadingReport.set(true);
+    this.filterForm.disable({ emitEvent: false });
+    this.loading.startLoading();
+    this.requests.next({ filter: result.filter, raw });
+  }
+
+  refresh(): void {
+    this.search();
+  }
+
+  selectSection(sectionId: string): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    if (this.sections().some(section => section.id === sectionId)) this.selectedSectionId.set(sectionId);
+  }
+
+  reset(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    const values: Record<string, AccountReportFilterValue> = {};
+    this.config.filters.forEach((filter) => {
+      values[filter.key] = this.cloneValue(filter.initialValue);
+    });
+    this.filterForm.reset(values);
+    this.invalidateOutput();
+  }
+
+  retryLookups(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    this.loadLookups(false);
+  }
+
+  print(): void {
+    if (this.response() && this.rowCount() && !this.printing() && !this.loadingReport() && !this.loadingLookups()) this.printSession.print();
+  }
+
+  export(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    const response = this.response();
+    if (!response || !this.rowCount()) return;
+    const translate = (key: string): string => this.translate.instant(key);
+    const sections = this.sections();
+    const rows = this.config.exportRows
+      ? this.config.exportRows(response, sections, translate)
+      : this.defaultExportRows(sections, translate);
+    if (rows.length) onExportToExcel(signal(rows), this.config.exportFileName);
+  }
+
+  back(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    this.location.back();
+  }
+
+  appliedFilterItems(): ReadonlyArray<{ labelKey: string; value: string }> {
+    const raw = this.appliedFilters();
+    return this.config.filters
+      .map((filter) => ({ labelKey: filter.labelKey, value: this.filterDisplay(filter, raw[filter.key]) }))
+      .filter((item) => !!item.value);
+  }
+
+  private initializeForm(): void {
+    this.config.filters.forEach((filter) => {
+      this.filterForm.addControl(
+        filter.key,
+        new FormControl<AccountReportFilterValue>(
+          this.cloneValue(filter.initialValue),
+          { validators: this.validatorsFor(filter) },
+        ),
+      );
+    });
+  }
+  sectionRows(section: AccountReportSection<TRow>): TRow[] {
+    let rows = this.sectionRowCache.get(section);
+    if (!rows) {
+      rows = [...section.rows];
+      this.sectionRowCache.set(section, rows);
+    }
+    return rows;
+  }
+
+  private validatorsFor(filter: AccountReportFilterDefinition): ValidatorFn[] {
+    const validators: ValidatorFn[] = [];
+    if (filter.required) validators.push(Validators.required);
+    if (filter.kind === 'date-range') validators.push(dateRangeValidator);
+    if (filter.kind === 'date') validators.push(dateValueValidator);
+    if (filter.kind === 'month') {
+      validators.push((control) => {
+        if (control.value === null || control.value === '') return filter.required ? { required: true } : null;
+        return parseMonthValue(control.value as Date | string | null) ? null : { date: true };
+      });
+    }
+    if (filter.min !== undefined) validators.push(Validators.min(filter.min));
+    if (filter.max !== undefined) validators.push(Validators.max(filter.max));
+    if (filter.kind === 'number') {
+      validators.push(control => control.value == null ||
+        (typeof control.value === 'number' && Number.isFinite(control.value) && Number.isInteger(control.value))
+        ? null : { number: true });
+    }
+    if (filter.kind === 'select') {
+      validators.push(control => control.value == null ||
+        this.optionsFor(filter).some(option => option.value === control.value)
+        ? null : { invalidSelection: true });
+    }
+    return validators;
+  }
+
+  private bindRequests(): void {
+    this.requests
+      .pipe(
+        switchMap((request) =>
+          defer(() => this.config.load(request.filter)).pipe(
+            map((result): ReportOutcome<TResponse, TFilter> => {
+              if (result.isSuccess && result.entity) {
+                return {
+                  request,
+                  response: this.config.normalizeResponse
+                    ? this.config.normalizeResponse(result.entity)
+                    : result.entity,
+                };
+              }
+              return { request, declaredMessage: result.message };
+            }),
+            catchError((error) => of({ request, error } as ReportOutcome<TResponse, TFilter>)),
+            finalize(() => {
+              this.loadingReport.set(false);
+              this.filterForm.enable({ emitEvent: false });
+              this.loading.endLoading();
+            }),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((outcome) => {
+        if (outcome.response) {
+          this.response.set(outcome.response);
+          this.appliedFilters.set(outcome.request.raw);
+          this.errorMessage.set('');
+          return;
+        }
+        this.response.set(null);
+        this.appliedFilters.set({});
+        this.errorMessage.set(
+          outcome.error
+            ? apiErrorMessage(outcome.error, this.config.loadErrorKey || 'accountReports.loadError')
+            : outcome.declaredMessage || this.config.loadErrorKey || 'accountReports.loadError',
+        );
+      });
+  }
+
+  private loadLookups(autoSearch: boolean): void {
+    const definitions = this.config.filters.filter((filter) => !!filter.loadOptions);
+    if (!definitions.length) {
+      if (autoSearch) queueMicrotask(() => this.search());
+      return;
+    }
+
+    this.loadingLookups.set(true);
+    forkJoin(
+      definitions.map((filter) =>
+        filter.loadOptions!().pipe(
+          map((result) => ({ filter, result })),
+          catchError((error) => of({ filter, error })),
+        ),
+      ),
+    )
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.loadingLookups.set(false)),
+      )
+      .subscribe((outcomes) => {
+        const options = { ...this.lookupOptions() };
+        const errors = new Set<string>();
+        outcomes.forEach((outcome) => {
+          if ('result' in outcome && outcome.result.isSuccess) {
+            options[outcome.filter.key] = (outcome.result.entities ?? []).map((item) => ({
+              value: item.id,
+              label: item.value,
+            }));
+          } else {
+            errors.add(outcome.filter.key);
+            options[outcome.filter.key] = [];
+          }
+        });
+        this.lookupOptions.set(options);
+        this.lookupErrors.set(errors);
+        definitions.forEach(filter => this.filterForm.controls[filter.key].updateValueAndValidity({ emitEvent: false }));
+        if (autoSearch && !errors.size) queueMicrotask(() => this.search());
+      });
+  }
+
+  private invalidateOutput(): void {
+    this.response.set(null);
+    this.appliedFilters.set({});
+    this.hasSearched.set(false);
+    this.errorMessage.set('');
+  }
+
+  private rawFilters(): AccountReportFilterRaw {
+    const raw = this.filterForm.getRawValue();
+    const result: Record<string, AccountReportFilterValue> = {};
+    Object.keys(raw).forEach((key) => {
+      result[key] = this.cloneValue(raw[key]);
+    });
+    return result;
+  }
+
+  private cloneValue(value: AccountReportFilterValue): AccountReportFilterValue {
+    if (Array.isArray(value)) return value.map((item) => new Date(item)) as Date[];
+    return value instanceof Date ? new Date(value) : value;
+  }
+
+  private flattenRows(section: AccountReportSection<TRow>): TRow[] {
+    const rows: TRow[] = [];
+    const visit = (source: ReadonlyArray<TRow>): void => {
+      source.forEach((row) => {
+        rows.push(row);
+        const children = section.hierarchy?.children(row) ?? [];
+        if (children.length) visit(children);
+      });
+    };
+    visit(section.rows);
+    return rows;
+  }
+
+  private defaultExportRows(
+    sections: ReadonlyArray<AccountReportSection<TRow>>,
+    translate: (key: string) => string,
+  ): Array<Record<string, string | number>> {
+    const sectionHeader = translate('accountReports.section');
+    const includeSection = sections.length > 1;
+    const rows: Array<Record<string, string | number>> = [];
+    sections.forEach((section) => {
+      const title = section.titleKey ? translate(section.titleKey) : translate(this.config.titleKey);
+      dataTableExportRows(this.flattenRows(section), section.columns, translate).forEach((row) => {
+        rows.push(includeSection ? { [sectionHeader]: title, ...row } : row);
+      });
+    });
+    return rows;
+  }
+
+  private filterDisplay(filter: AccountReportFilterDefinition, value: AccountReportFilterValue): string {
+    if (value === undefined || value === null || value === '' || value === false) return '';
+    if (filter.kind === 'date-range') {
+      const [from, to] = parseDateRange(value);
+      return from && to ? `${formatDisplayDate(from)} – ${formatDisplayDate(to)}` : '';
+    }
+    if (filter.kind === 'date') {
+      const date = parseDateValue(value);
+      return date ? formatDisplayDate(date) : '';
+    }
+    if (filter.kind === 'month') return parseMonthValue(value as Date | string | null) ?? '';
+    if (filter.kind === 'select') {
+      return this.optionsFor(filter).find((option) => option.value === value)?.label ?? String(value);
+    }
+    if (filter.kind === 'checkbox') return this.translate.instant('general.yes');
+    return String(value);
+  }
+}
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report-page.component.html
+<section appReportPage class="sigma-report-page--fill sigma-print-flow">
+  <div class="sigma-report-panel sigma-print-flow">
+    <app-feature-title
+      [title]="config.titleKey | translate"
+      [icon]="config.icon"
+    ></app-feature-title>
+
+    <form
+      class="sigma-filter-form sigma-report-filter-panel no-print"
+      [formGroup]="filterForm"
+      (ngSubmit)="search()"
+    >
+      @for (filter of config.filters; track filter.key) {
+        @if (filter.kind === 'checkbox') {
+          <label class="sigma-report-filter-check" [for]="controlId(filter)">
+            <p-checkbox
+              [inputId]="controlId(filter)"
+              [formControlName]="filter.key"
+              [binary]="true"
+            ></p-checkbox>
+            <span>{{ filter.labelKey | translate }}</span>
+          </label>
+        } @else {
+          <div
+            class="sigma-report-filter-field"
+            [class.sigma-report-filter-field--wide]="filter.wide"
+          >
+            <label [for]="controlId(filter)">
+              {{ filter.labelKey | translate }}
+              @if (filter.required) { <span aria-hidden="true">*</span> }
+            </label>
+
+            @switch (filter.kind) {
+              @case ('date-range') {
+                <p-calendar
+                  appDatePicker
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  selectionMode="range"
+                  [numberOfMonths]="2"
+                  dataType="date"
+                  dateFormat="dd/mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  [hideOnDateTimeSelect]="false"
+                  placeholder="dd/mm/yyyy - dd/mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('date') {
+                <p-calendar
+                  appDatePicker
+                  [dateInputMask]="true"
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  dateFormat="dd/mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  placeholder="dd/mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('month') {
+                <p-calendar
+                  appDatePicker
+                  [dateInputMask]="true"
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  view="month"
+                  dateFormat="mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  placeholder="mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('select') {
+                <p-dropdown
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  [options]="optionsFor(filter)"
+                  optionLabel="label"
+                  optionValue="value"
+                  [filter]="true"
+                  [showClear]="true"
+                  appendTo="body"
+                  [placeholder]="filter.labelKey | translate"
+                ></p-dropdown>
+              }
+              @case ('number') {
+                <p-inputNumber
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  [min]="filter.min"
+                  [max]="filter.max"
+                  [minFractionDigits]="0"
+                  [maxFractionDigits]="0"
+                  [useGrouping]="false"
+                />
+              }
+              @case ('text') {
+                <input
+                  pInputText
+                  [id]="controlId(filter)"
+                  type="text"
+                  [formControlName]="filter.key"
+                  [placeholder]="filter.labelKey | translate"
+                />
+              }
+            }
+            <app-field-error [control]="filterForm.controls[filter.key]" />
+          </div>
+        }
+      }
+
+      <div
+        appReportActions
+        class="sigma-report-filter-actions"
+        [ariaLabel]="'general.actions' | translate"
+      >
+        @if (config.showBack) {
+          <button type="button" class="btn btn-secondary sigma-report-action--reset" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="back()">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            {{ 'general.back' | translate }}
+          </button>
+        }
+        <app-primary-action-button
+          type="submit"
+          [label]="'general.search' | translate"
+          icon="bi bi-search"
+          [loading]="loadingReport()"
+          [disabled]="printing() || loadingLookups() || hasRequiredLookupError()"
+        ></app-primary-action-button>
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="refresh()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          {{ 'general.refresh' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--reset" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="reset()">
+          <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+          {{ 'general.reset' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" [disabled]="printing() || !response() || !rowCount() || loadingReport() || loadingLookups()" (click)="print()">
+          <i class="bi bi-printer" aria-hidden="true"></i>
+          {{ 'general.print' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" [disabled]="printing() || !response() || !rowCount() || loadingReport() || loadingLookups()" (click)="export()">
+          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i>
+          {{ 'general.exportExcel' | translate }}
+        </button>
+      </div>
+    </form>
+
+    @if (lookupErrors().size) {
+      <div class="accounts-report-lookup-error no-print" role="alert">
+        <app-state-message kind="error" message="accountReports.lookupError"></app-state-message>
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="retryLookups()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          {{ 'accountReports.retryLookups' | translate }}
+        </button>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <app-state-message class="no-print" kind="error" [message]="errorMessage()"></app-state-message>
+    }
+
+    @if (appliedFilterItems().length) {
+      <div class="accounts-report-applied-filters" aria-live="polite">
+        @for (item of appliedFilterItems(); track item.labelKey) {
+          <span><strong>{{ item.labelKey | translate }}:</strong> {{ item.value }}</span>
+        }
+      </div>
+    }
+
+    @if (responseContext()) {
+      <p class="mb-0" role="status">{{ responseContext() }}</p>
+    }
+
+    @if (summaryCards().length) {
+      <app-summary-cards
+        [class.accounts-report-summary--tabs]="config.sectionLayout === 'tabs'"
+        [ariaLabel]="'accountReports.summary' | translate"
+        [cards]="summaryCards()"
+        [density]="config.summaryDensity || 'dense'"
+        layout="row"
+        [minCardWidth]="150"
+        [maxHeight]="config.summaryMaxHeight ?? null"
+      ></app-summary-cards>
+    }
+
+    @if (config.sectionLayout === 'tabs' && sections().length) {
+      <app-editor-tabs
+        class="accounts-report-tabs no-print"
+        [tabs]="sectionTabs()"
+        [activeTab]="activeSectionId()"
+        (activeTabChange)="selectSection($event)"
+        [ariaLabel]="config.titleKey | translate"
+        [idPrefix]="config.id"
+        appearance="workspace"
+        [disabled]="printing() || loadingReport() || loadingLookups()"
+      ></app-editor-tabs>
+    }
+
+    <div
+      class="accounts-report-results sigma-print-flow"
+      [class.accounts-report-results--document]="config.sectionLayout === 'document'"
+      [class.accounts-report-results--tabs]="config.sectionLayout === 'tabs'"
+      [class.sigma-report-table-frame]="config.sectionLayout === 'document'"
+      [attr.tabindex]="config.sectionLayout === 'document' ? 0 : null"
+      [attr.role]="config.sectionLayout === 'document' ? 'region' : null"
+      [attr.aria-label]="config.sectionLayout === 'document' ? (config.titleKey | translate) : null"
+    >
+      @if (loadingReport()) {
+        <app-state-message kind="loading"></app-state-message>
+      } @else if (!response()) {
+        @if (!errorMessage()) {
+          <app-state-message kind="empty" [message]="config.searchPromptKey || 'accountReports.searchPrompt'"></app-state-message>
+        }
+      } @else {
+        <div class="accounts-report-sections sigma-print-flow" [attr.data-count]="sections().length">
+          @for (section of sections(); track section.id) {
+            <section
+              class="accounts-report-section sigma-print-flow"
+              [class.accounts-report-section--inactive]="config.sectionLayout === 'tabs' && activeSectionId() !== section.id"
+              [id]="config.id + '-panel-' + section.id"
+              [attr.role]="config.sectionLayout === 'tabs' ? 'tabpanel' : null"
+              [attr.aria-labelledby]="config.sectionLayout === 'tabs' ? config.id + '-tab-' + section.id : (section.titleKey ? config.id + '-' + section.id + '-heading' : null)"
+              [attr.aria-label]="!section.titleKey && config.sectionLayout !== 'tabs' ? (config.titleKey | translate) : null"
+              [attr.aria-hidden]="config.sectionLayout === 'tabs' ? activeSectionId() !== section.id && !printing() : null"
+            >
+              @if (section.titleKey) {
+                <h2 [class.d-none]="config.sectionLayout === 'tabs'" [class.d-print-block]="config.sectionLayout === 'tabs'" [id]="config.id + '-' + section.id + '-heading'">{{ section.titleKey | translate }}</h2>
+              }
+              @if (config.sectionLayout === 'document' && !section.rows.length) {
+                <app-state-message kind="empty" message="general.noData"></app-state-message>
+              } @else {
+                <app-data-table
+                  class="accounts-report-grid"
+                  [style.--sigma-data-table-min-width]="section.minWidth || '42rem'"
+                  [value]="sectionRows(section)"
+                  [columns]="section.columns"
+                  [dataKey]="section.dataKey || 'accountId'"
+                  [hierarchy]="section.hierarchy"
+                  [printAllRows]="printing()"
+                  [lazy]="false"
+                  [paginator]="false"
+                  [fill]="config.sectionLayout !== 'document'"
+                  [scrollable]="config.sectionLayout !== 'document' && !printing()"
+                  [loading]="false"
+                  [showEmpty]="true"
+                  emptyMessage="general.noData"
+                ></app-data-table>
+              }
+            </section>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report-page.component.scss
+.accounts-report-lookup-error {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.accounts-report-applied-filters {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  color: var(--sigma-muted);
+  font-size: 11px;
+}
+
+.accounts-report-summary--tabs {
+  margin-block-end: 12px;
+}
+
+.accounts-report-tabs {
+  flex: 0 0 auto;
+}
+
+.accounts-report-results,
+.accounts-report-sections,
+.accounts-report-section {
+  min-width: 0;
+  min-height: 0;
+}
+
+.accounts-report-results {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.accounts-report-sections {
+  display: grid;
+  flex: 1 1 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+}
+
+.accounts-report-section {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.accounts-report-section > h2 {
+  flex: 0 0 auto;
+  margin: 0 0 6px;
+  color: var(--sigma-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.accounts-report-grid {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.accounts-report-results.accounts-report-results--document {
+  overflow: auto;
+
+  .accounts-report-sections {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 16px;
+    overflow: visible;
+  }
+
+  .accounts-report-section,
+  .accounts-report-grid {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+}
+
+.accounts-report-results--tabs .accounts-report-sections {
+  display: flex;
+  flex-direction: column;
+
+  .accounts-report-section {
+    flex: 1 1 0;
+  }
+}
+
+@media screen {
+  .accounts-report-section--inactive {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .accounts-report-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .accounts-report-results--tabs .accounts-report-sections {
+    display: block;
+  }
+
+  .accounts-report-results.accounts-report-results--document {
+    overflow: visible;
+
+    .accounts-report-sections {
+      display: block;
+    }
+  }
+
+  .sigma-report-panel,
+  .accounts-report-results,
+  .accounts-report-sections,
+  .accounts-report-section {
+    display: block;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .accounts-report-section {
+    margin-block-end: 16px;
+    break-inside: auto;
+  }
+}
+
+
+SOURCE: src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts
+import { Component, inject } from '@angular/core';
+
+import { CashFlowDTO, CashFlowFilter, CashFlowLine } from '../../models/list';
+import { CashFlowStatementService } from '../../services/cash-flow-statement.service';
+import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
+import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
+import { reportNumber, reportDate } from '../../../shared/report-family/account-report-values';
+
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-accounts', standalone: true,
+  imports: [AccountReportPageComponent],
+  templateUrl: './list.component.html', styleUrl: './list.component.scss',
+  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+})
+export class CashFlowStatementComponent {
+  private readonly service = inject(CashFlowStatementService);
+  private readonly fiscalYears = inject(FiscalYearService);
+  private readonly router = inject(Router);
+  readonly config: AccountReportConfig<CashFlowDTO, CashFlowFilter, CashFlowLine> = {
+    id: 'cashFlowStatement', titleKey: 'cashFlowStatement.title', icon: 'bi bi-bar-chart', exportFileName: 'CashFlowStatement',
+    sectionLayout: 'tabs',
+    summaryDensity: 'slim',
+    summaryMaxHeight: 80,
+    filters: [
+      { key: 'fiscalYearId', labelKey: 'cashFlowStatement.fiscalYear', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.fiscalYears.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
+      { key: 'asOfDate', labelKey: 'cashFlowStatement.asOfDate', kind: 'date', initialValue: null }
+    ],
+    load: filter => this.service.getReport(filter),
+    buildFilter: raw => {
+
+      return { filter: { fiscalYearId: reportNumber(raw, 'fiscalYearId'), asOfDate: reportDate(raw, 'asOfDate') } };
+    },
+    sections: response => [
+      { id: 'operatingActivities', titleKey: 'cashFlowStatement.operatingActivities', icon: 'bi bi-gear', minWidth: '32rem', rows: response.operatingActivities ?? [], columns: [
+          { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+          { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+        ] },
+      { id: 'investingActivities', titleKey: 'cashFlowStatement.investingActivities', icon: 'bi bi-graph-up-arrow', minWidth: '32rem', rows: response.investingActivities ?? [], columns: [
+          { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+          { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+        ] },
+      { id: 'financingActivities', titleKey: 'cashFlowStatement.financingActivities', icon: 'bi bi-bank', minWidth: '32rem', rows: response.financingActivities ?? [], columns: [
+          { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+          { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+        ] }
+    ],
+    summaryCards: response => [
+      { id: 'netIncome', labelKey: 'cashFlowStatement.netIncome', value: response.netIncome, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'netCashFromOperating', labelKey: 'cashFlowStatement.netCashFromOperating', value: response.netCashFromOperating, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'netCashFromInvesting', labelKey: 'cashFlowStatement.netCashFromInvesting', value: response.netCashFromInvesting, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'netCashFromFinancing', labelKey: 'cashFlowStatement.netCashFromFinancing', value: response.netCashFromFinancing, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'netChangeInCash', labelKey: 'cashFlowStatement.netChangeInCash', value: response.netChangeInCash, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' }
+    ]
+  };
+  private openLedger(accountId: number): void {
+    if (accountId > 0) void this.router.navigate(['/Ledger'], { queryParams: { accountId } });
+  }
+}

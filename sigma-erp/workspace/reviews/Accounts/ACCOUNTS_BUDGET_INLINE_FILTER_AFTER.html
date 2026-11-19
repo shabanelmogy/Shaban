@@ -1,0 +1,48 @@
+<div class="sigma-filter-panel__grid">
+  <ng-content></ng-content>
+</div>
+
+@if (advanced && advancedOpen()) {
+  <div [id]="advancedId" class="sigma-filter-panel__grid sigma-filter-panel__grid--advanced">
+    <ng-container [ngTemplateOutlet]="advanced.template"></ng-container>
+  </div>
+}
+
+<div class="sigma-filter-panel__toolbar">
+  @if (inlineActions() && !advanced && inlineActionCaption()) {
+    <span class="sigma-filter-panel__action-caption invisible" aria-hidden="true">{{ inlineActionCaption() | translate }}</span>
+  }
+  <div class="sigma-filter-panel__toolbar-start">
+    @if (advanced) {
+      <button
+        type="button"
+        class="sigma-filter-toggle"
+        [class.is-open]="advancedOpen()"
+        [class.has-active]="activeCount() > 0"
+        [attr.aria-controls]="advancedId"
+        [attr.aria-expanded]="advancedOpen()"
+        [disabled]="busy()"
+        (click)="toggle()"
+      >
+        <span class="sigma-filter-toggle__icon" aria-hidden="true"><i class="bi bi-sliders2"></i></span>
+        <span>{{ moreFiltersLabel() | translate }}</span>
+        @if (stableLayout() || activeCount() > 0) {
+          <span class="sigma-filter-toggle__count" [class.is-empty]="activeCount() === 0"
+            [attr.aria-hidden]="activeCount() === 0 ? 'true' : null"
+            [attr.aria-label]="activeCount() > 0 ? ('general.activeFiltersCount' | translate: { count: activeCount() }) : null">
+            {{ activeCount() }}
+          </span>
+        }
+        <i class="bi bi-chevron-down sigma-filter-toggle__chevron" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
+
+  <div class="sigma-filter-panel__actions">
+    <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="reset()">
+      <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+      {{ 'general.reset' | translate }}
+    </button>
+    <ng-content select="[appFilterActions]"></ng-content>
+  </div>
+</div>

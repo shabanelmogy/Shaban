@@ -1,0 +1,34 @@
+{
+  "finalSettlementProcess": {
+    "title": "Final Settlement Process", "subtitle": "Calculate, review, save, and approve an employee's final settlement",
+    "staff": "Employee", "selectStaff": "Select employee", "clearStaff": "Clear employee", "designation": "Designation",
+    "lastWorkingDay": "Last working day", "history": "Revision history", "current": "Current revision", "revision": "Revision {{revision}}", "back": "Back to processed payrolls",
+    "staffLoadError": "Unable to load eligible employees.", "noStaff": "No eligible employees found",
+    "policyNotice": "The calculation uses the policy values entered here. Saving and approval do not make a payment.",
+    "joiningOrRejoiningDate": "Joining or rejoining date", "salaryProrationBasis": "Salary proration basis",
+    "leaveDaysRemaining": "Leave days remaining", "leaveSalaryBasis": "Leave salary basis", "ticketQuota": "Ticket quota",
+    "ticketQuotaPeriodYears": "Ticket quota period (years)", "ticketPrice": "Ticket price", "ticketEligibilityPercent": "Ticket eligibility",
+    "gratuityDays": "Gratuity days", "gratuitySalaryBasis": "Gratuity salary basis", "normalSalaryFrom": "Normal salary from",
+    "firstWorkingDay": "First working day", "salaryDays": "Salary days", "salaryDivisor": "Salary divisor", "serviceDays": "Service days",
+    "monthlyBasic": "Monthly basic", "monthlyGross": "Monthly gross", "leaveDailyRate": "Leave daily rate", "gratuityDailyRate": "Gratuity daily rate",
+    "normalSalary": "Normal salary", "leaveSalary": "Leave salary", "ticketPayable": "Ticket payable", "gratuity": "Gratuity", "totalPayable": "Total payable",
+    "processFirst": "Process the current policy values before saving.", "saveError": "Unable to save the final settlement.",
+    "invalidInputs": "Review the required policy values and date range.", "historyError": "Unable to load settlement revisions.",
+    "processError": "Unable to calculate the final settlement.", "routeMismatch": "The requested final settlement context does not match the saved run.",
+    "loadError": "Unable to load the final settlement.", "notProcessed": "Process the final settlement to review its calculation.",
+    "tabs": { "label": "Final settlement sections", "normal": "Normal salary", "leave": "Leave salary", "ticket": "Ticket", "gratuity": "Gratuity", "summary": "Summary" },
+    "bases": { "basic": "Basic salary", "gross": "Gross salary" },
+    "proration": { "calendarDays": "Calendar days", "fixed30": "Fixed 30 days" }
+  },
+  "paySlips": {
+    "title": "Pay Slips", "subtitle": "Review saved payroll snapshots and their historical revisions",
+    "showingEntries": "Showing {first} to {last} of {totalRecords} entries", "empty": "No saved pay slips match the applied filters.", "reportTitle": "Pay Slips Report",
+    "filters": { "dateRange": "Date range", "no": "Pay slip number", "type": "Payroll type", "staff": "Employee" },
+    "actions": { "view": "View pay slip", "report": "Report" },
+    "columns": { "no": "Pay slip number", "name": "Employee", "code": "Employee code", "date": "Date", "type": "Payroll type", "totalAmount": "Total amount", "status": "Status" },
+    "detail": { "title": "Pay Slip", "item": "Item", "amount": "Amount", "revision": "Revision", "salaryPeriod": "Salary period", "overtimePeriod": "Overtime period", "policyVersion": "Policy version", "currentState": "Revision state", "approvalState": "Approval state", "paymentState": "Payment state", "settlementPolicy": "Final settlement policy", "settlementRates": "Final settlement salary bases and rates" },
+    "statuses": { "current": "Current", "superseded": "Superseded", "unpaid": "Not paid" },
+    "errors": { "load": "Unable to load pay slips.", "staff": "Unable to load employees.", "detail": "Unable to load the selected pay slip.", "export": "Unable to prepare all pay slips for export." }
+  },
+  "payrolls": { "types": { "finalSettlement": "Final Settlement" }, "actions": { "processFinalSettlement": "Process Final Settlement" } }
+}

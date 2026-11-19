@@ -1,10 +1,13 @@
 ## 1. Governance and review principles
 
-### Opening disclosure and reference sequence (owner clarification, 2026-11-05)
+### Opening disclosure and reference sequence (owner clarification, 2026-11-05; tier-scaled 2026-11-19)
 
 Before investigating application source, give a short task-specific opening
-that states the scope and authorization mode, the Master Guide and applicable
-UI/backend books, and the following items explicitly:
+scaled to the tier. **Tier S:** one line stating scope/mode, the owning block and
+the verification boundary; name the references below only when the change
+touches a screen contract. **Tiers M/L:** state the scope and authorization
+mode, the Master Guide and applicable UI/backend books, and the following items
+explicitly:
 
 - **Speed guide and original explanations:** the relevant local chapter and
   screen explanations to inspect under Master2.
@@ -92,7 +95,7 @@ owning implementation and scoped data instead of carrying invalid experimental
 records through a second application path.
 
 When a correct change needs schema preparation, document the required migration
-and clean-start steps under the existing explicit migration boundary. Scoped
+and clean-start steps under the scoped experimental migration rule. Scoped
 experimental-data repair follows the standing permission below; do not invent
 historical assignments or hide invalid records behind fallback calculations.
 Preserve unrelated source work and data. If the owner later explicitly designates
@@ -116,11 +119,19 @@ operation, affected row counts and resulting integrity checks under Master7;
 distinguish executed changes from proposed commands and unresolved schema work.
 
 This standing permission does not authorize production or out-of-project
-databases, schema changes/migrations, a full data reset or dropping a database.
-Keep the existing explicit migration boundary. Tests, lint, browser/application
-execution, commits, pushes and deployments retain their existing authorization
-requirements. The rule adds no recurring approval step for the scoped
+databases, a full data reset or dropping a database. Scoped tests and lint follow
+Master5; browser/application execution, commits, pushes and deployments retain
+their existing authorization requirements. The rule adds no recurring approval step for the scoped
 experimental-database operations it already authorizes.
+
+### Required experimental migrations (owner instruction, 2026-11-17)
+
+An authorized Sigma implementation includes creating and applying its required
+EF migration on the verified Sigma experimental database. Master7 owns target,
+baseline, SQL review, scoped execution and result evidence. Keep unrelated
+pending migrations outside the operation. Review-only, plan-only and
+named-phase limits still apply. Production, out-of-project targets, full resets
+and database drops retain their separate authorization boundaries.
 
 ### Proportional process (owner decision D4-5, 2026-10-01)
 

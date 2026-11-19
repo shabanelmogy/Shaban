@@ -1,0 +1,28 @@
+using SiGma.Helpers.Enum;
+
+namespace SiGma.ViewModels.ViewModels.CashDeposit
+{
+    /// <summary>
+    /// Flat list VM optimised for grid display.
+    /// Columns: Bank Deposit No, Date, Ref No, Description, Amount.
+    /// Filters: No, Date Range, Account (BankId), Branch.
+    /// </summary>
+    public class CashDepositListVM
+    {
+        public int Id { get; set; }
+        public string? No { get; set; }
+        public DateTime Date { get; set; }
+        public string? BankName { get; set; }
+        public string? RefNo { get; set; }
+        public string? Description { get; set; }
+
+        /// <summary>Total deposit amount (server-calculated).</summary>
+        public decimal Amount { get; set; }
+
+        public ApprovalStatus ApprovalStatus { get; set; }
+        public bool IsPosted { get; set; }
+        public bool IsVoided { get; set; }
+        public string? CreatedBy { get; set; }
+        public DateTime? CreatedAt { get; set; }
+    }
+}

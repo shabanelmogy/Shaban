@@ -15,7 +15,8 @@ The recipe system therefore separates three concerns:
 
 1. The Master Guide and pattern books own the rules and explanations.
 2. `recipe-manifest.json` declares which canonical blocks govern a task shape.
-   Each book is a directory; block N is the file `NN-*.md` in it.
+   Each book is a directory; block N is the file `NN-*.md` in it, plus the
+   topic files in its optional `NN/` folder (fingerprinted together, Master8).
 3. `Generate-SigmaRecipes.ps1` combines the task template with fingerprints of
    those source blocks and writes the generated packet.
 
@@ -123,8 +124,10 @@ repeats the drift.
 ## Read-only companion checks
 
 - `Check-Translations.ps1` — en/ar key parity per block (UI block 23).
-- `Check-BookReferences.ps1` — checks local Markdown links and canonical block
-  numbers without traversing application source. Run after a book or skill change.
+- `Check-BookReferences.ps1` checks canonical block numbers, local Markdown links,
+  directory links ending in a slash and Markdown heading fragments. Coverage
+  includes the public entry pages, book indexes and active review index.
+  Run after a book or skill change.
   Source paths/types/classes are checked only when narrow current-task paths are
   explicitly supplied through `-SourceScope`; no repository-root scan is accepted.
   Output identifies skipped source checks; a documentation pass is not a source

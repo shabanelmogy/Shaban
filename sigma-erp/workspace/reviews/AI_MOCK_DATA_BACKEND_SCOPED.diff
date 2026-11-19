@@ -1,0 +1,305 @@
+diff --git a/SiGma.Business/IServices/IApiKeySettingService.cs b/SiGma.Business/IServices/IApiKeySettingService.cs
+index e5d9029e..c10e3bfb 100644
+--- a/SiGma.Business/IServices/IApiKeySettingService.cs
++++ b/SiGma.Business/IServices/IApiKeySettingService.cs
+@@ -1,14 +1,20 @@
+ using SiGma.Business.IServices.Bases;
+ using SiGma.ViewModels.ViewModels.ApiKeySetting;
++using SiGma.ViewModels.ViewModels.MockData;
+ 
+ namespace SiGma.Business.IServices
+ {
+     public interface
+-        IApiKeySettingService : IService<ApiKeySettingAddVM, ApiKeySettingUpdateVM, ApiKeySettingDetailVM, ApiKeySettingListVM>
++        IApiKeySettingService : IService<ApiKeySettingAddVM, ApiKeySettingUpdateVM, ApiKeySettingDetailVM, ApiKeySettingListVM>,
++            ISingleRowSettingsService<ApiKeySettingAddVM, ApiKeySettingDetailVM>
+     {
+ 
+ 
+         Task<Result<ApiKeySettingDetailVM>> GetFirstMapApi();
++        Task<Result<string>> ReadDeepSeekApiKeyAsync(CancellationToken cancellationToken);
++        Task<Result> SaveDeepSeekApiKeyAsync(string? apiKey, CancellationToken cancellationToken);
++        Task<Result<MockDataSettingsVM>> ReadMockDataSettingsAsync(CancellationToken cancellationToken);
++        Task<Result> SaveMockDataSettingsAsync(MockDataSettingsSaveVM request, CancellationToken cancellationToken);
+     }
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/SiGma.Business/MapperConfig/ApiKeySettingProfiler.cs b/SiGma.Business/MapperConfig/ApiKeySettingProfiler.cs
+index b67e2e9a..bcd25eb0 100644
+--- a/SiGma.Business/MapperConfig/ApiKeySettingProfiler.cs
++++ b/SiGma.Business/MapperConfig/ApiKeySettingProfiler.cs
+@@ -1,4 +1,5 @@
+ using SiGma.ViewModels.ViewModels.ApiKeySetting;
++using SiGma.Business.Services.SettingsModels;
+ 
+ namespace SiGma.Business.MapperConfig
+ {
+@@ -7,10 +8,46 @@ namespace SiGma.Business.MapperConfig
+         public ApiKeySettingProfiler()
+         {
+ 
+-            CreateMap<ApiKeySetting, ApiKeySettingDetailVM>().ReverseMap();
+-            CreateMap<ApiKeySetting, ApiKeySettingListVM>().ReverseMap();
+-            CreateMap<ApiKeySettingAddVM, ApiKeySetting>().ReverseMap();
+-            CreateMap<ApiKeySettingUpdateVM, ApiKeySetting>().ReverseMap();
++            CreateMap<ApiKeySetting, ApiKeySettingDetailVM>().ReverseMap()
++                .ForMember(x => x.DeepSeekApiKey, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataButton, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataPreview, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataConfirmation, o => o.Ignore());
++            CreateMap<ApiKeySetting, ApiKeySettingListVM>().ReverseMap()
++                .ForMember(x => x.DeepSeekApiKey, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataButton, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataPreview, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataConfirmation, o => o.Ignore());
++            CreateMap<ApiKeySettingAddVM, ApiKeySetting>()
++                .ForMember(x => x.DeepSeekApiKey, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataButton, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataPreview, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataConfirmation, o => o.Ignore()).ReverseMap();
++            CreateMap<ApiKeySettingUpdateVM, ApiKeySetting>()
++                .ForMember(x => x.DeepSeekApiKey, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataButton, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataPreview, o => o.Ignore())
++                .ForMember(x => x.ShowMockDataConfirmation, o => o.Ignore()).ReverseMap();
++
++            CreateMap<ApiKeySetting, ApiKeySettingSecretVM>();
++            CreateMap<ApiKeySettingSecretVM, ApiKeySetting>(MemberList.Source)
++                .ConstructUsing(_ => new ApiKeySetting { GoogleMapApiKey = string.Empty })
++                .ForMember(x => x.DeepSeekApiKey, o => o.PreCondition(source => !string.IsNullOrWhiteSpace(source.DeepSeekApiKey)))
++                .ForMember(x => x.ShowMockDataButton, o =>
++                {
++                    o.PreCondition(source => source.ShowMockDataButton.HasValue);
++                    o.MapFrom(source => source.ShowMockDataButton!.Value);
++                })
++                .ForMember(x => x.ShowMockDataPreview, o =>
++                {
++                    o.PreCondition(source => source.ShowMockDataPreview.HasValue);
++                    o.MapFrom(source => source.ShowMockDataPreview!.Value);
++                })
++                .ForMember(x => x.ShowMockDataConfirmation, o =>
++                {
++                    o.PreCondition(source => source.ShowMockDataConfirmation.HasValue);
++                    o.MapFrom(source => source.ShowMockDataConfirmation!.Value);
++                });
+         }
+     }
+ }
+diff --git a/SiGma.Business/Services/ApiKeySettingService.cs b/SiGma.Business/Services/ApiKeySettingService.cs
+index 7d71a708..bbe8c4da 100644
+--- a/SiGma.Business/Services/ApiKeySettingService.cs
++++ b/SiGma.Business/Services/ApiKeySettingService.cs
+@@ -1,42 +1,125 @@
+-using Microsoft.AspNetCore.Http;
+ using SiGma.ViewModels.ViewModels.ApiKeySetting;
+-using System.Security.Claims;
++using SiGma.ViewModels.ViewModels.MockData;
++using SiGma.Business.Services.HelperServices;
++using SiGma.Business.Services.SettingsModels;
+ 
+ namespace SiGma.Business.Services
+ {
+     public class ApiKeySettingService :
+-    Service<ApiKeySettingAddVM, ApiKeySettingUpdateVM, ApiKeySettingDetailVM,
+-        ApiKeySettingListVM, SiGmaDbContext, ApiKeySetting>, IApiKeySettingService
++    SingleRowSettingsService<ApiKeySettingAddVM, ApiKeySettingUpdateVM, ApiKeySettingDetailVM,
++        ApiKeySettingListVM, ApiKeySetting>, IApiKeySettingService
+     {
+-        private readonly int _subscriptionId;
+-        public ApiKeySettingService(IHttpContextAccessor httpContext, IUnitOfWork<SiGmaDbContext> unitOfWork, IMapper mapper,
+-            IStringLocalizer<GeneralMessage> localization) : base(unitOfWork, mapper, localization)
++        private readonly IServiceHelper _settings;
++        private readonly IStringLocalizer<MockDataMessage> _mockMessages;
++        public ApiKeySettingService(IUnitOfWork<SiGmaDbContext> unitOfWork, IMapper mapper,
++            IStringLocalizer<GeneralMessage> localization, IServiceHelper settings,
++            IStringLocalizer<MockDataMessage> mockMessages) : base(unitOfWork, mapper, localization, settings)
+         {
+-            var userClaimsPrincipal = httpContext.HttpContext?.User;
+-            var userSubscriptionId = userClaimsPrincipal?.FindFirst(ClaimTypes.NameIdentifier);
+-            if (userSubscriptionId != null) _ = int.TryParse(userSubscriptionId.Value, out _subscriptionId);
++            _settings = settings;
++            _mockMessages = mockMessages;
++        }
+ 
++        public async Task<Result<string>> ReadDeepSeekApiKeyAsync(CancellationToken cancellationToken)
++        {
++            cancellationToken.ThrowIfCancellationRequested();
++            var row = await _settings.GetSingleAsync<ApiKeySettingSecretVM, ApiKeySetting>();
++            cancellationToken.ThrowIfCancellationRequested();
++            return new Result<string> { IsSuccess = true, Entity = row?.DeepSeekApiKey };
+         }
+ 
+-        public async Task<Result<ApiKeySettingDetailVM>> GetFirstMapApi()
++        public async Task<Result<MockDataSettingsVM>> ReadMockDataSettingsAsync(CancellationToken cancellationToken)
+         {
+-            var entity = await UnitOfWork.Context.ApiKeySettings.OrderByDescending(l => l.CreatedAt)
+-                .Where(j => j.IsDeleted == false && j.SubscriptionId == _subscriptionId)
+-                .FirstOrDefaultAsync();
+-            if (entity == null)
++            cancellationToken.ThrowIfCancellationRequested();
++            var row = await _settings.GetSingleAsync<ApiKeySettingSecretVM, ApiKeySetting>();
++            cancellationToken.ThrowIfCancellationRequested();
++            return new Result<MockDataSettingsVM>
+             {
+-                return new Result<ApiKeySettingDetailVM>
++                IsSuccess = true,
++                Entity = new MockDataSettingsVM
+                 {
+-                    IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.FailedToFound)
+-                };
++                    HasApiKey = !string.IsNullOrWhiteSpace(row?.DeepSeekApiKey),
++                    ShowButton = row?.ShowMockDataButton ?? true,
++                    ShowPreview = row?.ShowMockDataPreview ?? true,
++                    ShowConfirmation = row?.ShowMockDataConfirmation ?? true
++                }
++            };
++        }
++
++        public override async Task<Result> SaveMineAsync(ApiKeySettingAddVM vm, CancellationToken cancellationToken)
++        {
++            if (vm == null) return BusinessFailure("InvalidRequest");
++            await _settings.UpsertSingleAsync<ApiKeySettingAddVM, ApiKeySetting>(vm, cancellationToken);
++            PreserveOtherSettings(nameof(ApiKeySetting.GoogleMapApiKey));
++            var saved = await UnitOfWork.SaveChangesAsync(cancellationToken);
++            return saved
++                ? new Result { IsSuccess = true, Message = LocalizeMessage("SavedSuccessfully") }
++                : BusinessFailure("FailedToUpdate");
++        }
++
++        // Legacy id-based PUT retains its tenant/identity and validation contract, without writing the secret snapshot.
++        protected override async Task<Result> UpdateCoreAsync(ApiKeySettingUpdateVM vm)
++        {
++            if (vm == null) return BusinessFailure("InvalidRequest");
++            var row = await UnitOfWork.Repository.Query<ApiKeySetting>(x => x.Id == vm.Id).FirstOrDefaultAsync();
++            if (row == null) return BusinessFailure("FailedToFound", 404);
++            if (await InvalidInputAsync(vm, vm.Id) is { } invalid) return invalid;
++            row.GoogleMapApiKey = vm.GoogleMapApiKey;
++            return await SaveUpdateAsync(row);
++        }
+ 
+-            }
+-            return new Result<ApiKeySettingDetailVM>
++        private void PreserveOtherSettings(params string[] changedProperties)
++        {
++            // The shared helper calls Repository.Update, which marks the entire row Modified.
++            // These sections own one scalar each; unrelated concurrent changes must survive.
++            foreach (var entry in UnitOfWork.Context.ChangeTracker.Entries<ApiKeySetting>()
++                .Where(entry => entry.State == EntityState.Modified))
++                foreach (var property in entry.Properties)
++                    property.IsModified = changedProperties.Contains(property.Metadata.Name, StringComparer.Ordinal)
++                        && !Equals(property.CurrentValue, property.OriginalValue);
++        }
++
++        public Task<Result> SaveDeepSeekApiKeyAsync(string? apiKey, CancellationToken cancellationToken)
++            => SaveMockDataSettingsAsync(new MockDataSettingsSaveVM { ApiKey = apiKey }, cancellationToken);
++
++        public async Task<Result> SaveMockDataSettingsAsync(MockDataSettingsSaveVM request, CancellationToken cancellationToken)
++        {
++            cancellationToken.ThrowIfCancellationRequested();
++            if (request == null)
++                return new Result { IsSuccess = false, Message = _mockMessages["InvalidRequest"].Value };
++            var apiKey = request.ApiKey;
++            if (apiKey?.Length > 2048 || apiKey?.Any(char.IsControl) == true)
++                return new Result { IsSuccess = false, Message = _mockMessages["InvalidRequest"].Value };
++            var changedProperties = new List<string>();
++            if (!string.IsNullOrWhiteSpace(apiKey)) changedProperties.Add(nameof(ApiKeySetting.DeepSeekApiKey));
++            if (request.ShowButton.HasValue) changedProperties.Add(nameof(ApiKeySetting.ShowMockDataButton));
++            if (request.ShowPreview.HasValue) changedProperties.Add(nameof(ApiKeySetting.ShowMockDataPreview));
++            if (request.ShowConfirmation.HasValue) changedProperties.Add(nameof(ApiKeySetting.ShowMockDataConfirmation));
++            if (changedProperties.Count == 0)
++                return new Result { IsSuccess = true, Message = _mockMessages["SettingsSaved"].Value };
++
++            await _settings.UpsertSingleAsync<ApiKeySettingSecretVM, ApiKeySetting>(
++                new ApiKeySettingSecretVM
++                {
++                    DeepSeekApiKey = string.IsNullOrWhiteSpace(apiKey) ? null : apiKey.Trim(),
++                    ShowMockDataButton = request.ShowButton,
++                    ShowMockDataPreview = request.ShowPreview,
++                    ShowMockDataConfirmation = request.ShowConfirmation
++                }, cancellationToken);
++            PreserveOtherSettings(changedProperties.ToArray());
++            var saved = await UnitOfWork.SaveChangesAsync(cancellationToken);
++            return new Result
+             {
+-                IsSuccess = true,
+-                Entity = Mapper.Map<ApiKeySettingDetailVM>(entity)
++                IsSuccess = saved,
++                Message = _mockMessages[saved ? "SettingsSaved" : "SettingsUnavailable"].Value
+             };
+         }
++
++        public async Task<Result<ApiKeySettingDetailVM>> GetFirstMapApi()
++        {
++            var setting = await GetMineAsync();
++            return setting.Entity == null
++                ? BusinessFailure<ApiKeySettingDetailVM>("FailedToFound")
++                : setting;
++        }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/SiGma.DataAccess/Configuration/ApiKeySettingConfig.cs b/SiGma.DataAccess/Configuration/ApiKeySettingConfig.cs
+index 4e6b8baa..3196e421 100644
+--- a/SiGma.DataAccess/Configuration/ApiKeySettingConfig.cs
++++ b/SiGma.DataAccess/Configuration/ApiKeySettingConfig.cs
+@@ -5,6 +5,11 @@ namespace SiGma.DataAccess.Configuration
+         public void Configure(EntityTypeBuilder<ApiKeySetting> builder)
+         {
+             builder.ToTable(nameof(ApiKeySetting));
++            builder.Property(x => x.DeepSeekApiKey).HasMaxLength(2048);
++            builder.Property(x => x.ShowMockDataButton).HasDefaultValue(true).HasSentinel(true);
++            builder.Property(x => x.ShowMockDataPreview).HasDefaultValue(true).HasSentinel(true);
++            builder.Property(x => x.ShowMockDataConfirmation).HasDefaultValue(true).HasSentinel(true);
++            builder.HasIndex(x => x.SubscriptionId).IsUnique().HasFilter("[IsDeleted] = 0");
+         }
+     }
+ 
+diff --git a/SiGma.Helpers/Models/Settings/ApiKeySetting.cs b/SiGma.Helpers/Models/Settings/ApiKeySetting.cs
+index 9cc4a069..5f2f6aad 100644
+--- a/SiGma.Helpers/Models/Settings/ApiKeySetting.cs
++++ b/SiGma.Helpers/Models/Settings/ApiKeySetting.cs
+@@ -4,6 +4,11 @@ public class ApiKeySetting : EntityBase
+ {
+     [Display(Name = "Google Map API Key")]
+     public required string GoogleMapApiKey { get; set; }
++
++    public string? DeepSeekApiKey { get; set; }
++    public bool ShowMockDataButton { get; set; } = true;
++    public bool ShowMockDataPreview { get; set; } = true;
++    public bool ShowMockDataConfirmation { get; set; } = true;
+ }
+ 
+ 
+diff --git a/SiGma.ServerAPI/Controller/ApiKeySettingController.cs b/SiGma.ServerAPI/Controller/ApiKeySettingController.cs
+index 89876196..964fa21b 100644
+--- a/SiGma.ServerAPI/Controller/ApiKeySettingController.cs
++++ b/SiGma.ServerAPI/Controller/ApiKeySettingController.cs
+@@ -4,7 +4,7 @@ using SiGma.ViewModels.ViewModels.ApiKeySetting;
+ 
+ namespace SiGma.ServerAPI.Controller
+ {
+-    public class ApiKeySettingController : SiGmaControllerBase<ApiKeySettingAddVM, ApiKeySettingUpdateVM, ApiKeySettingDetailVM, ApiKeySettingListVM,
++    public class ApiKeySettingController : SingleRowSettingsControllerBase<ApiKeySettingAddVM, ApiKeySettingUpdateVM, ApiKeySettingDetailVM, ApiKeySettingListVM,
+         IApiKeySettingService>
+     {
+         public ApiKeySettingController(IApiKeySettingService service) : base(service)
+diff --git a/SiGma.ServerAPI/Extensions/DependencyResolver.cs b/SiGma.ServerAPI/Extensions/DependencyResolver.cs
+index 17072446..c97976f9 100644
+--- a/SiGma.ServerAPI/Extensions/DependencyResolver.cs
++++ b/SiGma.ServerAPI/Extensions/DependencyResolver.cs
+@@ -132,6 +132,11 @@ namespace SiGma.ServerAPI.Extensions
+             services.AddHttpContextAccessor();
+             services.TryAddScoped(typeof(ApiSecurityHelper));
+             services.AddHttpClient("Server", opt => opt.BaseAddress = new Uri(configuration["Servers:AuthenticationServer"]));
++            services.AddHttpClient("DeepSeekMockData", client =>
++            {
++                client.Timeout = TimeSpan.FromSeconds(45);
++            }).RedactLoggedHeaders(_ => true)
++              .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
+             #endregion
+ 
+             #region Setup

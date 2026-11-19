@@ -1,0 +1,160 @@
+<section appReportPage class="card">
+  @if(form){
+
+  <div class="card-header pt-4 d-block mb-4">
+    <form class="sigma-filter-form" [formGroup]="form" (ngSubmit)="onSearch()">
+      <div class="row g-3">
+        @for (filter of dynamicFilterConfig(); track $index) {
+        @if (filter.type === "dropdown") {
+        <div class="form-group col-6 col-md-4">
+          <label class="form-label">{{
+            "reports." + filter.name | translate
+            }}</label>
+          <p-dropdown [options]="filter.options" optionLabel="value" optionValue="key"
+            [formControlName]="filter.formControlName"
+            [placeholder]="filter.placeholder || ('reports.select' | translate)">
+          </p-dropdown>
+        </div>
+        }
+
+        @if (filter.type === "checkbox") {
+        <div class="col-6 col-md-4 mt-5">
+          <p-checkbox [formControlName]="filter.formControlName" [name]="filter.name" binary="true"
+            [label]="'reports.' + filter.name | translate">
+          </p-checkbox>
+        </div>
+        }
+
+        @if (filter.type === "dateRange") {
+        <div class="form-group col-6 col-md-4">
+          <label class="form-label">{{
+            "reports.dateRange" | translate
+            }}</label>
+          <p-calendar selectionMode="range" [readonlyInput]="true" dateFormat="dd/mm/yy"
+            [formControlName]="filter.formControlName" [showIcon]="true">
+          </p-calendar>
+        </div>
+        }
+
+        @if (filter.type === "date") {
+        <div class="form-group col-6 col-md-4">
+          <label class="form-label">{{
+            "reports." + filter.name | translate
+            }}</label>
+          <p-calendar [readonlyInput]="true" dateFormat="dd/mm/yy" [formControlName]="filter.formControlName"
+            [showIcon]="true">
+          </p-calendar>
+        </div>
+        }
+
+        @if (filter.type === "month") {
+        <div class="form-group col-6 col-md-4">
+          <label class="form-label">{{
+            "reports.month" | translate
+            }}</label>
+          <p-calendar [readonlyInput]="true" view="month" dateFormat="mm/yy" formControlName="month" [showIcon]="true">
+          </p-calendar>
+        </div>
+        }
+
+        @if (filter.type === "text") {
+        <div class="form-group col-6 col-md-4">
+          <label class="form-label">{{
+            "reports." + filter.name | translate
+            }}</label>
+          <input type="text" class="form-control" pInputText [formControlName]="filter.formControlName"
+            [placeholder]="filter.placeholder || ''">
+        </div>
+        }
+
+        @if (filter.type === "number") {
+        <div class="form-group col-6 col-md-4">
+          <label class="form-label">{{
+            "reports." + filter.name | translate
+            }}</label>
+          <p-inputNumber class="form-control" [formControlName]="filter.formControlName" [min]="filter.min"
+            [max]="filter.max" [placeholder]="filter.placeholder || ''">
+          </p-inputNumber>
+        </div>
+        }
+
+        @if (filter.type === "radio") {
+        <div class="form-group col-6 col-md-4">
+          <label class="form-label">{{
+            "reports." + filter.name | translate
+            }}</label>
+          <div class="d-flex gap-3">
+            @for (option of filter.options; track option.key) {
+            <p-radioButton [formControlName]="filter.formControlName" [value]="option.key"
+              [label]="option.value.toString()" [name]="filter.name">
+            </p-radioButton>
+            }
+          </div>
+        </div>
+        }
+        }
+      </div>
+
+      @if( totals() ){
+      <div class="row">
+        <div class="col d-flex flex-column justify-content-center align-items-center mt-5"
+          *ngFor="let total of totals()">
+          <label [for]="total.id">{{ total.title | translate }}</label>
+          <span class="d-block">{{ total.value }}</span>
+        </div>
+      </div>
+      }
+
+
+      <div
+        appReportActions
+        class="d-flex justify-content-end gap-2 mt-4 mb-4"
+        [ariaLabel]="'general.actions' | translate"
+      >
+        <button class="btn btn-sm fw-bold btn-secondary" type="button" (click)="onCancel()">
+          {{ "general.cancel" | translate }}
+        </button>
+        <button class="btn btn-sm fw-bold btn-primary" type="submit">
+          {{ "general.search" | translate }}
+        </button>
+      </div>
+    </form>
+
+  </div>
+
+  }
+  <div class="card-body">
+    <p-treeTable *ngIf="config().isTree && data()" [value]="data()" [columns]="config().columns" [paginator]="true"
+      [rows]="5" [rowsPerPageOptions]="[5, 10, 25, 50]" [scrollable]="true" [tableStyle]="{ 'min-width': '70rem' }">
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns">{{ col.header | translate }}</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+        <tr [ttRow]="rowNode">
+          <td *ngFor="let col of columns; let i = index">
+            <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0"></p-treeTableToggler>
+            {{ rowData[col.field] }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-treeTable>
+
+    <p-table *ngIf="!config().isTree" [value]="data()" [paginator]="true" [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 25, 50]">
+      <ng-template pTemplate="header">
+        <tr>
+          <th *ngFor="let col of config().columns">
+            {{ col.header | translate }}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td *ngFor="let col of config().columns">{{ row[col.field] }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</section>

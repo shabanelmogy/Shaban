@@ -1,0 +1,83 @@
+{
+  "status": "Implemented — source-only",
+  "ownerVerificationPending": true,
+  "storage": "Plaintext by explicit development owner instruction",
+  "files": [
+    {
+      "file": "SiGma.Business/IServices/IMockDataService.cs",
+      "sha256": "3D0B32028FE37D87C4DA2FF910DEC93F25DAB35ACE70621AC5983DEFC77FAD56"
+    },
+    {
+      "file": "SiGma.Business/IServices/IApiKeySettingService.cs",
+      "sha256": "B1876710E42A50D352285439A6F6AE4E7D70E74FAC69E2E988B5147A31BF3D25"
+    },
+    {
+      "file": "SiGma.Business/Services/MockDataService.cs",
+      "sha256": "14619C34DF60E37F32C11C4EC95426D6809F133A8CC1A6D32AAE150962812EFA"
+    },
+    {
+      "file": "SiGma.Business/Services/ApiKeySettingService.cs",
+      "sha256": "D231523BD06F52EC06CB19A8605B21D2950F83EE443CD1A5DE1A614628854FB7"
+    },
+    {
+      "file": "SiGma.Business/Services/SettingsModels/ApiKeySettingSecretVM.cs",
+      "sha256": "FEF5EF43262BF349C9E197397D8FE1BD92006EAF5001C6A4FC19B808981AC6AD"
+    },
+    {
+      "file": "SiGma.Business/MapperConfig/ApiKeySettingProfiler.cs",
+      "sha256": "DE1FCDBAB97792DF18499FA7243C1FB9E8075F0A00EED67ED39DD1C34DA7ACDF"
+    },
+    {
+      "file": "SiGma.Helpers/Models/Settings/ApiKeySetting.cs",
+      "sha256": "75A5121218126A9F75222560282F543953C22B3DD8C9C3E7BB61131FDAB76634"
+    },
+    {
+      "file": "SiGma.DataAccess/Configuration/ApiKeySettingConfig.cs",
+      "sha256": "B1D349373C0874D4F2039351AB93BF7F1E101B9F93829151C5DA6CCF1EC7714B"
+    },
+    {
+      "file": "SiGma.Helpers/Localization/Shared/MockDataMessage.cs",
+      "sha256": "11A9EEFFCBC67DC128533862FCA7C4C7F56B598744ACE31EE2EB6838FB46460B"
+    },
+    {
+      "file": "SiGma.Helpers/Localization/Shared/MockDataMessage.resx",
+      "sha256": "9CBB526E29FB07738CAAB0AC4EA0D44EDAA7B580DA7343058F4FE14831F4328E"
+    },
+    {
+      "file": "SiGma.Helpers/Localization/Shared/MockDataMessage.ar-SA.resx",
+      "sha256": "B3B4136B44FA36CC38D3609FE73C8333EF22897741DA05D725D99ECE60B0FF84"
+    },
+    {
+      "file": "SiGma.ServerAPI/Controller/MockDataController.cs",
+      "sha256": "9F44EBE1B45904712488BED03E6D804251E07FAD4183DA3957C0510855260549"
+    },
+    {
+      "file": "SiGma.ServerAPI/Controller/ApiKeySettingController.cs",
+      "sha256": "A364EAD65268AE59928649872BE4ACBF7B8BE055C3C7539F38EFB11E5A0165D6"
+    },
+    {
+      "file": "SiGma.ServerAPI/Extensions/DependencyResolver.cs",
+      "sha256": "9415ECBDC582A4EC4822B6CD9514085C64A7424CB4862E687AF55CB9429CA842"
+    },
+    {
+      "file": "SiGma.ViewModels/ViewModels/MockData/MockDataFieldVM.cs",
+      "sha256": "EE8128E1C702B3FE13F83E7C572EA9FCDEE69F9849D27024966FC267D6A20181"
+    },
+    {
+      "file": "SiGma.ViewModels/ViewModels/MockData/MockDataGenerateVM.cs",
+      "sha256": "F5C27248E3782426EFDE13F6F92DB080EF84BBF537E9F899489EFA5B08DAB668"
+    },
+    {
+      "file": "SiGma.ViewModels/ViewModels/MockData/MockDataCandidatesVM.cs",
+      "sha256": "5C93494996926D21CADA89859F4F74D002F7F67790B3239922011235520878CB"
+    },
+    {
+      "file": "SiGma.ViewModels/ViewModels/MockData/MockDataSettingsVM.cs",
+      "sha256": "473163D83B2A6A51E2267F73AB02654FD752A24C58337C11F95D07C7304525AA"
+    },
+    {
+      "file": "SiGma.ViewModels/ViewModels/MockData/MockDataSettingsSaveVM.cs",
+      "sha256": "2E4029A3BB2D5062C45F0DB2038074FE9C85B325FD2B2200DAEAADCCB968FC45"
+    }
+  ]
+}

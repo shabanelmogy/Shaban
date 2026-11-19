@@ -1,0 +1,455 @@
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/charges-type/charges-type.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/charges-type/charges-type.component.html
+index 6ed716d..4da84c0 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/charges-type/charges-type.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/charges-type/charges-type.component.html	
+@@ -1,30 +1,10 @@
+ <app-link-account-tab-state [loading]="tabLoading()" [failed]="loadFailed()" (retry)="loadData()">
+-<section class="link-account-table" aria-labelledby="charge-settings-heading">
+-  <div class="link-account-toolbar">
+-    <label for="charge-module">{{ 'linkAccounts.module' | translate }}</label>
+-    <p-dropdown
+-      inputId="charge-module"
+-      appendTo="body"
+-      [options]="chargeModules()"
+-      optionLabel="value"
+-      optionValue="id"
+-      [ngModel]="selectedModule()"
+-      (ngModelChange)="onModuleChange($event)"
+-    ></p-dropdown>
+-  </div>
+-
+-  <div class="link-account-table__header link-account-table__header--two">
+-    <h2 id="charge-settings-heading">{{ 'linkAccounts.chargesType' | translate }}</h2>
+-    <h2>{{ 'linkAccounts.accounts' | translate }}</h2>
+-  </div>
+-
+-  <div class="link-account-table__body">
+-    @for (row of visibleRows(); track row.value) {
+-      <div class="link-account-row link-account-row--two">
+-        <span class="link-account-row__label">
+-          {{ row.settingLabel || row.settingKey || row.value }}
+-        </span>
+-        <p-dropdown
++  <app-editable-collection-table title="linkAccounts.chargesType" [headingVisible]="false"
++    [columns]="columns" [editable]="false"
++    tableMinWidth="36rem" emptyMessage="linkAccounts.noSearchResults">
++    <ng-template [appEditableCollectionRow]="visibleRows()" let-row>
++      <td class="align-middle">{{ row.settingLabel || row.settingKey || row.value }}</td>
++      <td><div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate"
+           appendTo="body"
+           [filter]="true"
+           [options]="accounts()"
+@@ -33,11 +13,7 @@
+           [ngModel]="row.accountId"
+           (ngModelChange)="onAccountChange(row, $event)"
+           [placeholder]="'linkAccounts.selectAccount' | translate"
+-        ></p-dropdown>
+-      </div>
+-    } @empty {
+-      <div class="link-account-empty">{{ 'linkAccounts.noSearchResults' | translate }}</div>
+-    }
+-  </div>
+-</section>
++        ></p-dropdown></div></td>
++    </ng-template>
++  </app-editable-collection-table>
+ </app-link-account-tab-state>
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.html
+index ca9a541..6996e6e 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.html	
+@@ -1,5 +1,6 @@
+-<section class="link-accounts-page">
+-  <div class="link-accounts-panel">
++<section class="sigma-list-page">
++  <div class="sigma-list-panel sigma-list-panel--workspace">
++    <header class="sigma-list-header">
+     <app-feature-title
+       [title]="'linkAccounts.title' | translate"
+       [subtitle]="'linkAccounts.manage' | translate"
+@@ -8,28 +9,21 @@
+       <app-primary-action-button
+         [label]="'linkAccounts.autoLink.button' | translate"
+         icon="bi bi-magic"
+-        [disabled]="!accountsReady() || isSaving()"
++        [disabled]="!accountsReady() || isSaving() || refreshing() || confirmationPending() || childConfirmationPending()"
+         (pressed)="openAutoLink()"
+       />
+       <app-primary-action-button
+         [label]="'general.saveAll' | translate"
+         icon="bi bi-check2-circle"
+         [loading]="isSaving()"
++        [disabled]="!canSaveAll() || refreshing() || autoLinkVisible()"
+         (pressed)="saveAll()"
+       />
+     </app-feature-title>
++    </header>
+ 
+     @if (saveFailed() || saveBlocked()) {
+-      <div class="link-accounts-save-error" role="alert">
+-        <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+-        <span>
+-          @if (saveBlocked()) {
+-            {{ 'linkAccounts.saveBlocked' | translate }}
+-          } @else {
+-            {{ saveErrorMessage() || ('linkAccounts.saveFailed' | translate) }}
+-          }
+-        </span>
+-      </div>
++      <app-state-message kind="error" [message]="saveBlocked() ? 'linkAccounts.saveBlocked' : (saveErrorMessage() || 'linkAccounts.saveFailed')" />
+     }
+ 
+     <div class="link-accounts-card">
+@@ -39,27 +33,29 @@
+         [ariaLabel]="'linkAccounts.sections' | translate"
+         idPrefix="link-accounts"
+         appearance="workspace"
++        [disabled]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible() || childConfirmationPending()"
+         (activeTabChange)="setCurrentTab($event)"
+       />
+ 
+-      <div class="link-accounts-search-row">
+-        <div class="link-accounts-search" [class.link-accounts-search--active]="searchTerm()">
+-          <i class="bi bi-search" aria-hidden="true"></i>
+-          <input
+-            type="search"
+-            [value]="searchTerm()"
+-            (input)="onSearch($event)"
+-            [placeholder]="'linkAccounts.searchPlaceholder' | translate"
+-            [attr.aria-label]="'linkAccounts.searchPlaceholder' | translate"
+-          />
+-          @if (searchTerm()) {
+-            <button type="button" (click)="clearSearch()" [attr.aria-label]="'linkAccounts.clearSearch' | translate">
+-              <i class="bi bi-x-lg" aria-hidden="true"></i>
+-            </button>
+-          }
++      <form appFilterPanel [mainColumns]="currentTabKey() === 'ChargesType' ? 2 : 1" [stableLayout]="true" [inlineActions]="true"
++        [busy]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible()"
++        [formGroup]="searchForm" (resetRequested)="clearSearch()">
++        @if (currentTabKey() === 'ChargesType') {
++          <div class="sigma-filter-field">
++            <label for="charge-module">{{ 'linkAccounts.module' | translate }}</label>
++            <p-dropdown inputId="charge-module" appendTo="body" styleClass="w-100"
++              [disabled]="!chargesTypeTab?.ready() || !!(chargesTypeTab?.busy() || chargesTypeTab?.confirmationPending())"
++              [options]="options()?.chargeModules ?? []" optionLabel="value" optionValue="id"
++              [ngModel]="chargesTypeTab?.selectedModule()" [ngModelOptions]="{ standalone: true }"
++              (ngModelChange)="chargesTypeTab?.onModuleChange($event)" />
++          </div>
++        }
++        <div class="sigma-filter-field">
++          <label for="link-accounts-search">{{ 'linkAccounts.searchPlaceholder' | translate }}</label>
++          <input id="link-accounts-search" class="form-control" type="search" formControlName="search"
++            [placeholder]="'linkAccounts.searchPlaceholder' | translate" />
+         </div>
+-      </div>
+-
++      </form>
+       <div #tabScroll class="link-accounts-card__scroll">
+         <app-link-account-tab-state
+           [loading]="accountsLoading()"
+@@ -78,38 +74,38 @@
+             >
+               @switch (tab.key) {
+                 @case ('General') {
+-                  <app-general [typeId]="tab.id"
++                  <app-general [busy]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible()" [refreshing]="refreshing()" (loaded)="onTabLoaded()" [typeId]="tab.id"
+                     [defaultLinkSectionId]="enumId(options()?.linkSections, 'Default')"
+                     [accounts]="accounts()" [searchTerm]="searchTerm()"></app-general>
+                 }
+                 @case ('ChargesType') {
+-                  <app-charges-type [typeId]="tab.id"
++                  <app-charges-type [busy]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible()" [refreshing]="refreshing()" (loaded)="onTabLoaded()" [typeId]="tab.id"
+                     [defaultLinkSectionId]="enumId(options()?.linkSections, 'Default')"
+                     [chargeModules]="options()?.chargeModules ?? []"
+                     [accounts]="accounts()" [searchTerm]="searchTerm()"></app-charges-type>
+                 }
+                 @case ('Contacts') {
+-                  <app-contacts [typeId]="tab.id"
++                  <app-contacts [busy]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible()" [refreshing]="refreshing()" (loaded)="onTabLoaded()" [typeId]="tab.id"
+                     [defaultLinkSectionId]="enumId(options()?.linkSections, 'Default')"
+                     [accounts]="accounts()" [searchTerm]="searchTerm()"></app-contacts>
+                 }
+                 @case ('PaymentMethods') {
+-                  <app-payment-methods [typeId]="tab.id"
++                  <app-payment-methods [busy]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible()" [refreshing]="refreshing()" (loaded)="onTabLoaded()" [typeId]="tab.id"
+                     [defaultLinkSectionId]="enumId(options()?.linkSections, 'Default')"
+                     [accounts]="accounts()" [searchTerm]="searchTerm()"></app-payment-methods>
+                 }
+                 @case ('BankAccounts') {
+-                  <app-banck-account [typeId]="tab.id"
++                  <app-banck-account [busy]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible()" [refreshing]="refreshing()" (loaded)="onTabLoaded()" [typeId]="tab.id"
+                     [defaultLinkSectionId]="enumId(options()?.linkSections, 'Default')"
+                     [accounts]="accounts()" [searchTerm]="searchTerm()"></app-banck-account>
+                 }
+                 @case ('PrepaidExpense') {
+-                  <app-prepaid-expense [typeId]="tab.id"
++                  <app-prepaid-expense [busy]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible()" [refreshing]="refreshing()" (loaded)="onTabLoaded()" [typeId]="tab.id"
+                     [defaultLinkSectionId]="enumId(options()?.linkSections, 'Default')"
+                     [accounts]="accounts()" [searchTerm]="searchTerm()"></app-prepaid-expense>
+                 }
+                 @case ('Workshop') {
+-                  <app-workshop [typeId]="tab.id"
++                  <app-workshop [busy]="isSaving() || refreshing() || confirmationPending() || autoLinkVisible()" [refreshing]="refreshing()" (loaded)="onTabLoaded()" [typeId]="tab.id"
+                     [linkSections]="options()?.linkSections ?? []"
+                     [itemTypes]="options()?.itemTypes ?? []"
+                     [jobTypes]="options()?.jobTypes ?? []"
+@@ -128,5 +124,6 @@
+ <app-link-accounts-auto-link
+   [visible]="autoLinkVisible()"
+   [accountTypes]="tabs()"
+-  (closed)="onAutoLinkClosed($event)"
++  (closed)="onAutoLinkClosed()"
++  (appliedCompleted)="onAutoLinkApplied($event)"
+ />
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.ts b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.ts
+index 03b8b93..eb16d6d 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.ts	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.ts	
+@@ -1,3 +1,7 @@
++import { MessageService } from 'primeng/api';
++import { TranslateService } from '@ngx-translate/core';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+ import {
+   Component,
+   DestroyRef,
+@@ -5,13 +9,17 @@ import {
+   OnInit,
+   ViewChild,
+   computed,
++  effect,
+   inject,
+   signal,
+ } from '@angular/core';
+ import { CommonModule } from '@angular/common';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+-import { finalize, forkJoin, Observable, tap } from 'rxjs';
++import { finalize, forkJoin, Observable, Subscription, map, tap } from 'rxjs';
+ import { TranslateModule } from '@ngx-translate/core';
++import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
++import { DropdownModule } from 'primeng/dropdown';
++import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+ import { AccountService } from 'src/app/modules/Accounts/Account/services/account.service';
+ import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+ import { Results } from 'src/app/modules/shared/models/results';
+@@ -43,9 +51,15 @@ import {
+ 
+ @Component({
+   selector: 'app-details',
++  host: { class: 'sigma-route-host' },
+   standalone: true,
+   imports: [
+     CommonModule,
++    ReactiveFormsModule,
++    FormsModule,
++    DropdownModule,
++    FilterPanelComponent,
++    StateMessageComponent,
+     TranslateModule,
+     GeneralComponent,
+     ChargesTypeComponent,
+@@ -69,9 +83,15 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+   private readonly confirmationDialog = inject(ConfirmationDialogService);
+   private readonly destroyRef = inject(DestroyRef);
+   private allowNavigation = false;
++  private accountsRequest?: Subscription;
++  private readonly messages = inject(MessageService);
++  private readonly translate = inject(TranslateService);
++  private pendingSuccess = '';
++  readonly refreshing = signal(false);
++  readonly confirmationPending = signal(false);
+ 
+   @ViewChild(GeneralComponent) private generalTab?: GeneralComponent;
+-  @ViewChild(ChargesTypeComponent) private chargesTypeTab?: ChargesTypeComponent;
++  @ViewChild(ChargesTypeComponent) protected chargesTypeTab?: ChargesTypeComponent;
+   @ViewChild(ContactsComponent) private contactsTab?: ContactsComponent;
+   @ViewChild(PaymentMethodsComponent) private paymentMethodsTab?: PaymentMethodsComponent;
+   @ViewChild(BanckAccountComponent) private bankAccountsTab?: BanckAccountComponent;
+@@ -90,6 +110,7 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+   readonly saveErrorMessage = signal<string | null>(null);
+   readonly saveBlocked = signal(false);
+   readonly searchTerm = signal('');
++  readonly searchForm = new FormGroup({ search: new FormControl('', { nonNullable: true }) });
+   readonly currentTabKey = signal('General');
+   readonly autoLinkVisible = signal(false);
+   /** Bumped after Complete Missing Links so every tab is recreated and reloads its links. */
+@@ -121,13 +142,26 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+   );
+   readonly enumId = getLinkAccountsEnumId;
+ 
++  constructor() {
++    super();
++    effect(() => {
++      if (this.isSaving() || this.refreshing() || this.confirmationPending() || this.autoLinkVisible()) this.searchForm.disable({ emitEvent: false });
++      else this.searchForm.enable({ emitEvent: false });
++    });
++  }
++
+   ngOnInit(): void {
++    this.searchForm.controls.search.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
++      this.searchTerm.set(value);
++      if (this.tabScroll) this.tabScroll.nativeElement.scrollTop = 0;
++    });
+     this.getAccounts();
+   }
+ 
+   setCurrentTab(tabKey: string): void {
++    if (this.isSaving() || this.refreshing() || this.confirmationPending() || this.autoLinkVisible() || this.childConfirmationPending()) return;
+     this.currentTabKey.set(tabKey);
+-    this.searchTerm.set('');
++    this.searchForm.reset({ search: '' });
+     if (this.tabScroll) this.tabScroll.nativeElement.scrollTop = 0;
+   }
+ 
+@@ -137,13 +171,13 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+   }
+ 
+   clearSearch(): void {
+-    this.searchTerm.set('');
++    this.searchForm.reset({ search: '' });
+     if (this.tabScroll) this.tabScroll.nativeElement.scrollTop = 0;
+   }
+ 
+   canSaveAll(): boolean {
+     return (
+-      this.accountsReady() &&
++      !this.confirmationPending() && !this.childConfirmationPending() && this.accountsReady() &&
+       !!this.generalTab?.ready() &&
+       !!this.chargesTypeTab?.ready() &&
+       !!this.contactsTab?.ready() &&
+@@ -157,7 +191,7 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+   }
+ 
+   saveAll(): void {
+-    if (this.isSaving()) return;
++    if (this.isSaving() || this.refreshing() || this.confirmationPending() || this.autoLinkVisible() || this.childConfirmationPending()) return;
+ 
+     this.saveFailed.set(false);
+     this.saveErrorMessage.set(null);
+@@ -203,19 +237,20 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+           this.markAllTabsSaved();
+         },
+         error: (error: unknown) => {
+-          this.saveErrorMessage.set(this.extractServerMessage(error));
++          this.saveErrorMessage.set(apiErrorMessage(error, 'linkAccounts.saveFailed'));
+           this.saveFailed.set(true);
+         },
+       });
+   }
+ 
+   openAutoLink(): void {
+-    if (this.isSaving() || !this.accountsReady()) return;
++    if (this.isSaving() || this.refreshing() || this.confirmationPending() || this.childConfirmationPending() || !this.accountsReady()) return;
+     if (!this.hasUnsavedChanges()) {
+       this.autoLinkVisible.set(true);
+       return;
+     }
+ 
++    this.confirmationPending.set(true);
+     // Applying reloads every tab, so pending edits must be saved or discarded first.
+     this.confirmationDialog
+       .confirm({
+@@ -227,29 +262,42 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+         cancelLabel: { key: 'general.cancel' },
+         confirmIcon: 'bi bi-magic',
+       })
+-      .pipe(takeUntilDestroyed(this.destroyRef))
++      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false)))
+       .subscribe((confirmed) => {
+-        if (confirmed) this.autoLinkVisible.set(true);
++        if (confirmed && !this.isSaving() && !this.refreshing() && this.accountsReady() && !this.childConfirmationPending()) this.autoLinkVisible.set(true);
+       });
+   }
+ 
+-  onAutoLinkClosed(applied: boolean): void {
+-    this.autoLinkVisible.set(false);
+-    if (!applied) return;
++  onAutoLinkClosed(): void { this.autoLinkVisible.set(false); }
+ 
+-    // New accounts must appear in the account dropdowns before the tabs reload.
++  onAutoLinkApplied(message: string): void {
++    this.pendingSuccess = message;
++    this.refreshing.set(true);
+     this.saveFailed.set(false);
+     this.saveBlocked.set(false);
+-    this.tabsReloadKey.update((key) => key + 1);
++    this.tabsReloadKey.update(key => key + 1);
+     this.getAccounts();
+   }
+ 
++  onTabLoaded(): void {
++    if (!this.refreshing() || !this.canSaveAll()) return;
++    this.refreshing.set(false);
++    if (this.pendingSuccess) this.messages.add({ key: 'global', severity: 'success', summary: this.translate.instant('general.success'), detail: this.translate.instant(this.pendingSuccess) });
++    this.pendingSuccess = '';
++  }
++
++  childConfirmationPending(): boolean {
++    return !!(this.prepaidExpenseTab?.confirmationPending() || this.workshopTab?.confirmationPending());
++  }
++
+   getAccounts(): void {
++    if (this.isSaving() || this.confirmationPending() || this.childConfirmationPending()) return;
++    this.accountsRequest?.unsubscribe();
+     this.accountsReady.set(false);
+     this.accountsLoading.set(true);
+     this.accountsLoadFailed.set(false);
+-    forkJoin({
+-      accounts: this.accountService.getSelectList<Results<DropDownSelect>>(),
++    this.accountsRequest = forkJoin({
++      accounts: this.accountService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }),
+       options: this.linkAccountsService.getOptions(),
+     })
+       .pipe(
+@@ -258,7 +306,12 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+       )
+       .subscribe({
+         next: ({ accounts, options }) => {
+-          if (!accounts.isSuccess || !options.isSuccess || !options.entity) {
++          const required = ['General', 'ChargesType', 'Contacts', 'PaymentMethods', 'BankAccounts', 'PrepaidExpense', 'Workshop'];
++          if (!accounts.isSuccess || !options.isSuccess || !options.entity ||
++              !required.every(key => options.entity!.accountTypes?.some(tab => tab.key === key && Number.isInteger(tab.id) && tab.id > 0)) ||
++              !options.entity.linkSections?.some(section => section.key === 'Default') ||
++              !options.entity.linkSections?.some(section => section.key === 'StockRevenueAccounts') ||
++              !options.entity.linkSections?.some(section => section.key === 'StockExpenseAccounts')) {
+             this.accountsLoadFailed.set(true);
+             return;
+           }
+@@ -271,13 +324,16 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+             this.currentTabKey.set(options.entity.accountTypes[0]?.key ?? 'General');
+           }
+           this.accountsReady.set(true);
++          this.onTabLoaded();
+         },
+         error: () => this.accountsLoadFailed.set(true),
+       });
+   }
+ 
+   canDeactivate(): boolean | Observable<boolean> {
++    if (this.isSaving() || this.refreshing() || this.autoLinkVisible() || this.confirmationPending() || this.childConfirmationPending()) return false;
+     if (this.allowNavigation || !this.hasUnsavedChanges()) return true;
++    this.confirmationPending.set(true);
+ 
+     return this.confirmationDialog
+       .confirm({
+@@ -291,6 +347,8 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+       })
+       .pipe(
+         takeUntilDestroyed(this.destroyRef),
++        map(confirmed => confirmed && !this.isSaving() && !this.refreshing() && !this.childConfirmationPending()),
++        finalize(() => this.confirmationPending.set(false)),
+         tap((confirmed) => {
+           if (confirmed) this.allowNavigation = true;
+         })
+@@ -323,11 +381,4 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+     this.workshopTab?.markSaved();
+   }
+ 
+-  private extractServerMessage(error: unknown): string | null {
+-    const candidate = error as { error?: { message?: unknown } };
+-    const message = candidate?.error?.message;
+-    return typeof message === 'string' && message.trim().length > 0
+-      ? message.trim()
+-      : null;
+-  }
+ }

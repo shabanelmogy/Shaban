@@ -1,0 +1,7 @@
+Source-only syntax and preservation check; build/visual/runtime pending.
+src/app/modules/Workshop/WorkOrder/components/list/list.component.ts: syntax clean; only declared presentation property changed, methods/form/query/calculations/save unchanged
+src/app/modules/Workshop/WorkOrder/components/details/details.component.ts: syntax clean; only declared presentation property changed, methods/form/query/calculations/save unchanged
+en: existing validationMessages.date and More filters keys present
+ar: existing validationMessages.date and More filters keys present
+src/app/modules/Workshop/WorkOrder/components/list/list.component.html: template syntax clean
+src/app/modules/Workshop/WorkOrder/components/details/details.component.html: template syntax clean

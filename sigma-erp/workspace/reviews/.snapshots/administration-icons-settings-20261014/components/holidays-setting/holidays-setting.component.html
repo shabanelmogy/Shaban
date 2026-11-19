@@ -1,0 +1,84 @@
+<div class="card">
+    <table-list [columns]="columns()" [list]="data()" [moreActions]="moreActions()" [hasCreate]="true"
+        (openDialog)="showDialog()" [hasCustomSearch]="false" [hasAllList]="false" [hasDeleteList]="false"
+        [hasActiveList]="false" [hasInActiveList]="false"></table-list>
+</div>
+
+<ng-template #actionTemplate let-row>
+    <div class="dropdown">
+        <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-gear me-1"></i>
+            {{ 'general.actions' | translate }}
+        </button>
+
+        <ul class="dropdown-menu">
+            @for (act of moreActions(); track act.title) {
+            <li>
+                <button class="dropdown-item d-flex align-items-center" type="button" (click)="act.action(row)">
+                    <i [class]="act.icon + ' me-2'"></i>
+                    {{ act.title | translate }}
+                </button>
+            </li>
+            }
+        </ul>
+    </div>
+</ng-template>
+
+
+<p-dialog header="{{ 'settings.holidaysModel.addNewholiday' | translate }}" [modal]="true" [(visible)]="visibleDialog"
+    [draggable]="false" [resizable]="false" [style]="{ width: '420px' }" styleClass="holiday-dialog">
+    <form appMockData [formGroup]="HolidaysSettingForm">
+        <div class="container-fluid">
+            <div class="row mb-4 justify-content-center">
+                <div class="col-12">
+                    <label class="form-label fw-semibold required"> {{ 'settings.holidaysModel.name' | translate }}
+                    </label>
+                    <input type="text" pInputText formControlName="name" class="form-control" />
+                </div>
+                @if (
+                HolidaysSettingForm.get('name')?.invalid &&
+                (HolidaysSettingForm.get('name')?.touched || HolidaysSettingForm.get('name')?.dirty)) {
+                <div class="invalid-feedback d-block">
+
+                    @if (HolidaysSettingForm.get('name')?.hasError('required')) { <p class="errors"> {{
+                        'validationMessages.required' | translate }}</p>}
+                    @if (HolidaysSettingForm.get('name')?.hasError('minlength')) { <p class="errors"> {{
+                        'validationMessages.minlength' | translate }}</p> }
+                    @if (HolidaysSettingForm.get('name')?.hasError('maxlength')) {
+                    <p class="errors"> {{ 'validationMessages.maxlength' | translate }}</p> }
+                </div>
+                }
+            </div>
+
+            <div class="row mb-4 justify-content-center">
+                <div class="col-12">
+                    <label class="form-label fw-semibold required"> {{ 'settings.holidaysModel.date' | translate }}
+                    </label>
+                    <input type="date" pInputText formControlName="date" class="form-control" />
+                </div>
+                @if (
+                HolidaysSettingForm.get('date')?.invalid &&
+                (HolidaysSettingForm.get('date')?.touched || HolidaysSettingForm.get('date')?.dirty)) {
+                <div class="invalid-feedback d-block">
+                    @if (HolidaysSettingForm.get('date')?.hasError('required')) {
+                    <p class="errors"> {{ 'validationMessages.required' | translate }}</p>}
+                </div>
+                }
+            </div>
+
+            <div class="row my-4">
+                <div class="col-12 d-flex justify-content-end">
+                    <app-buttons [endButtons]="Buttons" (buttonsClick)="onButtonClick($event)">
+                    </app-buttons>
+                </div>
+            </div>
+
+        </div>
+
+        @if (HolidaysSettingForm.invalid && HolidaysSettingForm.dirty ) {
+        <p class="errors">{{ 'validationMessages.formInvalid' | translate }} </p>
+        }
+    </form>
+
+</p-dialog>

@@ -1,0 +1,1091 @@
+SOURCE: src/app/modules/shared/components/data-table/data-table.component.scss
+:host {
+  --_sigma-data-table-border: var(--sigma-data-table-border, #d7dade);
+  --_sigma-data-table-header-background: var(--sigma-data-table-header-background, #f3f3f3);
+  --_sigma-data-table-header-color: var(--sigma-data-table-header-color, #222);
+  --_sigma-data-table-row-background: var(--sigma-data-table-row-background, #fff);
+  --_sigma-data-table-row-alt-background: var(--sigma-data-table-row-alt-background, #f1f1f1);
+  --_sigma-data-table-row-hover-background: var(--sigma-data-table-row-hover-background, #f3f8fc);
+  --_sigma-data-table-text: var(--sigma-data-table-text, #3f4850);
+  --_sigma-data-table-muted: var(--sigma-data-table-muted, #728596);
+  --_sigma-data-table-10-rows-height: 288px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+.sigma-data-table {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.sigma-data-table__empty {
+  display: flex;
+  height: 100%;
+  min-height: calc(var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height)) - 28px);
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--_sigma-data-table-muted);
+  pointer-events: none;
+  font-size: 12px;
+}
+
+:host ::ng-deep .sigma-data-table p-table {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  justify-content: space-between;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height)) !important;
+  height: var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height));
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--scrollable {
+  min-height: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--scrollable p-table {
+  min-height: 0;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--scrollable .p-datatable {
+  min-height: 0;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--scrollable .p-datatable-wrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height)) !important;
+  height: var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height));
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-thead > tr > th {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-table {
+  min-width: var(--sigma-data-table-min-width, 640px);
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-table:has(.sigma-data-table__empty-row) {
+  height: 100%;
+  flex: 1 1 auto;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__empty-row {
+  height: 100% !important;
+  background: transparent !important;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__empty-cell {
+  height: 100% !important;
+  vertical-align: middle !important;
+  border-bottom: 0 !important;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody,
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr,
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr > td {
+  overflow: visible !important;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-thead > tr > th {
+  height: 28px;
+  padding: 5px 7px;
+  border-color: var(--_sigma-data-table-border);
+  color: var(--_sigma-data-table-header-color);
+  background: var(--_sigma-data-table-header-background);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr > td {
+  height: 25px;
+  max-width: 360px;
+  overflow: hidden !important;
+  padding: 3px 7px;
+  border-color: var(--_sigma-data-table-border);
+  color: var(--_sigma-data-table-text);
+  background: var(--_sigma-data-table-row-background);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr > td.sigma-data-table__cell--wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  overflow: visible !important;
+  text-overflow: clip;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr:nth-child(even) > td {
+  background: var(--_sigma-data-table-row-alt-background);
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr:hover > td {
+  background: var(--_sigma-data-table-row-hover-background);
+}
+
+.sigma-data-table__hierarchy-cell,
+.sigma-data-table__indented-cell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.sigma-data-table__hierarchy-toggle,
+.sigma-data-table__cell-link {
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+}
+
+.sigma-data-table__hierarchy-toggle {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 3px;
+  color: var(--_sigma-data-table-muted);
+}
+
+.sigma-data-table__hierarchy-toggle:hover,
+.sigma-data-table__hierarchy-toggle:focus-visible,
+.sigma-data-table__cell-link:focus-visible {
+  outline: 0;
+  box-shadow: var(--sigma-control-focus-ring);
+}
+
+.sigma-data-table__hierarchy-spacer {
+  width: 22px;
+  flex: 0 0 22px;
+}
+
+.sigma-data-table__hierarchy-code {
+  min-width: 52px;
+  color: var(--_sigma-data-table-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sigma-data-table__cell-link {
+  min-width: 0;
+  padding: 0;
+  color: var(--sigma-primary);
+  cursor: pointer;
+  overflow: hidden;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sigma-data-table__cell-link:hover {
+  color: var(--sigma-primary-hover);
+  text-decoration: underline;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__cell--wrap .sigma-data-table__cell-link {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr.sigma-data-table__hierarchy-root > td {
+  font-weight: 650;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr.sigma-data-table__row--interactive {
+  cursor: pointer;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr.sigma-data-table__row--interactive:focus-visible {
+  outline: 2px solid var(--sigma-primary);
+  outline-offset: -2px;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr.sigma-data-table__row--interactive:focus-visible > td {
+  background: var(--_sigma-data-table-row-hover-background);
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__actions-column {
+  width: 1%;
+  overflow: visible !important;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column {
+  width: 30px;
+  min-width: 30px;
+  padding-inline: 4px;
+  text-align: center;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column .p-checkbox {
+  width: 15px;
+  height: 15px;
+  vertical-align: middle;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column .p-checkbox-box {
+  width: 15px;
+  height: 15px;
+  border-width: 1px;
+  border-radius: 2px;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column .p-checkbox-icon,
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column .p-icon {
+  width: 9px;
+  height: 9px;
+  font-size: 9px;
+}
+
+:host ::ng-deep .sigma-data-table .action-button-toggle {
+  min-width: 86px;
+  min-height: 24px;
+  padding: 2px 8px;
+  border-color: var(--sigma-primary) !important;
+  border-radius: 2px;
+  color: #fff !important;
+  background: var(--sigma-primary) !important;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+:host ::ng-deep .sigma-data-table .action-button-toggle i {
+  color: #fff !important;
+}
+
+:host ::ng-deep .sigma-data-table .action-button-toggle:hover,
+:host ::ng-deep .sigma-data-table .action-button-toggle:focus-visible,
+:host ::ng-deep .sigma-data-table .action-button-toggle:active,
+:host ::ng-deep .sigma-data-table .action-button-toggle.show {
+  border-color: var(--sigma-primary-hover) !important;
+  color: #fff !important;
+  background: var(--sigma-primary-hover) !important;
+}
+
+:host ::ng-deep .sigma-data-table .dropdown-menu {
+  z-index: 1100;
+  max-height: min(70vh, 420px);
+  overflow-y: auto;
+}
+
+:host ::ng-deep .sigma-data-table p-paginator {
+  display: block;
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 0 12px;
+  border: 0;
+  background: transparent;
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-current {
+  width: auto;
+  min-width: max-content;
+  height: auto;
+  flex: 0 0 auto;
+  margin-inline: 4px;
+  padding-inline: 6px;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-pages {
+  display: inline-flex;
+  align-items: center;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-pages:empty::before {
+  content: '1';
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 2.125rem !important;
+  height: 2.125rem !important;
+  min-width: 2.125rem !important;
+  padding: 0 !important;
+  margin: 0.143rem;
+  border-radius: 50% !important;
+  border: 1px solid var(--sigma-primary) !important;
+  color: #fff !important;
+  background: var(--sigma-primary) !important;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: default;
+  user-select: none;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page {
+  border-radius: 50% !important;
+  width: 2.125rem !important;
+  height: 2.125rem !important;
+  min-width: 2.125rem !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0.143rem;
+  font-size: 11px;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-first,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-prev,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-next,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-last {
+  border-radius: 50% !important;
+  width: 2.125rem !important;
+  height: 2.125rem !important;
+  min-width: 2.125rem !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:hover,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:focus-visible {
+  border-radius: 50% !important;
+  border: 1px solid var(--sigma-primary) !important;
+  color: #fff !important;
+  background: var(--sigma-primary) !important;
+  font-weight: 700;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--sigma-primary) 28%, transparent);
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-rpp-options.p-disabled {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+:host-context([data-bs-theme='dark']) {
+  --_sigma-data-table-border: var(--sigma-data-table-border, #405364);
+  --_sigma-data-table-header-background: var(--sigma-data-table-header-background, #20313d);
+  --_sigma-data-table-header-color: var(--sigma-data-table-header-color, #e5edf4);
+  --_sigma-data-table-row-background: var(--sigma-data-table-row-background, #182630);
+  --_sigma-data-table-row-alt-background: var(--sigma-data-table-row-alt-background, #1d2b36);
+  --_sigma-data-table-row-hover-background: var(--sigma-data-table-row-hover-background, #243746);
+  --_sigma-data-table-text: var(--sigma-data-table-text, #dce7ee);
+  --_sigma-data-table-muted: var(--sigma-data-table-muted, #a9bdca);
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator-current {
+  color: var(--_sigma-data-table-muted);
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:hover,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:focus-visible,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-pages:empty::before {
+  border-radius: 50% !important;
+  border-color: #246b98 !important;
+  background: #246b98 !important;
+  color: #fff !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page:not(.p-highlight) {
+  color: var(--_sigma-data-table-muted) !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page:not(.p-highlight):hover {
+  color: #fff !important;
+  background: #304454 !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-first,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-prev,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-next,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-last {
+  color: var(--_sigma-data-table-muted) !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-first:hover:not(.p-disabled),
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-prev:hover:not(.p-disabled),
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-next:hover:not(.p-disabled),
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-last:hover:not(.p-disabled) {
+  color: #fff !important;
+  background: #304454 !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-dropdown {
+  border-color: #405364 !important;
+  color: #e5edf4 !important;
+  background: #22313e !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-dropdown .p-dropdown-label {
+  color: #e5edf4 !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-dropdown .p-dropdown-trigger {
+  color: #aebdca !important;
+}
+
+/*
+ * Fill mode (`[fill]="true"`, UI block 6, backlog 34). Kept last so it wins over the fixed
+ * scroll-height rules above: the grid fills its flex parent, rows are the scroll owner, the
+ * paginator is grounded at the bottom with compact spacing.
+ */
+.sigma-data-table.sigma-data-table--fill {
+  height: 100%;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill p-table,
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill .p-datatable {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill .p-datatable-wrapper {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill p-paginator,
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill .p-paginator {
+  flex-shrink: 0 !important;
+  margin-top: auto !important;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill .p-paginator {
+  padding: 6px 0 4px !important;
+}
+
+/* Reports can keep the shared grid palette while their outer frame owns scrolling. */
+:host ::ng-deep .sigma-data-table.sigma-data-table--flow,
+:host ::ng-deep .sigma-data-table.sigma-data-table--flow p-table,
+:host ::ng-deep .sigma-data-table.sigma-data-table--flow .p-datatable,
+:host ::ng-deep .sigma-data-table.sigma-data-table--flow .p-datatable-wrapper {
+  display: block;
+  height: auto;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.sigma-data-table--flow .sigma-data-table__empty {
+  min-height: 260px;
+}
+
+@media print {
+  :host ::ng-deep .sigma-data-table--flow p-paginator {
+    display: none !important;
+  }
+
+  :host ::ng-deep .sigma-data-table--flow .p-datatable-table {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  :host ::ng-deep .sigma-data-table--flow .p-datatable-thead > tr > th,
+  :host ::ng-deep .sigma-data-table--flow .p-datatable-tbody > tr > td {
+    position: static;
+    max-width: none;
+    overflow: visible !important;
+    color: #222 !important;
+    background: #fff !important;
+    border-color: #d7dade;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+  }
+
+  :host ::ng-deep .sigma-data-table--flow .p-datatable-tbody > tr {
+    break-inside: avoid;
+  }
+
+  .sigma-data-table--flow .sigma-data-table__empty {
+    min-height: 0;
+  }
+
+  .sigma-data-table__hierarchy-toggle,
+  .sigma-data-table__hierarchy-spacer {
+    display: none;
+  }
+}
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report.models.ts
+import { Observable } from 'rxjs';
+
+import {
+  DataTableColumn,
+  DataTableHierarchy,
+} from 'src/app/modules/shared/components/data-table/data-table.component';
+import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Result } from 'src/app/modules/shared/models/result';
+import { Results } from 'src/app/modules/shared/models/results';
+
+export type AccountReportFilterValue = Date | Date[] | string | number | boolean | null | undefined;
+export type AccountReportFilterRaw = Readonly<Record<string, AccountReportFilterValue>>;
+export type AccountReportFilterKind =
+  | 'date-range'
+  | 'date'
+  | 'month'
+  | 'select'
+  | 'number'
+  | 'text'
+  | 'checkbox';
+
+export interface AccountReportFilterOption {
+  value: string | number;
+  label?: string;
+  labelKey?: string;
+}
+
+export interface AccountReportFilterDefinition {
+  key: string;
+  labelKey: string;
+  kind: AccountReportFilterKind;
+  initialValue: AccountReportFilterValue;
+  required?: boolean;
+  min?: number;
+  max?: number;
+  wide?: boolean;
+  options?: ReadonlyArray<AccountReportFilterOption>;
+  loadOptions?: () => Observable<Results<DropDownSelect>>;
+  requiredLookup?: boolean;
+}
+
+export interface AccountReportBuildResult<TFilter extends object> {
+  filter?: TFilter;
+  errorKey?: string;
+  focusKey?: string;
+}
+
+export interface AccountReportSection<TRow extends object> {
+  id: string;
+  titleKey?: string;
+  rows: ReadonlyArray<TRow>;
+  columns: ReadonlyArray<DataTableColumn<TRow>>;
+  hierarchy?: DataTableHierarchy<TRow>;
+  dataKey?: string;
+  minWidth?: string;
+}
+
+export interface AccountReportConfig<
+  TResponse extends object,
+  TFilter extends object,
+  TRow extends object,
+> {
+  id: string;
+  titleKey: string;
+  icon: string;
+  exportFileName: string;
+  sectionLayout?: 'panels' | 'document';
+  filters: ReadonlyArray<AccountReportFilterDefinition>;
+  load: (filter: TFilter) => Observable<Result<TResponse>>;
+  buildFilter: (raw: AccountReportFilterRaw) => AccountReportBuildResult<TFilter>;
+  sections: (
+    response: TResponse,
+    appliedFilters: AccountReportFilterRaw,
+  ) => ReadonlyArray<AccountReportSection<TRow>>;
+  summaryCards?: (response: TResponse) => ReadonlyArray<SummaryCard>;
+  responseContext?: (response: TResponse) => string;
+  normalizeResponse?: (response: TResponse) => TResponse;
+  exportRows?: (
+    response: TResponse,
+    sections: ReadonlyArray<AccountReportSection<TRow>>,
+    translate: (key: string) => string,
+  ) => Array<Record<string, string | number>>;
+  loadErrorKey?: string;
+  searchPromptKey?: string;
+  autoSearch?: boolean;
+  showBack?: boolean;
+}
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report-page.component.html
+<section appReportPage class="sigma-report-page--fill sigma-print-flow">
+  <div class="sigma-report-panel sigma-print-flow">
+    <app-feature-title
+      [title]="config.titleKey | translate"
+      [icon]="config.icon"
+    ></app-feature-title>
+
+    <form
+      class="sigma-filter-form sigma-report-filter-panel no-print"
+      [formGroup]="filterForm"
+      (ngSubmit)="search()"
+    >
+      @for (filter of config.filters; track filter.key) {
+        @if (filter.kind === 'checkbox') {
+          <label class="sigma-report-filter-check" [for]="controlId(filter)">
+            <p-checkbox
+              [inputId]="controlId(filter)"
+              [formControlName]="filter.key"
+              [binary]="true"
+            ></p-checkbox>
+            <span>{{ filter.labelKey | translate }}</span>
+          </label>
+        } @else {
+          <div
+            class="sigma-report-filter-field"
+            [class.sigma-report-filter-field--wide]="filter.wide"
+          >
+            <label [for]="controlId(filter)">
+              {{ filter.labelKey | translate }}
+              @if (filter.required) { <span aria-hidden="true">*</span> }
+            </label>
+
+            @switch (filter.kind) {
+              @case ('date-range') {
+                <p-calendar
+                  appDatePicker
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  selectionMode="range"
+                  [numberOfMonths]="2"
+                  dataType="date"
+                  dateFormat="dd/mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  [hideOnDateTimeSelect]="false"
+                  placeholder="dd/mm/yyyy - dd/mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('date') {
+                <p-calendar
+                  appDatePicker
+                  [dateInputMask]="true"
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  dateFormat="dd/mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  placeholder="dd/mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('month') {
+                <p-calendar
+                  appDatePicker
+                  [dateInputMask]="true"
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  view="month"
+                  dateFormat="mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  placeholder="mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('select') {
+                <p-dropdown
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  [options]="optionsFor(filter)"
+                  optionLabel="label"
+                  optionValue="value"
+                  [filter]="true"
+                  [showClear]="true"
+                  appendTo="body"
+                  [placeholder]="filter.labelKey | translate"
+                ></p-dropdown>
+              }
+              @case ('number') {
+                <p-inputNumber
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  [min]="filter.min"
+                  [max]="filter.max"
+                  [minFractionDigits]="0"
+                  [maxFractionDigits]="0"
+                  [useGrouping]="false"
+                />
+              }
+              @case ('text') {
+                <input
+                  pInputText
+                  [id]="controlId(filter)"
+                  type="text"
+                  [formControlName]="filter.key"
+                  [placeholder]="filter.labelKey | translate"
+                />
+              }
+            }
+            <app-field-error [control]="filterForm.controls[filter.key]" />
+          </div>
+        }
+      }
+
+      <div
+        appReportActions
+        class="sigma-report-filter-actions"
+        [ariaLabel]="'general.actions' | translate"
+      >
+        @if (config.showBack) {
+          <button type="button" class="btn btn-secondary sigma-report-action--reset" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="back()">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            {{ 'general.back' | translate }}
+          </button>
+        }
+        <app-primary-action-button
+          type="submit"
+          [label]="'general.search' | translate"
+          icon="bi bi-search"
+          [loading]="loadingReport()"
+          [disabled]="printing() || loadingLookups() || hasRequiredLookupError()"
+        ></app-primary-action-button>
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="refresh()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          {{ 'general.refresh' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--reset" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="reset()">
+          <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+          {{ 'general.reset' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" [disabled]="printing() || !response() || !rowCount() || loadingReport() || loadingLookups()" (click)="print()">
+          <i class="bi bi-printer" aria-hidden="true"></i>
+          {{ 'general.print' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" [disabled]="printing() || !response() || !rowCount() || loadingReport() || loadingLookups()" (click)="export()">
+          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i>
+          {{ 'general.exportExcel' | translate }}
+        </button>
+      </div>
+    </form>
+
+    @if (lookupErrors().size) {
+      <div class="accounts-report-lookup-error no-print" role="alert">
+        <app-state-message kind="error" message="accountReports.lookupError"></app-state-message>
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="retryLookups()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          {{ 'accountReports.retryLookups' | translate }}
+        </button>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <app-state-message class="no-print" kind="error" [message]="errorMessage()"></app-state-message>
+    }
+
+    @if (appliedFilterItems().length) {
+      <div class="accounts-report-applied-filters" aria-live="polite">
+        @for (item of appliedFilterItems(); track item.labelKey) {
+          <span><strong>{{ item.labelKey | translate }}:</strong> {{ item.value }}</span>
+        }
+      </div>
+    }
+
+    @if (responseContext()) {
+      <p class="mb-0" role="status">{{ responseContext() }}</p>
+    }
+
+    @if (summaryCards().length) {
+      <app-summary-cards
+        [ariaLabel]="'accountReports.summary' | translate"
+        [cards]="summaryCards()"
+        density="dense"
+        layout="row"
+        [minCardWidth]="150"
+      ></app-summary-cards>
+    }
+
+    <div
+      class="accounts-report-results sigma-print-flow"
+      [class.accounts-report-results--document]="config.sectionLayout === 'document'"
+      [class.sigma-report-table-frame]="config.sectionLayout === 'document'"
+      [attr.tabindex]="config.sectionLayout === 'document' ? 0 : null"
+      [attr.role]="config.sectionLayout === 'document' ? 'region' : null"
+      [attr.aria-label]="config.sectionLayout === 'document' ? (config.titleKey | translate) : null"
+    >
+      @if (loadingReport()) {
+        <app-state-message kind="loading"></app-state-message>
+      } @else if (!response()) {
+        @if (!errorMessage()) {
+          <app-state-message kind="empty" [message]="config.searchPromptKey || 'accountReports.searchPrompt'"></app-state-message>
+        }
+      } @else {
+        <div class="accounts-report-sections sigma-print-flow" [attr.data-count]="sections().length">
+          @for (section of sections(); track section.id) {
+            <section class="accounts-report-section sigma-print-flow" [attr.aria-labelledby]="section.titleKey ? config.id + '-' + section.id + '-heading' : null" [attr.aria-label]="!section.titleKey ? (config.titleKey | translate) : null">
+              @if (section.titleKey) {
+                <h2 [id]="config.id + '-' + section.id + '-heading'">{{ section.titleKey | translate }}</h2>
+              }
+              @if (config.sectionLayout === 'document' && !section.rows.length) {
+                <app-state-message kind="empty" message="general.noData"></app-state-message>
+              } @else {
+                <app-data-table
+                  class="accounts-report-grid"
+                  [style.--sigma-data-table-min-width]="section.minWidth || '42rem'"
+                  [value]="sectionRows(section)"
+                  [columns]="section.columns"
+                  [dataKey]="section.dataKey || 'accountId'"
+                  [hierarchy]="section.hierarchy"
+                  [printAllRows]="printing()"
+                  [lazy]="false"
+                  [paginator]="false"
+                  [fill]="config.sectionLayout !== 'document'"
+                  [scrollable]="config.sectionLayout !== 'document' && !printing()"
+                  [loading]="false"
+                  [showEmpty]="true"
+                  emptyMessage="general.noData"
+                ></app-data-table>
+              }
+            </section>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report-page.component.scss
+.accounts-report-lookup-error {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.accounts-report-applied-filters {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  color: var(--sigma-muted);
+  font-size: 11px;
+}
+
+.accounts-report-results,
+.accounts-report-sections,
+.accounts-report-section {
+  min-width: 0;
+  min-height: 0;
+}
+
+.accounts-report-results {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.accounts-report-sections {
+  display: grid;
+  flex: 1 1 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+}
+
+.accounts-report-section {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.accounts-report-section > h2 {
+  flex: 0 0 auto;
+  margin: 0 0 6px;
+  color: var(--sigma-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.accounts-report-grid {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.accounts-report-results.accounts-report-results--document {
+  overflow: auto;
+
+  .accounts-report-sections {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 16px;
+    overflow: visible;
+  }
+
+  .accounts-report-section,
+  .accounts-report-grid {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 760px) {
+  .accounts-report-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .accounts-report-results.accounts-report-results--document {
+    overflow: visible;
+
+    .accounts-report-sections {
+      display: block;
+    }
+  }
+
+  .sigma-report-panel,
+  .accounts-report-results,
+  .accounts-report-sections,
+  .accounts-report-section {
+    display: block;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .accounts-report-section {
+    margin-block-end: 16px;
+    break-inside: auto;
+  }
+}
+
+
+SOURCE: src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts
+import { Component, inject } from '@angular/core';
+
+import { CashFlowDTO, CashFlowFilter, CashFlowLine } from '../../models/list';
+import { CashFlowStatementService } from '../../services/cash-flow-statement.service';
+import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
+import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
+import { reportNumber, reportDate } from '../../../shared/report-family/account-report-values';
+
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-accounts', standalone: true,
+  imports: [AccountReportPageComponent],
+  templateUrl: './list.component.html', styleUrl: './list.component.scss',
+  host: { class: 'sigma-route-host sigma-print-flow' },
+})
+export class CashFlowStatementComponent {
+  private readonly service = inject(CashFlowStatementService);
+  private readonly fiscalYears = inject(FiscalYearService);
+  private readonly router = inject(Router);
+  readonly config: AccountReportConfig<CashFlowDTO, CashFlowFilter, CashFlowLine> = {
+    id: 'cashFlowStatement', titleKey: 'cashFlowStatement.title', icon: 'bi bi-bar-chart', exportFileName: 'CashFlowStatement',
+    sectionLayout: 'document',
+    filters: [
+      { key: 'fiscalYearId', labelKey: 'cashFlowStatement.fiscalYear', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.fiscalYears.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
+      { key: 'asOfDate', labelKey: 'cashFlowStatement.asOfDate', kind: 'date', initialValue: null }
+    ],
+    load: filter => this.service.getReport(filter),
+    buildFilter: raw => {
+
+      return { filter: { fiscalYearId: reportNumber(raw, 'fiscalYearId'), asOfDate: reportDate(raw, 'asOfDate') } };
+    },
+    sections: response => [
+      { id: 'operatingActivities', titleKey: 'cashFlowStatement.operatingActivities', minWidth: '32rem', rows: response.operatingActivities ?? [], columns: [
+          { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+          { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+        ] },
+      { id: 'investingActivities', titleKey: 'cashFlowStatement.investingActivities', minWidth: '32rem', rows: response.investingActivities ?? [], columns: [
+          { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+          { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+        ] },
+      { id: 'financingActivities', titleKey: 'cashFlowStatement.financingActivities', minWidth: '32rem', rows: response.financingActivities ?? [], columns: [
+          { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+          { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+        ] }
+    ],
+    summaryCards: response => [
+      { id: 'netIncome', labelKey: 'cashFlowStatement.netIncome', value: response.netIncome, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'netCashFromOperating', labelKey: 'cashFlowStatement.netCashFromOperating', value: response.netCashFromOperating, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'netCashFromInvesting', labelKey: 'cashFlowStatement.netCashFromInvesting', value: response.netCashFromInvesting, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'netCashFromFinancing', labelKey: 'cashFlowStatement.netCashFromFinancing', value: response.netCashFromFinancing, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'netChangeInCash', labelKey: 'cashFlowStatement.netChangeInCash', value: response.netChangeInCash, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' }
+    ]
+  };
+  private openLedger(accountId: number): void {
+    if (accountId > 0) void this.router.navigate(['/Ledger'], { queryParams: { accountId } });
+  }
+}

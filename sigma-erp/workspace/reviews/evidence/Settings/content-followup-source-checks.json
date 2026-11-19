@@ -1,0 +1,142 @@
+{
+  "date": "2026-11-02",
+  "scope": "Settings inner content presentation only",
+  "kind": "source syntax, complete binding/control inventory including Angular21 switch groups, registrations and TS-only import deltas; no compile/runtime",
+  "pages": [
+    {
+      "page": "broker",
+      "beforeSha256": "aeb2d8e668facfbabb8db8b77a86e5265390101efa8a49fe5a666564ff9ab81c",
+      "afterSha256": "443f4f6fc72f5663e0d27237b14a7368f4317aad897f24b1b18be3314a7dda00",
+      "controlDeclarations": 3,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "common",
+      "beforeSha256": "6bbece326b0e41ab91283bac90c2c8b4fb001428f8e5c1a6037e2f2b21864435",
+      "afterSha256": "bd87abc21b7472bf97a4d29e72e0610f851439e537378b0ec218e97f22e3f688",
+      "controlDeclarations": 232,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 32
+    },
+    {
+      "page": "cost-centers",
+      "beforeSha256": "da909d72e76c45dd454b31622a6e35d260318921ea6cdba4f6bfc8dd57e928d6",
+      "afterSha256": "944a53a2ed92168818a3f0831e24af3c59eaae70362e70dfbdef30489ecfaf2b",
+      "controlDeclarations": 2,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "dda",
+      "beforeSha256": "eb617ca593a531b237fa81180a6adc0951b62bf57bbfab7a6d51e412d5852dd1",
+      "afterSha256": "b95abfcdb3ce77dcabede8293f2503ea456c833c226f29042edcdc3206c0fe68",
+      "controlDeclarations": 12,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "document-number",
+      "beforeSha256": "5324ee54d5d24cc6f546a2440ad6983937ed7b1d8f1beb97bb3d157f35fbcddd",
+      "afterSha256": "71417110041ce4ba584746011e9e438b02565d754f70ad51c5efc544cc6b81ec",
+      "controlDeclarations": 164,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 39
+    },
+    {
+      "page": "equipment",
+      "beforeSha256": "cea9d14bf3ed0561cdc82ee37feaeda9aa6163f48cfc5f16fa38699d860b8ac5",
+      "afterSha256": "9d411f9b97a1464a171342f2a110c80cca0fd02a9739823edf363022dde0fef3",
+      "controlDeclarations": 1,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "fields",
+      "beforeSha256": "28f7c6f04c2a0b089eb56555419163e9dfd8dae9b9c05d8b49c8149e4dd27514",
+      "afterSha256": "b2eab71010abaaa52478a086667489716e22d80937f1705b9f4b820f98926fa4",
+      "controlDeclarations": 28,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 19
+    },
+    {
+      "page": "forms-and-fields",
+      "beforeSha256": "9d375a15657e33e246a970f5b6a3b9aad8c9cf5b04d1ab398145e965b3834128",
+      "afterSha256": "38e2ada237c10ef87376cfc84c036b0ac8a2be13c3e0b13efa5b54fa0fefe1e5",
+      "controlDeclarations": 3,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 3
+    },
+    {
+      "page": "hrm",
+      "beforeSha256": "3fdf20d164cfcf0d8ae30a45424a0acbb6fc402ad7d24d805f05a518cbc89dde",
+      "afterSha256": "19ed13e102e005bce3b1b23cf9730aa62bc55d45254536285c9b2e6bf4d76ef9",
+      "controlDeclarations": 3,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "limousine",
+      "beforeSha256": "f9eb3438444b5b8764f24e9985429d1bc2dd462fe979cb99e6b1fbe19341e1bf",
+      "afterSha256": "3afa104c0f29d1eb4c9a1e9bf9324b492b74131e4436f1f0180c64bf1bae8852",
+      "controlDeclarations": 15,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "notifications",
+      "beforeSha256": "350bfa1035423f22c1828334bf0f70bdaf9383120695619ce9301e031d871ae1",
+      "afterSha256": "a060768714611af2c4ab8a0cfcd9c02c7ce749fdaafb63d76f4ba289fe27a5d4",
+      "controlDeclarations": 8,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 3
+    },
+    {
+      "page": "payment-gateway-setting",
+      "beforeSha256": "b3365dcc4fd53b074bdccffb62a5a19af8e0857dbc27d774b95175eadf1cf97c",
+      "afterSha256": "a1751616cdd487264c8cbb480d50b968087eac82339e9bf92377ea57daef63c9",
+      "controlDeclarations": 4,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "user-management",
+      "beforeSha256": "ed868a34be2640b7c2cebf01e063f4981ef4aaf6a944a8e050ec2188c6b658bb",
+      "afterSha256": "afe28eb06267a2bb40143143482cf86576b231977e90c140052c023cfa37fc84",
+      "controlDeclarations": 4,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 2
+    },
+    {
+      "page": "workshop",
+      "beforeSha256": "dad85471c5a152bb709c5316bf7cfcce265d864bef7371a6f10c24c2d0ad2deb",
+      "afterSha256": "81b5c818c8149c9f12a668e98fb8e29516eee1b51d34af1ea7e3f517e89ba953",
+      "controlDeclarations": 7,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "e-salik",
+      "beforeSha256": "b4dbbba3f4e6dcec1f9732e0f91ce4b327d7b3f310eeac8e22b330766f6b9dcd",
+      "afterSha256": "a38ecf090219f8bc4d12786f7c5c3efbfdfabef1d6a5378f40486574cb531326",
+      "controlDeclarations": 19,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    },
+    {
+      "page": "e-darb",
+      "beforeSha256": "be1fd7ead4083c5764358effa191321d95a6cf315eeb10642bb74108387379ab",
+      "afterSha256": "872b3a611ac144aa3242c1fa6cfa07a03f813cb139b6dbdcdb460f2b7e7fdacb",
+      "controlDeclarations": 15,
+      "bindingInventoryPreserved": true,
+      "sectionCards": 1
+    }
+  ],
+  "issues": [],
+  "additionalChecks": [
+    "Exact binding multiplicities preserved including Angular21 switch cases",
+    "AR/EN FormSection title keys resolved",
+    "Shared content CSS parsed without compiling Sass",
+    "Current files TS/template syntax checked"
+  ]
+}

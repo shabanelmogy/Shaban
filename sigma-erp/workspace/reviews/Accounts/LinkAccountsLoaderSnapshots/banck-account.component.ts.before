@@ -1,0 +1,99 @@
+import { EditableCollectionRowDirective, EditableCollectionTableColumn, EditableCollectionTableComponent } from 'src/app/modules/shared/components/editable-collection-table/editable-collection-table.component';
+import { Component, DestroyRef, OnInit, inject, input, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateModule } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { Subscription, finalize } from 'rxjs';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { LinkAccountsListVM, LinkAccountsUpsertDTO, filterLinkAccountRows } from '../../models/list';
+import { LinkAccountsService } from '../../services/linkaccounts.service';
+import { LinkAccountTabStateComponent } from '../tab-state/tab-state.component';
+
+@Component({
+  selector: 'app-banck-account',
+  standalone: true,
+  imports: [EditableCollectionRowDirective, EditableCollectionTableComponent, FormsModule, DropdownModule, TranslateModule, LinkAccountTabStateComponent],
+  templateUrl: './banck-account.component.html',
+  styleUrl: './banck-account.component.scss',
+})
+export class BanckAccountComponent extends BaseComponentService implements OnInit {
+  private readonly linkAccountsService = inject(LinkAccountsService);
+  private readonly destroyRef = inject(DestroyRef);
+  private loadRequest?: Subscription;
+  readonly loaded = output<void>();
+  readonly busy = input(false);
+  readonly refreshing = input(false);
+  readonly confirmationPending = signal(false);
+  readonly accounts = input<DropDownSelect[]>([]);
+  readonly searchTerm = input('');
+  readonly typeId = input.required<number>();
+  readonly defaultLinkSectionId = input.required<number>();
+  readonly rows = signal<LinkAccountsListVM[]>([]);
+  readonly columns: ReadonlyArray<EditableCollectionTableColumn> = [
+    { header: 'linkAccounts.bankName', width: '280px' },
+    { header: 'linkAccounts.accounts', width: '280px' },
+  ];
+  readonly ready = signal(false);
+  readonly dirty = signal(false);
+  readonly tabLoading = signal(true);
+  readonly loadFailed = signal(false);
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+    if (this.busy() && !this.refreshing()) return;
+    this.loadRequest?.unsubscribe();
+    this.ready.set(false);
+    this.tabLoading.set(true);
+    this.loadFailed.set(false);
+    this.loadRequest = this.linkAccountsService.getLinkAccountsByType(this.typeId()).pipe(
+      takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.tabLoading.set(false))
+    ).subscribe({
+      next: (response) => {
+        if (!response.isSuccess) {
+          this.loadFailed.set(true);
+          return;
+        }
+        this.rows.set(response.entities);
+        this.dirty.set(false);
+        this.ready.set(true);
+          this.loaded.emit();
+      },
+      error: () => this.loadFailed.set(true),
+    });
+  }
+
+  onAccountChange(target: LinkAccountsListVM, accountId: number | null): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => rows.map((row) =>
+      row === target ? { ...row, accountId: accountId ?? undefined } : row
+    ));
+    this.dirty.set(true);
+  }
+
+  visibleRows(): LinkAccountsListVM[] {
+    return filterLinkAccountRows(this.rows(), this.searchTerm(), this.accounts());
+  }
+
+  getPayload(): LinkAccountsUpsertDTO[] {
+    return this.rows()
+      .filter((row) => row.subType !== undefined && row.subType !== null)
+      .map((row) => ({
+        type: this.typeId(),
+        value: null,
+        accountId: row.accountId ?? null,
+        subType: row.subType,
+        jobType: row.jobType ?? null,
+        linkSection: row.linkSection ?? this.defaultLinkSectionId(),
+      }));
+  }
+
+  markSaved(): void {
+    this.dirty.set(false);
+  }
+}

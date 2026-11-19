@@ -1,0 +1,1213 @@
+
+NEW SiGma.Business\IServices\IPaySlipService.cs
+using SiGma.ViewModels.ViewModels.PaySlip;
+
+namespace SiGma.Business.IServices;
+
+public interface IPaySlipService
+{
+    Task<Results<PaySlipListVm>> ListAsync(ListSmBase request, CancellationToken cancellationToken = default);
+    Task<Result<PaySlipDetailVm>> GetAsync(int id, CancellationToken cancellationToken = default);
+    Task<Results<PaySlipStaffOptionVm>> StaffAsync(CancellationToken cancellationToken = default);
+}
+
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Business\\IServices\\IPayrollRunService.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Business\\IServices\\IPayrollRunService.cs"
+index 9f99498..ee7104a 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Business\\IServices\\IPayrollRunService.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Business\\IServices\\IPayrollRunService.cs"	
+@@ -6,6 +6,7 @@ public interface IPayrollRunService
+ {
+     Task<Result<PayrollRunVm>> CalculateAsync(PayrollCalculateVm request, CancellationToken cancellationToken = default);
+     Task<Results<PayrollStaffOptionVm>> LeaveSalaryStaffAsync(CancellationToken cancellationToken = default);
++    Task<Results<FinalSettlementStaffOptionVm>> SettlementStaffAsync(CancellationToken cancellationToken = default);
+     Task<Result<PayrollRunVm>> SaveAsync(PayrollSaveVm request, CancellationToken cancellationToken = default);
+     Task<Result<PayrollRunVm>> GetAsync(int id, int? revisionNumber = null, CancellationToken cancellationToken = default);
+     Task<Result<List<PayrollRevisionSummaryVm>>> RevisionsAsync(int id, CancellationToken cancellationToken = default);
+
+NEW SiGma.Business\Services\Payrolls\PaySlipService.cs
+using System.Globalization;
+using System.Text.Json;
+using SiGma.ViewModels.ViewModels.PayrollRun;
+using SiGma.ViewModels.ViewModels.PaySlip;
+
+namespace SiGma.Business.Services.Payrolls;
+
+public sealed class PaySlipService : IPaySlipService
+{
+    private const string PayrollType = "Payroll";
+    private const string LeaveSalaryType = "LeaveSalary";
+    private const string FinalSettlementType = "FinalSettlement";
+    private readonly IUnitOfWork<SiGmaDbContext> _unitOfWork;
+    private readonly IStringLocalizer<GeneralMessage> _localization;
+
+    public PaySlipService(IUnitOfWork<SiGmaDbContext> unitOfWork,
+        IStringLocalizer<GeneralMessage> localization)
+    {
+        _unitOfWork = unitOfWork;
+        _localization = localization;
+    }
+
+    public async Task<Results<PaySlipListVm>> ListAsync(ListSmBase request,
+        CancellationToken cancellationToken = default)
+    {
+        var filters = request.Filters ?? [];
+        var dateFrom = FilterHelper.GetDate(filters, "dateFrom");
+        var dateTo = FilterHelper.GetDate(filters, "dateTo");
+        var no = FilterHelper.GetString(filters, "no");
+        var type = FilterHelper.GetString(filters, "type");
+        var staffId = FilterHelper.GetInt(filters, "staffId");
+        var sort = FilterHelper.GetString(filters, "sortField") ?? "date";
+        var order = FilterHelper.GetInt(filters, "sortOrder") ?? -1;
+        var noRunId = 0;
+        var noRevision = 0;
+        var noStaffId = 0;
+        var validNo = no is null || TrySlipNo(no, out noRunId, out noRevision, out noStaffId);
+        if (filters.ContainsKey("dateFrom") && !dateFrom.HasValue ||
+            filters.ContainsKey("dateTo") && !dateTo.HasValue || dateFrom > dateTo ||
+            type is not (null or PayrollType or LeaveSalaryType or FinalSettlementType) ||
+            filters.ContainsKey("staffId") && staffId is not > 0 || !validNo ||
+            sort is not ("date" or "no" or "name" or "code" or "type" or "totalAmount") ||
+            order is not (1 or -1))
+            return new() { Message = _localization["PaySlipFiltersInvalid"], Entities = [] };
+
+        var query = from run in _unitOfWork.Repository.Query<PayrollRun>()
+                    join revision in _unitOfWork.Repository.Query<PayrollRunRevision>()
+                        on new { RunId = run.Id, Number = run.CurrentRevision }
+                        equals new { RunId = revision.PayrollRunId, Number = revision.RevisionNumber }
+                    join line in _unitOfWork.Repository.Query<PayrollLine>() on revision.Id equals line.PayrollRunRevisionId
+                    select new
+                    {
+                        Id = line.Id, RunId = run.Id, revision.RevisionNumber, line.StaffId,
+                        line.Name, line.Code,
+                        Date = run.Type == FinalSettlementType
+                            ? run.LastWorkingDay ?? run.PeriodEnd.AddDays(-1)
+                            : run.PeriodEnd.AddDays(-1),
+                        run.Type, TotalAmount = line.NetPay,
+                        IsApproved = revision.ApprovedAt.HasValue,
+                        IsPaid = run.IsPaid,
+                        IsCurrentRevision = run.CurrentRevision == revision.RevisionNumber
+                    };
+        if (dateFrom.HasValue) query = query.Where(x => x.Date >= dateFrom.Value);
+        if (dateTo.HasValue) query = query.Where(x => x.Date <= dateTo.Value);
+        if (type is not null) query = query.Where(x => x.Type == type);
+        if (staffId.HasValue) query = query.Where(x => x.StaffId == staffId.Value);
+        if (no is not null)
+            query = query.Where(x => x.RunId == noRunId && x.RevisionNumber == noRevision && x.StaffId == noStaffId);
+
+        var total = await query.CountAsync(cancellationToken);
+        var size = Math.Clamp(request.PageSize ?? 10, 1, 100);
+        var pages = (int)Math.Ceiling(total / (double)size);
+        var page = Math.Clamp(request.PageNo ?? 1, 1, Math.Max(1, pages));
+        var ordered = (sort, order) switch
+        {
+            ("date", 1) => query.OrderBy(x => x.Date),
+            ("name", 1) => query.OrderBy(x => x.Name),
+            ("name", -1) => query.OrderByDescending(x => x.Name),
+            ("code", 1) => query.OrderBy(x => x.Code),
+            ("code", -1) => query.OrderByDescending(x => x.Code),
+            ("type", 1) => query.OrderBy(x => x.Type),
+            ("type", -1) => query.OrderByDescending(x => x.Type),
+            ("totalAmount", 1) => query.OrderBy(x => x.TotalAmount),
+            ("totalAmount", -1) => query.OrderByDescending(x => x.TotalAmount),
+            ("no", 1) => query.OrderBy(x => x.RunId).ThenBy(x => x.RevisionNumber).ThenBy(x => x.StaffId),
+            ("no", -1) => query.OrderByDescending(x => x.RunId).ThenByDescending(x => x.RevisionNumber)
+                .ThenByDescending(x => x.StaffId),
+            _ => query.OrderByDescending(x => x.Date)
+        };
+        var rows = await ordered.ThenBy(x => x.Id).AsNoTracking()
+            .Skip((page - 1) * size).Take(size).ToListAsync(cancellationToken);
+        return new()
+        {
+            IsSuccess = true, PageNo = page, PageSize = size, TotalCount = total, TotalPages = pages,
+            Entities = rows.Select(x => new PaySlipListVm
+            {
+                Id = x.Id, RunId = x.RunId, RevisionNumber = x.RevisionNumber, StaffId = x.StaffId,
+                No = SlipNo(x.RunId, x.RevisionNumber, x.StaffId), Name = x.Name, Code = x.Code,
+                Date = x.Date, Type = x.Type, TotalAmount = x.TotalAmount,
+                IsApproved = x.IsApproved, IsPaid = x.IsPaid, IsCurrentRevision = x.IsCurrentRevision
+            }).ToList()
+        };
+    }
+
+    public async Task<Result<PaySlipDetailVm>> GetAsync(int id,
+        CancellationToken cancellationToken = default)
+    {
+        var row = await (from line in _unitOfWork.Repository.Query<PayrollLine>(x => x.Id == id)
+                         join revision in _unitOfWork.Repository.Query<PayrollRunRevision>()
+                             on line.PayrollRunRevisionId equals revision.Id
+                         join run in _unitOfWork.Repository.Query<PayrollRun>()
+                             on revision.PayrollRunId equals run.Id
+                         select new
+                         {
+                             Line = line, Revision = revision, Run = run,
+                             Date = run.Type == FinalSettlementType
+                                 ? run.LastWorkingDay ?? run.PeriodEnd.AddDays(-1)
+                                 : run.PeriodEnd.AddDays(-1)
+                         }).AsNoTracking().SingleOrDefaultAsync(cancellationToken);
+        if (row is null)
+            return new() { Message = _localization["PaySlipNotFound"], ErrorStatusCode = 404 };
+        var settlement = DeserializeSettlement(row.Revision.SettlementSnapshot);
+        if (row.Run.Type == FinalSettlementType && settlement is null)
+            return new() { Message = _localization["PayrollHistoryInvalid"], ErrorStatusCode = 409 };
+        return new()
+        {
+            IsSuccess = true,
+            Entity = new PaySlipDetailVm
+            {
+                Id = row.Line.Id, RunId = row.Run.Id, RevisionNumber = row.Revision.RevisionNumber,
+                StaffId = row.Line.StaffId,
+                No = SlipNo(row.Run.Id, row.Revision.RevisionNumber, row.Line.StaffId),
+                Name = row.Line.Name, Code = row.Line.Code, Date = row.Date, Type = row.Run.Type,
+                TotalAmount = row.Line.NetPay, IsApproved = row.Revision.ApprovedAt.HasValue,
+                IsPaid = row.Run.IsPaid && row.Run.CurrentRevision == row.Revision.RevisionNumber,
+                IsCurrentRevision = row.Run.CurrentRevision == row.Revision.RevisionNumber,
+                Period = row.Run.PeriodStart.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+                OvertimePeriod = row.Revision.OvertimePeriod.ToString("yyyy-MM", CultureInfo.InvariantCulture),
+                PolicyVersion = row.Revision.PolicyVersion, DecimalPlaces = row.Revision.DecimalPlaces,
+                Basic = row.Line.Basic, Allowances = row.Line.Allowances, Gross = row.Line.Gross,
+                Overtime = row.Line.Overtime, Additional = row.Line.Additional,
+                Deductions = row.Line.Deductions, NetPay = row.Line.NetPay,
+                FinalSettlement = settlement
+            }
+        };
+    }
+
+    public async Task<Results<PaySlipStaffOptionVm>> StaffAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var rows = await (from line in _unitOfWork.Repository.Query<PayrollLine>()
+                          join revision in _unitOfWork.Repository.Query<PayrollRunRevision>()
+                              on line.PayrollRunRevisionId equals revision.Id
+                          join run in _unitOfWork.Repository.Query<PayrollRun>()
+                              on revision.PayrollRunId equals run.Id
+                          orderby line.Id descending
+                          select new { line.Id, line.StaffId, line.Code, line.Name })
+            .AsNoTracking().ToListAsync(cancellationToken);
+        var options = rows.GroupBy(x => x.StaffId).Select(group => group.First())
+            .OrderBy(x => x.Code).ThenBy(x => x.StaffId)
+            .Select(x => new PaySlipStaffOptionVm
+            { Id = x.StaffId, No = x.Code, Value = x.Name }).ToList();
+        return new() { IsSuccess = true, Entities = options };
+    }
+
+    private static string SlipNo(int runId, int revisionNumber, int staffId)
+        => FormattableString.Invariant($"{runId}-{revisionNumber}-{staffId}");
+
+    private static bool TrySlipNo(string value, out int runId, out int revisionNumber, out int staffId)
+    {
+        runId = revisionNumber = staffId = 0;
+        var parts = value.Split('-', StringSplitOptions.None);
+        return parts.Length == 3 && int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out runId) &&
+            int.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out revisionNumber) &&
+            int.TryParse(parts[2], NumberStyles.None, CultureInfo.InvariantCulture, out staffId) &&
+            runId > 0 && revisionNumber > 0 && staffId > 0;
+    }
+
+    private static FinalSettlementSnapshotVm? DeserializeSettlement(string? snapshot)
+    {
+        if (string.IsNullOrWhiteSpace(snapshot)) return null;
+        try
+        {
+            var value = JsonSerializer.Deserialize<FinalSettlementSnapshotVm>(snapshot);
+            return IsValidSettlementSnapshot(value) ? value : null;
+        }
+        catch (JsonException) { return null; }
+    }
+
+    private static bool IsValidSettlementSnapshot(FinalSettlementSnapshotVm? value)
+        => value?.Inputs is not null && value.SalaryDivisor > 0 && value.SalaryDays >= 0 &&
+            value.ServiceDays > 0 && TryDate(value.FirstWorkingDay) && TryDate(value.NormalSalaryFrom) &&
+            TryDate(value.LastWorkingDay) && TryDate(value.Inputs.LastWorkingDay) &&
+            TryDate(value.Inputs.JoiningOrRejoiningDate) &&
+            value.Inputs.SalaryProrationBasis is "CalendarDays" or "Fixed30" &&
+            value.Inputs.LeaveSalaryBasis is "Basic" or "Gross" &&
+            value.Inputs.GratuitySalaryBasis is "Basic" or "Gross" &&
+            value.Inputs.LeaveDaysRemaining.HasValue && value.Inputs.TicketQuota.HasValue &&
+            value.Inputs.TicketQuotaPeriodYears.HasValue && value.Inputs.TicketPrice.HasValue &&
+            value.Inputs.TicketEligibilityPercent.HasValue && value.Inputs.GratuityDays.HasValue;
+
+    private static bool TryDate(string? value)
+        => DateTime.TryParseExact(value, "yyyy-MM-dd", CultureInfo.InvariantCulture,
+            DateTimeStyles.None, out _);
+}
+
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Business\\Services\\Payrolls\\PayrollRunService.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Business\\Services\\Payrolls\\PayrollRunService.cs"
+index 5b2c642..4f8c98c 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Business\\Services\\Payrolls\\PayrollRunService.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Business\\Services\\Payrolls\\PayrollRunService.cs"	
+@@ -15,8 +15,10 @@ namespace SiGma.Business.Services.Payrolls;
+ public sealed class PayrollRunService : IPayrollRunService
+ {
+     private const string PolicyVersion = "MonthlySalarySnapshot-v1";
++    private const string FinalSettlementPolicyVersion = "FinalSettlementSnapshot-v1";
+     private const string PayrollType = "Payroll";
+     private const string LeaveSalaryType = "LeaveSalary";
++    private const string FinalSettlementType = "FinalSettlement";
+     private readonly IUnitOfWork<SiGmaDbContext> _unitOfWork;
+     private readonly FinancialNumberPolicyResolver _moneyPolicy;
+     private readonly IStringLocalizer<GeneralMessage> _localization;
+@@ -37,7 +39,8 @@ public sealed class PayrollRunService : IPayrollRunService
+     {
+         if (!TryPeriod(request.Period, out var start))
+             return new() { Message = _localization["PayrollPeriodInvalid"] };
+-        if (!TryScope(request.Type, request.StaffId, out var type, out var staffId))
++        if (!TryScope(request.Type, request.StaffId, request.FinalSettlement, start,
++                out var type, out var staffId, out var lastWorkingDay))
+             return new() { Message = _localization["PayrollScopeInvalid"] };
+         // One consistent read across mutable salary/time/deduction inputs.
+         await using var transaction = await _unitOfWork.Context.Database
+@@ -45,7 +48,10 @@ public sealed class PayrollRunService : IPayrollRunService
+         var run = await _unitOfWork.Repository.Query<PayrollRun>(x => x.PeriodStart == start &&
+                 x.Type == type && x.StaffId == staffId)
+             .AsNoTracking().SingleOrDefaultAsync(cancellationToken);
+-        var calculated = await CalculateCoreAsync(start, type, staffId, run, cancellationToken);
++        if (run is not null && run.LastWorkingDay != lastWorkingDay)
++            return new() { Message = _localization["PayrollFinalSettlementIdentityChanged"], ErrorStatusCode = 409 };
++        var calculated = await CalculateCoreAsync(start, type, staffId, request.FinalSettlement,
++            run, cancellationToken);
+         await transaction.CommitAsync(cancellationToken);
+         return calculated.Result;
+     }
+@@ -55,7 +61,8 @@ public sealed class PayrollRunService : IPayrollRunService
+     {
+         if (!TryPeriod(request.Period, out var start) || string.IsNullOrWhiteSpace(request.ExpectedVersion))
+             return new() { Message = _localization["PayrollPeriodInvalid"] };
+-        if (!TryScope(request.Type, request.StaffId, out var type, out var staffId))
++        if (!TryScope(request.Type, request.StaffId, request.FinalSettlement, start,
++                out var type, out var staffId, out var lastWorkingDay))
+             return new() { Message = _localization["PayrollScopeInvalid"] };
+ 
+         Result<PayrollRunVm>? response = null;
+@@ -71,17 +78,26 @@ public sealed class PayrollRunService : IPayrollRunService
+                         x.Type == type && x.StaffId == staffId)
+                     .SingleOrDefaultAsync(cancellationToken);
+                 var current = run is null ? null : await LoadRevisionAsync(run, run.CurrentRevision, cancellationToken);
++                if (run is not null && run.LastWorkingDay != lastWorkingDay)
++                    return response = new()
++                    {
++                        Message = _localization["PayrollFinalSettlementIdentityChanged"], ErrorStatusCode = 409
++                    };
+                 if (run?.IsPaid == true)
+                 {
+                     // A replay of the request that already produced this paid snapshot is a
+                     // read-only idempotent success. Every different Save remains locked.
+-                    if (current is not null && current.RequestVersion == request.ExpectedVersion)
++                    if (current is not null && current.RequestVersion == request.ExpectedVersion &&
++                        (type != FinalSettlementType ||
++                            DeserializeSettlement(current.SettlementSnapshot) is { } savedSettlement &&
++                            JsonSerializer.Serialize(savedSettlement.Inputs) == JsonSerializer.Serialize(request.FinalSettlement)))
+                         return response = new() { IsSuccess = true, Entity = ToVm(run, current) };
+                     response = new() { Message = _localization["PayrollPaidRequiresSettlement"], ErrorStatusCode = 409 };
+                     return response;
+                 }
+ 
+-                var calculated = await CalculateCoreAsync(start, type, staffId, run, cancellationToken);
++                var calculated = await CalculateCoreAsync(start, type, staffId, request.FinalSettlement,
++                    run, cancellationToken);
+                 var preview = calculated.Result.Entity;
+                 if (!calculated.Result.IsSuccess || preview is null)
+                     return response = calculated.Result;
+@@ -109,7 +125,8 @@ public sealed class PayrollRunService : IPayrollRunService
+                 {
+                     run = new PayrollRun
+                     {
+-                        PeriodStart = start, PeriodEnd = start.AddMonths(1), Type = type, StaffId = staffId
++                        PeriodStart = start, PeriodEnd = start.AddMonths(1), Type = type,
++                        StaffId = staffId, LastWorkingDay = lastWorkingDay
+                     };
+                     await _unitOfWork.Repository.AddAsync(run, cancellationToken);
+                 }
+@@ -121,6 +138,9 @@ public sealed class PayrollRunService : IPayrollRunService
+                     PolicyVersion = preview.PolicyVersion,
+                     OvertimePeriod = calculated.OvertimePeriod,
+                     DecimalPlaces = preview.DecimalPlaces,
++                    SettlementSnapshot = preview.FinalSettlement is null
++                        ? null
++                        : JsonSerializer.Serialize(preview.FinalSettlement),
+                     TotalBasic = preview.TotalBasic, TotalAllowances = preview.TotalAllowances,
+                     TotalGross = preview.TotalGross, TotalOvertime = preview.TotalOvertime,
+                     TotalAdditional = preview.TotalAdditional, TotalDeductions = preview.TotalDeductions,
+@@ -174,6 +194,9 @@ public sealed class PayrollRunService : IPayrollRunService
+         var run = await _unitOfWork.Repository.Query<PayrollRun>(x => x.Id == id)
+             .AsNoTracking().SingleOrDefaultAsync(cancellationToken);
+         var revision = run is null ? null : await LoadRevisionAsync(run, revisionNumber ?? run.CurrentRevision, cancellationToken);
++        if (run?.Type == FinalSettlementType && revision is not null &&
++            DeserializeSettlement(revision.SettlementSnapshot) is null)
++            return new() { Message = _localization["PayrollHistoryInvalid"], ErrorStatusCode = 409 };
+         return run is null || revision is null
+             ? new() { Message = _localization["PayrollNotFound"], ErrorStatusCode = 404 }
+             : new() { IsSuccess = true, Entity = ToVm(run, revision) };
+@@ -196,6 +219,30 @@ public sealed class PayrollRunService : IPayrollRunService
+         return new() { IsSuccess = true, Entities = rows };
+     }
+ 
++    public async Task<Results<FinalSettlementStaffOptionVm>> SettlementStaffAsync(
++        CancellationToken cancellationToken = default)
++    {
++        var source = await _unitOfWork.Repository.Query<Staff>(x => x.IsActive != false)
++            .AsNoTracking().OrderBy(x => x.No).ThenBy(x => x.Id)
++            .Select(x => new
++            {
++                x.Id,
++                x.No,
++                Value = !string.IsNullOrWhiteSpace(x.Name)
++                    ? x.Name
++                    : ((x.FirstName ?? string.Empty) + " " + (x.MiddleName ?? string.Empty) + " " +
++                        (x.LastName ?? string.Empty)).Trim(),
++                Designation = x.StaffDesignation != null ? x.StaffDesignation.Name : null,
++                x.DateOfJoining
++            }).ToListAsync(cancellationToken);
++        var rows = source.Select(x => new FinalSettlementStaffOptionVm
++        {
++            Id = x.Id, No = x.No, Value = x.Value, Designation = x.Designation,
++            DateOfJoining = x.DateOfJoining.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
++        }).ToList();
++        return new() { IsSuccess = true, Entities = rows };
++    }
++
+     public async Task<Result<List<PayrollRevisionSummaryVm>>> RevisionsAsync(int id,
+         CancellationToken cancellationToken = default)
+     {
+@@ -242,6 +289,8 @@ public sealed class PayrollRunService : IPayrollRunService
+                     .SingleOrDefaultAsync(cancellationToken);
+                 if (run is null || revision is null)
+                     return response = new() { Message = _localization["PayrollNotFound"], ErrorStatusCode = 404 };
++                if (run.Type == FinalSettlementType && DeserializeSettlement(revision.SettlementSnapshot) is null)
++                    return response = new() { Message = _localization["PayrollHistoryInvalid"], ErrorStatusCode = 409 };
+                 if (run.IsPaid)
+                     return response = new() { Message = _localization["PayrollPaidRequiresSettlement"], ErrorStatusCode = 409 };
+                 if (run.ApprovedRevisionNumber.HasValue && run.ApprovedRevisionNumber != run.CurrentRevision ||
+@@ -297,7 +346,7 @@ public sealed class PayrollRunService : IPayrollRunService
+         var sort = FilterHelper.GetString(filters, "sortField") ?? "date";
+         var order = FilterHelper.GetInt(filters, "sortOrder") ?? -1;
+         if (filters.ContainsKey("dateFrom") && !dateFrom.HasValue || filters.ContainsKey("dateTo") && !dateTo.HasValue ||
+-            dateFrom > dateTo || type is not (null or PayrollType or LeaveSalaryType) ||
++            dateFrom > dateTo || type is not (null or PayrollType or LeaveSalaryType or FinalSettlementType) ||
+             filters.ContainsKey("pendingApproval") && !pending.HasValue ||
+             sort is not ("date" or "amount" or "isApproved" or "revisionNumber") || order is not (1 or -1))
+             return new() { Message = _localization["PayrollFiltersInvalid"], Entities = [] };
+@@ -307,7 +356,10 @@ public sealed class PayrollRunService : IPayrollRunService
+                         equals new { RunId = revision.PayrollRunId, Number = revision.RevisionNumber }
+                     select new
+                     {
+-                        run.Id, Date = run.PeriodEnd.AddDays(-1), run.Type, run.StaffId, run.CurrentRevision,
++                        run.Id, Date = run.Type == FinalSettlementType
++                            ? run.LastWorkingDay ?? run.PeriodEnd.AddDays(-1)
++                            : run.PeriodEnd.AddDays(-1),
++                        run.Type, run.StaffId, run.CurrentRevision,
+                         run.IsPaid, run.ApprovedRevisionNumber,
+                         IsApproved = run.ApprovedRevisionNumber == run.CurrentRevision,
+                         Amount = revision.TotalNet, revision.SourceVersion,
+@@ -359,7 +411,8 @@ public sealed class PayrollRunService : IPayrollRunService
+                 line.SubscriptionId == run.SubscriptionId)).SingleOrDefaultAsync(ct);
+ 
+     private async Task<(Result<PayrollRunVm> Result, string SourceVersion, DateTime OvertimePeriod, List<PayrollLine> Lines)>
+-        CalculateCoreAsync(DateTime start, string type, int? staffId, PayrollRun? run, CancellationToken ct)
++        CalculateCoreAsync(DateTime start, string type, int? staffId, FinalSettlementInputsVm? settlementInputs,
++            PayrollRun? run, CancellationToken ct)
+     {
+         var settings = await _unitOfWork.Repository.Query<HrmSetting>().AsNoTracking().Take(2).ToListAsync(ct);
+         if (settings.Count > 1 || settings.Any(x => x.IsPreviousMonthSalesCommissionForPayrollProcess || x.IsBusinessUnitsWisePayrollProcess))
+@@ -370,19 +423,45 @@ public sealed class PayrollRunService : IPayrollRunService
+         var overtimeStart = previousOvertime ? start.AddMonths(-1) : start;
+         var end = start.AddMonths(1);
+         var overtimeEnd = overtimeStart.AddMonths(1);
++        var finalLastDay = type == FinalSettlementType && settlementInputs is not null &&
++                TryDate(settlementInputs.LastWorkingDay, out var parsedLastDay)
++            ? parsedLastDay
++            : (DateTime?)null;
+         var precision = await _moneyPolicy.GetBaseCurrencyDecimalPlacesAsync(ct);
+         if (precision.Error is not null)
+             return (new() { Message = precision.Error.Message, ErrorStatusCode = precision.Error.ErrorStatusCode }, string.Empty, start, []);
+         var decimalPlaces = precision.DecimalPlaces;
++        var policyVersion = type == FinalSettlementType ? FinalSettlementPolicyVersion : PolicyVersion;
+         var tenant = _unitOfWork.Repository.SubscriptionId;
+         var staff = await _unitOfWork.Repository.Query<Staff>(x => x.IsActive != false &&
+                 x.DateOfJoining < end && (type == PayrollType
+                     ? x.IsInactive != true
+-                    : x.IsInactive && x.Id == staffId))
+-            .AsNoTracking().Include(x => x.SalaryPackages!.Where(p => p.IsDeleted != true && p.SubscriptionId == tenant))
++                    : type == LeaveSalaryType
++                        ? x.IsInactive && x.Id == staffId
++                        : x.Id == staffId))
++            .AsNoTracking()
++            .Include(x => x.StaffDesignation)
++            .Include(x => x.SalaryPackages!.Where(p => p.IsDeleted != true && p.SubscriptionId == tenant))
+             .OrderBy(x => x.Id).ToListAsync(ct);
+-        if (type == LeaveSalaryType && staff.Count != 1)
+-            return (new() { Message = _localization["PayrollStaffInvalid"] }, string.Empty, start, []);
++        if (type is LeaveSalaryType or FinalSettlementType && staff.Count != 1)
++            return (new() { Message = _localization[type == FinalSettlementType
++                ? "PayrollFinalSettlementStaffInvalid"
++                : "PayrollStaffInvalid"] }, string.Empty, start, []);
++        if (type == FinalSettlementType && (staff[0].DateOfJoining == default ||
++            staff[0].StaffDesignationId.HasValue && staff[0].StaffDesignation is null))
++            return (new() { Message = _localization["PayrollFinalSettlementInputsInvalid"] },
++                string.Empty, start, []);
++        var currentRunId = run?.Id ?? 0;
++        if (type == FinalSettlementType && await _unitOfWork.Repository.ExistsAsync<PayrollRun>(x =>
++                x.Type == FinalSettlementType && x.StaffId == staffId && x.Id != currentRunId,
++                cancellationToken: ct))
++            return (new() { Message = _localization["PayrollFinalSettlementExists"], ErrorStatusCode = 409 },
++                string.Empty, start, []);
++        var joiningOrRejoiningDate = default(DateTime);
++        if (type == FinalSettlementType && (finalLastDay is null || settlementInputs is null ||
++            !TryValidateSettlementInputs(settlementInputs, staff[0], start, finalLastDay.Value,
++                out joiningOrRejoiningDate)))
++            return (new() { Message = _localization["PayrollFinalSettlementInputsInvalid"] }, string.Empty, start, []);
+         var ids = staff.Select(x => x.Id).ToList();
+         var overtime = await _unitOfWork.Repository.Query<Overtime>(x => x.IsActive != false && x.StaffId.HasValue && ids.Contains(x.StaffId.Value) &&
+                 x.Month >= overtimeStart && x.Month < overtimeEnd).AsNoTracking().OrderBy(x => x.Id).ToListAsync(ct);
+@@ -394,9 +473,10 @@ public sealed class PayrollRunService : IPayrollRunService
+         var overtimeByStaff = overtime.ToLookup(x => x.StaffId!.Value);
+         var deductionsByStaff = deductions.ToLookup(x => x.StaffId!.Value);
+         var absentByStaff = absent.ToLookup(x => x.StaffId!.Value);
+-        var opposingType = type == PayrollType ? LeaveSalaryType : PayrollType;
+         var duplicateStaffIds = await (from otherRun in _unitOfWork.Repository.Query<PayrollRun>(x =>
+-                    x.PeriodStart == start && x.Type == opposingType && x.CurrentRevision > 0)
++                    x.PeriodStart == start && x.Type != type &&
++                    (x.Type == PayrollType || x.Type == LeaveSalaryType || x.Type == FinalSettlementType) &&
++                    x.CurrentRevision > 0)
+                 join revision in _unitOfWork.Repository.Query<PayrollRunRevision>()
+                     on new { RunId = otherRun.Id, Number = otherRun.CurrentRevision }
+                     equals new { RunId = revision.PayrollRunId, Number = revision.RevisionNumber }
+@@ -406,15 +486,19 @@ public sealed class PayrollRunService : IPayrollRunService
+         var duplicateStaff = duplicateStaffIds.ToHashSet();
+         var rows = new List<PayrollLineVm>();
+         var lines = new List<PayrollLine>();
++        FinalSettlementSnapshotVm? settlementSnapshot = null;
+         foreach (var employee in staff)
+         {
++            var salarySourceEnd = finalLastDay?.AddDays(1) ?? end;
+             var packages = (employee.SalaryPackages ?? []).Where(x => x.IsActive != false &&
+-                    (x.ApplicableFrom ?? x.CreatedAt)?.Date < end).OrderBy(x => x.Id).ToList();
++                    (x.ApplicableFrom ?? x.CreatedAt)?.Date < salarySourceEnd).OrderBy(x => x.Id).ToList();
+             var effective = packages.Select(x => (x.ApplicableFrom ?? x.CreatedAt)?.Date).Max();
+             var latest = packages.Where(x => (x.ApplicableFrom ?? x.CreatedAt)?.Date == effective).ToList();
+-            var ot = overtimeByStaff[employee.Id].ToList();
++            var ot = overtimeByStaff[employee.Id].Where(x => finalLastDay is null ||
++                x.Month.Date <= finalLastDay.Value).ToList();
+             var deduction = deductionsByStaff[employee.Id].ToList();
+-            var attendance = absentByStaff[employee.Id].ToList();
++            var attendance = absentByStaff[employee.Id].Where(x => finalLastDay is null ||
++                x.Date.Date <= finalLastDay.Value).ToList();
+             var name = string.IsNullOrWhiteSpace(employee.Name)
+                 ? string.Join(" ", new[] { employee.FirstName, employee.MiddleName, employee.LastName }
+                     .Where(value => !string.IsNullOrWhiteSpace(value)))
+@@ -423,7 +507,12 @@ public sealed class PayrollRunService : IPayrollRunService
+             CalculateSalary(row, latest, decimalPlaces);
+             if ((employee.SalaryPackages ?? []).Any(x => x.IsActive != false && !x.ApplicableFrom.HasValue && !x.CreatedAt.HasValue))
+                 row.Issues.Add("payrollProcess.issues.invalidSalary");
+-            if (employee.DateOfJoining.Date > start || effective?.Date > start)
++            var normalSalaryFrom = employee.DateOfJoining.Date > start ? employee.DateOfJoining.Date : start;
++            if (normalSalaryFrom > (finalLastDay ?? end.AddDays(-1)))
++                row.Issues.Add("payrollProcess.issues.invalidSettlementDates");
++            if (type == FinalSettlementType
++                ? effective?.Date > normalSalaryFrom
++                : employee.DateOfJoining.Date > start || effective?.Date > start)
+                 row.Issues.Add("payrollProcess.issues.prorationRequired");
+             if (attendance.Count > 0) row.Issues.Add("payrollProcess.issues.absencePolicyRequired");
+             if (duplicateStaff.Contains(employee.Id))
+@@ -451,36 +540,53 @@ public sealed class PayrollRunService : IPayrollRunService
+                 row.Deductions += monthIndex == count - 1 ? total - installment * (count - 1) : installment;
+             }
+             row.NetPay = row.Gross + row.Overtime + row.Additional - row.Deductions;
++            FinalSettlementSnapshotVm? settlement = null;
++            if (type == FinalSettlementType && settlementInputs is not null && finalLastDay.HasValue)
++            {
++                settlement = CalculateFinalSettlement(row, latest, employee, settlementInputs,
++                    joiningOrRejoiningDate, normalSalaryFrom, finalLastDay.Value, decimalPlaces);
++            }
+             if (row.NetPay < 0m) row.Issues.Add("payrollProcess.issues.negativeNet");
+             if ((row.Code?.Length ?? 0) > 100 || row.Name.Length > 300)
+                 row.Issues.Add("payrollProcess.issues.invalidIdentity");
+             row.Issues = row.Issues.Distinct().ToList();
+             rows.Add(row);
++            var baseSourceSnapshot = new
++            {
++                employee.Id, employee.No, Name = name, employee.DateOfJoining,
++                Salary = latest.Select(x => new { x.Id, x.SalaryType, x.Type, x.Amount, x.ApplicableFrom, x.CreatedAt }),
++                Overtime = ot.Select(x => new { x.Id, x.Month, x.NormalOTHours, x.HolidayOTHours, x.TotalOTHours, x.OvertimeRate, x.OvertimeAmount }),
++                Deductions = deduction.Select(x => new { x.Id, x.TotalAmount, x.StartDate, x.NumberOfDeductions, x.PaidInstallments, x.Status, x.PassOverDeductionForThisMonth }),
++                Absences = attendance.Select(x => new { x.Id, x.Date }),
++                UndatedSalary = (employee.SalaryPackages ?? []).Where(x => x.IsActive != false &&
++                        !x.ApplicableFrom.HasValue && !x.CreatedAt.HasValue).OrderBy(x => x.Id)
++                    .Select(x => new { x.Id, x.SalaryType, x.Type, x.Amount }),
++                row.Issues
++            };
++            var sourceSnapshot = type == FinalSettlementType
++                ? JsonSerializer.Serialize(new
++                {
++                    Base = baseSourceSnapshot,
++                    Designation = employee.StaffDesignation?.Name,
++                    Settlement = settlement
++                })
++                : JsonSerializer.Serialize(baseSourceSnapshot);
+             lines.Add(new PayrollLine
+             {
+                 StaffId = row.StaffId, Code = row.Code, Name = row.Name, SalaryEffectiveFrom = effective,
+                 Basic = row.Basic, Allowances = row.Allowances, Gross = row.Gross, Overtime = row.Overtime,
+                 Additional = row.Additional, Deductions = row.Deductions, NetPay = row.NetPay,
+-                SourceSnapshot = JsonSerializer.Serialize(new
+-                {
+-                    employee.Id, employee.No, Name = name, employee.DateOfJoining,
+-                    Salary = latest.Select(x => new { x.Id, x.SalaryType, x.Type, x.Amount, x.ApplicableFrom, x.CreatedAt }),
+-                    Overtime = ot.Select(x => new { x.Id, x.Month, x.NormalOTHours, x.HolidayOTHours, x.TotalOTHours, x.OvertimeRate, x.OvertimeAmount }),
+-                    Deductions = deduction.Select(x => new { x.Id, x.TotalAmount, x.StartDate, x.NumberOfDeductions, x.PaidInstallments, x.Status, x.PassOverDeductionForThisMonth }),
+-                    Absences = attendance.Select(x => new { x.Id, x.Date }),
+-                    UndatedSalary = (employee.SalaryPackages ?? []).Where(x => x.IsActive != false &&
+-                            !x.ApplicableFrom.HasValue && !x.CreatedAt.HasValue).OrderBy(x => x.Id)
+-                        .Select(x => new { x.Id, x.SalaryType, x.Type, x.Amount }),
+-                    row.Issues
+-                })
++                SourceSnapshot = sourceSnapshot
+             });
++            if (settlement is not null)
++                settlementSnapshot = settlement;
+         }
+         var sourceVersion = type == PayrollType && duplicateStaff.Count == 0
+             ? Hash(JsonSerializer.Serialize(new
+             { PolicyVersion, Period = start, OvertimePeriod = overtimeStart, DecimalPlaces = decimalPlaces,
+                 Sources = lines.Select(x => x.SourceSnapshot) }))
+             : Hash(JsonSerializer.Serialize(new
+-            { PolicyVersion, Period = start, Type = type, StaffId = staffId,
++            { PolicyVersion = policyVersion, Period = start, Type = type, StaffId = staffId,
+                 Eligibility = staff.Select(x => new { x.Id, x.IsInactive, x.IsActive, x.DateOfJoining }),
+                 OvertimePeriod = overtimeStart, DecimalPlaces = decimalPlaces,
+                 Sources = lines.Select(x => x.SourceSnapshot) }));
+@@ -502,11 +608,12 @@ public sealed class PayrollRunService : IPayrollRunService
+         var vm = new PayrollRunVm
+         {
+             Id = run?.Id, Period = Period(start), Type = type, StaffId = staffId,
++            FinalSettlement = settlementSnapshot,
+             Version = Version(sourceVersion, run),
+             RevisionNumber = run?.CurrentRevision ?? 0, IsPaid = run?.IsPaid ?? false,
+             IsCurrentRevision = true, IsApproved = run is not null && run.ApprovedRevisionNumber == run.CurrentRevision,
+             ApprovedAt = Utc(saved?.ApprovedAt), ApprovedBy = saved?.ApprovedBy,
+-            IsSaved = saved?.SourceVersion == sourceVersion, PolicyVersion = PolicyVersion,
++            IsSaved = saved?.SourceVersion == sourceVersion, PolicyVersion = policyVersion,
+             OvertimePeriod = Period(overtimeStart), DecimalPlaces = decimalPlaces, Rows = rows,
+             TotalBasic = rows.Sum(x => x.Basic), TotalAllowances = rows.Sum(x => x.Allowances),
+             TotalGross = rows.Sum(x => x.Gross), TotalOvertime = rows.Sum(x => x.Overtime),
+@@ -528,6 +635,102 @@ public sealed class PayrollRunService : IPayrollRunService
+         return (new() { IsSuccess = true, Entity = vm }, sourceVersion, overtimeStart, lines);
+     }
+ 
++    private static FinalSettlementSnapshotVm CalculateFinalSettlement(PayrollLineVm row,
++        List<SalaryPackage> packages, Staff employee, FinalSettlementInputsVm inputs,
++        DateTime joiningOrRejoiningDate, DateTime normalSalaryFrom, DateTime lastWorkingDay, int decimals)
++    {
++        var coveredDays = (lastWorkingDay - normalSalaryFrom).Days + 1;
++        var fixed30 = inputs.SalaryProrationBasis == "Fixed30";
++        var salaryDivisor = fixed30 ? 30 : DateTime.DaysInMonth(lastWorkingDay.Year, lastWorkingDay.Month);
++        var salaryDays = fixed30 ? Math.Min(coveredDays, 30) : coveredDays;
++        var factor = salaryDays / (decimal)salaryDivisor;
++
++        var monthlyBasic = row.Basic;
++        var monthlyAllowances = row.Allowances;
++        var monthlyGross = row.Gross;
++        var monthlyPackageDeductions = Money(packages.Where(x => x.SalaryType == SalaryType.OtherIncentive &&
++            x.Type is >= 100 and <= 117).Sum(x => x.Amount), decimals);
++        var installmentDeductions = row.Deductions - monthlyPackageDeductions;
++        var monthlySalesCommission = Money(packages.Where(x => x.SalaryType == SalaryType.OtherIncentive &&
++            (x.Type == (int)SalaryComponentType.Commission ||
++                x.Type == (int)SalaryComponentType.SalesIncentive))
++            .Sum(x => x.Amount), decimals);
++        var monthlyAdditional = Money(packages.Where(x => x.SalaryType == SalaryType.OtherIncentive &&
++            x.Type is >= 13 and <= 21 &&
++            x.Type != (int)SalaryComponentType.Commission &&
++            x.Type != (int)SalaryComponentType.SalesIncentive &&
++            x.Type != (int)SalaryComponentType.LeaveEncashment &&
++            x.Type != (int)SalaryComponentType.EndOfServiceBenefits)
++            .Sum(x => x.Amount), decimals);
++        if (packages.Any(x => x.SalaryType == SalaryType.OtherIncentive &&
++            (x.Type == (int)SalaryComponentType.LeaveEncashment ||
++                x.Type == (int)SalaryComponentType.EndOfServiceBenefits)))
++            row.Issues.Add("payrollProcess.issues.dedicatedSettlementComponent");
++
++        row.Basic = Money(monthlyBasic * factor, decimals);
++        row.Allowances = Money(monthlyAllowances * factor, decimals);
++        row.Gross = Money(row.Basic + row.Allowances, decimals);
++        var salesCommission = Money(monthlySalesCommission * factor, decimals);
++        var normalAdditional = Money(monthlyAdditional * factor, decimals);
++        row.Deductions = Money(monthlyPackageDeductions * factor, decimals) + installmentDeductions;
++        row.Deductions = Money(row.Deductions, decimals);
++        var normalSalary = Money(row.Gross + row.Overtime + salesCommission + normalAdditional - row.Deductions, decimals);
++        var leaveBasis = inputs.LeaveSalaryBasis == "Basic" ? monthlyBasic : monthlyGross;
++        var gratuityBasis = inputs.GratuitySalaryBasis == "Basic" ? monthlyBasic : monthlyGross;
++        var leaveDailyRate = Money(leaveBasis / salaryDivisor, decimals);
++        var gratuityDailyRate = Money(gratuityBasis / salaryDivisor, decimals);
++        var leaveSalary = Money(leaveDailyRate * inputs.LeaveDaysRemaining!.Value, decimals);
++        var ticketPayable = Money(inputs.TicketQuota!.Value * inputs.TicketPrice!.Value *
++            inputs.TicketEligibilityPercent!.Value / 100m, decimals);
++        var gratuity = Money(gratuityDailyRate * inputs.GratuityDays!.Value, decimals);
++        var totalPayable = Money(normalSalary + leaveSalary + ticketPayable + gratuity, decimals);
++        row.Additional = Money(normalAdditional + salesCommission + leaveSalary + ticketPayable + gratuity, decimals);
++        row.NetPay = totalPayable;
++        if (normalSalary < 0m)
++            row.Issues.Add("payrollProcess.issues.negativeNet");
++
++        return new FinalSettlementSnapshotVm
++        {
++            Inputs = new FinalSettlementInputsVm
++            {
++                LastWorkingDay = inputs.LastWorkingDay,
++                JoiningOrRejoiningDate = joiningOrRejoiningDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
++                SalaryProrationBasis = inputs.SalaryProrationBasis,
++                LeaveDaysRemaining = inputs.LeaveDaysRemaining,
++                LeaveSalaryBasis = inputs.LeaveSalaryBasis,
++                TicketQuota = inputs.TicketQuota,
++                TicketQuotaPeriodYears = inputs.TicketQuotaPeriodYears,
++                TicketPrice = inputs.TicketPrice,
++                TicketEligibilityPercent = inputs.TicketEligibilityPercent,
++                GratuityDays = inputs.GratuityDays,
++                GratuitySalaryBasis = inputs.GratuitySalaryBasis
++            },
++            Designation = employee.StaffDesignation?.Name,
++            FirstWorkingDay = employee.DateOfJoining.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
++            NormalSalaryFrom = normalSalaryFrom.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
++            LastWorkingDay = lastWorkingDay.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
++            ServiceDays = (lastWorkingDay - employee.DateOfJoining.Date).Days + 1,
++            SalaryDays = salaryDays,
++            SalaryDivisor = salaryDivisor,
++            MonthlyBasic = monthlyBasic,
++            MonthlyGross = monthlyGross,
++            LeaveDailyRate = leaveDailyRate,
++            GratuityDailyRate = gratuityDailyRate,
++            Basic = row.Basic,
++            Allowances = row.Allowances,
++            Gross = row.Gross,
++            Overtime = row.Overtime,
++            SalesCommission = salesCommission,
++            Additional = normalAdditional,
++            Deductions = row.Deductions,
++            NormalSalary = normalSalary,
++            LeaveSalary = leaveSalary,
++            TicketPayable = ticketPayable,
++            Gratuity = gratuity,
++            TotalPayable = totalPayable
++        };
++    }
++
+     private static void CalculateSalary(PayrollLineVm row, List<SalaryPackage> packages, int decimals)
+     {
+         if (packages.Count == 0)
+@@ -559,6 +762,7 @@ public sealed class PayrollRunService : IPayrollRunService
+         => new()
+         {
+             Id = run.Id, Period = Period(run.PeriodStart), Type = run.Type, StaffId = run.StaffId,
++            FinalSettlement = DeserializeSettlement(revision.SettlementSnapshot),
+             Version = Version(revision.SourceVersion, run),
+             RevisionNumber = revision.RevisionNumber, IsSaved = true,
+             IsPaid = run.IsPaid && run.CurrentRevision == revision.RevisionNumber,
+@@ -579,22 +783,78 @@ public sealed class PayrollRunService : IPayrollRunService
+     private static bool TryPeriod(string? period, out DateTime start)
+         => DateTime.TryParseExact(period, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out start)
+             && start.Year < 9999;
+-    private static bool TryScope(string? requestedType, int? requestedStaffId, out string type, out int? staffId)
++    private static bool TryScope(string? requestedType, int? requestedStaffId,
++        FinalSettlementInputsVm? settlementInputs, DateTime periodStart, out string type,
++        out int? staffId, out DateTime? lastWorkingDay)
+     {
+         type = requestedType ?? PayrollType;
+         staffId = requestedStaffId;
+-        return type switch
+-        {
+-            PayrollType => staffId is null,
+-            LeaveSalaryType => staffId > 0,
+-            _ => false
+-        };
++        lastWorkingDay = null;
++        if (type == PayrollType)
++            return staffId is null && settlementInputs is null;
++        if (type == LeaveSalaryType)
++            return staffId > 0 && settlementInputs is null;
++        if (type != FinalSettlementType || staffId is not > 0 || settlementInputs is null ||
++            !TryDate(settlementInputs.LastWorkingDay, out var parsedLastWorkingDay) ||
++            parsedLastWorkingDay < periodStart || parsedLastWorkingDay >= periodStart.AddMonths(1))
++            return false;
++        lastWorkingDay = parsedLastWorkingDay;
++        return true;
++    }
++    private static bool TryValidateSettlementInputs(FinalSettlementInputsVm inputs, Staff staff,
++        DateTime periodStart, DateTime lastWorkingDay, out DateTime joiningOrRejoiningDate)
++    {
++        joiningOrRejoiningDate = default;
++        return TryDate(inputs.JoiningOrRejoiningDate, out joiningOrRejoiningDate) &&
++            lastWorkingDay >= periodStart && lastWorkingDay < periodStart.AddMonths(1) &&
++            lastWorkingDay >= staff.DateOfJoining.Date &&
++            joiningOrRejoiningDate >= staff.DateOfJoining.Date &&
++            joiningOrRejoiningDate <= lastWorkingDay &&
++            inputs.SalaryProrationBasis is "CalendarDays" or "Fixed30" &&
++            inputs.LeaveSalaryBasis is "Basic" or "Gross" &&
++            inputs.GratuitySalaryBasis is "Basic" or "Gross" &&
++            InRange(inputs.LeaveDaysRemaining, 0m, 1_000_000m) &&
++            InRange(inputs.TicketQuota, 0m, 1_000_000m) &&
++            InRange(inputs.TicketQuotaPeriodYears, 0.000001m, 1_000_000m) &&
++            InRange(inputs.TicketPrice, 0m, 1_000_000_000m) &&
++            InRange(inputs.TicketEligibilityPercent, 0m, 100m) &&
++            InRange(inputs.GratuityDays, 0m, 1_000_000m);
+     }
++    private static bool InRange(decimal? value, decimal minimum, decimal maximum)
++        => value.HasValue && value.Value >= minimum && value.Value <= maximum;
++    private static bool TryDate(string? value, out DateTime date)
++        => DateTime.TryParseExact(value, "yyyy-MM-dd", CultureInfo.InvariantCulture,
++            DateTimeStyles.None, out date);
+     private static string Period(DateTime date) => date.ToString("yyyy-MM", CultureInfo.InvariantCulture);
+     private static decimal Money(decimal value, int decimals) => FinancialNumberPolicy.RoundMoney(value, decimals);
+     private static DateTime? Utc(DateTime? value)
+         => value.HasValue ? DateTime.SpecifyKind(value.Value, DateTimeKind.Utc) : null;
+     private static string Hash(string input) => Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(input)));
++    private static FinalSettlementSnapshotVm? DeserializeSettlement(string? snapshot)
++    {
++        if (string.IsNullOrWhiteSpace(snapshot)) return null;
++        try
++        {
++            var value = JsonSerializer.Deserialize<FinalSettlementSnapshotVm>(snapshot);
++            return IsValidSettlementSnapshot(value) ? value : null;
++        }
++        catch (JsonException)
++        {
++            return null;
++        }
++    }
++    private static bool IsValidSettlementSnapshot(FinalSettlementSnapshotVm? value)
++        => value?.Inputs is not null && value.SalaryDivisor > 0 && value.SalaryDays >= 0 &&
++            value.ServiceDays > 0 && TryDate(value.FirstWorkingDay, out _) &&
++            TryDate(value.NormalSalaryFrom, out _) && TryDate(value.LastWorkingDay, out _) &&
++            TryDate(value.Inputs.LastWorkingDay, out _) &&
++            TryDate(value.Inputs.JoiningOrRejoiningDate, out _) &&
++            value.Inputs.SalaryProrationBasis is "CalendarDays" or "Fixed30" &&
++            value.Inputs.LeaveSalaryBasis is "Basic" or "Gross" &&
++            value.Inputs.GratuitySalaryBasis is "Basic" or "Gross" &&
++            value.Inputs.LeaveDaysRemaining.HasValue && value.Inputs.TicketQuota.HasValue &&
++            value.Inputs.TicketQuotaPeriodYears.HasValue && value.Inputs.TicketPrice.HasValue &&
++            value.Inputs.TicketEligibilityPercent.HasValue && value.Inputs.GratuityDays.HasValue;
+     private static string Version(string source, PayrollRun? run)
+         => StateVersion(source, run?.Id ?? 0, run?.CurrentRevision ?? 0, run?.IsPaid ?? false, run?.ApprovedRevisionNumber);
+     private static string StateVersion(string source, int id, int revision, bool paid, int? approved)
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.DataAccess\\Configuration\\PayrollRunConfig.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.DataAccess\\Configuration\\PayrollRunConfig.cs"
+index 6ba4fcd..955a6fd 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.DataAccess\\Configuration\\PayrollRunConfig.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.DataAccess\\Configuration\\PayrollRunConfig.cs"	
+@@ -8,12 +8,15 @@ public sealed class PayrollRunConfig : IEntityTypeConfiguration<PayrollRun>
+         builder.Property(x => x.Type).HasMaxLength(32).IsRequired().HasDefaultValue("Payroll");
+         builder.Property(x => x.PeriodStart).HasColumnType("date");
+         builder.Property(x => x.PeriodEnd).HasColumnType("date");
++        builder.Property(x => x.LastWorkingDay).HasColumnType("date");
+         builder.Property(x => x.CurrentRevision).IsConcurrencyToken();
+         builder.Property(x => x.IsPaid).IsConcurrencyToken();
+         builder.Property(x => x.ApprovedRevisionNumber).IsConcurrencyToken();
+         // Payroll history is never silently deleted or replaced.
+         builder.HasIndex(x => new { x.SubscriptionId, x.PeriodStart, x.Type, x.StaffId })
+             .IsUnique().HasFilter(null);
++        builder.HasIndex(x => new { x.SubscriptionId, x.Type, x.StaffId }).IsUnique()
++            .HasFilter("[Type] = N'FinalSettlement' AND [StaffId] IS NOT NULL");
+         builder.HasOne(x => x.Staff).WithMany().HasForeignKey(x => x.StaffId)
+             .OnDelete(DeleteBehavior.Restrict);
+     }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.DataAccess\\Configuration\\PayrollRunRevisionConfig.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.DataAccess\\Configuration\\PayrollRunRevisionConfig.cs"
+index c249f70..c2ce4e0 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.DataAccess\\Configuration\\PayrollRunRevisionConfig.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.DataAccess\\Configuration\\PayrollRunRevisionConfig.cs"	
+@@ -9,6 +9,7 @@ public sealed class PayrollRunRevisionConfig : IEntityTypeConfiguration<PayrollR
+         builder.Property(x => x.SourceVersion).HasMaxLength(64).IsRequired();
+         builder.Property(x => x.PolicyVersion).HasMaxLength(50).IsRequired();
+         builder.Property(x => x.OvertimePeriod).HasColumnType("date");
++        builder.Property(x => x.SettlementSnapshot);
+         builder.Property(x => x.ApprovedBy).HasMaxLength(300);
+         builder.HasIndex(x => new { x.PayrollRunId, x.RevisionNumber }).IsUnique();
+         builder.HasIndex(x => new { x.PayrollRunId, x.RequestVersion }).IsUnique();
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.ar-SA.resx" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.ar-SA.resx"
+index e787df7..e6df0b5 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.ar-SA.resx"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.ar-SA.resx"	
+@@ -1999,4 +1999,40 @@
+   <data name="JobDeleteOpenOnly" xml:space="preserve"><value>يمكن حذف العمل المفتوح فقط.</value></data>
+   <data name="JobWriteFailed" xml:space="preserve"><value>تعذر حفظ العمل. أعد تحميله وحاول مرة أخرى.</value></data>
+   <data name="JobCloseOpenOnly" xml:space="preserve"><value>يمكن إغلاق العمل المفتوح فقط.</value></data>
++  <data name="PayrollFinalSettlementIdentityChanged" xml:space="preserve"><value>لا يمكن تغيير الموظف أو الشهر أو آخر يوم عمل للتسوية النهائية المحفوظة. افتح النسخة المحفوظة لتعديل مدخلات الحساب.</value></data>
++  <data name="PayrollFinalSettlementStaffInvalid" xml:space="preserve"><value>الموظف المحدد غير متاح للتسوية النهائية. أعد تحميل قائمة الموظفين.</value></data>
++  <data name="PayrollFinalSettlementInputsInvalid" xml:space="preserve"><value>راجع تواريخ التسوية وأسس الراتب ومدخلات الاستحقاق. أكمل جميع الحقول المطلوبة ضمن النطاق المسموح.</value></data>
++  <data name="PayrollFinalSettlementExists" xml:space="preserve"><value>توجد تسوية نهائية لهذا الموظف بالفعل. افتح التسوية الحالية لمراجعتها أو تعديلها.</value></data>
++  <data name="PaySlipNotFound" xml:space="preserve"><value>تعذر العثور على قسيمة الراتب المحفوظة.</value></data>
++  <data name="PaySlipFiltersInvalid" xml:space="preserve"><value>مرشحات قسائم الرواتب أو ترتيبها غير صالح. راجع نطاق التاريخ والنوع والموظف.</value></data>
++  <data name="LeaveNotFound" xml:space="preserve">
++    <value>طلب الإجازة غير موجود.</value>
++  </data>
++  <data name="LeaveTypeNotFound" xml:space="preserve">
++    <value>نوع الإجازة غير موجود.</value>
++  </data>
++  <data name="LeaveDatesRequired" xml:space="preserve">
++    <value>أدخل تاريخي الإجازة. يمكن ترك التاريخين فارغين فقط لطلب قديم لم تُسجل له تواريخ.</value>
++  </data>
++  <data name="LeaveDateOrderInvalid" xml:space="preserve">
++    <value>يجب أن يكون تاريخ نهاية الإجازة في يوم البداية أو بعده.</value>
++  </data>
++  <data name="LeaveApproversInvalid" xml:space="preserve">
++    <value>اختر كل معتمد مرة واحدة من سجلات الموظفين الصحيحة.</value>
++  </data>
++  <data name="LeaveApproverNotFound" xml:space="preserve">
++    <value>واحد أو أكثر من الموظفين المختارين للاعتماد لم يعد موجودًا.</value>
++  </data>
++  <data name="EntityLeave" xml:space="preserve">
++    <value>طلبات الإجازات</value>
++  </data>
++  <data name="EntityLeaveType" xml:space="preserve">
++    <value>أنواع الإجازات</value>
++  </data>
++  <data name="EntityLeaveTypeApprover" xml:space="preserve">
++    <value>إعدادات معتمدي الإجازات</value>
++  </data>
++  <data name="EntitySettingsHolidayModel" xml:space="preserve">
++    <value>العطلات</value>
++  </data>
+ </root>
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.resx" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.resx"
+index 2fcd272..c614c19 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.resx"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.resx"	
+@@ -1999,4 +1999,40 @@
+   <data name="JobDeleteOpenOnly" xml:space="preserve"><value>Only an open job can be deleted.</value></data>
+   <data name="JobWriteFailed" xml:space="preserve"><value>The job could not be saved. Reload it and try again.</value></data>
+   <data name="JobCloseOpenOnly" xml:space="preserve"><value>Only an open job can be closed.</value></data>
++  <data name="PayrollFinalSettlementIdentityChanged" xml:space="preserve"><value>The employee, month and last working day of a saved final settlement cannot be changed. Open its saved revision to update the calculation inputs.</value></data>
++  <data name="PayrollFinalSettlementStaffInvalid" xml:space="preserve"><value>The selected employee is not available for final settlement. Reload the employee list.</value></data>
++  <data name="PayrollFinalSettlementInputsInvalid" xml:space="preserve"><value>Review the final settlement dates, salary bases and entitlement inputs. Complete every required field within its allowed range.</value></data>
++  <data name="PayrollFinalSettlementExists" xml:space="preserve"><value>A final settlement already exists for this employee. Open the existing settlement to review or revise it.</value></data>
++  <data name="PaySlipNotFound" xml:space="preserve"><value>The saved pay slip could not be found.</value></data>
++  <data name="PaySlipFiltersInvalid" xml:space="preserve"><value>Invalid pay slip filters or sorting. Review the date range, type and employee.</value></data>
++  <data name="LeaveNotFound" xml:space="preserve">
++    <value>The leave request was not found.</value>
++  </data>
++  <data name="LeaveTypeNotFound" xml:space="preserve">
++    <value>The leave type was not found.</value>
++  </data>
++  <data name="LeaveDatesRequired" xml:space="preserve">
++    <value>Enter both leave dates. Dates can be omitted only for an existing undated request.</value>
++  </data>
++  <data name="LeaveDateOrderInvalid" xml:space="preserve">
++    <value>The end date must be on or after the start date.</value>
++  </data>
++  <data name="LeaveApproversInvalid" xml:space="preserve">
++    <value>Select each approver once using a valid staff record.</value>
++  </data>
++  <data name="LeaveApproverNotFound" xml:space="preserve">
++    <value>One or more selected approvers no longer exist.</value>
++  </data>
++  <data name="EntityLeave" xml:space="preserve">
++    <value>Leave requests</value>
++  </data>
++  <data name="EntityLeaveType" xml:space="preserve">
++    <value>Leave types</value>
++  </data>
++  <data name="EntityLeaveTypeApprover" xml:space="preserve">
++    <value>Leave approver configuration</value>
++  </data>
++  <data name="EntitySettingsHolidayModel" xml:space="preserve">
++    <value>Holidays</value>
++  </data>
+ </root>
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\PayrollRun.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\PayrollRun.cs"
+index 195bba5..d95e84e 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\PayrollRun.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\PayrollRun.cs"	
+@@ -7,6 +7,7 @@ public class PayrollRun : EntityBase
+     public string Type { get; set; } = "Payroll";
+     public int? StaffId { get; set; }
+     public Staff? Staff { get; set; }
++    public DateTime? LastWorkingDay { get; set; }
+     public DateTime PeriodStart { get; set; }
+     public DateTime PeriodEnd { get; set; }
+     public int CurrentRevision { get; set; }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\PayrollRunRevision.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\PayrollRunRevision.cs"
+index a628741..5a2380d 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\PayrollRunRevision.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\PayrollRunRevision.cs"	
+@@ -12,6 +12,7 @@ public class PayrollRunRevision : EntityBase
+     public string PolicyVersion { get; set; } = string.Empty;
+     public DateTime OvertimePeriod { get; set; }
+     public int DecimalPlaces { get; set; }
++    public string? SettlementSnapshot { get; set; }
+     public DateTime? ApprovedAt { get; set; }
+     public string? ApprovedBy { get; set; }
+     public decimal TotalBasic { get; set; }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\StaffPayroll.md" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\StaffPayroll.md"
+index 80b471d..36bc2aa 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\StaffPayroll.md"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\StaffPayroll.md"	
+@@ -1,6 +1,6 @@
+ # Staff salary inputs and monthly payroll
+ 
+-Source status: implemented, source-only; owner compilation, schema and runtime acceptance pending (2026-10-09).
++Source status: implemented, source-only; owner compilation, schema and runtime acceptance pending (2026-10-10).
+ 
+ This feature document describes the current source. The frozen payroll contract and reconciliation live under `F:/My Work/Sigma/reviews`. The canonical Sigma books remain the implementation authority.
+ 
+@@ -49,7 +49,24 @@ The version hash includes the policy, period, overtime month, precision, employe
+ - `/ProcessedPayrolls`: saved runs, View/Edit/Approve/log, complete matching-list and saved-run Excel.
+ - `/UserGuide/hrm`: bilingual workflow, calculation issues, revision/approval boundaries and separate payment explanation.
+ 
+-## Payment and settlement boundary
++## Final settlement policy `FinalSettlementSnapshot-v1`
++
++`FinalSettlement` extends the existing run/revision/line/log aggregate; it does not create a second payroll writer. Calculate and Save require one available staff id and typed `finalSettlement` inputs: last working day in the selected month, joining/rejoining date, CalendarDays/Fixed30 day basis, reviewed remaining leave days and Basic/Gross basis, ticket quota/period/price/eligibility percentage, and reviewed earned gratuity days and Basic/Gross basis. Numeric inputs are required; an explicit zero is accepted for an inapplicable entitlement. The first joining date and designation remain source facts. No employment-status change is written.
++
++- Salary coverage is inclusive from the later of month start or actual joining through last working day. Latest salary packages are selected before last day + 1; salary changes within the covered period and recorded absences still block Save until their policy is resolved.
++- CalendarDays divides by actual month days. Fixed30 divides by 30 and caps covered salary days at 30. Basic and allowances are rounded separately and sum to Gross. Package earnings/deductions are prorated; recorded overtime and due installment deductions retain actual amounts.
++- Commission and sales incentive are disclosed once. Package LeaveEncashment/EndOfServiceBenefits components block double counting. Leave/gratuity = reviewed days × the disclosed rounded Basic/Gross daily rate. Ticket = quota × price × eligibility / 100. Quota period is recorded context; the system does not infer statutory or service-earned eligibility.
++- Total = normal salary + leave salary + ticket + gratuity. The saved line Additional includes commission and all settlement additions, preserving `Gross + Overtime + Additional - Deductions = NetPay`; the settlement snapshot separates the portions for review.
++- One final settlement root per employee across all months. Any other current saved payroll type containing the employee in the same month blocks another salary Save. Save rechecks guards inside its tenant lock/transaction; a unique filtered final index protects races.
++- Saved staff/month/last working day are immutable. Changed reviewed inputs create an unpaid revision and reset approval. Existing monthly policy and source hash shapes remain compatible. Historical typed JSON retains dates, bases, daily rates and breakdown independently of mutable staff data.
++
++## Pay slip reads
++
++`GET /PaySlips` projects current saved PayrollLine revisions with counted paging and exact date/no/type/staff filters. Columns are No, Name, Code, Date, Type, Total Amount and Status; identity/status fields are limited to the corresponding list DTO. The deterministic number is `runId-revisionNumber-staffId`; No searches the complete identifier. Date is inclusive month end for monthly payroll or the final last working day.
++
++`GET /PaySlips/{id}` reads exactly one historical PayrollLine.Id and its owning revision/root. Approval, payment and current/superseded state remain distinct; salary and final-settlement amounts are saved snapshots. `GET /PaySlips/staff` uses saved line identities, preserving historical employee choices. The service is covered by the existing scoped assembly scanner. No slip entity, amount write, payment toggle or journal endpoint is added. `/FinalSettlementProcess`, `/PaySlips` and their bilingual `/UserGuide/hrm` topics complete the frontend handoff.
++
++## Disbursement boundary
+ 
+ Save and Approve do not mean payment. A separate disbursement owner must consume the current approved revision, record actual payment/ledger effects atomically, update installment payment state where applicable and append its operation log. No manual Paid toggle or actual payment writer exists in this change.
+ 
+@@ -58,3 +75,7 @@ If a root has been paid by that future owner, regular Save is refused. Process e
+ ## Owner schema and acceptance
+ 
+ The payroll tables/configurations require an owner-created incremental migration, suggested name `AddPayrollRunTypeAndStaffScope`, for required Type (max 32, default Payroll), nullable StaffId and the unfiltered unique `(SubscriptionId, PeriodStart, Type, StaffId)` key. No migration, model snapshot, database command, build or runtime check was run in this task. Owner acceptance must cover legacy backfill/duplicates, schema registration, effective-date cases, source validation, save/approve races and retries, immutable history, logs, export counts, Arabic/dark/responsive layouts and the future payment/settlement boundary.
++
++This extension additionally requires nullable `PayrollRun.LastWorkingDay` (date), nullable revision `SettlementSnapshot` JSON and the unique filtered `(SubscriptionId,Type,StaffId)` final-settlement index. Suggested incremental name: `AddPayrollFinalSettlementSnapshots`; review existing owner migrations before generating another. Agents preserved externally created migrations/model-snapshot/DbContext changes and did not create or run them. Verify partial-month arithmetic, entitlement quantities/bases, overlap/final uniqueness races, unchanged/changed revisions, approval reset, paid lock, historical slips, all-page output and isolated print layout after owner compilation and schema update.
++
++Final source reconciliation found owner-created `20261010080156_refactor-payroll2.cs` already declares both new columns and the final unique filtered index. Do not generate a duplicate migration for these changes. Its actual application/database state remains owner verification pending; agents only read the scoped migration declarations.
+
+NEW SiGma.ServerAPI\Controller\PaySlipsController.cs
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SiGma.Business.IServices;
+using SiGma.Helpers.Request;
+using SiGma.Helpers.Results;
+
+namespace SiGma.ServerAPI.Controller;
+
+[ApiController, Authorize, Route("[controller]")]
+public sealed class PaySlipsController : ControllerBase
+{
+    private readonly IPaySlipService _service;
+    public PaySlipsController(IPaySlipService service) => _service = service;
+
+    [HttpGet]
+    public async Task<IActionResult> List([FromQuery] ListSmBase request, CancellationToken cancellationToken)
+        => Response(await _service.ListAsync(request, cancellationToken));
+
+    [HttpGet("staff")]
+    public async Task<IActionResult> Staff(CancellationToken cancellationToken)
+        => Response(await _service.StaffAsync(cancellationToken));
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
+        => Response(await _service.GetAsync(id, cancellationToken));
+
+    private IActionResult Response(Result result)
+        => result.IsSuccess ? Ok(result) : StatusCode(result.StatusCode ?? 400, result);
+}
+
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.ServerAPI\\Controller\\PayrollRunsController.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ServerAPI\\Controller\\PayrollRunsController.cs"
+index 75444cf..3f5c156 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.ServerAPI\\Controller\\PayrollRunsController.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ServerAPI\\Controller\\PayrollRunsController.cs"	
+@@ -33,6 +33,10 @@ public sealed class PayrollRunsController : ControllerBase
+     public async Task<IActionResult> LeaveSalaryStaff(CancellationToken cancellationToken)
+         => Response(await _service.LeaveSalaryStaffAsync(cancellationToken));
+ 
++    [HttpGet("settlement-staff")]
++    public async Task<IActionResult> SettlementStaff(CancellationToken cancellationToken)
++        => Response(await _service.SettlementStaffAsync(cancellationToken));
++
+     [HttpPost]
+     public async Task<IActionResult> Save(PayrollSaveVm request, CancellationToken cancellationToken)
+         => Response(await _service.SaveAsync(request, cancellationToken));
+
+NEW SiGma.ViewModels\ViewModels\PaySlip\PaySlipDetailVm.cs
+using SiGma.ViewModels.ViewModels.PayrollRun;
+
+namespace SiGma.ViewModels.ViewModels.PaySlip;
+
+public sealed class PaySlipDetailVm
+{
+    public int Id { get; set; }
+    public int RunId { get; set; }
+    public int RevisionNumber { get; set; }
+    public int StaffId { get; set; }
+    public string No { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string? Code { get; set; }
+    public DateTime Date { get; set; }
+    public string Type { get; set; } = string.Empty;
+    public decimal TotalAmount { get; set; }
+    public bool IsApproved { get; set; }
+    public bool IsPaid { get; set; }
+    public bool IsCurrentRevision { get; set; }
+    public string Period { get; set; } = string.Empty;
+    public string OvertimePeriod { get; set; } = string.Empty;
+    public string PolicyVersion { get; set; } = string.Empty;
+    public int DecimalPlaces { get; set; }
+    public decimal Basic { get; set; }
+    public decimal Allowances { get; set; }
+    public decimal Gross { get; set; }
+    public decimal Overtime { get; set; }
+    public decimal Additional { get; set; }
+    public decimal Deductions { get; set; }
+    public decimal NetPay { get; set; }
+    public FinalSettlementSnapshotVm? FinalSettlement { get; set; }
+}
+
+
+NEW SiGma.ViewModels\ViewModels\PaySlip\PaySlipListVm.cs
+namespace SiGma.ViewModels.ViewModels.PaySlip;
+
+public sealed class PaySlipListVm
+{
+    public int Id { get; set; }
+    public int RunId { get; set; }
+    public int RevisionNumber { get; set; }
+    public int StaffId { get; set; }
+    public string No { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
+    public string? Code { get; set; }
+    public DateTime Date { get; set; }
+    public string Type { get; set; } = string.Empty;
+    public decimal TotalAmount { get; set; }
+    public bool IsApproved { get; set; }
+    public bool IsPaid { get; set; }
+    public bool IsCurrentRevision { get; set; }
+}
+
+
+NEW SiGma.ViewModels\ViewModels\PaySlip\PaySlipStaffOptionVm.cs
+namespace SiGma.ViewModels.ViewModels.PaySlip;
+
+public sealed class PaySlipStaffOptionVm
+{
+    public int Id { get; set; }
+    public string? No { get; set; }
+    public string Value { get; set; } = string.Empty;
+}
+
+
+NEW SiGma.ViewModels\ViewModels\PayrollRun\FinalSettlementInputsVm.cs
+namespace SiGma.ViewModels.ViewModels.PayrollRun;
+
+public sealed class FinalSettlementInputsVm
+{
+    [Required, RegularExpression(@"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$")]
+    public string? LastWorkingDay { get; set; }
+
+    [Required, RegularExpression(@"^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$")]
+    public string? JoiningOrRejoiningDate { get; set; }
+
+    [Required, RegularExpression(@"^(CalendarDays|Fixed30)$")]
+    public string? SalaryProrationBasis { get; set; }
+
+    [Required, Range(typeof(decimal), "0", "1000000")]
+    public decimal? LeaveDaysRemaining { get; set; }
+
+    [Required, RegularExpression(@"^(Basic|Gross)$")]
+    public string? LeaveSalaryBasis { get; set; }
+
+    [Required, Range(typeof(decimal), "0", "1000000")]
+    public decimal? TicketQuota { get; set; }
+
+    [Required, Range(typeof(decimal), "0.000001", "1000000")]
+    public decimal? TicketQuotaPeriodYears { get; set; }
+
+    [Required, Range(typeof(decimal), "0", "1000000000")]
+    public decimal? TicketPrice { get; set; }
+
+    [Required, Range(typeof(decimal), "0", "100")]
+    public decimal? TicketEligibilityPercent { get; set; }
+
+    [Required, Range(typeof(decimal), "0", "1000000")]
+    public decimal? GratuityDays { get; set; }
+
+    [Required, RegularExpression(@"^(Basic|Gross)$")]
+    public string? GratuitySalaryBasis { get; set; }
+}
+
+
+NEW SiGma.ViewModels\ViewModels\PayrollRun\FinalSettlementSnapshotVm.cs
+namespace SiGma.ViewModels.ViewModels.PayrollRun;
+
+public sealed class FinalSettlementSnapshotVm
+{
+    public FinalSettlementInputsVm Inputs { get; set; } = new();
+    public string? Designation { get; set; }
+    public string FirstWorkingDay { get; set; } = string.Empty;
+    public string NormalSalaryFrom { get; set; } = string.Empty;
+    public string LastWorkingDay { get; set; } = string.Empty;
+    public int ServiceDays { get; set; }
+    public int SalaryDays { get; set; }
+    public int SalaryDivisor { get; set; }
+    public decimal MonthlyBasic { get; set; }
+    public decimal MonthlyGross { get; set; }
+    public decimal LeaveDailyRate { get; set; }
+    public decimal GratuityDailyRate { get; set; }
+    public decimal Basic { get; set; }
+    public decimal Allowances { get; set; }
+    public decimal Gross { get; set; }
+    public decimal Overtime { get; set; }
+    public decimal SalesCommission { get; set; }
+    public decimal Additional { get; set; }
+    public decimal Deductions { get; set; }
+    public decimal NormalSalary { get; set; }
+    public decimal LeaveSalary { get; set; }
+    public decimal TicketPayable { get; set; }
+    public decimal Gratuity { get; set; }
+    public decimal TotalPayable { get; set; }
+}
+
+
+NEW SiGma.ViewModels\ViewModels\PayrollRun\FinalSettlementStaffOptionVm.cs
+namespace SiGma.ViewModels.ViewModels.PayrollRun;
+
+public sealed class FinalSettlementStaffOptionVm
+{
+    public int Id { get; set; }
+    public string? No { get; set; }
+    public string Value { get; set; } = string.Empty;
+    public string? Designation { get; set; }
+    public string DateOfJoining { get; set; } = string.Empty;
+}
+
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollCalculateVm.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollCalculateVm.cs"
+index e41b3cb..22445ac 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollCalculateVm.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollCalculateVm.cs"	
+@@ -8,4 +8,5 @@ public sealed class PayrollCalculateVm
+     public string Type { get; set; } = "Payroll";
+     [Range(1, int.MaxValue)]
+     public int? StaffId { get; set; }
++    public FinalSettlementInputsVm? FinalSettlement { get; set; }
+ }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunVm.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunVm.cs"
+index 4172b22..0d1aeba 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunVm.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunVm.cs"	
+@@ -6,6 +6,7 @@ public sealed class PayrollRunVm
+     public string Period { get; set; } = string.Empty;
+     public string Type { get; set; } = "Payroll";
+     public int? StaffId { get; set; }
++    public FinalSettlementSnapshotVm? FinalSettlement { get; set; }
+     public string Version { get; set; } = string.Empty;
+     public int RevisionNumber { get; set; }
+     public bool IsSaved { get; set; }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollSaveVm.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollSaveVm.cs"
+index 5798951..390a093 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollSaveVm.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollSaveVm.cs"	
+@@ -8,6 +8,7 @@ public sealed class PayrollSaveVm
+     public string Type { get; set; } = "Payroll";
+     [Range(1, int.MaxValue)]
+     public int? StaffId { get; set; }
++    public FinalSettlementInputsVm? FinalSettlement { get; set; }
+     [Required, RegularExpression(@"^[A-F0-9]{64}$")]
+     public string ExpectedVersion { get; set; } = string.Empty;
+ }

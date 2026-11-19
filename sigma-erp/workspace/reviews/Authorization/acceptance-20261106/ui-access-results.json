@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "check": "System role cannot be edited or deleted in the UI",
+      "passed": true
+    },
+    {
+      "check": "User access opens and displays effective grants",
+      "passed": true,
+      "details": "Combined permission preview\nBranch.View\nFrom role: Reader sigma-e2e-isolation-20261106-d5c89e"
+    },
+    {
+      "check": "Dark theme is applied",
+      "passed": true
+    },
+    {
+      "check": "Arabic runtime and RTL are applied",
+      "passed": true,
+      "details": {
+        "options": [
+          "All role types",
+          "System roles",
+          "Custom roles",
+          "English",
+          "العربية",
+          "Chinese",
+          "Spanish",
+          "Japanese",
+          "German",
+          "French"
+        ]
+      }
+    },
+    {
+      "check": "No browser errors or failed requests in access/theme/language workflow",
+      "passed": true,
+      "details": {
+        "errors": [],
+        "network": []
+      }
+    }
+  ],
+  "errors": [],
+  "network": []
+}

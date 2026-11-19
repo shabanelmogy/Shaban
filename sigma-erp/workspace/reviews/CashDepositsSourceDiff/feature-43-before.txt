@@ -1,0 +1,23 @@
+using SiGma.Business.IServices.Bases;
+using SiGma.ViewModels.ViewModels.CashDeposit;
+
+namespace SiGma.Business.IServices
+{
+    public interface ICashDepositService
+        : IService<CashDepositAddVM, CashDepositUpdateVM, CashDepositDetailVM, CashDepositListVM>
+    {
+        /// <summary>Approves the cash deposit and marks its Journal Voucher as posted.</summary>
+        Task<Result> ToggleApprovalStatusAsync(int id, CancellationToken cancellationToken = default);
+
+        /// <summary>Voids (or un-voids) a cash deposit. Blocked if active allocations exist.</summary>
+        Task<Result> ToggleVoidStatusAsync(int id, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Returns all payment vouchers that are not yet fully deposited.
+        /// Used to populate the "Create New Cash Deposit" modal grid.
+        /// Each row shows: Date, Voucher type, No, Description, Amount, Deposited, DueAmount.
+        /// </summary>
+        Task<Results<UndepositedVoucherDto>> GetUndepositedVouchersAsync(
+            CancellationToken cancellationToken = default);
+    }
+}

@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
-    [string]$DocsRoot = (Split-Path -Parent $PSScriptRoot),
+    # Empty = parent of this script's folder (resolved below; $PSScriptRoot can be empty in
+    # Windows PowerShell 5.1 parameter defaults under `powershell -File`).
+    [string]$DocsRoot = '',
     [string]$WorkspaceRoot = 'F:\My Work\Sigma',
     # Also check the operational digest (skill) against the books.
     [string]$SkillPath = 'F:\My Work\Sigma\.agents\skills\sigma-screen-refactor\SKILL.md',
@@ -17,12 +19,43 @@ param(
 #   2. type  - backticked type names (Service, Controller, Policy, Component, ...) that no .cs/.ts declares;
 #   3. css   - backticked shared CSS classes (sigma-*) that no stylesheet, template or component uses;
 #   4. block - "UI block N" / "backend block N" / "Master block N" references outside the book's range;
-#   5. link  - relative markdown links to a missing .md file.
+#   5. link  - a missing local Markdown file, directory link or heading fragment.
+# Instruction files (AGENTS.md, live companion and its workflow sections, skill, review index) also get:
+#   6. budget    - file larger than its Master8 size budget;
+#   7. table     - markdown table whose second line is not the |---| separator;
+#   8. duplicate - the same long paragraph in more than one instruction file (one rule, one owner);
+#   9. size      - warning only: canonical block over 30 KB, or review over 40 KB without a
+#                  *_CURRENT_STATE.md that links to it (current-state files themselves are budgeted at 4 KB).
 # An unresolved item is a finding to read, not an automatic error: a route or an illustrative
-# name can look like a path. Exit code = number of findings in groups path, block and link.
+# name can look like a path. Exit code = number of findings in groups path, block, link, budget and table.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+$ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
+if (-not $DocsRoot) { $DocsRoot = Split-Path -Parent $ScriptDir }
+
+# Instruction files and their size budgets in bytes (Master8, 2026-11-19).
+$companion = Join-Path $WorkspaceRoot '.agents\SIGMA_WORKFLOW_RULES.md'
+$budgets = [ordered]@{}
+$budgets[(Join-Path $WorkspaceRoot 'AGENTS.md')] = 8KB
+$budgets[$companion] = 14KB
+$budgets[$SkillPath] = 15KB
+$budgets[(Join-Path $WorkspaceRoot 'reviews\INDEX.md')] = 12KB
+$workflowDir = Join-Path $WorkspaceRoot '.agents\workflow'
+if (Test-Path -LiteralPath $workflowDir) {
+    foreach ($f in Get-ChildItem -LiteralPath $workflowDir -Filter '*.md') { $budgets[$f.FullName] = 12KB }
+}
+$reviewsDir = Join-Path $WorkspaceRoot 'reviews'
+$currentStates = @()
+if (Test-Path -LiteralPath $reviewsDir) {
+    $currentStates = @(Get-ChildItem -LiteralPath $reviewsDir -Filter '*_CURRENT_STATE.md' -Recurse |
+        Where-Object { $_.FullName -notmatch '\\Archive\\' })
+    foreach ($f in $currentStates) { $budgets[$f.FullName] = 4KB }
+}
+# Soft size warnings (Master8): canonical blocks over 30 KB; reviews over 40 KB without a current-state file.
+$blockWarnBytes = 30KB
+$reviewWarnBytes = 40KB
 
 $skipDirs = @('node_modules', 'bin', 'obj', '.git', 'dist', '.angular', 'out-tsc', 'graphify-out', 'generated')
 $repoRoots = @(
@@ -95,7 +128,7 @@ foreach ($f in $allFiles) {
 
 function Test-PathToken([string]$Token, [string]$MdDir) {
     $t = $Token.Replace('\', '/').TrimStart('.', '/').TrimEnd('/').ToLowerInvariant()
-    foreach ($base in @($MdDir, $DocsRoot, $WorkspaceRoot, $PSScriptRoot)) {
+    foreach ($base in @($MdDir, $DocsRoot, $WorkspaceRoot, $ScriptDir)) {
         if (Test-Path -LiteralPath (Join-Path $base $Token)) { return $true }
     }
     $suffix = '/' + $t
@@ -116,7 +149,14 @@ $targets = @()
 foreach ($book in @('master', 'ui', 'backend')) {
     $targets += Get-ChildItem -LiteralPath (Join-Path $DocsRoot $book) -Filter '*.md' -Recurse
 }
-if ($SkillPath -and (Test-Path -LiteralPath $SkillPath)) { $targets += Get-Item -LiteralPath $SkillPath }
+foreach ($entry in @('README.md', 'SIGMA_FEATURE_REVIEW_MASTER.md', 'SIGMA_UI_PATTERNS.md',
+                     'SIGMA_BACKEND_PATTERNS.md', 'SIGMA_COMMAND_REFERENCE_AR.md', 'recipe-system/README.md')) {
+    $targets += Get-Item -LiteralPath (Join-Path $DocsRoot $entry)
+}
+# Instruction files: skill, entry, companion and its sections are link/block-checked like the books.
+foreach ($p in $budgets.Keys) {
+    if ($p -and (Test-Path -LiteralPath $p)) { $targets += Get-Item -LiteralPath $p }
+}
 
 $findings = New-Object System.Collections.Generic.List[object]
 function Add-Finding([string]$Group, [string]$File, [int]$Line, [string]$Text) {
@@ -124,6 +164,30 @@ function Add-Finding([string]$Group, [string]$File, [int]$Line, [string]$Text) {
 }
 
 $typeSuffix = '(Service|Controller|ControllerBase|Helper|Policy|Profile|Configuration|Resolver|Repository|Component|Directive|Pipe|Guard|Interceptor)'
+$anchorsByFile = @{}
+function Get-MarkdownAnchors([string]$Path) {
+    if (!$anchorsByFile.ContainsKey($Path)) {
+        $anchors = New-Object 'System.Collections.Generic.HashSet[string]'
+        $fence = $null
+        foreach ($line in [System.IO.File]::ReadLines($Path)) {
+            if ($fence) {
+                if ($line -match ('^ {0,3}' + $fence + $fence[0] + '*\s*$')) { $fence = $null }
+                continue
+            }
+            if ($line -match '^ {0,3}(\x60{3,}|~{3,})') { $fence = $Matches[1]; continue }
+            foreach ($id in [regex]::Matches($line, '(?i)<a\s+[^>]*?(?:id|name)=["'']([^"'']+)["'']')) {
+                [void]$anchors.Add($id.Groups[1].Value)
+            }
+            if ($line -notmatch '^ {0,3}#{1,6}\s+(.+?)\s*$') { continue }
+            $heading = $Matches[1] -replace '\s+#+$', '' -replace '\[([^\]]+)\]\([^)]+\)', '$1' -replace '<[^>]+>', ''
+            $slug = ($heading.ToLowerInvariant() -replace '[^\p{L}\p{M}\p{N}_ -]', '') -replace ' ', '-'
+            $candidate = $slug
+            for ($suffix = 1; !$anchors.Add($candidate); $suffix++) { $candidate = "$slug-$suffix" }
+        }
+        $anchorsByFile[$Path] = $anchors
+    }
+    return ,$anchorsByFile[$Path]
+}
 foreach ($md in $targets) {
     $rel = $md.FullName.Replace($DocsRoot, '').TrimStart('\')
     $lines = [System.IO.File]::ReadAllLines($md.FullName, [System.Text.Encoding]::UTF8)
@@ -160,12 +224,82 @@ foreach ($md in $targets) {
             if (($m.Groups[1].Value -match '^[Bb]ackend$') -and ($m.Value -notmatch 'block')) { continue }
             if ($n -gt $ranges[$book]) { Add-Finding 'block' $rel ($i + 1) $m.Value }
         }
-        foreach ($m in [regex]::Matches($line, '\]\(<?([^)>#]+\.md)>?(#[^)]*)?\)')) {
-            $target = [uri]::UnescapeDataString($m.Groups[1].Value)
-            if ($target -match '^https?') { continue }
-            $targetPath = if ([System.IO.Path]::IsPathRooted($target)) { $target } else { Join-Path $md.DirectoryName $target }
-            if (-not (Test-Path -LiteralPath $targetPath)) { Add-Finding 'link' $rel ($i + 1) $target }
+        foreach ($m in [regex]::Matches($line, '\]\((?:<(?<url>[^>]+)>|(?<url>[^)\s]+))\)')) {
+            $url = $m.Groups['url'].Value
+            if ($url -match '^(?:[a-z][a-z0-9+.-]*://|mailto:|//)') { continue }
+            $parts = $url -split '#', 2
+            $target = [uri]::UnescapeDataString($parts[0])
+            if ($target -and $target -notmatch '(?:\.md|/)$') { continue }
+            $targetPath = if (!$target) { $md.FullName } elseif ([System.IO.Path]::IsPathRooted($target)) { $target } else { Join-Path $md.DirectoryName $target }
+            if (-not (Test-Path -LiteralPath $targetPath)) {
+                Add-Finding 'link' $rel ($i + 1) $url
+            } elseif ($parts.Count -eq 2 -and $parts[1] -and $targetPath -match '\.md$') {
+                if ([System.IO.Path]::GetFileName($targetPath) -in @('SIGMA_FRONTEND_REVIEW_GUIDE.md', 'SIGMA_BACKEND_REVIEW_GUIDE.md')) {
+                    Add-Finding 'link' $rel ($i + 1) $url
+                } elseif (!(Get-MarkdownAnchors ([System.IO.Path]::GetFullPath($targetPath))).Contains([uri]::UnescapeDataString($parts[1]))) {
+                    Add-Finding 'link' $rel ($i + 1) $url
+                }
+            }
         }
+    }
+}
+
+# 6-8. Instruction-file budgets, table structure and repeated paragraphs.
+$paragraphOwners = @{}
+foreach ($p in $budgets.Keys) {
+    if (-not $p -or -not (Test-Path -LiteralPath $p)) { continue }
+    $name = $p.Replace($WorkspaceRoot, '').TrimStart('\')
+    $size = (Get-Item -LiteralPath $p).Length
+    if ($size -gt $budgets[$p]) { Add-Finding 'budget' $name 0 ("{0} bytes > budget {1}" -f $size, $budgets[$p]) }
+
+    $lines = [System.IO.File]::ReadAllLines($p, [System.Text.Encoding]::UTF8)
+    $inFence = $false
+    $para = New-Object System.Collections.Generic.List[string]
+    for ($i = 0; $i -le $lines.Length; $i++) {
+        $line = if ($i -lt $lines.Length) { $lines[$i] } else { '' }
+        if ($line.TrimStart().StartsWith('```')) { $inFence = -not $inFence; continue }
+        if ($inFence) { continue }
+        $isRow = $line.TrimStart().StartsWith('|')
+        $prevRow = ($i -gt 0) -and $lines[$i - 1].TrimStart().StartsWith('|')
+        if ($isRow -and -not $prevRow) {
+            $next = if ($i + 1 -lt $lines.Length) { $lines[$i + 1].Trim() } else { '' }
+            if ($next -notmatch '^\|(\s*:?-{3,}:?\s*\|)+$') { Add-Finding 'table' $name ($i + 1) 'table header is not followed by a |---| separator' }
+        }
+        if ($line.Trim() -eq '' -or $isRow -or $line.TrimStart().StartsWith('#')) {
+            $text = (($para -join ' ') -replace '\s+', ' ').Trim()
+            if ($text.Length -ge 160 -and $name -notmatch '_CURRENT_STATE.md$') {
+                if (-not $paragraphOwners.ContainsKey($text)) { $paragraphOwners[$text] = New-Object System.Collections.Generic.List[string] }
+                if (-not $paragraphOwners[$text].Contains($name)) { $paragraphOwners[$text].Add($name) }
+            }
+            $para.Clear()
+        } else { $para.Add($line) }
+    }
+}
+foreach ($book in @('master', 'ui', 'backend')) {
+    foreach ($f in Get-ChildItem -LiteralPath (Join-Path $DocsRoot $book) -Filter '*.md' -Recurse) {
+        if ($f.Length -gt $blockWarnBytes) { Add-Finding 'size' ($book + '\' + $f.Name) 0 ("{0} bytes > {1}; split or remove history (Master8)" -f $f.Length, $blockWarnBytes) }
+    }
+}
+if (Test-Path -LiteralPath $reviewsDir) {
+    $covered = New-Object 'System.Collections.Generic.HashSet[string]'
+    foreach ($cs in $currentStates) {
+        foreach ($m in [regex]::Matches([System.IO.File]::ReadAllText($cs.FullName), '\(<?([^)>#]+\.md)')) {
+            [void]$covered.Add([System.IO.Path]::GetFileName([uri]::UnescapeDataString($m.Groups[1].Value)).ToLowerInvariant())
+        }
+    }
+    $largeReviews = Get-ChildItem -LiteralPath $reviewsDir -Filter '*.md' -Recurse |
+        Where-Object { $_.FullName -notmatch '\\(Archive|Deferred|evidence)\\' -and $_.Name -notmatch '^(INDEX|INDEX_HISTORY)\.md$|_CURRENT_STATE\.md$' -and $_.Length -gt $reviewWarnBytes } |
+        Sort-Object Length -Descending
+    foreach ($f in $largeReviews) {
+        if (-not $covered.Contains($f.Name.ToLowerInvariant())) {
+            Add-Finding 'size' ('reviews\' + $f.FullName.Substring($reviewsDir.Length).TrimStart('\')) 0 ("{0} bytes > {1} with no current-state file" -f $f.Length, $reviewWarnBytes)
+        }
+    }
+}
+
+foreach ($k in $paragraphOwners.Keys) {
+    if ($paragraphOwners[$k].Count -gt 1) {
+        Add-Finding 'duplicate' ($paragraphOwners[$k] -join ' + ') 0 ($k.Substring(0, [Math]::Min(90, $k.Length)) + '...')
     }
 }
 
@@ -176,5 +310,5 @@ foreach ($g in $groups) {
     $g.Group | Select-Object -First $Show | ForEach-Object { Write-Host ("  {0}:{1}  {2}" -f $_.File, $_.Line, $_.Text) }
 }
 if ($findings.Count -eq 0) { Write-Host 'OK - every checked reference resolves.' }
-$hard = @($findings | Where-Object { $_.Group -in @('path', 'block', 'link') }).Count
+$hard = @($findings | Where-Object { $_.Group -in @('path', 'block', 'link', 'budget', 'table') }).Count
 exit $hard

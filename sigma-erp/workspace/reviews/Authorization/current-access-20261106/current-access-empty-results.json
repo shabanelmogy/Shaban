@@ -1,0 +1,37 @@
+{
+  "checks": [
+    {
+      "name": "Linked account with no grants sees an explicit empty-functions state",
+      "passed": true
+    },
+    {
+      "name": "Empty grants do not submit business reads",
+      "passed": true,
+      "detail": [
+        "/auth/consolelogin",
+        "/Authorization/me",
+        "/CurrentBranch/Options",
+        "/CurrentBranch/Mine",
+        "/Language/Options",
+        "/Localization/Runtime",
+        "/Localization/Runtime"
+      ]
+    },
+    {
+      "name": "No-grant linked user can use Arabic runtime",
+      "passed": true
+    },
+    {
+      "name": "Arabic empty-access state works in dark theme",
+      "passed": true
+    },
+    {
+      "name": "Empty-access flow has no failed requests or browser exceptions",
+      "passed": true,
+      "detail": {
+        "failed": [],
+        "errors": []
+      }
+    }
+  ]
+}

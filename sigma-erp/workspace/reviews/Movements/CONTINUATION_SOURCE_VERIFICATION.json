@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-07",
+  "verification": "Source parsing and scoped guard inspection only; no compilation/tests/runtime",
+  "files": [
+    {
+      "file": "src/app/modules/Movements/CustodyMovement/components/details/details.component.ts",
+      "parseProblems": 0
+    },
+    {
+      "file": "src/app/modules/Movements/DeliveryMovement/components/details/details.component.ts",
+      "parseProblems": 0
+    },
+    {
+      "file": "src/app/modules/Movements/collectionMovement/components/details/details.component.ts",
+      "parseProblems": 0
+    }
+  ],
+  "problems": [],
+  "checkedRxjsExports": ["defer", "of"],
+  "scopedWhitespace": "passed",
+  "recipeCheck": "Phase01 current; PLAN00 and Phase00/02/03/04/05/06 stale; canonical blocks used",
+  "ownerAcceptancePending": true
+}

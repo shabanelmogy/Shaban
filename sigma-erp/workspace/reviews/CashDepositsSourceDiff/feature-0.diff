@@ -1,0 +1,33 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/cashdeposit.routes.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/cashdeposit.routes.ts (current)
+index 8b4c3c5..a3745a7 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/cashdeposit.routes.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/cashdeposit.routes.ts (current)	
+@@ -1,18 +1,14 @@
+-import { Routes } from '@angular/router';
+-import {CashDepositsComponent } from './components/list/list.component';
++import { CanDeactivateFn, Routes } from '@angular/router';
++import { CashDepositsComponent } from './components/list/list.component';
+ import { DetailsComponent } from './components/details/details.component';
+ 
++const preventUnsavedExit: CanDeactivateFn<DetailsComponent> = (component) =>
++  component.canDeactivate();
++
+ export const CashDeposit_Routes: Routes = [
+-  {
+-    path: '',
+-    component: CashDepositsComponent,
+-  },
+-  {
+-    path: 'details/:id',
+-    component: DetailsComponent,
+-  },
+-  {
+-    path: 'create',
+-    component: DetailsComponent,
+-  },
++  { path: 'create', component: DetailsComponent, data: { mode: 'create' }, canDeactivate: [preventUnsavedExit] },
++  { path: 'view/:id', component: DetailsComponent, data: { mode: 'view' }, canDeactivate: [preventUnsavedExit] },
++  { path: 'edit/:id', component: DetailsComponent, data: { mode: 'edit' }, canDeactivate: [preventUnsavedExit] },
++  { path: 'details/:id', redirectTo: 'view/:id' },
++  { path: '', component: CashDepositsComponent },
+ ];

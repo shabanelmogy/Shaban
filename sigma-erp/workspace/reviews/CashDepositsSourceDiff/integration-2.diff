@@ -1,0 +1,20 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/components/toolbar/toolbar.component.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/components/toolbar/toolbar.component.ts (current)
+index bd51a24..2343e53 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/components/toolbar/toolbar.component.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/components/toolbar/toolbar.component.ts (current)	
+@@ -139,6 +139,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
+     const isAccounts = /^\/(Account|LinkAccounts|FiscalYear|MonthClose|openingBalances|Journal|Budget|BudgetVariance|TrailBalance|TrialBalance|BalanceSheet|BalanceSheetMonthWise|CashFlowStatement|IncomeComparison|IncomeStatement|IncomeStatement2|IncomeStatementFy|IncomeStatementFy2|IncomeStatementYtd|IncomeStatementYtd2|VehicleIncomeStatement|Ledger)(\/|$)/.test(routePath);
+     const isDashboard = routePath === '/dashboard';
+     const isBankReconciliation = routePath === '/BankReconciliation';
++    const isCashDeposit = /^\/CashDeposit(\/|$)/.test(routePath);
+     // LimoQuotation owns its single title inside the feature card.
+     const isLimoQuotationGrid = this.router.url.startsWith('/LimoQuotation');
+     return (
+@@ -163,6 +164,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
+       !isAccounts &&
+       !isDashboard &&
+       !isBankReconciliation &&
++      !isCashDeposit &&
+       !isLimoQuotationGrid &&
+       viewsWithPageTitles.some((t) => t === this.appToolbarLayout)
+     );

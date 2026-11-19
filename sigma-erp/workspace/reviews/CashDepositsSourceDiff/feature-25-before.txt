@@ -1,0 +1,14 @@
+import { Injectable } from '@angular/core';
+import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+import { environment } from 'src/environments/environment';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CashDepositDetailService extends BaseService {
+  constructor() {
+    super('CashDepositDetail', environment.baseUrl);
+  }
+
+
+}

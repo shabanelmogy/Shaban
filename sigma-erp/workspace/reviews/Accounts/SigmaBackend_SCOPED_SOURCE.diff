@@ -1,0 +1,1595 @@
+diff --git a/SiGma.Business/Services/AccountServices/AccountReportsService.cs b/SiGma.Business/Services/AccountServices/AccountReportsService.cs
+index ceabaf48..a8f903df 100644
+--- a/SiGma.Business/Services/AccountServices/AccountReportsService.cs
++++ b/SiGma.Business/Services/AccountServices/AccountReportsService.cs
+@@ -2375,6 +2375,8 @@ public class AccountReportsService : IAccountReportsService
+         JournalsRequestDto request,
+         CancellationToken cancellationToken = default)
+     {
++        var pageNo = Math.Max(1, request.PageNumber);
++        var pageSize = Math.Clamp(request.PageSize, 1, 100);
+         // ── 1. Parse filters ──────────────────────────────────────────────
+         var filters          = request.Filters ?? [];
+         var voucherNo        = FilterHelper.GetString(filters, "voucherNo");
+@@ -2390,8 +2392,9 @@ public class AccountReportsService : IAccountReportsService
+                 IsSuccess = false,
+                 Message   = "fromDate cannot be later than toDate.",
+                 Entities  = [],
+-                PageNo    = request.PageNumber,
+-                PageSize  = request.PageSize,
++                PageNo    = pageNo,
++                PageSize  = pageSize,
++                TotalCount = 0,
+                 TotalPages = 0
+             };
+ 
+@@ -2458,19 +2461,20 @@ public class AccountReportsService : IAccountReportsService
+ 
+         // ── 6. Paginate ───────────────────────────────────────────────────
+         var totalCount = allLines.Count;
+-        var totalPages = (int)Math.Ceiling(totalCount / (double)request.PageSize);
++        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+ 
+         var paged = allLines
+-            .Skip((request.PageNumber - 1) * request.PageSize)
+-            .Take(request.PageSize)
++            .Skip((int)Math.Min((long)(pageNo - 1) * pageSize, totalCount))
++            .Take(pageSize)
+             .ToList();
+ 
+         return new Results<JournalsLineVm>
+         {
+             IsSuccess  = true,
+             Entities   = paged,
+-            PageNo     = request.PageNumber,
+-            PageSize   = request.PageSize,
++            PageNo     = pageNo,
++            PageSize   = pageSize,
++            TotalCount = totalCount,
+             TotalPages = totalPages
+         };
+     }
+@@ -2508,11 +2512,18 @@ public class AccountReportsService : IAccountReportsService
+         var end     = new DateTime(fiscalYear.EndDate.Year,   fiscalYear.EndDate.Month,   1);
+         while (current <= end)
+         {
+-            months.Add((current.Year, current.Month, current.ToString("MMM-yy").ToUpper()));
++            months.Add((current.Year, current.Month, current.ToString("MMM-yy", System.Globalization.CultureInfo.InvariantCulture).ToUpperInvariant()));
+             current = current.AddMonths(1);
+         }
+         var monthLabels = months.Select(m => m.Label).ToList();
+ 
++        var budgetPeriods = months.Select(m => new BudgetMonthVm
++        {
++            Label = m.Label,
++            Year = m.Year,
++            Month = m.Month
++        }).ToList();
++
+         // ── 4. Load leaf accounts filtered by category ────────────────────
+ 
+         var accountQuery = _unitOfWork.Repository
+@@ -2539,7 +2550,7 @@ public class AccountReportsService : IAccountReportsService
+             .ToList();
+ 
+         if (accounts.Count == 0)
+-            return AccountReportHelper.Ok(new BudgetVm { Months = monthLabels, Rows = [] });
++            return AccountReportHelper.Ok(new BudgetVm { Months = monthLabels, Periods = budgetPeriods, Rows = [] });
+ 
+         var accountIds = accounts.Select(a => a.Id).ToList();
+ 
+@@ -2573,7 +2584,7 @@ public class AccountReportsService : IAccountReportsService
+             };
+         }).ToList();
+ 
+-        return AccountReportHelper.Ok(new BudgetVm { Months = monthLabels, Rows = rows });
++        return AccountReportHelper.Ok(new BudgetVm { Months = monthLabels, Periods = budgetPeriods, Rows = rows });
+     }
+ 
+     public async Task<Result> SaveBudgetAsync(
+@@ -2583,13 +2594,45 @@ public class AccountReportsService : IAccountReportsService
+         if (request.Entries is null || request.Entries.Count == 0)
+             return new Result { IsSuccess = false, Message = "No entries provided." };
+ 
+-        // Validate fiscal year
+-        if (!await _unitOfWork.Repository.ExistsAsync<FiscalYear>(
+-                x => x.Id == request.FiscalYearId, cancellationToken: cancellationToken))
++        var fiscalYear = await _unitOfWork.Repository.Query<FiscalYear>(
++                x => x.Id == request.FiscalYearId && x.IsDeleted != true)
++            .AsNoTracking()
++            .FirstOrDefaultAsync(cancellationToken);
++        if (fiscalYear is null)
+             return new Result { IsSuccess = false, Message = "Fiscal year not found." };
+ 
++        // Validate the entire changed-cell set before tracking any mutation.
++        var keys = new HashSet<(int AccountId, int Year, int Month)>();
++        var firstMonth = new DateTime(fiscalYear.StartDate.Year, fiscalYear.StartDate.Month, 1);
++        var lastMonth = new DateTime(fiscalYear.EndDate.Year, fiscalYear.EndDate.Month, 1);
++        foreach (var entry in request.Entries)
++        {
++            if (entry is null || entry.AccountId <= 0 || entry.Year is < 1 or > 9999 || entry.Month is < 1 or > 12)
++                return new Result { IsSuccess = false, Message = "Invalid budget account or calendar month." };
++            var month = new DateTime(entry.Year, entry.Month, 1);
++            if (month < firstMonth || month > lastMonth)
++                return new Result { IsSuccess = false, Message = "Budget month must belong to the fiscal year." };
++            if (!keys.Add((entry.AccountId, entry.Year, entry.Month)))
++                return new Result { IsSuccess = false, Message = "Duplicate budget account and month." };
++        }
++
+         // Load all existing budget records for this fiscal year in one query
+         var accountIds = request.Entries.Select(e => e.AccountId).Distinct().ToList();
++        var validAccounts = await _unitOfWork.Repository.Query<Account>(
++                a => accountIds.Contains(a.Id) && a.IsDeleted != true)
++            .AsNoTracking()
++            .Select(a => new { a.Id, a.AccountLevel })
++            .ToListAsync(cancellationToken);
++        var parentAccountIds = await _unitOfWork.Repository.Query<Account>(
++                a => a.IsDeleted != true && a.ParentId.HasValue && accountIds.Contains(a.ParentId.Value))
++            .AsNoTracking()
++            .Select(a => a.ParentId!.Value)
++            .Distinct()
++            .ToListAsync(cancellationToken);
++        // Match GetBudgetAsync's existing leaf rule, including childless level 1-4 accounts.
++        if (validAccounts.Count != accountIds.Count ||
++            validAccounts.Any(a => a.AccountLevel != 5 && parentAccountIds.Contains(a.Id)))
++            return new Result { IsSuccess = false, Message = "Budget accounts must be active leaf accounts." };
+ 
+         var existing = await _unitOfWork.Repository
+             .Query<AccountBudget>(b =>
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/AccountReportRequestDtos.cs b/SiGma.ViewModels/ViewModels/AccountReports/AccountReportRequestDtos.cs
+deleted file mode 100644
+index 1a3023a1..00000000
+--- a/SiGma.ViewModels/ViewModels/AccountReports/AccountReportRequestDtos.cs
++++ /dev/null
+@@ -1,15 +0,0 @@
+-using SiGma.Helpers.Request;
+-
+-namespace SiGma.ViewModels.ViewModels.AccountReports;
+-
+-/// <summary>
+-/// Request DTO for Balance Sheet report.
+-/// Filters: asOfDate, includeZeros
+-/// </summary>
+-public class BalanceSheetRequestDto : SpecificationRequestDto { }
+-
+-/// <summary>
+-/// Request DTO for Cash Flow (Indirect Method) report.
+-/// Filters: asOfDate
+-/// </summary>
+-public class CashFlowRequestDto : SpecificationRequestDto { }
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseVm.cs
+index 52131a2a..e4987e04 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseVm.cs
+@@ -2,22 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Balance Sheet (Monthwise) report.
+-///
+-/// Available filters:
+-/// - asOfMonth: The last month to show (format: yyyy-MM, e.g. "2026-04") — required
+-/// - periodMonths: Number of months to show going back from asOfMonth (default: 12, max: 24)
+-/// - branchId: Filter by branch (integer)
+-/// - costCenterGroupId: Filter by division / cost center group (integer)
+-/// - hideZeroActivity: Hide accounts with zero balance across all months (true/false)
+-/// </summary>
+-public class BalanceSheetMonthwiseRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class BalanceSheetMonthwiseVm
+ {
+     /// <summary>Ordered list of month labels shown as columns (e.g. ["MAY-25", "JUN-25", ...])</summary>
+@@ -25,21 +9,3 @@ public class BalanceSheetMonthwiseVm
+ 
+     public List<BalanceSheetMonthwiseLineVm> Lines { get; set; } = [];
+ }
+-
+-public class BalanceSheetMonthwiseLineVm
+-{
+-    public int     AccountId     { get; set; }
+-    public string? AccountCode   { get; set; }
+-    public string? AccountName   { get; set; }
+-    public int?    AccountLevel  { get; set; }
+-    public int?    ParentId      { get; set; }
+-    public bool    AllowChildren { get; set; }
+-
+-    /// <summary>
+-    /// Balance per month, keyed by the same label as <see cref="BalanceSheetMonthwiseVm.Months"/>.
+-    /// Value = cumulative balance as of the last day of that month.
+-    /// </summary>
+-    public Dictionary<string, decimal> MonthlyBalances { get; set; } = [];
+-
+-    public List<BalanceSheetMonthwiseLineVm> Children { get; set; } = [];
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetVm.cs
+index 584ab670..99e79625 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetVm.cs
+@@ -10,14 +10,3 @@ public class BalanceSheetVm
+     public List<BalanceSheetLineVm> Liabilities { get; set; } = new();
+     public List<BalanceSheetLineVm> Equity { get; set; } = new();
+ }
+-
+-public class BalanceSheetLineVm
+-{
+-    public int AccountId { get; set; }
+-    public string? Code { get; set; }
+-    public string? Name { get; set; }
+-    public int? Level { get; set; }
+-    public int? ParentId { get; set; }
+-    public decimal Amount { get; set; }
+-    public List<BalanceSheetLineVm> Children { get; set; } = new();
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceVm.cs
+index dd80ac9d..7df6e2b3 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceVm.cs
+@@ -2,36 +2,7 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for the Budget Variance report.
+-///
+-/// Available filters:
+-/// - fiscalYearId:  Fiscal year (integer, required)
+-/// - accountType:   AccountCategory enum integer value
+-///                  (1=Asset, 2=Liability, 3=Equity, 4=Revenue, 5=Expense, default: 1=Asset)
+-/// </summary>
+-public class BudgetVarianceRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class BudgetVarianceVm
+ {
+     public List<BudgetVarianceLineVm> Lines { get; set; } = [];
+ }
+-
+-public class BudgetVarianceLineVm
+-{
+-    public int     AccountId   { get; set; }
+-    public string? AccountCode { get; set; }
+-    public string? AccountName { get; set; }
+-
+-    public string  Month       { get; set; } = default!;  // e.g. "Dec-24"
+-    public int     MonthNumber { get; set; }               // 1–12
+-    public int     Year        { get; set; }
+-
+-    public decimal Actual      { get; set; }               // Net activity from journal entries
+-    public decimal Budget      { get; set; }               // From AccountBudget
+-    public decimal Variance    => Budget - Actual;         // Positive = under budget
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BudgetVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BudgetVm.cs
+index 96939280..5c51583b 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/BudgetVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BudgetVm.cs
+@@ -1,61 +1,8 @@
+-using SiGma.Helpers.Enum.Accounts;
+-using SiGma.Helpers.Request;
+-
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for loading the Budget screen.
+-///
+-/// Available filters:
+-/// - fiscalYearId:  Fiscal year to load budget for (integer, required)
+-/// - accountType:   Filter by account category using AccountCategory enum value
+-///                  (integer: Asset=1, Liability=2, Equity=3, Revenue=4, Expense=5)
+-///                  Defaults to Asset=1 when not provided.
+-/// </summary>
+-public class BudgetRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Save request — sent when user saves budget values
+-// ─────────────────────────────────────────────────────────────
+-
+-public class SaveBudgetRequestDto
+-{
+-    /// <summary>Fiscal year the budget belongs to.</summary>
+-    public int FiscalYearId { get; set; }
+-
+-    /// <summary>List of budget entries to upsert.</summary>
+-    public List<BudgetEntryDto> Entries { get; set; } = [];
+-}
+-
+-public class BudgetEntryDto
+-{
+-    public int     AccountId { get; set; }
+-    public int     Year      { get; set; }
+-    public int     Month     { get; set; }
+-    public decimal Amount    { get; set; }
+-}
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class BudgetVm
+ {
+-    /// <summary>Ordered month labels matching the fiscal year (e.g. ["DEC-24","JAN-25",...]).</summary>
+     public List<string> Months { get; set; } = [];
+-
++    public List<BudgetMonthVm> Periods { get; set; } = [];
+     public List<BudgetAccountRowVm> Rows { get; set; } = [];
+ }
+-
+-public class BudgetAccountRowVm
+-{
+-    public int     AccountId   { get; set; }
+-    public string? AccountCode { get; set; }
+-    public string? AccountName { get; set; }
+-
+-    /// <summary>Total budget across all months for this account.</summary>
+-    public decimal Total => MonthlyAmounts.Values.Sum();
+-
+-    /// <summary>Key = month label (e.g. "DEC-24"), Value = budget amount.</summary>
+-    public Dictionary<string, decimal> MonthlyAmounts { get; set; } = [];
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/CashFlowVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/CashFlowVm.cs
+index 6f4acdf1..c17239d0 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/CashFlowVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/CashFlowVm.cs
+@@ -12,11 +12,3 @@ public class CashFlowVm
+     public decimal NetCashFromFinancing { get; set; }
+     public decimal NetChangeInCash { get; set; }
+ }
+-
+-public class CashFlowLineVm
+-{
+-    public int AccountId { get; set; }
+-    public string Code { get; set; } = null!;
+-    public string Name { get; set; } = null!;
+-    public decimal Amount { get; set; }
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonVm.cs
+index b9332234..46500a49 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonVm.cs
+@@ -2,22 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Income Comparison Report.
+-///
+-/// Available filters:
+-/// - fromDate1 / toDate1: First date range (format: yyyy-MM-dd)
+-/// - fromDate2 / toDate2: Second date range (format: yyyy-MM-dd)
+-/// - branchId: Filter by branch (integer)
+-/// - costCenterGroupId: Filter by division / cost center group (integer)
+-/// - hideZeroActivity: Hide accounts with zero balance in both periods (true/false, default: false)
+-/// </summary>
+-public class IncomeComparisonRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class IncomeComparisonVm
+ {
+     public decimal TotalRevenue1  { get; set; }
+@@ -32,19 +16,3 @@ public class IncomeComparisonVm
+ 
+     public List<IncomeComparisonLineVm> Lines { get; set; } = [];
+ }
+-
+-public class IncomeComparisonLineVm
+-{
+-    public int     AccountId     { get; set; }
+-    public string? Code          { get; set; }
+-    public string? Name          { get; set; }
+-    public int?    Level         { get; set; }
+-    public int?    ParentId      { get; set; }
+-    public bool    AllowChildren { get; set; }
+-
+-    public decimal Balance1  { get; set; }
+-    public decimal Balance2  { get; set; }
+-    public decimal Variance  => Balance1 - Balance2;
+-
+-    public List<IncomeComparisonLineVm> Children { get; set; } = [];
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2Vm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2Vm.cs
+index f5338bf8..4db41fdf 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2Vm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2Vm.cs
+@@ -2,21 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Income Statement 2 (formatted P&amp;L with subtotals).
+-///
+-/// Available filters:
+-/// - fromDate: Start date (format: yyyy-MM-dd)
+-/// - toDate: End date (format: yyyy-MM-dd)
+-/// - branchId: Filter by branch (integer)
+-/// - hideZeroActivity: Hide accounts with zero balance (true/false, default: false)
+-/// </summary>
+-public class IncomeStatement2RequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class IncomeStatement2Vm
+ {
+     // Header summary
+@@ -32,30 +17,3 @@ public class IncomeStatement2Vm
+ 
+     public List<IncomeStatement2LineVm> Lines { get; set; } = [];
+ }
+-
+-/// <summary>
+-/// A subtotal row with Balance, Budget, and Variance columns.
+-/// </summary>
+-public class IncomeStatement2SubtotalVm
+-{
+-    public decimal Balance  { get; set; }
+-    public decimal Budget   { get; set; }
+-    public decimal Variance => Balance - Budget;
+-}
+-
+-public class IncomeStatement2LineVm
+-{
+-    public int     AccountId     { get; set; }
+-    public string? Code          { get; set; }
+-    public string? Name          { get; set; }
+-    public int?    Level         { get; set; }
+-    public int?    ParentId      { get; set; }
+-    public bool    AllowChildren { get; set; }
+-    public string? SubGroup      { get; set; }   // StatementSubGroup name for grouping
+-
+-    public decimal Balance  { get; set; }
+-    public decimal Budget   { get; set; }
+-    public decimal Variance => Balance - Budget;
+-
+-    public List<IncomeStatement2LineVm> Children { get; set; } = [];
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2Vm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2Vm.cs
+index c476b2ff..b7a30982 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2Vm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2Vm.cs
+@@ -2,23 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Income Statement FY 2 (flat monthwise list — same columns as FY but no tree nesting).
+-///
+-/// Available filters:
+-/// - fromMonth: Start month (format: yyyy-MM, e.g. "2024-12") — required (or use fromDate)
+-/// - toMonth: End month (format: yyyy-MM, e.g. "2025-12") — required (or use toDate)
+-/// - fromDate: Alternative to fromMonth — full date (format: yyyy-MM-dd or dd/MM/yyyy)
+-/// - toDate: Alternative to toMonth — full date (format: yyyy-MM-dd or dd/MM/yyyy)
+-/// - branchId: Filter by branch (integer)
+-/// - hideZeroActivity: Hide accounts with zero across all months (true/false, default: false)
+-/// </summary>
+-public class IncomeStatementFy2RequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response — flat list (no Children nesting)
+-// ─────────────────────────────────────────────────────────────
+-
+ public class IncomeStatementFy2Vm
+ {
+     /// <summary>Ordered month labels (e.g. ["DEC-24","JAN-25",...,"DEC-25"]).</summary>
+@@ -31,19 +14,3 @@ public class IncomeStatementFy2Vm
+     /// <summary>Flat ordered list of all accounts — no Children nesting.</summary>
+     public List<IncomeStatementFy2LineVm> Lines { get; set; } = [];
+ }
+-
+-public class IncomeStatementFy2LineVm
+-{
+-    public int     AccountId     { get; set; }
+-    public string? Code          { get; set; }
+-    public string? Name          { get; set; }
+-    public int?    Level         { get; set; }
+-    public int?    ParentId      { get; set; }
+-    public bool    AllowChildren { get; set; }
+-
+-    /// <summary>Balance per month keyed by month label.</summary>
+-    public Dictionary<string, decimal> MonthlyBalances { get; set; } = [];
+-
+-    /// <summary>Sum of all monthly balances.</summary>
+-    public decimal Total => MonthlyBalances.Values.Sum();
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyVm.cs
+index 8e23972e..b4c8348a 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyVm.cs
+@@ -2,22 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Income Statement FY (Fiscal Year Monthwise) report.
+-///
+-/// Available filters:
+-/// - fromMonth: Start month of the range (format: yyyy-MM, e.g. "2024-12") — required
+-/// - toMonth: End month of the range (format: yyyy-MM, e.g. "2025-12") — required
+-/// - branchId: Filter by branch (integer)
+-/// - costCenterGroupId: Filter by cost center group / division (integer)
+-/// - hideZeroActivity: Hide accounts with zero across all months (true/false, default: false)
+-/// </summary>
+-public class IncomeStatementFyRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class IncomeStatementFyVm
+ {
+     /// <summary>Ordered month labels used as column headers (e.g. ["DEC-24","JAN-25",...,"DEC-25"]).</summary>
+@@ -37,24 +21,3 @@ public class IncomeStatementFyVm
+ 
+     public List<IncomeStatementFyLineVm> Lines { get; set; } = [];
+ }
+-
+-public class IncomeStatementFyLineVm
+-{
+-    public int     AccountId     { get; set; }
+-    public string? Code          { get; set; }
+-    public string? Name          { get; set; }
+-    public int?    Level         { get; set; }
+-    public int?    ParentId      { get; set; }
+-    public bool    AllowChildren { get; set; }
+-
+-    /// <summary>
+-    /// Balance per month keyed by the same labels as <see cref="IncomeStatementFyVm.Months"/>.
+-    /// Revenue accounts: Credit - Debit. Expense accounts: Debit - Credit.
+-    /// </summary>
+-    public Dictionary<string, decimal> MonthlyBalances { get; set; } = [];
+-
+-    /// <summary>Sum of all monthly balances.</summary>
+-    public decimal Total => MonthlyBalances.Values.Sum();
+-
+-    public List<IncomeStatementFyLineVm> Children { get; set; } = [];
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementVm.cs
+index 1bce6a52..a2d3eb4e 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementVm.cs
+@@ -2,24 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Income Statement report.
+-///
+-/// Available filters:
+-/// - fromDate: Start date (format: yyyy-MM-dd)
+-/// - toDate: End date (format: yyyy-MM-dd)
+-/// - branchId: Filter by branch (integer)
+-/// - costCenterGroupId: Filter by division / cost center group (integer)
+-/// - accountLevel: Show accounts up to this level, 1–5 (integer)
+-/// - hideZeroActivity: Hide accounts with zero balance (true/false, default: false)
+-/// - hideBudget: Hide budget and variance columns (true/false, default: false)
+-/// </summary>
+-public class IncomeStatementRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class IncomeStatementVm
+ {
+     public decimal TotalRevenue  { get; set; }
+@@ -28,19 +10,3 @@ public class IncomeStatementVm
+ 
+     public List<IncomeStatementLineVm> Lines { get; set; } = [];
+ }
+-
+-public class IncomeStatementLineVm
+-{
+-    public int     AccountId    { get; set; }
+-    public string? Code         { get; set; }
+-    public string? Name         { get; set; }
+-    public int?    Level        { get; set; }
+-    public int?    ParentId     { get; set; }
+-    public bool    AllowChildren { get; set; }
+-
+-    public decimal Balance      { get; set; }   // Actual period activity
+-    public decimal Budget       { get; set; }   // Budget (0 until budget module exists)
+-    public decimal Variance     => Balance - Budget;
+-
+-    public List<IncomeStatementLineVm> Children { get; set; } = [];
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtd2Vm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtd2Vm.cs
+index d8f35691..6bfa22fa 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtd2Vm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtd2Vm.cs
+@@ -2,21 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Income Statement YTD 2 (YTD with subtotal footer rows).
+-///
+-/// Available filters:
+-/// - month: The month to report on (format: yyyy-MM, e.g. "2026-04") — required
+-/// - branchId: Filter by branch (integer)
+-/// - hideZeroActivity: Hide accounts with zero in all three columns (true/false, default: false)
+-/// - summaryReport: Show only parent/summary accounts (true/false, default: false)
+-/// </summary>
+-public class IncomeStatementYtd2RequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class IncomeStatementYtd2Vm
+ {
+     // Header P/L totals
+@@ -32,13 +17,3 @@ public class IncomeStatementYtd2Vm
+ 
+     public List<IncomeStatementYtdLineVm> Lines { get; set; } = [];
+ }
+-
+-/// <summary>
+-/// A subtotal footer row with the same three columns as the account lines.
+-/// </summary>
+-public class IncomeStatementYtdSubtotalVm
+-{
+-    public decimal CurrentMonth      { get; set; }
+-    public decimal CurrentYtd        { get; set; }
+-    public decimal PreviousYearMonth { get; set; }
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdVm.cs
+index e9ad1157..66060703 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdVm.cs
+@@ -2,22 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Income Statement YTD report.
+-///
+-/// Available filters:
+-/// - month: The month to report on (format: yyyy-MM, e.g. "2026-04") — required
+-/// - branchId: Filter by branch (integer)
+-/// - costCenterGroupId: Filter by cost center group / division (integer)
+-/// - hideZeroActivity: Hide accounts with zero balance across all columns (true/false, default: false)
+-/// - summaryReport: Show only parent/summary accounts, not leaf detail (true/false, default: false)
+-/// </summary>
+-public class IncomeStatementYtdRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class IncomeStatementYtdVm
+ {
+     /// <summary>Profit/Loss for the current month only.</summary>
+@@ -31,24 +15,3 @@ public class IncomeStatementYtdVm
+ 
+     public List<IncomeStatementYtdLineVm> Lines { get; set; } = [];
+ }
+-
+-public class IncomeStatementYtdLineVm
+-{
+-    public int     AccountId     { get; set; }
+-    public string? Code          { get; set; }
+-    public string? Name          { get; set; }
+-    public int?    Level         { get; set; }
+-    public int?    ParentId      { get; set; }
+-    public bool    AllowChildren { get; set; }
+-
+-    /// <summary>Activity for the selected month only.</summary>
+-    public decimal CurrentMonth      { get; set; }
+-
+-    /// <summary>Activity from Jan 1 to end of selected month (current year).</summary>
+-    public decimal CurrentYtd        { get; set; }
+-
+-    /// <summary>Activity for the same month range in the previous year.</summary>
+-    public decimal PreviousYearMonth { get; set; }
+-
+-    public List<IncomeStatementYtdLineVm> Children { get; set; } = [];
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/JournalsVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/JournalsVm.cs
+index 30ca54b5..9874d324 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/JournalsVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/JournalsVm.cs
+@@ -1,42 +1,8 @@
+-using SiGma.Helpers.Request;
+-
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for the Journals report.
+-///
+-/// Available filters:
+-/// - voucherNo:       Filter by voucher number (string, partial match)
+-/// - type:            Filter by voucher type (string: Receipt, Payment, JournalVoucher, CreditNote, DebitNote, SalesInvoice)
+-/// - chassisOrPlateNo: Filter by chassis no or plate no (string, partial match on Description or SubLookUp)
+-/// - fromDate:        Start of date range (format: yyyy-MM-dd)
+-/// - toDate:          End of date range (format: yyyy-MM-dd)
+-/// - accountId:       Filter by account (integer)
+-/// </summary>
+-public class JournalsRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class JournalsVm
+ {
+-    public decimal TotalDebit  { get; set; }
++    public decimal TotalDebit { get; set; }
+     public decimal TotalCredit { get; set; }
+-
+     public List<JournalsLineVm> Lines { get; set; } = [];
+ }
+-
+-public class JournalsLineVm
+-{
+-    public DateTime Date        { get; set; }
+-    public string?  AccountCode { get; set; }
+-    public string?  AccountName { get; set; }
+-    public string?  Contact     { get; set; }   // Partner name
+-    public string?  Type        { get; set; }   // VoucherType display name
+-    public string?  VoucherNo   { get; set; }   // JournalVoucher.No
+-    public string?  PlateNo     { get; set; }   // from SubLookUp or Description
+-    public string?  Description { get; set; }
+-    public decimal  Debit       { get; set; }
+-    public decimal  Credit      { get; set; }
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/LedgerVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/LedgerVm.cs
+index b36b09de..93626a05 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/LedgerVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/LedgerVm.cs
+@@ -2,24 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for the Ledger report.
+-///
+-/// Available filters:
+-/// - accountId:            Account to show ledger for (integer, required)
+-/// - fromDate:             Start of date range (format: yyyy-MM-dd)
+-/// - toDate:               End of date range (format: yyyy-MM-dd)
+-/// - branchId:             Filter by branch (integer)
+-/// - costCenterGroupId:    Filter by cost center group / division (integer)
+-/// - chassisOrPlateNo:     Filter by vehicle chassis no or plate no (string)
+-/// - showOriginalCurrency: Show amounts in the voucher's original currency instead of base currency (true/false, default: false)
+-/// </summary>
+-public class LedgerRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class LedgerVm
+ {
+     public int     AccountId      { get; set; }
+@@ -37,18 +19,3 @@ public class LedgerVm
+ 
+     public List<LedgerLineVm> Lines { get; set; } = [];
+ }
+-
+-public class LedgerLineVm
+-{
+-    public DateTime Date         { get; set; }
+-    public string?  Type         { get; set; }   // VoucherType display name
+-    public string?  VoucherNo    { get; set; }   // JournalVoucher.No
+-    public string?  Contact      { get; set; }   // Partner name
+-    public string?  Vehicle      { get; set; }   // PlateNo or ChassisNo
+-    public string?  Description  { get; set; }   // JournalVoucherDetail.Description
+-    public decimal  Debit        { get; set; }
+-    public decimal  Credit       { get; set; }
+-    public decimal  Balance      { get; set; }   // Running balance
+-    /// <summary>Currency code for this line when showOriginalCurrency = true. Null when base currency.</summary>
+-    public string?  CurrencyCode { get; set; }
+-}
+\ No newline at end of file
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceVm.cs
+index e4df875c..70a9824a 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceVm.cs
+@@ -2,25 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Trial Balance report.
+-///
+-/// Available filters:
+-/// - fromDate: Start of date range (format: yyyy-MM-dd)
+-/// - toDate: End of date range (format: yyyy-MM-dd)
+-/// - branchId: Filter by branch ID (integer)
+-/// - costCenterGroupId: Filter by cost center group / division (integer)
+-/// - accountLevel: Show accounts up to this level, 1–5 (integer)
+-/// - hideZeroActivity: Hide accounts with no debit/credit activity in the period (true/false)
+-/// - hideZeroEndingBalance: Hide accounts with zero ending balance (true/false)
+-/// - leafOnly: Show only leaf accounts (AllowChildren = false) (true/false)
+-/// </summary>
+-public class TrialBalanceRequestDto : SpecificationRequestDto { }
+-
+-// ─────────────────────────────────────────────────────────────
+-// Response
+-// ─────────────────────────────────────────────────────────────
+-
+ public class TrialBalanceVm
+ {
+     public decimal TotalDebit  { get; set; }
+@@ -28,21 +9,3 @@ public class TrialBalanceVm
+ 
+     public List<TrialBalanceLineVm> Lines { get; set; } = [];
+ }
+-
+-public class TrialBalanceLineVm
+-{
+-    public int     AccountId        { get; set; }
+-    public string? AccountCode      { get; set; }
+-    public string? AccountName      { get; set; }
+-    public int?    AccountLevel     { get; set; }
+-    public int?    ParentId         { get; set; }
+-    public bool    AllowChildren    { get; set; }
+-
+-    public decimal BeginningBalance { get; set; }
+-    public decimal Debit            { get; set; }
+-    public decimal Credit           { get; set; }
+-    public decimal NetActivity      => Debit - Credit;
+-    public decimal EndingBalance    => BeginningBalance + NetActivity;
+-
+-    public List<TrialBalanceLineVm> Children { get; set; } = [];
+-}
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/VehicleIncomeStatementVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/VehicleIncomeStatementVm.cs
+index 6742687c..64c0ecd8 100644
+--- a/SiGma.ViewModels/ViewModels/AccountReports/VehicleIncomeStatementVm.cs
++++ b/SiGma.ViewModels/ViewModels/AccountReports/VehicleIncomeStatementVm.cs
+@@ -2,20 +2,6 @@ using SiGma.Helpers.Request;
+ 
+ namespace SiGma.ViewModels.ViewModels.AccountReports;
+ 
+-/// <summary>
+-/// Request DTO for Vehicle Income Statement report.
+-///
+-/// Available filters:
+-/// - fromDate: Start date (format: yyyy-MM-dd)
+-/// - toDate: End date (format: yyyy-MM-dd)
+-/// - branchId: Filter by branch (integer)
+-/// - costCenterGroupId: Filter by division / cost center group (integer)
+-/// - ownershipType: Filter by vehicle ownership (0=Own, 1=External, 2=BuyBack)
+-/// - accountLevel: Show accounts up to this level, 1–5 (integer)
+-/// - hideZeroActivity: Hide accounts with zero balance (true/false, default: false)
+-/// </summary>
+-public class VehicleIncomeStatementRequestDto : SpecificationRequestDto { }
+-
+ public class VehicleIncomeStatementVm
+ {
+     public decimal TotalRevenue  { get; set; }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetLineVm.cs
+@@ -0,0 +1,12 @@
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class BalanceSheetLineVm
++{
++    public int AccountId { get; set; }
++    public string? Code { get; set; }
++    public string? Name { get; set; }
++    public int? Level { get; set; }
++    public int? ParentId { get; set; }
++    public decimal Amount { get; set; }
++    public List<BalanceSheetLineVm> Children { get; set; } = new();
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseLineVm.cs
+@@ -0,0 +1,21 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class BalanceSheetMonthwiseLineVm
++{
++    public int     AccountId     { get; set; }
++    public string? AccountCode   { get; set; }
++    public string? AccountName   { get; set; }
++    public int?    AccountLevel  { get; set; }
++    public int?    ParentId      { get; set; }
++    public bool    AllowChildren { get; set; }
++
++    /// <summary>
++    /// Balance per month, keyed by the same label as <see cref="BalanceSheetMonthwiseVm.Months"/>.
++    /// Value = cumulative balance as of the last day of that month.
++    /// </summary>
++    public Dictionary<string, decimal> MonthlyBalances { get; set; } = [];
++
++    public List<BalanceSheetMonthwiseLineVm> Children { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseRequestDto.cs
+@@ -0,0 +1,15 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Balance Sheet (Monthwise) report.
++///
++/// Available filters:
++/// - asOfMonth: The last month to show (format: yyyy-MM, e.g. "2026-04") — required
++/// - periodMonths: Number of months to show going back from asOfMonth (default: 12, max: 24)
++/// - branchId: Filter by branch (integer)
++/// - costCenterGroupId: Filter by division / cost center group (integer)
++/// - hideZeroActivity: Hide accounts with zero balance across all months (true/false)
++/// </summary>
++public class BalanceSheetMonthwiseRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetRequestDto.cs
+@@ -0,0 +1,9 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Balance Sheet report.
++/// Filters: asOfDate, includeZeros
++/// </summary>
++public class BalanceSheetRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BudgetAccountRowVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BudgetAccountRowVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BudgetAccountRowVm.cs
+@@ -0,0 +1,10 @@
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class BudgetAccountRowVm
++{
++    public int AccountId { get; set; }
++    public string? AccountCode { get; set; }
++    public string? AccountName { get; set; }
++    public decimal Total => MonthlyAmounts.Values.Sum();
++    public Dictionary<string, decimal> MonthlyAmounts { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BudgetEntryDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/BudgetEntryDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BudgetEntryDto.cs
+@@ -0,0 +1,9 @@
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class BudgetEntryDto
++{
++    public int AccountId { get; set; }
++    public int Year { get; set; }
++    public int Month { get; set; }
++    public decimal Amount { get; set; }
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BudgetMonthVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BudgetMonthVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BudgetMonthVm.cs
+@@ -0,0 +1,8 @@
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class BudgetMonthVm
++{
++    public string Label { get; set; } = string.Empty;
++    public int Year { get; set; }
++    public int Month { get; set; }
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BudgetRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/BudgetRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BudgetRequestDto.cs
+@@ -0,0 +1,6 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>Complete budget matrix. Filters: fiscalYearId (required), accountType (Asset=1 default).</summary>
++public class BudgetRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceLineVm.cs
+@@ -0,0 +1,18 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class BudgetVarianceLineVm
++{
++    public int     AccountId   { get; set; }
++    public string? AccountCode { get; set; }
++    public string? AccountName { get; set; }
++
++    public string  Month       { get; set; } = default!;  // e.g. "Dec-24"
++    public int     MonthNumber { get; set; }               // 1–12
++    public int     Year        { get; set; }
++
++    public decimal Actual      { get; set; }               // Net activity from journal entries
++    public decimal Budget      { get; set; }               // From AccountBudget
++    public decimal Variance    => Budget - Actual;         // Positive = under budget
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceRequestDto.cs
+@@ -0,0 +1,13 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for the Budget Variance report.
++///
++/// Available filters:
++/// - fiscalYearId:  Fiscal year (integer, required)
++/// - accountType:   AccountCategory enum integer value
++///                  (1=Asset, 2=Liability, 3=Equity, 4=Revenue, 5=Expense, default: 1=Asset)
++/// </summary>
++public class BudgetVarianceRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/CashFlowLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/CashFlowLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/CashFlowLineVm.cs
+@@ -0,0 +1,9 @@
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class CashFlowLineVm
++{
++    public int AccountId { get; set; }
++    public string Code { get; set; } = null!;
++    public string Name { get; set; } = null!;
++    public decimal Amount { get; set; }
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/CashFlowRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/CashFlowRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/CashFlowRequestDto.cs
+@@ -0,0 +1,9 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Cash Flow (Indirect Method) report.
++/// Filters: asOfDate
++/// </summary>
++public class CashFlowRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonLineVm.cs
+@@ -0,0 +1,19 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class IncomeComparisonLineVm
++{
++    public int     AccountId     { get; set; }
++    public string? Code          { get; set; }
++    public string? Name          { get; set; }
++    public int?    Level         { get; set; }
++    public int?    ParentId      { get; set; }
++    public bool    AllowChildren { get; set; }
++
++    public decimal Balance1  { get; set; }
++    public decimal Balance2  { get; set; }
++    public decimal Variance  => Balance1 - Balance2;
++
++    public List<IncomeComparisonLineVm> Children { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonRequestDto.cs
+@@ -0,0 +1,15 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Income Comparison Report.
++///
++/// Available filters:
++/// - fromDate1 / toDate1: First date range (format: yyyy-MM-dd)
++/// - fromDate2 / toDate2: Second date range (format: yyyy-MM-dd)
++/// - branchId: Filter by branch (integer)
++/// - costCenterGroupId: Filter by division / cost center group (integer)
++/// - hideZeroActivity: Hide accounts with zero balance in both periods (true/false, default: false)
++/// </summary>
++public class IncomeComparisonRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2LineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2LineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2LineVm.cs
+@@ -0,0 +1,20 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class IncomeStatement2LineVm
++{
++    public int     AccountId     { get; set; }
++    public string? Code          { get; set; }
++    public string? Name          { get; set; }
++    public int?    Level         { get; set; }
++    public int?    ParentId      { get; set; }
++    public bool    AllowChildren { get; set; }
++    public string? SubGroup      { get; set; }   // StatementSubGroup name for grouping
++
++    public decimal Balance  { get; set; }
++    public decimal Budget   { get; set; }
++    public decimal Variance => Balance - Budget;
++
++    public List<IncomeStatement2LineVm> Children { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2RequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2RequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2RequestDto.cs
+@@ -0,0 +1,14 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Income Statement 2 (formatted P&amp;L with subtotals).
++///
++/// Available filters:
++/// - fromDate: Start date (format: yyyy-MM-dd)
++/// - toDate: End date (format: yyyy-MM-dd)
++/// - branchId: Filter by branch (integer)
++/// - hideZeroActivity: Hide accounts with zero balance (true/false, default: false)
++/// </summary>
++public class IncomeStatement2RequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2SubtotalVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2SubtotalVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2SubtotalVm.cs
+@@ -0,0 +1,13 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// A subtotal row with Balance, Budget, and Variance columns.
++/// </summary>
++public class IncomeStatement2SubtotalVm
++{
++    public decimal Balance  { get; set; }
++    public decimal Budget   { get; set; }
++    public decimal Variance => Balance - Budget;
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2LineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2LineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2LineVm.cs
+@@ -0,0 +1,19 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class IncomeStatementFy2LineVm
++{
++    public int     AccountId     { get; set; }
++    public string? Code          { get; set; }
++    public string? Name          { get; set; }
++    public int?    Level         { get; set; }
++    public int?    ParentId      { get; set; }
++    public bool    AllowChildren { get; set; }
++
++    /// <summary>Balance per month keyed by month label.</summary>
++    public Dictionary<string, decimal> MonthlyBalances { get; set; } = [];
++
++    /// <summary>Sum of all monthly balances.</summary>
++    public decimal Total => MonthlyBalances.Values.Sum();
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2RequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2RequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2RequestDto.cs
+@@ -0,0 +1,16 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Income Statement FY 2 (flat monthwise list — same columns as FY but no tree nesting).
++///
++/// Available filters:
++/// - fromMonth: Start month (format: yyyy-MM, e.g. "2024-12") — required (or use fromDate)
++/// - toMonth: End month (format: yyyy-MM, e.g. "2025-12") — required (or use toDate)
++/// - fromDate: Alternative to fromMonth — full date (format: yyyy-MM-dd or dd/MM/yyyy)
++/// - toDate: Alternative to toMonth — full date (format: yyyy-MM-dd or dd/MM/yyyy)
++/// - branchId: Filter by branch (integer)
++/// - hideZeroActivity: Hide accounts with zero across all months (true/false, default: false)
++/// </summary>
++public class IncomeStatementFy2RequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyLineVm.cs
+@@ -0,0 +1,24 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class IncomeStatementFyLineVm
++{
++    public int     AccountId     { get; set; }
++    public string? Code          { get; set; }
++    public string? Name          { get; set; }
++    public int?    Level         { get; set; }
++    public int?    ParentId      { get; set; }
++    public bool    AllowChildren { get; set; }
++
++    /// <summary>
++    /// Balance per month keyed by the same labels as <see cref="IncomeStatementFyVm.Months"/>.
++    /// Revenue accounts: Credit - Debit. Expense accounts: Debit - Credit.
++    /// </summary>
++    public Dictionary<string, decimal> MonthlyBalances { get; set; } = [];
++
++    /// <summary>Sum of all monthly balances.</summary>
++    public decimal Total => MonthlyBalances.Values.Sum();
++
++    public List<IncomeStatementFyLineVm> Children { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyRequestDto.cs
+@@ -0,0 +1,15 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Income Statement FY (Fiscal Year Monthwise) report.
++///
++/// Available filters:
++/// - fromMonth: Start month of the range (format: yyyy-MM, e.g. "2024-12") — required
++/// - toMonth: End month of the range (format: yyyy-MM, e.g. "2025-12") — required
++/// - branchId: Filter by branch (integer)
++/// - costCenterGroupId: Filter by cost center group / division (integer)
++/// - hideZeroActivity: Hide accounts with zero across all months (true/false, default: false)
++/// </summary>
++public class IncomeStatementFyRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementLineVm.cs
+@@ -0,0 +1,19 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class IncomeStatementLineVm
++{
++    public int     AccountId    { get; set; }
++    public string? Code         { get; set; }
++    public string? Name         { get; set; }
++    public int?    Level        { get; set; }
++    public int?    ParentId     { get; set; }
++    public bool    AllowChildren { get; set; }
++
++    public decimal Balance      { get; set; }   // Actual period activity
++    public decimal Budget       { get; set; }   // Budget (0 until budget module exists)
++    public decimal Variance     => Balance - Budget;
++
++    public List<IncomeStatementLineVm> Children { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementRequestDto.cs
+@@ -0,0 +1,17 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Income Statement report.
++///
++/// Available filters:
++/// - fromDate: Start date (format: yyyy-MM-dd)
++/// - toDate: End date (format: yyyy-MM-dd)
++/// - branchId: Filter by branch (integer)
++/// - costCenterGroupId: Filter by division / cost center group (integer)
++/// - accountLevel: Show accounts up to this level, 1–5 (integer)
++/// - hideZeroActivity: Hide accounts with zero balance (true/false, default: false)
++/// - hideBudget: Hide budget and variance columns (true/false, default: false)
++/// </summary>
++public class IncomeStatementRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtd2RequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtd2RequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtd2RequestDto.cs
+@@ -0,0 +1,14 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Income Statement YTD 2 (YTD with subtotal footer rows).
++///
++/// Available filters:
++/// - month: The month to report on (format: yyyy-MM, e.g. "2026-04") — required
++/// - branchId: Filter by branch (integer)
++/// - hideZeroActivity: Hide accounts with zero in all three columns (true/false, default: false)
++/// - summaryReport: Show only parent/summary accounts (true/false, default: false)
++/// </summary>
++public class IncomeStatementYtd2RequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdLineVm.cs
+@@ -0,0 +1,24 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class IncomeStatementYtdLineVm
++{
++    public int     AccountId     { get; set; }
++    public string? Code          { get; set; }
++    public string? Name          { get; set; }
++    public int?    Level         { get; set; }
++    public int?    ParentId      { get; set; }
++    public bool    AllowChildren { get; set; }
++
++    /// <summary>Activity for the selected month only.</summary>
++    public decimal CurrentMonth      { get; set; }
++
++    /// <summary>Activity from Jan 1 to end of selected month (current year).</summary>
++    public decimal CurrentYtd        { get; set; }
++
++    /// <summary>Activity for the same month range in the previous year.</summary>
++    public decimal PreviousYearMonth { get; set; }
++
++    public List<IncomeStatementYtdLineVm> Children { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdRequestDto.cs
+@@ -0,0 +1,15 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Income Statement YTD report.
++///
++/// Available filters:
++/// - month: The month to report on (format: yyyy-MM, e.g. "2026-04") — required
++/// - branchId: Filter by branch (integer)
++/// - costCenterGroupId: Filter by cost center group / division (integer)
++/// - hideZeroActivity: Hide accounts with zero balance across all columns (true/false, default: false)
++/// - summaryReport: Show only parent/summary accounts, not leaf detail (true/false, default: false)
++/// </summary>
++public class IncomeStatementYtdRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdSubtotalVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdSubtotalVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdSubtotalVm.cs
+@@ -0,0 +1,13 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// A subtotal footer row with the same three columns as the account lines.
++/// </summary>
++public class IncomeStatementYtdSubtotalVm
++{
++    public decimal CurrentMonth      { get; set; }
++    public decimal CurrentYtd        { get; set; }
++    public decimal PreviousYearMonth { get; set; }
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/JournalsLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/JournalsLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/JournalsLineVm.cs
+@@ -0,0 +1,15 @@
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class JournalsLineVm
++{
++    public DateTime Date { get; set; }
++    public string? AccountCode { get; set; }
++    public string? AccountName { get; set; }
++    public string? Contact { get; set; }
++    public string? Type { get; set; }
++    public string? VoucherNo { get; set; }
++    public string? PlateNo { get; set; }
++    public string? Description { get; set; }
++    public decimal Debit { get; set; }
++    public decimal Credit { get; set; }
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/JournalsRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/JournalsRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/JournalsRequestDto.cs
+@@ -0,0 +1,6 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>Filters: voucherNo, type, chassisOrPlateNo, fromDate, toDate, accountId. Paging: PageNumber/PageSize.</summary>
++public class JournalsRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/LedgerLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/LedgerLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/LedgerLineVm.cs
+@@ -0,0 +1,18 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class LedgerLineVm
++{
++    public DateTime Date         { get; set; }
++    public string?  Type         { get; set; }   // VoucherType display name
++    public string?  VoucherNo    { get; set; }   // JournalVoucher.No
++    public string?  Contact      { get; set; }   // Partner name
++    public string?  Vehicle      { get; set; }   // PlateNo or ChassisNo
++    public string?  Description  { get; set; }   // JournalVoucherDetail.Description
++    public decimal  Debit        { get; set; }
++    public decimal  Credit       { get; set; }
++    public decimal  Balance      { get; set; }   // Running balance
++    /// <summary>Currency code for this line when showOriginalCurrency = true. Null when base currency.</summary>
++    public string?  CurrencyCode { get; set; }
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/LedgerRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/LedgerRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/LedgerRequestDto.cs
+@@ -0,0 +1,17 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for the Ledger report.
++///
++/// Available filters:
++/// - accountId:            Account to show ledger for (integer, required)
++/// - fromDate:             Start of date range (format: yyyy-MM-dd)
++/// - toDate:               End of date range (format: yyyy-MM-dd)
++/// - branchId:             Filter by branch (integer)
++/// - costCenterGroupId:    Filter by cost center group / division (integer)
++/// - chassisOrPlateNo:     Filter by vehicle chassis no or plate no (string)
++/// - showOriginalCurrency: Show amounts in the voucher's original currency instead of base currency (true/false, default: false)
++/// </summary>
++public class LedgerRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/SaveBudgetRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/SaveBudgetRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/SaveBudgetRequestDto.cs
+@@ -0,0 +1,7 @@
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class SaveBudgetRequestDto
++{
++    public int FiscalYearId { get; set; }
++    public List<BudgetEntryDto> Entries { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceLineVm.cs b/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceLineVm.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceLineVm.cs
+@@ -0,0 +1,21 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++public class TrialBalanceLineVm
++{
++    public int     AccountId        { get; set; }
++    public string? AccountCode      { get; set; }
++    public string? AccountName      { get; set; }
++    public int?    AccountLevel     { get; set; }
++    public int?    ParentId         { get; set; }
++    public bool    AllowChildren    { get; set; }
++
++    public decimal BeginningBalance { get; set; }
++    public decimal Debit            { get; set; }
++    public decimal Credit           { get; set; }
++    public decimal NetActivity      => Debit - Credit;
++    public decimal EndingBalance    => BeginningBalance + NetActivity;
++
++    public List<TrialBalanceLineVm> Children { get; set; } = [];
++}
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceRequestDto.cs
+@@ -0,0 +1,18 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Trial Balance report.
++///
++/// Available filters:
++/// - fromDate: Start of date range (format: yyyy-MM-dd)
++/// - toDate: End of date range (format: yyyy-MM-dd)
++/// - branchId: Filter by branch ID (integer)
++/// - costCenterGroupId: Filter by cost center group / division (integer)
++/// - accountLevel: Show accounts up to this level, 1–5 (integer)
++/// - hideZeroActivity: Hide accounts with no debit/credit activity in the period (true/false)
++/// - hideZeroEndingBalance: Hide accounts with zero ending balance (true/false)
++/// - leafOnly: Show only leaf accounts (AllowChildren = false) (true/false)
++/// </summary>
++public class TrialBalanceRequestDto : SpecificationRequestDto { }
+
+diff --git a/SiGma.ViewModels/ViewModels/AccountReports/VehicleIncomeStatementRequestDto.cs b/SiGma.ViewModels/ViewModels/AccountReports/VehicleIncomeStatementRequestDto.cs
+new file mode 100644
+--- /dev/null
++++ b/SiGma.ViewModels/ViewModels/AccountReports/VehicleIncomeStatementRequestDto.cs
+@@ -0,0 +1,17 @@
++using SiGma.Helpers.Request;
++
++namespace SiGma.ViewModels.ViewModels.AccountReports;
++
++/// <summary>
++/// Request DTO for Vehicle Income Statement report.
++///
++/// Available filters:
++/// - fromDate: Start date (format: yyyy-MM-dd)
++/// - toDate: End date (format: yyyy-MM-dd)
++/// - branchId: Filter by branch (integer)
++/// - costCenterGroupId: Filter by division / cost center group (integer)
++/// - ownershipType: Filter by vehicle ownership (0=Own, 1=External, 2=BuyBack)
++/// - accountLevel: Show accounts up to this level, 1–5 (integer)
++/// - hideZeroActivity: Hide accounts with zero balance (true/false, default: false)
++/// </summary>
++public class VehicleIncomeStatementRequestDto : SpecificationRequestDto { }

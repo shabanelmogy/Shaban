@@ -1,0 +1,15 @@
+using SiGma.Helpers.Enum;
+using SiGma.Helpers.ViewModelsBases.Update;
+using System.ComponentModel.DataAnnotations;
+
+namespace SiGma.ViewModels.ViewModels.CashDepositDetail;
+
+public class CashDepositDetailUpdateVM : UpdateBaseVm
+{
+    [Required, EnumDataType(typeof(CashDepositSourceType))] public CashDepositSourceType SourceType { get; set; }
+
+    public int? SourceReceiptId { get; set; }
+    public int? SourcePaymentId { get; set; }
+
+    public decimal DepositedNow { get; set; }
+}

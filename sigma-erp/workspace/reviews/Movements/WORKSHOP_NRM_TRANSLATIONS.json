@@ -1,0 +1,132 @@
+{
+  "en": {
+    "workshopMaster": {
+      "title": "Workshops",
+      "createTitle": "Create workshop",
+      "viewTitle": "View workshop",
+      "editTitle": "Edit workshop",
+      "no": "Workshop No",
+      "createdBy": "Created by",
+      "pageReport": "Showing {first} to {last} of {totalRecords} entries",
+      "errors": {
+        "load": "Unable to load workshops. Please retry.",
+        "save": "Unable to save the workshop. Please retry.",
+        "export": "Unable to export workshops. Please retry."
+      },
+      "editor": {
+        "record": "Workshop {{no}}",
+        "discardTitle": "Discard workshop changes?",
+        "discardMessage": "Your unsaved changes will be discarded.",
+        "discard": "Discard"
+      }
+    },
+    "workshopMovement": {
+      "typeNames": {
+        "Maintenance": "Maintenance",
+        "Repair": "Repair",
+        "AccidentRepair": "Accident repair",
+        "Inspection": "Inspection",
+        "Breakdown": "Breakdown"
+      },
+      "errors": {
+        "load": "Unable to load workshop movements. Please retry.",
+        "lookups": "Unable to load workshop movement options. Please retry.",
+        "add": "Unable to save the workshop movement. Please retry.",
+        "export": "Unable to export workshop movements. Please retry.",
+        "cleanup": "The movement was kept, but attachment cleanup could not finish. Retry cleanup."
+      },
+      "editor": {
+        "record": "Workshop movement {{no}}",
+        "discardTitle": "Discard workshop movement changes?",
+        "discardMessage": "Your unsaved changes and uploads will be discarded.",
+        "discard": "Discard"
+      }
+    },
+    "nrm": {
+      "typeNames": {
+        "NrmStaffMovement": "NRM staff movement",
+        "StaffCar": "Staff car",
+        "SoldCarCustomerMovement": "Sold car customer movement",
+        "Nrt": "NRT",
+        "NrmCustomerMovement": "NRM customer movement"
+      },
+      "errors": {
+        "load": "Unable to load NRM movements. Please retry.",
+        "lookups": "Unable to load NRM options. Please retry.",
+        "add": "Unable to save the NRM movement. Please retry.",
+        "export": "Unable to export NRM movements. Please retry."
+      },
+      "editor": {
+        "record": "NRM {{no}}",
+        "discardTitle": "Discard NRM changes?",
+        "discardMessage": "Your unsaved changes will be discarded.",
+        "discard": "Discard"
+      }
+    }
+  },
+  "ar": {
+    "workshopMaster": {
+      "title": "الورش",
+      "createTitle": "إنشاء ورشة",
+      "viewTitle": "عرض الورشة",
+      "editTitle": "تعديل الورشة",
+      "no": "رقم الورشة",
+      "createdBy": "أنشأ بواسطة",
+      "pageReport": "عرض {first} إلى {last} من {totalRecords} سجل",
+      "errors": {
+        "load": "تعذر تحميل الورش. يرجى إعادة المحاولة.",
+        "save": "تعذر حفظ الورشة. يرجى إعادة المحاولة.",
+        "export": "تعذر تصدير الورش. يرجى إعادة المحاولة."
+      },
+      "editor": {
+        "record": "الورشة {{no}}",
+        "discardTitle": "تجاهل تعديلات الورشة؟",
+        "discardMessage": "سيتم تجاهل التعديلات غير المحفوظة.",
+        "discard": "تجاهل"
+      }
+    },
+    "workshopMovement": {
+      "typeNames": {
+        "Maintenance": "صيانة",
+        "Repair": "إصلاح",
+        "AccidentRepair": "إصلاح حادث",
+        "Inspection": "فحص",
+        "Breakdown": "عطل"
+      },
+      "errors": {
+        "load": "تعذر تحميل حركات الورشة. يرجى إعادة المحاولة.",
+        "lookups": "تعذر تحميل خيارات حركة الورشة. يرجى إعادة المحاولة.",
+        "add": "تعذر حفظ حركة الورشة. يرجى إعادة المحاولة.",
+        "export": "تعذر تصدير حركات الورشة. يرجى إعادة المحاولة.",
+        "cleanup": "تم الاحتفاظ بالحركة، لكن لم تكتمل عملية تنظيف المرفقات. يرجى إعادة المحاولة."
+      },
+      "editor": {
+        "record": "حركة الورشة {{no}}",
+        "discardTitle": "تجاهل تعديلات حركة الورشة؟",
+        "discardMessage": "سيتم تجاهل التعديلات والملفات المرفوعة غير المحفوظة.",
+        "discard": "تجاهل"
+      }
+    },
+    "nrm": {
+      "typeNames": {
+        "NrmStaffMovement": "حركة موظف NRM",
+        "StaffCar": "سيارة موظف",
+        "SoldCarCustomerMovement": "حركة عميل لسيارة مباعة",
+        "Nrt": "NRT",
+        "NrmCustomerMovement": "حركة عميل NRM"
+      },
+      "errors": {
+        "load": "تعذر تحميل حركات NRM. يرجى إعادة المحاولة.",
+        "lookups": "تعذر تحميل خيارات NRM. يرجى إعادة المحاولة.",
+        "add": "تعذر حفظ حركة NRM. يرجى إعادة المحاولة.",
+        "export": "تعذر تصدير حركات NRM. يرجى إعادة المحاولة."
+      },
+      "editor": {
+        "record": "حركة NRM {{no}}",
+        "discardTitle": "تجاهل تعديلات NRM؟",
+        "discardMessage": "سيتم تجاهل التعديلات غير المحفوظة.",
+        "discard": "تجاهل"
+      }
+    }
+  }
+}

@@ -1,0 +1,168 @@
+[
+  {
+    "title": "sideMenu.administrations.customerRequests",
+    "link": "/CustomerRequest"
+  },
+  {
+    "title": "sideMenu.dataImports.vehicles",
+    "link": "/ImportVehicles"
+  },
+  {
+    "title": "sideMenu.dataImports.salik",
+    "link": "/ImportSalikTolls"
+  },
+  {
+    "title": "sideMenu.dataImports.darb",
+    "link": "/ImportDarbTolls"
+  },
+  {
+    "title": "sideMenu.dataImports.fines",
+    "link": "/ImportFines"
+  },
+  {
+    "title": "sideMenu.dataImports.staff",
+    "link": "/ImportStaff"
+  },
+  {
+    "title": "sideMenu.dataImports.suppliers",
+    "link": "/ImportSuppliers"
+  },
+  {
+    "title": "sideMenu.dataImports.individualPartner",
+    "link": "/ImportIndividualPartner"
+  },
+  {
+    "title": "sideMenu.dataImports.companies",
+    "link": "/ImportCompanies"
+  },
+  {
+    "title": "sideMenu.dataImports.customers",
+    "link": "/ImportCustomers"
+  },
+  {
+    "title": "sideMenu.dataImports.assets",
+    "link": "/ImportAssets"
+  },
+  {
+    "title": "sideMenu.dataImports.items",
+    "link": "/ImportItems"
+  },
+  {
+    "title": "sideMenu.dataImports.rentalAgreements",
+    "link": "/ImportRentalAgreements"
+  },
+  {
+    "title": "sideMenu.dataImports.closedRentalAgreements",
+    "link": "/ImportClosedRentalAgreements"
+  },
+  {
+    "title": "sideMenu.dataImports.leaseAgreements",
+    "link": "/ImportLeaseAgreements"
+  },
+  {
+    "title": "sideMenu.dataImports.closedLeaseAgreements",
+    "link": "/ImportClosedLeaseAgreements"
+  },
+  {
+    "title": "sideMenu.administrations.branches",
+    "link": "/Branch"
+  },
+  {
+    "title": "sideMenu.administrations.currencies",
+    "link": "/Currency"
+  },
+  {
+    "title": "sideMenu.administrations.countries",
+    "link": "/Country"
+  },
+  {
+    "title": "sideMenu.administrations.sponserShips",
+    "link": "/SponserShip"
+  },
+  {
+    "title": "sideMenu.administrations.industries",
+    "link": "/Industry"
+  },
+  {
+    "title": "sideMenu.administrations.contactGroups",
+    "link": "/ContactGroup"
+  },
+  {
+    "title": "sideMenu.administrations.paymentMethods",
+    "link": "/PaymentMethod"
+  },
+  {
+    "title": "sideMenu.administrations.costCenters",
+    "link": "/CostCenter"
+  },
+  {
+    "title": "sideMenu.administrations.emailTemplates",
+    "link": "/EmailTemplates"
+  },
+  {
+    "title": "sideMenu.administrations.checklist",
+    "link": "/ChecklistItem"
+  },
+  {
+    "title": "sideMenu.administrations.customLookups",
+    "link": "/CustomLookup"
+  },
+  {
+    "title": "sideMenu.administrations.vehicleNotReadyReasons",
+    "link": "/VehicleNotReadyReason"
+  },
+  {
+    "title": "sideMenu.administrations.replacementReasons",
+    "link": "/ReplacementReason"
+  },
+  {
+    "title": "sideMenu.administrations.voucherReasons",
+    "link": "/VoucherReason"
+  },
+  {
+    "title": "sideMenu.administrations.correctVehicleStatus",
+    "link": "/CorrectVehicleStatus"
+  },
+  {
+    "title": "sideMenu.administrations.roles",
+    "link": "/Role"
+  },
+  {
+    "title": "sideMenu.administrations.users",
+    "link": "/User"
+  },
+  {
+    "title": "sideMenu.administrations.languages",
+    "link": "/Language"
+  },
+  {
+    "title": "sideMenu.administrations.auditTrail",
+    "link": "/auditTrail"
+  },
+  {
+    "title": "sideMenu.administrations.messageLogs",
+    "link": "/messageLogs"
+  },
+  {
+    "title": "sideMenu.administrations.errorLogs",
+    "link": "/errorLogs"
+  },
+  {
+    "title": "sideMenu.administrations.saleOrigins",
+    "link": "/SaleOrigin"
+  },
+  {
+    "title": "sideMenu.administrations.settings",
+    "link": "/Settings"
+  },
+  {
+    "title": "userGuide.title",
+    "link": "/UserGuide/administration",
+    "icon": "bi bi-book",
+    "styleClass": "submenu-tone-blue"
+  },
+  {
+    "title": "sideMenu.administrations.customerProjects",
+    "link": "/CustomerProject"
+  }
+]

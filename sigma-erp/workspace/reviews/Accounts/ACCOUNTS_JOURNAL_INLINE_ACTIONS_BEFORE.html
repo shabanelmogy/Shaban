@@ -1,0 +1,45 @@
+<section appReportPage class="sigma-report-page--fill sigma-print-flow">
+  <div class="sigma-report-panel sigma-print-flow">
+    <app-feature-title [title]="'journal.title' | translate" icon="bi bi-journal-text" />
+    <form class="sigma-filter-form sigma-report-filter-panel no-print" [formGroup]="filterForm" (ngSubmit)="search()">
+      <div class="sigma-report-filter-field">
+        <label for="journal-range">{{ 'journal.dateRange' | translate }}</label>
+        <p-calendar inputId="journal-range" formControlName="dateRange" appDatePicker selectionMode="range" appendTo="body" />
+        <app-field-error [control]="filterForm.controls.dateRange" />
+      </div>
+      <div class="sigma-report-filter-field">
+        <label for="journal-no">{{ 'journal.voucherNo' | translate }}</label>
+        <input id="journal-no" pInputText formControlName="voucherNo" />
+      </div>
+      <div class="sigma-report-filter-field">
+        <label for="journal-type">{{ 'journal.type' | translate }}</label>
+        <p-dropdown inputId="journal-type" formControlName="type" [options]="voucherTypes" optionLabel="label" optionValue="value" [showClear]="true" appendTo="body">
+          <ng-template pTemplate="item" let-option>{{ option.label | translate }}</ng-template>
+          <ng-template pTemplate="selectedItem" let-option>{{ option.label | translate }}</ng-template>
+        </p-dropdown>
+      </div>
+      <div class="sigma-report-filter-field">
+        <label for="journal-vehicle">{{ 'journal.chassisOrPlateNo' | translate }}</label>
+        <input id="journal-vehicle" pInputText formControlName="chassisOrPlateNo" />
+      </div>
+      <div class="sigma-report-filter-field">
+        <label for="journal-account">{{ 'journal.account' | translate }}</label>
+        <p-dropdown inputId="journal-account" formControlName="accountId" [options]="accounts()" optionLabel="value" optionValue="id" [filter]="true" [showClear]="true" [loading]="accountLoading()" appendTo="body" />
+      </div>
+      <div appReportActions class="sigma-report-filter-actions" [ariaLabel]="'general.actions' | translate">
+        <app-primary-action-button type="submit" [label]="'general.search' | translate" icon="bi bi-search" [loading]="loadingReport()" [disabled]="loadingReport() || exporting() || accountLoading() || !!accountError()" />
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" (click)="refresh()" [disabled]="!hasSearched() || loadingReport() || exporting()">{{ 'general.refresh' | translate }}</button>
+        <button type="button" class="btn btn-secondary sigma-report-action--reset" (click)="reset()" [disabled]="loadingReport() || exporting()">{{ 'general.reset' | translate }}</button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" (click)="export()" [disabled]="!data().length || loadingReport() || exporting()">{{ 'general.exportExcel' | translate }}</button>
+      </div>
+    </form>
+    @if (accountError()) {
+      <app-state-message kind="error" [message]="accountError()" />
+      <button type="button" class="btn btn-secondary no-print" (click)="loadAccounts()" [disabled]="accountLoading()">{{ 'general.retry' | translate }}</button>
+    }
+    @if (errorMessage()) { <app-state-message kind="error" [message]="errorMessage()" /> }
+    <div class="sigma-list-table sigma-print-flow">
+      <app-data-table [value]="data()" [columns]="columns" [fill]="true" [lazy]="true" [loading]="loadingReport() || exporting()" [page]="paging().pageNo" [rows]="paging().pageSize" [totalRecords]="totalCount()" [showEmpty]="hasSearched() && !errorMessage()" (paginationChange)="pageChanged($event)" />
+    </div>
+  </div>
+</section>

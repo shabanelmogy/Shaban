@@ -1,0 +1,113 @@
+Workshop\LabourActivities\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Workshop\LabourActivities\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), search: this.activeSearc
+Workshop\JobCategory\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Workshop\JobCategory\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), search: this.activeSearc
+Vouchers\PurchaseRequests\PurchaseRequest\components\create-purchase-order\create-purchase-order.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, supplierId: this.sourceSupplierId, availableForPurchaseOrder: true, no: this.sourceNo.va
+Vouchers\PurchaseRequests\PurchaseRequest\components\create-purchase-order\create-purchase-order.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.sourcePageNo(), pageSize: this.sourcePageSize() })
+Transportation\TransportationAgreement\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Transportation\TransportationAgreement\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid,}
+Transportation\TransportationAgreement\components\list\list.component.ts | BinaryExpression | this.appliedQuery = { grid: this.columnFilters.grid, ...this.appliedQuery, pageNo: this.pageNo(), pageSize: this.pageSize() }
+Transportation\TransportationAgreement\components\list\list.component.ts | ReturnStatement | return { grid: this.columnFilters.grid, ...this.appliedQuery.filters, dateFilter: true, pageNo: this.pageNo(), pageSize: this.page
+Transportation\TransportationAgreement\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, agreementNo: raw.agreementNo.trim(), fromDate, toDate, status: raw.status, customerId: r
+Transportation\TransportationAgreement\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Transportation\TransportationAgreement\components\list\list.component.ts | BinaryExpression | this.appliedQuery = { grid: this.columnFilters.grid, ...this.appliedQuery, pageNo: this.pageNo(), pageSize: this.pageSize() }
+Transportation\TransportationAgreement\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, ...this.appliedQuery.filters }
+Transportation\TransportationAgreement\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, ...this.appliedQuery.filters, dateFilter: true, 
+Transportation\TransportationAgreement\components\list\list.component.ts | PropertyAssignment | queryParams: { grid: this.columnFilters.grid, ...this.appliedQuery.filters, dateFilter: true, pageNo: this.pageNo(), pageSize: thi
+Transportation\TransportationAgreement\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, ...this.appliedQuery.filters }
+Stock\UnitsOfMeasures\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Stock\UnitsOfMeasures\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Stock\UnitsOfMeasures\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, name: this.activeName() }
+Stock\UnitsOfMeasures\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, name: this.activeName(), pageNo: this.pageNo(), 
+Stock\ItemType\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Stock\ItemType\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Stock\ItemType\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, name: this.activeName(), type: this.activeType() }
+Stock\ItemType\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, name: this.activeName(), type: this.activeType()
+Stock\Item\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Stock\Item\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Stock\Item\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, no: this.activeNo(), name: this.activeName(), type: this.activeType(), supplierItemCode:
+Stock\Item\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, no: this.activeNo(), name: this.activeName(), ty
+Sales\DueInstallments\components\list\list.component.ts | BinaryExpression | this.appliedQuery = { grid: this.columnFilters.grid, fromDate, toDate, customerId: raw.customerId, agreementNo: raw.agreementNo.tr
+Sales\DueInstallments\components\list\list.component.ts | CallExpression | resolveListPaging( { first: event.first, rows: Math.min(100, event.rows ?? this.pageSize()) }, { grid: this.columnFilters.grid, pa
+Sales\DueInstallments\components\list\list.component.ts | BinaryExpression | this.appliedQuery = { grid: this.columnFilters.grid, ...this.appliedQuery, pageNo: paging.pageNo, pageSize: paging.pageSize, sortF
+Sales\DueInstallments\components\list\list.component.ts | ParenthesizedExpression | ({ grid: this.columnFilters.grid, isSuccess: result.isSuccess, isInfo: result.isInfo, id: result.id, message: result.message, enti
+Rental\TariffCard\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Rental\TariffCard\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), })
+Limousine\TripTypes\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Limousine\TripTypes\components\list\list.component.ts | CallExpression | resolveListPaging({ ...event, rows: Math.min(100, event.rows || this.pageSize()) }, { grid: this.columnFilters.grid, pageNo: this.
+Limousine\TripTypes\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, ...this.applied }
+Limousine\TripTypes\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, ...this.applied, pageNo: query.pageNo, pageSize:
+Limousine\TripGridCustomization\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Limousine\TripGridCustomization\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize()
+Limousine\TripGridCustomization\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize()
+Limousine\TripGridCustomization\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid,}
+Limousine\TripGridCustomization\components\list\list.component.ts | CallExpression | resolveListPaging({ ...event, rows: Math.min(100, event.rows ?? this.pageSize()) }, { grid: this.columnFilters.grid, pageNo: this.
+Limousine\TripGridCustomization\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid,}
+Limousine\Location\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Limousine\Location\components\list\list.component.ts | CallExpression | resolveListPaging({ ...event, rows: Math.min(100, event.rows || this.pageSize()) }, { grid: this.columnFilters.grid, pageNo: this.
+Limousine\Location\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, ...this.applied }
+Limousine\Location\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, ...this.applied, pageNo: query.pageNo, pageSize:
+Lease\LeaseInquiry\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Lease\LeaseInquiry\components\list\list.component.ts | PropertyDeclaration | private lastQuery: LeaseInquiryListQuery = { grid: this.columnFilters.grid, pageNo: 1, pageSize: DEFAULT_PAGE_SIZE, sortField: 'da
+Lease\LeaseInquiry\components\list\list.component.ts | BinaryExpression | this.lastQuery = { grid: this.columnFilters.grid, ...this.buildQuery(), pageNo: 1, pageSize: this.pageSize(), }
+Lease\LeaseInquiry\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Lease\LeaseInquiry\components\list\list.component.ts | BinaryExpression | this.lastQuery = { grid: this.columnFilters.grid, ...this.lastQuery, pageNo: nextPage, pageSize: rows, sortField: nextSortField, s
+Lease\LeaseInquiry\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.appliedGridFilters || null, ...this.lastQuery })
+Lease\LeaseInquiry\components\list\list.component.ts | VariableDeclaration | query: LeaseInquiryListQuery = { grid: this.columnFilters.grid, pageNo: 1, pageSize: this.pageSize(), sortField: this.sortField(),
+Lease\LeaseCustomerSms\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Lease\LeaseCostSetting\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), })
+Lease\LeaseCostSetting\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Lease\LeaseClause\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), })
+Lease\LeaseClause\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortFiel
+HRM\Administration\Staff Roles\StaffRole\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+HRM\Administration\Staff Roles\StaffRole\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), search: this.activeSearc
+HRM\Administration\Leave Opening Balance\LeaveOpeningBalance\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+HRM\Administration\Leave Opening Balance\LeaveOpeningBalance\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, ...this.appliedFilters() }
+HRM\Administration\Departments\Department\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), })
+HRM\Administration\Departments\Department\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), search: this.activeSearc
+Fleet\VehicleService\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Fleet\VehicleService\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Fleet\VehicleService\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortFiel
+Fleet\VehicleService\components\list\list.component.ts | ReturnStatement | return { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortField(), sortOrder: 
+Fleet\Vehicle\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Fleet\Vehicle\components\list\list.component.ts | PropertyDeclaration | private lastSearch: VehicleSearchModel = { grid: this.columnFilters.grid, pageNo: 1, pageSize: DEFAULT_PAGE_SIZE, sortField: 'id',
+Fleet\Vehicle\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Fleet\Vehicle\components\list\list.component.ts | BinaryExpression | this.lastSearch = { grid: this.columnFilters.grid, ...this.lastSearch, pageNo: nextPage, pageSize: rows, sortField: nextSortField,
+Fleet\Vehicle\components\list\list.component.ts | CallExpression | this.vehicleService .search({ grid: this.columnFilters.grid, ...this.lastSearch, pageNo: 1, pageSize: null }, { skipErrorIntercept
+Fleet\Vehicle\components\list\list.component.ts | CallExpression | this.vehicleService .search({ grid: this.columnFilters.grid, ...this.lastSearch, pageNo: 1, pageSize: null }, { skipErrorIntercept
+Fleet\Vehicle\components\list\list.component.ts | BinaryExpression | this.lastSearch = { grid: this.columnFilters.grid, ...this.lastSearch, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField
+Fleet\Vehicle\components\list\list.component.ts | ReturnStatement | return { grid: this.appliedGridFilters || null, ...this.lastSearch, isActive: this.lastSearch.isActive === undefined ? undefined :
+Fleet\Vehicle\components\list\list.component.ts | ReturnStatement | return { grid: this.columnFilters.grid, pageNo: 1, pageSize: this.pageSize(), plateNo: value.plateNo?.trim() || undefined, fleetNo
+Fleet\SourceCode\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Fleet\SourceCode\components\list\list.component.ts | PropertyAssignment | filters: { ...(this.lastFilters), grid: this.columnFilters.grid }
+Fleet\ServiceLog\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Fleet\ServiceLog\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), plateNo: filters.plateNo
+Fleet\ServiceItem\components\list\list.component.ts | CallExpression | this.serviceItemService.getList({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), })
+Fleet\ServiceItem\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Fleet\ServiceBookings\components\list\list.component.ts | CallExpression | this.service.getExport({ grid: this.columnFilters.grid, ...filters, statuses: [...filters.statuses], pageNo: 1, pageSize: null, so
+Fleet\ServiceBookings\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Fleet\ServiceBookings\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, ...filters, statuses: [...filters.statuses], pageNo: this.pageNo(), pageSi
+Fleet\Alerts\components\list\list.component.ts | PropertyDeclaration | private lastSearch: FleetAlertSearch = { grid: this.columnFilters.grid, pageNo: 1, pageSize: DEFAULT_PAGE_SIZE, sortField: 'dueDat
+Fleet\Alerts\components\list\list.component.ts | CallExpression | this.requestList({ grid: this.columnFilters.grid, ...this.lastSearch, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField:
+Fleet\Alerts\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Fleet\Alerts\components\list\list.component.ts | CallExpression | this.fleetAlertsService .search(type, { grid: this.columnFilters.grid, ...this.lastSearch, pageNo: 1, pageSize: null })
+Fleet\Accidents\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Fleet\Accidents\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Fleet\Accidents\components\list\list.component.ts | ReturnStatement | return { grid: this.columnFilters.grid, ...this.appliedFilters(), dateRange: !this.appliedFilters().dateFrom && !this.appliedFilte
+Banking\ChequesReceivables\components\actions\actions.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, status: PDCStatus.Pending }
+Banking\ChequesPayables\components\mature\mature.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, status: ChequeStatus.Pending }
+Banking\ChequesPayables\components\mature\mature.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Assets\assetType\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), })
+Assets\assetType\components\list\list.component.ts | CallExpression | this.listRequests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortFiel
+Administration\Languages\components\texts\texts.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Administration\Languages\components\texts\texts.component.ts | BinaryExpression | this.applied = { grid: this.columnFilters.grid, baseLanguageCode: value.baseLanguageCode!, targetLanguageCode: value.targetLanguag
+Administration\Languages\components\texts\texts.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.appliedGridFilters || null, ...this.applied })
+Administration\Languages\components\texts\texts.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Administration\Languages\components\texts\texts.component.ts | BinaryExpression | this.applied = { grid: this.columnFilters.grid, ...this.applied, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: sort
+Accounts\FiscalYears\components\list\list.component.ts | CallExpression | this.requests.next({ grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortField(),
+Accounts\AccountSetting\components\classification-definitions\classification-definitions.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Accounts\AccountSetting\components\classification-definitions\classification-definitions.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, search: this.appliedSearch }
+Accounts\AccountSetting\components\list\list.component.ts | PropertyDeclaration | private columnFilters: { grid?: string } = { grid: this.activatedRoute.snapshot.queryParamMap.get('grid') ?? undefined };
+Accounts\AccountSetting\components\list\list.component.ts | CallExpression | resolveListPaging(event, { grid: this.columnFilters.grid, pageNo: this.pageNo(), pageSize: this.pageSize() })
+Accounts\AccountSetting\components\list\list.component.ts | PropertyAssignment | filters: { grid: this.columnFilters.grid, search: this.appliedSearch }
+Accounts\AccountSetting\components\list\list.component.ts | CallExpression | writeListRoute(this.router, this.activatedRoute, { grid: this.columnFilters.grid, search: this.appliedSearch || null, pageNo: this

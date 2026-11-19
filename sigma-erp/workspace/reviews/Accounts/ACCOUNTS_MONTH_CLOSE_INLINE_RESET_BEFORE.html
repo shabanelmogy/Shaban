@@ -1,0 +1,73 @@
+<section class="sigma-list-page">
+  <div class="sigma-list-panel">
+    <header class="sigma-list-header">
+    <app-feature-title
+      [title]="'monthClose.title' | translate"
+      [subtitle]="'monthClose.subtitle' | translate"
+      icon="bi bi-calendar2-check"
+    />
+    </header>
+
+    @if (errorMessage()) {
+      <app-state-message kind="error" [message]="errorMessage()" />
+      <button type="button" class="sigma-secondary-button" (click)="retry()">{{ 'general.retry' | translate }}</button>
+    }
+
+    <form class="month-close-filters" appFilterPanel [mainColumns]="1" [stableLayout]="true" [formGroup]="filterForm"
+      [busy]="loadingFiscalYears() || loadingMonths() || updatingId() !== null || confirmationPending() || dialogOpen()" (resetRequested)="reset()">
+    <div class="sigma-filter-field">
+      <label for="month-close-fiscal-year" class="form-label">
+        {{ 'monthClose.fiscalYear' | translate }}
+      </label>
+      <p-dropdown
+        inputId="month-close-fiscal-year"
+        [options]="fiscalYearOptions()"
+        optionLabel="label"
+        optionValue="id"
+        formControlName="fiscalYearId"
+        [placeholder]="'monthClose.selectFiscalYear' | translate"
+        [loading]="loadingFiscalYears()"
+        [showClear]="true"
+        appendTo="body"
+      />
+
+      @if (!loadingFiscalYears() && !errorMessage() && fiscalYearOptions().length === 0) {
+        <app-state-message kind="empty" message="monthClose.emptyFiscalYears" />
+      }
+    </div>
+    </form>
+
+    @if (selectedFiscalYearId() !== null) {
+      <div class="sigma-list-table">
+      <app-data-table
+        [fill]="true"
+        [value]="months()"
+        [columns]="columns()"
+        [actions]="actions()"
+        dataKey="id"
+        [lazy]="false"
+        [paginator]="false"
+        [loading]="loadingMonths()"
+        [showEmpty]="!errorMessage()"
+        emptyMessage="monthClose.emptyMonths"
+      />
+      </div>
+    } @else {
+      <app-state-message kind="empty" message="monthClose.selectFiscalYearPrompt" icon="bi bi-calendar2" />
+    }
+  </div>
+</section>
+
+@if (closeTarget(); as target) {
+  <app-month-close [record]="target.record" [monthLabel]="monthName(target.record.month)"
+    (cancelled)="closeTarget.set(null)" (completed)="closeCompleted($event)" />
+}
+
+@if (reopenFailure(); as failure) {
+  <app-editor-dialog [visible]="true" [title]="'monthClose.checks.reopenDenied' | translate"
+    [subtitle]="'monthClose.confirm.recordLabel' | translate: { month: monthName(failure.record.month), year: failure.record.year }"
+    icon="bi bi-unlock" mode="view" width="900px" [contentPadded]="true" [primaryActionVisible]="false"
+    [closeLabel]="'general.close' | translate" (closeRequested)="closeReasonDialog()" (escapeRequested)="closeReasonDialog($event)">
+    <app-month-close-check-result [result]="failure.result" />
+  </app-editor-dialog>
+}

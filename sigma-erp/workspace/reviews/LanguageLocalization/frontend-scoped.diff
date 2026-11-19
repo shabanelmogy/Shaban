@@ -1,0 +1,1695 @@
+diff --git a/src/app/_metronic/layout/components/header/navbar/navbar.component.html b/src/app/_metronic/layout/components/header/navbar/navbar.component.html
+index ff742596..ac334c8e 100644
+--- a/src/app/_metronic/layout/components/header/navbar/navbar.component.html
++++ b/src/app/_metronic/layout/components/header/navbar/navbar.component.html
+@@ -98,10 +98,10 @@
+       data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+       data-kt-menu-attach="parent"
+       data-kt-menu-placement="bottom-end"
+-      [attr.aria-label]="'Change language. Current: ' + (language?.name || '')"
+-      [title]="language?.name || 'Language'"
++      [attr.aria-label]="'localizationRuntime.chooseLanguage' | translate"
++      [title]="language?.languageName || ('localizationRuntime.chooseLanguage' | translate)"
+     >
+-      <img class="topbar-language-flag" [src]="currentLang" alt="" />
++      <span [class]="flagCountryCode(language?.flag) ? 'fi fi-' + flagCountryCode(language?.flag) : 'bi bi-translate'" aria-hidden="true"></span>
+     </button>
+ 
+     <div
+@@ -113,12 +113,12 @@
+           <i class="bi bi-translate"></i>
+         </span>
+         <span class="language-menu-heading-copy">
+-          <strong>Choose language</strong>
+-          <small>Application display language</small>
++          <strong>{{ 'localizationRuntime.chooseLanguage' | translate }}</strong>
++          <small>{{ 'localizationRuntime.displayLanguage' | translate }}</small>
+         </span>
+         <span class="language-current">
+-          <img [src]="currentLang" alt="" />
+-          {{ language?.name }}
++          <span [class]="flagCountryCode(language?.flag) ? 'fi fi-' + flagCountryCode(language?.flag) : ''" aria-hidden="true">{{ flagCountryCode(language?.flag) ? '' : language?.flag }}</span>
++          {{ language?.languageName }}
+         </span>
+       </div>
+ 
+@@ -130,23 +130,23 @@
+           <button
+             type="button"
+             class="language-option"
+-            [class.active]="lang.lang === language.lang"
++            [class.active]="lang.cultureCode === language?.cultureCode"
+             data-kt-menu-dismiss="true"
+-            (click)="selectLanguage(lang.lang)"
++            (click)="selectLanguage(lang.cultureCode)"
+           >
+             <span class="language-option-flag">
+-              <img [src]="lang.flag" alt="" />
++              <span [class]="flagCountryCode(lang.flag) ? 'fi fi-' + flagCountryCode(lang.flag) : ''" aria-hidden="true">{{ flagCountryCode(lang.flag) ? '' : lang.flag }}</span>
+             </span>
+             <span class="language-option-copy">
+-              <strong>{{ lang.name }}</strong>
+-              <small>{{ lang.nativeName }}</small>
++              <strong>{{ lang.languageName }}</strong>
++              <small>{{ lang.cultureCode }}</small>
+             </span>
+             <span
+-              *ngIf="lang.lang === language.lang"
++              *ngIf="lang.cultureCode === language?.cultureCode"
+               class="language-active"
+             >
+               <i class="bi bi-check2" aria-hidden="true"></i>
+-              Active
++              {{ 'localizationRuntime.active' | translate }}
+             </span>
+           </button>
+         </div>
+@@ -154,11 +154,20 @@
+ 
+       <div class="language-menu-footer">
+         <i class="bi bi-lightning-charge" aria-hidden="true"></i>
+-        Language changes are applied instantly
++        {{ (translationService.runtimeLoading() ? 'localizationRuntime.loading' : 'localizationRuntime.applied') | translate }}
+       </div>
+     </div>
+   </div>
+ 
++  <div *ngIf="translationService.runtimeError()" class="app-navbar-item" role="status">
++    <button type="button" class="sigma-secondary-button"
++      [disabled]="translationService.runtimeLoading()" (click)="retryRuntime()"
++      [title]="'localizationRuntime.loadError' | translate">
++      <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
++      {{ 'localizationRuntime.retry' | translate }}
++    </button>
++  </div>
++
+   <!-- Theme mode -->
+   <app-theme-mode-switcher
+     class="appbar-theme-switcher"
+diff --git a/src/app/_metronic/layout/components/header/navbar/navbar.component.ts b/src/app/_metronic/layout/components/header/navbar/navbar.component.ts
+index 591e8f5d..8cb4e630 100644
+--- a/src/app/_metronic/layout/components/header/navbar/navbar.component.ts
++++ b/src/app/_metronic/layout/components/header/navbar/navbar.component.ts
+@@ -1,4 +1,7 @@
+-import { Component, Input, OnInit } from '@angular/core';
++import { Component, DestroyRef, Input, OnInit } from '@angular/core';
++import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
++import { flagCountryCode } from 'src/app/modules/Administration/Languages/constants/language-options';
++import { LanguageOption } from 'src/app/modules/Administration/Languages/models/options';
+ import { take } from 'rxjs';
+ import { BranchDTO } from 'src/app/modules/Administration/Branches/models/list';
+ import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
+@@ -14,18 +17,21 @@ import { Results } from 'src/app/modules/shared/models/results';
+ export class NavbarComponent implements OnInit {
+   @Input() appHeaderDefaulMenuDisplay: boolean;
+   @Input() isRtl: boolean;
+-  langs = languages;
+-  currentLang: string;
+-  language: LanguageFlag;
++  get langs(): readonly LanguageOption[] { return this.translationService.languageOptions(); }
++  get language(): LanguageOption | undefined {
++    return this.langs.find(option => option.cultureCode === this.translationService.selectedLanguage());
++  }
++  flagCountryCode(flag: string | null | undefined): string { return flagCountryCode(flag ?? null); }
+   branches: BranchDTO[] = [];
+   selectedBranch: BranchDTO | null = null;
+   branchSearch = '';
+   private readonly selectedBranchStorageKey = 'selectedBranchId';
+ 
+   constructor(
+-    private translationService: TranslationService,
++    readonly translationService: TranslationService,
+     private branchService: BranchService,
+-    private authService: AuthService
++    private authService: AuthService,
++    private destroyRef: DestroyRef
+   ) {}
+ 
+   get activeBranchName(): string {
+@@ -72,29 +78,18 @@ export class NavbarComponent implements OnInit {
+ 
+   ngOnInit(): void {
+     this.getListItems();
+-    this.setLanguage(this.translationService.getSelectedLanguage());
+   }
+-  selectLanguage(lang: string) {
++  selectLanguage(lang: string): void {
+     this.translationService.setLanguage(lang);
+-    this.setLanguage(lang);
+-    // document.location.reload();
+   }
+ 
+-  setLanguage(lang: string) {
+-    this.langs.forEach((language: LanguageFlag) => {
+-      if (language.lang === lang) {
+-        language.active = true;
+-        this.currentLang = language.flag;
+-        this.language = language;
+-      } else {
+-        language.active = false;
+-      }
+-    });
++  retryRuntime(): void {
++    this.translationService.refreshRuntime();
+   }
+   getListItems() {
+     this.branchService
+       .get()
+-      .pipe(take(1))
++      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+       .subscribe({
+         next: (res: Results<BranchDTO>) => {
+           if (res.isSuccess) {
+@@ -118,56 +113,3 @@ export class NavbarComponent implements OnInit {
+       null;
+   }
+ }
+-
+-interface LanguageFlag {
+-  lang: string;
+-  name: string;
+-  nativeName: string;
+-  flag: string;
+-  active?: boolean;
+-}
+-
+-const languages = [
+-  {
+-    lang: 'en',
+-    name: 'English',
+-    nativeName: 'English',
+-    flag: './assets/media/flags/united-states.svg',
+-  },
+-  {
+-    lang: 'ar',
+-    name: 'Arabic',
+-    nativeName: 'العربية',
+-    flag: './assets/media/flags/saudi-arabia.svg',
+-  },
+-  {
+-    lang: 'zh',
+-    name: 'Mandarin',
+-    nativeName: '中文',
+-    flag: './assets/media/flags/china.svg',
+-  },
+-  {
+-    lang: 'es',
+-    name: 'Spanish',
+-    nativeName: 'Español',
+-    flag: './assets/media/flags/spain.svg',
+-  },
+-  {
+-    lang: 'ja',
+-    name: 'Japanese',
+-    nativeName: '日本語',
+-    flag: './assets/media/flags/japan.svg',
+-  },
+-  {
+-    lang: 'de',
+-    name: 'German',
+-    nativeName: 'Deutsch',
+-    flag: './assets/media/flags/germany.svg',
+-  },
+-  {
+-    lang: 'fr',
+-    name: 'French',
+-    nativeName: 'Français',
+-    flag: './assets/media/flags/france.svg',
+-  },
+-];
+diff --git a/src/app/_metronic/layout/components/toolbar/toolbar.component.ts b/src/app/_metronic/layout/components/toolbar/toolbar.component.ts
+index bef1da5e..9bf5d434 100644
+--- a/src/app/_metronic/layout/components/toolbar/toolbar.component.ts
++++ b/src/app/_metronic/layout/components/toolbar/toolbar.component.ts
+@@ -166,7 +166,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
+     const isVoucherReasons = routePath === '/VoucherReason';
+     const isSaleOrigins = routePath === '/SaleOrigin';
+     const isCustomLookups = routePath === '/CustomLookup';
+-    const isLanguages = routePath === '/Language';
++    const isLanguages = routePath === '/Language' || routePath.startsWith('/Language/');
+     const isAuditTrail = routePath === '/auditTrail';
+     const isMessageLogs = routePath === '/messageLogs';
+     const isDataEntryCorrections = /^\/(DataEntryCorrection|DataEntryCorrectionModel)(\/|$)/.test(routePath);
+diff --git a/src/app/_metronic/layout/layout.component.ts b/src/app/_metronic/layout/layout.component.ts
+index f11e7a12..ee9fd9c2 100644
+--- a/src/app/_metronic/layout/layout.component.ts
++++ b/src/app/_metronic/layout/layout.component.ts
+@@ -10,7 +10,8 @@ import { Subscription } from 'rxjs';
+ import { LayoutService } from './core/layout.service';
+ import { LayoutInitService } from './core/layout-init.service';
+ import { ILayout, LayoutType } from './core/configs/config';
+-import { HttpClient } from '@angular/common/http';
++import { AuthService } from 'src/app/modules/auth/services/auth.service';
++import { TranslationService } from 'src/app/modules/i18n';
+ 
+ @Component({
+   selector: 'app-layout',
+@@ -77,10 +78,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
+     private layout: LayoutService,
+     private router: Router,
+     private activatedRoute: ActivatedRoute,
+-    private httpService: HttpClient
++    private auth: AuthService,
++    private translation: TranslationService
+   ) {
+     // define layout type and load layout
+-    this.router.events.subscribe((event) => {
++    this.unsubscribe.push(this.router.events.subscribe((event) => {
+       if (event instanceof NavigationEnd) {
+         const currentLayoutType = this.layout.currentLayoutTypeSubject.value;
+ 
+@@ -93,7 +95,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
+           this.initService.reInitProps(nextLayoutType);
+         }
+       }
+-    });
++    }));
+   }
+ 
+   getBranches() {
+@@ -105,6 +107,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
+   }
+ 
+   ngOnInit() {
++    const currentUser = this.auth.getCurrentUser();
++    if (currentUser) this.translation.startSession(currentUser.subscriptionId, currentUser.id);
++    this.unsubscribe.push(this.auth.currentUser$.subscribe(user => {
++      if (user) this.translation.startSession(user.subscriptionId, user.id);
++      else this.translation.endSession();
++    }));
+     document.body.classList.add(this.viewportClass);
+     const subscr = this.layout.layoutConfigSubject
+       .asObservable()
+@@ -430,6 +438,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
+   }
+ 
+   ngOnDestroy() {
++    this.translation.endSession();
+     document.body.classList.remove(this.viewportClass);
+     this.unsubscribe.forEach((sb) => sb.unsubscribe());
+   }
+diff --git a/src/app/modules/Administration/Languages/components/details/details.component.html b/src/app/modules/Administration/Languages/components/details/details.component.html
+index aedefcb0..def3f025 100644
+--- a/src/app/modules/Administration/Languages/components/details/details.component.html
++++ b/src/app/modules/Administration/Languages/components/details/details.component.html
+@@ -3,12 +3,16 @@
+   [subtitle]="id === null ? '' : ('language.editorSubtitle' | translate: { id: id })"
+   icon="bi bi-translate" [mode]="pageMode()" width="640px" [contentPadded]="true"
+   [focusOnShow]="false" closeButtonId="language-close" [closeDisabled]="busy"
+-  [primaryActionVisible]="!loadingDetails() && !detailError()"
++  [primaryActionVisible]="!loadingDetails() && !detailError() && !details()?.isBuiltIn && !committed()"
+   [primaryActionDisabled]="busy" [saving]="saving()"
+   [closeLabel]="'general.close' | translate" [cancelLabel]="'general.cancel' | translate"
+   [saveLabel]="'general.save' | translate" [editLabel]="'general.edit' | translate"
+   (closeRequested)="requestClose()" (escapeRequested)="onEscape($event)"
+   (saveRequested)="save()" (editRequested)="enableEditing()" (shown)="onShown()">
++  @if (saveError()) {
++    <app-state-message kind="error" [message]="saveError()" />
++    @if (committed()) { <button type="button" class="sigma-secondary-button" [disabled]="busy" (click)="refreshRuntime()">{{ 'general.retry' | translate }}</button> }
++  }
+   @if (loadingDetails()) {
+     <app-state-message kind="loading" />
+   } @else if (detailError()) {
+@@ -25,9 +29,11 @@
+           <label>{{ 'language.flag' | translate }}</label>
+           <span class="sigma-field__read">{{ details()?.flag }}</span>
+         </div>
++        <div class="sigma-field"><label>{{ 'language.code' | translate }}</label><span class="sigma-field__read">{{ details()?.cultureCode }}</span></div>
++        @if (details()?.isBuiltIn) { <p>{{ 'languageManagement.builtInLocked' | translate }}</p> }
+       </div>
+     </app-form-section>
+-  } @else {
++  } @else if (!committed()) {
+     <form appMockData [formGroup]="form" (ngSubmit)="save()" class="sigma-editor-form flex-fill" novalidate>
+       <div class="sigma-editor-body flex-fill">
+         <div class="sigma-editor-scroll flex-fill">
+@@ -36,7 +42,7 @@
+               <div class="sigma-field">
+                 <label class="required" for="language-name">{{ 'language.languageName' | translate }}</label>
+                 <p-dropdown inputId="language-name" formControlName="languageName" [options]="languageOptions()"
+-                  optionLabel="name" optionValue="name" [filter]="true" [showClear]="true"
++                  optionLabel="name" optionValue="name" [filter]="true" [showClear]="true" [editable]="true"
+                   [placeholder]="'language.selectLanguage' | translate" appendTo="body" styleClass="w-100"
+                   [ariaLabel]="'language.languageName' | translate" />
+                 <app-field-error [control]="form.controls.languageName" />
+@@ -49,6 +55,13 @@
+                   [ariaLabel]="'language.flag' | translate" />
+                 <app-field-error [control]="form.controls.flag" />
+               </div>
++              <div class="sigma-field">
++                <label class="required" for="language-code">{{ 'language.code' | translate }}</label>
++                <input id="language-code" type="text" formControlName="cultureCode" maxlength="32" dir="ltr"
++                  [attr.aria-invalid]="form.controls.cultureCode.invalid && form.controls.cultureCode.touched" />
++                <app-field-error [control]="form.controls.cultureCode" />
++                <small>{{ 'languageManagement.codeHelp' | translate }}</small>
++              </div>
+             </div>
+           </app-form-section>
+         </div>
+diff --git a/src/app/modules/Administration/Languages/components/details/details.component.ts b/src/app/modules/Administration/Languages/components/details/details.component.ts
+index 9d71da6d..6a36426b 100644
+--- a/src/app/modules/Administration/Languages/components/details/details.component.ts
++++ b/src/app/modules/Administration/Languages/components/details/details.component.ts
+@@ -14,6 +14,7 @@ import { TranslateOptionsPipe } from 'src/app/modules/shared/pipes/translate-opt
+ import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+ import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+ import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { TranslationService } from 'src/app/modules/i18n/translation.service';
+ import { focusField } from 'src/app/modules/shared/utils/focus-field';
+ import { freezeFormState } from 'src/app/modules/shared/utils/form-state';
+ import { LANGUAGE_FLAGS, LanguageOption, languageCode } from '../../constants/language-options';
+@@ -39,6 +40,7 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+   private readonly fb = inject(FormBuilder);
+   private readonly destroyRef = inject(DestroyRef);
+   private readonly confirmation = inject(ConfirmationDialogService);
++  private readonly runtime = inject(TranslationService);
+   private sessionId: number | null = null;
+   private disposed = false;
+   private hydrated = false;
+@@ -52,11 +54,15 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+   readonly saving = signal(false);
+   readonly closeConfirmationPending = signal(false);
+   readonly detailError = signal('');
++  readonly saveError = signal('');
++  readonly committed = signal(false);
++  readonly refreshing = signal(false);
+   readonly titleKey = computed(() => this.pageMode() === 'view' ? 'language.view'
+     : this.pageMode() === 'edit' ? 'language.edit' : 'language.create');
+   readonly form = this.fb.group({
+-    languageName: this.fb.control<string | null>(null, Validators.required),
+-    flag: this.fb.control<string | null>(null, Validators.required),
++    languageName: this.fb.control<string | null>(null, [Validators.required, Validators.maxLength(250)]),
++    flag: this.fb.control<string | null>(null, [Validators.required, Validators.maxLength(100)]),
++    cultureCode: this.fb.nonNullable.control('', [Validators.required, Validators.maxLength(32)]),
+   });
+   readonly languageOptions = computed<LanguageOption[]>(() => {
+     const options = [...LANGUAGES];
+@@ -74,13 +80,15 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+ 
+   constructor() {
+     super();
+-    this.destroyRef.onDestroy(() => { this.disposed = true; });
++    this.destroyRef.onDestroy(() => {
++      this.disposed = true;
++    });
+   }
+ 
+   get busy(): boolean {
+-    return this.loadingDetails() || this.saving() || this.closeConfirmationPending()
++    return this.loadingDetails() || this.saving() || this.refreshing() || this.closeConfirmationPending()
+       || !!this.mockForm?.isPending()
+-      || (this.hydrated && this.pageMode() !== 'view' && this.form.disabled);
++      || (this.hydrated && !this.committed() && this.pageMode() !== 'view' && this.form.disabled);
+   }
+ 
+   ngOnInit(): void {
+@@ -96,7 +104,7 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+   loadDetails(): void {
+     if (!this.isCurrent() || this.loadingDetails() || this.saving() || this.hydrated) return;
+     const id = this.sessionId;
+-    if (id === null || !Number.isInteger(id) || id <= 0) {
++    if (id === null || !Number.isInteger(id) || id === 0) {
+       this.detailError.set('language.errors.details');
+       return;
+     }
+@@ -117,7 +125,8 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+           return;
+         }
+         this.details.set(response.entity);
+-        this.form.reset({ languageName: response.entity.languageName, flag: response.entity.flag }, { emitEvent: false });
++        this.form.reset({ languageName: response.entity.languageName, flag: response.entity.flag, cultureCode: response.entity.cultureCode ?? '' }, { emitEvent: false });
++        if (response.entity.isBuiltIn) this.pageMode.set('view');
+         this.hydrated = true;
+         if (this.pageMode() !== 'view') this.form.enable({ emitEvent: false });
+       },
+@@ -128,38 +137,64 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+   }
+ 
+   enableEditing(): void {
+-    if (!this.isCurrent() || this.busy || !this.hydrated || this.detailError() || this.pageMode() !== 'view') return;
++    if (!this.isCurrent() || this.busy || !this.hydrated || this.details()?.isBuiltIn || this.detailError() || this.pageMode() !== 'view') return;
+     this.pageMode.set('edit');
+     this.form.enable({ emitEvent: false });
+   }
+ 
+   save(): void {
+-    if (!this.isCurrent() || this.busy || !this.hydrated || this.detailError() || this.pageMode() === 'view') return;
++    if (!this.isCurrent() || this.busy || this.committed() || !this.hydrated || this.details()?.isBuiltIn || this.detailError() || this.pageMode() === 'view') return;
+     this.form.markAllAsTouched();
+     if (this.form.invalid) {
+-      focusField(this.form.controls.languageName.invalid ? 'language-name' : 'language-flag', { openOverlay: false });
++      focusField(this.form.controls.languageName.invalid ? 'language-name' : this.form.controls.flag.invalid ? 'language-flag' : 'language-code', { openOverlay: false });
+       return;
+     }
+     const raw = this.form.getRawValue();
+-    const payload: LanguageCreateDTO = { languageName: raw.languageName!, flag: raw.flag! };
++    const payload: LanguageCreateDTO = { languageName: raw.languageName!, flag: raw.flag!, cultureCode: raw.cultureCode.trim() };
+     const id = this.sessionId;
+     const request = this.pageMode() === 'create' ? this.service.createLanguage(payload)
+       : id === null ? null : this.service.updateLanguage({ ...payload, id });
+     if (!request) return;
+     this.saving.set(true);
++    this.saveError.set('');
+     const restore = freezeFormState(this.form, this.destroyRef);
+     this.loading.startLoading();
+     request.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+       this.loading.endLoading();
+-      if (this.isCurrent()) { this.saving.set(false); restore(); }
++      if (this.isCurrent()) {
++        this.saving.set(false);
++        restore();
++      }
+     })).subscribe({
+       next: response => {
+         if (!this.isCurrent()) return;
+-        if (!response.isSuccess) { restore(); return; } // Interceptor owns mutation feedback.
++        if (!response.isSuccess) {
++          this.saveError.set(response.message || 'languageManagement.errors.save');
++          restore();
++          return;
++        }
+         this.form.markAsPristine();
+-        this.close(true);
++        this.committed.set(true);
++        this.refreshRuntime();
++      },
++      error: error => {
++        if (this.isCurrent()) {
++          this.saveError.set(apiErrorMessage(error, 'languageManagement.errors.save'));
++          restore();
++        }
+       },
+-      error: () => { if (this.isCurrent()) restore(); },
++    });
++  }
++
++  refreshRuntime(): void {
++    if (!this.isCurrent() || this.refreshing()) return;
++    this.refreshing.set(true);
++    this.runtime.refreshRuntime().pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.refreshing.set(false))).subscribe({
++      next: ok => {
++        if (ok) this.close(true);
++        else this.saveError.set('languageManagement.storedRefreshFailed');
++      },
++      error: () => this.saveError.set('languageManagement.storedRefreshFailed'),
+     });
+   }
+ 
+@@ -184,7 +219,7 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+   requestClose(): void {
+     this.canDeactivate().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(accepted => {
+       // The accepted decision arrives before its pending flag is finalized.
+-      if (accepted && this.isCurrent() && !this.saving() && !this.loadingDetails()) this.close(false);
++      if (accepted && this.isCurrent() && !this.saving() && !this.loadingDetails()) this.close(this.committed());
+     });
+   }
+ 
+@@ -194,7 +229,10 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+     this.requestClose();
+   }
+ 
+-  onShown(): void { this.shown = true; this.focusAfterRead(); }
++  onShown(): void {
++    this.shown = true;
++    this.focusAfterRead();
++  }
+ 
+   private focusAfterRead(): void {
+     if (!this.shown || !this.isCurrent() || this.busy || this.focused) return;
+@@ -202,7 +240,9 @@ export class LanguageDetailsComponent extends BaseComponentService implements On
+     focusField('language-close', { openOverlay: false });
+   }
+ 
+-  private isCurrent(): boolean { return !this.disposed && this.visible() && this.id === this.sessionId; }
++  private isCurrent(): boolean {
++    return !this.disposed && this.visible() && this.id === this.sessionId;
++  }
+ 
+   private close(saved: boolean): void {
+     this.visible.set(false);
+diff --git a/src/app/modules/Administration/Languages/components/list/list.component.html b/src/app/modules/Administration/Languages/components/list/list.component.html
+index 29f3018a..5a05ecb6 100644
+--- a/src/app/modules/Administration/Languages/components/list/list.component.html
++++ b/src/app/modules/Administration/Languages/components/list/list.component.html
+@@ -11,6 +11,11 @@
+     </form>
+     @if (errorMessage()) { <app-state-message kind="error" [message]="errorMessage()" /><button type="button" class="sigma-secondary-button" [disabled]="actionBusy()" (click)="retryList()">{{ 'general.retry' | translate }}</button> }
+     @if (exportError()) { <app-state-message kind="error" [message]="exportError()" /><button type="button" class="sigma-secondary-button" [disabled]="exportBlocked" (click)="exportExcel()">{{ 'general.retry' | translate }}</button> }
++    @if (actionError()) { <app-state-message kind="error" [message]="actionError()" /> }
++    @if (outcome()) {
++      <div class="sigma-alert" [class.sigma-alert--warning]="refreshFailed()" role="status">{{ outcome() | translate }}</div>
++      @if (refreshFailed()) { <button type="button" class="sigma-secondary-button" [disabled]="actionBusy()" (click)="retryRuntime()">{{ 'general.retry' | translate }}</button> }
++    }
+     <div class="sigma-list-table"><app-data-table [value]="data()" [columns]="columns" [actions]="actions" dataKey="id" [lazy]="true" [paginator]="true" [first]="(pageNo() - 1) * pageSize()" [rows]="pageSize()" [rowsPerPageOptions]="rowsPerPageOptions" [totalRecords]="totalRecords()" [loading]="loadingList()" [showEmpty]="!errorMessage()" [sortField]="sortField()" [sortOrder]="sortOrder()" [fill]="true" currentPageReport="language.showingEntries" emptyMessage="general.noDataFound" (lazyLoad)="onLazyLoad($event)" /></div>
+   </div>
+   @if (editorSession(); as session) { <app-language-details [mode]="session.mode" [id]="session.id" (closed)="onEditorClosed($event, session)" /> }
+diff --git a/src/app/modules/Administration/Languages/components/list/list.component.ts b/src/app/modules/Administration/Languages/components/list/list.component.ts
+index bcd4fb3d..ed5e28f8 100644
+--- a/src/app/modules/Administration/Languages/components/list/list.component.ts
++++ b/src/app/modules/Administration/Languages/components/list/list.component.ts
+@@ -1,11 +1,12 @@
+ import { CommonModule } from '@angular/common';
+-import { Component, DestroyRef, OnInit, TemplateRef, ViewChild, computed, inject, signal } from '@angular/core';
++import { Component, DestroyRef, OnInit, TemplateRef, ViewChild, WritableSignal, computed, inject, signal } from '@angular/core';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+ import { TranslateModule, TranslateService } from '@ngx-translate/core';
+ import { TableLazyLoadEvent } from 'primeng/table';
+ import { EMPTY, Observable, Subject, catchError, defer, finalize, of, switchMap } from 'rxjs';
+ import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
++import { TranslationService } from 'src/app/modules/i18n/translation.service';
+ import { DataTableCellContext, DataTableColumn, DataTableComponent, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+ import { EditorDialogMode } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
+ import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+@@ -14,52 +15,356 @@ import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-p
+ import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+ import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+ import { ActionList } from 'src/app/modules/shared/models/action-list';
++import { Result } from 'src/app/modules/shared/models/result';
+ import { Results } from 'src/app/modules/shared/models/results';
+ import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+ import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+ import { apiErrorMessage, composedReadErrorMessage } from 'src/app/modules/shared/utils/api-error';
+ import { DEFAULT_PAGE_SIZE, resolveListPaging } from 'src/app/modules/shared/utils/list-query';
+ import { readListRoute, writeListRoute } from 'src/app/modules/shared/utils/list-route-state';
++import { flagCountryCode } from '../../constants/language-options';
+ import { LanguageGridRow, LanguageListQuery, LanguageDTO } from '../../models/list';
+ import { LanguageService } from '../../services/language.service';
+-import { flagCountryCode, languageCode } from '../../constants/language-options';
+ import { LanguageDetailsComponent } from '../details/details.component';
+ 
+-@Component({ selector: 'app-languages', standalone: true, imports: [CommonModule, DataTableComponent, FeatureTitleComponent, FilterActionsDirective, FilterPanelComponent, LanguageDetailsComponent, PrimaryActionButtonComponent, ReactiveFormsModule, StateMessageComponent, TranslateModule], templateUrl: './list.component.html', host: { class: 'sigma-route-host' } })
++@Component({
++  selector: 'app-languages', standalone: true,
++  imports: [CommonModule, DataTableComponent, FeatureTitleComponent, FilterActionsDirective,
++    FilterPanelComponent, LanguageDetailsComponent, PrimaryActionButtonComponent,
++    ReactiveFormsModule, StateMessageComponent, TranslateModule],
++  templateUrl: './list.component.html', host: { class: 'sigma-route-host' },
++})
+ export class LanguagesComponent extends BaseComponentService implements OnInit {
+   @ViewChild(LanguageDetailsComponent) private editor?: LanguageDetailsComponent;
+   @ViewChild('flagTemplate', { static: true }) private flagTemplate!: TemplateRef<DataTableCellContext<LanguageGridRow>>;
+-  private readonly fb = inject(FormBuilder); private readonly destroyRef = inject(DestroyRef); private readonly service = inject(LanguageService); private readonly translate = inject(TranslateService); private readonly confirmation = inject(ConfirmationDialogService); private readonly listQuery$ = new Subject<LanguageListQuery>(); private activeFilters: { languageName?: string } = {}; private appliedQueryReady = false; private lastQueryKey = '';
+-  readonly data = signal<LanguageGridRow[]>([]); readonly totalRecords = signal(0); readonly loadingList = signal(false); readonly exporting = signal(false); readonly deleting = signal(false); readonly confirming = signal(false); readonly errorMessage = signal(''); readonly exportError = signal(''); readonly pageNo = signal(1); readonly pageSize = signal(DEFAULT_PAGE_SIZE); readonly sortField = signal(''); readonly sortOrder = signal<1 | -1>(-1); readonly rowsPerPageOptions = [10, 15, 20, 50, 100]; readonly editorSession = signal<{ mode: EditorDialogMode; id: number | null } | null>(null); readonly actionBusy = computed(() => this.loadingList() || this.exporting() || this.deleting() || this.confirming() || this.editorSession() !== null); readonly filterForm = this.fb.nonNullable.group({ languageName: '' }); columns: ReadonlyArray<DataTableColumn<LanguageGridRow>> = []; private sortableFields = new Set<string>();
+-  get exportBlocked(): boolean { return this.actionBusy() || !this.appliedQueryReady; }
+-  flagCountryCode(flag: string | null): string { return flagCountryCode(flag); }
+-  ngOnInit(): void { this.columns = [
+-    { field: 'flag', header: 'language.flag', cellTemplate: this.flagTemplate, value: row => row.flag ?? '' },
+-    { field: 'languageName', header: 'language.languageName', sortable: true, link: { activate: row => this.openEditor('view', row), enabled: () => !this.actionBusy(), title: 'general.viewDetails' } },
+-    { field: 'code', header: 'language.code', value: row => row.code },
+-    { field: 'createdBy', header: 'general.createdBy', sortable: true },
+-    { field: 'isActive', header: 'general.isActive', sortable: true, type: 'status', status: row => row.isActive === null ? { label: 'general.notAvailable', tone: 'neutral' } : row.isActive ? { label: 'mangeDetails.yes', tone: 'success' } : { label: 'mangeDetails.no', tone: 'neutral' } },
+-    { field: 'createdAt', header: 'general.createdAt', sortable: true, type: 'date' },
+-  ]; this.sortableFields = new Set(this.columns.filter(c => c.sortable).map(c => String(c.field))); this.bindListQueries(); this.restoreStateFromRoute(); this.applyDraftFilters(); this.refreshAppliedList(); }
+-  private bindListQueries(): void { this.listQuery$.pipe(switchMap(query => defer(() => { this.loadingList.set(true); this.errorMessage.set(''); this.loading.startLoading(); return this.service.getList(query).pipe(catchError(error => { this.setListError(apiErrorMessage(error, 'language.errors.list')); return EMPTY; }), finalize(() => { this.loadingList.set(false); this.loading.endLoading(); })); })), takeUntilDestroyed(this.destroyRef)).subscribe(response => this.applyListResponse(response)); }
+-  private applyListResponse(response: Results<LanguageDTO>): void { if (!response.isSuccess) { this.setListError(response.message || 'language.errors.list'); return; } const total = Math.max(0, Number(response.totalCount ?? 0)); this.totalRecords.set(total); const lastPage = Math.max(1, Math.ceil(total / this.pageSize())); if (this.pageNo() > lastPage) { this.pageNo.set(lastPage); this.refreshAppliedList(); return; } this.data.set((response.entities ?? []).map(row => ({ ...row, code: languageCode(row.languageName) }))); }
+-  private setListError(message: string): void { this.errorMessage.set(message); this.data.set([]); this.totalRecords.set(0); }
+-  search(): void { if (this.actionBusy()) return; this.applyDraftFilters(); this.pageNo.set(1); this.exportError.set(''); this.refreshAppliedList(); }
+-  resetFilters(): void { if (!this.actionBusy()) { this.filterForm.reset({ languageName: '' }); this.search(); } }
+-  private applyDraftFilters(): void { const value = this.filterForm.getRawValue().languageName.trim(); this.activeFilters = value ? { languageName: value } : {}; this.appliedQueryReady = true; }
+-  onLazyLoad(event: TableLazyLoadEvent): void { if (!this.appliedQueryReady || this.actionBusy()) return; const paging = resolveListPaging(event, { pageNo: this.pageNo(), pageSize: this.pageSize() }); const rawSort = typeof event.sortField === 'string' ? event.sortField : ''; const nextSort = this.sortableFields.has(rawSort) ? rawSort : this.sortField(); const nextOrder = event.sortOrder === 1 || event.sortOrder === -1 ? event.sortOrder : this.sortOrder(); if (!paging.changed && nextSort === this.sortField() && nextOrder === this.sortOrder()) return; this.pageNo.set(paging.pageNo); this.pageSize.set(Math.min(100, paging.pageSize)); this.sortField.set(nextSort); this.sortOrder.set(nextOrder); this.writeStateToRoute(); this.requestList(this.currentQuery()); }
+-  retryList(): void { if (!this.actionBusy()) this.refreshAppliedList(); }
+-  private currentQuery(): LanguageListQuery { return { pageNo: this.pageNo(), pageSize: this.pageSize(), filters: { ...this.activeFilters }, sortField: this.sortField(), sortOrder: this.sortOrder() }; }
+-  private refreshAppliedList(): void { if (this.appliedQueryReady) { this.writeStateToRoute(); this.requestList(this.currentQuery(), true); } }
+-  private requestList(query: LanguageListQuery, force = false): void { const key = JSON.stringify(query); if (!force && key === this.lastQueryKey) return; this.lastQueryKey = key; this.listQuery$.next(query); }
+-  openCreate(): void { if (!this.actionBusy()) this.editorSession.set({ mode: 'create', id: null }); }
+-  private openEditor(mode: 'view' | 'edit', row: LanguageGridRow): void { if (!this.actionBusy() && row.id > 0) this.editorSession.set({ mode, id: row.id }); }
+-  onEditorClosed(saved: boolean, session: { mode: EditorDialogMode; id: number | null }): void { if (this.editorSession() !== session) return; this.editorSession.set(null); if (saved) this.refreshAppliedList(); }
+-  canDeactivate(): Observable<boolean> { const session = this.editorSession(); return defer(() => { if (this.deleting() || this.confirming() || this.exporting()) return of(false); if (!session) return of(this.editorSession() === null); if (this.editorSession() !== session || !this.editor) return of(false); return this.editor.canDeactivate(); }).pipe(takeUntilDestroyed(this.destroyRef)); }
+-  private confirmDelete(row: LanguageGridRow): void { if (this.actionBusy() || row.id <= 0) return; this.confirming.set(true); this.confirmation.confirmDelete({ title: { key: 'language.confirmDeleteTitle' }, subtitle: { key: 'language.confirmDeleteSubtitle', params: { id: row.id } }, message: { key: 'language.confirmDeleteQuestion' }, warning: { key: 'language.confirmDeleteWarning' }, record: { label: { key: 'language.languageName' }, title: row.languageName ?? '', meta: this.translate.instant('language.editorSubtitle', { id: row.id }), icon: 'bi bi-translate' } }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirming.set(false))).subscribe(confirmed => { if (confirmed) this.deleteLanguage(row); }); }
+-  private deleteLanguage(row: LanguageGridRow): void { if (this.actionBusy()) return; this.deleting.set(true); this.loading.startLoading(); this.service.deleteLanguage(row.id).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => { this.deleting.set(false); this.loading.endLoading(); })).subscribe({ next: response => { if (!response.isSuccess) return; if (this.data().length === 1 && this.pageNo() > 1) this.pageNo.update(page => page - 1); this.refreshAppliedList(); }, error: () => this.deleting.set(false) }); }
+-  exportExcel(): void { if (this.exportBlocked) return; const query = this.currentQuery(); const headers = new Map<string, string>(); for (const column of this.columns) headers.set(column.header, this.translate.instant(column.header)); this.exporting.set(true); this.exportError.set(''); this.loading.startLoading(); this.service.getAllList(query).pipe(takeUntilDestroyed(this.destroyRef), catchError(error => { this.exportError.set(composedReadErrorMessage(error, 'language.errors.export')); return of(null); }), finalize(() => { this.exporting.set(false); this.loading.endLoading(); })).subscribe(rows => { if (rows === null) return; if (!rows.length) { this.exportError.set(this.totalRecords() ? 'language.errors.export' : 'general.noDataFound'); return; } const exportRows = dataTableExportRows(rows.map(row => ({ ...row, code: languageCode(row.languageName) })), this.columns, key => headers.get(key) ?? key); onExportToExcel(signal(exportRows), 'Languages'); }); }
+-  private restoreStateFromRoute(): void { const state = readListRoute(this.activatedRoute); const paging = state.paging(); this.filterForm.patchValue({ languageName: state.text('languageName') }, { emitEvent: false }); this.pageNo.set(paging.pageNo); this.pageSize.set(Math.min(100, Math.max(10, paging.pageSize))); if (paging.sortField && this.sortableFields.has(paging.sortField)) this.sortField.set(paging.sortField); if (paging.sortOrder) this.sortOrder.set(paging.sortOrder); }
+-  private writeStateToRoute(): void { writeListRoute(this.router, this.activatedRoute, { languageName: this.activeFilters.languageName, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortField(), sortOrder: this.sortOrder() }); }
+-  readonly actions: ActionList<LanguageGridRow>[] = [{ title: 'general.viewDetails', icon: 'bi bi-eye', disabled: () => this.actionBusy(), action: row => { if (row) this.openEditor('view', row); } }, { title: 'general.edit', icon: 'bi bi-pencil-square', disabled: () => this.actionBusy(), action: row => { if (row) this.openEditor('edit', row); } }, { title: 'general.delete', icon: 'bi bi-trash3', disabled: () => this.actionBusy(), action: row => { if (row) this.confirmDelete(row); } }];
++  private readonly fb = inject(FormBuilder);
++  private readonly destroyRef = inject(DestroyRef);
++  private readonly service = inject(LanguageService);
++  private readonly translate = inject(TranslateService);
++  private readonly runtime = inject(TranslationService);
++  private readonly confirmation = inject(ConfirmationDialogService);
++  private readonly listQuery$ = new Subject<LanguageListQuery>();
++  private activeFilters: { languageName?: string } = {};
++  private appliedQueryReady = false;
++  private lastQueryKey = '';
++  private sortableFields = new Set<string>();
++
++  readonly data = signal<LanguageGridRow[]>([]);
++  readonly totalRecords = signal(0);
++  readonly loadingList = signal(false);
++  readonly exporting = signal(false);
++  readonly deleting = signal(false);
++  readonly confirming = signal(false);
++  readonly updatingDefault = signal(false);
++  readonly refreshing = signal(false);
++  readonly refreshFailed = signal(false);
++  readonly errorMessage = signal('');
++  readonly exportError = signal('');
++  readonly actionError = signal('');
++  readonly outcome = signal('');
++  readonly pageNo = signal(1);
++  readonly pageSize = signal(DEFAULT_PAGE_SIZE);
++  readonly sortField = signal('');
++  readonly sortOrder = signal<1 | -1>(-1);
++  readonly rowsPerPageOptions = [10, 15, 20, 50, 100];
++  readonly editorSession = signal<{ mode: EditorDialogMode; id: number | null } | null>(null);
++  readonly mutationBusy = computed(() => this.exporting() || this.deleting() || this.confirming()
++    || this.updatingDefault() || this.refreshing() || this.editorSession() !== null);
++  readonly actionBusy = computed(() => this.loadingList() || this.mutationBusy());
++  readonly filterForm = this.fb.nonNullable.group({ languageName: '' });
++  columns: ReadonlyArray<DataTableColumn<LanguageGridRow>> = [];
++
++  get exportBlocked(): boolean {
++    return this.actionBusy() || !this.appliedQueryReady;
++  }
++  flagCountryCode(flag: string | null): string {
++    return flagCountryCode(flag);
++  }
++
++  ngOnInit(): void {
++    this.columns = [
++      { field: 'flag', header: 'language.flag', cellTemplate: this.flagTemplate, value: row => row.flag ?? '' },
++      { field: 'languageName', header: 'language.languageName', sortable: true,
++        link: { activate: row => this.openEditor('view', row), enabled: () => !this.actionBusy(), title: 'general.viewDetails' } },
++      { field: 'cultureCode', header: 'language.code' },
++      { field: 'isBuiltIn', header: 'languageManagement.builtIn', type: 'status', status: row => ({ label: row.isBuiltIn ? 'mangeDetails.yes' : 'mangeDetails.no', tone: row.isBuiltIn ? 'success' : 'neutral' }) },
++      { field: 'isDefault', header: 'languageManagement.default', type: 'status', status: row => ({ label: row.isDefault ? 'mangeDetails.yes' : 'mangeDetails.no', tone: row.isDefault ? 'success' : 'neutral' }) },
++      { field: 'createdBy', header: 'general.createdBy', sortable: true },
++      { field: 'isActive', header: 'general.isActive', sortable: true, type: 'status',
++        status: row => ({ label: row.isActive === null ? 'general.notAvailable' : row.isActive ? 'mangeDetails.yes' : 'mangeDetails.no', tone: row.isActive ? 'success' : 'neutral' }) },
++      { field: 'createdAt', header: 'general.createdAt', sortable: true, type: 'dateTime' },
++    ];
++    this.sortableFields = new Set(this.columns.filter(column => column.sortable).map(column => String(column.field)));
++    this.bindListQueries();
++    this.restoreStateFromRoute();
++    this.applyDraftFilters();
++    this.refreshAppliedList();
++  }
++
++  private bindListQueries(): void {
++    this.listQuery$.pipe(switchMap(query => defer(() => {
++      this.loadingList.set(true);
++      this.errorMessage.set('');
++      this.loading.startLoading();
++      return this.service.getList(query).pipe(
++        catchError(error => {
++          this.setListError(apiErrorMessage(error, 'language.errors.list'));
++          return EMPTY;
++        }),
++        finalize(() => {
++          this.loadingList.set(false);
++          this.loading.endLoading();
++        }),
++      );
++    })), takeUntilDestroyed(this.destroyRef)).subscribe(response => this.applyListResponse(response));
++  }
++
++  private applyListResponse(response: Results<LanguageDTO>): void {
++    if (!response.isSuccess) {
++      this.setListError(response.message || 'language.errors.list');
++      return;
++    }
++    const total = Math.max(0, Number(response.totalCount ?? 0));
++    this.totalRecords.set(total);
++    const lastPage = Math.max(1, Math.ceil(total / this.pageSize()));
++    if (this.pageNo() > lastPage) {
++      this.pageNo.set(lastPage);
++      this.refreshAppliedList();
++      return;
++    }
++    this.data.set(response.entities ?? []);
++  }
++
++  private setListError(message: string): void {
++    this.errorMessage.set(message);
++    this.data.set([]);
++    this.totalRecords.set(0);
++  }
++
++  search(): void {
++    if (this.actionBusy()) return;
++    this.applyDraftFilters();
++    this.pageNo.set(1);
++    this.exportError.set('');
++    this.refreshAppliedList();
++  }
++
++  resetFilters(): void {
++    if (!this.actionBusy()) {
++      this.filterForm.reset({ languageName: '' });
++      this.search();
++    }
++  }
++
++  private applyDraftFilters(): void {
++    const value = this.filterForm.getRawValue().languageName.trim();
++    this.activeFilters = value ? { languageName: value } : {};
++    this.appliedQueryReady = true;
++  }
++
++  onLazyLoad(event: TableLazyLoadEvent): void {
++    // A newer page cancels an in-flight read; it must not be dropped as busy.
++    if (!this.appliedQueryReady || this.mutationBusy()) return;
++    const paging = resolveListPaging(event, { pageNo: this.pageNo(), pageSize: this.pageSize() });
++    const rawSort = typeof event.sortField === 'string' ? event.sortField : '';
++    const nextSort = this.sortableFields.has(rawSort) ? rawSort : this.sortField();
++    const nextOrder = event.sortOrder === 1 || event.sortOrder === -1 ? event.sortOrder : this.sortOrder();
++    if (!paging.changed && nextSort === this.sortField() && nextOrder === this.sortOrder()) return;
++    this.pageNo.set(paging.pageNo);
++    this.pageSize.set(Math.min(100, paging.pageSize));
++    this.sortField.set(nextSort);
++    this.sortOrder.set(nextOrder);
++    this.writeStateToRoute();
++    this.requestList(this.currentQuery());
++  }
++
++  retryList(): void {
++    if (!this.mutationBusy()) this.refreshAppliedList();
++  }
++  private currentQuery(): LanguageListQuery {
++    return { pageNo: this.pageNo(), pageSize: this.pageSize(), filters: { ...this.activeFilters }, sortField: this.sortField(), sortOrder: this.sortOrder() };
++  }
++  private refreshAppliedList(): void {
++    if (this.appliedQueryReady) {
++      this.writeStateToRoute();
++      this.requestList(this.currentQuery(), true);
++    }
++  }
++  private requestList(query: LanguageListQuery, force = false): void {
++    const key = JSON.stringify(query);
++    if (!force && key === this.lastQueryKey) return;
++    this.lastQueryKey = key;
++    this.listQuery$.next(query);
++  }
++
++  openCreate(): void {
++    if (!this.actionBusy()) this.editorSession.set({ mode: 'create', id: null });
++  }
++  private openEditor(mode: 'view' | 'edit', row: LanguageGridRow): void {
++    if (!this.actionBusy() && row.id !== 0 && (mode === 'view' || !row.isBuiltIn)) this.editorSession.set({ mode, id: row.id });
++  }
++  onEditorClosed(saved: boolean, session: { mode: EditorDialogMode; id: number | null }): void {
++    if (this.editorSession() !== session) return;
++    this.editorSession.set(null);
++    if (saved) {
++      this.outcome.set('languageManagement.stored');
++      this.refreshAppliedList();
++    }
++  }
++  canDeactivate(): Observable<boolean> {
++    const session = this.editorSession();
++    return defer(() => {
++      if (this.deleting() || this.confirming() || this.exporting() || this.updatingDefault() || this.refreshing()) return of(false);
++      if (!session) return of(this.editorSession() === null);
++      return this.editorSession() === session && this.editor ? this.editor.canDeactivate() : of(false);
++    }).pipe(takeUntilDestroyed(this.destroyRef));
++  }
++
++  private confirmDelete(row: LanguageGridRow): void {
++    if (this.actionBusy() || row.id <= 0 || row.isBuiltIn || row.isDefault) return;
++    this.confirming.set(true);
++    this.confirmation.confirmDelete({
++      title: { key: 'language.confirmDeleteTitle' }, subtitle: { key: 'language.confirmDeleteSubtitle', params: { id: row.id } },
++      message: { key: 'language.confirmDeleteQuestion' }, warning: { key: 'language.confirmDeleteWarning' },
++      record: { label: { key: 'language.languageName' }, title: row.languageName ?? '', meta: row.cultureCode ?? '', icon: 'bi bi-translate' },
++    }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirming.set(false))).subscribe(confirmed => {
++      // Confirmation emits before finalize; release its own guard before mutation.
++      this.confirming.set(false);
++      if (confirmed) this.runMutation(this.service.deleteLanguage(row.id), this.deleting);
++    });
++  }
++
++  private chooseDefault(row: LanguageGridRow): void {
++    if (this.actionBusy() || !row.cultureCode || row.isDefault || !row.isActive) return;
++    const code = row.cultureCode;
++    this.updatingDefault.set(true);
++    this.actionError.set('');
++    this.service.getOptions().pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.updatingDefault.set(false))).subscribe({
++      next: response => {
++        if (!response.isSuccess || !response.entity) {
++          this.actionError.set(response.message || 'languageManagement.errors.options');
++          return;
++        }
++        const options = response.entity;
++        if (!options.languages.some(option => option.cultureCode === code)) {
++          this.actionError.set('languageManagement.errors.options');
++          return;
++        }
++        this.confirming.set(true);
++        this.confirmation.confirm({ title: { key: 'languageManagement.setDefault' },
++          subtitle: code,
++          message: { key: 'languageManagement.defaultQuestion', params: { name: row.languageName ?? code } },
++          warning: { key: 'languageManagement.defaultHelp' },
++        }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirming.set(false))).subscribe(accepted => {
++          this.confirming.set(false);
++          if (accepted) this.runMutation(this.service.setDefault(code, options.settingsVersion), this.updatingDefault);
++        });
++      },
++      error: error => this.actionError.set(apiErrorMessage(error, 'languageManagement.errors.options')),
++    });
++  }
++
++  private runMutation(request: Observable<Result<unknown>>, busy: WritableSignal<boolean>): void {
++    if (this.actionBusy()) return;
++    busy.set(true);
++    this.actionError.set('');
++    this.outcome.set('');
++    this.refreshFailed.set(false);
++    this.loading.startLoading();
++    request.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
++      busy.set(false);
++      this.loading.endLoading();
++    })).subscribe({
++      next: response => {
++        if (!response.isSuccess) {
++          this.actionError.set(response.message || 'languageManagement.errors.save');
++          return;
++        }
++        this.outcome.set('languageManagement.stored');
++        this.refreshAppliedList();
++        this.retryRuntime();
++      },
++      error: error => this.actionError.set(apiErrorMessage(error, 'languageManagement.errors.save')),
++    });
++  }
++
++  retryRuntime(): void {
++    if (this.refreshing()) return;
++    this.refreshing.set(true);
++    this.runtime.refreshRuntime().pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.refreshing.set(false))).subscribe({
++      next: ok => {
++        this.refreshFailed.set(!ok);
++        this.outcome.set(ok ? 'languageManagement.applied' : 'languageManagement.storedRefreshFailed');
++      },
++      error: () => {
++        this.refreshFailed.set(true);
++        this.outcome.set('languageManagement.storedRefreshFailed');
++      },
++    });
++  }
++
++  private changeTexts(row: LanguageGridRow): void {
++    if (!this.actionBusy() && row.cultureCode && row.isActive) void this.router.navigate(['/Language/texts'], { queryParams: { targetLanguageCode: row.cultureCode } });
++  }
++
++  exportExcel(): void {
++    if (this.exportBlocked) return;
++    const query = this.currentQuery();
++    const labels = new Map<string, string>();
++    for (const column of this.columns) labels.set(column.header, this.translate.instant(column.header));
++    for (const key of ['mangeDetails.yes', 'mangeDetails.no', 'general.notAvailable']) labels.set(key, this.translate.instant(key));
++    const columns = [...this.columns];
++    this.exporting.set(true);
++    this.exportError.set('');
++    this.loading.startLoading();
++    this.service.getAllList(query).pipe(takeUntilDestroyed(this.destroyRef),
++      catchError(error => {
++        this.exportError.set(composedReadErrorMessage(error, 'language.errors.export'));
++        return of(null);
++      }),
++      finalize(() => {
++        this.exporting.set(false);
++        this.loading.endLoading();
++      }),
++    ).subscribe(rows => {
++      if (rows === null) return;
++      if (!rows.length) {
++        this.exportError.set(this.totalRecords() ? 'language.errors.export' : 'general.noDataFound');
++        return;
++      }
++      onExportToExcel(signal(dataTableExportRows(rows, columns, key => labels.get(key) ?? key)), 'Languages');
++    });
++  }
++
++  private restoreStateFromRoute(): void {
++    const state = readListRoute(this.activatedRoute);
++    const paging = state.paging();
++    this.filterForm.patchValue({ languageName: state.text('languageName') }, { emitEvent: false });
++    this.pageNo.set(paging.pageNo);
++    this.pageSize.set(Math.min(100, Math.max(10, paging.pageSize)));
++    if (paging.sortField && this.sortableFields.has(paging.sortField)) this.sortField.set(paging.sortField);
++    if (paging.sortOrder) this.sortOrder.set(paging.sortOrder);
++  }
++  private writeStateToRoute(): void {
++    writeListRoute(this.router, this.activatedRoute, { languageName: this.activeFilters.languageName,
++      pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortField(), sortOrder: this.sortOrder() });
++  }
++
++  readonly actions: ActionList<LanguageGridRow>[] = [
++    { title: 'general.viewDetails', icon: 'bi bi-eye', disabled: () => this.actionBusy(), action: row => {
++      if (row) this.openEditor('view', row);
++    } },
++    { title: 'general.edit', icon: 'bi bi-pencil-square', visible: row => !!row && !row.isBuiltIn, disabled: () => this.actionBusy(), action: row => {
++      if (row) this.openEditor('edit', row);
++    } },
++    { title: 'languageManagement.changeTexts', icon: 'bi bi-translate', disabled: row => this.actionBusy() || !row?.cultureCode || !row.isActive, action: row => {
++      if (row) this.changeTexts(row);
++    } },
++    { title: 'languageManagement.setDefault', icon: 'bi bi-star', disabled: row => this.actionBusy() || !row?.cultureCode || !row.isActive || row.isDefault, action: row => {
++      if (row) this.chooseDefault(row);
++    } },
++    { title: 'general.delete', icon: 'bi bi-trash3', visible: row => !!row && !row.isBuiltIn, disabled: row => this.actionBusy() || !!row?.isDefault, action: row => {
++      if (row) this.confirmDelete(row);
++    } },
++  ];
+ }
+diff --git a/src/app/modules/Administration/Languages/language.routes.ts b/src/app/modules/Administration/Languages/language.routes.ts
+index 65e7ca3c..bcce7335 100644
+--- a/src/app/modules/Administration/Languages/language.routes.ts
++++ b/src/app/modules/Administration/Languages/language.routes.ts
+@@ -1,7 +1,13 @@
+ import { Routes } from '@angular/router';
+ import { LanguagesComponent } from './components/list/list.component';
++import { LanguageTextsComponent } from './components/texts/texts.component';
+ 
+ export const Language_Routes: Routes = [
++  {
++    path: 'texts',
++    component: LanguageTextsComponent,
++    canDeactivate: [(component: LanguageTextsComponent) => component.canDeactivate()],
++  },
+   {
+     path: '',
+     component: LanguagesComponent,
+diff --git a/src/app/modules/Administration/Languages/models/create.ts b/src/app/modules/Administration/Languages/models/create.ts
+index 387ca84a..88ad61e0 100644
+--- a/src/app/modules/Administration/Languages/models/create.ts
++++ b/src/app/modules/Administration/Languages/models/create.ts
+@@ -1,6 +1,7 @@
+ export interface LanguageCreateDTO {
+   languageName: string;
+   flag: string;
++  cultureCode: string;
+ }
+ 
+ export interface LanguageUpdateDTO extends LanguageCreateDTO {
+diff --git a/src/app/modules/Administration/Languages/models/details.ts b/src/app/modules/Administration/Languages/models/details.ts
+index 67ab81bf..1ba74845 100644
+--- a/src/app/modules/Administration/Languages/models/details.ts
++++ b/src/app/modules/Administration/Languages/models/details.ts
+@@ -2,4 +2,6 @@ export interface LanguageDetailsDTO {
+   id: number;
+   languageName: string | null;
+   flag: string | null;
++  cultureCode: string | null;
++  isBuiltIn: boolean;
+ }
+diff --git a/src/app/modules/Administration/Languages/models/list.ts b/src/app/modules/Administration/Languages/models/list.ts
+index 8d2203ed..f74bd37e 100644
+--- a/src/app/modules/Administration/Languages/models/list.ts
++++ b/src/app/modules/Administration/Languages/models/list.ts
+@@ -4,15 +4,15 @@ export interface LanguageDTO {
+   id: number;
+   languageName: string | null;
+   flag: string | null;
++  cultureCode: string | null;
++  isBuiltIn: boolean;
++  isDefault: boolean;
+   isActive: boolean | null;
+   createdBy: string | null;
+-  createdAt: string;
++  createdAt: string | null;
+ }
+ 
+-export interface LanguageGridRow extends LanguageDTO {
+-  /** Display-only language code from the existing local language catalog. */
+-  code: string;
+-}
++export type LanguageGridRow = LanguageDTO;
+ 
+ export interface LanguageFilters {
+   languageName?: string;
+diff --git a/src/app/modules/Administration/Languages/services/language.service.ts b/src/app/modules/Administration/Languages/services/language.service.ts
+index 59b9204b..44553b36 100644
+--- a/src/app/modules/Administration/Languages/services/language.service.ts
++++ b/src/app/modules/Administration/Languages/services/language.service.ts
+@@ -3,14 +3,19 @@ import { Observable } from 'rxjs';
+ import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+ import { Result } from 'src/app/modules/shared/models/result';
+ import { Results } from 'src/app/modules/shared/models/results';
+-import { fetchAllPages, toListParams } from 'src/app/modules/shared/utils/list-query';
++import { fetchAllPages, toListParams, toQueryParams } from 'src/app/modules/shared/utils/list-query';
+ import { LanguageCreateDTO, LanguageUpdateDTO } from '../models/create';
+ import { LanguageDetailsDTO } from '../models/details';
+ import { LanguageDTO, LanguageListQuery } from '../models/list';
++import { LanguageOptions } from '../models/options';
++import { LanguageTextDetail, LanguageTextIdentity, LanguageTextQuery, LanguageTextRow, LanguageTextWrite } from '../models/text';
+ 
+ @Injectable({ providedIn: 'root' })
+ export class LanguageService extends BaseService {
+-  constructor() { super('Language'); }
++  private readonly inline = { headers: { 'X-Skip-Error-Interceptor': 'true', 'X-Skip-Success-Toast': 'true' } };
++  constructor() {
++    super('Language');
++  }
+ 
+   getList(query: LanguageListQuery): Observable<Results<LanguageDTO>> {
+     return this.http.get<Results<LanguageDTO>>(`${this.baseUrl}Language`, {
+@@ -28,14 +33,46 @@ export class LanguageService extends BaseService {
+   }
+ 
+   createLanguage(payload: LanguageCreateDTO): Observable<Result<unknown>> {
+-    return this.http.post<Result<unknown>>(`${this.baseUrl}Language`, payload);
++    return this.http.post<Result<unknown>>(`${this.baseUrl}Language`, payload, this.inline);
+   }
+ 
+   updateLanguage(payload: LanguageUpdateDTO): Observable<Result<unknown>> {
+-    return this.http.put<Result<unknown>>(`${this.baseUrl}Language`, payload);
++    return this.http.put<Result<unknown>>(`${this.baseUrl}Language`, payload, this.inline);
+   }
+ 
+   deleteLanguage(id: number): Observable<Result<unknown>> {
+-    return this.delete<unknown>(String(id));
++    return this.http.delete<Result<unknown>>(`${this.baseUrl}Language`, { ...this.inline, params: toQueryParams({ id }) });
++  }
++
++  getOptions(): Observable<Result<LanguageOptions>> {
++    return this.http.get<Result<LanguageOptions>>(`${this.baseUrl}Language/Options`, this.inline);
++  }
++
++  setDefault(cultureCode: string, expectedVersion: string | null): Observable<Result<unknown>> {
++    return this.http.put<Result<unknown>>(`${this.baseUrl}Language/Default`, { cultureCode, expectedVersion }, this.inline);
++  }
++
++  getTexts(query: LanguageTextQuery): Observable<Results<LanguageTextRow>> {
++    return this.http.get<Results<LanguageTextRow>>(`${this.baseUrl}LanguageText`, { ...this.inline, params: toQueryParams(query) });
++  }
++
++  getTextKeys(query: LanguageTextQuery): Observable<Result<string[]>> {
++    return this.http.get<Result<string[]>>(`${this.baseUrl}LanguageText/Keys`, { ...this.inline, params: toQueryParams(query) });
++  }
++
++  getTextDetail(identity: LanguageTextIdentity, key: string): Observable<Result<LanguageTextDetail>> {
++    const { baseLanguageCode, targetLanguageCode, source } = identity;
++    return this.http.get<Result<LanguageTextDetail>>(`${this.baseUrl}LanguageText/Detail`, {
++      ...this.inline,
++      params: toQueryParams({ baseLanguageCode, targetLanguageCode, source, key }),
++    });
++  }
++
++  saveText(payload: LanguageTextWrite): Observable<Result<LanguageTextDetail>> {
++    return this.http.put<Result<LanguageTextDetail>>(`${this.baseUrl}LanguageText`, payload, this.inline);
++  }
++
++  resetText(payload: Omit<LanguageTextWrite, 'value'>): Observable<Result<unknown>> {
++    return this.http.delete<Result<unknown>>(`${this.baseUrl}LanguageText/Override`, { ...this.inline, params: toQueryParams(payload) });
+   }
+ }
+diff --git a/src/app/modules/UserGuide/content/languages-topic.ts b/src/app/modules/UserGuide/content/languages-topic.ts
+index d6e90abb..51bc371d 100644
+--- a/src/app/modules/UserGuide/content/languages-topic.ts
++++ b/src/app/modules/UserGuide/content/languages-topic.ts
+@@ -2,22 +2,25 @@ import type { GuideTopic } from '../models/user-guide.model';
+ 
+ export const LANGUAGES_TOPIC: GuideTopic = {
+   titleKey: 'language.title',
+-  title: { en: 'Languages', ar: 'اللغات' },
++  title: { en: 'Languages and texts', ar: 'اللغات والنصوص' },
+   route: '/Language',
+   icon: 'bi bi-translate',
+   purpose: {
+-    en: 'Manage the interface language records and their flags. Open Administration → Languages.',
+-    ar: 'إدارة سجلات لغات الواجهة وأعلامها. افتح الإدارة ← اللغات.',
++    en: 'Manage subscription languages, the default language and database text customizations. Open Administration → Languages; Change texts opens /Language/texts.',
++    ar: 'إدارة لغات الاشتراك واللغة الافتراضية وتخصيصات النصوص في قاعدة البيانات. افتح الإدارة ← اللغات؛ يفتح تغيير النصوص المسار /Language/texts.',
+   },
+   steps: [
+-    { en: 'Review the language name, code, flag, creator, active state and creation time in the list. Use the pager and supported column headings to move and sort.', ar: 'راجع اسم اللغة والكود والعلم والمنشئ وحالة التفعيل ووقت الإنشاء في القائمة. استخدم أداة الصفحات وعناوين الأعمدة المدعومة للتنقل والفرز.' },
+-    { en: 'Enter part of a language name and choose Search. Reset clears the draft filter and returns to page 1. Paging, refresh and Excel use the last applied search.', ar: 'أدخل جزءًا من اسم اللغة واضغط بحث. يمسح إعادة التعيين فلتر المسودة ويعيدك إلى الصفحة الأولى. تستخدم الصفحات والتحديث وExcel آخر بحث مطبق.' },
+-    { en: 'Choose Create Language, select a language and its flag, then Save. Both fields are required; a successful save closes the dialog and refreshes the list.', ar: 'اختر إنشاء لغة، ثم حدد اللغة والعلم واضغط حفظ. الحقلان مطلوبان؛ ويغلق نجاح الحفظ النافذة ويحدث القائمة.' },
+-    { en: 'Select the language name or View to read a record. View is read-only. Edit opens the same dialog for changes. Cancel, Close, Escape and leaving a dirty editor ask before discarding changes.', ar: 'اضغط اسم اللغة أو اختر عرضًا لقراءة السجل. العرض للقراءة فقط. يفتح التعديل النافذة نفسها للتغييرات. يطلب الإلغاء والإغلاق وEscape ومغادرة محرر معدل تأكيد تجاهل التغييرات.' },
+-    { en: 'Choose Delete from the row actions and confirm the record shown in the confirmation. A failed read, save, delete or export keeps the current screen state so you can retry.', ar: 'اختر حذفًا من إجراءات الصف وأكد السجل الظاهر في رسالة التأكيد. يحافظ فشل القراءة أو الحفظ أو الحذف أو التصدير على حالة الشاشة الحالية لإعادة المحاولة.' },
++    { en: 'Review name, culture code, flag, built-in/default state and audit values. Search applies the draft name filter; Reset returns to page 1. Paging, refresh and Excel use the applied search. Excel includes all matching pages and creation date/time.', ar: 'راجع الاسم وكود الثقافة والعلم وحالتي المدمجة والافتراضية وقيم التدقيق. يطبق البحث مسودة فلتر الاسم، ويعيد إعادة التعيين إلى الصفحة الأولى. تستخدم الصفحات والتحديث وExcel البحث المطبق. يشمل Excel جميع الصفحات المطابقة وتاريخ ووقت الإنشاء.' },
++    { en: 'Create a language by choosing or typing its name, choosing its flag and entering a valid culture code, then Save. The name is limited to 250 characters. View is read-only; Edit reuses the same dialog. A code already used by texts or the default setting cannot be changed. Built-in definitions cannot be edited or deleted, but their texts can be customized.', ar: 'أنشئ لغة باختيار اسمها أو كتابته، واختيار علمها وإدخال كود ثقافة صحيح ثم الحفظ. الحد الأقصى للاسم 250 حرفًا. العرض للقراءة فقط، ويستخدم التعديل النافذة نفسها. لا يمكن تغيير كود مستخدم في النصوص أو الإعداد الافتراضي. لا يمكن تعديل تعريفات اللغات المدمجة أو حذفها، لكن يمكن تخصيص نصوصها.' },
++    { en: 'Choose Set as default and confirm the language. Users without an explicit language choice use this default. Delete asks for confirmation and the server rejects built-in, default, referenced or used language identities.', ar: 'اختر تعيين كافتراضية وأكد اللغة. يستخدمها من لم يختر لغة صراحة. يطلب الحذف تأكيدًا ويرفض الخادم حذف اللغة المدمجة أو الافتراضية أو المرتبطة أو المستخدمة.' },
++    { en: 'Choose Change texts for a resolved active language. Select base language, target language and source; All texts or Empty translations controls direct target values. Search matches keys and direct base/target text. Search applies the choices; Refresh keeps the last applied search.', ar: 'اختر تغيير النصوص للغة نشطة ذات كود معروف. حدد اللغة الأساسية والمستهدفة والمصدر، ثم جميع النصوص أو الترجمات الفارغة لفلترة القيم المستهدفة المباشرة. يبحث البحث في المفاتيح والنصوص الأساسية والمستهدفة المباشرة. يطبق بحث الاختيارات، ويحتفظ تحديث بآخر بحث مطبق.' },
++    { en: 'Open Edit on a text. The key, source and base value are read-only. Enter plain text up to 4000 characters and preserve every required placeholder. Saving an empty value leaves no direct translation; runtime fallback still supplies text when available.', ar: 'افتح تعديلًا على النص. المفتاح والمصدر والقيمة الأساسية للقراءة فقط. أدخل نصًا عاديًا بحد أقصى 4000 حرف وحافظ على جميع العناصر النائبة المطلوبة. يترك حفظ قيمة فارغة الترجمة المباشرة فارغة، وتوفر الترجمة البديلة نصًا أثناء التشغيل عند توفره.' },
++    { en: 'Save and close stores the text and refreshes the interface. Save and next stores it then moves through the fixed session key list, including across pages. Previous never saves automatically and asks before discarding a changed draft. First/last boundaries disable navigation. A session contains at most 50000 keys; narrow the search if necessary.', ar: 'يحفظ حفظ وإغلاق النص ويحدث الواجهة. يحفظ حفظ والتالي النص ثم ينتقل في قائمة مفاتيح الجلسة الثابتة، حتى عبر الصفحات. لا يحفظ السابق تلقائيًا ويطلب تأكيد تجاهل المسودة المعدلة. يعطل التنقل عند أول وآخر مفتاح. تضم الجلسة حتى 50000 مفتاح؛ ضيق البحث عند الحاجة.' },
++    { en: 'Restore original text removes one customization after confirmation; it does not delete the original key or other languages. A conflict preserves your draft: Reload latest version asks before discarding changes, then lets you review and save against the new version.', ar: 'يزيل استعادة النص الأصلي تخصيصًا واحدًا بعد التأكيد، ولا يحذف المفتاح الأصلي أو اللغات الأخرى. يحتفظ التعارض بالمسودة؛ يطلب تحميل أحدث نسخة تأكيد تجاهل التغييرات ثم يتيح مراجعتها والحفظ باستخدام النسخة الجديدة.' },
++    { en: 'Cancel, Close, Escape, Previous and leaving the route guard unsaved edits. Failed reads offer Retry. If storage succeeds but interface refresh or the next detail load fails, retry only that failed step; the screen prevents repeating the committed save.', ar: 'تحمي الإلغاء والإغلاق وEscape والسابق ومغادرة المسار التغييرات غير المحفوظة. توفر القراءة الفاشلة إعادة المحاولة. إذا نجح التخزين وفشل تحديث الواجهة أو تحميل النص التالي، أعد محاولة الخطوة الفاشلة فقط؛ تمنع الشاشة تكرار الحفظ المنفذ.' },
+   ],
+   notes: [
+-    { en: 'The server owns the record identifier and audit values. Default-language selection, changing all interface texts and special locks for built-in languages are not available in the current API.', ar: 'يمتلك الخادم معرف السجل وقيم التدقيق. اختيار اللغة الافتراضية وتغيير نصوص الواجهة وأقفال اللغات المدمجة غير متاحة في واجهة API الحالية.' },
+-    { en: 'Generated mock data, when enabled for the form, fills the draft only. Review the values and use Save manually.', ar: 'عند تفعيل البيانات التجريبية للنموذج، فهي تعبئ المسودة فقط. راجع القيم واستخدم الحفظ يدويًا.' },
++    { en: 'Sources are Sigma.UI, Sigma.API.GeneralMessages and Sigma.API.MockDataMessages. Baselines and keys come from the owner-imported application catalog; this screen does not invent keys or translate automatically. The owner must apply the schema migration and import the catalog before database localization is available.', ar: 'المصادر هي Sigma.UI وSigma.API.GeneralMessages وSigma.API.MockDataMessages. تأتي النصوص الأصلية والمفاتيح من كتالوج التطبيق الذي يستورده المالك؛ لا تنشئ الشاشة مفاتيح أو ترجمات تلقائية. يجب أن يطبق المالك ترحيل المخطط ويستورد الكتالوج قبل توفر ترجمة قاعدة البيانات.' },
++    { en: 'Fallback uses a nonblank selected-language customization, then its original text, then the subscription default, then English, then the key. A customization flagged for review is retained but skipped at runtime. Unknown or duplicate legacy identities remain visible and are not automatically merged or deleted.', ar: 'تستخدم الترجمة البديلة تخصيصًا غير فارغ للغة المختارة ثم نصها الأصلي ثم اللغة الافتراضية للاشتراك ثم الإنجليزية ثم المفتاح. يحتفظ النظام بالتخصيص الذي يحتاج مراجعة ويتجاوزه أثناء التشغيل. تظل هويات اللغات القديمة المجهولة أو المكررة ظاهرة دون دمج أو حذف تلقائي.' },
+   ],
+ };
+diff --git a/src/app/modules/auth/services/auth.service.ts b/src/app/modules/auth/services/auth.service.ts
+index 90e622c4..1ccfe368 100644
+--- a/src/app/modules/auth/services/auth.service.ts
++++ b/src/app/modules/auth/services/auth.service.ts
+@@ -78,6 +78,7 @@ export class AuthService implements OnDestroy {
+   logout() {
+     localStorage.removeItem(this.authLocalStorageToken);
+     localStorage.removeItem(this.authLocalStorageUser);
++    this.currentUserSubject.next(undefined);
+     this.router.navigate(['/auth/login'], {
+       queryParams: {},
+     });
+diff --git a/src/app/modules/i18n/translation.service.ts b/src/app/modules/i18n/translation.service.ts
+index 1c3c2858..f8141c2f 100644
+--- a/src/app/modules/i18n/translation.service.ts
++++ b/src/app/modules/i18n/translation.service.ts
+@@ -1,108 +1,311 @@
+-// Localization is based on '@ngx-translate/core';
+-// Please be familiar with official documentations first => https://github.com/ngx-translate/core
+-
+ import { DOCUMENT } from '@angular/common';
+-import { Inject, Injectable, Renderer2, RendererFactory2 } from '@angular/core';
++import { HttpClient } from '@angular/common/http';
++import { DestroyRef, Inject, Injectable, Renderer2, RendererFactory2, signal } from '@angular/core';
++import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+ import { TranslateService } from '@ngx-translate/core';
++import { Observable, ReplaySubject, Subject, defer, of } from 'rxjs';
++import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
++import { environment } from 'src/environments/environment';
++import { LanguageOption } from '../Administration/Languages/models/options';
++import { LanguageService } from '../Administration/Languages/services/language.service';
++import { Result } from '../shared/models/result';
+ 
+ export interface Locale {
+   lang: string;
+-  data: any;
++  data: Record<string, unknown>;
++}
++
++interface RuntimeDictionary {
++  languageCode: string;
++  isRightToLeft: boolean;
++  revision: string;
++  values: Record<string, string>;
++}
++interface RuntimeRead {
++  session: string;
++  result: ReplaySubject<boolean>;
+ }
+ 
+-const LOCALIZATION_LOCAL_STORAGE_KEY = 'language';
++const BUILT_IN_OPTIONS: LanguageOption[] = [
++  ['en', 'English', 'us'], ['ar', 'العربية', 'sa'],
++  ['zh', '中文', 'cn'], ['es', 'Español', 'es'], ['ja', '日本語', 'jp'],
++  ['de', 'Deutsch', 'de'], ['fr', 'Français', 'fr'],
++].map(([cultureCode, languageName, flag], index) => ({
++  id: -index - 1, cultureCode, languageName, flag,
++  isBuiltIn: true, isDefault: cultureCode === 'en', isRightToLeft: cultureCode === 'ar', isActive: true,
++}));
+ 
+-@Injectable({
+-  providedIn: 'root',
+-})
++@Injectable({ providedIn: 'root' })
+ export class TranslationService {
+-  // Private properties
+-  private langIds: any = [];
+-  private renderer: Renderer2;
++  readonly languageOptions = signal<readonly LanguageOption[]>(BUILT_IN_OPTIONS);
++  readonly selectedLanguage = signal('en');
++  readonly runtimeLoading = signal(false);
++  readonly runtimeError = signal(false);
++  private readonly originals = new Map<string, Record<string, unknown>>();
++  private readonly runtimeLanguages = new Set<string>();
++  private readonly requests = new Subject<RuntimeRead | null>();
++  private readonly renderer: Renderer2;
++  private readonly rtlStylesheetId = 'app-rtl-stylesheet';
++  private session: string | null = null;
++  private preferredLanguage: string | null = null;
++  private selectedRtl = false;
++
+   constructor(
+     private translate: TranslateService,
+-    private rendererFactory: RendererFactory2,
+-    @Inject(DOCUMENT) private document: Document
++    rendererFactory: RendererFactory2,
++    @Inject(DOCUMENT) private document: Document,
++    private http: HttpClient,
++    private languages: LanguageService,
++    destroyRef: DestroyRef,
+   ) {
+-    this.renderer = this.rendererFactory.createRenderer(null, null);
+-    // add new langIds to the list
+-    this.translate.addLangs(['en']);
+-
+-    // this language will be used as a fallback when a translation isn't found in the current language
++    this.renderer = rendererFactory.createRenderer(null, null);
+     this.translate.setDefaultLang('en');
++    this.requests.pipe(
++      switchMap(request => request ? defer(() => {
++        let applied = false;
++        this.runtimeLoading.set(true);
++        this.runtimeError.set(false);
++        return this.languages.getOptions().pipe(
++          switchMap(response => {
++            if (!response.isSuccess || !response.entity || request.session !== this.session) {
++              throw new Error('Runtime options unavailable');
++            }
++            const options = response.entity.languages.filter(option => option.isActive);
++            if (!options.length) {
++              throw new Error('Runtime options unavailable');
++            }
++            this.languageOptions.set(options);
++            const preferred = options.find(option => option.cultureCode === this.preferredLanguage);
++            const selected = preferred
++              || options.find(option => option.cultureCode === response.entity!.defaultLanguageCode)
++              || options.find(option => option.cultureCode === 'en');
++            if (!selected) {
++              throw new Error('Runtime language unavailable');
++            }
++            return this.http.get<Result<RuntimeDictionary>>(`${environment.baseUrl}Localization/Runtime`, {
++              params: { languageCode: selected.cultureCode },
++              headers: { 'X-Skip-Error-Interceptor': 'true' },
++            }).pipe(map(result => ({ result, selected })));
++          }),
++          tap(({ result, selected }) => {
++            if (request.session !== this.session) {
++              return;
++            }
++            const data = result.entity;
++            if (!result.isSuccess || !data || data.languageCode !== selected.cultureCode || !data.revision) {
++              throw new Error('Runtime dictionary unavailable');
++            }
++            const dictionary = this.buildDictionary(data.languageCode, data.values);
++            // Keep only the active DB snapshot; another language is always reread with its revision.
++            for (const previous of this.runtimeLanguages) {
++              if (previous === data.languageCode) {
++                continue;
++              }
++              const original = this.originals.get(previous);
++              if (original) {
++                this.translate.setTranslation(previous, this.clone(original), false);
++              } else {
++                this.translate.resetLang(previous);
++              }
++            }
++            this.runtimeLanguages.clear();
++            this.translate.setTranslation(data.languageCode, dictionary, false);
++            this.runtimeLanguages.add(data.languageCode);
++            this.applyLanguage(data.languageCode, data.isRightToLeft);
++            applied = true;
++          }),
++          catchError(() => {
++            if (request.session === this.session) {
++              this.runtimeError.set(true);
++            }
++            return of(null);
++          }),
++          finalize(() => {
++            this.runtimeLoading.set(false);
++            request.result.next(applied);
++            request.result.complete();
++          }),
++        );
++      }) : of(null)),
++      takeUntilDestroyed(destroyRef),
++    ).subscribe();
++  }
++
++  loadTranslations(...locales: Locale[]): void {
++    for (const locale of locales) {
++      const original = this.clone(locale.data);
++      this.originals.set(locale.lang, original);
++      this.translate.setTranslation(locale.lang, this.clone(original), false);
++    }
++    this.translate.addLangs(Array.from(this.originals.keys()));
++    const saved = this.readPreference('language');
++    const language = saved && this.originals.has(saved) ? saved : 'en';
++    this.applyLanguage(language, language === 'ar');
+   }
+ 
+-  loadTranslations(...args: Locale[]): void {
+-    const locales = [...args];
++  /** Called by the authenticated shell; no AuthService dependency or interceptor requests. */
++  startSession(subscriptionId: string, userId: string): void {
++    const session = subscriptionId && userId
++      ? `${encodeURIComponent(subscriptionId)}:${encodeURIComponent(userId)}`
++      : null;
++    if (!session || session === this.session) {
++      return;
++    }
++    this.endSession();
++    this.session = session;
++    this.preferredLanguage = this.readPreference(this.preferenceKey());
++    // A global pre-login preference is never a new tenant's preference.
++    this.applyLanguage('en', false);
++    this.refreshRuntime();
++  }
+ 
+-    locales.forEach((locale) => {
+-      // use setTranslation() with the third argument set to true
+-      // to append translations instead of replacing them
+-      this.translate.setTranslation(locale.lang, locale.data, true);
+-      this.langIds.push(locale.lang);
+-    });
++  endSession(): void {
++    this.session = null;
++    this.requests.next(null);
++    this.preferredLanguage = null;
++    for (const language of this.runtimeLanguages) {
++      if (!this.originals.has(language)) {
++        this.translate.resetLang(language);
++      }
++    }
++    for (const [language, dictionary] of this.originals) {
++      this.translate.setTranslation(language, this.clone(dictionary), false);
++    }
++    this.runtimeLanguages.clear();
++    this.languageOptions.set(BUILT_IN_OPTIONS);
++    this.runtimeError.set(false);
++    const saved = this.readPreference('language');
++    const language = saved && this.originals.has(saved) ? saved : 'en';
++    this.applyLanguage(language, language === 'ar');
++  }
+ 
+-    // add new languages to the list
+-    this.translate.addLangs(this.langIds);
+-    this.translate.use(this.getSelectedLanguage());
+-    this.checkAndRemoveElement();
++  /** A refresh owns its read immediately; callers may observe the replayed outcome. */
++  refreshRuntime(): Observable<boolean> {
++    if (!this.session) {
++      return of(false);
++    }
++    const result = new ReplaySubject<boolean>(1);
++    this.requests.next({ session: this.session, result });
++    return result.asObservable();
+   }
+ 
+-  setLanguage(lang: string) {
+-    if (lang) {
+-      this.translate.use(lang);
+-      localStorage.setItem(LOCALIZATION_LOCAL_STORAGE_KEY, lang);
+-      this.checkAndRemoveElement();
++  setLanguage(language: string): void {
++    const option = this.languageOptions().find(item => item.cultureCode === language);
++    if (!option) {
++      return;
++    }
++    if (this.session) {
++      this.preferredLanguage = language;
++      this.writePreference(this.preferenceKey(), language);
++      this.refreshRuntime();
++    } else {
++      this.writePreference('language', language);
++      this.applyLanguage(language, option.isRightToLeft);
+     }
+   }
+ 
+-  /**
+-   * Returns selected language
+-   */
+-  getSelectedLanguage(): any {
+-    return (
+-      localStorage.getItem(LOCALIZATION_LOCAL_STORAGE_KEY) ||
+-      this.translate.getDefaultLang()
+-    );
++  getSelectedLanguage(): string {
++    return this.selectedLanguage();
+   }
+-  private readonly rtlStylesheetId = 'app-rtl-stylesheet';
+ 
+-  checkAndRemoveElement() {
+-    const lang = this.getSelectedLanguage();
+-
+-    const bodyElement = this.document.body;
+-    this.renderer.setAttribute(this.document.documentElement, 'lang', lang);
+-    if (lang === 'ar') {
+-      this.renderer.setAttribute(bodyElement, 'direction', 'rtl');
+-      this.renderer.setAttribute(bodyElement, 'dir', 'rtl');
+-      this.renderer.setStyle(bodyElement, 'direction', 'rtl');
+-      this.renderer.setAttribute(this.document.documentElement, 'dir', 'rtl');
+-      this.renderer.setAttribute(this.document.documentElement, 'direction', 'rtl');
+-
+-      if (!this.document.getElementById(this.rtlStylesheetId)) {
+-        const linkElement = this.renderer.createElement('link');
+-        this.renderer.setAttribute(linkElement, 'id', this.rtlStylesheetId);
+-        this.renderer.setAttribute(linkElement, 'rel', 'stylesheet');
+-        this.renderer.setAttribute(
+-          linkElement,
+-          'href',
+-          './assets/css/style.rtl.css'
+-        );
+-        this.renderer.appendChild(this.document.head, linkElement);
++  private applyLanguage(language: string, rtl: boolean): void {
++    this.selectedLanguage.set(language);
++    this.selectedRtl = rtl;
++    this.translate.setDefaultLang('en');
++    this.translate.use(language);
++    this.checkAndRemoveElement();
++  }
++
++  checkAndRemoveElement(): void {
++    const direction = this.selectedRtl ? 'rtl' : 'ltr';
++    this.renderer.setAttribute(this.document.documentElement, 'lang', this.selectedLanguage());
++    for (const element of [this.document.documentElement, this.document.body]) {
++      this.renderer.setAttribute(element, 'dir', direction);
++      this.renderer.setAttribute(element, 'direction', direction);
++    }
++    this.renderer.setStyle(this.document.body, 'direction', direction);
++    const stylesheet = this.document.getElementById(this.rtlStylesheetId);
++    if (this.selectedRtl && !stylesheet) {
++      const link = this.renderer.createElement('link');
++      this.renderer.setAttribute(link, 'id', this.rtlStylesheetId);
++      this.renderer.setAttribute(link, 'rel', 'stylesheet');
++      this.renderer.setAttribute(link, 'href', './assets/css/style.rtl.css');
++      this.renderer.appendChild(this.document.head, link);
++    } else if (!this.selectedRtl && stylesheet?.parentNode) {
++      this.renderer.removeChild(stylesheet.parentNode, stylesheet);
++    }
++  }
++
++  private buildDictionary(language: string, values: Record<string, string>): Record<string, unknown> {
++    if (!values || typeof values !== 'object' || Array.isArray(values) || !Object.keys(values).length) {
++      throw new Error('Runtime dictionary unavailable');
++    }
++    // Source paths distinguish literal dots/ellipsis from nested property separators.
++    // Preserve nested group reads as well as ngx-translate's full-key reads.
++    const paths = new Map<string, string[]>();
++    const collect = (source: Record<string, unknown>, parent: string[] = []): void => {
++      for (const [key, value] of Object.entries(source)) {
++        const path = [...parent, key];
++        if (value && typeof value === 'object' && !Array.isArray(value)) {
++          collect(value as Record<string, unknown>, path);
++        } else {
++          paths.set(path.join('.'), path);
++        }
+       }
+-    } else {
+-      this.renderer.setAttribute(bodyElement, 'direction', 'ltr');
+-      this.renderer.setAttribute(bodyElement, 'dir', 'ltr');
+-      this.renderer.setStyle(bodyElement, 'direction', 'ltr');
+-      this.renderer.setAttribute(this.document.documentElement, 'dir', 'ltr');
+-      this.renderer.setAttribute(this.document.documentElement, 'direction', 'ltr');
+-
+-      const rtlStylesheet = this.document.getElementById(
+-        this.rtlStylesheetId
+-      );
+-      if (rtlStylesheet?.parentNode) {
+-        this.renderer.removeChild(this.document.head, rtlStylesheet);
++    };
++    for (const original of this.originals.values()) {
++      collect(original);
++    }
++    const dictionary = this.clone(this.originals.get(language) || {});
++    for (const [key, value] of Object.entries(values)) {
++      if (!key || typeof value !== 'string' || key.split('.').some(part => ['__proto__', 'constructor', 'prototype'].includes(part))) {
++        throw new Error('Unsafe runtime translation key');
++      }
++      const parts = paths.get(key) || this.newKeyPath(key);
++      let node = dictionary;
++      for (const part of parts.slice(0, -1)) {
++        const child = node[part];
++        if (!child || typeof child !== 'object' || Array.isArray(child)) {
++          node[part] = Object.create(null);
++        }
++        node = node[part] as Record<string, unknown>;
+       }
++      node[parts[parts.length - 1]] = value;
++    }
++    return dictionary;
++  }
++
++  private newKeyPath(key: string): string[] {
++    const parts = key.split('.');
++    const empty = parts.findIndex(part => !part);
++    // A trailing literal ellipsis belongs to its preceding property name.
++    const literalStart = Math.max(0, empty - 1);
++    return empty < 0
++      ? parts
++      : [...parts.slice(0, literalStart), parts.slice(literalStart).join('.')];
++  }
++
++  private clone(value: Record<string, unknown>): Record<string, unknown> {
++    return JSON.parse(JSON.stringify(value));
++  }
++
++  private preferenceKey(): string {
++    return `sigma.language:${this.session}`;
++  }
++
++  private readPreference(key: string): string | null {
++    try {
++      return localStorage.getItem(key);
++    } catch {
++      return null;
++    }
++  }
++
++  private writePreference(key: string, value: string): void {
++    try {
++      localStorage.setItem(key, value);
++    } catch {
++      // Session choice still works when storage is unavailable.
+     }
+   }
+ }
+diff --git a/src/app/modules/i18n/vocabs/ar.ts b/src/app/modules/i18n/vocabs/ar.ts
+index af90ebb6..1d41adf6 100644
+--- a/src/app/modules/i18n/vocabs/ar.ts
++++ b/src/app/modules/i18n/vocabs/ar.ts
+@@ -1,8 +1,15 @@
++import { authorizationAr } from './authorization';
++import { localizationRuntimeAr } from './localization-runtime';
++import { languageManagementAr } from './languages';
++
+ // Arabic
+ export const locale = {
+   lang: 'ar',
+ 
+   data: {
++    authorization: authorizationAr,
++    localizationRuntime: localizationRuntimeAr,
++    languageManagement: languageManagementAr,
+     user: {
+       id: 'المعرّف',
+       name: 'الاسم',
+diff --git a/src/app/modules/i18n/vocabs/en.ts b/src/app/modules/i18n/vocabs/en.ts
+index 763c575a..29b3f056 100644
+--- a/src/app/modules/i18n/vocabs/en.ts
++++ b/src/app/modules/i18n/vocabs/en.ts
+@@ -1,9 +1,15 @@
+ import { tollsInvoice } from "src/app/_metronic/shared/enums/tollsInvoice";
++import { authorizationEn } from './authorization';
++import { localizationRuntimeEn } from './localization-runtime';
++import { languageManagementEn } from './languages';
+ 
+ // USA
+ export const locale = {
+   lang: 'en',
+   data: {
++    authorization: authorizationEn,
++    localizationRuntime: localizationRuntimeEn,
++    languageManagement: languageManagementEn,
+     recordListsGuide: {
+       Vouchers_TrafficFines_TrafficFine: "Traffic Fines",
+       Vouchers_SalaryVouchers_SalaryVoucher: "Salary Vouchers",
+diff --git a/src/app/modules/shared/components/editor-dialog/editor-dialog.component.html b/src/app/modules/shared/components/editor-dialog/editor-dialog.component.html
+index 0149c7f3..555b5a70 100644
+--- a/src/app/modules/shared/components/editor-dialog/editor-dialog.component.html
++++ b/src/app/modules/shared/components/editor-dialog/editor-dialog.component.html
+@@ -56,6 +56,13 @@
+         <ng-content select="[editorDialogHint]"></ng-content>
+       </div>
+       <div class="app-editor-dialog-actions">
++        @for (action of footerActions; track action.id) {
++          <button type="button" class="app-editor-dialog-secondary-button"
++            [disabled]="action.disabled || saving" (click)="footerActionRequested.emit(action.id)">
++            @if (action.icon) { <i [class]="action.icon" aria-hidden="true"></i> }
++            {{ action.label }}
++          </button>
++        }
+         <button
+           type="button"
+           class="app-editor-dialog-secondary-button"
+diff --git a/src/app/modules/shared/components/editor-dialog/editor-dialog.component.scss b/src/app/modules/shared/components/editor-dialog/editor-dialog.component.scss
+index f7f2c73f..4ff0f448 100644
+--- a/src/app/modules/shared/components/editor-dialog/editor-dialog.component.scss
++++ b/src/app/modules/shared/components/editor-dialog/editor-dialog.component.scss
+@@ -97,7 +97,10 @@
+ 
+ .app-editor-dialog-actions {
+   display: flex;
++  flex-wrap: wrap;
++  min-width: 0;
+   align-items: center;
++  justify-content: flex-end;
+   gap: 8px;
+   margin-inline-start: auto;
+ }
+diff --git a/src/app/modules/shared/components/editor-dialog/editor-dialog.component.ts b/src/app/modules/shared/components/editor-dialog/editor-dialog.component.ts
+index f82c6a83..fc3c5e67 100644
+--- a/src/app/modules/shared/components/editor-dialog/editor-dialog.component.ts
++++ b/src/app/modules/shared/components/editor-dialog/editor-dialog.component.ts
+@@ -6,6 +6,13 @@ export type EditorDialogMode = 'create' | 'view' | 'edit';
+ 
+ export type EditorDialogBreakpoints = Record<string, string>;
+ 
++export interface EditorDialogFooterAction {
++  id: string;
++  label: string;
++  icon?: string;
++  disabled?: boolean;
++}
++
+ @Component({
+   selector: 'app-editor-dialog',
+   standalone: true,
+@@ -49,6 +56,8 @@ export class EditorDialogComponent {
+   @Input() cancelLabel = 'Cancel';
+   @Input() editLabel = 'Edit';
+   @Input() saveLabel = 'Save';
++  /** Optional workflow actions; the shell owns placement, the consumer owns behavior. */
++  @Input() footerActions: readonly EditorDialogFooterAction[] = [];
+ 
+   @Output() readonly closeRequested = new EventEmitter<void>();
+   @Output() readonly editRequested = new EventEmitter<void>();
+@@ -56,6 +65,7 @@ export class EditorDialogComponent {
+   @Output() readonly saveAndPrintRequested = new EventEmitter<void>();
+   @Output() readonly escapeRequested = new EventEmitter<Event>();
+   @Output() readonly shown = new EventEmitter<void>();
++  @Output() readonly footerActionRequested = new EventEmitter<string>();
+ 
+   readonly contentStyle = {
+     overflow: 'hidden', padding: '0', display: 'flex', flexDirection: 'column', minHeight: '0',
+diff --git a/src/app/modules/shared/interceptores/api-request.ts b/src/app/modules/shared/interceptores/api-request.ts
+index f44e4a0d..17e3132f 100644
+--- a/src/app/modules/shared/interceptores/api-request.ts
++++ b/src/app/modules/shared/interceptores/api-request.ts
+@@ -10,7 +10,7 @@ export function isSigmaApiRequest(req: HttpRequest<unknown>): boolean {
+   return !!environment.baseUrl && req.url.startsWith(environment.baseUrl);
+ }
+ 
+-/** Backend request culture for the active UI language (`ar` → `ar-SA`, else `en-US`). */
++/** Carry the selected catalog culture; the authenticated server validates tenant options. */
+ export function apiCulture(language: string | null | undefined): string {
+-  return language === 'ar' ? 'ar-SA' : 'en-US';
++  return language && /^[a-zA-Z]{2,8}(?:-[a-zA-Z0-9]{1,8})*$/.test(language) ? language : 'en';
+ }
+diff --git a/src/styles.scss b/src/styles.scss
+index 78aaedc0..7cd74d9d 100644
+--- a/src/styles.scss
++++ b/src/styles.scss
+@@ -16,6 +16,12 @@
+ @import './app/modules/shared/components/api-error-dialog/api-error-dialog.component';
+ @import './app/modules/shared/components/confirmation-dialog/confirmation-dialog.component';
+ 
++/* All application tables, including legacy/vendor cells, share vertical centering (UI6). */
++table th,
++table td {
++  vertical-align: middle !important;
++}
++
+ :root {
+   --sigma-primary: #3498db;
+   --sigma-primary-hover: #2587c5;
+@@ -509,6 +515,11 @@ body.p-overflow-hidden {
+ // Shared editor dialogs and the Vehicle Service picker are appended to body,
+ // so their PrimeNG shell styles must remain global. Projected content stays
+ // feature-scoped.
++[dir='rtl'] .app-editor-dialog .app-editor-dialog-actions .bi-chevron-left,
++[dir='rtl'] .app-editor-dialog .app-editor-dialog-actions .bi-chevron-right {
++  transform: scaleX(-1);
++}
++
+ .app-editor-dialog.p-dialog,
+ .vehicle-service-item-picker-dialog.p-dialog {
+   --app-editor-dialog-surface: #fff;

@@ -1,0 +1,181 @@
+<section class="sigma-list-page">
+  <div class="sigma-list-panel">
+    <header class="sigma-list-header">
+      <app-feature-title
+        [title]="(isLeaveSalary ? 'leaveSalaryPayrollProcess.title' : 'payrollProcess.title') | translate"
+        [subtitle]="(isLeaveSalary ? 'leaveSalaryPayrollProcess.subtitle' : 'payrollProcess.subtitle') | translate"
+        icon="bi bi-wallet2">
+        @if (displayedRun(); as run) {
+          <span class="sigma-status-badge" role="status">
+            {{ 'payrollProcess.processedPeriod' | translate: { period: run.period, overtime: run.overtimePeriod } }}
+          </span>
+          @if (run.revisionNumber > 0) {
+            <span class="sigma-status-badge">{{ 'payrollProcess.revisionLabel' | translate: { revision: run.revisionNumber } }}</span>
+          }
+          <span class="sigma-status-badge" [class.sigma-status-badge--warning]="run.isPaid">
+            {{ (run.isPaid ? 'payrollProcess.paid' : run.isSaved ? 'payrollProcess.saved' : 'payrollProcess.preview') | translate }}
+          </span>
+          @if (historicalRun() && !run.isCurrentRevision) {
+            <span class="sigma-status-badge sigma-status-badge--warning">{{ 'payrollProcess.superseded' | translate }}</span>
+          }
+          <span class="sigma-status-badge" [class.sigma-status-badge--success]="run.isApproved">
+            {{ (run.isApproved ? 'payrollProcess.approved' : 'payrollProcess.pendingApproval') | translate }}
+          </span>
+          @if (run.approvedAt) {
+            <small>{{ 'payrollProcess.approvalDetails' | translate: { date: formatDisplayDate(run.approvedAt, true), actor: run.approvedBy ?? '' } }}</small>
+          }
+        }
+      </app-feature-title>
+    </header>
+
+    <form class="payroll-process-filters" appFilterPanel [formGroup]="filterForm" (ngSubmit)="process()"
+      [mainColumns]="preview()?.id ? (isLeaveSalary ? 3 : 2) : (isLeaveSalary ? 2 : 1)" [stableLayout]="true" [inlineActions]="true" inlineActionCaption="general.actions"
+      [busy]="busy() || readOnly()" (resetRequested)="reset()" novalidate>
+      <div class="sigma-filter-field">
+        <label class="required" for="payroll-month">{{ 'payrollProcess.month' | translate }}</label>
+        <p-calendar appDatePicker [dateInputMask]="true" inputId="payroll-month" formControlName="month"
+          view="month" dateFormat="mm/yy" placeholder="mm/yyyy" [readonlyInput]="false" [keepInvalid]="true"
+          appendTo="body" panelStyleClass="sigma-datepicker-panel" styleClass="w-100"
+          [attr.aria-invalid]="filterForm.controls.month.invalid && filterForm.controls.month.touched" />
+        <app-field-error [control]="filterForm.controls.month" [messages]="{ payrollPeriod: 'payrollProcess.periodRange' }" reserveMessage="validationMessages.date" />
+      </div>
+      @if (isLeaveSalary) {
+        <div class="sigma-filter-field">
+          <label class="required" for="leave-salary-staff">{{ 'leaveSalaryPayrollProcess.staff' | translate }}</label>
+          <div class="d-flex gap-2 align-items-start">
+            <p-dropdown class="flex-grow-1" inputId="leave-salary-staff" formControlName="staffId" [options]="staffOptions()"
+              optionValue="id" optionLabel="value" [filter]="true" filterBy="no,value" [loading]="staffLoading()"
+              [placeholder]="'leaveSalaryPayrollProcess.selectStaff' | translate" appendTo="body" styleClass="w-100"
+              [emptyMessage]="(staffLoading() ? 'leaveSalaryPayrollProcess.loadingStaff' : 'leaveSalaryPayrollProcess.noEligibleStaff') | translate"
+              [emptyFilterMessage]="'leaveSalaryPayrollProcess.noEligibleStaff' | translate"
+              (onChange)="staffChanged($event.value)">
+              <ng-template pTemplate="selectedItem" let-option>
+                <span>{{ option.no ? option.no + ' — ' : '' }}{{ option.value }}</span>
+              </ng-template>
+              <ng-template pTemplate="item" let-option>
+                <span>{{ option.no ? option.no + ' — ' : '' }}{{ option.value }}</span>
+              </ng-template>
+            </p-dropdown>
+            <button type="button" class="sigma-secondary-button sigma-icon-button text-danger"
+              [disabled]="busy() || filterForm.controls.staffId.disabled || !filterForm.controls.staffId.value"
+              [attr.aria-label]="'leaveSalaryPayrollProcess.clearStaff' | translate"
+              [title]="'leaveSalaryPayrollProcess.clearStaff' | translate" (click)="clearStaff()">
+              <i class="bi bi-trash3-fill text-reset" aria-hidden="true"></i>
+            </button>
+          </div>
+          <app-field-error [control]="filterForm.controls.staffId" reserveMessage="validationMessages.required" />
+          @if (staffLoading()) { <app-state-message kind="loading" [message]="'leaveSalaryPayrollProcess.loadingStaff' | translate" /> }
+          @if (staffError()) {
+            <app-state-message kind="error" [message]="staffError() | translate" />
+            <button type="button" class="sigma-secondary-button" [disabled]="busy() || staffLoading()" (click)="retryStaff()">
+              <i class="bi bi-arrow-repeat" aria-hidden="true"></i>{{ 'payrollProcess.retry' | translate }}
+            </button>
+          }
+        </div>
+      }
+      @if (preview()?.id) {
+        <div class="sigma-filter-field">
+          <label for="payroll-revision">{{ 'payrollProcess.history' | translate }}</label>
+          <p-dropdown inputId="payroll-revision" formControlName="revision" [options]="revisionOptions()"
+            optionValue="id" optionLabel="value" [placeholder]="'payrollProcess.currentPreview' | translate"
+            [autoDisplayFirst]="false" appendTo="body" (onChange)="viewRevision($event.value)" />
+          @if (revisionsLoading()) { <app-state-message kind="loading" /> }
+        </div>
+      }
+      <ng-container appFilterActions>
+        <button type="button" class="sigma-secondary-button sigma-icon-button text-danger" [disabled]="busy()"
+          [attr.aria-label]="'payrollProcess.notesTitle' | translate" [title]="'payrollProcess.notesTitle' | translate"
+          aria-haspopup="dialog" (click)="openNotes()">
+          <i class="bi bi-exclamation-circle-fill text-reset" aria-hidden="true"></i>
+        </button>
+        @if (!readOnly()) {
+          <app-primary-action-button type="submit" icon="bi bi-gear" [label]="'payrollProcess.process' | translate"
+            [disabled]="!canProcess()" [loading]="processing()" />
+          <app-primary-action-button type="button" icon="bi bi-floppy-fill" [label]="'general.save' | translate"
+            [disabled]="saveDisabled()" [loading]="saving()" (pressed)="save()" />
+        }
+        <button type="button" class="sigma-secondary-button" [disabled]="!canExport()" (click)="exportExcel()">
+          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i>{{ 'general.exportExcel' | translate }}
+        </button>
+        @if (preview()?.id) {
+          <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="openLogs()">
+            <i class="bi bi-clock-history" aria-hidden="true"></i>{{ 'payrollProcess.logs.title' | translate }}
+          </button>
+        }
+        @if (openedFromList()) {
+          <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="backToPayrolls()">
+            <i class="bi bi-list-ul" aria-hidden="true"></i>{{ 'payrollProcess.backToPayrolls' | translate }}
+          </button>
+        }
+      </ng-container>
+    </form>
+
+    @if (isLeaveSalary) {
+      <div class="sigma-alert" role="note">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        <span>{{ 'leaveSalaryPayrollProcess.policyNotice' | translate }}</span>
+      </div>
+    }
+
+    @if (actionError()) {
+      <app-state-message kind="error" [message]="actionError()" />
+      @if (canRetry()) {
+        <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="retry()">
+          <i class="bi bi-arrow-repeat" aria-hidden="true"></i>{{ 'payrollProcess.retry' | translate }}
+        </button>
+      }
+    }
+    @if (revisionsError()) {
+      <div class="sigma-alert" role="alert">
+        <i class="bi bi-exclamation-circle" aria-hidden="true"></i><span>{{ revisionsError() | translate }}</span>
+        <button type="button" class="sigma-secondary-button" [disabled]="busy() || revisionsLoading()" (click)="retryRevisions()">{{ 'payrollProcess.retryHistory' | translate }}</button>
+      </div>
+    }
+
+    <div class="sigma-list-table">
+      <app-data-table [value]="rows()" [columns]="columns()" dataKey="staffId" [fill]="true"
+        [lazy]="false" [paginator]="false" [loading]="loadingRun() || processing() || historyLoading()"
+        [showEmpty]="!actionError()" [emptyMessage]="preview() ? 'payrollProcess.empty' : 'payrollProcess.notProcessed'"
+        style="--sigma-data-table-min-width: 1250px" />
+    </div>
+
+    @if (displayedRun()) {
+      <app-summary-cards class="sigma-list-summary" [ariaLabel]="'payrollProcess.totals' | translate" [cards]="summaryCards()"
+        density="slim" layout="row" [minCardWidth]="140" [maxHeight]="80" />
+    }
+  </div>
+</section>
+
+<ng-template #staffTemplate let-row>
+  <span>{{ row.name }}</span>
+</ng-template>
+
+<ng-template #notesTemplate let-row>
+  @if (row.issues.length > 0) {
+    <button type="button" class="sigma-secondary-button sigma-icon-button text-danger w-20px h-15px min-h-15px p-0 lh-1 align-middle" [disabled]="busy()"
+      [attr.aria-label]="'payrollProcess.staffNotesLabel' | translate: { name: row.name }"
+      [title]="'payrollProcess.staffNotesLabel' | translate: { name: row.name }"
+      aria-haspopup="dialog" (click)="openNotes(row)">
+      <i class="bi bi-exclamation-circle-fill text-reset fs-8" aria-hidden="true"></i>
+    </button>
+  }
+</ng-template>
+
+<app-editor-dialog [visible]="!!notesContext()" [title]="'payrollProcess.notesTitle' | translate"
+  [subtitle]="notesContext()?.staff
+    ? ('payrollProcess.staffNotesSubtitle' | translate: { name: notesContext()?.staff?.name ?? '', code: notesContext()?.staff?.code ?? '', period: notesContext()?.period ?? '' })
+    : ('payrollProcess.screenNotesSubtitle' | translate: { period: notesContext()?.period ?? '' })"
+  icon="bi bi-exclamation-circle" mode="view" [primaryActionVisible]="false" [contentPadded]="true"
+  width="640px" height="420px" dialogClass="payroll-notes-dialog" [closeLabel]="'general.close' | translate"
+  (closeRequested)="closeNotes()" (escapeRequested)="closeNotes()">
+  <div class="sigma-editor-scroll">
+    @for (message of notesContext()?.messages ?? []; track message) {
+      <div class="sigma-alert sigma-alert--warning" role="note">
+        <i class="bi bi-exclamation-circle" aria-hidden="true"></i><span>{{ message | translate }}</span>
+      </div>
+    }
+  </div>
+</app-editor-dialog>
+
+<app-payroll-run-logs [visible]="logsVisible()" [runId]="preview()?.id ?? null" [period]="preview()?.period ?? ''"
+  (closed)="closeLogs()" />

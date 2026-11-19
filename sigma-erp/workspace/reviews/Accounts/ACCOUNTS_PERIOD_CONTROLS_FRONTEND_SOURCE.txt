@@ -1,0 +1,1285 @@
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\month-close.routes.ts
+import { Routes } from '@angular/router';
+
+import { MonthCloseListComponent } from './components/list/list.component';
+
+export const MonthClose_Routes: Routes = [
+  {
+    path: '',
+    component: MonthCloseListComponent,
+  },
+];
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\components\check-result\check-result.component.html
+@if (result.isValid) {
+  <div class="sigma-alert sigma-alert--success" role="status">
+    <i class="bi bi-check-circle" aria-hidden="true"></i>
+    {{ result.message | translate }}
+  </div>
+} @else {
+  <app-state-message kind="error" [message]="result.message || 'monthClose.checks.failed'" />
+  @if (result.issues.length) {
+    <p>{{ 'monthClose.checks.issueCount' | translate: { count: result.issueCount } }}</p>
+    <ul class="sigma-alert-list">
+      @for (issue of result.issues; track issue.code) {
+        <li>{{ 'monthClose.checks.issueReason' | translate: { reason: (reasonKey(issue.code) | translate), count: issue.count } }}</li>
+      }
+    </ul>
+  }
+}
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\components\check-result\check-result.component.ts
+import { Component, Input } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { MonthCloseCheckDTO } from '../../models/month-close';
+
+const ISSUE_KEYS: Readonly<Record<string, string>> = {
+  monthNotFound: 'monthClose.reasons.monthNotFound',
+  fiscalYearNotFound: 'monthClose.reasons.fiscalYearNotFound',
+  invalidPeriod: 'monthClose.reasons.invalidPeriod',
+  fiscalYearClosed: 'monthClose.reasons.fiscalYearClosed',
+  monthAlreadyClosed: 'monthClose.reasons.monthAlreadyClosed',
+  futureMonth: 'monthClose.reasons.futureMonth',
+  previousMonthsOpen: 'monthClose.reasons.previousMonthsOpen',
+  vouchersNotApproved: 'monthClose.reasons.vouchersNotApproved',
+  invalidVouchers: 'monthClose.reasons.invalidVouchers',
+  periodImmutable: 'monthClose.reasons.periodImmutable',
+  useCloseAction: 'monthClose.reasons.useCloseAction',
+  invalidStatus: 'monthClose.reasons.invalidStatus',
+  closedRecordDelete: 'monthClose.reasons.closedRecordDelete',
+};
+
+@Component({
+  selector: 'app-month-close-check-result',
+  standalone: true,
+  imports: [TranslateModule, StateMessageComponent],
+  templateUrl: './check-result.component.html',
+})
+export class MonthCloseCheckResultComponent {
+  @Input({ required: true }) result!: MonthCloseCheckDTO;
+
+  reasonKey(code: string): string {
+    return Object.prototype.hasOwnProperty.call(ISSUE_KEYS, code)
+      ? ISSUE_KEYS[code]
+      : this.result.message || 'monthClose.checks.failed';
+  }
+}
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\components\close\close.component.html
+<app-editor-dialog [visible]="visible()" [title]="'monthClose.actions.close' | translate"
+  [subtitle]="'monthClose.confirm.recordLabel' | translate: { month: monthLabel, year: record.year }" icon="bi bi-lock"
+  mode="view" width="900px" [contentPadded]="true" [primaryActionVisible]="false"
+  [closeDisabled]="processing() || confirmationPending()" [closeLabel]="'general.close' | translate"
+  (closeRequested)="close()" (escapeRequested)="onEscape($event)">
+  <section class="month-close">
+    <app-step-form [steps]="navigationSteps" [activeStep]="currentStep() - 1" [ariaLabel]="'monthClose.checks.progressAria' | translate" />
+    <div class="month-close-result" role="status" aria-live="polite">
+      @if (processing()) {
+        <app-state-message kind="loading" message="monthClose.checks.checking" />
+      } @else {
+        @if (currentResult(); as result) {
+          <app-month-close-check-result [result]="result" />
+        }
+      }
+      @if (currentStep() === 3 && currentResult()?.isValid) {
+        <div class="month-close-confirmation">
+          <i class="bi bi-check2" aria-hidden="true"></i>
+          {{ 'monthClose.checks.confirmation' | translate }}
+        </div>
+      }
+    </div>
+    <footer class="sigma-editor-footer">
+      @if (currentStep() > 1 && currentStep() < 4) {
+        <button type="button" class="sigma-secondary-button" [disabled]="processing() || confirmationPending()" (click)="previous()">
+          {{ 'general.previous' | translate }}
+        </button>
+      }
+      @if (currentResult()?.isValid === false) {
+        <app-primary-action-button [label]="'monthClose.checks.retry' | translate" icon="bi bi-arrow-clockwise"
+          [disabled]="processing() || confirmationPending()" [loading]="processing()" (pressed)="retry()" />
+      } @else if (currentStep() < 3) {
+        <app-primary-action-button [label]="'general.next' | translate" icon="bi bi-arrow-right" [disabled]="!canContinue()" (pressed)="next()" />
+      } @else if (currentStep() === 3) {
+        <app-primary-action-button [label]="'monthClose.actions.close' | translate" icon="bi bi-lock-fill"
+          [disabled]="!canContinue()" (pressed)="requestCloseMonth()" />
+      }
+      <button type="button" class="sigma-secondary-button" [disabled]="processing() || confirmationPending()" (click)="close()">
+        {{ (closeSucceeded() ? 'general.close' : 'general.cancel') | translate }}
+      </button>
+    </footer>
+  </section>
+</app-editor-dialog>
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\components\close\close.component.scss
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\components\close\close.component.ts
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, EventEmitter, Input, OnInit, Output, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateModule } from '@ngx-translate/core';
+import { Observable, finalize, timeout } from 'rxjs';
+import { EditorDialogComponent } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { StepFormComponent, StepFormStep } from 'src/app/modules/shared/components/step-form/step-form.component';
+import { Result } from 'src/app/modules/shared/models/result';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { MonthCloseCheckDTO, MonthCloseDTO } from '../../models/month-close';
+import { MonthCloseService } from '../../services/month-close.service';
+import { MonthCloseCheckResultComponent } from '../check-result/check-result.component';
+
+type CloseStep = 1 | 2 | 3 | 4;
+const CLOSE_CHECK_TIMEOUT_MS = 20_000;
+
+@Component({
+  selector: 'app-month-close',
+  standalone: true,
+  imports: [CommonModule, TranslateModule, EditorDialogComponent, PrimaryActionButtonComponent, StateMessageComponent, StepFormComponent, MonthCloseCheckResultComponent],
+  templateUrl: './close.component.html',
+  styleUrl: './close.component.scss',
+})
+export class MonthCloseComponent extends BaseComponentService implements OnInit {
+  @Input({ required: true }) record!: MonthCloseDTO;
+  @Input({ required: true }) monthLabel!: string;
+
+  @Output() readonly cancelled = new EventEmitter<void>();
+  @Output() readonly completed = new EventEmitter<string>();
+
+  private readonly monthCloseService = inject(MonthCloseService);
+  private readonly confirmationDialog = inject(ConfirmationDialogService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  readonly navigationSteps: ReadonlyArray<StepFormStep> = [
+    { key: '1', label: 'monthClose.checks.steps.validate' },
+    { key: '2', label: 'monthClose.checks.steps.approvals' },
+    { key: '3', label: 'monthClose.checks.steps.consistency' },
+    { key: '4', label: 'monthClose.checks.steps.close' },
+  ];
+  readonly currentStep = signal<CloseStep>(1);
+  readonly results = signal<Partial<Record<CloseStep, MonthCloseCheckDTO>>>({});
+  readonly processing = signal(false);
+  readonly confirmationPending = signal(false);
+  readonly closeSucceeded = signal(false);
+  readonly visible = signal(true);
+
+  ngOnInit(): void {
+    this.runCurrentStep();
+  }
+
+  currentResult(): MonthCloseCheckDTO | null {
+    return this.results()[this.currentStep()] ?? null;
+  }
+
+  canContinue(): boolean {
+    return !this.processing() && !this.confirmationPending() && this.currentResult()?.isValid === true;
+  }
+
+  next(): void {
+    if (!this.canContinue() || this.currentStep() >= 3) return;
+    this.currentStep.update(step => (step + 1) as CloseStep);
+    if (!this.currentResult()) this.runCurrentStep();
+  }
+
+  previous(): void {
+    if (this.processing() || this.confirmationPending() || this.currentStep() <= 1 || this.currentStep() >= 4) return;
+    this.currentStep.update(step => (step - 1) as CloseStep);
+  }
+
+  requestCloseMonth(): void {
+    if (!this.canContinue() || this.currentStep() !== 3) return;
+    const id = this.record.id;
+    this.confirmationPending.set(true);
+    this.confirmationDialog.confirm({
+      severity: 'danger',
+      title: { key: 'monthClose.confirm.closeTitle' },
+      message: { key: 'monthClose.confirm.closeMessage', params: { record: `${this.monthLabel} ${this.record.year}` } },
+      record: {
+        label: { key: 'monthClose.confirm.recordLabel', params: { month: this.monthLabel, year: this.record.year } },
+        title: `${this.monthLabel} ${this.record.year}`,
+        icon: 'bi bi-calendar-month',
+      },
+      confirmLabel: { key: 'monthClose.actions.close' },
+      cancelLabel: { key: 'general.cancel' },
+      confirmIcon: 'bi bi-lock-fill',
+      icon: 'bi bi-lock-fill',
+    }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => this.confirmationPending.set(false)),
+    ).subscribe(confirmed => {
+      if (!confirmed || !this.visible() || this.record.id !== id || this.processing() || this.currentStep() !== 3 || this.currentResult()?.isValid !== true) return;
+      this.currentStep.set(4);
+      this.runCurrentStep();
+    });
+  }
+
+  retry(): void {
+    if (!this.processing() && !this.confirmationPending() && !this.closeSucceeded()) this.runCurrentStep();
+  }
+
+  close(): void {
+    if (this.processing() || this.confirmationPending()) return;
+    this.visible.set(false);
+    this.cancelled.emit();
+  }
+
+  onEscape(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.close();
+  }
+
+  private runCurrentStep(): void {
+    if (!this.record.id || this.processing()) return;
+    const step = this.currentStep();
+    const id = this.record.id;
+    this.processing.set(true);
+    this.loading.startLoading();
+    const request = this.getStepRequest(step);
+    (step === 4 ? request : request.pipe(timeout({ first: CLOSE_CHECK_TIMEOUT_MS }))).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => { this.processing.set(false); this.loading.endLoading(); }),
+    ).subscribe({
+      next: response => {
+        if (!this.visible() || this.record.id !== id) return;
+        const result: MonthCloseCheckDTO = response.isSuccess && response.entity
+          ? response.entity
+          : {
+              isValid: false,
+              message: response.message || 'monthClose.checks.failed',
+              issueCount: response.entity?.issueCount ?? 0,
+              issues: response.entity?.issues ?? [],
+            };
+        this.results.update(results => ({ ...results, [step]: result }));
+        if (step === 4 && response.isSuccess && result.isValid && !this.closeSucceeded()) {
+          this.closeSucceeded.set(true);
+          this.completed.emit(response.message || result.message || 'general.success');
+        }
+      },
+      error: (error: unknown) => {
+        if (!this.visible() || this.record.id !== id) return;
+        this.results.update(results => ({
+          ...results,
+          [step]: { isValid: false, message: apiErrorMessage(error, 'monthClose.checks.failed'), issueCount: 0, issues: [] },
+        }));
+      },
+    });
+  }
+
+  private getStepRequest(step: CloseStep): Observable<Result<MonthCloseCheckDTO>> {
+    switch (step) {
+      case 1: return this.monthCloseService.verifyValidMonth(this.record.id);
+      case 2: return this.monthCloseService.verifyVoucherApprovals(this.record.id);
+      case 3: return this.monthCloseService.verifyDataInconsistency(this.record.id);
+      case 4: return this.monthCloseService.closeMonth(this.record.id);
+    }
+  }
+}
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\components\list\list.component.html
+<section class="sigma-list-page">
+  <div class="sigma-list-panel">
+    <header class="sigma-list-header">
+    <app-feature-title
+      [title]="'monthClose.title' | translate"
+      [subtitle]="'monthClose.subtitle' | translate"
+      icon="bi bi-calendar2-check"
+    />
+    </header>
+
+    @if (errorMessage()) {
+      <app-state-message kind="error" [message]="errorMessage()" />
+      <button type="button" class="sigma-secondary-button" (click)="retry()">{{ 'general.retry' | translate }}</button>
+    }
+
+    <form class="month-close-filters" appFilterPanel [mainColumns]="1" [stableLayout]="true" [formGroup]="filterForm"
+      [busy]="loadingFiscalYears() || loadingMonths() || updatingId() !== null || confirmationPending() || dialogOpen()" (resetRequested)="reset()">
+    <div class="sigma-filter-field">
+      <label for="month-close-fiscal-year" class="form-label">
+        {{ 'monthClose.fiscalYear' | translate }}
+      </label>
+      <p-dropdown
+        inputId="month-close-fiscal-year"
+        [options]="fiscalYearOptions()"
+        optionLabel="label"
+        optionValue="id"
+        formControlName="fiscalYearId"
+        [placeholder]="'monthClose.selectFiscalYear' | translate"
+        [loading]="loadingFiscalYears()"
+        [showClear]="true"
+        appendTo="body"
+      />
+
+      @if (!loadingFiscalYears() && !errorMessage() && fiscalYearOptions().length === 0) {
+        <app-state-message kind="empty" message="monthClose.emptyFiscalYears" />
+      }
+    </div>
+    </form>
+
+    @if (selectedFiscalYearId() !== null) {
+      <div class="sigma-list-table">
+      <app-data-table
+        [fill]="true"
+        [value]="months()"
+        [columns]="columns()"
+        [actions]="actions()"
+        dataKey="id"
+        [lazy]="false"
+        [paginator]="false"
+        [loading]="loadingMonths()"
+        [showEmpty]="!errorMessage()"
+        emptyMessage="monthClose.emptyMonths"
+      />
+      </div>
+    } @else {
+      <app-state-message kind="empty" message="monthClose.selectFiscalYearPrompt" icon="bi bi-calendar2" />
+    }
+  </div>
+</section>
+
+@if (closeTarget(); as target) {
+  <app-month-close [record]="target.record" [monthLabel]="monthName(target.record.month)"
+    (cancelled)="closeTarget.set(null)" (completed)="closeCompleted($event)" />
+}
+
+@if (reopenFailure(); as failure) {
+  <app-editor-dialog [visible]="true" [title]="'monthClose.checks.reopenDenied' | translate"
+    [subtitle]="'monthClose.confirm.recordLabel' | translate: { month: monthName(failure.record.month), year: failure.record.year }"
+    icon="bi bi-unlock" mode="view" width="900px" [contentPadded]="true" [primaryActionVisible]="false"
+    [closeLabel]="'general.close' | translate" (closeRequested)="closeReasonDialog()" (escapeRequested)="closeReasonDialog($event)">
+    <app-month-close-check-result [result]="failure.result" />
+  </app-editor-dialog>
+}
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\components\list\list.component.scss
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\components\list\list.component.ts
+import { MessageService } from 'primeng/api';
+import { formatDisplayDate } from 'src/app/modules/shared/utils/date-utils';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  OnInit,
+  inject,
+  effect,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { Subject, EMPTY, catchError, defer, finalize, switchMap } from 'rxjs';
+
+import { FiscalYearDTO } from 'src/app/modules/Accounts/FiscalYears/models/list';
+import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
+import { fetchAllPages } from 'src/app/modules/shared/utils/list-query';
+import {
+  DataTableColumn,
+  DataTableComponent,
+} from 'src/app/modules/shared/components/data-table/data-table.component';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { ActionList } from 'src/app/modules/shared/models/action-list';
+import { Result } from 'src/app/modules/shared/models/result';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { EditorDialogComponent } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
+
+import { MonthCloseCheckDTO, MonthCloseDTO, MonthCloseStatus } from '../../models/month-close';
+import { MonthCloseService } from '../../services/month-close.service';
+import { MonthCloseComponent } from '../close/close.component';
+import { MonthCloseCheckResultComponent } from '../check-result/check-result.component';
+
+interface FiscalYearOption {
+  id: number;
+  label: string;
+}
+
+@Component({
+  selector: 'app-month-close-list',
+  host: { class: 'sigma-route-host' },
+  standalone: true,
+  imports: [
+    CommonModule,
+    StateMessageComponent,
+    DataTableComponent,
+    DropdownModule,
+    FeatureTitleComponent,
+    ReactiveFormsModule,
+    FilterPanelComponent,
+    TranslateModule,
+    EditorDialogComponent,
+    MonthCloseComponent,
+    MonthCloseCheckResultComponent,
+  ],
+  templateUrl: './list.component.html',
+  styleUrl: './list.component.scss',
+})
+export class MonthCloseListComponent extends BaseComponentService implements OnInit {
+  private readonly fiscalYearService = inject(FiscalYearService);
+  private readonly monthCloseService = inject(MonthCloseService);
+  private readonly confirmationDialog = inject(ConfirmationDialogService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
+
+  private readonly messages = inject(MessageService);
+  private readonly monthQueries = new Subject<number | null>();
+  private pendingSuccessMessage = '';
+  private pendingSuccessYearId: number | null = null;
+  private destroyed = false;
+  readonly confirmationPending = signal(false);
+  readonly closeTarget = signal<{ record: MonthCloseDTO; fiscalYearId: number } | null>(null);
+  readonly reopenFailure = signal<{ record: MonthCloseDTO; result: MonthCloseCheckDTO } | null>(null);
+  readonly dialogOpen = computed(() => this.closeTarget() !== null || this.reopenFailure() !== null);
+
+  readonly fiscalYearOptions = signal<FiscalYearOption[]>([]);
+  readonly months = signal<MonthCloseDTO[]>([]);
+  readonly columns = signal<ReadonlyArray<DataTableColumn<MonthCloseDTO>>>([]);
+  readonly actions = signal<ActionList<MonthCloseDTO>[]>([]);
+  readonly loadingFiscalYears = signal(false);
+  readonly loadingMonths = signal(false);
+  readonly updatingId = signal<number | null>(null);
+  readonly selectedFiscalYearId = signal<number | null>(null);
+  readonly errorMessage = signal('');
+  readonly filterForm = new FormGroup({ fiscalYearId: new FormControl<number | null>(null) });
+
+  constructor() {
+    super();
+    this.initActions();
+    this.destroyRef.onDestroy(() => { this.destroyed = true; this.clearPendingSuccess(); });
+    effect(() => {
+      if (this.loadingFiscalYears() || this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) this.filterForm.disable({ emitEvent: false });
+      else this.filterForm.enable({ emitEvent: false });
+    });
+  }
+
+  ngOnInit(): void {
+    this.filterForm.controls.fiscalYearId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => this.onFiscalYearChange(id));
+    this.monthQueries.pipe(
+      switchMap(id => id === null ? EMPTY : defer(() => {
+        this.loadingMonths.set(true);
+        this.errorMessage.set('');
+        this.loading.startLoading();
+        return this.monthCloseService.getByFiscalYear(id).pipe(
+          catchError(error => { this.handleRefreshFailure(apiErrorMessage(error, 'monthClose.errors.months')); return EMPTY; }),
+          finalize(() => { this.loadingMonths.set(false); this.loading.endLoading(); this.completeRefreshFeedback(); }),
+        );
+      })),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe(result => this.applyMonthsResult(result));
+    this.initColumns();
+    this.loadFiscalYears();
+  }
+
+  onFiscalYearChange(fiscalYearId: number | null): void {
+    if (this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) return;
+    this.selectedFiscalYearId.set(this.fiscalYearOptions().some(year => year.id === fiscalYearId) ? fiscalYearId : null);
+    this.months.set([]);
+    this.errorMessage.set('');
+
+    this.monthQueries.next(this.selectedFiscalYearId());
+  }
+
+  monthName(month: number): string {
+    if (!Number.isInteger(month) || month < 1 || month > 12) return String(month);
+    const locale = this.translate.currentLang || this.translate.defaultLang || 'en';
+    return new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date(2000, month - 1, 1));
+  }
+
+  statusKey(status: MonthCloseStatus): string {
+    return status === MonthCloseStatus.Closed
+      ? 'monthClose.status.closed'
+      : 'monthClose.status.open';
+  }
+
+  openClose(row: MonthCloseDTO): void {
+    const fiscalYearId = this.selectedFiscalYearId();
+    const current = this.months().find(month => month.id === row.id);
+    if (!fiscalYearId || !current || current.status !== MonthCloseStatus.Open || this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) return;
+    this.closeTarget.set({ record: { ...current }, fiscalYearId });
+  }
+
+  closeCompleted(message: string): void {
+    const target = this.closeTarget();
+    if (!target || this.selectedFiscalYearId() !== target.fiscalYearId) return;
+    this.closeTarget.set(null);
+    this.refreshAfterMutation(target.fiscalYearId, message);
+  }
+
+  closeReasonDialog(event?: Event): void {
+    event?.preventDefault();
+    event?.stopPropagation();
+    this.reopenFailure.set(null);
+  }
+
+  confirmReopen(row: MonthCloseDTO): void {
+    const fiscalYearId = this.selectedFiscalYearId();
+    if (!fiscalYearId || row.id < 1 || row.status !== MonthCloseStatus.Closed || this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) return;
+
+    const id = row.id;
+    const status = row.status;
+    this.confirmationPending.set(true);
+    this.confirmationDialog
+      .confirm({
+        severity: 'warning',
+        title: { key: 'monthClose.confirm.reopenTitle' },
+        message: {
+          key: 'monthClose.confirm.reopenMessage',
+          params: { record: `${this.monthName(row.month)} ${row.year}` },
+        },
+        icon: 'bi bi-unlock',
+        record: {
+          label: {
+            key: 'monthClose.confirm.recordLabel',
+            params: { month: this.monthName(row.month), year: row.year },
+          },
+          title: `${this.monthName(row.month)} ${row.year}`,
+          icon: 'bi bi-calendar-month',
+        },
+        confirmLabel: { key: 'monthClose.actions.reopen' },
+        cancelLabel: { key: 'general.cancel' },
+        confirmIcon: 'bi bi-unlock',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false)))
+      .subscribe((confirmed) => {
+        const current = this.months().find(month => month.id === id);
+        if (confirmed && current?.status === status && this.selectedFiscalYearId() === fiscalYearId && !this.loadingMonths() && this.updatingId() === null && !this.dialogOpen()) this.reopenMonth(current, fiscalYearId);
+      });
+  }
+
+  private initColumns(): void {
+    this.columns.set([
+      {
+        field: 'month',
+        header: 'monthClose.columns.month',
+        value: (row) => this.monthName(row.month),
+      },
+      { field: 'year', header: 'monthClose.columns.year', type: 'number' },
+      {
+        field: 'status',
+        header: 'monthClose.columns.status',
+        type: 'status',
+        status: row => ({ label: this.statusKey(row.status), tone: row.status === MonthCloseStatus.Open ? 'success' : 'neutral' }),
+      },
+    ]);
+  }
+
+  private initActions(): void {
+    this.actions.set([
+      {
+        title: 'monthClose.actions.close',
+        icon: 'bi bi-lock',
+        visible: (row: MonthCloseDTO) => row.status === MonthCloseStatus.Open,
+        disabled: () => this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen(),
+        action: (row: MonthCloseDTO) => this.openClose(row),
+      },
+      {
+        title: 'monthClose.actions.reopen',
+        icon: 'bi bi-unlock',
+        visible: (row: MonthCloseDTO) => row.status === MonthCloseStatus.Closed,
+        disabled: () => this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen(),
+        action: (row: MonthCloseDTO) => this.confirmReopen(row),
+      },
+    ]);
+  }
+
+  private loadFiscalYears(): void {
+    this.loadingFiscalYears.set(true);
+    this.errorMessage.set('');
+    this.loading.startLoading();
+
+    fetchAllPages(pageNo => this.fiscalYearService.getFiscalYears({ pageNo, pageSize: 100, sortField: 'startDate', sortOrder: -1 }), 'monthClose.errors.fiscalYears')
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loadingFiscalYears.set(false);
+          this.loading.endLoading();
+        }),
+      )
+      .subscribe({
+        next: (result) => {
+          this.fiscalYearOptions.set(result.map(year => this.toFiscalYearOption(year)));
+        },
+        error: (error: unknown) => {
+          this.fiscalYearOptions.set([]);
+          this.errorMessage.set(error instanceof Error && !(error instanceof HttpErrorResponse) ? error.message : apiErrorMessage(error, 'monthClose.errors.fiscalYears'));
+        },
+      });
+  }
+
+  private toFiscalYearOption(year: FiscalYearDTO): FiscalYearOption {
+    return {
+      id: year.id,
+      label: `${formatDisplayDate(year.startDate)} – ${formatDisplayDate(year.endDate)}`,
+    };
+  }
+
+  retry(): void {
+    if (this.loadingFiscalYears() || this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) return;
+    const id = this.selectedFiscalYearId();
+    if (id === null) this.loadFiscalYears();
+    else this.monthQueries.next(id);
+  }
+
+  reset(): void {
+    if (this.updatingId() !== null || this.confirmationPending() || this.loadingMonths() || this.loadingFiscalYears() || this.dialogOpen()) return;
+    this.filterForm.reset({ fiscalYearId: null });
+  }
+
+  private reopenMonth(row: MonthCloseDTO, fiscalYearId: number): void {
+    if (this.updatingId() !== null || this.selectedFiscalYearId() !== fiscalYearId || this.dialogOpen()) return;
+
+    this.updatingId.set(row.id);
+    this.errorMessage.set('');
+    this.loading.startLoading();
+
+    this.monthCloseService
+      .reopenMonth(row.id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.updatingId.set(null);
+          this.loading.endLoading();
+        }),
+      )
+      .subscribe({
+        next: result => {
+          if (!result.isSuccess || result.entity?.isValid !== true) {
+            this.reopenFailure.set({ record: { ...row }, result: {
+              isValid: false,
+              message: result.entity?.message || result.message || 'monthClose.errors.update',
+              issueCount: result.entity?.issueCount ?? 0,
+              issues: result.entity?.issues ?? [],
+            } });
+            return;
+          }
+          this.refreshAfterMutation(fiscalYearId, result.message || result.entity.message || 'general.success');
+        },
+        error: (error: unknown) => {
+          this.reopenFailure.set({ record: { ...row }, result: {
+            isValid: false, message: apiErrorMessage(error, 'monthClose.errors.update'), issueCount: 0, issues: [],
+          } });
+        },
+      });
+  }
+
+  private applyMonthsResult(result: Result<MonthCloseDTO[]>): void {
+    if (!result.isSuccess) {
+      this.handleRefreshFailure(result.message || 'monthClose.errors.months');
+      return;
+    }
+    this.months.set(result.entity ?? []);
+  }
+
+  private completeRefreshFeedback(): void {
+    if (!this.destroyed && this.pendingSuccessMessage && this.pendingSuccessYearId === this.selectedFiscalYearId() && !this.errorMessage()) {
+      this.messages.add({ key: 'global', severity: 'success', summary: this.translate.instant('general.success'), detail: this.translate.instant(this.pendingSuccessMessage) });
+      this.clearPendingSuccess();
+    }
+  }
+
+  private refreshAfterMutation(fiscalYearId: number, message: string): void {
+    this.pendingSuccessMessage = message;
+    this.pendingSuccessYearId = fiscalYearId;
+    this.monthQueries.next(fiscalYearId);
+  }
+
+  private handleRefreshFailure(message: string): void {
+    this.months.set([]);
+    this.errorMessage.set(this.pendingSuccessMessage
+      ? this.translate.instant('monthClose.errors.refreshAfterUpdate', { message: this.translate.instant(message) })
+      : message);
+    this.clearPendingSuccess();
+  }
+
+  private clearPendingSuccess(): void {
+    this.pendingSuccessMessage = '';
+    this.pendingSuccessYearId = null;
+  }
+
+}
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\models\month-close.ts
+export enum MonthCloseStatus {
+  Open = 1,
+  Closed = 2,
+}
+
+export interface MonthCloseDTO {
+  id: number;
+  month: number;
+  year: number;
+  status: MonthCloseStatus;
+}
+
+export interface MonthCloseIssueDTO {
+  code: string;
+  count: number;
+}
+
+export interface MonthCloseCheckDTO {
+  isValid: boolean;
+  message: string;
+  issueCount: number;
+  issues: MonthCloseIssueDTO[];
+}
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\MonthClose\services\month-close.service.ts
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { Result } from 'src/app/modules/shared/models/result';
+import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+import { environment } from 'src/environments/environment';
+
+import { MonthCloseCheckDTO, MonthCloseDTO } from '../models/month-close';
+
+@Injectable({ providedIn: 'root' })
+export class MonthCloseService extends BaseService {
+  constructor() {
+    super('MonthClose', environment.baseUrl);
+  }
+
+  getByFiscalYear(fiscalYearId: number): Observable<Result<MonthCloseDTO[]>> {
+    return this.http.get<Result<MonthCloseDTO[]>>(
+      `${this.baseUrl}MonthClose/GetByFiscalYear/${fiscalYearId}`,
+      { headers: { 'X-Skip-Error-Interceptor': 'true' } },
+    );
+  }
+
+  verifyValidMonth(id: number): Observable<Result<MonthCloseCheckDTO>> {
+    return this.getCheck('VerifyValidMonth', id);
+  }
+
+  verifyVoucherApprovals(id: number): Observable<Result<MonthCloseCheckDTO>> {
+    return this.getCheck('VerifyVoucherApprovals', id);
+  }
+
+  verifyDataInconsistency(id: number): Observable<Result<MonthCloseCheckDTO>> {
+    return this.getCheck('VerifyDataInconsistency', id);
+  }
+
+  closeMonth(id: number): Observable<Result<MonthCloseCheckDTO>> {
+    return this.changeStatus('CloseMonth', id);
+  }
+
+  reopenMonth(id: number): Observable<Result<MonthCloseCheckDTO>> {
+    return this.changeStatus('ReopenMonth', id);
+  }
+
+  private getCheck(endpoint: string, id: number): Observable<Result<MonthCloseCheckDTO>> {
+    return this.http.get<Result<MonthCloseCheckDTO>>(
+      `${this.baseUrl}MonthClose/${endpoint}/${id}`,
+      { headers: { 'X-Skip-Error-Interceptor': 'true', 'X-Skip-Success-Toast': 'true' } },
+    );
+  }
+
+  private changeStatus(endpoint: string, id: number): Observable<Result<MonthCloseCheckDTO>> {
+    return this.http.post<Result<MonthCloseCheckDTO>>(
+      `${this.baseUrl}MonthClose/${endpoint}/${id}`,
+      null,
+      { headers: { 'X-Skip-Error-Interceptor': 'true', 'X-Skip-Success-Toast': 'true' } },
+    );
+  }
+}
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\FiscalYears\components\details\details.component.ts
+import { focusField } from 'src/app/modules/shared/utils/focus-field';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { dateValueValidator, parseDateValue, toApiDateTime } from 'src/app/modules/shared/utils/date-utils';
+import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
+import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  inject,
+  effect,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { CalendarModule } from 'primeng/calendar';
+import { finalize } from 'rxjs';
+
+import { EditorDialogComponent, EditorDialogMode } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { FiscalYearCreateDTO, FiscalYearUpdateDTO } from '../../models/create';
+import { FiscalYearDetailsDTO } from '../../models/details';
+import { FiscalYearService } from '../../services/fiscalYear.service';
+
+export type FiscalYearEditorMode = EditorDialogMode;
+type FiscalYearForm = FormGroup<{
+  startDate: FormControl<Date | string | null>;
+  endDate: FormControl<Date | string | null>;
+}>;
+
+@Component({
+  selector: 'app-fiscal-year-details',
+  standalone: true,
+  imports: [
+    CalendarModule,
+    StateMessageComponent,
+    FieldErrorComponent,
+    DatePickerDirective,
+    CommonModule,
+    EditorDialogComponent,
+    ReactiveFormsModule,
+    TranslateModule,
+  ],
+  templateUrl: './details.component.html',
+  styleUrl: './details.component.scss',
+})
+export class DetailsComponent extends BaseComponentService implements OnInit {
+  @Input() mode: FiscalYearEditorMode = 'create';
+  @Input() recordId: number | null = null;
+
+  @Output() readonly closed = new EventEmitter<boolean>();
+
+  private readonly fiscalYearService = inject(FiscalYearService);
+  private readonly confirmationDialog = inject(ConfirmationDialogService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly document = inject(DOCUMENT);
+  private readonly fb = inject(FormBuilder);
+
+  readonly fiscalYearForm: FiscalYearForm = this.fb.group(
+    {
+      startDate: this.fb.control<Date | string | null>(null, [Validators.required, dateValueValidator]),
+      endDate: this.fb.control<Date | string | null>(null, [Validators.required, dateValueValidator]),
+    },
+    { validators: this.dateRangeValidator() },
+  );
+  readonly fiscalYear = signal<FiscalYearDetailsDTO | null>(null);
+  readonly loadingDetails = signal(false);
+  readonly loadError = signal('');
+  readonly errorMessage = signal('');
+  readonly saving = signal(false);
+  readonly closeConfirmationPending = signal(false);
+  readonly editorDialogVisible = signal(true);
+
+  constructor() {
+    super();
+    effect(() => {
+      this.saving(); this.loadingDetails(); this.closeConfirmationPending(); this.loadError();
+      this.applyMode();
+    });
+  }
+
+  ngOnInit(): void {
+    this.applyMode();
+    if (this.mode === 'create') {
+      this.loadSuggestedDates();
+      return;
+    }
+
+    if (!this.recordId || this.recordId < 1) {
+      this.loadError.set('FISCAL_YEAR.DETAIL_ERROR');
+      this.fiscalYearForm.disable({ emitEvent: false });
+      return;
+    }
+
+    this.loadDetails(this.recordId);
+  }
+
+  pageTitleKey(): string {
+    return this.mode === 'create'
+      ? 'FISCAL_YEAR.ADD_NEW'
+      : this.mode === 'edit'
+        ? 'FISCAL_YEAR.EDIT_TITLE'
+        : 'FISCAL_YEAR.VIEW_TITLE';
+  }
+
+  save(): void {
+    if (this.mode === 'view' || this.saving() || this.loadingDetails() || this.closeConfirmationPending() || this.loadError() || this.mode === 'edit' && this.fiscalYear()?.status !== 1) return;
+
+    this.fiscalYearForm.markAllAsTouched();
+    if (this.fiscalYearForm.invalid) {
+      queueMicrotask(() => this.focusFirstInvalidControl());
+      return;
+    }
+
+    const value = this.fiscalYearForm.getRawValue();
+    if (!value.startDate || !value.endDate) return;
+
+    const data: FiscalYearCreateDTO = {
+      startDate: toApiDateTime(value.startDate)!,
+      endDate: toApiDateTime(value.endDate)!,
+    };
+    const request$ = this.mode === 'create'
+      ? this.fiscalYearService.createFiscalYear(data)
+      : this.recordId
+        ? this.fiscalYearService.updateFiscalYear({ ...data, id: this.recordId } as FiscalYearUpdateDTO)
+        : null;
+
+    if (!request$) {
+      this.errorMessage.set('FISCAL_YEAR.DETAIL_ERROR');
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.saving.set(true);
+    this.loading.startLoading();
+    request$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.saving.set(false);
+          this.loading.endLoading();
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          if (!response.isSuccess) {
+            this.errorMessage.set(response.message || 'FISCAL_YEAR.SAVE_ERROR');
+            return;
+          }
+          this.finish(true);
+        },
+        error: (error: HttpErrorResponse) =>
+          this.errorMessage.set(apiErrorMessage(error, 'FISCAL_YEAR.SAVE_ERROR')),
+      });
+  }
+
+  enableEditing(): void {
+    if (this.mode !== 'view' || this.loadingDetails() || this.saving() || this.closeConfirmationPending() || this.loadError() || this.fiscalYear()?.status !== 1) return;
+    this.mode = 'edit';
+    this.applyMode();
+  }
+
+  requestClose(): void {
+    if (this.saving() || this.closeConfirmationPending()) return;
+    if (this.mode === 'view' || !this.fiscalYearForm.dirty) {
+      this.finish(false);
+      return;
+    }
+
+    const id = this.recordId;
+    this.closeConfirmationPending.set(true);
+    this.confirmationDialog
+      .confirm({
+        severity: 'warning',
+        title: { key: 'FISCAL_YEAR.DISCARD_TITLE' },
+        message: { key: 'FISCAL_YEAR.DISCARD_MESSAGE' },
+        confirmLabel: { key: 'FISCAL_YEAR.DISCARD' },
+        cancelLabel: { key: 'general.cancel' },
+        confirmIcon: 'bi bi-box-arrow-left',
+      })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.closeConfirmationPending.set(false)),
+      )
+      .subscribe((confirmed) => {
+        if (confirmed && this.editorDialogVisible() && this.recordId === id && !this.saving() && !this.loadingDetails()) this.finish(false);
+      });
+  }
+
+  onDialogEscape(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.requestClose();
+  }
+
+  onEditorShown(): void {
+    if (this.mode === 'view') {
+      queueMicrotask(() => this.focusInitialControl());
+    }
+  }
+
+  startDateValue(): Date | undefined {
+    const value = this.fiscalYearForm.controls.startDate.value;
+    return value instanceof Date ? value : undefined;
+  }
+
+  private loadDetails(id: number): void {
+    this.loadingDetails.set(true);
+    this.loadError.set('');
+    this.loading.startLoading();
+    this.fiscalYearService
+      .getFiscalYearDetails(id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loadingDetails.set(false);
+          this.applyMode();
+          this.loading.endLoading();
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          if (!this.editorDialogVisible() || this.recordId !== id) return;
+          if (!response.isSuccess || !response.entity) {
+            this.loadError.set(response.message || 'FISCAL_YEAR.DETAIL_ERROR');
+            this.fiscalYearForm.disable({ emitEvent: false });
+            return;
+          }
+          this.fiscalYear.set(response.entity);
+          if (this.mode === 'edit' && response.entity.status !== 1) this.mode = 'view';
+          this.fiscalYearForm.patchValue({
+            startDate: new Date(response.entity.startDate.slice(0, 10) + 'T00:00:00'),
+            endDate: new Date(response.entity.endDate.slice(0, 10) + 'T00:00:00'),
+          });
+          this.fiscalYearForm.markAsPristine();
+          this.applyMode();
+          if (this.mode === 'view') {
+            queueMicrotask(() => this.focusInitialControl());
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          this.loadError.set(apiErrorMessage(error, 'FISCAL_YEAR.DETAIL_ERROR'));
+          this.fiscalYearForm.disable({ emitEvent: false });
+        },
+      });
+  }
+
+  private loadSuggestedDates(): void {
+    if (this.loadingDetails() || this.saving() || this.mode !== 'create') return;
+    this.loadingDetails.set(true);
+    this.loadError.set('');
+    this.applyMode();
+    this.loading.startLoading();
+    this.fiscalYearService
+      .getFiscalYears({ pageNo: 1, pageSize: 1, sortField: 'endDate', sortOrder: -1 })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.loadingDetails.set(false);
+          this.applyMode();
+          this.loading.endLoading();
+        }),
+      )
+      .subscribe({
+        next: response => {
+          if (!this.editorDialogVisible() || this.mode !== 'create') return;
+          if (!response.isSuccess || !Array.isArray(response.entities)) {
+            this.loadError.set(response.message || 'FISCAL_YEAR.DETAIL_ERROR');
+            return;
+          }
+
+          let startDate: Date;
+          let endDate: Date;
+          const latest = response.entities[0];
+          if (latest) {
+            const latestEnd = typeof latest.endDate === 'string'
+              ? parseDateValue(latest.endDate.slice(0, 10)) : null;
+            const latestStart = typeof latest.startDate === 'string'
+              ? parseDateValue(latest.startDate.slice(0, 10)) : null;
+            if (!latestEnd || !latestStart || latestEnd < latestStart) {
+              this.loadError.set('FISCAL_YEAR.DETAIL_ERROR');
+              return;
+            }
+            startDate = new Date(latestEnd + 'T00:00:00');
+            startDate.setDate(startDate.getDate() + 1);
+            endDate = new Date(startDate);
+            endDate.setFullYear(endDate.getFullYear() + 1);
+            endDate.setDate(endDate.getDate() - 1);
+            if (endDate.getFullYear() > 9999) {
+              this.loadError.set('FISCAL_YEAR.DETAIL_ERROR');
+              return;
+            }
+          } else {
+            // Empty only counts as the first year when the server confirms zero records.
+            if (response.totalCount !== 0) {
+              this.loadError.set('FISCAL_YEAR.DETAIL_ERROR');
+              return;
+            }
+            const currentYear = new Date().getFullYear();
+            startDate = new Date(currentYear, 0, 1);
+            endDate = new Date(currentYear, 11, 31);
+          }
+          this.fiscalYearForm.patchValue({ startDate, endDate }, { emitEvent: false });
+          this.fiscalYearForm.markAsPristine();
+        },
+        error: (error: HttpErrorResponse) => {
+          if (this.editorDialogVisible()) this.loadError.set(apiErrorMessage(error, 'FISCAL_YEAR.DETAIL_ERROR'));
+        },
+      });
+  }
+
+  private applyMode(): void {
+    if (this.mode === 'view' || this.saving() || this.closeConfirmationPending() || this.loadingDetails() || this.loadError()) {
+      this.fiscalYearForm.disable({ emitEvent: false });
+    } else {
+      this.fiscalYearForm.enable({ emitEvent: false });
+    }
+  }
+
+  private dateRangeValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const startDate = toApiDateTime(control.get('startDate')?.value);
+      const endDate = toApiDateTime(control.get('endDate')?.value);
+      if (!startDate || !endDate) return null;
+      return endDate < startDate
+        ? { invalidDateRange: true }
+        : null;
+    };
+  }
+
+  private focusInitialControl(): void {
+    if (this.mode !== 'view') return;
+    this.document.querySelector<HTMLElement>('.fiscal-year-editor-dialog .app-editor-dialog-close')?.focus();
+  }
+
+  retry(): void {
+    if (this.loadingDetails() || this.saving() || this.closeConfirmationPending()) return;
+    if (this.mode === 'create') this.loadSuggestedDates();
+    else if (this.recordId) this.loadDetails(this.recordId);
+  }
+
+  private focusFirstInvalidControl(): void {
+    focusField(this.fiscalYearForm.controls.startDate.invalid ? 'fiscal-year-start-date' : 'fiscal-year-end-date');
+  }
+
+  private finish(changed: boolean): void {
+    this.editorDialogVisible.set(false);
+    this.closed.emit(changed);
+  }
+
+}
+
+
+SOURCE: F:\My Work\Sigma\SiGmaAngularFrontEnd\tsconfig.app.json
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": []
+  },
+  "files": [
+    "src/app/modules/Accounts/openingBalances/services/opening-balance-collection.service.ts",
+    "src/app/modules/Accounts/openingBalances/shared/opening-balance-editor-state/opening-balance-editor-state.component.ts",
+    "src/app/modules/Accounts/shared/report-family/account-report.models.ts",
+    "src/app/modules/Accounts/shared/report-family/account-report-endpoint.service.ts",
+    "src/app/modules/Accounts/shared/report-family/account-report-page.component.ts",
+    "src/app/modules/Accounts/shared/report-family/account-report-values.ts",
+    "src/main.ts",
+    "src/polyfills.ts",
+    "src/app/modules/shared/components/summary-cards/summary-cards.component.ts",
+    "src/app/modules/Customers/Companies/CompanyPartner/companypartner.routes.ts",
+    "src/app/modules/Customers/Companies/CompanyPartner/components/list/list.component.ts",
+    "src/app/modules/Customers/Companies/CompanyPartner/components/details/details.component.ts",
+    "src/app/modules/Customers/Companies/CompanyPartner/components/detalisForm/drivers/driver-draft.component.ts",
+    "src/app/modules/Accounts/FiscalYears/fiscalYear.routes.ts",
+    "src/app/modules/Accounts/FiscalYears/components/list/list.component.ts",
+    "src/app/modules/Accounts/MonthClose/month-close.routes.ts",
+    "src/app/modules/Accounts/MonthClose/components/list/list.component.ts",
+    "src/app/modules/Accounts/MonthClose/components/close/close.component.ts",
+    "src/app/modules/Accounts/MonthClose/components/check-result/check-result.component.ts",
+    "src/app/modules/Lease/LeaseQuotation/components/master-agreement-dialog/master-agreement-dialog.component.ts",
+    "src/app/modules/Lease/LeaseQuotation/components/rejection-dialog/rejection-dialog.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/deposit/deposit.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/vehicle-replacement/vehicle-replacement.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/driver-replacement/driver-replacement.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/additional-charges/additional-charges.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/billing-history/billing-history.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/payment-instructions/payment-instructions.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/void/void.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/logs-dialog/logs-dialog.component.ts",
+    "src/app/modules/Lease/LeaseAgreement/components/delivery-date/delivery-date.component.ts",
+    "src/app/modules/Equipment Rental/EquipmentQuotation/components/purchase-orders/purchase-orders.component.ts",
+    "src/app/modules/Rental/Agreement/agreement.routes.ts",
+    "src/app/modules/Rental/Agreement/components/list/list.component.ts",
+    "src/app/modules/Rental/Agreement/components/details/details.component.ts",
+    "src/app/modules/Rental/Agreement/components/discounts/discounts.component.ts",
+    "src/app/modules/Rental/Agreement/components/documents/documents.component.ts",
+    "src/app/modules/Rental/Agreement/components/deposit/deposit.component.ts",
+    "src/app/modules/Rental/Agreement/components/billing-history/billing-history.component.ts",
+    "src/app/modules/Rental/Agreement/components/delivery-date/delivery-date.component.ts",
+    "src/app/modules/Rental/Agreement/components/logs-dialog/logs-dialog.component.ts",
+    "src/app/modules/Rental/Agreement/components/print/print.component.ts",
+    "src/app/modules/Rental/Agreement/components/sales-person/sales-person.component.ts",
+    "src/app/modules/Rental/Agreement/components/void/void.component.ts",
+    "src/app/modules/Equipment Rental/DeliveryNote/deliverynote.routes.ts",
+    "src/app/modules/Equipment Rental/DeliveryNote/components/list/list.component.ts",
+    "src/app/modules/Equipment Rental/TimeSheet/timesheet.routes.ts",
+    "src/app/modules/Equipment Rental/TimeSheet/components/list/list.component.ts",
+    "src/app/modules/Equipment Rental/TimeSheet/components/details/details.component.ts",
+    "src/app/modules/Transportation/TransportationAgreement/transportationagreement.routes.ts",
+    "src/app/modules/Transportation/TransportationAgreement/components/list/list.component.ts",
+    "src/app/modules/Transportation/TransportationAgreement/components/details/details.component.ts",
+    "src/app/modules/Transportation/TripSheet/tripsheet.routes.ts",
+    "src/app/modules/Transportation/TripSheet/components/list/list.component.ts",
+    "src/app/modules/Transportation/TripSheet/components/details/details.component.ts",
+    "src/app/modules/Transportation/Trips/trips.routes.ts",
+    "src/app/modules/Transportation/Trips/components/list/list.component.ts",
+    "src/app/modules/Transportation/Trips/components/details/details.component.ts",
+    "src/app/modules/Movements/NRM/nrm.routes.ts",
+    "src/app/modules/Movements/NRM/components/list/list.component.ts",
+    "src/app/modules/Movements/NRM/components/details/details.component.ts",
+    "src/app/modules/Movements/WorkshopMovement/workshopmovement.routes.ts",
+    "src/app/modules/Movements/WorkshopMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/WorkshopMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/CustodyMovement/custodymovement.routes.ts",
+    "src/app/modules/Movements/CustodyMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/CustodyMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/DeliveryMovement/deliverymovement.routes.ts",
+    "src/app/modules/Movements/DeliveryMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/DeliveryMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/collectionMovement/collection-movement.routes.ts",
+    "src/app/modules/Movements/collectionMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/collectionMovement/components/details/details.component.ts",
+    "src/app/modules/Movements/logsMovement/logs-movement-routes.ts",
+    "src/app/modules/Movements/logsMovement/components/list/list.component.ts",
+    "src/app/modules/Movements/logsMovement/components/view/view.component.ts",
+    "src/app/modules/Workshop/WorkOrder/workorder.routes.ts",
+    "src/app/modules/Workshop/WorkOrder/components/list/list.component.ts",
+    "src/app/modules/Workshop/WorkOrder/components/details/details.component.ts",
+    "src/app/modules/Workshop/JobEstimation/jobestimation.routes.ts",
+    "src/app/modules/Workshop/JobEstimation/components/list/list.component.ts",
+    "src/app/modules/Workshop/JobEstimation/components/editor/editor.component.ts",
+    "src/app/modules/Workshop/JobEstimation/components/logs/logs-dialog.component.ts",
+    "src/app/modules/Workshop/JobEstimation/components/report/report.component.ts",
+    "src/app/modules/Customers/BalancesSummary/balances-summary.routes.ts",
+    "src/app/modules/Customers/BalancesSummary/components/list/list.component.ts",
+    "src/app/modules/Customers/ReceivableAgeAnalysis/receivable-age-analysis.routes.ts",
+    "src/app/modules/Customers/ReceivableAgeAnalysis/components/list/list.component.ts",
+    "src/app/modules/Customers/alerts/alerts.routes.ts",
+    "src/app/modules/Customers/alerts/components/list/list.component.ts",
+    "src/app/modules/Customers/debtCollection/debtCollection.routes.ts",
+    "src/app/modules/Customers/debtCollection/components/report/report.component.ts"
+  ],
+
+
+  "include": [
+    "src/**/*.d.ts",
+    "src/app/modules/Accounts/FiscalYears/**/*.ts"
+  ],
+  "exclude": [
+    "src/app/modules/Accounts/FiscalYears/**/*.spec.ts"
+  ]
+}

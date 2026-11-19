@@ -1,0 +1,56 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/list.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/list.ts (current)
+index 95e0676..a03c646 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/list.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/list.ts (current)	
+@@ -1,16 +1,38 @@
+-export interface CashDepositDTO {
+-  id: string;
+-  subscriptionId: number;
+-  isDeleted: boolean;
+-  isActive: boolean;
+-  isValid: boolean;
+-  isChanged: boolean;
+-  deletedAt: string;
+-  deletedBy: string;
+-  createdAt: string;
+-  createdBy: string;
++import { ListQuery } from 'src/app/modules/shared/utils/list-query';
++
++export enum CashDepositApprovalStatus {
++  Approved = 0,
++  NotApproved = 1,
++  Rejected = 2,
++}
++
++export enum CashDepositSourceType {
++  Receipt = 1,
++  Payment = 2,
++}
++
++export interface CashDepositListRow {
++  id: number;
++  no: string | null;
+   date: string;
+-  bankId?: number;
+-  refNo?: string;
++  refNo: string | null;
++  description: string | null;
++  amount: number;
++  bankName: string | null;
++  createdBy: string | null;
++  createdAt: string | null;
++  approvalStatus: CashDepositApprovalStatus;
++  isPosted: boolean;
++  isVoided: boolean;
++}
++
++export interface CashDepositFilters {
++  no: string | null;
++  dateFrom: string | null;
++  dateTo: string | null;
++  bankId: number | null;
++  branchId: number | null;
+ }
+ 
++export type CashDepositListQuery = ListQuery<CashDepositFilters>;
++

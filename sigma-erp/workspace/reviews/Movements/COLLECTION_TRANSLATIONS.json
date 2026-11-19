@@ -1,0 +1,51 @@
+{
+  "en": {
+    "collectionMovement": {
+      "details": "Collection movement details",
+      "agreementBranch": "Agreement branch",
+      "dateTimePlaceholder": "dd/mm/yyyy HH:mm",
+      "recordSubtitle": "Collection movement: {{no}}",
+      "delivered": "Delivered",
+      "listError": "Collection movements could not be loaded.",
+      "detailError": "The collection movement could not be loaded.",
+      "lookupError": "Selection options could not be loaded. Retry before saving.",
+      "agreementError": "Agreement context could not be loaded. Retry before saving.",
+      "saveError": "The collection movement was not saved. Your changes are retained.",
+      "deleteError": "The collection movement was not deleted.",
+      "exportError": "All matching collection movements could not be loaded for export.",
+      "exportEmptyError": "No collection movements were returned for this export.",
+      "confirmDeleteTitle": "Delete collection movement",
+      "confirmDeleteSubtitle": "Review the selected movement before continuing",
+      "confirmDeleteQuestion": "Delete this collection movement?",
+      "confirmDeleteWarning": "The selected movement will be removed from the list.",
+      "discardTitle": "Discard collection movement changes?",
+      "discardMessage": "Your unsaved collection movement changes will be lost.",
+      "discard": "Discard changes"
+    }
+  },
+  "ar": {
+    "collectionMovement": {
+      "openCollectionMovementTitle": "فتح حركة استلام",
+      "details": "تفاصيل حركة الاستلام",
+      "agreementBranch": "فرع الاتفاقية",
+      "dateTimePlaceholder": "dd/mm/yyyy HH:mm",
+      "recordSubtitle": "حركة الاستلام: {{no}}",
+      "delivered": "تم التسليم",
+      "listError": "تعذر تحميل حركات الاستلام.",
+      "detailError": "تعذر تحميل حركة الاستلام.",
+      "lookupError": "تعذر تحميل خيارات الاختيار. أعد المحاولة قبل الحفظ.",
+      "agreementError": "تعذر تحميل بيانات الاتفاقية. أعد المحاولة قبل الحفظ.",
+      "saveError": "لم يتم حفظ حركة الاستلام. تم الاحتفاظ بتعديلاتك.",
+      "deleteError": "لم يتم حذف حركة الاستلام.",
+      "exportError": "تعذر تحميل جميع حركات الاستلام المطابقة للتصدير.",
+      "exportEmptyError": "لم يتم إرجاع حركات استلام لهذا التصدير.",
+      "confirmDeleteTitle": "حذف حركة الاستلام",
+      "confirmDeleteSubtitle": "راجع الحركة المحددة قبل المتابعة",
+      "confirmDeleteQuestion": "هل تريد حذف حركة الاستلام هذه؟",
+      "confirmDeleteWarning": "ستتم إزالة الحركة المحددة من القائمة.",
+      "discardTitle": "تجاهل تعديلات حركة الاستلام؟",
+      "discardMessage": "ستفقد تعديلات حركة الاستلام غير المحفوظة.",
+      "discard": "تجاهل التعديلات"
+    }
+  }
+}

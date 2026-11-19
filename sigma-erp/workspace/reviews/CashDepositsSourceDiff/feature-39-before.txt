@@ -1,0 +1,724 @@
+using SiGma.Business.Resolver;
+using SiGma.ViewModels.ViewModels.CashDeposit;
+using SiGma.ViewModels.ViewModels.CashDepositDetail;
+
+namespace SiGma.Business.Services.BanksServices;
+
+public class CashDepositService :
+    Service<CashDepositAddVM, CashDepositUpdateVM, CashDepositDetailVM,
+        CashDepositListVM, SiGmaDbContext, CashDeposit>, ICashDepositService
+{
+    private readonly JournalVoucherResolver _jvResolver;
+
+    public CashDepositService(
+        IUnitOfWork<SiGmaDbContext> unitOfWork,
+        IMapper mapper,
+        IStringLocalizer<GeneralMessage> localization,
+        JournalVoucherResolver jvResolver)
+        : base(unitOfWork, mapper, localization)
+    {
+        _jvResolver = jvResolver;
+    }
+
+    // ── List ─────────────────────────────────────────────────────
+
+    public override async Task<Results<CashDepositListVM>> GetManyAsync(ListSmBase searchModel)
+    {
+        // Use WithNavigations so BankName/PaymentMethodName/BranchName are populated via AutoMapper ProjectTo
+        return await GetManyWithNavigationsAsync(searchModel);
+    }
+
+    // ── Add ──────────────────────────────────────────────────────
+
+    public override async Task<Result> AddAsync(CashDepositAddVM vm, CancellationToken cancellationToken)
+    {
+        // Kept: Multiple SaveChangesAsync() calls must be committed atomically.
+        using var transaction = await UnitOfWork.Context.Database.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            // 1. Validate foreign keys
+            var fkError = await ValidateForeignKeysAsync(vm.BankId, vm.PaymentMethodId, vm.BranchId, cancellationToken);
+            if (fkError is not null)
+                return Fail(fkError);
+
+            // 2. Validate source FKs and over-deposit on detail lines
+            var detailError = await ValidateDetailLinesAsync(vm.CashDepositDetails, cancellationToken);
+            if (detailError is not null)
+                return Fail(detailError);
+
+            // 3. Map VM → entity
+            var cashDeposit = Mapper.Map<CashDeposit>(vm);
+
+            // 4. Recalculate server-side totals (DueAmount per line, Amount = sum of DepositedNow)
+            foreach (var detail in cashDeposit.CashDepositDetails)
+                detail.Recalculate();
+            cashDeposit.Recalculate();
+
+            // 4. Persist master + details
+            await UnitOfWork.Repository.AddAsync(cashDeposit, cancellationToken);
+            await UnitOfWork.SaveChangesAsync(cancellationToken);
+
+            // 5. Build and save Journal Voucher (double-entry GL posting)
+            var jvResult = await BuildAndSaveJvAsync(cashDeposit, null, cancellationToken);
+            if (!jvResult.IsSuccess)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                return jvResult;
+            }
+
+            await transaction.CommitAsync(cancellationToken);
+
+            return new Result
+            {
+                IsSuccess = true,
+                Id        = cashDeposit.Id,
+                Message   = Localization.GetString(GeneralMessage.SuccessedToAdd)
+            };
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync(cancellationToken);
+            return Fail(Localization.GetString(GeneralMessage.FailedToAdd) + " - " + ex.Message);
+        }
+    }
+
+    // ── Update ───────────────────────────────────────────────────
+
+    public override async Task<Result> UpdateAsync(CashDepositUpdateVM vm)
+    {
+        // 1. Load tracked entity with child details (NO AsNoTracking — EF must track changes)
+        var cashDeposit = await UnitOfWork.Repository
+            .Query<CashDeposit>(e => e.Id == vm.Id, null, true, false, e => e.CashDepositDetails)
+            .FirstOrDefaultAsync();
+
+        if (cashDeposit is null)
+            return Fail("Cash deposit not found.");
+
+        // 2. Approval lock — cannot update a posted/approved deposit
+        if (cashDeposit.ApprovalStatus == ApprovalStatus.Approved || cashDeposit.IsPosted)
+            return Fail("Cannot update a posted or approved cash deposit.");
+
+        // 3. Allocation guard — block update if active allocations exist on linked JV
+        if (cashDeposit.JournalVoucherId.HasValue)
+        {
+            var hasAllocations = await _jvResolver.HasActiveAllocationsAsync(cashDeposit.JournalVoucherId.Value);
+            if (hasAllocations)
+            {
+                const string msg = "This document has active customer allocations and cannot be modified. Please remove all related allocations before editing or deleting the document.";
+                _jvResolver.LogBlockedOperation("CashDeposit", cashDeposit.No ?? cashDeposit.Id.ToString(), msg);
+                return Fail(msg);
+            }
+        }
+
+        // 4. Load existing JV with detail lines for rebuild
+        JournalVoucher? existingJv = null;
+        if (cashDeposit.JournalVoucherId.HasValue)
+        {
+            existingJv = await UnitOfWork.Repository
+                .Query<JournalVoucher>(
+                    jv => jv.Id == cashDeposit.JournalVoucherId.Value,
+                    null, false, false,
+                    jv => jv.JournalVoucherDetails)
+                .FirstOrDefaultAsync();
+        }
+
+        // 5. FK validation on updated values
+        var fkError = await ValidateForeignKeysAsync(vm.BankId, vm.PaymentMethodId, vm.BranchId);
+        if (fkError is not null)
+            return Fail(fkError);
+
+        // 5b. Validate detail lines (source FK existence + over-deposit guard)
+        var detailError = await ValidateDetailLinesAsync(vm.CashDepositDetails);
+        if (detailError is not null)
+            return Fail(detailError);
+
+        // Kept: Multiple SaveChangesAsync() calls must be committed atomically.
+        using var transaction = await UnitOfWork.Context.Database.BeginTransactionAsync();
+        try
+        {
+            // 6. Map updated scalars onto the tracked entity
+            Mapper.Map(vm, cashDeposit);
+
+            // 7. Sync detail collection: map incoming VMs to detail entities
+            var incomingDetails = Mapper.Map<List<CashDepositDetail>>(vm.CashDepositDetails);
+
+            // Remove details that are no longer in the update payload
+            var removedDetails = cashDeposit.CashDepositDetails
+                .Where(existing => !incomingDetails.Any(n => n.Id != 0 && n.Id == existing.Id))
+                .ToList();
+            if (removedDetails.Any())
+                UnitOfWork.Repository.DeleteRange(removedDetails);
+
+            // Add or update detail lines
+            foreach (var incoming in incomingDetails)
+            {
+                var existing = cashDeposit.CashDepositDetails.FirstOrDefault(d => d.Id == incoming.Id && d.Id != 0);
+                if (existing is not null)
+                    Mapper.Map(incoming, existing);
+                else
+                    cashDeposit.CashDepositDetails.Add(incoming);
+            }
+
+            // 8. Recalculate server-side
+            foreach (var detail in cashDeposit.CashDepositDetails)
+                detail.Recalculate();
+            cashDeposit.Recalculate();
+
+            UnitOfWork.Repository.Update(cashDeposit);
+            await UnitOfWork.SaveChangesAsync();
+
+            // 9. JV Rebuild: delete old detail lines, reconstruct balanced lines
+            if (existingJv?.JournalVoucherDetails.Any() == true)
+            {
+                UnitOfWork.Repository.DeleteRange(existingJv.JournalVoucherDetails);
+                await UnitOfWork.SaveChangesAsync();
+                existingJv.JournalVoucherDetails.Clear();
+            }
+
+            var jvResult = await BuildAndSaveJvAsync(cashDeposit, existingJv);
+            if (!jvResult.IsSuccess)
+            {
+                await transaction.RollbackAsync();
+                return jvResult;
+            }
+
+            await transaction.CommitAsync();
+
+            return new Result
+            {
+                IsSuccess = true,
+                Id        = cashDeposit.Id,
+                Message   = Localization.GetString(GeneralMessage.SuccessedToUpdate)
+            };
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return Fail(Localization.GetString(GeneralMessage.FailedToUpdate) + " - " + ex.Message);
+        }
+    }
+
+    // ── Delete ───────────────────────────────────────────────────
+
+    public override async Task<Result> RemoveAsync(int id)
+    {
+        // 1. Load master
+        var cashDeposit = await UnitOfWork.Repository.FindByIdAsync<CashDeposit>(id);
+        if (cashDeposit is null)
+            return Fail("Cash deposit not found.");
+
+        // 2. Approval lock
+        if (cashDeposit.ApprovalStatus == ApprovalStatus.Approved || cashDeposit.IsPosted)
+            return Fail("Cannot delete a posted or approved cash deposit.");
+
+        // 3. Allocation guard
+        if (cashDeposit.JournalVoucherId.HasValue)
+        {
+            var hasAllocations = await _jvResolver.HasActiveAllocationsAsync(cashDeposit.JournalVoucherId.Value);
+            if (hasAllocations)
+            {
+                const string msg = "This document has active customer allocations and cannot be modified. Please remove all related allocations before editing or deleting the document.";
+                _jvResolver.LogBlockedOperation("CashDeposit", cashDeposit.No ?? cashDeposit.Id.ToString(), msg);
+                return Fail(msg);
+            }
+        }
+
+        // 4. Load JV with detail lines for cleanup
+        JournalVoucher? existingJv = null;
+        if (cashDeposit.JournalVoucherId.HasValue)
+        {
+            existingJv = await UnitOfWork.Repository
+                .Query<JournalVoucher>(
+                    jv => jv.Id == cashDeposit.JournalVoucherId.Value,
+                    null, false, false,
+                    jv => jv.JournalVoucherDetails)
+                .FirstOrDefaultAsync();
+        }
+
+        try
+        {
+            // 5. Ledger cleanup sequence (ref: Delete/Cleanup Rules)
+            if (existingJv is not null)
+            {
+                if (existingJv.JournalVoucherDetails.Any())
+                    UnitOfWork.Repository.DeleteRange(existingJv.JournalVoucherDetails);
+                UnitOfWork.Repository.Delete(existingJv);
+            }
+
+            // 6. Delete master (detail rows cascade via DB FK config)
+            UnitOfWork.Repository.Delete(cashDeposit);
+            // Removed: EF Core implicit transaction is sufficient.
+            var result = await UnitOfWork.SaveChangesAsync();
+
+            return new Result
+            {
+                IsSuccess = result,
+                Message   = result
+                    ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+                    : Localization.GetString(GeneralMessage.FailedToRemove)
+            };
+        }
+        catch (Exception ex)
+        {
+            return Fail("An error occurred while deleting the cash deposit: " + ex.Message);
+        }
+    }
+
+    // ── Approval / Void ──────────────────────────────────────────
+
+    public async Task<Result> ToggleApprovalStatusAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var cashDeposit = await UnitOfWork.Repository.FindByIdAsync<CashDeposit>(id);
+        if (cashDeposit is null)
+            return Fail("Cash deposit not found.");
+
+        if (cashDeposit.IsVoided)
+            return Fail("Cannot change approval status of a voided cash deposit.");
+
+        // The deposit's approval posts or unposts its journal (the ledger follows the
+        // document); the resolver enforces the open period and allocations.
+        var journalVoucher = cashDeposit.JournalVoucherId.HasValue
+            ? await UnitOfWork.Repository
+                .Query<JournalVoucher>(jv => jv.Id == cashDeposit.JournalVoucherId.Value)
+                .FirstOrDefaultAsync(cancellationToken)
+            : null;
+        if (journalVoucher is null)
+            return Fail("Cash deposit Journal Voucher was not found.");
+
+        try
+        {
+            if (cashDeposit.ApprovalStatus == ApprovalStatus.Approved)
+            {
+                if (await _jvResolver.HasActiveAllocationsAsync(journalVoucher.Id, cancellationToken))
+                {
+                    const string msg = "This document has active customer allocations and cannot be modified. Please remove all related allocations before editing or deleting the document.";
+                    _jvResolver.LogBlockedOperation("CashDeposit", cashDeposit.No ?? cashDeposit.Id.ToString(), msg);
+                    return Fail(msg);
+                }
+
+                await _jvResolver.UnpostAsync(journalVoucher, cancellationToken);
+                cashDeposit.ApprovalStatus = ApprovalStatus.NotApproved;
+                cashDeposit.IsPosted = false;
+            }
+            else
+            {
+                await _jvResolver.PostAsync(journalVoucher, cancellationToken);
+                cashDeposit.ApprovalStatus = ApprovalStatus.Approved;
+                cashDeposit.IsPosted = true;
+            }
+        }
+        catch (JournalPostingException exception)
+        {
+            return Fail(exception.Message);
+        }
+
+        UnitOfWork.Repository.Update(journalVoucher);
+        UnitOfWork.Repository.Update(cashDeposit);
+        await UnitOfWork.SaveChangesAsync(cancellationToken);
+
+        return new Result
+        {
+            IsSuccess = true,
+            Id        = cashDeposit.Id,
+            Message   = $"Cash deposit approval status changed to {cashDeposit.ApprovalStatus}."
+        };
+    }
+
+    public async Task<Result> ToggleVoidStatusAsync(int id, CancellationToken cancellationToken = default)
+    {
+        var cashDeposit = await UnitOfWork.Repository.FindByIdAsync<CashDeposit>(id);
+        if (cashDeposit is null)
+            return Fail("Cash deposit not found.");
+
+        bool isVoiding = !cashDeposit.IsVoided;
+
+        // Voiding: block if active allocations exist
+        if (isVoiding && cashDeposit.JournalVoucherId.HasValue)
+        {
+            var hasAllocations = await _jvResolver.HasActiveAllocationsAsync(cashDeposit.JournalVoucherId.Value);
+            if (hasAllocations)
+            {
+                const string msg = "This document has active customer allocations and cannot be voided. Please remove all related allocations before editing or voiding the document.";
+                _jvResolver.LogBlockedOperation("CashDeposit", cashDeposit.No ?? cashDeposit.Id.ToString(), msg);
+                return Fail(msg);
+            }
+        }
+
+        // Sync JV void state
+        JournalVoucher? jv = null;
+        if (cashDeposit.JournalVoucherId.HasValue)
+        {
+            jv = await UnitOfWork.Repository
+                .Query<JournalVoucher>(x => x.Id == cashDeposit.JournalVoucherId.Value)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        try
+        {
+            if (jv is not null)
+            {
+                // Voiding changes the ledger: only in an open fiscal year and month.
+                await _jvResolver.EnsurePeriodOpenAsync(jv.Date, cancellationToken);
+                jv.IsVoided = isVoiding;
+                UnitOfWork.Repository.Update(jv);
+            }
+
+            cashDeposit.IsVoided = isVoiding;
+            UnitOfWork.Repository.Update(cashDeposit);
+            // Removed: EF Core implicit transaction is sufficient.
+            var result = await UnitOfWork.SaveChangesAsync(cancellationToken);
+
+            return new Result
+            {
+                IsSuccess = result,
+                Id        = cashDeposit.Id,
+                Message   = result
+                    ? $"Cash deposit {(isVoiding ? "voided" : "un-voided")} successfully."
+                    : $"Failed to {(isVoiding ? "void" : "un-void")} cash deposit."
+            };
+        }
+        catch (Exception ex)
+        {
+            return Fail(ex.Message);
+        }
+    }
+
+    // ── Private helpers ───────────────────────────────────────────
+
+    /// <summary>
+    /// Builds and persists balanced double-entry JV lines for a cash deposit.
+    /// Shared between AddAsync and UpdateAsync.
+    ///
+    /// Cash Deposit GL pattern:
+    ///   DEBIT  Bank Account           (cashDeposit.Amount)  — cash arrives at the bank
+    ///   CREDIT Cash-in-Hand Account   (cashDeposit.Amount)  — clears the undeposited cash
+    ///
+    /// Both accounts are resolved dynamically via LinkAccounts — no hardcoded IDs.
+    /// </summary>
+    private async Task<Result> BuildAndSaveJvAsync(
+        CashDeposit cashDeposit,
+        JournalVoucher? existingJv,
+        CancellationToken cancellationToken = default)
+    {
+        // Resolve destination Bank account from PaymentMethod link
+        int? bankAccountId = null;
+        if (cashDeposit.PaymentMethodId.HasValue)
+        {
+            bankAccountId = await _jvResolver.GetPaymentMethodAccountIdAsync(
+                cashDeposit.PaymentMethodId.Value,
+                cancellationToken: cancellationToken);
+        }
+
+        if (bankAccountId is null or 0)
+            return Fail("No linked bank account found for the selected payment method. Please configure the bank account in Link Accounts > Payment Methods.");
+
+        // Resolve Cash Deposits clearing account — this clears the undeposited cash balance
+        // Uses the dedicated "Customer Cash Deposits Account" from the General link accounts config
+        int? cashDepositsAccountId = await _jvResolver.GetGeneralAccountIdAsync(
+            LinkAccountsGeneral.CustomerCashDepositsAccount,
+            cancellationToken: cancellationToken);
+
+        if (cashDepositsAccountId is null or 0)
+            return Fail("Customer Cash Deposits account is not configured in Link Accounts (General > Customer Cash Deposits Account).");
+
+        // Build JV header — reuse existing on update, create new on add
+        var jv = existingJv ?? _jvResolver.NewJV(
+            cashDeposit.Date,
+            cashDeposit.BranchId,
+            VoucherTypeName.Receipt,
+            VoucherSubType.JV
+        );
+
+        if (existingJv is not null)
+        {
+            jv.Date     = cashDeposit.Date;
+            jv.BranchId = cashDeposit.BranchId;
+        }
+
+        // ── DEBIT: Bank account — cash deposited into the bank ──
+        _jvResolver.AddLine(jv, bankAccountId.Value, cashDeposit.Amount, 0, "Cash Deposit - Bank");
+
+        // ── CREDIT: Customer Cash Deposits account — clears the collected but undeposited cash ──
+        _jvResolver.AddLine(jv, cashDepositsAccountId.Value, 0, cashDeposit.Amount, "Cash Deposit - Clear Collected Cash");
+
+        // Persist JV (SaveJVAsync validates fiscal year and debit == credit balance)
+        var jvId = await _jvResolver.SaveJVAsync(jv, cancellationToken);
+        if (existingJv is null)
+        {
+            cashDeposit.JournalVoucherId = jvId;
+            UnitOfWork.Repository.Update(cashDeposit);
+            await UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        return new Result { IsSuccess = true };
+    }
+
+    /// <summary>
+    /// Validates all foreign keys before saving.
+    /// Returns an error string if any FK is missing, or null if all are valid.
+    /// CancellationToken defaults to default so UpdateAsync can call without passing one.
+    /// </summary>
+    private async Task<string?> ValidateForeignKeysAsync(
+        int bankId,
+        int? paymentMethodId,
+        int? branchId,
+        CancellationToken cancellationToken = default)
+    {
+        if (!await UnitOfWork.Repository.ExistsAsync<Bank>(
+                x => x.Id == bankId, cancellationToken: cancellationToken))
+            return "Bank not found.";
+
+        if (paymentMethodId.HasValue &&
+            !await UnitOfWork.Repository.ExistsAsync<PaymentMethod>(
+                x => x.Id == paymentMethodId.Value, cancellationToken: cancellationToken))
+            return "Payment method not found.";
+
+        if (branchId.HasValue &&
+            !await UnitOfWork.Repository.ExistsAsync<Branch>(
+                x => x.Id == branchId.Value, cancellationToken: cancellationToken))
+            return "Branch not found.";
+
+        return null;
+    }
+
+    /// <summary>
+    /// Returns all cash-method vouchers (Receipts + Payments) that are not yet fully deposited.
+    ///
+    /// Data sources queried:
+    ///   1. Receipt   — all ReceiptTypes (ContactReceipt, GeneralReceipt, AdvanceReceipt, etc.)
+    ///                  where PaymentMethod is cash-based (not Bank Transfer / PDC)
+    ///   2. Payment   — all PaymentTypes (SupplierPayment, CustomerPayment, GeneralPayment,
+    ///                  Deposit, DepositRefund, etc.)
+    ///
+    /// "Deposited" for each voucher = sum of DepositedNow across all existing CashDepositDetail
+    ///  rows that reference that source (by SourceReceiptId or SourcePaymentId).
+    ///
+    /// Only rows with DueAmount != 0 are returned (handles both positive inflows and
+    /// negative outflows like Supplier Payments).
+    /// </summary>
+    public async Task<Results<UndepositedVoucherDto>> GetUndepositedVouchersAsync(
+        CancellationToken cancellationToken = default)
+    {
+        // ── 1. Build deposited-amount lookups from existing CashDepositDetail rows ──────────
+
+        // How much has already been deposited per source Receipt
+        var depositedByReceiptId = await UnitOfWork.Repository
+            .Query<CashDepositDetail>(d => d.SourceReceiptId.HasValue)
+            .GroupBy(d => d.SourceReceiptId!.Value)
+            .Select(g => new { SourceId = g.Key, Deposited = g.Sum(d => d.DepositedNow) })
+            .ToListAsync(cancellationToken);
+
+        var receiptDepositedLookup = depositedByReceiptId
+            .ToDictionary(x => x.SourceId, x => x.Deposited);
+
+        // How much has already been deposited per source Payment
+        var depositedByPaymentId = await UnitOfWork.Repository
+            .Query<CashDepositDetail>(d => d.SourcePaymentId.HasValue)
+            .GroupBy(d => d.SourcePaymentId!.Value)
+            .Select(g => new { SourceId = g.Key, Deposited = g.Sum(d => d.DepositedNow) })
+            .ToListAsync(cancellationToken);
+
+        var paymentDepositedLookup = depositedByPaymentId
+            .ToDictionary(x => x.SourceId, x => x.Deposited);
+
+        // ── 2. Load Receipt vouchers ──────────────────────────────────────────────────────
+
+        var receipts = await UnitOfWork.Repository
+            .Query<Receipt>(r =>
+                r.IsDeleted != true &&
+                !r.IsVoided &&
+                r.PaymentMethodId.HasValue)
+            .Include(r => r.PaymentMethod)
+            .Where(r => r.PaymentMethod != null && r.PaymentMethod.Type == PaymentType.Cash)
+            .ToListAsync(cancellationToken);
+
+        var receiptRows = receipts
+            .Select(r =>
+            {
+                var deposited = receiptDepositedLookup.TryGetValue(r.Id, out var d) ? d : 0m;
+                var dueAmount = r.Amount - deposited;
+
+                return new UndepositedVoucherDto
+                {
+                    SourceType      = CashDepositSourceType.Receipt,
+                    SourceReceiptId = r.Id,
+                    Date            = r.Date,
+                    VoucherLabel    = FormatReceiptType(r.ReceiptType),
+                    No              = r.No,
+                    Description     = r.Detail ?? r.AdditionalDetail,
+                    Amount          = r.Amount,
+                    Deposited       = deposited,
+                    DueAmount       = dueAmount,
+                    DepositedNow    = 0
+                };
+            })
+            .Where(dto => dto.DueAmount != 0);   // include both positive (not yet deposited) and partial
+
+        // ── 3. Load Payment vouchers ──────────────────────────────────────────────────────
+
+        var payments = await UnitOfWork.Repository
+            .Query<Payment>(p => p.IsDeleted != true && p.PaymentMethodId.HasValue)
+            .Include(p => p.PaymentDetails)
+            .Include(p => p.PaymentMethod)
+            .Where(p => p.PaymentMethod != null && p.PaymentMethod.Type == PaymentType.Cash)
+            .ToListAsync(cancellationToken);
+
+        var paymentRows = payments
+            .Select(p =>
+            {
+                var totalAmount = p.PaymentDetails?.Sum(d => d.Amount) ?? 0m;
+                var deposited   = paymentDepositedLookup.TryGetValue(p.Id, out var d) ? d : 0m;
+                var dueAmount   = totalAmount - deposited;
+
+                return new UndepositedVoucherDto
+                {
+                    SourceType       = CashDepositSourceType.Payment,
+                    SourcePaymentId  = p.Id,
+                    Date             = p.Date ?? DateTime.Today,
+                    VoucherLabel     = FormatPaymentType(p.PaymentType),
+                    No               = p.No,
+                    Description      = p.Note,
+                    Amount           = totalAmount,
+                    Deposited        = deposited,
+                    DueAmount        = dueAmount,
+                    DepositedNow     = 0
+                };
+            })
+            .Where(dto => dto.DueAmount != 0);
+
+        // ── 4. Merge, sort, return ────────────────────────────────────────────────────────
+
+        var result = receiptRows
+            .Concat(paymentRows)
+            .OrderBy(dto => dto.Date)
+            .ThenBy(dto => dto.VoucherLabel)
+            .ToList();
+
+        return new Results<UndepositedVoucherDto>
+        {
+            IsSuccess = true,
+            Entities  = result
+        };
+    }
+
+    // ── Label helpers ──────────────────────────────────────────────
+
+    private static string FormatReceiptType(ReceiptType type) => type switch
+    {
+        ReceiptType.ContactReceipt    => "Contact Receipt",
+        ReceiptType.GeneralReceipt    => "General Receipt",
+        ReceiptType.StaffReceipt      => "Staff Receipt",
+        ReceiptType.AdvanceReceipt    => "Advance Receipt",
+        ReceiptType.AdvanceTaxReceipt => "Advance Tax Receipt",
+        ReceiptType.AssetSaleReceipt  => "Asset Sale Receipt",
+        _                             => type.ToString()
+    };
+
+    private static string FormatPaymentType(PaymentType? type) => type switch
+    {
+        PaymentType.Cash         => "Cash Payment",
+        PaymentType.CreditCard   => "Credit Card Payment",
+        PaymentType.DebitCard    => "Debit Card Payment",
+        PaymentType.Cheque       => "Cheque Payment",
+        PaymentType.BankTransfer => "Bank Transfer Payment",
+        PaymentType.CardRefund   => "Card Refund",
+        PaymentType.Other        => "General Payment",
+        _                        => "Payment"
+    };
+
+    /// <summary>
+    /// Validates detail lines before saving:
+    ///   1. Source FK must exist (SourceReceiptId → Receipt, or SourcePaymentId → Payment).
+    ///   2. DepositedNow must not exceed DueAmount (over-deposit guard).
+    ///   3. At least one line must have DepositedNow != 0.
+    /// Returns an error string if invalid, or null if all pass.
+    /// </summary>
+    private async Task<string?> ValidateDetailLinesAsync(
+        IEnumerable<CashDepositDetailAddVM> detailVms,
+        CancellationToken cancellationToken = default)
+    {
+        var lines = detailVms.Select(d => (
+            SourceType: d.SourceType,
+            SourceReceiptId: d.SourceReceiptId,
+            SourcePaymentId: d.SourcePaymentId,
+            No: d.No,
+            Amount: d.Amount,
+            Deposited: d.Deposited,
+            DepositedNow: d.DepositedNow
+        ));
+        return await ValidateDetailLinesInternalAsync(lines, cancellationToken);
+    }
+
+    private async Task<string?> ValidateDetailLinesAsync(
+        IEnumerable<CashDepositDetailUpdateVM> detailVms,
+        CancellationToken cancellationToken = default)
+    {
+        var lines = detailVms.Select(d => (
+            SourceType: d.SourceType,
+            SourceReceiptId: d.SourceReceiptId,
+            SourcePaymentId: d.SourcePaymentId,
+            No: d.No,
+            Amount: d.Amount,
+            Deposited: d.Deposited,
+            DepositedNow: d.DepositedNow
+        ));
+        return await ValidateDetailLinesInternalAsync(lines, cancellationToken);
+    }
+
+    private async Task<string?> ValidateDetailLinesInternalAsync(
+        IEnumerable<(CashDepositSourceType SourceType, int? SourceReceiptId, int? SourcePaymentId,
+                     string? No, decimal Amount, decimal Deposited, decimal DepositedNow)> lines,
+        CancellationToken cancellationToken)
+    {
+        var lineList = lines.ToList();
+        if (!lineList.Any())
+            return "At least one voucher line must be selected for deposit.";
+
+        bool anyNonZero = false;
+
+        foreach (var line in lineList)
+        {
+            // Source FK validation
+            if (line.SourceType == CashDepositSourceType.Receipt)
+            {
+                if (!line.SourceReceiptId.HasValue)
+                    return "A detail line with SourceType=Receipt must have SourceReceiptId set.";
+                if (!await UnitOfWork.Repository.Query<Receipt>(
+                        x => x.Id == line.SourceReceiptId.Value &&
+                             x.PaymentMethod != null &&
+                             x.PaymentMethod.Type == PaymentType.Cash)
+                        .AnyAsync(cancellationToken))
+                    return $"Receipt ID {line.SourceReceiptId.Value} was not found or does not use a cash payment method.";
+            }
+            else if (line.SourceType == CashDepositSourceType.Payment)
+            {
+                if (!line.SourcePaymentId.HasValue)
+                    return "A detail line with SourceType=Payment must have SourcePaymentId set.";
+                if (!await UnitOfWork.Repository.Query<Payment>(
+                        x => x.Id == line.SourcePaymentId.Value &&
+                             x.PaymentMethod != null &&
+                             x.PaymentMethod.Type == PaymentType.Cash)
+                        .AnyAsync(cancellationToken))
+                    return $"Payment ID {line.SourcePaymentId.Value} was not found or does not use a cash payment method.";
+            }
+
+            // Over-deposit guard: DepositedNow must not exceed |DueAmount|
+            var dueAmount = line.Amount - line.Deposited;
+            if (Math.Abs(line.DepositedNow) > Math.Abs(dueAmount))
+                return $"Voucher No '{line.No ?? "?"}': " +
+                       $"DepositedNow ({line.DepositedNow}) exceeds the Due Amount ({dueAmount}).";
+
+            if (line.DepositedNow != 0)
+                anyNonZero = true;
+        }
+
+        if (!anyNonZero)
+            return "At least one line must have a non-zero DepositedNow amount.";
+
+        return null;
+    }
+
+    /// <summary>Returns a failed Result with the given message.</summary>
+    private static Result Fail(string message)
+        => new Result { IsSuccess = false, Message = message };
+}

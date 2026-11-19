@@ -1,0 +1,449 @@
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  TemplateRef,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
+
+import { ActionList } from '../../models/action-list';
+import { ActionButtonComponent } from '../action-button/action-button.component';
+import {
+  DataTableCellValue,
+  DataTableColumnFormat,
+  DataTableStatus,
+  dataTableCellText,
+} from './data-table.format';
+import { DEFAULT_PAGE_SIZE } from '../../utils/list-query';
+
+export type {
+  DataTableCellValue,
+  DataTableColumnType,
+  DataTableStatus,
+  DataTableStatusTone,
+} from './data-table.format';
+export { dataTableExportRows, formatMoney } from './data-table.format';
+
+export interface DataTablePaginationEvent {
+  page: number;
+  pageSize: number;
+  first: number;
+  sortField?: string;
+  sortOrder?: 1 | -1;
+}
+
+export interface DataTableCellContext<T extends object> {
+  $implicit: T;
+  row: T;
+  column: DataTableColumn<T>;
+}
+
+export interface DataTableCellLink<T extends object> {
+  activate: (row: T) => void;
+  enabled?: (row: T) => boolean;
+  title?: string;
+  ariaLabel?: (row: T) => string;
+}
+
+/** Optional read-only hierarchy for complete report datasets (UI blocks 6/20). */
+export interface DataTableHierarchy<T extends object> {
+  rowKey: (row: T) => string | number;
+  children: (row: T) => ReadonlyArray<T> | null | undefined;
+  code?: (row: T) => DataTableCellValue;
+  label?: (row: T) => DataTableCellValue;
+  activate?: (row: T) => void;
+  activateEnabled?: (row: T) => boolean;
+  activateTitle?: string;
+  activateAriaLabel?: (row: T) => string;
+  defaultExpanded?: boolean;
+}
+
+/**
+ * A grid column (UI block 5). `type` formats the field (date, dateTime, money, number) or draws a
+ * status badge from `status(row)`; `value` and `cellTemplate` stay for anything else.
+ */
+export interface DataTableColumn<T extends object> extends DataTableColumnFormat<T> {
+  width?: string;
+  sortable?: boolean;
+  cellTemplate?: TemplateRef<DataTableCellContext<T>>;
+  headerClass?: string;
+  cellClass?: string;
+  /** Optional logical indentation for a flat hierarchy such as IncomeStatementFy2. */
+  indent?: (row: T) => number;
+  /** Optional inline navigation for a read-only report cell. */
+  link?: DataTableCellLink<T>;
+}
+
+@Component({
+  selector: 'app-data-table',
+  standalone: true,
+  imports: [ActionButtonComponent, CommonModule, TableModule, TranslateModule],
+  templateUrl: './data-table.component.html',
+  styleUrl: './data-table.component.scss',
+})
+export class DataTableComponent<T extends object> implements OnChanges {
+  private readonly translate = inject(TranslateService);
+  @ViewChild(Table) private readonly table?: Table;
+
+  /** Reset the shared row viewport without exposing PrimeNG internals to features. */
+  scrollToStart(): void {
+    this.table?.scrollTo({ top: 0, left: 0 });
+  }
+
+  @Input({ required: true }) value: T[] = [];
+  @Input({ required: true }) columns: ReadonlyArray<DataTableColumn<T>> = [];
+  @Input() actions: ActionList[] = [];
+  @Input() dataKey = 'id';
+  @Input() loading = false;
+  @Input() lazy = true;
+  @Input() paginator = true;
+  @Input() alwaysShowPaginator = true;
+  @Input() page = 1;
+  @Input() first?: number;
+  private _rows = DEFAULT_PAGE_SIZE;
+
+  @Input()
+  get rows(): number {
+    return this._rows;
+  }
+  set rows(value: number | null | undefined) {
+    if (!value) {
+      this._rows = DEFAULT_PAGE_SIZE;
+      return;
+    }
+    // 10 stays the minimum page size (the token interceptor enforces it on requests too).
+    this._rows = Math.max(10, value);
+  }
+
+  private _rowsPerPageOptions: number[] = [10, 15, 20, 50, 100];
+
+  @Input()
+  get rowsPerPageOptions(): number[] {
+    return this._rowsPerPageOptions;
+  }
+  set rowsPerPageOptions(options: number[] | null | undefined) {
+    if (!options || options.length === 0 || this.isLegacyRowsPerPage(options)) {
+      this._rowsPerPageOptions = [10, 15, 20, 50, 100];
+      return;
+    }
+    this._rowsPerPageOptions = options;
+  }
+
+  private isLegacyRowsPerPage(options: number[]): boolean {
+    const key = options.join(',');
+    return (
+      key === '10,20,50,100' ||
+      key === '5,10,25,50' ||
+      key === '5,10,20,50,100' ||
+      key === '10,25,50' ||
+      key === '5,10,25' ||
+      options.some((opt) => opt < 10)
+    );
+  }
+
+  @Input() totalRecords = 0;
+  @Input() sortField = '';
+  @Input() sortOrder: 1 | -1 = 1;
+  @Input() scrollHeight = '288px';
+  /** External report frames own scrolling when false (UI blocks 6/20/21). */
+  @Input() scrollable = true;
+  /**
+   * Fill mode (UI block 6, backlog 34): the grid takes the remaining height of its flex parent,
+   * rows scroll inside it and the paginator stays at the bottom. Replaces the feature-level
+   * `::ng-deep` fill workaround; `scrollHeight` is ignored.
+   */
+  @Input() fill = false;
+  @Input() showCurrentPageReport?: boolean;
+  @Input() currentPageReport = '';
+  @Input() emptyMessage = 'general.noDataFound';
+  @Input() emptyIcon = 'bi bi-inbox';
+  @Input() showEmpty = true;
+  @Input() rowInteractive = false;
+  @Input() selectable = false;
+  @Input() selectionDisabled = false;
+  @Input() selection: T[] = [];
+  @Input() selectionPageOnly = true;
+  @Input() selectAllAriaLabel = '';
+  @Input() rowSelectionAriaLabel?: (row: T) => string;
+  @Input() hierarchy?: DataTableHierarchy<T>;
+  /** Print preparation renders every descendant without mutating screen expansion. */
+  @Input() printAllRows = false;
+  @Input() rowTone?: (row: T) => 'section' | 'subtotal' | 'total' | null;
+
+  @Output() readonly pageChange = new EventEmitter<number>();
+  @Output() readonly rowsChange = new EventEmitter<number>();
+  @Output() readonly paginationChange = new EventEmitter<DataTablePaginationEvent>();
+  @Output() readonly lazyLoad = new EventEmitter<TableLazyLoadEvent>();
+  @Output() readonly rowActivated = new EventEmitter<T>();
+  @Output() readonly selectionChange = new EventEmitter<T[]>();
+
+  protected actionTemplate?: TemplateRef<unknown>;
+  private readonly expandedHierarchyKeys = new Set<string>();
+  private readonly initializedHierarchyKeys = new Set<string>();
+  private readonly hierarchyLevels = new Map<string, number>();
+  private visibleHierarchyRows: T[] = [];
+
+  ngOnChanges(): void {
+    this.rebuildHierarchyRows();
+  }
+
+  protected get hasActions(): boolean {
+    return this.actions.length > 0;
+  }
+
+  protected get columnCount(): number {
+    return Math.max(
+      1,
+      this.columns.length + (this.hasActions ? 1 : 0) + (this.selectable ? 1 : 0),
+    );
+  }
+
+  protected get hasRowActivation(): boolean {
+    return this.rowInteractive;
+  }
+
+  protected get resolvedScrollHeight(): string {
+    if (this.fill) {
+      return 'flex';
+    }
+    if (!this.scrollHeight || this.scrollHeight === '100%') {
+      return '288px';
+    }
+    return this.scrollHeight;
+  }
+
+  protected get resolvedFirst(): number {
+    if (this.first !== undefined && this.first !== null) {
+      return this.first;
+    }
+    return Math.max(0, (this.page - 1) * this.rows);
+  }
+
+  protected get resolvedTotalRecords(): number {
+    if (!this.lazy && (!this.totalRecords || this.totalRecords === 0)) {
+      return this.value?.length ?? 0;
+    }
+    return this.totalRecords;
+  }
+
+  protected get renderedValue(): T[] {
+    return this.hierarchy ? this.visibleHierarchyRows : this.value;
+  }
+
+  protected get resolvedShowCurrentPageReport(): boolean {
+    if (this.showCurrentPageReport !== undefined && this.showCurrentPageReport !== null) {
+      return this.showCurrentPageReport;
+    }
+    return !!this.currentPageReport || (this.paginator && this.resolvedTotalRecords > 0);
+  }
+
+  protected get resolvedCurrentPageReport(): string {
+    return this.currentPageReport || '{first} - {last} / {totalRecords}';
+  }
+
+  protected onTableLazyLoad(event: TableLazyLoadEvent): void {
+    const rawRows = Number(event.rows ?? this.rows);
+    const newRows = Math.max(10, Number.isNaN(rawRows) || rawRows < 10 ? 10 : rawRows);
+    const newFirst = Math.max(0, Number(event.first ?? 0));
+    const newPage = Math.floor(newFirst / newRows) + 1;
+
+    this.first = newFirst;
+
+    if (this._rows !== newRows) {
+      this._rows = newRows;
+      this.rowsChange.emit(newRows);
+    }
+
+    if (this.page !== newPage) {
+      this.page = newPage;
+      this.pageChange.emit(newPage);
+    }
+
+    const sortField = typeof event.sortField === 'string'
+      ? event.sortField
+      : (Array.isArray(event.sortField) ? event.sortField[0] : undefined);
+    const sortOrder = event.sortOrder === 1 || event.sortOrder === -1
+      ? event.sortOrder
+      : undefined;
+
+    this.paginationChange.emit({
+      page: newPage,
+      pageSize: newRows,
+      first: newFirst,
+      sortField,
+      sortOrder,
+    });
+
+    this.lazyLoad.emit({
+      ...event,
+      rows: newRows,
+      first: newFirst,
+    });
+  }
+
+  /** PrimeNG local sorting resets first without emitting onPage. Keep controlled paging in sync. */
+  protected onTableFirstChange(first: number): void {
+    if (this.lazy || !this.paginator || first === this.resolvedFirst) return;
+    this.onTablePage({ first, rows: this.rows });
+  }
+
+  protected onTablePage(event: { first: number; rows: number; page?: number }): void {
+    const newRows = Math.max(1, Number(event.rows ?? this.rows));
+    const newFirst = Math.max(0, Number(event.first ?? 0));
+    const newPage = event.page !== undefined ? event.page + 1 : Math.floor(newFirst / newRows) + 1;
+
+    this.first = newFirst;
+
+    if (this.rows !== newRows) {
+      this.rows = newRows;
+      this.rowsChange.emit(newRows);
+    }
+
+    if (this.page !== newPage) {
+      this.page = newPage;
+      this.pageChange.emit(newPage);
+    }
+
+    this.paginationChange.emit({
+      page: newPage,
+      pageSize: newRows,
+      first: newFirst,
+    });
+  }
+
+  protected setActionTemplate(template: TemplateRef<unknown>): void {
+    this.actionTemplate = template;
+  }
+
+  protected displayValue(row: T, column: DataTableColumn<T>): DataTableCellValue {
+    return dataTableCellText(row, column, (key) => this.translate.instant(key));
+  }
+
+  protected statusOf(row: T, column: DataTableColumn<T>): DataTableStatus | null {
+    return column.type === 'status' && column.status ? column.status(row) : null;
+  }
+
+  protected statusClass(status: DataTableStatus): string {
+    return !status.tone || status.tone === 'neutral'
+      ? 'sigma-status-badge'
+      : `sigma-status-badge sigma-status-badge--${status.tone}`;
+  }
+
+  protected selectionLabel(row: T): string {
+    return this.rowSelectionAriaLabel?.(row) ?? '';
+  }
+
+  protected hierarchyLevel(row: T): number {
+    const hierarchy = this.hierarchy;
+    return hierarchy ? this.hierarchyLevels.get(String(hierarchy.rowKey(row))) ?? 0 : 0;
+  }
+
+  protected columnIndent(row: T, column: DataTableColumn<T>): number {
+    return Math.max(0, Math.floor(column.indent?.(row) ?? 0));
+  }
+
+  protected hasHierarchyChildren(row: T): boolean {
+    return (this.hierarchy?.children(row)?.length ?? 0) > 0;
+  }
+
+  protected hierarchyExpanded(row: T): boolean {
+    const hierarchy = this.hierarchy;
+    return !!hierarchy && this.expandedHierarchyKeys.has(String(hierarchy.rowKey(row)));
+  }
+
+  protected toggleHierarchy(row: T, event: Event): void {
+    event.stopPropagation();
+    const hierarchy = this.hierarchy;
+    if (!hierarchy || !this.hasHierarchyChildren(row)) return;
+    const key = String(hierarchy.rowKey(row));
+    if (this.expandedHierarchyKeys.has(key)) this.expandedHierarchyKeys.delete(key);
+    else this.expandedHierarchyKeys.add(key);
+    this.rebuildHierarchyRows();
+  }
+
+  protected hierarchyCode(row: T): string {
+    return String(this.hierarchy?.code?.(row) ?? '');
+  }
+
+  protected hierarchyLabel(row: T, column: DataTableColumn<T>): string {
+    return String(this.hierarchy?.label?.(row) ?? this.displayValue(row, column) ?? '');
+  }
+
+  protected hierarchyActivate(row: T, event: Event): void {
+    event.stopPropagation();
+    const hierarchy = this.hierarchy;
+    if (!hierarchy?.activateEnabled || hierarchy.activateEnabled(row)) hierarchy?.activate?.(row);
+  }
+
+  protected hierarchyActivateAriaLabel(row: T, column: DataTableColumn<T>): string {
+    return this.hierarchy?.activateAriaLabel?.(row) || this.hierarchyLabel(row, column);
+  }
+
+  protected cellLinkActivate(row: T, column: DataTableColumn<T>, event: Event): void {
+    event.stopPropagation();
+    if (!column.link?.enabled || column.link.enabled(row)) column.link?.activate(row);
+  }
+
+  protected cellLinkAriaLabel(row: T, column: DataTableColumn<T>): string {
+    return String(column.link?.ariaLabel?.(row) || this.displayValue(row, column) || '');
+  }
+
+  protected updateSelection(value: T[] | T | null): void {
+    if (this.selectionDisabled) return;
+    this.selectionChange.emit(Array.isArray(value) ? value : []);
+  }
+
+  protected activateRow(row: T, event: Event): void {
+    if (!this.hasRowActivation) return;
+
+    const target = event.target;
+    if (target instanceof Element) {
+      const interactiveTarget = target.closest(
+        'button, a[href], input, select, textarea, option, label, summary, '
+          + '[contenteditable="true"], [tabindex]:not([tabindex="-1"]), [role]',
+      );
+      if (interactiveTarget && interactiveTarget !== event.currentTarget) return;
+    }
+
+    if (event.type === 'keydown') event.preventDefault();
+    this.rowActivated.emit(row);
+  }
+
+  private rebuildHierarchyRows(): void {
+    this.hierarchyLevels.clear();
+    if (!this.hierarchy) {
+      this.visibleHierarchyRows = [];
+      return;
+    }
+    const rows: T[] = [];
+    this.appendHierarchyRows(this.value, 0, rows, this.hierarchy);
+    this.visibleHierarchyRows = rows;
+  }
+
+  private appendHierarchyRows(
+    source: ReadonlyArray<T>,
+    level: number,
+    target: T[],
+    hierarchy: DataTableHierarchy<T>,
+  ): void {
+    source.forEach((row) => {
+      const key = String(hierarchy.rowKey(row));
+      if (!this.initializedHierarchyKeys.has(key)) {
+        this.initializedHierarchyKeys.add(key);
+        if (hierarchy.defaultExpanded) this.expandedHierarchyKeys.add(key);
+      }
+      this.hierarchyLevels.set(key, level);
+      target.push(row);
+      const children = hierarchy.children(row) ?? [];
+      if (children.length && (this.printAllRows || this.expandedHierarchyKeys.has(key))) {
+        this.appendHierarchyRows(children, level + 1, target, hierarchy);
+      }
+    });
+  }
+}

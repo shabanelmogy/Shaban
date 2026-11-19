@@ -127,9 +127,12 @@ of the active tab. Feature print rules may separate sections and keep a heading
 with its table; shared `sigma-print-flow` still owns releasing the scroll bounds.
 Do not select a different tab or fetch data merely to print the full report.
 
-When the owner removes a duplicate heading already supplied by a tab label,
-hide that panel heading only in screen media. Keep the panel's tab-based
-accessible name and retain the heading in print, where the navigation is hidden.
+When the owner removes a duplicate heading already supplied by a tab label or
+an active inner side-list selector, hide that panel or group heading on screen
+with the shared `.sigma-print-only` utility in `src/styles.scss` (never retired
+Bootstrap `d-none d-print-block`). Keep the panel's accessible name
+(`aria-labelledby` / `aria-label`) and retain the heading in print, where the
+navigation is hidden.
 
 Shared-grid reports (block 6) must render every response row with
 `paginator=false` and `scrollable=false` during printing. A screen grid using

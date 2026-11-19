@@ -1,0 +1,384 @@
+import { MessageService } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import {
+  Component,
+  DestroyRef,
+  ElementRef,
+  OnInit,
+  ViewChild,
+  computed,
+  effect,
+  inject,
+  signal,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize, forkJoin, Observable, Subscription, map, tap } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+import { AccountService } from 'src/app/modules/Accounts/Account/services/account.service';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import {
+  EditorTab,
+  EditorTabsComponent,
+} from 'src/app/modules/shared/components/editor-tabs/editor-tabs.component';
+import { BanckAccountComponent } from '../banck-account/banck-account.component';
+import { ChargesTypeComponent } from '../charges-type/charges-type.component';
+import { ContactsComponent } from '../contacts/contacts.component';
+import { GeneralComponent } from '../general/general.component';
+import { PaymentMethodsComponent } from '../payment-methods/payment-methods.component';
+import { PrepaidExpenseComponent } from '../prepaid-expense/prepaid-expense.component';
+import { WorkshopComponent } from '../workshop/workshop.component';
+import { LinkAccountTabStateComponent } from '../tab-state/tab-state.component';
+import { LinkAccountsAutoLinkComponent } from '../auto-link/auto-link.component';
+import { LinkAccountsService } from '../../services/linkaccounts.service';
+import {
+  LinkAccountsEnumOptionVM,
+  LinkAccountsOptionsVM,
+  LinkAccountsSaveDTO,
+  LinkAccountsUpsertDTO,
+  getLinkAccountsEnumId,
+} from '../../models/list';
+
+@Component({
+  selector: 'app-details',
+  host: { class: 'sigma-route-host' },
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    FormsModule,
+    DropdownModule,
+    FilterPanelComponent,
+    StateMessageComponent,
+    TranslateModule,
+    GeneralComponent,
+    ChargesTypeComponent,
+    ContactsComponent,
+    PaymentMethodsComponent,
+    BanckAccountComponent,
+    PrepaidExpenseComponent,
+    WorkshopComponent,
+    LinkAccountTabStateComponent,
+    FeatureTitleComponent,
+    PrimaryActionButtonComponent,
+    EditorTabsComponent,
+    LinkAccountsAutoLinkComponent,
+  ],
+  templateUrl: './details.component.html',
+  styleUrl: './details.component.scss',
+})
+export class DetailsComponent extends BaseComponentService implements OnInit {
+  private readonly linkAccountsService = inject(LinkAccountsService);
+  private readonly accountService = inject(AccountService);
+  private readonly confirmationDialog = inject(ConfirmationDialogService);
+  private readonly destroyRef = inject(DestroyRef);
+  private allowNavigation = false;
+  private accountsRequest?: Subscription;
+  private readonly messages = inject(MessageService);
+  private readonly translate = inject(TranslateService);
+  private pendingSuccess = '';
+  readonly refreshing = signal(false);
+  readonly confirmationPending = signal(false);
+
+  @ViewChild(GeneralComponent) private generalTab?: GeneralComponent;
+  @ViewChild(ChargesTypeComponent) protected chargesTypeTab?: ChargesTypeComponent;
+  @ViewChild(ContactsComponent) private contactsTab?: ContactsComponent;
+  @ViewChild(PaymentMethodsComponent) protected paymentMethodsTab?: PaymentMethodsComponent;
+  @ViewChild(BanckAccountComponent) private bankAccountsTab?: BanckAccountComponent;
+  @ViewChild(PrepaidExpenseComponent) private prepaidExpenseTab?: PrepaidExpenseComponent;
+  @ViewChild(WorkshopComponent) private workshopTab?: WorkshopComponent;
+  @ViewChild('tabScroll') private tabScroll?: ElementRef<HTMLDivElement>;
+
+  readonly options = signal<LinkAccountsOptionsVM | null>(null);
+  readonly tabs = signal<LinkAccountsEnumOptionVM[]>([]);
+  readonly accounts = signal<DropDownSelect[]>([]);
+  readonly accountsReady = signal(false);
+  readonly accountsLoading = signal(true);
+  readonly accountsLoadFailed = signal(false);
+  readonly isSaving = signal(false);
+  readonly saveFailed = signal(false);
+  readonly saveErrorMessage = signal<string | null>(null);
+  readonly saveBlocked = signal(false);
+  readonly searchTerm = signal('');
+  readonly searchForm = new FormGroup({ search: new FormControl('', { nonNullable: true }) });
+  readonly currentTabKey = signal('General');
+  readonly autoLinkVisible = signal(false);
+  /** Bumped after Complete Missing Links so every tab is recreated and reloads its links. */
+  readonly tabsReloadKey = signal(0);
+  private readonly tabTranslationKeys: Readonly<Record<string, string>> = {
+    General: 'linkAccounts.general',
+    ChargesType: 'linkAccounts.chargesType',
+    Contacts: 'linkAccounts.contacts',
+    PaymentMethods: 'linkAccounts.paymentMethods',
+    BankAccounts: 'linkAccounts.bankAccounts',
+    PrepaidExpense: 'linkAccounts.prepaidExpense',
+    Workshop: 'linkAccounts.workshop',
+  };
+  private readonly tabIcons: Readonly<Record<string, string>> = {
+    General: 'bi bi-sliders',
+    ChargesType: 'bi bi-receipt',
+    Contacts: 'bi bi-people',
+    PaymentMethods: 'bi bi-credit-card',
+    BankAccounts: 'bi bi-bank',
+    PrepaidExpense: 'bi bi-calendar2-check',
+    Workshop: 'bi bi-tools',
+  };
+  readonly uiTabs = computed<ReadonlyArray<EditorTab<string>>>(() =>
+    this.tabs().map((tab) => ({
+      key: tab.key,
+      label: this.getTabTranslationKey(tab.key),
+      icon: this.tabIcons[tab.key],
+    }))
+  );
+  readonly enumId = getLinkAccountsEnumId;
+
+  constructor() {
+    super();
+    effect(() => {
+      if (this.isSaving() || this.refreshing() || this.confirmationPending() || this.autoLinkVisible()) this.searchForm.disable({ emitEvent: false });
+      else this.searchForm.enable({ emitEvent: false });
+    });
+  }
+
+  ngOnInit(): void {
+    this.searchForm.controls.search.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+      this.searchTerm.set(value);
+      if (this.tabScroll) this.tabScroll.nativeElement.scrollTop = 0;
+    });
+    this.getAccounts();
+  }
+
+  setCurrentTab(tabKey: string): void {
+    if (this.isSaving() || this.refreshing() || this.confirmationPending() || this.autoLinkVisible() || this.childConfirmationPending()) return;
+    this.currentTabKey.set(tabKey);
+    this.searchForm.reset({ search: '' });
+    if (this.tabScroll) this.tabScroll.nativeElement.scrollTop = 0;
+  }
+
+  onSearch(event: Event): void {
+    this.searchTerm.set((event.target as HTMLInputElement).value);
+    if (this.tabScroll) this.tabScroll.nativeElement.scrollTop = 0;
+  }
+
+  clearSearch(): void {
+    this.searchForm.reset({ search: '' });
+    if (this.tabScroll) this.tabScroll.nativeElement.scrollTop = 0;
+  }
+
+  canSaveAll(): boolean {
+    return (
+      !this.confirmationPending() && !this.childConfirmationPending() && this.accountsReady() &&
+      !!this.generalTab?.ready() &&
+      !!this.chargesTypeTab?.ready() &&
+      !!this.contactsTab?.ready() &&
+      !!this.paymentMethodsTab?.ready() &&
+      !!this.bankAccountsTab?.ready() &&
+      !!this.prepaidExpenseTab?.ready() &&
+      !!this.prepaidExpenseTab?.valid() &&
+      !!this.workshopTab?.ready() &&
+      !!this.workshopTab?.valid()
+    );
+  }
+
+  saveAll(): void {
+    if (this.isSaving() || this.refreshing() || this.confirmationPending() || this.autoLinkVisible() || this.childConfirmationPending()) return;
+
+    this.saveFailed.set(false);
+    this.saveErrorMessage.set(null);
+    this.saveBlocked.set(false);
+    if (!this.canSaveAll()) {
+      this.saveBlocked.set(true);
+      return;
+    }
+
+    const payload: LinkAccountsUpsertDTO[] = [
+      ...(this.generalTab?.getPayload() ?? []),
+      ...(this.chargesTypeTab?.getPayload() ?? []),
+      ...(this.contactsTab?.getPayload() ?? []),
+      ...(this.paymentMethodsTab?.getPayload() ?? []),
+      ...(this.bankAccountsTab?.getPayload() ?? []),
+      ...(this.prepaidExpenseTab?.getPayload() ?? []),
+      ...(this.workshopTab?.getPayload() ?? []),
+    ];
+
+    const request: LinkAccountsSaveDTO = {
+      replaceTypes: this.tabs().map((tab) => Number(tab.id)),
+      mappings: payload,
+    };
+
+    this.isSaving.set(true);
+    this.loading.startLoading();
+    this.linkAccountsService
+      .saveLinkAccounts(request)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => {
+          this.isSaving.set(false);
+          this.loading.endLoading();
+        })
+      )
+      .subscribe({
+        next: (result) => {
+          if (!result.isSuccess) {
+            this.saveErrorMessage.set(result.message?.trim() || null);
+            this.saveFailed.set(true);
+            return;
+          }
+          this.markAllTabsSaved();
+        },
+        error: (error: unknown) => {
+          this.saveErrorMessage.set(apiErrorMessage(error, 'linkAccounts.saveFailed'));
+          this.saveFailed.set(true);
+        },
+      });
+  }
+
+  openAutoLink(): void {
+    if (this.isSaving() || this.refreshing() || this.confirmationPending() || this.childConfirmationPending() || !this.accountsReady()) return;
+    if (!this.hasUnsavedChanges()) {
+      this.autoLinkVisible.set(true);
+      return;
+    }
+
+    this.confirmationPending.set(true);
+    // Applying reloads every tab, so pending edits must be saved or discarded first.
+    this.confirmationDialog
+      .confirm({
+        severity: 'warning',
+        title: { key: 'linkAccounts.unsavedTitle' },
+        message: { key: 'linkAccounts.autoLink.unsavedMessage' },
+        icon: 'bi bi-exclamation-triangle',
+        confirmLabel: { key: 'linkAccounts.discardChanges' },
+        cancelLabel: { key: 'general.cancel' },
+        confirmIcon: 'bi bi-magic',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false)))
+      .subscribe((confirmed) => {
+        if (confirmed && !this.isSaving() && !this.refreshing() && this.accountsReady() && !this.childConfirmationPending()) this.autoLinkVisible.set(true);
+      });
+  }
+
+  onAutoLinkClosed(): void { this.autoLinkVisible.set(false); }
+
+  onAutoLinkApplied(message: string): void {
+    this.pendingSuccess = message;
+    this.refreshing.set(true);
+    this.saveFailed.set(false);
+    this.saveBlocked.set(false);
+    this.tabsReloadKey.update(key => key + 1);
+    this.getAccounts();
+  }
+
+  onTabLoaded(): void {
+    if (!this.refreshing() || !this.canSaveAll()) return;
+    this.refreshing.set(false);
+    if (this.pendingSuccess) this.messages.add({ key: 'global', severity: 'success', summary: this.translate.instant('general.success'), detail: this.translate.instant(this.pendingSuccess) });
+    this.pendingSuccess = '';
+  }
+
+  childConfirmationPending(): boolean {
+    return !!(this.prepaidExpenseTab?.confirmationPending() || this.workshopTab?.confirmationPending());
+  }
+
+  getAccounts(): void {
+    if (this.isSaving() || this.confirmationPending() || this.childConfirmationPending()) return;
+    this.accountsRequest?.unsubscribe();
+    this.accountsReady.set(false);
+    this.accountsLoading.set(true);
+    this.accountsLoadFailed.set(false);
+    this.accountsRequest = forkJoin({
+      accounts: this.accountService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }),
+      options: this.linkAccountsService.getOptions(),
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.accountsLoading.set(false))
+      )
+      .subscribe({
+        next: ({ accounts, options }) => {
+          const required = ['General', 'ChargesType', 'Contacts', 'PaymentMethods', 'BankAccounts', 'PrepaidExpense', 'Workshop'];
+          if (!accounts.isSuccess || !options.isSuccess || !options.entity ||
+              !required.every(key => options.entity!.accountTypes?.some(tab => tab.key === key && Number.isInteger(tab.id) && tab.id > 0)) ||
+              !options.entity.linkSections?.some(section => section.key === 'Default') ||
+              !options.entity.linkSections?.some(section => section.key === 'StockRevenueAccounts') ||
+              !options.entity.linkSections?.some(section => section.key === 'StockExpenseAccounts')) {
+            this.accountsLoadFailed.set(true);
+            return;
+          }
+
+          this.accounts.set(accounts.entities);
+          this.options.set(options.entity);
+          this.tabs.set(options.entity.accountTypes);
+          const selectedKey = this.currentTabKey();
+          if (!options.entity.accountTypes.some((tab) => tab.key === selectedKey)) {
+            this.currentTabKey.set(options.entity.accountTypes[0]?.key ?? 'General');
+          }
+          this.accountsReady.set(true);
+          this.onTabLoaded();
+        },
+        error: () => this.accountsLoadFailed.set(true),
+      });
+  }
+
+  canDeactivate(): boolean | Observable<boolean> {
+    if (this.isSaving() || this.refreshing() || this.autoLinkVisible() || this.confirmationPending() || this.childConfirmationPending()) return false;
+    if (this.allowNavigation || !this.hasUnsavedChanges()) return true;
+    this.confirmationPending.set(true);
+
+    return this.confirmationDialog
+      .confirm({
+        severity: 'warning',
+        title: { key: 'linkAccounts.unsavedTitle' },
+        message: { key: 'linkAccounts.unsavedMessage' },
+        icon: 'bi bi-exclamation-triangle',
+        confirmLabel: { key: 'linkAccounts.discardChanges' },
+        cancelLabel: { key: 'general.cancel' },
+        confirmIcon: 'bi bi-box-arrow-left',
+      })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map(confirmed => confirmed && !this.isSaving() && !this.refreshing() && !this.childConfirmationPending()),
+        finalize(() => this.confirmationPending.set(false)),
+        tap((confirmed) => {
+          if (confirmed) this.allowNavigation = true;
+        })
+      );
+  }
+
+  private getTabTranslationKey(tabKey: string): string {
+    return this.tabTranslationKeys[tabKey] ?? tabKey;
+  }
+
+  private hasUnsavedChanges(): boolean {
+    return !!(
+      this.generalTab?.dirty() ||
+      this.chargesTypeTab?.dirty() ||
+      this.contactsTab?.dirty() ||
+      this.paymentMethodsTab?.dirty() ||
+      this.bankAccountsTab?.dirty() ||
+      this.prepaidExpenseTab?.dirty() ||
+      this.workshopTab?.dirty()
+    );
+  }
+
+  private markAllTabsSaved(): void {
+    this.generalTab?.markSaved();
+    this.chargesTypeTab?.markSaved();
+    this.contactsTab?.markSaved();
+    this.paymentMethodsTab?.markSaved();
+    this.bankAccountsTab?.markSaved();
+    this.prepaidExpenseTab?.markSaved();
+    this.workshopTab?.markSaved();
+  }
+
+}

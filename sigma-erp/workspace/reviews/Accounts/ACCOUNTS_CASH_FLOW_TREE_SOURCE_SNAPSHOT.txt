@@ -1,0 +1,801 @@
+SOURCE: src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+import { CashFlowDTO, CashFlowFilter, CashFlowLine } from '../../models/list';
+import { CashFlowStatementRow } from '../../models/cash-flow-statement-row';
+import { CashFlowStatementService } from '../../services/cash-flow-statement.service';
+import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
+import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
+import { reportNumber, reportDate } from '../../../shared/report-family/account-report-values';
+
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
+import { Router } from '@angular/router';
+import { DataTableColumn, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+
+@Component({
+  selector: 'app-accounts', standalone: true,
+  imports: [AccountReportPageComponent],
+  templateUrl: './list.component.html', styleUrl: './list.component.scss',
+  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+})
+export class CashFlowStatementComponent {
+  private readonly service = inject(CashFlowStatementService);
+  private readonly fiscalYears = inject(FiscalYearService);
+  private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+  private readonly columns: ReadonlyArray<DataTableColumn<CashFlowStatementRow>> = [
+    {
+      field: 'name', header: 'cashFlowStatement.account', width: '78%',
+      cellClass: 'sigma-data-table__cell--wrap',
+      value: row => row.labelKey
+        ? this.translate.instant(row.labelKey)
+        : [row.code, row.name].filter(Boolean).join(' — ') || '—',
+    },
+    {
+      field: 'amount', header: 'cashFlowStatement.amount', width: '22%', type: 'money',
+      headerClass: 'text-end', cellClass: 'text-end sigma-data-table__cell--numeric',
+    },
+  ];
+  readonly config: AccountReportConfig<CashFlowDTO, CashFlowFilter, CashFlowStatementRow> = {
+    id: 'cashFlowStatement', titleKey: 'cashFlowStatement.title', icon: 'bi bi-file-earmark-spreadsheet', exportFileName: 'CashFlowStatement',
+    filters: [
+      { key: 'fiscalYearId', labelKey: 'cashFlowStatement.fiscalYear', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.fiscalYears.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
+      { key: 'asOfDate', labelKey: 'cashFlowStatement.asOfDate', kind: 'date', initialValue: null }
+    ],
+    load: filter => this.service.getReport(filter),
+    buildFilter: raw => {
+
+      return { filter: { fiscalYearId: reportNumber(raw, 'fiscalYearId'), asOfDate: reportDate(raw, 'asOfDate') } };
+    },
+    sections: response => [
+      {
+        id: 'statement', dataKey: 'id', minWidth: '32rem',
+        rows: this.statementRows(response), columns: this.columns, rowTone: row => row.tone,
+        hierarchy: {
+          rowKey: row => row.id,
+          children: row => row.children,
+          defaultExpanded: true,
+          activateEnabled: row => row.accountId > 0 && row.tone === null,
+          activate: row => this.openLedger(row.accountId),
+          activateTitle: 'cashFlowStatement.openLedger',
+        },
+      },
+    ],
+    exportRows: (response, _sections, translate) => this.exportRows(response, translate),
+  };
+
+  private statementRows(response: CashFlowDTO): CashFlowStatementRow[] {
+    const rows: CashFlowStatementRow[] = [];
+    const activities = [
+      { key: 'operatingActivities', lines: response.operatingActivities ?? [], totalKey: 'netCashFromOperating', total: response.netCashFromOperating },
+      { key: 'investingActivities', lines: response.investingActivities ?? [], totalKey: 'netCashFromInvesting', total: response.netCashFromInvesting },
+      { key: 'financingActivities', lines: response.financingActivities ?? [], totalKey: 'netCashFromFinancing', total: response.netCashFromFinancing },
+    ];
+    for (const activity of activities) {
+      const children: CashFlowStatementRow[] = [];
+      if (activity.key === 'operatingActivities' && !activity.lines.some(line => this.isNetIncomeLine(line))) {
+        children.push(this.statementLabel('netIncome', response.netIncome, null));
+      }
+      activity.lines.forEach((line, index) => children.push({
+        ...line, id: `${activity.key}-${index}`, tone: null,
+        labelKey: activity.key === 'operatingActivities' && this.isNetIncomeLine(line)
+          ? 'cashFlowStatement.netIncome' : undefined,
+      }));
+      children.push(this.statementLabel(activity.totalKey, activity.total, 'subtotal'));
+      rows.push({ ...this.statementLabel(activity.key, activity.total, 'section'), children });
+    }
+    rows.push(this.statementLabel('netChangeInCash', response.netChangeInCash, 'total'));
+    return rows;
+  }
+
+  private statementLabel(key: string, amount: number | null, tone: CashFlowStatementRow['tone']): CashFlowStatementRow {
+    return { id: key, accountId: 0, code: '', name: '', labelKey: `cashFlowStatement.${key}`, amount, tone };
+  }
+
+  private isNetIncomeLine(line: CashFlowLine): boolean {
+    return line.accountId === 0 && !line.code && line.name === 'Net Income';
+  }
+
+  private exportRows(response: CashFlowDTO, translate: (key: string) => string): Array<Record<string, string | number>> {
+    const columns: ReadonlyArray<DataTableColumn<CashFlowLine>> = [
+      { field: 'name', header: 'cashFlowStatement.account', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—' },
+      { field: 'amount', header: 'cashFlowStatement.amount', type: 'money' },
+    ];
+    const activities = [
+      { key: 'operatingActivities', lines: response.operatingActivities ?? [] },
+      { key: 'investingActivities', lines: response.investingActivities ?? [] },
+      { key: 'financingActivities', lines: response.financingActivities ?? [] },
+    ];
+    const rows: Array<Record<string, string | number>> = [];
+    for (const activity of activities) {
+      for (const row of dataTableExportRows(activity.lines, columns, translate)) {
+        rows.push({
+          [translate('accountReports.section')]: translate(`cashFlowStatement.${activity.key}`), ...row,
+        });
+      }
+    }
+    return rows;
+  }
+
+  private openLedger(accountId: number): void {
+    if (accountId > 0) void this.router.navigate(['/Ledger'], { queryParams: { accountId } });
+  }
+}
+
+
+SOURCE: src/app/modules/Accounts/CashFlowStatement/models/cash-flow-statement-row.ts
+export interface CashFlowStatementRow {
+  id: string;
+  accountId: number;
+  code: string;
+  name: string;
+  labelKey?: string;
+  amount: number | null;
+  tone: 'section' | 'subtotal' | 'total' | null;
+  children?: ReadonlyArray<CashFlowStatementRow>;
+}
+
+
+SOURCE: src/app/modules/shared/components/data-table/data-table.component.ts
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  TemplateRef,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
+
+import { ActionList } from '../../models/action-list';
+import { ActionButtonComponent } from '../action-button/action-button.component';
+import {
+  DataTableCellValue,
+  DataTableColumnFormat,
+  DataTableStatus,
+  dataTableCellText,
+} from './data-table.format';
+import { DEFAULT_PAGE_SIZE } from '../../utils/list-query';
+
+export type {
+  DataTableCellValue,
+  DataTableColumnType,
+  DataTableStatus,
+  DataTableStatusTone,
+} from './data-table.format';
+export { dataTableExportRows, formatMoney } from './data-table.format';
+
+export interface DataTablePaginationEvent {
+  page: number;
+  pageSize: number;
+  first: number;
+  sortField?: string;
+  sortOrder?: 1 | -1;
+}
+
+export interface DataTableCellContext<T extends object> {
+  $implicit: T;
+  row: T;
+  column: DataTableColumn<T>;
+}
+
+export interface DataTableCellLink<T extends object> {
+  activate: (row: T) => void;
+  enabled?: (row: T) => boolean;
+  title?: string;
+  ariaLabel?: (row: T) => string;
+}
+
+/** Optional read-only hierarchy for complete report datasets (UI blocks 6/20). */
+export interface DataTableHierarchy<T extends object> {
+  rowKey: (row: T) => string | number;
+  children: (row: T) => ReadonlyArray<T> | null | undefined;
+  code?: (row: T) => DataTableCellValue;
+  label?: (row: T) => DataTableCellValue;
+  activate?: (row: T) => void;
+  activateEnabled?: (row: T) => boolean;
+  activateTitle?: string;
+  activateAriaLabel?: (row: T) => string;
+  defaultExpanded?: boolean;
+}
+
+/**
+ * A grid column (UI block 5). `type` formats the field (date, dateTime, money, number) or draws a
+ * status badge from `status(row)`; `value` and `cellTemplate` stay for anything else.
+ */
+export interface DataTableColumn<T extends object> extends DataTableColumnFormat<T> {
+  width?: string;
+  sortable?: boolean;
+  cellTemplate?: TemplateRef<DataTableCellContext<T>>;
+  headerClass?: string;
+  cellClass?: string;
+  /** Optional logical indentation for a flat hierarchy such as IncomeStatementFy2. */
+  indent?: (row: T) => number;
+  /** Optional inline navigation for a read-only report cell. */
+  link?: DataTableCellLink<T>;
+}
+
+@Component({
+  selector: 'app-data-table',
+  standalone: true,
+  imports: [ActionButtonComponent, CommonModule, TableModule, TranslateModule],
+  templateUrl: './data-table.component.html',
+  styleUrl: './data-table.component.scss',
+})
+export class DataTableComponent<T extends object> implements OnChanges {
+  private readonly translate = inject(TranslateService);
+  @ViewChild(Table) private readonly table?: Table;
+
+  /** Reset the shared row viewport without exposing PrimeNG internals to features. */
+  scrollToStart(): void {
+    this.table?.scrollTo({ top: 0, left: 0 });
+  }
+
+  @Input({ required: true }) value: T[] = [];
+  @Input({ required: true }) columns: ReadonlyArray<DataTableColumn<T>> = [];
+  @Input() actions: ActionList[] = [];
+  @Input() dataKey = 'id';
+  @Input() loading = false;
+  @Input() lazy = true;
+  @Input() paginator = true;
+  @Input() alwaysShowPaginator = true;
+  @Input() page = 1;
+  @Input() first?: number;
+  private _rows = DEFAULT_PAGE_SIZE;
+
+  @Input()
+  get rows(): number {
+    return this._rows;
+  }
+  set rows(value: number | null | undefined) {
+    if (!value) {
+      this._rows = DEFAULT_PAGE_SIZE;
+      return;
+    }
+    // 10 stays the minimum page size (the token interceptor enforces it on requests too).
+    this._rows = Math.max(10, value);
+  }
+
+  private _rowsPerPageOptions: number[] = [10, 15, 20, 50, 100];
+
+  @Input()
+  get rowsPerPageOptions(): number[] {
+    return this._rowsPerPageOptions;
+  }
+  set rowsPerPageOptions(options: number[] | null | undefined) {
+    if (!options || options.length === 0 || this.isLegacyRowsPerPage(options)) {
+      this._rowsPerPageOptions = [10, 15, 20, 50, 100];
+      return;
+    }
+    this._rowsPerPageOptions = options;
+  }
+
+  private isLegacyRowsPerPage(options: number[]): boolean {
+    const key = options.join(',');
+    return (
+      key === '10,20,50,100' ||
+      key === '5,10,25,50' ||
+      key === '5,10,20,50,100' ||
+      key === '10,25,50' ||
+      key === '5,10,25' ||
+      options.some((opt) => opt < 10)
+    );
+  }
+
+  @Input() totalRecords = 0;
+  @Input() sortField = '';
+  @Input() sortOrder: 1 | -1 = 1;
+  @Input() scrollHeight = '288px';
+  /** External report frames own scrolling when false (UI blocks 6/20/21). */
+  @Input() scrollable = true;
+  /**
+   * Fill mode (UI block 6, backlog 34): the grid takes the remaining height of its flex parent,
+   * rows scroll inside it and the paginator stays at the bottom. Replaces the feature-level
+   * `::ng-deep` fill workaround; `scrollHeight` is ignored.
+   */
+  @Input() fill = false;
+  @Input() showCurrentPageReport?: boolean;
+  @Input() currentPageReport = '';
+  @Input() emptyMessage = 'general.noDataFound';
+  @Input() emptyIcon = 'bi bi-inbox';
+  @Input() showEmpty = true;
+  @Input() rowInteractive = false;
+  @Input() selectable = false;
+  @Input() selectionDisabled = false;
+  @Input() selection: T[] = [];
+  @Input() selectionPageOnly = true;
+  @Input() selectAllAriaLabel = '';
+  @Input() rowSelectionAriaLabel?: (row: T) => string;
+  @Input() hierarchy?: DataTableHierarchy<T>;
+  /** Print preparation renders every descendant without mutating screen expansion. */
+  @Input() printAllRows = false;
+  @Input() rowTone?: (row: T) => 'section' | 'subtotal' | 'total' | null;
+
+  @Output() readonly pageChange = new EventEmitter<number>();
+  @Output() readonly rowsChange = new EventEmitter<number>();
+  @Output() readonly paginationChange = new EventEmitter<DataTablePaginationEvent>();
+  @Output() readonly lazyLoad = new EventEmitter<TableLazyLoadEvent>();
+  @Output() readonly rowActivated = new EventEmitter<T>();
+  @Output() readonly selectionChange = new EventEmitter<T[]>();
+
+  protected actionTemplate?: TemplateRef<unknown>;
+  private readonly expandedHierarchyKeys = new Set<string>();
+  private readonly initializedHierarchyKeys = new Set<string>();
+  private readonly hierarchyLevels = new Map<string, number>();
+  private visibleHierarchyRows: T[] = [];
+
+  ngOnChanges(): void {
+    this.rebuildHierarchyRows();
+  }
+
+  protected get hasActions(): boolean {
+    return this.actions.length > 0;
+  }
+
+  protected get columnCount(): number {
+    return Math.max(
+      1,
+      this.columns.length + (this.hasActions ? 1 : 0) + (this.selectable ? 1 : 0),
+    );
+  }
+
+  protected get hasRowActivation(): boolean {
+    return this.rowInteractive;
+  }
+
+  protected get resolvedScrollHeight(): string {
+    if (this.fill) {
+      return 'flex';
+    }
+    if (!this.scrollHeight || this.scrollHeight === '100%') {
+      return '288px';
+    }
+    return this.scrollHeight;
+  }
+
+  protected get resolvedFirst(): number {
+    if (this.first !== undefined && this.first !== null) {
+      return this.first;
+    }
+    return Math.max(0, (this.page - 1) * this.rows);
+  }
+
+  protected get resolvedTotalRecords(): number {
+    if (!this.lazy && (!this.totalRecords || this.totalRecords === 0)) {
+      return this.value?.length ?? 0;
+    }
+    return this.totalRecords;
+  }
+
+  protected get renderedValue(): T[] {
+    return this.hierarchy ? this.visibleHierarchyRows : this.value;
+  }
+
+  protected get resolvedShowCurrentPageReport(): boolean {
+    if (this.showCurrentPageReport !== undefined && this.showCurrentPageReport !== null) {
+      return this.showCurrentPageReport;
+    }
+    return !!this.currentPageReport || (this.paginator && this.resolvedTotalRecords > 0);
+  }
+
+  protected get resolvedCurrentPageReport(): string {
+    return this.currentPageReport || '{first} - {last} / {totalRecords}';
+  }
+
+  protected onTableLazyLoad(event: TableLazyLoadEvent): void {
+    const rawRows = Number(event.rows ?? this.rows);
+    const newRows = Math.max(10, Number.isNaN(rawRows) || rawRows < 10 ? 10 : rawRows);
+    const newFirst = Math.max(0, Number(event.first ?? 0));
+    const newPage = Math.floor(newFirst / newRows) + 1;
+
+    this.first = newFirst;
+
+    if (this._rows !== newRows) {
+      this._rows = newRows;
+      this.rowsChange.emit(newRows);
+    }
+
+    if (this.page !== newPage) {
+      this.page = newPage;
+      this.pageChange.emit(newPage);
+    }
+
+    const sortField = typeof event.sortField === 'string'
+      ? event.sortField
+      : (Array.isArray(event.sortField) ? event.sortField[0] : undefined);
+    const sortOrder = event.sortOrder === 1 || event.sortOrder === -1
+      ? event.sortOrder
+      : undefined;
+
+    this.paginationChange.emit({
+      page: newPage,
+      pageSize: newRows,
+      first: newFirst,
+      sortField,
+      sortOrder,
+    });
+
+    this.lazyLoad.emit({
+      ...event,
+      rows: newRows,
+      first: newFirst,
+    });
+  }
+
+  /** PrimeNG local sorting resets first without emitting onPage. Keep controlled paging in sync. */
+  protected onTableFirstChange(first: number): void {
+    if (this.lazy || !this.paginator || first === this.resolvedFirst) return;
+    this.onTablePage({ first, rows: this.rows });
+  }
+
+  protected onTablePage(event: { first: number; rows: number; page?: number }): void {
+    const newRows = Math.max(1, Number(event.rows ?? this.rows));
+    const newFirst = Math.max(0, Number(event.first ?? 0));
+    const newPage = event.page !== undefined ? event.page + 1 : Math.floor(newFirst / newRows) + 1;
+
+    this.first = newFirst;
+
+    if (this.rows !== newRows) {
+      this.rows = newRows;
+      this.rowsChange.emit(newRows);
+    }
+
+    if (this.page !== newPage) {
+      this.page = newPage;
+      this.pageChange.emit(newPage);
+    }
+
+    this.paginationChange.emit({
+      page: newPage,
+      pageSize: newRows,
+      first: newFirst,
+    });
+  }
+
+  protected setActionTemplate(template: TemplateRef<unknown>): void {
+    this.actionTemplate = template;
+  }
+
+  protected displayValue(row: T, column: DataTableColumn<T>): DataTableCellValue {
+    return dataTableCellText(row, column, (key) => this.translate.instant(key));
+  }
+
+  protected statusOf(row: T, column: DataTableColumn<T>): DataTableStatus | null {
+    return column.type === 'status' && column.status ? column.status(row) : null;
+  }
+
+  protected statusClass(status: DataTableStatus): string {
+    return !status.tone || status.tone === 'neutral'
+      ? 'sigma-status-badge'
+      : `sigma-status-badge sigma-status-badge--${status.tone}`;
+  }
+
+  protected selectionLabel(row: T): string {
+    return this.rowSelectionAriaLabel?.(row) ?? '';
+  }
+
+  protected hierarchyLevel(row: T): number {
+    const hierarchy = this.hierarchy;
+    return hierarchy ? this.hierarchyLevels.get(String(hierarchy.rowKey(row))) ?? 0 : 0;
+  }
+
+  protected columnIndent(row: T, column: DataTableColumn<T>): number {
+    return Math.max(0, Math.floor(column.indent?.(row) ?? 0));
+  }
+
+  protected hasHierarchyChildren(row: T): boolean {
+    return (this.hierarchy?.children(row)?.length ?? 0) > 0;
+  }
+
+  protected hierarchyExpanded(row: T): boolean {
+    const hierarchy = this.hierarchy;
+    return !!hierarchy && this.expandedHierarchyKeys.has(String(hierarchy.rowKey(row)));
+  }
+
+  protected toggleHierarchy(row: T, event: Event): void {
+    event.stopPropagation();
+    const hierarchy = this.hierarchy;
+    if (!hierarchy || !this.hasHierarchyChildren(row)) return;
+    const key = String(hierarchy.rowKey(row));
+    if (this.expandedHierarchyKeys.has(key)) this.expandedHierarchyKeys.delete(key);
+    else this.expandedHierarchyKeys.add(key);
+    this.rebuildHierarchyRows();
+  }
+
+  protected hierarchyCode(row: T): string {
+    return String(this.hierarchy?.code?.(row) ?? '');
+  }
+
+  protected hierarchyLabel(row: T, column: DataTableColumn<T>): string {
+    return String(this.hierarchy?.label?.(row) ?? this.displayValue(row, column) ?? '');
+  }
+
+  protected hierarchyActivate(row: T, event: Event): void {
+    event.stopPropagation();
+    const hierarchy = this.hierarchy;
+    if (!hierarchy?.activateEnabled || hierarchy.activateEnabled(row)) hierarchy?.activate?.(row);
+  }
+
+  protected hierarchyActivateAriaLabel(row: T, column: DataTableColumn<T>): string {
+    return this.hierarchy?.activateAriaLabel?.(row) || this.hierarchyLabel(row, column);
+  }
+
+  protected cellLinkActivate(row: T, column: DataTableColumn<T>, event: Event): void {
+    event.stopPropagation();
+    if (!column.link?.enabled || column.link.enabled(row)) column.link?.activate(row);
+  }
+
+  protected cellLinkAriaLabel(row: T, column: DataTableColumn<T>): string {
+    return String(column.link?.ariaLabel?.(row) || this.displayValue(row, column) || '');
+  }
+
+  protected updateSelection(value: T[] | T | null): void {
+    if (this.selectionDisabled) return;
+    this.selectionChange.emit(Array.isArray(value) ? value : []);
+  }
+
+  protected activateRow(row: T, event: Event): void {
+    if (!this.hasRowActivation) return;
+
+    const target = event.target;
+    if (target instanceof Element) {
+      const interactiveTarget = target.closest(
+        'button, a[href], input, select, textarea, option, label, summary, '
+          + '[contenteditable="true"], [tabindex]:not([tabindex="-1"]), [role]',
+      );
+      if (interactiveTarget && interactiveTarget !== event.currentTarget) return;
+    }
+
+    if (event.type === 'keydown') event.preventDefault();
+    this.rowActivated.emit(row);
+  }
+
+  private rebuildHierarchyRows(): void {
+    this.hierarchyLevels.clear();
+    if (!this.hierarchy) {
+      this.visibleHierarchyRows = [];
+      return;
+    }
+    const rows: T[] = [];
+    this.appendHierarchyRows(this.value, 0, rows, this.hierarchy);
+    this.visibleHierarchyRows = rows;
+  }
+
+  private appendHierarchyRows(
+    source: ReadonlyArray<T>,
+    level: number,
+    target: T[],
+    hierarchy: DataTableHierarchy<T>,
+  ): void {
+    source.forEach((row) => {
+      const key = String(hierarchy.rowKey(row));
+      if (!this.initializedHierarchyKeys.has(key)) {
+        this.initializedHierarchyKeys.add(key);
+        if (hierarchy.defaultExpanded) this.expandedHierarchyKeys.add(key);
+      }
+      this.hierarchyLevels.set(key, level);
+      target.push(row);
+      const children = hierarchy.children(row) ?? [];
+      if (children.length && (this.printAllRows || this.expandedHierarchyKeys.has(key))) {
+        this.appendHierarchyRows(children, level + 1, target, hierarchy);
+      }
+    });
+  }
+}
+
+
+SOURCE: src/app/modules/shared/components/data-table/data-table.component.html
+<div
+  class="sigma-data-table"
+  [class.sigma-data-table--scrollable]="scrollable"
+  [class.sigma-data-table--flow]="!scrollable"
+  [class.sigma-data-table--fill]="fill && scrollable"
+  [style.--sigma-data-table-scroll-height]="resolvedScrollHeight"
+>
+  @if (hasActions) {
+    <app-action-button
+      [moreActions]="actions"
+      (SendActionTemplate)="setActionTemplate($event)"
+    ></app-action-button>
+  }
+
+  <p-table
+    [value]="renderedValue"
+    [dataKey]="dataKey"
+    styleClass="sigma-data-table__table"
+    responsiveLayout="scroll"
+    [scrollable]="scrollable"
+    [scrollHeight]="scrollable ? resolvedScrollHeight : ''"
+    sortMode="single"
+    [lazy]="lazy"
+    [lazyLoadOnInit]="false"
+    [paginator]="paginator"
+    [alwaysShowPaginator]="alwaysShowPaginator"
+    [first]="resolvedFirst"
+    [rows]="rows"
+    [totalRecords]="resolvedTotalRecords"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [loading]="loading"
+    [sortField]="sortField"
+    [sortOrder]="sortOrder"
+    [selectionMode]="selectable ? 'multiple' : undefined"
+    [selection]="selection"
+    [selectionPageOnly]="selectionPageOnly"
+    [showCurrentPageReport]="resolvedShowCurrentPageReport"
+    [currentPageReportTemplate]="resolvedCurrentPageReport | translate"
+    paginatorDropdownAppendTo="body"
+    (onLazyLoad)="onTableLazyLoad($event)"
+    (firstChange)="onTableFirstChange($event)"
+    (onPage)="onTablePage($event)"
+    (selectionChange)="updateSelection($event)"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        @if (selectable) {
+          <th scope="col" class="sigma-data-table__selection-column">
+            <p-tableHeaderCheckbox
+              [disabled]="selectionDisabled"
+              [ariaLabel]="selectAllAriaLabel"
+            ></p-tableHeaderCheckbox>
+          </th>
+        }
+        @if (hasActions) {
+          <th scope="col" class="sigma-data-table__actions-column">
+            {{ 'general.actions' | translate }}
+          </th>
+        }
+        @for (column of columns; track column.field + ':' + column.header) {
+          <th
+            scope="col"
+            [ngClass]="column.headerClass"
+            [style.width]="column.width || null"
+            [pSortableColumn]="column.field"
+            [pSortableColumnDisabled]="!column.sortable"
+          >
+            {{ column.header | translate }}
+            @if (column.sortable) {
+              <p-sortIcon [field]="column.field"></p-sortIcon>
+            }
+          </th>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr
+        [attr.data-row-tone]="rowTone ? rowTone(row) : null"
+        [class.sigma-data-table__row--interactive]="hasRowActivation"
+        [class.sigma-data-table__hierarchy-root]="hierarchy && hierarchyLevel(row) === 0"
+        [attr.tabindex]="hasRowActivation ? 0 : null"
+        [attr.role]="hasRowActivation && !selectable ? 'button' : null"
+        (click)="activateRow(row, $event)"
+        (keydown.enter)="activateRow(row, $event)"
+        (keydown.space)="activateRow(row, $event)"
+      >
+        @if (selectable) {
+          <td
+            class="sigma-data-table__selection-column"
+            (click)="$event.stopPropagation()"
+            (keydown)="$event.stopPropagation()"
+          >
+            <p-tableCheckbox
+              [disabled]="selectionDisabled"
+              [value]="row"
+              [ariaLabel]="selectionLabel(row)"
+            ></p-tableCheckbox>
+          </td>
+        }
+        @if (hasActions) {
+          <td class="sigma-data-table__actions-column">
+            @if (actionTemplate) {
+              <ng-container
+                *ngTemplateOutlet="actionTemplate; context: { $implicit: row }"
+              ></ng-container>
+            }
+          </td>
+        }
+        @for (column of columns; track column.field + ':' + column.header; let isFirst = $first) {
+          <td [ngClass]="column.cellClass" [style.width]="column.width || null">
+            @if (column.cellTemplate) {
+              <ng-container
+                *ngTemplateOutlet="column.cellTemplate; context: {
+                  $implicit: row,
+                  row,
+                  column
+                }"
+              ></ng-container>
+            } @else if (hierarchy && isFirst) {
+              <div
+                class="sigma-data-table__hierarchy-cell"
+                [style.padding-inline-start.px]="hierarchyLevel(row) * 14"
+              >
+                @if (hasHierarchyChildren(row)) {
+                  <button
+                    type="button"
+                    class="sigma-data-table__hierarchy-toggle"
+                    [attr.aria-expanded]="hierarchyExpanded(row)"
+                    [attr.aria-label]="hierarchyLabel(row, column)"
+                    (click)="toggleHierarchy(row, $event)"
+                  >
+                    <i
+                      class="bi"
+                      [class.bi-chevron-down]="hierarchyExpanded(row)"
+                      [class.bi-chevron-right]="!hierarchyExpanded(row)"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                } @else {
+                  <span class="sigma-data-table__hierarchy-spacer" aria-hidden="true"></span>
+                }
+                @if (hierarchyCode(row); as code) {
+                  <span class="sigma-data-table__hierarchy-code">{{ code }}</span>
+                }
+                @if (hierarchy.activate && (!hierarchy.activateEnabled || hierarchy.activateEnabled(row))) {
+                  <button
+                    type="button"
+                    class="sigma-data-table__cell-link"
+                    [title]="hierarchy.activateTitle ? (hierarchy.activateTitle | translate) : ''"
+                    [attr.aria-label]="hierarchyActivateAriaLabel(row, column)"
+                    (click)="hierarchyActivate(row, $event)"
+                  >
+                    {{ hierarchyLabel(row, column) }}
+                  </button>
+                } @else {
+                  <span>{{ hierarchyLabel(row, column) }}</span>
+                }
+              </div>
+            } @else if (column.link && (!column.link.enabled || column.link.enabled(row))) {
+              <div
+                class="sigma-data-table__indented-cell"
+                [style.padding-inline-start.px]="columnIndent(row, column) * 14"
+              >
+                <button
+                  type="button"
+                  class="sigma-data-table__cell-link"
+                  [title]="column.link.title ? (column.link.title | translate) : ''"
+                  [attr.aria-label]="cellLinkAriaLabel(row, column)"
+                  (click)="cellLinkActivate(row, column, $event)"
+                >
+                  {{ displayValue(row, column) }}
+                </button>
+              </div>
+            } @else if (column.indent) {
+              <div
+                class="sigma-data-table__indented-cell"
+                [style.padding-inline-start.px]="columnIndent(row, column) * 14"
+              >
+                {{ displayValue(row, column) }}
+              </div>
+            } @else {
+              @if (statusOf(row, column); as status) {
+                <span [class]="statusClass(status)">{{ status.label | translate }}</span>
+              } @else {
+                {{ displayValue(row, column) }}
+              }
+            }
+          </td>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr class="sigma-data-table__empty-row">
+        <td [attr.colspan]="columnCount" class="sigma-data-table__empty-cell">
+          @if (!loading && showEmpty) {
+            <div class="sigma-data-table__empty" role="status">
+              <i [class]="emptyIcon" aria-hidden="true"></i>
+              {{ emptyMessage | translate }}
+            </div>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

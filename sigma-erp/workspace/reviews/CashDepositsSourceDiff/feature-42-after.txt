@@ -1,0 +1,49 @@
+using Microsoft.AspNetCore.Mvc;
+using SiGma.Business.IServices;
+using SiGma.ViewModels.ViewModels.CashDeposit;
+
+namespace SiGma.ServerAPI.Controller
+{
+    public class CashDepositController : SiGmaControllerBase<
+        CashDepositAddVM, CashDepositUpdateVM, CashDepositDetailVM, CashDepositListVM,
+        ICashDepositService>
+    {
+        public CashDepositController(ICashDepositService service) : base(service)
+        {
+        }
+
+        /// <summary>
+        /// Returns all payment vouchers that are not yet fully deposited.
+        /// Used to populate the "Create New Cash Deposit" modal grid.
+        /// Columns: Date, Voucher type, No, Description, Amount, Deposited, Due Amount.
+        /// The client fills in "Deposited Now" per row before submitting.
+        /// </summary>
+        [HttpGet("GetUndepositedVouchers")]
+        public async Task<IActionResult> GetUndepositedVouchersAsync(
+            [FromQuery] int? excludeCashDepositId, CancellationToken cancellationToken)
+            => ToActionResult(await Service.GetUndepositedVouchersAsync(excludeCashDepositId, cancellationToken));
+
+        /// <summary>
+        /// Toggles the approval status of a cash deposit.
+        /// Approving: sets ApprovalStatus = Approved, IsPosted = true.
+        /// Un-approving: blocked if active allocations exist on the linked JV.
+        /// </summary>
+        [HttpPost("ToggleApproval/{id}")]
+        public async Task<IActionResult> ToggleApprovalAsync(int id, CancellationToken cancellationToken)
+        {
+            var result = await Service.ToggleApprovalStatusAsync(id, cancellationToken);
+            return ToActionResult(result);
+        }
+
+        /// <summary>
+        /// Toggles the void status of a cash deposit.
+        /// Voiding: blocked if active allocations exist on the linked JV.
+        /// </summary>
+        [HttpPost("ToggleVoid/{id}")]
+        public async Task<IActionResult> ToggleVoidAsync(int id, CancellationToken cancellationToken)
+        {
+            var result = await Service.ToggleVoidStatusAsync(id, cancellationToken);
+            return ToActionResult(result);
+        }
+    }
+}

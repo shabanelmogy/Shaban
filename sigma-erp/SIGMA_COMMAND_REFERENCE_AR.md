@@ -15,7 +15,7 @@
 | `Plan <feature>` | تخطيط قبل التنفيذ، خصوصًا لو الـ logic غامض أو التغيير كبير |
 | `Review <feature>` | مراجعة read-only للموجود وتحديد المشاكل والـ drift |
 | `Implement <feature>` | تنفيذ الخطة أو العقود المجمدة |
-| `Verify <feature>` | تحقق source-only بعد التنفيذ؛ التشغيل والاختبارات تحتاج تفويضًا صريحًا |
+| `Verify <feature>` | مطابقة ما نُفّذ مع العقد وكتابة تقرير. راجع [جدول الأوامر المعتمد](<F:/My Work/Sigma/.agents/SIGMA_WORKFLOW_RULES.md#2-task-modes-and-commands>) لمعرفة الفحوص المسموحة. |
 | `Close <feature>` | Final Reconciliation وإغلاق العمل |
 
 > **ملاحظات ملزمة من الجذر `F:\My Work\Sigma\AGENTS.md`** — المرجع ده سريع فقط
@@ -24,8 +24,6 @@
 > - `Review` و `Feature Review end-to-end` **read-only على مصدر التطبيق**:
 >   ممنوع تعديل أي ملف مصدر أو إعداد أو ملف تعليمات. إنشاء الـ artifacts تحت
 >   `F:\My Work\Sigma\reviews\` مسموح ومتوقع، لأنه جزء من مخرج المراجعة.
-> - `Verify` = **source-only**. الـ build والـ test والـ runtime والـ database
->   والـ browser تفضل pending لحد تفويض صريح للمهمة الحالية.
 > - التنفيذ لا يبدأ إلا بصيغة صريحة: `Implement <feature>` / `نفذ <الميزة>`،
 >   أو `ونفذ الإصلاحات المؤكدة`، أو `run review and refactor direct`، أو طلب
 >   مباشر بـ refactor / fix / implement — ومع عقد Frozen.

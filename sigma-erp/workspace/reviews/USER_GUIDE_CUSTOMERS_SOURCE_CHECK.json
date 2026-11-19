@@ -1,0 +1,22 @@
+{
+  "guide": "customers",
+  "topics": 8,
+  "workflowSteps": 7,
+  "questions": 8,
+  "bilingualPairs": 100,
+  "syntaxFiles": 7,
+  "coverage": "8/8 original Customers menu destinations in order",
+  "registry": "Sales preserved; Customers added",
+  "checks": [
+    "static AST parse",
+    "relative imports exist",
+    "route presence",
+    "one sidebar entry",
+    "nonempty EN/AR text",
+    "no conflict markers"
+  ],
+  "verification": "source-only; compile/runtime/visual pending",
+  "status": "Implemented — source-only",
+  "ownerVerificationPending": "yes",
+  "finalSyntaxAndWhitespaceErrors": 0
+}

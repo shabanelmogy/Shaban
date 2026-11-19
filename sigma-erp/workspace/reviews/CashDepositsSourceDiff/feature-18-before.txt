@@ -1,0 +1,4 @@
+<div class="card">
+    <table-list [columns]="columns" [list]="data" [hasCreate]="true" [moreActions]="moreActions" (openDialog)="goCreate($event)"></table-list>
+  </div>
+  

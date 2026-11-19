@@ -1,0 +1,144 @@
+Status: Implemented — source-only
+Owner verification pending: yes
+Snapshot includes current complete component and new display model; scoped diff includes prior refactor changes.
+
+src/app/modules/Accounts/IncomeStatement2/components/list/list.component.ts
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { IncomeStatement2DTO, IncomeStatement2Filter, IncomeStatement2Line } from '../../models/list';
+import { IncomeStatement2Row } from '../../models/income-statement2-row';
+import { IncomeStatement2Service } from '../../services/income-statement2.service';
+import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
+import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
+import { currentMonthRange, reportRange, reportNumber, reportBoolean } from '../../../shared/report-family/account-report-values';
+
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
+import { DataTableColumn, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+
+@Component({
+  selector: 'app-income-statement2', standalone: true,
+  imports: [AccountReportPageComponent],
+  templateUrl: './list.component.html', styleUrl: './list.component.scss',
+  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+})
+export class IncomeStatement2Component {
+  private readonly service = inject(IncomeStatement2Service);
+  private readonly translate = inject(TranslateService);
+  private readonly branches = inject(BranchService);
+  private readonly subGroups = new Set([
+    'None', 'CurrentAssets', 'NonCurrentAssets', 'CurrentLiabilities', 'LongTermLiabilities', 'Equity',
+    'OperatingRevenue', 'OtherRevenue', 'CostOfSales', 'SellingExpense', 'AdministrativeExpense',
+    'MaintenanceExpense', 'DepreciationExpense', 'FinancialExpense', 'OtherExpense',
+  ]);
+  private readonly amountColumns: ReadonlyArray<DataTableColumn<IncomeStatement2Row>> =
+    (['balance', 'budget', 'variance'] as const).map<DataTableColumn<IncomeStatement2Row>>(field => ({
+      field, header: `incomeStatement2.${field}`, type: 'money', width: '14%',
+      headerClass: 'text-end', cellClass: 'text-end sigma-data-table__cell--numeric',
+    }));
+  private readonly columns: ReadonlyArray<DataTableColumn<IncomeStatement2Row>> = [
+    {
+      field: 'name', header: 'incomeStatement2.account', width: '40%',
+      cellClass: 'sigma-data-table__cell--wrap',
+      value: row => row.labelKey ? this.translate.instant(row.labelKey)
+        : [row.code, row.name].filter(Boolean).join(' — ') || '—',
+    },
+    {
+      field: 'subGroup', header: 'incomeStatement2.subGroup', width: '18%',
+      cellClass: 'sigma-data-table__cell--wrap',
+      value: row => row.subGroup && this.subGroups.has(row.subGroup)
+        ? this.translate.instant(`incomeStatement2.subGroups.${row.subGroup}`) : row.subGroup || '',
+    },
+    ...this.amountColumns,
+  ];
+  readonly config: AccountReportConfig<IncomeStatement2DTO, IncomeStatement2Filter, IncomeStatement2Row> = {
+    id: 'incomeStatement2', titleKey: 'incomeStatement2.title', icon: 'bi bi-file-earmark-spreadsheet', exportFileName: 'IncomeStatement2',
+    summaryDensity: 'slim', summaryMaxHeight: 80,
+    filters: [
+      { key: 'dateRange', labelKey: 'accountReports.dateRange', kind: 'date-range', initialValue: currentMonthRange() },
+      { key: 'branchId', labelKey: 'incomeStatement2.branch', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
+      { key: 'hideZeroActivity', labelKey: 'incomeStatement2.hideZeroActivity', kind: 'checkbox', initialValue: false }
+    ],
+    load: filter => this.service.getReport(filter),
+    buildFilter: raw => {
+
+      return { filter: { ...reportRange(raw, 'dateRange'), branchId: reportNumber(raw, 'branchId'), hideZeroActivity: reportBoolean(raw, 'hideZeroActivity') } };
+    },
+    sections: response => [
+      {
+        id: 'statement', dataKey: 'id', minWidth: '56rem',
+        rows: [...(response.lines ?? []).map(line => this.accountRow(line, true)), ...this.subtotalRows(response)],
+        columns: this.columns, rowTone: row => row.tone,
+        hierarchy: { rowKey: row => row.id, children: row => row.children, defaultExpanded: true },
+      },
+    ],
+    exportRows: (response, _sections, translate) => this.exportRows(response, translate),
+    summaryCards: response => [
+      { id: 'totalRevenue', labelKey: 'incomeStatement2.totalRevenue', value: response.totalRevenue, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'totalExpenses', labelKey: 'incomeStatement2.totalExpenses', value: response.totalExpenses, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'profitLoss', labelKey: 'incomeStatement2.profitLoss', value: response.profitLoss, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' }
+    ]
+  };
+
+  private accountRow(line: IncomeStatement2Line, root = false): IncomeStatement2Row {
+    return {
+      ...line, id: `account-${line.accountId}`, tone: root ? 'section' : null,
+      children: (line.children ?? []).map(child => this.accountRow(child)),
+    };
+  }
+
+  private subtotalRows(response: IncomeStatement2DTO): IncomeStatement2Row[] {
+    const entries = [
+      { key: 'grossProfitLoss', value: response.grossProfitLoss },
+      { key: 'profitLossBeforeSaleOfAssets', value: response.profitLossBeforeSaleOfAssets },
+      { key: 'profitLossOnSaleOfAssets', value: response.profitLossOnSaleOfAssets },
+      { key: 'netProfitLoss', value: response.netProfitLoss },
+    ];
+    return entries.map((entry, index) => ({
+      ...entry.value, id: `subtotal-${entry.key}`, labelKey: `incomeStatement2.${entry.key}`,
+      accountId: -(index + 1), code: '', name: '', level: 1, parentId: null,
+      allowChildren: false, subGroup: '', children: [], tone: entry.key === 'netProfitLoss' ? 'total' : 'subtotal',
+    }));
+  }
+
+  private exportRows(response: IncomeStatement2DTO, translate: (key: string) => string): Array<Record<string, string | number>> {
+    const subtotalColumns: ReadonlyArray<DataTableColumn<IncomeStatement2Row>> = [
+      { field: 'name', header: 'incomeStatement2.subtotal', value: row => translate(row.labelKey!) },
+      ...this.amountColumns,
+    ];
+    const accountColumns: ReadonlyArray<DataTableColumn<IncomeStatement2Line>> = [
+      { field: 'name', header: 'incomeStatement2.account', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—' },
+      { field: 'subGroup', header: 'incomeStatement2.subGroup' },
+      { field: 'balance', header: 'incomeStatement2.balance', type: 'money' },
+      { field: 'budget', header: 'incomeStatement2.budget', type: 'money' },
+      { field: 'variance', header: 'incomeStatement2.variance', type: 'money' },
+    ];
+    const rows: Array<Record<string, string | number>> = dataTableExportRows(this.subtotalRows(response), subtotalColumns, translate).map(row => ({
+      [translate('accountReports.section')]: translate('incomeStatement2.subtotal'), ...row,
+    }));
+    const accounts: IncomeStatement2Line[] = [];
+    const visit = (source: ReadonlyArray<IncomeStatement2Line>): void => {
+      for (const line of source) {
+        accounts.push(line);
+        visit(line.children ?? []);
+      }
+    };
+    visit(response.lines ?? []);
+    for (const row of dataTableExportRows(accounts, accountColumns, translate)) {
+      rows.push({ [translate('accountReports.section')]: translate('incomeStatement2.title'), ...row });
+    }
+    return rows;
+  }
+}
+
+
+src/app/modules/Accounts/IncomeStatement2/models/income-statement2-row.ts
+import { IncomeStatement2Line } from './list';
+
+export interface IncomeStatement2Row extends IncomeStatement2Line {
+  id: string;
+  labelKey?: string;
+  tone: 'section' | 'subtotal' | 'total' | null;
+  children: IncomeStatement2Row[];
+}

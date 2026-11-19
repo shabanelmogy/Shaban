@@ -1,0 +1,100 @@
+| Field | Value |
+|---|---|
+| Status | Frozen |
+| Owner verification pending | yes |
+| Date | 2026-10-03 |
+
+# Suppliers frontend / backend handoff
+
+Authority: Sigma AGENTS.md; Master 1, 3–7; UI catalog types 01/07 and their owning blocks; BE 3–9, 13/14/17/18. Recipe drift check passed for PLAN-00 and PHASE-00 through PHASE-06 on 2026-10-03. Plan: SUPPLIERS_MAINTENANCE_EVOLUTION_PLAN.md. No screenshot/video was supplied: screenshot evidence is Not Applicable. Source evidence is current code, not runtime acceptance.
+
+## Supplier grid and filter contract
+
+Actions first, then `no`, `name`, `phone1`, `website`, `email` (text). Frontend SupplierDTO and backend SupplierListVM = `id/Id`, `no/No`, `name/Name`, `phone1/Phone1`, `website/Website`, `email/Email`; exact displayed scope retained. Search is trimmed text sent in Filters[search], matched against existing No/Name/VAT/TRN/Phone1/Phone2/Email search fields. Sort keys correspond to sortable displayed columns, default Id descending. Generic list paging defaults 10 and clamps 1..100; UI uses existing DEFAULT_PAGE_SIZE=20 and 10/20/50/100 choices. Source requests use toListParams and exports fetchAllPages. Keep applied search for paging, mutation refresh and modal return; no speculative new filters.
+
+## Supplier detail and write contract
+
+Create inputs: name (required trimmed, max250), vat/trn/phone1/phone2 (nullable max50), website (nullable max100), email (nullable valid email max254), otherDetail (nullable max1000), nullable contactGroupId/currencyId, taxExempted boolean, nullable PartnerAddress {address max250, city/state max100, zipCode max30, countryId nullable}. Update adds supplier Id and optional saved address Id; Id=0/absent denotes a new address. Null address preserves the existing address, as the current contract documents; a supplied owned address updates its saved instance. No subscriptionId, No, audit, totals or state in payloads. Server chooses PartnerType.Supplier and default Supplier contact group when missing, checks selected group type and live tenant references, duplicate nonblank VAT/TRN and address ownership before mapping. Shared write guard and tracked UpdateCoreAsync; one aggregate save. Detail renders the above values and saved currency/contact-group/country labels; add only those label members needed to avoid edit-only lookups in View. Server document No may be returned for identifying subtitle. Detail route is GetByWithNavigationsId/{id}.
+
+## Actions and integration
+
+Supplier list supports Create, View, Edit, Delete and full export. VehicleService reference actions Save/Cancel/dirty discard apply; nested service-item/part/profile mutations do not apply because Supplier owns none. Job close/approval/lubrication actions do not apply because Supplier has no such state. Delete uses shared confirmation preset and backend usage-aware owned-address deletion, retaining the existing rule that referenced suppliers cannot be deleted. Exact endpoint DELETE Supplier?id=<id>; success closes/refetches applied page, last-row deletion backs up one page. No new activate/post/approve workflow. Delete is an authorization candidate; only existing AuthGuard/[Authorize] applies.
+
+Canonical route shape: Supplier list owns modal create/view/edit; remove redundant details/:id route only after direct-consumer search. Reports retain their existing lazy route URLs/menu entries. Root provided services use the one interceptor-equipped HttpClient. Inline read/lookup errors require X-Skip-Error-Interceptor plus apiErrorMessage and Retry. Standard mutations retain the interceptor feedback owner. View modal has no primary action; header title is screen name, subtitle record identity. Form is stable/disabled during save, restored on failure; successful snapshot required before Edit Save.
+
+## Report filter / dataset contract
+
+| Screen | Filters and defaults | Rows and totals | Target output |
+|---|---|---|---|
+| Statement | fromDate/toDate from validated shared current-month range, supplierId required, reportType ledger/outstanding, includeInactive false | Complete ledgerLines and advanceTaxInvoiceLines. Backend period totals/beginning/ending/current balances; additive outstandingTotal positive AP residual. No request paging. | Typed shared grids, complete print and click-time exports for applicable section. All filters invalidate prior result. |
+| Balances | current-month fromDate/toDate; nullable branchId, supplierId, supplierStatus active/inactive, salesPersonId; balanceType all/debit/credit/range (existing nonzero meaning) | debit-credit period movement per supplier; totalBalance covers whole filtered result. Existing paged default clamp1..200. IncludeAllRows=true gives every item, pageNumber1, pageSize=max(1,count), totalCount=count and totalPages0/1. | Complete rows with controlled local page20, sorting across loaded complete set only, complete export/print. Preserve row-activated statement viewer with same supplier and applied month range, includeInactive=true. |
+| Aging | asOfDate today; nullable supplierId/supplierGroupId; customizePeriods off; defaults 30/60/90/120/150/180, on positive increasing ints | signed credit-debit residual buckets after both-sided matching. SubTotal=raw ledger net; Allocated=informational matched magnitude; UnAllocated=Balance=remaining net, invariant sum(buckets)=Balance=raw net. Backend totals across filtered set. IncludeAllRows contract as balances. | All 11 displayed columns preserved: name/code/contactGroup/seven buckets/balance. Applied effective range labels on grid/cards/Excel/print; shared summary cards. |
+
+Absent optional IDs omitted, false preserved; blank strings omitted; supplied invalid IDs/dates/enums/bucket boundaries rejected at backend. Date-only strings yyyy-MM-dd, inclusive to/as-of day. Reports read tenant/live journal/detail/account/partner facts, posted and nonvoided, through QueryReport; no accounting mutations. Allocation eligibility follows persisted source details or source document journal (Receipt/CreditNote/DebitNote/JV); same partner/AP membership and cutoff, deterministic date/Id allocation order and source Id distribution, capacity guards. Missing AP links return localized configuration error.
+
+All report filters bind the same typed FormGroup including conditional custom fields, disable/restore around request, invalidate output on edits, and use shared dates/money/errors. Balances statement viewer uses app-editor-dialog View (no primary Save), single dual-month dateRange control, stable identity/open-state cancellation, backend balances and typed shared ledger grid. Auxiliary lookups have local loading and visible inline Retry; no global backdrop for lookups. Shared report Print releases bounded flow and local slicing for every section, restores paging/state after print or failure, cancels pending frame on destroy. No fake response totals before success.
+
+## Reference conformance baseline
+
+| Concern | Book | Actual reference / shared owner | Initial target finding / required match |
+|---|---|---|---|
+| List shell/filter/grid | UI1/3/4/6 | Workshop/Job/components/list/list.component.html; styles.scss; FilterPanelComponent; DataTableComponent.fill | Supplier local palette/fill/pager styles replaced by sigma shell, appFilterPanel, fill=true. |
+| Modal | UI13/15/19/27 | Fleet/VehicleService/components/details/details.component.html; EditorDialogComponent, FieldErrorComponent, focusField | Reuse public shell controls; canonical blocks supersede legacy reference field/error markup. Padded body, View no Save, shared fields/errors/focus and dirty-close preset. |
+| Report strip and totals | UI20/24 | Accounts/TrailBalance/components/list/list.component.html sigma-report-filter-*; SummaryCardsComponent | All three local report filter/table/totals copies replaced with shared owners. New reviewed cards use SummaryCardsComponent (UI24), not historical accounting card internals. |
+| Sectioned statement | UI6/20/21 | Customers/StatementOfAccount/components/list/list.component.html; app-editor-tabs; app-data-table | Two existing sections retained in bounded panels, typed fields/date/money, complete print. No Customer-only deposits/PDC/ageing added. |
+| Read wrappers/query | UI2/8/22/28; BE9/17 | list-query.ts; api-error.ts; ReportPrintService; SupplierService methods | Replace hand-built serializers/date helpers/export caches; explicit complete rows for paged reports. |
+| CRUD/owned reference | BE5/8/13/14 | BranchService list hooks; PurchaseOrderService tracked graph and RemoveWithChildrenAsync; Service.UpdateCoreAsync | Remove copied GetManyAsync, use inherited hooks and tracked address reconciliation; no manual SubscriptionId. |
+
+Root performs final conformance comparison against actual final symbols and values. No known mismatch may be called complete solely from shared imports. Runtime/visual/accounting acceptance remains owner-pending.
+
+## Frozen amendment — shared print preparation, 2026-10-03
+
+Master5's extraction gate applies to the identical print-preparation lifecycle needed by the three in-scope reports. Extend the existing ReportPrintService with createSession(DestroyRef), returning a readonly printing signal and guarded print operation. The shared owner schedules one render frame, invokes its existing print method, clears preparation on afterPrint/false result and cancels a pending frame on destroy. Consumers keep data/paging eligibility and bind paginator/scrollable to !printing. Existing print() callers remain compatible; reference screens are not modified. Promote this reusable lifecycle to UI21 and the skill in the same task. This is a technical extraction of an already-confirmed rule, with no business or output-scope change.
+
+## Frozen reconciliation amendment — inherited keys and shared statement rendering
+
+Canonical BE8 explicitly prohibits an ordinary filtered uniqueness index when inheritance separates the business key from tenant/live-row scope. SupplierConfig.ToTable(Supplier), PartnerConfig.ToTable(Partner) and Supplier : Partner establish that shape. Replace the existing global VAT/TRN indexes by removal from SupplierConfig and use the already-shared ExecuteUniqueWriteAsync<Supplier> boundary declared by UniqueColumns. The directly related Supplier import chunk must participate in the same boundary and recheck live keys, preserving partial chunk semantics and unrelated import writers. Owner migration suggestion becomes RemoveSupplierGlobalVatTrnUniqueIndexes; no migration is created or run. Arbitrary SQL/bypass writers remain a documented limitation. This supersedes the provisional composite-index implementation, which cannot safely express the inherited scope.
+
+Detail labels use the frozen frontend names currencyName, contactGroupName and partnerAddress.countryName; add mappings explicitly. Existing document No is inherited from DetailBaseVm. Statement totals must use every period ledger row before outstanding filtering, with allocations/due authoritative on both statement sections. The two statement consumers reuse feature-owned supplier-statement-view.ts for their identical column, signed-balance and summary contracts; no reference module is edited. Balances drill-down fixes the supplier identity selected from the applied report and edits only its dual-month date range.
+
+## Source reconciliation amendment — existing shared owners, 2026-10-03
+
+PrimeNG local sorting emits firstChange when it resets the offset, without onPage. DataTableComponent consumes that changed local offset and emits its existing typed pagination event; lazy/server grids and paginator=false print preparation retain their owners. Suppliers consumers continue through resolveListPaging. This repairs controlled paging without adding sorting requests or changing report scope; UI6 and the skill record the shared rule.
+
+API body text cleaning remains with the existing TrimIncomingStrings registration in SiGma.ServerAPI/Program.cs, as BE3 requires. SupplierService does not duplicate Normalize/Clean helpers. Required/length/email rules stay on the VMs; direct import inputs keep their own boundary checks. ReconcileReference retains a saved address identity even when the incoming Id is 0; it creates an address only when there is no current child. Supplier null-address preservation remains the explicit feature rule.
+
+## Frozen owner paging amendment — 2026-10-03
+
+Owner explicitly requests default 15 table rows, superseding the earlier 20-row presentation default. Shared DEFAULT_PAGE_SIZE governs all Suppliers initial pagers (including statement sections/dialog); standard options are 10/15/20/50/100. Explicit URL/user sizes remain. This amendment changes no API/DTO, report completeness, totals, full print/export, filter/sort or business contract. The prior values above are retained as historical evidence. Implementation and source reconciliation: F:/My Work/Sigma/reviews/Archive/Completed/2026-10-23/DEFAULT_TABLE_PAGE_SIZE_FEATURE_REVIEW.md; runtime acceptance pending.
+
+## Owner filter-stability amendment — 2026-10-03
+
+Owner extends the moving-filter repair to Suppliers Balance Summary. The main form adopts shared FilterPanel stableLayout with five original main fields and Balance Type in More Filters, matching the frozen Staff presentation. The earlier report-strip decision remains historical; statement-dialog strip and all report/business/API contracts, including nonzero Range, are unchanged. Later authority and source reconciliation: BALANCE_SUMMARY_FILTER_LAYOUT_CONTRACT_FREEZE.md and BALANCE_SUMMARY_FILTER_LAYOUT_FEATURE_REVIEW.md. Visual/runtime acceptance pending.
+
+## Owner Supplier amount-range amendment — 2026-10-03
+
+Owner reports Range does not show From/To. SUPPLIER_BALANCES_SUMMARY_RANGE_CONTRACT_FREEZE.md freezes this later extension: UI Range requires both amount bounds, and supplied API bounds apply inclusive signed Balance filtering before totals/count/paging. Both absent retains historical nonzero Range for older API callers. Existing Debit-Credit period calculation, other scopes, complete-response paging/print/Excel, card size, stable filter layout and statement drill-down unchanged. Final implementation/source checks: SUPPLIER_BALANCES_SUMMARY_RANGE_FEATURE_REVIEW.md. Compilation/runtime acceptance pending; earlier nonzero-only evidence remains historical.
+
+## Frozen re-review scope — 2026-10-08
+
+### Current technical reconciliation amendment
+
+Current BE3 requires lean explicit read contracts: SupplierDetailVM retains Id/No/Name and all used Supplier fields (16 total), SupplierAddressDetailVM retains Id and all used address/country fields (seven total). Their unused DetailBaseVm inheritance is removed; earlier claims about inherited identity remain historical. Existing named classes, nested consumers, lookup labels and write DTOs remain compatible. BE6 requires the existing ToActionResult status translator for all four custom Supplier read actions, including the already-produced TaxRate missing-supplier 404. No service business logic, route/body wrapper or persistence change.
+
+Current UI10 deferred discard/freeze and route forwarding, UI17 shared strict date range validation, UI19/20 reserved field-error geometry and UI22 composed export error ownership are applied as technical corrections to the existing screens. No new business field, workflow, API query, accounting effect, permission or schema requirement. Final source evidence and owner acceptance limits are in SUPPLIERS_FEATURE_REVIEW.md, Final re-review reconciliation — 2026-10-08.
+
+The owner requests review and implementation of all confirmed Suppliers corrections against current documentation. Reuse the existing frozen business/API contracts and all later amendments above, including default15 and the inclusive amount Range. Re-review the current checkout rather than assuming the historical implementation is still conformant. The four existing screens and their directly related Supplier backend, translations and existing suppliers-guide.ts are in scope. No new accounting effect, field, permission, status, schema or storage behavior is approved by this technical re-review.
+
+Root owns discovery/freeze, Supplier CRUD frontend, guide reconciliation, integration and final evidence. Independent report frontend and Supplier backend workstreams may correct source-supported violations of these contracts and current canonical owners, after recording concern/block/actual-reference/source comparison in the feature review. Any material contract conflict returns to root before implementation. Preserve all unrelated work; no shared-owner/reference changes without root integration. Recipe check on 2026-10-08 reports PLAN00/Phase00–05 stale and Phase06 current; canonical blocks govern, packet regeneration/semantic review pending. Source-only execution boundary remains in force.
+
+## Frozen owner amendment — current balance through today, 2026-10-26
+
+The owner accepted the proposed distinction between opening, selected-period closing and current balances, and explicitly requested implementation plus an information marker explaining the current balance. This narrow amendment supersedes only the unresolved temporal meaning in SUPPLIERS_FULL_STACK_REVIEW; all historical decisions remain recorded.
+
+- CurrentBalance is the signed Debit−Credit sum of this supplier's eligible posted, nonvoided, tenant/live AP journal lines with accounting Date strictly before tomorrow, independent of fromDate/toDate/reportType. Capture the existing server calendar `DateTime.Today` once per request; this follows Sigma's existing local wall-clock date authority and introduces no new timezone policy. A future payment due date does not exclude an otherwise eligible current accounting entry. Future accounting dates, drafts, deleted and voided journals do not contribute.
+- BeginningBalance and EndingBalanceTill, period rows/totals, OutstandingTotal and allocation matching retain their selected-period contracts. No account-mapping/historical eligibility rewrite is authorized by this amendment.
+- Return additive date-only CurrentBalanceAsOfDate (yyyy-MM-dd) with the same captured date used by the calculation. Existing endpoint, filters and Result wrapper remain; no entity/schema change. Frontend SupplierStatement adds currentBalanceAsOfDate:string and formats the server date via existing date helpers.
+- Both statement consumers reuse supplierStatementCards: the current card title is “Current Balance Through Today” / “الرصيد الحالي حتى اليوم”, its existing public icon becomes bi-info-circle, and its visible hint explains the dated, posted-only scope independent of the selected period, excluding future accounting dates. Use existing SummaryCard.icon/hintKey/hintParams and SummaryCards print behavior; no new tooltip, shared component API, local card markup/style or feature opt-in is needed. The explanatory text remains printable although the decorative icon is hidden in print.
+- Update the owning bilingual Suppliers user guide. No other review finding is approved for implementation here. Source-only verification; no build/test/lint/browser/database/migration/commit command. No new migration.
+
+Pre-edit concern/reference comparison: BE17 owns server SUM and explicit cutoff; actual SupplierJournalLines/PayableAccountIdsAsync own existing tenant/live/posted/AP semantics. UI24's actual SummaryCard model and SummaryCards template already render icon plus translated hint and hintParams; shared print keeps hint text. UI17's toPickerDate + formatDisplayDate preserve date-only calendar values. The two actual consumers are SupplierStatementComponent.summaryCards and SupplierBalancesSummaryComponent.statementCards. Cache/loading/index matrices in the current review remain the baseline for this bounded rule; no new lookup/request owner is introduced. Tier S: one calculation rule and its explanation; root performs the sequential implementation without subagents because splitting these small dependent producer/consumer edits adds overhead.

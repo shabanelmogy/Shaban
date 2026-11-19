@@ -1,0 +1,45 @@
+The 'vendorChunk' option is not used by this builder and will be ignored.
+- Building...
+
+Initial chunk files                  | Names                    |  Raw size
+main.js                              | main                     |   2.84 MB | 
+styles.css                           | styles                   |   2.61 MB | 
+scripts.js                           | scripts                  | 106.35 kB | 
+polyfills.js                         | polyfills                |  88.73 kB | 
+chunk-YTKTWDNM.js                    | -                        |  25.66 kB | 
+chunk-ZOWDLK44.js                    | -                        |  22.56 kB | 
+chunk-OHM7KUTM.js                    | -                        |  15.43 kB | 
+chunk-HVS3INBY.js                    | -                        |   3.40 kB | 
+chunk-SB4CNMPM.js                    | -                        |   3.23 kB | 
+chunk-CGHSVITQ.js                    | -                        |   2.33 kB | 
+chunk-J4B6MK7R.js                    | -                        |   1.89 kB | 
+chunk-TBGSYPQK.js                    | -                        |   1.39 kB | 
+chunk-KE2RCJYK.js                    | -                        |   1.15 kB | 
+chunk-IO7NCLWR.js                    | -                        |   1.05 kB | 
+chunk-W4G6JIYY.js                    | -                        | 796 bytes | 
+chunk-PG5UJNMW.js                    | -                        | 697 bytes | 
+chunk-XT6KCI6A.js                    | -                        |  43 bytes | 
+
+                                     | Initial total            |   5.72 MB
+
+Lazy chunk files                     | Names                    |  Raw size
+user-guide.routes-RHQNSQUA.js        | user-guide-routes        |   1.57 MB | 
+layout.module-ARYKWFPJ.js            | layout-module            |   1.22 MB | 
+chunk-M4M4R652.js                    | -                        | 621.25 kB | 
+bill.routes-B2SDSUTD.js              | bill-routes              | 460.80 kB | 
+agreement.routes-CRUN7JAM.js         | agreement-routes         | 366.98 kB | 
+job.routes-L6OO5K7P.js               | job-routes               | 336.38 kB | 
+invoice.routes-KIWAXDAD.js           | invoice-routes           | 250.82 kB | 
+booking.routes-YQ7AH4YF.js           | booking-routes           | 215.18 kB | 
+fleet-vehicle.routes-QLEKMTD2.js     | fleet-vehicle-routes     | 208.31 kB | 
+openingBalances.routes-WR73ISV3.js   | openingBalances-routes   | 201.32 kB | 
+jobestimation.routes-4K626ED5.js     | jobestimation-routes     | 191.36 kB | 
+purchaserequest.routes-VJDMG3NE.js   | purchaserequest-routes   | 188.71 kB | 
+goodsreceivednote.routes-C3KODFOY.js | goodsreceivednote-routes | 178.99 kB | 
+companypartner.routes-7FNIUBNX.js    | companypartner-routes    | 175.38 kB | 
+common.component-MVY3ZOEU.js         | common-component         | 174.13 kB | 
+...and 556 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [103.126 seconds]
+
+Watch mode enabled. Watching for file changes...

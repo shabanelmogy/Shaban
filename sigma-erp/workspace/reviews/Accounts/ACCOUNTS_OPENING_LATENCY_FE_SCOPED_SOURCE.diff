@@ -1,0 +1,564 @@
+diff --git a/src/app/modules/Accounts/openingBalances/components/details/details.component.ts b/src/app/modules/Accounts/openingBalances/components/details/details.component.ts
+index 22fb585..ce15400 100644
+--- a/src/app/modules/Accounts/openingBalances/components/details/details.component.ts
++++ b/src/app/modules/Accounts/openingBalances/components/details/details.component.ts
+@@ -1,9 +1,8 @@
+ import { CommonModule } from '@angular/common';
+-import { Component, DestroyRef, inject, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
++import { Component, DestroyRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+-import { MessageService } from 'primeng/api';
+-import { EMPTY, finalize, of, switchMap } from 'rxjs';
++import { TranslateModule } from '@ngx-translate/core';
++import { EMPTY, Observable, finalize, map, of, switchMap } from 'rxjs';
+ 
+ import { AccountsOpeningBalancesTypeEnum } from 'src/app/_metronic/shared/enums/accountsOpeningBalancesType';
+ import {
+@@ -13,13 +12,13 @@ import {
+ import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+ import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+ import { LoadingService } from 'src/app/modules/shared/service/loading.service';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { formatDisplayDate } from 'src/app/modules/shared/utils/date-utils';
+ 
+ import { OpeningBalanceBatch } from '../../models/batch';
+-import { OpeningBalanceSourceKey } from '../../models/state';
+ import { OpeningBalanceBatchService } from '../../services/opening-balance-batch.service';
+ import { OpeningBalanceStateService } from '../../services/opening-balance-state.service';
+-import { OpeningBalanceStateBannerComponent } from '../../shared/opening-balance-state-banner/opening-balance-state-banner.component';
+-import { parseLocalCalendarDate } from '../../shared/opening-balance-editor.utils';
++import { OpeningBalanceEditorStateComponent } from '../../shared/opening-balance-editor-state/opening-balance-editor-state.component';
+ import { AccountsComponent } from '../accounts/accounts.component';
+ import { CostCenterComponent } from '../cost-center/cost-center.component';
+ import { CustomersComponent } from '../customers/customers.component';
+@@ -45,19 +44,17 @@ import { SuppliersComponent } from '../suppliers/suppliers.component';
+     StockComponent,
+     PrepaidComponent,
+     DepositComponent,
+-    OpeningBalanceStateBannerComponent,
++    OpeningBalanceEditorStateComponent,
+   ],
+   templateUrl: './details.component.html',
+   styleUrl: './details.component.scss',
+-  encapsulation: ViewEncapsulation.None,
++  host: { class: 'sigma-route-host' },
+ })
+ export class DetailsComponent implements OnInit {
+   private readonly confirmationDialog = inject(ConfirmationDialogService);
+   private readonly destroyRef = inject(DestroyRef);
+   private readonly openingBalanceStateService = inject(OpeningBalanceStateService);
+   private readonly openingBalanceBatchService = inject(OpeningBalanceBatchService);
+-  private readonly messageService = inject(MessageService);
+-  private readonly translate = inject(TranslateService);
+   private readonly loading = inject(LoadingService);
+ 
+   @ViewChild(AccountsComponent) private accountsTab?: AccountsComponent;
+@@ -85,20 +82,13 @@ export class DetailsComponent implements OnInit {
+     label: `AccountsOpeningBalancesTypeEnum.${tab}`,
+     icon: this.tabIcons[tab],
+   }));
+-  readonly tabSourceKeys: Record<AccountsOpeningBalancesTypeEnum, OpeningBalanceSourceKey> = {
+-    [AccountsOpeningBalancesTypeEnum.Accounts]: 'OpeningBalanceAccount',
+-    [AccountsOpeningBalancesTypeEnum.CostCenter]: 'OpeningBalanceCostCenter',
+-    [AccountsOpeningBalancesTypeEnum.Customers]: 'OpeningBalanceCustomer',
+-    [AccountsOpeningBalancesTypeEnum.Suppliers]: 'OpeningBalanceSupplier',
+-    [AccountsOpeningBalancesTypeEnum.Staff]: 'OpeningBalanceStaff',
+-    [AccountsOpeningBalancesTypeEnum.Stock]: 'OpeningBalanceStock',
+-    [AccountsOpeningBalancesTypeEnum.Prepaid]: 'OpeningBalancePrepaid',
+-    [AccountsOpeningBalancesTypeEnum.Deposit]: 'OpeningBalanceDeposit',
+-  };
+ 
+   currentTab = AccountsOpeningBalancesTypeEnum.Accounts;
+   readonly batchReady = signal(false);
+-  readonly openingDate = signal<Date | null>(null);
++  readonly batchLoading = signal(false);
++  readonly batchError = signal('');
++  readonly discardPending = signal(false);
++  readonly openingDate = signal('');
+ 
+   ngOnInit(): void {
+     this.loadBatch();
+@@ -106,43 +96,51 @@ export class DetailsComponent implements OnInit {
+ 
+   setCurrentTab(tab: AccountsOpeningBalancesTypeEnum): void {
+     if (tab === this.currentTab) return;
+-    if (this.isActiveSaving()) return;
++    if (this.isActiveSaving() || this.discardPending()) return;
+ 
+     if (!this.activeEditor()?.hasUnsavedChanges()) {
+       this.currentTab = tab;
+       return;
+     }
+ 
++    this.discardPending.set(true);
+     this.confirmationDialog
+-      .confirm({
+-        title: { key: 'openingBalancesEditor.unsavedTitle' },
+-        message: { key: 'openingBalancesEditor.unsavedMessage' },
+-        severity: 'warning',
+-        confirmLabel: { key: 'openingBalancesEditor.discardChanges' },
+-      })
++      .confirmDiscard('openingBalancesEditor')
+       .pipe(takeUntilDestroyed(this.destroyRef))
+       .subscribe((confirmed) => {
+-        if (confirmed) this.currentTab = tab;
++        this.discardPending.set(false);
++        if (confirmed && !this.isActiveSaving()) this.currentTab = tab;
+       });
+   }
+ 
+-  currentState() {
+-    return this.openingBalanceStateService.states()[this.tabSourceKeys[this.currentTab]] ?? null;
++  canDeactivate(): boolean | Observable<boolean> {
++    if (this.isActiveSaving()) return false;
++    if (!this.activeEditor()?.hasUnsavedChanges()) return true;
++    if (this.discardPending()) return false;
++
++    this.discardPending.set(true);
++    return this.confirmationDialog.confirmDiscard('openingBalancesEditor').pipe(
++      map((confirmed) => confirmed && !this.isActiveSaving()),
++      finalize(() => this.discardPending.set(false)),
++    );
+   }
+ 
+   isActiveSaving(): boolean {
+-    return this.activeEditor()?.saving() ?? false;
++    return this.activeEditor()?.isBusy() ?? false;
+   }
+ 
+-  private loadBatch(): void {
++  loadBatch(): void {
++    if (this.batchLoading() || this.isActiveSaving() || this.discardPending()) return;
+     this.loading.startLoading();
+     this.batchReady.set(false);
++    this.batchLoading.set(true);
++    this.batchError.set('');
+     this.openingBalanceBatchService
+       .get()
+       .pipe(
+         switchMap((result) => {
+           if (!result.isSuccess || !result.entity) {
+-            this.showBatchFailure(result.message);
++            this.batchError.set(result.message?.trim() || 'apiErrors.requestSummary');
+             return EMPTY;
+           }
+ 
+@@ -151,7 +149,7 @@ export class DetailsComponent implements OnInit {
+           if (result.entity.isConfigured) return of(result);
+ 
+           if (!result.entity.openingDate) {
+-            this.showBatchFailure(this.translate.instant('openingBalancesEditor.noOpenFiscalYear'));
++            this.batchError.set('openingBalancesEditor.noOpenFiscalYear');
+             return EMPTY;
+           }
+ 
+@@ -160,56 +158,35 @@ export class DetailsComponent implements OnInit {
+             description: result.entity.description,
+           });
+         }),
+-        switchMap((result) => {
+-          if (!result.isSuccess || !result.entity) {
+-            this.showBatchFailure(result.message);
+-            return EMPTY;
+-          }
+-
+-          this.applyBatch(result.entity);
+-          return this.openingBalanceStateService.load(true);
+-        }),
+         takeUntilDestroyed(this.destroyRef),
+-        finalize(() => this.loading.endLoading()),
++        finalize(() => {
++          this.batchLoading.set(false);
++          this.loading.endLoading();
++        }),
+       )
+       .subscribe({
+-        next: (stateResult) => {
+-          if (!stateResult.isSuccess) {
+-            this.showBatchFailure(stateResult.message);
++        next: (result) => {
++          if (!result.isSuccess || !result.entity) {
++            this.batchError.set(result.message?.trim() || 'apiErrors.requestSummary');
+             return;
+           }
+ 
++          this.applyBatch(result.entity);
++          this.openingBalanceStateService.invalidate();
+           this.batchReady.set(true);
+         },
+-        error: (error) => this.showBatchFailure(this.extractServerMessage(error)),
++        error: (error) => this.batchError.set(apiErrorMessage(error, 'apiErrors.unexpectedMessage')),
+       });
+   }
+ 
+   private applyBatch(batch: OpeningBalanceBatch): void {
+-    this.openingDate.set(
+-      batch.openingDate ? parseLocalCalendarDate(batch.openingDate) : null,
+-    );
+-  }
+-
+-  private showBatchFailure(message?: string | null): void {
+-    this.messageService.add({
+-      key: 'global',
+-      severity: 'error',
+-      summary: this.translate.instant('apiErrors.requestTitle'),
+-      detail: message || this.translate.instant('apiErrors.requestSummary'),
+-    });
+-  }
+-
+-  private extractServerMessage(error: unknown): string {
+-    const candidate = error as { error?: { message?: unknown } };
+-    return typeof candidate?.error?.message === 'string'
+-      ? candidate.error.message
+-      : this.translate.instant('apiErrors.unexpectedMessage');
++    this.openingDate.set(batch.openingDate ? formatDisplayDate(batch.openingDate) : '');
+   }
+ 
+   private activeEditor(): {
+     hasUnsavedChanges(): boolean;
+     saving(): boolean;
++    isBusy(): boolean;
+     reloadEditor(): void;
+   } | undefined {
+     switch (this.currentTab) {
+diff --git a/src/app/modules/Accounts/openingBalances/services/opening-balance-state.service.ts b/src/app/modules/Accounts/openingBalances/services/opening-balance-state.service.ts
+index aa83add..fb73cc7 100644
+--- a/src/app/modules/Accounts/openingBalances/services/opening-balance-state.service.ts
++++ b/src/app/modules/Accounts/openingBalances/services/opening-balance-state.service.ts
+@@ -1,6 +1,6 @@
+-import { HttpClient } from '@angular/common/http';
++import { HttpClient, HttpParams } from '@angular/common/http';
+ import { Injectable, inject, signal } from '@angular/core';
+-import { Observable, shareReplay, tap } from 'rxjs';
++import { Observable, map, shareReplay, tap } from 'rxjs';
+ 
+ import { Result } from 'src/app/modules/shared/models/result';
+ import { environment } from 'src/environments/environment';
+@@ -14,29 +14,51 @@ import {
+ export class OpeningBalanceStateService {
+   private readonly http = inject(HttpClient);
+   private readonly stateMap = signal<Partial<Record<OpeningBalanceSourceKey, OpeningBalanceTabState>>>({});
+-  private request$?: Observable<Result<OpeningBalanceTabState[]>>;
++  private readonly requests = new Map<string, Observable<Result<OpeningBalanceTabState[]>>>();
+ 
+   readonly states = this.stateMap.asReadonly();
+ 
+-  load(force = false): Observable<Result<OpeningBalanceTabState[]>> {
+-    if (!this.request$ || force) {
+-      this.request$ = this.http
+-        .get<Result<OpeningBalanceTabState[]>>(`${environment.baseUrl}OpeningBalanceState`)
++  invalidate(): void {
++    this.requests.clear();
++    this.stateMap.set({});
++  }
++
++  load(force = false, sourceKey?: OpeningBalanceSourceKey): Observable<Result<OpeningBalanceTabState[]>> {
++    if (force) this.invalidate();
++    const key = sourceKey ?? 'all';
++    const cached = this.requests.get(key);
++    if (cached) return cached;
++
++    const request$: Observable<Result<OpeningBalanceTabState[]>> = this.http
++        .get<Result<OpeningBalanceTabState[]>>(`${environment.baseUrl}OpeningBalanceState`, {
++          headers: { 'X-Skip-Error-Interceptor': 'true' },
++          params: sourceKey ? new HttpParams().set('sourceKey', sourceKey) : new HttpParams(),
++        })
+         .pipe(
+-          tap((result) => {
+-            if (!result.isSuccess || !result.entity) return;
++          map(result => this.requests.get(key) === request$ ? result : {
++            ...result, isSuccess: false, entity: null, message: 'apiErrors.unexpectedMessage',
++          }),
++          tap({ next: (result) => {
++            if (this.requests.get(key) !== request$) return;
++            if (!result.isSuccess || !result.entity ||
++                (sourceKey && !result.entity.some(state => state.sourceKey === sourceKey && !!state.version))) {
++              this.requests.delete(key);
++              return;
++            }
+ 
+-            const next: Partial<Record<OpeningBalanceSourceKey, OpeningBalanceTabState>> = {};
++            const next: Partial<Record<OpeningBalanceSourceKey, OpeningBalanceTabState>> = sourceKey
++              ? { ...this.stateMap() } : {};
+             for (const state of result.entity) {
+               next[state.sourceKey as OpeningBalanceSourceKey] = state;
+             }
+             this.stateMap.set(next);
+-          }),
+-          shareReplay({ bufferSize: 1, refCount: false }),
++          }, error: () => {
++            if (this.requests.get(key) === request$) this.requests.delete(key);
++          } }),
++          shareReplay({ bufferSize: 1, refCount: true }),
+         );
+-    }
+-
+-    return this.request$;
++    this.requests.set(key, request$);
++    return request$;
+   }
+ 
+   stateFor(sourceKey: OpeningBalanceSourceKey): OpeningBalanceTabState | null {
+diff --git a/src/app/modules/Accounts/openingBalances/shared/opening-balance-editor.base.ts b/src/app/modules/Accounts/openingBalances/shared/opening-balance-editor.base.ts
+index a1d04ec..0cdf985 100644
+--- a/src/app/modules/Accounts/openingBalances/shared/opening-balance-editor.base.ts
++++ b/src/app/modules/Accounts/openingBalances/shared/opening-balance-editor.base.ts
+@@ -1,13 +1,17 @@
+-import { computed, DestroyRef, inject, signal } from '@angular/core';
++import { computed, DestroyRef, ElementRef, inject, signal } from '@angular/core';
+ import { AbstractControl } from '@angular/forms';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+ import { HttpErrorResponse } from '@angular/common/http';
+ import { MessageService } from 'primeng/api';
+ import { TranslateService } from '@ngx-translate/core';
++import { catchError, finalize, map, tap, throwError } from 'rxjs';
+ 
+ import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+ import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+ import { FinancialNumberPolicyService } from 'src/app/modules/shared/service/financial-number-policy.service';
++import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { focusField } from 'src/app/modules/shared/utils/focus-field';
+ import {
+   decimalDigitsInfo,
+   decimalStep,
+@@ -30,8 +34,17 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+   protected readonly openingBalanceStateService = inject(OpeningBalanceStateService);
+   private readonly financialNumberPolicyService = inject(FinancialNumberPolicyService);
+   private readonly moneyValidationRoots = new Set<AbstractControl>();
++  private moneyPolicyFailed = false;
++  private editorBusy = false;
++  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
++  private savedMessage: string | null = null;
++  readonly refreshRequired = signal(false);
++  readonly reloadConfirmationPending = signal(false);
+ 
+   readonly moneyDecimalPlaces = signal(2);
++  readonly loadingEditor = signal(false);
++  readonly editorReady = signal(false);
++  readonly editorError = signal('');
+   readonly moneyStep = computed(() => decimalStep(this.moneyDecimalPlaces()));
+   readonly moneyDigitsInfo = computed(() => decimalDigitsInfo(this.moneyDecimalPlaces()));
+   readonly moneyScaleValidator = financialScaleValidator(() => this.moneyDecimalPlaces());
+@@ -42,22 +55,21 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+       : { min: { min: this.moneyStep(), actual: control.value } };
+   };
+ 
+-  constructor() {
+-    super();
+-    this.financialNumberPolicyService
+-      .load()
+-      .pipe(takeUntilDestroyed(this.destroyRef))
+-      .subscribe({
+-        next: (result) => {
+-          if (result.isSuccess && result.entity) {
+-            this.moneyDecimalPlaces.set(result.entity.currencyDecimalPlaces);
+-            this.revalidateMoneyControls();
+-          } else if (!result.isSuccess) {
+-            this.showBusinessFailure(result.message);
+-          }
+-        },
+-        error: (error) => this.showTransportFailure(error),
+-      });
++  protected loadMoneyPolicy() {
++    return this.financialNumberPolicyService.load(this.moneyPolicyFailed).pipe(
++      map(result => result.isSuccess && !result.entity ? { ...result, isSuccess: false } : result),
++      tap(result => {
++        this.moneyPolicyFailed = !result.isSuccess || !result.entity;
++        if (result.isSuccess && result.entity) {
++          this.moneyDecimalPlaces.set(result.entity.currencyDecimalPlaces);
++          this.revalidateMoneyControls();
++        }
++      }),
++      catchError(error => {
++        this.moneyPolicyFailed = true;
++        return throwError(() => error);
++      }),
++    );
+   }
+ 
+   readonly aggregateState = computed(() =>
+@@ -65,7 +77,65 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+   );
+ 
+   protected loadAggregateState(force = false) {
+-    return this.openingBalanceStateService.load(force);
++    return this.openingBalanceStateService.load(force || this.refreshRequired(), this.sourceKey).pipe(
++      map(result => result.isSuccess && !result.entity?.some(state => state.sourceKey === this.sourceKey && !!state.version)
++        ? { ...result, isSuccess: false, message: 'apiErrors.unexpectedMessage' } : result),
++    );
++  }
++
++  canEdit(saving = false): boolean {
++    return this.editorReady() && !this.loadingEditor() && !this.editorBusy && !this.refreshRequired() && !this.reloadConfirmationPending() && !saving && !(this.aggregateState()?.isLocked ?? false);
++  }
++
++  canMutateRows(saving = false): boolean {
++    return this.canEdit(saving);
++  }
++
++  protected beginEditorLoad(form: AbstractControl): void {
++    this.loadingEditor.set(true);
++    this.editorReady.set(false);
++    this.editorError.set('');
++    form.disable({ emitEvent: false });
++    this.loading.startLoading();
++  }
++
++  protected completeEditorLoad(form: AbstractControl): void {
++    this.loadingEditor.set(false);
++    this.editorReady.set(true);
++    this.editorError.set('');
++    if (this.refreshRequired()) {
++      this.finishSaveRefresh();
++      this.showSaveSuccess(this.savedMessage);
++    }
++    this.syncAggregateLock(form);
++  }
++
++  protected failEditorLoad(error: unknown, fallback = 'apiErrors.unexpectedMessage'): void {
++    this.loadingEditor.set(false);
++    this.editorReady.set(false);
++    this.editorError.set(apiErrorMessage(error, fallback));
++  }
++
++  protected failEditorBusiness(message?: string | null): void {
++    this.loadingEditor.set(false);
++    this.editorReady.set(false);
++    this.editorError.set(message?.trim() || 'apiErrors.requestSummary');
++  }
++
++  protected endEditorLoad(): void {
++    this.loadingEditor.set(false);
++    this.loading.endLoading();
++  }
++
++  summaryCards(debit: number, credit: number, includeBalance = false): ReadonlyArray<SummaryCard> {
++    const cards: SummaryCard[] = [
++      { id: 'debit', labelKey: 'openingBalancesEditor.totalDebit', hintKey: 'openingBalancesEditor.previewHint', value: debit, format: 'money', icon: 'bi bi-arrow-down-left-circle', accent: 'debit' },
++      { id: 'credit', labelKey: 'openingBalancesEditor.totalCredit', hintKey: 'openingBalancesEditor.previewHint', value: credit, format: 'money', icon: 'bi bi-arrow-up-right-circle', accent: 'credit' },
++    ];
++    if (includeBalance) {
++      cards.push({ id: 'balance', labelKey: 'openingBalancesEditor.totalBalance', hintKey: 'openingBalancesEditor.previewHint', value: debit - credit, format: 'money', icon: 'bi bi-calculator', accent: 'balance' });
++    }
++    return cards;
+   }
+ 
+   protected expectedVersion(): string {
+@@ -73,6 +143,7 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+   }
+ 
+   protected ensureEditable(): boolean {
++    if (this.refreshRequired() || !this.editorReady() || this.loadingEditor()) return false;
+     const state = this.aggregateState();
+     if (!state?.isLocked) return true;
+ 
+@@ -84,7 +155,7 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+ 
+   protected syncAggregateLock(form: AbstractControl): void {
+     const state = this.aggregateState();
+-    if (state?.isLocked && state.lockReason !== 'OpeningDateNotConfigured') {
++    if (!this.editorReady() || this.loadingEditor() || this.editorBusy || this.refreshRequired() || state?.isLocked) {
+       form.disable({ emitEvent: false });
+       return;
+     }
+@@ -98,6 +169,7 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+   }
+ 
+   protected setEditorBusy(form: AbstractControl, busy: boolean): void {
++    this.editorBusy = busy;
+     if (busy) {
+       form.disable({ emitEvent: false });
+       return;
+@@ -107,6 +179,12 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+   }
+ 
+   protected showInvalidForm(): void {
++    requestAnimationFrame(() => {
++      const invalid = this.host.nativeElement.querySelector<HTMLInputElement>(
++      '[formControlName].ng-invalid input[id], input.ng-invalid[id], [formControlName].ng-invalid[id]',
++    ) || this.host.nativeElement.querySelector<HTMLInputElement>('input[id]');
++      if (invalid?.id) focusField(invalid.id);
++    });
+     this.messageService.add({
+       key: 'global',
+       severity: 'error',
+@@ -141,16 +219,21 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+     });
+   }
+ 
+-  protected showTransportFailure(error?: unknown): void {
+-    const serverMessage =
+-      error instanceof HttpErrorResponse &&
+-      error.error &&
+-      typeof error.error === 'object' &&
+-      'message' in error.error &&
+-      typeof error.error.message === 'string'
+-        ? error.error.message
+-        : null;
++  protected markSaveCommitted(message: string | null): void {
++    this.savedMessage = message;
++    this.refreshRequired.set(true);
++  }
+ 
++  protected finishSaveRefresh(): void {
++    this.refreshRequired.set(false);
++    this.editorError.set('');
++  }
++
++  protected failSaveRefresh(): void {
++    this.editorError.set('openingBalancesEditor.refreshAfterSaveError');
++  }
++
++  protected showTransportFailure(error?: unknown): void {
+     const isConcurrencyConflict =
+       error instanceof HttpErrorResponse && error.status === 409;
+ 
+@@ -164,7 +247,7 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+       ),
+       detail: isConcurrencyConflict
+         ? this.translate.instant('openingBalancesEditor.concurrencyMessage')
+-        : serverMessage || this.translate.instant('apiErrors.unexpectedMessage'),
++        : this.translate.instant(apiErrorMessage(error, 'apiErrors.unexpectedMessage')),
+     });
+   }
+ 
+@@ -174,6 +257,8 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+       return;
+     }
+ 
++    if (this.reloadConfirmationPending()) return;
++    this.reloadConfirmationPending.set(true);
+     this.confirmationDialog
+       .confirm({
+         title: { key: 'openingBalancesEditor.concurrencyTitle' },
+@@ -183,26 +268,13 @@ export abstract class OpeningBalanceEditorBase extends BaseComponentService {
+         confirmLabel: { key: 'openingBalancesEditor.reloadLatest' },
+         confirmIcon: 'bi bi-arrow-clockwise',
+       })
+-      .pipe(takeUntilDestroyed(this.destroyRef))
++      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.reloadConfirmationPending.set(false)))
+       .subscribe((confirmed) => {
++        this.reloadConfirmationPending.set(false);
+         if (confirmed) reloadLatest();
+       });
+   }
+ 
+-  protected confirmRowRemoval(accept: () => void): void {
+-    this.confirmationDialog
+-      .confirm({
+-        title: { key: 'openingBalancesEditor.confirmDeleteTitle' },
+-        message: { key: 'openingBalancesEditor.confirmDeleteMessage' },
+-        severity: 'danger',
+-        confirmLabel: { key: 'general.delete' },
+-      })
+-      .pipe(takeUntilDestroyed(this.destroyRef))
+-      .subscribe((confirmed) => {
+-        if (confirmed) accept();
+-      });
+-  }
+-
+   hasDebitCreditValidationError(rows: ReadonlyArray<AbstractControl>): boolean {
+     return rows.some(
+       (row) => row.hasError('debitCredit') && (row.touched || row.dirty),

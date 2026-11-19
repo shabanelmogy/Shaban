@@ -1,0 +1,20 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/services/cashdepositdetail.service.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/services/cashdepositdetail.service.ts (current)
+index 066464e..e69de29 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/services/cashdepositdetail.service.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/services/cashdepositdetail.service.ts (current)	
+@@ -1,14 +0,0 @@
+-import { Injectable } from '@angular/core';
+-import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+-import { environment } from 'src/environments/environment';
+-
+-@Injectable({
+-  providedIn: 'root',
+-})
+-export class CashDepositDetailService extends BaseService {
+-  constructor() {
+-    super('CashDepositDetail', environment.baseUrl);
+-  }
+-
+-
+-}
+\ No newline at end of file

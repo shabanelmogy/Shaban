@@ -1,0 +1,40 @@
+diff --git a/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositListVm.cs (initial) b/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositListVm.cs (current)
+index aa40abb..5857a90 100644
+--- a/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositListVm.cs (initial)	
++++ b/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositListVm.cs (current)	
+@@ -1,5 +1,4 @@
+ using SiGma.Helpers.Enum;
+-using SiGma.Helpers.ViewModelsBases.List;
+ 
+ namespace SiGma.ViewModels.ViewModels.CashDeposit
+ {
+@@ -8,17 +7,14 @@ namespace SiGma.ViewModels.ViewModels.CashDeposit
+     /// Columns: Bank Deposit No, Date, Ref No, Description, Amount.
+     /// Filters: No, Date Range, Account (BankId), Branch.
+     /// </summary>
+-    public class CashDepositListVM : ListBaseVm
++    public class CashDepositListVM
+     {
++        public int Id { get; set; }
++        public string? No { get; set; }
+         public DateTime Date { get; set; }
+-        public int? BankId { get; set; }
+         public string? BankName { get; set; }
+         public string? RefNo { get; set; }
+         public string? Description { get; set; }
+-        public int? BranchId { get; set; }
+-        public string? BranchName { get; set; }
+-        public int? PaymentMethodId { get; set; }
+-        public string? PaymentMethodName { get; set; }
+ 
+         /// <summary>Total deposit amount (server-calculated).</summary>
+         public decimal Amount { get; set; }
+@@ -26,6 +22,7 @@ namespace SiGma.ViewModels.ViewModels.CashDeposit
+         public ApprovalStatus ApprovalStatus { get; set; }
+         public bool IsPosted { get; set; }
+         public bool IsVoided { get; set; }
+-        public int? JournalVoucherId { get; set; }
++        public string? CreatedBy { get; set; }
++        public DateTime? CreatedAt { get; set; }
+     }
+ }

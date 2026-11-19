@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NuGetAudit>false</NuGetAudit>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <SecuritySource>F:\My Work\Sigma\SigmaBackend\SiGma.Security</SecuritySource>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
+    <Compile Include="$(SecuritySource)\Models\ApplicationUser.cs" Link="Owners\ApplicationUser.cs" />
+    <Compile Include="$(SecuritySource)\Models\IdentityTenant.cs" Link="Owners\IdentityTenant.cs" />
+    <Compile Include="$(SecuritySource)\DataAccess\ApplicationDbContext.cs" Link="Owners\ApplicationDbContext.cs" />
+    <Compile Include="$(SecuritySource)\DataAccess\IdentityTenantConfiguration.cs" Link="Owners\IdentityTenantConfiguration.cs" />
+    <Compile Include="$(SecuritySource)\Services\SubscriptionCodeResolver.cs" Link="Owners\SubscriptionCodeResolver.cs" />
+    <Compile Include="$(SecuritySource)\IServices\ISubscriptionCodeResolver.cs" Link="Owners\ISubscriptionCodeResolver.cs" />
+    <Compile Include="$(SecuritySource)\Options\SubscriptionAccessOptions.cs" Link="Owners\SubscriptionAccessOptions.cs" />
+    <Compile Include="$(SecuritySource)\Authorization\UserRoles.cs" Link="Owners\UserRoles.cs" />
+  </ItemGroup>
+</Project>

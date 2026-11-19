@@ -1,0 +1,29 @@
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { ReportActionsComponent } from '../report-actions/report-actions.component';
+
+/** Shared, view-only controls for complete report hierarchies. */
+@Component({
+  selector: 'app-report-tree-actions',
+  standalone: true,
+  imports: [ReportActionsComponent, TranslateModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'd-block flex-shrink-0 mb-2 no-print' },
+  styles: ['@media print { :host { display: none !important; } }'],
+  template: `
+    <div appReportActions [ariaLabel]="'reports.treeActions' | translate">
+      <button type="button" class="sigma-secondary-button" [disabled]="disabled"
+        (click)="expansionChange.emit(true)">
+        <i class="bi bi-arrows-expand" aria-hidden="true"></i>{{ 'reports.expandAll' | translate }}
+      </button>
+      <button type="button" class="sigma-secondary-button" [disabled]="disabled"
+        (click)="expansionChange.emit(false)">
+        <i class="bi bi-arrows-collapse" aria-hidden="true"></i>{{ 'reports.collapseAll' | translate }}
+      </button>
+    </div>
+  `,
+})
+export class ReportTreeActionsComponent {
+  @Input() disabled = false;
+  @Output() readonly expansionChange = new EventEmitter<boolean>();
+}

@@ -1,0 +1,925 @@
+SOURCE: src/app/modules/Workshop/WorkOrder/components/list/list.component.html
+<section class="sigma-list-page sigma-print-flow">
+  <div class="sigma-list-panel sigma-print-flow">
+    <header class="sigma-list-header">
+      <app-feature-title [title]="'workOrder.workOrders' | translate" [subtitle]="'workOrder.manageWorkOrders' | translate" icon="bi bi-file-earmark-text">
+        <app-primary-action-button class="no-print" [label]="'workOrder.createNewWorkOrder' | translate" [disabled]="actionBusy() || reporting() || printing()" (pressed)="openCreate()" />
+      </app-feature-title>
+    </header>
+    <form class="work-orders-filters no-print" appFilterPanel [mainColumns]="3" [advancedColumns]="3" [stableLayout]="true" [formGroup]="filterForm" [advancedControls]="advancedFilterNames" [busy]="reporting() || printing()" (ngSubmit)="onSearch()" (resetRequested)="resetFilters()" novalidate>
+      <div class="sigma-filter-field">
+        <label for="filter-wo-no">{{ 'workOrder.workOrderNo' | translate }}</label>
+        <input id="filter-wo-no" type="text" formControlName="workOrderNo" />
+      </div>
+      <div class="sigma-filter-field">
+        <label for="filter-date-range">{{ 'workOrder.dateRange' | translate }}</label>
+        <p-calendar appDatePicker inputId="filter-date-range" formControlName="dateRange" selectionMode="range" [numberOfMonths]="2" [placeholder]="'workOrder.dateRange' | translate" />
+        <app-field-error [control]="filterForm.controls.dateRange" reserveMessage="validationMessages.date" />
+      </div>
+      <div class="sigma-filter-field">
+        <label for="filter-customer">{{ 'workOrder.customer' | translate }}</label>
+        <p-dropdown inputId="filter-customer" formControlName="customerId" [options]="customerOptions()" optionLabel="value" optionValue="id" [placeholder]="'workOrder.selectCustomer' | translate" [showClear]="true" [filter]="true" appendTo="body" />
+      </div>
+      <ng-template appFilterAdvanced>
+        <div class="sigma-filter-field">
+          <label for="filter-customer-po">{{ 'workOrder.customerPONo' | translate }}</label>
+          <input id="filter-customer-po" type="text" formControlName="customerPONo" />
+        </div>
+        <div class="sigma-filter-field">
+          <label for="filter-status">{{ 'workOrder.status' | translate }}</label>
+          <p-dropdown inputId="filter-status" formControlName="status" [options]="statusOptions | translateOptions" optionLabel="label" optionValue="id" [placeholder]="'workOrder.allStatuses' | translate" [showClear]="true" appendTo="body" />
+        </div>
+        <div class="sigma-filter-field">
+          <label for="filter-acceptance">{{ 'workOrder.acceptanceStatus' | translate }}</label>
+          <p-dropdown inputId="filter-acceptance" formControlName="acceptanceStatus" [options]="acceptanceStatusOptions | translateOptions" optionLabel="label" optionValue="id" [placeholder]="'workOrder.allAcceptanceStatuses' | translate" [showClear]="true" appendTo="body" />
+        </div>
+        <div class="sigma-filter-field">
+          <label for="filter-vehicle">{{ 'workOrder.vehicle' | translate }}</label>
+          <p-dropdown inputId="filter-vehicle" formControlName="vehicleId" [options]="vehicleOptions()" optionLabel="value" optionValue="id" [placeholder]="'workOrder.selectVehicle' | translate" [showClear]="true" [filter]="true" appendTo="body" />
+        </div>
+        <div class="sigma-filter-field">
+          <label for="filter-branch">{{ 'workOrder.branch' | translate }}</label>
+          <p-dropdown inputId="filter-branch" formControlName="branchId" [options]="branchOptions()" optionLabel="value" optionValue="id" [placeholder]="'workOrder.selectBranch' | translate" [showClear]="true" [filter]="true" appendTo="body" />
+        </div>
+        <div class="sigma-filter-field">
+          <label for="filter-chassis">{{ 'workOrder.chassisNo' | translate }}</label>
+          <input id="filter-chassis" type="text" formControlName="chassisNo" />
+        </div>
+      </ng-template>
+      <ng-container appFilterActions>
+        <button type="button" class="sigma-secondary-button" [disabled]="reporting() || printing() || loadingList() || actionBusy()" (click)="onReport()"><i class="bi bi-printer" aria-hidden="true"></i>{{ 'workOrder.report' | translate }}</button>
+        <button type="button" class="sigma-secondary-button" [disabled]="exporting() || reporting() || printing()" (click)="exportExcel()"><i class="bi bi-file-earmark-excel" aria-hidden="true"></i>{{ 'general.exportExcel' | translate }}</button>
+        <app-primary-action-button type="submit" [label]="'general.search' | translate" icon="bi bi-search" [loading]="loadingList()" [disabled]="reporting() || printing()" />
+      </ng-container>
+    </form>
+    @if (lookupError()) {
+      <div class="sigma-alert sigma-alert--warning no-print" role="status">
+        <span>{{ 'workOrder.lookupError' | translate }}</span>
+        <button type="button" class="sigma-secondary-button" [disabled]="loadingLookups()" (click)="loadLookups()">{{ 'general.retry' | translate }}</button>
+      </div>
+    }
+    @if (errorMessage()) {
+      <div class="sigma-alert no-print" role="alert"><i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i><span>{{ errorMessage() | translate }}</span></div>
+    }
+    <ng-template #noTemplate let-row>
+      <span>{{ row.no || '—' }}</span>
+      <span class="sigma-status-badge" [class.sigma-status-badge--success]="row.acceptanceStatus === 1" [class.sigma-status-badge--danger]="row.acceptanceStatus === 2" [class.sigma-status-badge--warning]="row.acceptanceStatus === 0">{{ acceptanceKey(row.acceptanceStatus) | translate }}</span>
+    </ng-template>
+    <div class="sigma-list-table sigma-print-flow">
+      <app-data-table [fill]="true" [value]="printing() ? printRows() : data()" [columns]="columns" [actions]="printing() ? [] : moreActions" dataKey="id" [lazy]="!printing()" [paginator]="!printing()" [scrollable]="!printing()" [first]="(pageNumber() - 1) * pageSize()" [rows]="pageSize()" [totalRecords]="totalRecords()" [loading]="loadingList()" [showEmpty]="!errorMessage()" emptyMessage="workOrder.empty" currentPageReport="workOrder.showingEntries" (lazyLoad)="onLazyLoad($event)" />
+    </div>
+  </div>
+</section>
+
+
+SOURCE: src/app/modules/Workshop/WorkOrder/components/list/list.component.ts
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, OnInit, TemplateRef, ViewChild, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { TableLazyLoadEvent } from 'primeng/table';
+import { EMPTY, Subject, catchError, defer, finalize, forkJoin, of, switchMap } from 'rxjs';
+import { AcceptanceStatusEnum } from 'src/app/_metronic/shared/enums/acceptanceStatus';
+import { StatusEnum } from 'src/app/_metronic/shared/enums/status';
+import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
+import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
+import { CustomerService } from 'src/app/modules/shared/service/customer.service';
+import { VehicleService } from 'src/app/modules/Fleet/Vehicle/services/vehicle.service';
+import { ActionList } from 'src/app/modules/shared/models/action-list';
+import { DataTableCellContext, DataTableColumn, DataTableComponent, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+import { FilterActionsDirective, FilterAdvancedDirective } from 'src/app/modules/shared/components/filter-panel/filter-panel.directives';
+import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
+import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
+import { TranslateOptionsPipe } from 'src/app/modules/shared/pipes/translate-options.pipe';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { ReportPrintService } from 'src/app/modules/shared/service/report-print.service';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { currentMonthRange, dateRangeValidator, parseDateRange, parseDateValue } from 'src/app/modules/shared/utils/date-utils';
+import { DEFAULT_PAGE_SIZE, ListQuery, resolveListPaging } from 'src/app/modules/shared/utils/list-query';
+import { readListRoute, writeListRoute } from 'src/app/modules/shared/utils/list-route-state';
+import { WorkOrderFilters, WorkOrderListModel } from '../../models/list';
+import { WorkOrderService } from '../../services/workorder.service';
+
+@Component({
+  selector: 'app-work-orders',
+  standalone: true,
+  imports: [CalendarModule, CommonModule, DataTableComponent, DatePickerDirective, DropdownModule,
+    FeatureTitleComponent, FieldErrorComponent, FilterActionsDirective, FilterAdvancedDirective,
+    FilterPanelComponent, PrimaryActionButtonComponent, ReactiveFormsModule, TranslateModule, TranslateOptionsPipe],
+  templateUrl: './list.component.html',
+  host: { class: 'sigma-route-host' },
+})
+export class WorkOrdersComponent extends BaseComponentService implements OnInit {
+  private readonly service = inject(WorkOrderService);
+  private readonly branchService = inject(BranchService);
+  private readonly customerService = inject(CustomerService);
+  private readonly vehicleService = inject(VehicleService);
+  private readonly confirmation = inject(ConfirmationDialogService);
+  private readonly translate = inject(TranslateService);
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly listQuery$ = new Subject<ListQuery<WorkOrderFilters>>();
+  private readonly printSession = inject(ReportPrintService).createSession(this.destroyRef);
+  private activeFilters: WorkOrderFilters = {};
+  readonly printing = this.printSession.printing;
+  readonly printRows = signal<WorkOrderListModel[]>([]);
+  readonly data = signal<WorkOrderListModel[]>([]);
+  readonly loadingList = signal(false);
+  readonly totalRecords = signal(0);
+  readonly pageNumber = signal(1);
+  readonly pageSize = signal(DEFAULT_PAGE_SIZE);
+  readonly errorMessage = signal('');
+  readonly lookupError = signal(false);
+  readonly loadingLookups = signal(false);
+  readonly exporting = signal(false);
+  readonly reporting = signal(false);
+  readonly actionBusy = signal(false);
+  readonly branchOptions = signal<DropDownSelect[]>([]);
+  readonly customerOptions = signal<DropDownSelect[]>([]);
+  readonly vehicleOptions = signal<DropDownSelect[]>([]);
+  readonly advancedFilterNames = ['customerPONo', 'status', 'acceptanceStatus', 'vehicleId', 'branchId', 'chassisNo'];
+  readonly statusOptions = [{ id: StatusEnum.Open, key: 'workOrder.open' }, { id: StatusEnum.Closed, key: 'workOrder.closed' }];
+  readonly acceptanceStatusOptions = [
+    { id: AcceptanceStatusEnum.NotAccepted, key: 'workOrder.notAccepted' },
+    { id: AcceptanceStatusEnum.Accepted, key: 'workOrder.accepted' },
+    { id: AcceptanceStatusEnum.Rejected, key: 'workOrder.rejected' },
+  ];
+  readonly filterForm = this.fb.group({
+    workOrderNo: this.fb.nonNullable.control(''),
+    customerPONo: this.fb.nonNullable.control(''),
+    status: this.fb.control<number | null>(StatusEnum.Open),
+    acceptanceStatus: this.fb.control<number | null>(null),
+    dateRange: this.fb.control<Date[] | string | null>(currentMonthRange(), dateRangeValidator),
+    vehicleId: this.fb.control<number | null>(null),
+    customerId: this.fb.control<number | null>(null),
+    branchId: this.fb.control<number | null>(null),
+    chassisNo: this.fb.nonNullable.control(''),
+  });
+  @ViewChild('noTemplate', { static: true }) protected noTemplate!: TemplateRef<DataTableCellContext<WorkOrderListModel>>;
+  columns: ReadonlyArray<DataTableColumn<WorkOrderListModel>> = [];
+  readonly moreActions: ActionList<WorkOrderListModel>[] = [
+    { title: 'general.view', icon: 'bi bi-eye', action: (row) => { if (row) this.openEditor('view', row); } },
+    { title: 'general.edit', icon: 'bi bi-pencil-square', visible: (row) => !!row && this.isPending(row),
+      action: (row) => { if (row && this.isPending(row)) this.openEditor('edit', row); } },
+    { title: 'workOrder.accept', icon: 'bi bi-check-circle', visible: (row) => !!row && this.isPending(row),
+      disabled: () => this.actionBusy(), action: (row) => { if (row) this.confirmAction(row, 'accept'); } },
+    { title: 'workOrder.reject', icon: 'bi bi-x-circle', visible: (row) => !!row && this.isPending(row),
+      disabled: () => this.actionBusy(), action: (row) => { if (row) this.confirmAction(row, 'reject'); } },
+    { title: 'workOrder.createJob', icon: 'bi bi-wrench-adjustable-circle',
+      visible: (row) => !!row && Number(row.acceptanceStatus) === AcceptanceStatusEnum.Accepted,
+      disabled: () => this.actionBusy() || this.loadingList() || this.reporting() || this.printing(),
+      action: (row) => { if (row) this.openCreateJob(row); } },
+    { title: 'general.print', icon: 'bi bi-printer', action: (row) => { if (row) this.openEditor('view', row, true); } },
+    { title: 'general.delete', icon: 'bi bi-trash3', disabled: () => this.actionBusy(),
+      action: (row) => { if (row) this.confirmAction(row, 'delete'); } },
+  ];
+
+  constructor() {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.columns = [
+      { field: 'no', header: 'workOrder.workOrderNo', cellTemplate: this.noTemplate,
+        value: (row) => [row.no, this.translate.instant(this.acceptanceKey(row.acceptanceStatus))].filter(Boolean).join(' — ') },
+      { field: 'date', header: 'workOrder.date', type: 'date' },
+      { field: 'customer', header: 'workOrder.customer' },
+      { field: 'customerNo', header: 'workOrder.customerNo' },
+      { field: 'branch', header: 'workOrder.branch' },
+      { field: 'vehicle', header: 'workOrder.vehicle' },
+      { field: 'totalAmount', header: 'workOrder.totalAmount', type: 'money' },
+      { field: 'discount', header: 'workOrder.discount', type: 'money' },
+      { field: 'netAmount', header: 'workOrder.netAmount', type: 'money' },
+      { field: 'status', header: 'workOrder.status', type: 'status', status: (row) => ({
+        label: Number(row.status) === StatusEnum.Open ? 'workOrder.open' : 'workOrder.closed',
+        tone: Number(row.status) === StatusEnum.Open ? 'success' : 'neutral',
+      }) },
+    ];
+    this.bindListQueries();
+    this.restoreState();
+    this.loadLookups();
+    this.onSearch(false);
+  }
+
+  private bindListQueries(): void {
+    this.listQuery$.pipe(
+      switchMap((query) => defer(() => {
+        this.loadingList.set(true);
+        this.loading.startLoading();
+        this.errorMessage.set('');
+        return this.service.getList(query).pipe(
+          catchError((error) => {
+            this.failList(apiErrorMessage(error, 'workOrder.loadError'));
+            return EMPTY;
+          }),
+          finalize(() => {
+            this.loadingList.set(false);
+            this.loading.endLoading();
+          }),
+        );
+      })), takeUntilDestroyed(this.destroyRef),
+    ).subscribe((response) => {
+      if (!response.isSuccess) {
+        this.failList(response.message || 'workOrder.loadError');
+        return;
+      }
+      this.data.set(response.entities ?? []);
+      this.totalRecords.set(Number(response.totalCount ?? 0));
+    });
+  }
+
+  private failList(message: string): void {
+    this.errorMessage.set(message);
+    this.data.set([]);
+    this.totalRecords.set(0);
+  }
+
+  loadLookups(): void {
+    if (this.loadingLookups()) return;
+    this.loadingLookups.set(true);
+    forkJoin({
+      branches: this.branchService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }).pipe(catchError(() => of(null))),
+      customers: this.customerService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }).pipe(catchError(() => of(null))),
+      vehicles: this.vehicleService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }).pipe(catchError(() => of(null))),
+    }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loadingLookups.set(false))).subscribe((response) => {
+      if (response.branches?.isSuccess) this.branchOptions.set(response.branches.entities ?? []);
+      if (response.customers?.isSuccess) this.customerOptions.set(response.customers.entities ?? []);
+      if (response.vehicles?.isSuccess) this.vehicleOptions.set(response.vehicles.entities ?? []);
+      this.lookupError.set(!response.branches?.isSuccess || !response.customers?.isSuccess || !response.vehicles?.isSuccess);
+    });
+  }
+
+  onSearch(resetPage = true): void {
+    if (this.printing() || this.reporting()) return;
+    if (this.filterForm.invalid) {
+      this.filterForm.markAllAsTouched();
+      return;
+    }
+    const raw = this.filterForm.getRawValue();
+    const [dateFrom, dateTo] = parseDateRange(raw.dateRange);
+    this.activeFilters = {
+      workOrderNo: raw.workOrderNo.trim(), customerPONo: raw.customerPONo.trim(),
+      status: raw.status, acceptanceStatus: raw.acceptanceStatus, dateFrom, dateTo,
+      vehicleId: raw.vehicleId, customerId: raw.customerId, branchId: raw.branchId, chassisNo: raw.chassisNo.trim(),
+    };
+    if (resetPage) this.pageNumber.set(1);
+    this.requestList();
+  }
+
+  resetFilters(): void {
+    this.filterForm.reset({ workOrderNo: '', customerPONo: '', status: StatusEnum.Open, acceptanceStatus: null,
+      dateRange: currentMonthRange(), vehicleId: null, customerId: null, branchId: null, chassisNo: '' });
+    this.onSearch();
+  }
+
+  onLazyLoad(event: TableLazyLoadEvent): void {
+    if (this.printing() || this.reporting()) return;
+    const paging = resolveListPaging(event, { pageNo: this.pageNumber(), pageSize: this.pageSize() });
+    if (!paging.changed) return;
+    this.pageNumber.set(paging.pageNo);
+    this.pageSize.set(paging.pageSize);
+    this.requestList();
+  }
+
+  private requestList(): void {
+    writeListRoute(this.router, this.activatedRoute, this.returnQueryParams());
+    this.listQuery$.next({ filters: { ...this.activeFilters }, pageNo: this.pageNumber(), pageSize: this.pageSize() });
+  }
+
+  private returnQueryParams(): Record<string, string | number | null | undefined> {
+    return { ...this.activeFilters, status: this.activeFilters.status ?? 'all', dateRangeSet: 1, pageNo: this.pageNumber(), pageSize: this.pageSize() };
+  }
+
+  private restoreState(): void {
+    const state = readListRoute(this.activatedRoute);
+    const paging = state.paging();
+    this.pageNumber.set(paging.pageNo);
+    this.pageSize.set(paging.pageSize);
+    const dates = state.number('dateRangeSet') === 1
+      ? [state.text('dateFrom'), state.text('dateTo')].filter(Boolean).map((date) => new Date(`${parseDateValue(date)}T00:00:00`))
+      : currentMonthRange();
+    this.filterForm.patchValue({ workOrderNo: state.text('workOrderNo'), customerPONo: state.text('customerPONo'),
+      status: state.text('status') === 'all' ? null : state.number('status') ?? StatusEnum.Open, acceptanceStatus: state.number('acceptanceStatus'), dateRange: dates.length ? dates : null,
+      vehicleId: state.number('vehicleId'), customerId: state.number('customerId'), branchId: state.number('branchId'), chassisNo: state.text('chassisNo') });
+  }
+
+  openCreate(): void {
+    if (this.actionBusy() || this.reporting() || this.printing()) return;
+    void this.router.navigate(['/WorkOrder/create'], { queryParams: this.returnQueryParams() });
+  }
+
+  private openEditor(mode: 'view' | 'edit', row: WorkOrderListModel, print = false): void {
+    if (this.actionBusy() || this.reporting() || this.printing()) return;
+    void this.router.navigate(['/WorkOrder', mode, row.id], { queryParams: { ...this.returnQueryParams(), print: print ? 1 : null } });
+  }
+
+  private openCreateJob(row: WorkOrderListModel): void {
+    if (this.actionBusy() || this.loadingList() || this.reporting() || this.printing()
+      || Number(row.acceptanceStatus) !== AcceptanceStatusEnum.Accepted) return;
+    this.actionBusy.set(true);
+    void this.router.navigate(['/Job/create'], {
+      queryParams: { ...this.returnQueryParams(), sourceWorkOrderId: row.id, returnTo: 'workOrder' },
+    }).finally(() => this.actionBusy.set(false));
+  }
+
+  isPending(row: WorkOrderListModel): boolean {
+    return Number(row.acceptanceStatus) === AcceptanceStatusEnum.NotAccepted;
+  }
+
+  acceptanceKey(value: number | null | undefined): string {
+    return this.acceptanceStatusOptions.find((option) => option.id === Number(value))?.key ?? '';
+  }
+
+  private confirmAction(row: WorkOrderListModel, action: 'accept' | 'reject' | 'delete'): void {
+    if (this.actionBusy() || this.reporting() || this.printing() || (action !== 'delete' && !this.isPending(row))) return;
+    this.actionBusy.set(true);
+    const record = { label: { key: 'workOrder.workOrderNo' }, title: row.no || String(row.id) };
+    const confirmation = action === 'delete'
+      ? this.confirmation.confirmDelete({ title: { key: 'workOrder.deleteConfirmTitle' }, message: { key: 'workOrder.deleteConfirmMessage' }, record })
+      : this.confirmation.confirm({ severity: action === 'accept' ? 'info' : 'warning',
+        title: { key: action === 'accept' ? 'workOrder.acceptConfirmTitle' : 'workOrder.rejectConfirmTitle' },
+        message: { key: action === 'accept' ? 'workOrder.acceptConfirmMessage' : 'workOrder.rejectConfirmMessage' },
+        confirmLabel: { key: action === 'accept' ? 'workOrder.accept' : 'workOrder.reject' }, record });
+    confirmation.pipe(
+      switchMap((confirmed) => {
+        if (!confirmed) return EMPTY;
+        this.loading.startLoading();
+        this.errorMessage.set('');
+        const request = action === 'accept' ? this.service.acceptWorkOrder(row.id)
+          : action === 'reject' ? this.service.rejectWorkOrder(row.id) : this.service.deleteWorkOrder(row.id);
+        return request.pipe(finalize(() => this.loading.endLoading()));
+      }), takeUntilDestroyed(this.destroyRef), finalize(() => this.actionBusy.set(false)),
+    ).subscribe({
+      next: (response) => {
+        if (!response.isSuccess) {
+          this.errorMessage.set(response.message || 'workOrder.actionError');
+          return;
+        }
+        if (action === 'delete' && this.data().length === 1 && this.pageNumber() > 1) this.pageNumber.update((page) => page - 1);
+        this.requestList();
+      }, error: (error) => this.errorMessage.set(apiErrorMessage(error, 'workOrder.actionError')),
+    });
+  }
+
+  exportExcel(): void {
+    if (this.exporting() || this.reporting() || this.printing()) return;
+    this.exporting.set(true);
+    this.service.getAllList({ ...this.activeFilters }).pipe(takeUntilDestroyed(this.destroyRef),
+      finalize(() => this.exporting.set(false))).subscribe({
+      next: (rows) => {
+        if (!rows.length) {
+          this.errorMessage.set('workOrder.empty');
+          return;
+        }
+        onExportToExcel(signal(dataTableExportRows(rows, this.columns, (key) => this.translate.instant(key))), 'WorkOrders');
+      }, error: (error) => this.errorMessage.set(error instanceof Error ? error.message : apiErrorMessage(error, 'workOrder.exportError')),
+    });
+  }
+
+  onReport(): void {
+    if (this.reporting() || this.printing() || this.actionBusy() || this.loadingList()) return;
+    this.reporting.set(true);
+    this.filterForm.disable({ emitEvent: false });
+    this.loading.startLoading();
+    this.service.getAllList({ ...this.activeFilters }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+      this.reporting.set(false);
+      this.loading.endLoading();
+      if (!this.printing()) this.filterForm.enable({ emitEvent: false });
+    })).subscribe({
+      next: (rows) => {
+        if (!rows.length) {
+          this.errorMessage.set('workOrder.empty');
+          return;
+        }
+        this.printRows.set(rows);
+        this.printSession.print({ afterPrint: () => {
+          this.printRows.set([]);
+          this.filterForm.enable({ emitEvent: false });
+        } });
+      }, error: (error) => this.errorMessage.set(error instanceof Error ? error.message : apiErrorMessage(error, 'workOrder.exportError')),
+    });
+  }
+}
+
+
+SOURCE: src/app/modules/Workshop/WorkOrder/components/details/details.component.html
+<section class="sigma-editor-page sigma-print-flow">
+  <div class="sigma-editor-panel sigma-print-flow">
+    <app-feature-title [title]="title() | translate" [subtitle]="details() ? ('workOrder.recordSubtitle' | translate: { no: details()?.no || recordId() }) : ''" icon="bi bi-file-earmark-text">
+      <button feature-title-leading type="button" class="sigma-secondary-button sigma-icon-button no-print" [attr.aria-label]="'general.back' | translate" [disabled]="saving()" (click)="requestClose()"><i class="bi bi-arrow-left" aria-hidden="true"></i></button>
+      @if (details()) {
+        <span class="sigma-status-badge">{{ statusKey() | translate }}</span>
+        <span class="sigma-status-badge">{{ acceptanceKey() | translate }}</span>
+      }
+    </app-feature-title>
+    @if (loadingData()) {
+      <app-state-message kind="loading" class="no-print" />
+    }
+    @if (errorMessage()) {
+      <div class="sigma-alert no-print" role="alert">
+        <span>{{ errorMessage() | translate }}</span>
+        @if (mode() !== 'create' && !details()) {
+          <button type="button" class="sigma-secondary-button" [disabled]="loadingData()" (click)="loadDetails()">{{ 'general.retry' | translate }}</button>
+        }
+      </div>
+    }
+    @if (lookupError() && !isReadOnly()) {
+      <div class="sigma-alert sigma-alert--warning no-print" role="status">
+        <span>{{ 'workOrder.lookupError' | translate }}</span>
+        <button type="button" class="sigma-secondary-button" [disabled]="loadingLookups() || saving()" (click)="loadLookups()">{{ 'general.retry' | translate }}</button>
+      </div>
+    }
+    <form class="sigma-editor-form sigma-print-flow" [formGroup]="workOrderForm" (ngSubmit)="save()" novalidate>
+      <div class="sigma-editor-body work-order-workspace sigma-print-flow">
+        <app-form-section class="work-order-header sigma-print-flow" title="workOrder.details" icon="bi bi-card-list" density="compact" [fill]="true">
+          <div class="work-order-header-scroll sigma-print-flow">
+          <div class="sigma-editor-grid" style="--sigma-editor-columns: 5">
+            <div class="sigma-field">
+              <label for="wo-date" class="required">{{ 'workOrder.date' | translate }}</label>
+              @if (isReadOnly()) {
+                <div class="sigma-field__read">{{ details()?.date | date: 'dd/MM/yyyy' }}</div>
+              } @else {
+                <p-calendar appDatePicker [dateInputMask]="true" inputId="wo-date" formControlName="date" placeholder="dd/mm/yyyy" />
+                <app-field-error [control]="workOrderForm.controls.date" />
+              }
+            </div>
+            <div class="sigma-field">
+              <label for="wo-customer-po">{{ 'workOrder.customerPONo' | translate }}</label>
+              @if (isReadOnly()) { <div class="sigma-field__read">{{ workOrderForm.controls.customerPONo.value || '—' }}</div> } @else { <input id="wo-customer-po" type="text" formControlName="customerPONo" /> }
+            </div>
+            <div class="sigma-field">
+              <label for="wo-customer" class="required">{{ 'workOrder.customer' | translate }}</label>
+              @if (isReadOnly()) {
+                <div class="sigma-field__read">{{ details()?.customer?.name || '—' }}</div>
+              } @else {
+                <p-dropdown inputId="wo-customer" formControlName="customerId" [options]="customerOptions()" optionLabel="value" optionValue="id" [filter]="true" [showClear]="true" [placeholder]="'workOrder.selectCustomer' | translate" appendTo="body" />
+                <app-field-error [control]="workOrderForm.controls.customerId" />
+              }
+            </div>
+            <div class="sigma-field">
+              <label for="wo-branch" class="required">{{ 'workOrder.branch' | translate }}</label>
+              @if (isReadOnly()) {
+                <div class="sigma-field__read">{{ details()?.branch?.name || '—' }}</div>
+              } @else {
+                <p-dropdown inputId="wo-branch" formControlName="branchId" [options]="branchOptions()" optionLabel="value" optionValue="id" [filter]="true" [showClear]="true" [placeholder]="'workOrder.selectBranch' | translate" appendTo="body" />
+                <app-field-error [control]="workOrderForm.controls.branchId" />
+              }
+            </div>
+            <div class="sigma-field">
+              <label for="wo-discount">{{ 'workOrder.discount' | translate }}</label>
+              @if (isReadOnly()) { <div class="sigma-field__read">{{ workOrderForm.controls.discount.value | money }}</div> } @else { <input id="wo-discount" type="number" appNumericFocus formControlName="discount" min="0" step="0.01" />
+              <app-field-error [control]="workOrderForm.controls.discount" /> }
+            </div>
+            <div class="sigma-field sigma-field--full">
+              <label for="wo-notes">{{ 'workOrder.notes' | translate }}</label>
+              @if (isReadOnly()) { <div class="sigma-field__read">{{ workOrderForm.controls.notes.value || '—' }}</div> } @else { <textarea id="wo-notes" rows="2" formControlName="notes"></textarea> }
+            </div>
+          </div>
+          </div>
+        </app-form-section>
+        <app-form-section class="work-order-lines sigma-print-flow" title="workOrder.items" icon="bi bi-list-ul" density="compact" [fill]="true">
+          @if (!isReadOnly()) {
+            <app-primary-action-button form-section-actions class="no-print" [label]="'workOrder.addRow' | translate" [disabled]="!canMutate()" (pressed)="addRow()" />
+          }
+          <app-editable-collection-table title="workOrder.items" [headingVisible]="false" [columns]="itemColumns" emptyMessage="workOrder.emptyItems" [editable]="canMutate()" [fillHeight]="true" [stickyHeader]="true" tableMinWidth="950px" [validationMessage]="!isReadOnly() && workOrderForm.touched && itemsArray.length === 0 ? 'workOrder.itemsRequired' : ''" (removeRequested)="removeRow($event)">
+            <ng-template [appEditableCollectionRow]="itemsArray.controls" let-row let-index="index">
+              <ng-container [formGroup]="row">
+                <td>
+                  @if (isReadOnly()) { <div class="sigma-field__read">{{ row.controls.description.value || '—' }}</div> } @else { <input [id]="'wo-description-' + index" type="text" formControlName="description" [attr.aria-label]="'workOrder.description' | translate" />
+                  <app-field-error [control]="row.controls.description" /> }
+                </td>
+                <td>
+                  @if (isReadOnly()) {
+                    <span>{{ vehicleName(index) }}</span>
+                  } @else {
+                    <p-dropdown [inputId]="'wo-vehicle-' + index" formControlName="vehicleId" [options]="vehicleOptions()" optionLabel="value" optionValue="id" [filter]="true" [showClear]="true" [placeholder]="'workOrder.selectVehicle' | translate" [ariaLabel]="'workOrder.vehicleOptional' | translate" appendTo="body" />
+                  }
+                </td>
+                <td>
+                  @if (isReadOnly()) { <span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ row.controls.amount.value | money }}</span> } @else { <input [id]="'wo-amount-' + index" type="number" appNumericFocus formControlName="amount" min="0" step="0.01" [attr.aria-label]="'workOrder.amount' | translate" />
+                  <app-field-error [control]="row.controls.amount" /> }
+                </td>
+                <td>
+                  <span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ taxPreview(index) === null ? '—' : (taxPreview(index) | money) }}</span>
+                </td>
+                <td><span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ taxPreview(index) === null ? '—' : (rowTotal(row, index) | money) }}</span></td>
+              </ng-container>
+            </ng-template>
+          </app-editable-collection-table>
+        </app-form-section>
+      </div>
+    </form>
+    <app-summary-cards [cards]="summaryCards" [ariaLabel]="'workOrder.totals' | translate" density="slim" layout="row" [minCardWidth]="140" [maxHeight]="80" />
+    <footer class="sigma-editor-footer no-print">
+      <button type="button" class="sigma-secondary-button" [disabled]="saving()" (click)="requestClose()">{{ (isReadOnly() ? 'general.close' : 'general.cancel') | translate }}</button>
+      @if (isReadOnly() && details()) {
+        <button type="button" class="sigma-secondary-button" [disabled]="printing()" (click)="print()"><i class="bi bi-printer" aria-hidden="true"></i>{{ 'general.print' | translate }}</button>
+        @if (pending()) {
+          <app-primary-action-button [label]="'general.edit' | translate" icon="bi bi-pencil-square" (pressed)="switchToEdit()" />
+        }
+      } @else if (!isReadOnly()) {
+        <button type="button" class="sigma-secondary-button" [disabled]="!canMutate() || loadingLookups() || lookupError()" (click)="save(true)">{{ 'workOrder.saveAndPrint' | translate }}</button>
+        <app-primary-action-button [label]="'general.save' | translate" icon="bi bi-check2-circle" [loading]="saving()" [disabled]="!canMutate() || loadingLookups() || lookupError()" (pressed)="save()" />
+      }
+    </footer>
+  </div>
+</section>
+
+
+SOURCE: src/app/modules/Workshop/WorkOrder/components/details/details.component.ts
+import { NumericFocusDirective } from 'src/app/modules/shared/directives/numeric-focus.directive';
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, HostListener, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { Observable, catchError, finalize, forkJoin, of } from 'rxjs';
+import { AcceptanceStatusEnum } from 'src/app/_metronic/shared/enums/acceptanceStatus';
+import { StatusEnum } from 'src/app/_metronic/shared/enums/status';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
+import { CustomerService } from 'src/app/modules/shared/service/customer.service';
+import { VehicleService } from 'src/app/modules/Fleet/Vehicle/services/vehicle.service';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { FormSectionComponent } from 'src/app/modules/shared/components/form-section/form-section.component';
+import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import { EditableCollectionRowDirective, EditableCollectionTableColumn, EditableCollectionTableComponent } from 'src/app/modules/shared/components/editable-collection-table/editable-collection-table.component';
+import { SummaryCardsComponent } from 'src/app/modules/shared/components/summary-cards/summary-cards.component';
+import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
+import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
+import { MoneyPipe } from 'src/app/modules/shared/pipes/money.pipe';
+import { ReportPrintService } from 'src/app/modules/shared/service/report-print.service';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { dateValueValidator, parseDateValue } from 'src/app/modules/shared/utils/date-utils';
+import { EditableRows } from 'src/app/modules/shared/utils/editable-rows';
+import { allocateDocumentTax, roundMoney } from 'src/app/modules/shared/utils/financial-number.util';
+import { mergeSelectOptions } from 'src/app/modules/shared/utils/select-options';
+import { focusField } from 'src/app/modules/shared/utils/focus-field';
+import { WorkOrderService } from '../../services/workorder.service';
+import { WorkOrderCreateDTO, WorkOrderItemInputDTO } from '../../models/create';
+import { WorkOrderDetailsDTO, WorkOrderItemDetailDTO } from '../../models/details';
+
+export type WorkOrderEditorMode = 'create' | 'edit' | 'view';
+
+interface WorkOrderItemControls {
+  id: FormControl<number>;
+  description: FormControl<string>;
+  vehicleId: FormControl<number | null>;
+  amount: FormControl<number>;
+  tax: FormControl<number>;
+}
+
+@Component({
+  selector: 'app-work-order-details',
+  standalone: true,
+  imports: [
+    NumericFocusDirective, CalendarModule, CommonModule, DatePickerDirective, DropdownModule, EditableCollectionRowDirective,
+    EditableCollectionTableComponent, FeatureTitleComponent, FieldErrorComponent, FormSectionComponent, MoneyPipe,
+    PrimaryActionButtonComponent, ReactiveFormsModule, StateMessageComponent, SummaryCardsComponent, TranslateModule],
+  templateUrl: './details.component.html',
+  styleUrl: './details.component.scss',
+  host: { class: 'sigma-route-host' },
+})
+export class WorkOrderDetailsComponent extends BaseComponentService implements OnInit {
+  private readonly service = inject(WorkOrderService);
+  private readonly fb = inject(FormBuilder);
+  private readonly branchService = inject(BranchService);
+  private readonly customerService = inject(CustomerService);
+  private readonly vehicleService = inject(VehicleService);
+  private readonly confirmation = inject(ConfirmationDialogService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly printSession = inject(ReportPrintService).createSession(this.destroyRef);
+  private saved = false;
+  readonly mode = signal<WorkOrderEditorMode>('create');
+  readonly recordId = signal<number | null>(null);
+  readonly details = signal<WorkOrderDetailsDTO | null>(null);
+  readonly loadingData = signal(false);
+  readonly saving = signal(false);
+  readonly errorMessage = signal('');
+  readonly lookupError = signal(false);
+  readonly loadingLookups = signal(false);
+  readonly effectiveTaxRatePercent = signal<number | null>(null);
+  readonly customerOptions = signal<DropDownSelect[]>([]);
+  readonly branchOptions = signal<DropDownSelect[]>([]);
+  readonly vehicleOptions = signal<DropDownSelect[]>([]);
+  readonly printing = this.printSession.printing;
+  readonly isReadOnly = computed(() => this.mode() === 'view');
+  readonly pending = computed(() => this.mode() === 'create' || this.details()?.acceptanceStatus === AcceptanceStatusEnum.NotAccepted);
+  readonly canMutate = computed(() => !this.isReadOnly() && this.pending() && !this.loadingData()
+    && !this.saving() && !this.saved && (this.mode() === 'create' || this.details() !== null));
+  readonly title = computed(() => this.mode() === 'create' ? 'workOrder.createNewWorkOrder'
+    : this.mode() === 'edit' ? 'workOrder.editWorkOrder' : 'workOrder.workOrderDetails');
+  readonly workOrderForm = this.fb.group({
+    date: this.fb.control<Date | string | null>(new Date(), [Validators.required, dateValueValidator]),
+    customerPONo: this.fb.nonNullable.control(''),
+    notes: this.fb.nonNullable.control(''),
+    customerId: this.fb.control<number | null>(null, [Validators.required]),
+    branchId: this.fb.control<number | null>(null, [Validators.required]),
+    discount: this.fb.nonNullable.control(0, [Validators.required, Validators.min(0)]),
+    workOrderItems: this.fb.array<FormGroup<WorkOrderItemControls>>([]),
+  });
+  readonly rows = new EditableRows<FormGroup<WorkOrderItemControls>, WorkOrderItemDetailDTO>({
+    array: this.workOrderForm.controls.workOrderItems,
+    parent: this.workOrderForm,
+    create: (seed) => this.createRow(seed),
+    confirmation: this.confirmation,
+    destroyRef: this.destroyRef,
+    removeTitle: 'workOrder.removeRowTitle',
+    removeMessage: 'workOrder.removeRowMessage',
+    focusId: (index) => `wo-description-${index}`,
+    canMutate: () => this.canMutate(),
+  });
+  readonly itemColumns: ReadonlyArray<EditableCollectionTableColumn> = [
+    { header: 'workOrder.description', width: '300px', required: true },
+    { header: 'workOrder.vehicleOptional', width: '230px' },
+    { header: 'workOrder.amount', width: '140px', numeric: true, align: 'center', required: true },
+    { header: 'workOrder.tax', width: '140px', numeric: true, align: 'center' },
+    { header: 'workOrder.amtPlusTax', width: '140px', numeric: true, align: 'center' },
+  ];
+
+  constructor() {
+    super();
+  }
+
+  get itemsArray(): FormArray<FormGroup<WorkOrderItemControls>> {
+    return this.workOrderForm.controls.workOrderItems;
+  }
+
+  ngOnInit(): void {
+    this.mode.set(this.activatedRoute.snapshot.data['mode'] ?? 'create');
+    const id = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    this.recordId.set(Number.isInteger(id) && id > 0 ? id : null);
+    if (!this.isReadOnly()) this.loadLookups();
+    if (this.mode() === 'create') {
+      this.itemsArray.push(this.createRow());
+      this.workOrderForm.markAsPristine();
+    } else {
+      this.workOrderForm.disable({ emitEvent: false });
+      this.loadDetails();
+    }
+  }
+
+  loadLookups(): void {
+    if (this.isReadOnly() || this.loadingLookups()) return;
+    this.loadingLookups.set(true);
+    forkJoin({
+      customers: this.customerService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }).pipe(catchError(() => of(null))),
+      branches: this.branchService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }).pipe(catchError(() => of(null))),
+      vehicles: this.vehicleService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }).pipe(catchError(() => of(null))),
+      options: this.service.getOptions().pipe(catchError(() => of(null))),
+    }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loadingLookups.set(false))).subscribe((response) => {
+      if (response.customers?.isSuccess) this.customerOptions.set(response.customers.entities ?? []);
+      if (response.branches?.isSuccess) this.branchOptions.set(response.branches.entities ?? []);
+      if (response.vehicles?.isSuccess) this.vehicleOptions.set(response.vehicles.entities ?? []);
+      this.mergeSavedOptions();
+      const rate = response.options?.entity?.effectiveTaxRatePercent;
+      const optionsAvailable = response.options?.isSuccess === true && typeof rate === 'number' && Number.isFinite(rate);
+      this.effectiveTaxRatePercent.set(optionsAvailable ? rate! : null);
+      this.lookupError.set(!response.customers?.isSuccess || !response.branches?.isSuccess || !response.vehicles?.isSuccess || !optionsAvailable);
+    });
+  }
+
+  loadDetails(): void {
+    const id = this.recordId();
+    if (this.loadingData() || this.saving()) return;
+    if (!id) {
+      this.errorMessage.set('workOrder.failedToLoadDetails');
+      return;
+    }
+    this.loadingData.set(true);
+    this.details.set(null);
+    this.errorMessage.set('');
+    this.workOrderForm.disable({ emitEvent: false });
+    this.loading.startLoading();
+    this.service.getDetails(id).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+      this.loadingData.set(false);
+      this.applyMode();
+      this.loading.endLoading();
+      if (this.details() && this.isReadOnly() && this.activatedRoute.snapshot.queryParamMap.get('print') === '1') this.print();
+    })).subscribe({
+      next: (response) => {
+        if (!response.isSuccess || !response.entity) {
+          this.errorMessage.set(response.message || 'workOrder.failedToLoadDetails');
+          return;
+        }
+        this.details.set(response.entity);
+        this.populateForm(response.entity);
+        if (!this.isReadOnly() && !this.pending()) this.errorMessage.set('workOrder.editLocked');
+      }, error: (error) => this.errorMessage.set(apiErrorMessage(error, 'workOrder.failedToLoadDetails')),
+    });
+  }
+
+  private populateForm(dto: WorkOrderDetailsDTO): void {
+    const date = dto.date ? parseDateValue(dto.date.substring(0, 10)) : null;
+    this.workOrderForm.patchValue({
+      date: date ? new Date(`${date}T00:00:00`) : null,
+      customerPONo: dto.customerPONo ?? '', notes: dto.notes ?? '', customerId: dto.customerId ?? null,
+      branchId: dto.branchId ?? null, discount: dto.discount ?? 0,
+    }, { emitEvent: false });
+    this.rows.replace(dto.workOrderItems ?? []);
+    this.workOrderForm.markAsPristine();
+    this.mergeSavedOptions();
+  }
+
+  private mergeSavedOptions(): void {
+    const dto = this.details();
+    if (!dto) return;
+    const choice = (id: number | null | undefined, value: string | null | undefined): DropDownSelect[] => id && value ? [{ id, value }] : [];
+    this.customerOptions.set(mergeSelectOptions(this.customerOptions(), choice(dto.customerId, dto.customer?.name)));
+    this.branchOptions.set(mergeSelectOptions(this.branchOptions(), choice(dto.branchId, dto.branch?.name)));
+    const vehicles: DropDownSelect[] = [];
+    for (const row of dto.workOrderItems) vehicles.push(...choice(row.vehicleId, row.vehicle?.plateNo || row.vehicle?.name));
+    this.vehicleOptions.set(mergeSelectOptions(this.vehicleOptions(), vehicles));
+  }
+
+  private createRow(item?: WorkOrderItemDetailDTO): FormGroup<WorkOrderItemControls> {
+    return this.fb.group<WorkOrderItemControls>({
+      id: this.fb.nonNullable.control(item?.id ?? 0),
+      description: this.fb.nonNullable.control(item?.description ?? '', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(500)]),
+      vehicleId: this.fb.control<number | null>(item?.vehicleId ?? null),
+      amount: this.fb.nonNullable.control(item?.amount ?? 0, [Validators.required, Validators.min(0)]),
+      tax: this.fb.nonNullable.control(item?.tax ?? 0),
+    });
+  }
+
+  addRow(): void {
+    if (this.canMutate()) this.rows.add();
+  }
+
+  removeRow(index: number): void {
+    if (this.canMutate()) this.rows.requestRemove(index);
+  }
+
+  rowTotal(row: FormGroup<WorkOrderItemControls>, index: number): number {
+    if (this.isReadOnly()) return this.details()?.workOrderItems[index]?.amountPlusTax ?? 0;
+    return roundMoney(roundMoney(Number(row.controls.amount.value || 0)) + (this.taxPreview(index) ?? 0));
+  }
+
+  taxPreview(index: number): number | null {
+    if (this.isReadOnly()) return this.details()?.workOrderItems[index]?.tax ?? 0;
+    const rate = this.effectiveTaxRatePercent();
+    if (rate === null) return null;
+    return allocateDocumentTax(this.itemsArray.controls.map(row => ({
+      amount: roundMoney(Number(row.controls.amount.value || 0)), ratePercent: rate,
+    })), 2)[index] ?? 0;
+  }
+
+  get summaryCards(): ReadonlyArray<SummaryCard> {
+    const raw = this.workOrderForm.getRawValue();
+    const amount = raw.workOrderItems.reduce((sum, row) => sum + roundMoney(Number(row.amount || 0)), 0);
+    const tax = this.isReadOnly() ? raw.workOrderItems.reduce((sum, row) => sum + Number(row.tax || 0), 0)
+      : this.itemsArray.controls.reduce((sum, _row, index) => sum + (this.taxPreview(index) ?? 0), 0);
+    const gross = this.isReadOnly() ? this.details()?.totalAmount ?? 0
+      : roundMoney(this.itemsArray.controls.reduce((sum, row, index) => sum + this.rowTotal(row, index), 0));
+    const discount = roundMoney(Number(raw.discount || 0));
+    const net = this.isReadOnly() ? this.details()?.netAmount ?? 0 : roundMoney(gross - discount);
+    const previewKnown = this.isReadOnly() || this.effectiveTaxRatePercent() !== null;
+    return [
+      { id: 'amount', labelKey: 'workOrder.amount', value: amount, icon: 'bi bi-cash', accent: 'neutral', format: 'money' },
+      { id: 'tax', labelKey: 'workOrder.tax', value: previewKnown ? tax : '—', icon: 'bi bi-receipt', accent: 'neutral', format: previewKnown ? 'money' : 'text' },
+      { id: 'gross', labelKey: 'workOrder.amtPlusTax', value: previewKnown ? gross : '—', icon: 'bi bi-calculator', accent: 'info', format: previewKnown ? 'money' : 'text' },
+      { id: 'discount', labelKey: 'workOrder.discount', value: discount, icon: 'bi bi-dash-circle', accent: 'neutral', format: 'money' },
+      { id: 'net', labelKey: 'workOrder.netTotal', value: previewKnown ? net : '—', icon: 'bi bi-cash-stack', accent: 'primary', format: previewKnown ? 'money' : 'text' },
+    ];
+  }
+
+  vehicleName(index: number): string {
+    const vehicle = this.details()?.workOrderItems[index]?.vehicle;
+    return vehicle?.name || vehicle?.plateNo || '—';
+  }
+
+  statusKey(): string {
+    return this.details()?.status === StatusEnum.Open ? 'workOrder.open' : 'workOrder.closed';
+  }
+
+  acceptanceKey(): string {
+    const state = this.details()?.acceptanceStatus;
+    return state === AcceptanceStatusEnum.Accepted ? 'workOrder.accepted'
+      : state === AcceptanceStatusEnum.Rejected ? 'workOrder.rejected' : 'workOrder.notAccepted';
+  }
+
+  save(andPrint = false): void {
+    if (!this.canMutate() || this.loadingLookups() || this.lookupError()) return;
+    if (this.workOrderForm.invalid || !this.itemsArray.length) {
+      this.workOrderForm.markAllAsTouched();
+      this.errorMessage.set('workOrder.validationError');
+      this.focusFirstInvalid();
+      return;
+    }
+    const raw = this.workOrderForm.getRawValue();
+    const date = parseDateValue(raw.date);
+    if (!date) return;
+    const payload: WorkOrderCreateDTO = {
+      date, customerPONo: raw.customerPONo.trim() || null, notes: raw.notes.trim() || null,
+      customerId: raw.customerId!, branchId: raw.branchId!, discount: raw.discount,
+      workOrderItems: this.itemsArray.controls.map((row): WorkOrderItemInputDTO => {
+        const item = row.getRawValue();
+        return { ...(this.mode() === 'edit' && this.rows.savedId(row) ? { id: this.rows.savedId(row) } : {}),
+          description: item.description.trim(), vehicleId: item.vehicleId, amount: item.amount };
+      }),
+    };
+    this.saving.set(true);
+    this.workOrderForm.disable({ emitEvent: false });
+    this.loading.startLoading();
+    this.errorMessage.set('');
+    const request = this.mode() === 'create' ? this.service.createWorkOrder(payload)
+      : this.service.updateWorkOrder({ ...payload, id: this.recordId()! });
+    request.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+      this.saving.set(false);
+      this.applyMode();
+      this.loading.endLoading();
+    })).subscribe({
+      next: (response) => {
+        if (!response.isSuccess) {
+          this.errorMessage.set(response.message || 'workOrder.failedToSave');
+          return;
+        }
+        this.saved = true;
+        this.workOrderForm.markAsPristine();
+        const id = Number(response.id ?? this.recordId());
+        if (andPrint && Number.isInteger(id) && id > 0) {
+          void this.router.navigate(['/WorkOrder/view', id], { queryParams: { ...this.returnQueryParams(), print: 1 } });
+        } else {
+          this.close();
+        }
+      }, error: (error) => this.errorMessage.set(apiErrorMessage(error, 'workOrder.failedToSave')),
+    });
+  }
+
+  private applyMode(): void {
+    if (this.canMutate()) this.workOrderForm.enable({ emitEvent: false });
+    else this.workOrderForm.disable({ emitEvent: false });
+  }
+
+  private focusFirstInvalid(): void {
+    const fields = [
+      { control: this.workOrderForm.controls.date, id: 'wo-date' },
+      { control: this.workOrderForm.controls.customerId, id: 'wo-customer' },
+      { control: this.workOrderForm.controls.branchId, id: 'wo-branch' },
+      { control: this.workOrderForm.controls.discount, id: 'wo-discount' },
+    ];
+    const master = fields.find((field) => field.control.invalid);
+    if (master) {
+      focusField(master.id);
+      return;
+    }
+    const index = this.itemsArray.controls.findIndex((row) => row.invalid);
+    if (index < 0) return;
+    const row = this.itemsArray.at(index);
+    const field = row.controls.description.invalid ? 'description' : row.controls.amount.invalid ? 'amount' : 'tax';
+    focusField(`wo-${field}-${index}`);
+  }
+
+  canDeactivate(): boolean | Observable<boolean> {
+    if (this.loadingData()) return false;
+    if (this.saving() && !this.saved) return false;
+    if (this.saved || this.isReadOnly() || this.workOrderForm.pristine) return true;
+    return this.confirmation.confirmDiscard('workOrder');
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnload(event: BeforeUnloadEvent): void {
+    if (!this.saved && (this.saving() || (!this.isReadOnly() && this.workOrderForm.dirty))) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  }
+
+  requestClose(): void {
+    if (!this.saving()) this.close();
+  }
+
+  private returnQueryParams(): Record<string, unknown> {
+    const { print, ...params } = this.activatedRoute.snapshot.queryParams;
+    return params;
+  }
+
+  private close(): void {
+    void this.router.navigate(['/WorkOrder'], { queryParams: this.returnQueryParams() });
+  }
+
+  switchToEdit(): void {
+    if (!this.isReadOnly() || !this.pending() || !this.recordId()) return;
+    void this.router.navigate(['/WorkOrder/edit', this.recordId()], { queryParams: this.returnQueryParams() });
+  }
+
+  print(): void {
+    if (this.details() && this.isReadOnly() && !this.loadingData()) this.printSession.print();
+  }
+}

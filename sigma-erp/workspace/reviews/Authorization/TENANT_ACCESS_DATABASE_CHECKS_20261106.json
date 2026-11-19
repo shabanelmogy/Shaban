@@ -1,0 +1,31 @@
+{
+  "Date": "2026-11-06",
+  "LocalDatabase": "SiGmaSubscriptionPlatform",
+  "TenantCorrelation": [
+    {
+      "TenantId": 2,
+      "RegistrationId": "1f5f2fcb-3997-475e-a668-af03c7c23468",
+      "PlatformRows": 1,
+      "IdentityRows": 1,
+      "ErpOwnerRows": 1,
+      "Active": true,
+      "Correlated": true
+    },
+    {
+      "TenantId": 1,
+      "RegistrationId": "be3b1e18-87e5-4cd3-9592-f879ac786d00",
+      "PlatformRows": 1,
+      "IdentityRows": 1,
+      "ErpOwnerRows": 1,
+      "Active": true,
+      "Correlated": true
+    }
+  ],
+  "TranslationOverridesPreserved": true,
+  "TranslationOverrideCount": 5,
+  "AuthorizationRuntimeTexts": {
+    "configurationOnly": "Permissions apply to supported operations on the server. Operations awaiting classification cannot be granted here.",
+    "roleCount": "{{count}} roles",
+    "fromRole": "From role: {{name}}"
+  }
+}

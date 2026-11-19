@@ -1,0 +1,64 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/details.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/details.ts (current)
+index db7d94e..75d0f3c 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/details.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/models/details.ts (current)	
+@@ -1,16 +1,46 @@
+-export interface CashDepositDetailsDTO {
+-  id: string;
+-  subscriptionId: number;
+-  isDeleted: boolean;
+-  isActive: boolean;
+-  isValid: boolean;
+-  isChanged: boolean;
+-  deletedAt: string;
+-  deletedBy: string;
+-  createdAt: string;
+-  createdBy: string;
++import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
++import { CashDepositApprovalStatus, CashDepositSourceType } from './list';
++
++export interface UndepositedVoucher {
++  sourceType: CashDepositSourceType;
++  sourceReceiptId: number | null;
++  sourcePaymentId: number | null;
++  date: string;
++  voucherLabel: string | null;
++  no: string | null;
++  description: string | null;
++  amount: number;
++  deposited: number;
++  dueAmount: number;
++  depositedNow: number;
++}
++
++export interface CashDepositLine extends UndepositedVoucher {
++  id: number;
++}
++
++export interface CashDepositDetails {
++  id: number;
++  no: string | null;
+   date: string;
+-  bankId?: number;
+-  refNo?: string;
++  bankId: number | null;
++  bankName: string | null;
++  refNo: string | null;
++  description: string | null;
++  paymentMethodId: number | null;
++  paymentMethodName: string | null;
++  branchId: number | null;
++  branchName: string | null;
++  amount: number;
++  approvalStatus: CashDepositApprovalStatus;
++  isPosted: boolean;
++  isVoided: boolean;
++  cashDepositDetails: CashDepositLine[];
++}
++
++export interface CashDepositLookups {
++  banks: DropDownSelect[];
++  branches: DropDownSelect[];
++  paymentMethods: DropDownSelect[];
+ }
+ 

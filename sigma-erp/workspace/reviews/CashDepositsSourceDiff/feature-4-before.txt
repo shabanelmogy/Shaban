@@ -1,0 +1,328 @@
+import { Component, OnInit, OnDestroy, inject, signal, DestroyRef } from '@angular/core';
+import { Result } from 'src/app/modules/shared/models/result';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { CashDepositService } from '../../services/cashdeposit.service';
+import { CashDepositDetailsDTO } from '../../models/details';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModel } from 'src/app/modules/shared/models/button-model';
+import { ButtonsComponent } from 'src/app/modules/shared/components/buttons/buttons.component';
+import { CashDepositCreateDTO } from '../../models/create';
+import { TranslateModule } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PDCReceivableService } from 'src/app/modules/Banking/ChequesReceivables/services/pdc-receivable.service';
+import { Bank } from 'src/app/modules/Banking/ChequesReceivables/models/list';
+import { DetailsComponent as CashDepositDetailDetailsComponent } from '../../../CashDepositDetail/components/details/details.component';
+import { CalendarModule } from 'primeng/calendar';
+
+@Component({
+  selector: 'app-details',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ButtonsComponent,
+    TranslateModule,
+    DropdownModule,
+    CalendarModule,
+  ],
+  templateUrl: './details.component.html',
+  styleUrl: './details.component.scss',
+  providers: [DatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DetailsComponent extends BaseComponentService implements OnInit {
+  //#region properties
+  id: string;
+  cashDeposit: CashDepositDetailsDTO;
+
+  cashDepositForm: FormGroup;
+  isCreateMode: boolean = false;
+  subscriptionId: number = Number.parseInt(
+    localStorage.getItem('subscriptionId') || '0'
+  );
+  buttons: ButtonModel[] = [
+    {
+      id: 'btn-save',
+      text: 'general.save',
+      type: 'primary',
+      class: 'me-2',
+      disabled: false,
+    },
+    {
+      id: 'btn-cancel',
+      text: 'general.cancel',
+      type: 'secondary',
+      disabled: false,
+    },
+  ];
+  hederButtons: ButtonModel[] = [
+    {
+      id: 'btn-delete',
+      text: 'general.delete',
+      type: 'danger',
+      disabled: false,
+      class: 'me-2',
+    },
+    {
+      id: 'btn-update',
+      text: 'general.update',
+      type: 'primary',
+      disabled: false,
+    },
+  ];
+  banks = signal<Bank[]>([]);
+  readonly headerButtons: ButtonModel[] = [
+    { id: 'btn-delete', text: 'general.delete', type: 'danger', class: 'me-2' },
+    { id: 'btn-update', text: 'general.update', type: 'primary' },
+  ];
+  readonly cashDepositDetailComponent = CashDepositDetailDetailsComponent;
+
+  //#endregion
+
+  //#region injectors
+  private readonly cashDepositService = inject(CashDepositService);
+  private readonly fb = inject(FormBuilder);
+  private readonly datePipe = inject(DatePipe);
+  protected readonly destroyRef = inject(DestroyRef);
+
+  pdcReceivableService = inject(PDCReceivableService);
+  //#endregion
+
+  //#region constructor and life cycle
+  constructor() {
+    super();
+    this.activatedRoute.url
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((segments) => {
+        const path = segments.join('/');
+        if (path.includes('create')) {
+          this.isCreateMode = true;
+        }
+      });
+
+    this.activatedRoute.params.subscribe((params) => {
+      this.id = params['id'];
+      if (!params['id'] && !this.isCreateMode)
+        this.router.navigate(['/CashDeposit']);
+    });
+  }
+  ngOnInit(): void {
+    this.initForm();
+    this.fetchBanks();
+    if (!this.isCreateMode) this.getItemById(this.id);
+  }
+  //#endregion
+
+  //#region methods
+  fetchBanks() {
+    this.loading.startLoading();
+    this.pdcReceivableService
+      .getAll<Bank>('/Bank')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.banks.set(res.entities);
+          }
+          this.loading.endLoading();
+        },
+      });
+  }
+  getSubscriptionId(): number {
+    return Number.parseInt(localStorage.getItem('subscriptionId') || '0');
+  }
+  initForm() {
+    this.cashDepositForm = this.fb.group({
+      id: [{ value: '', disabled: !this.isCreateMode }],
+      subscriptionId: [{ value: '', disabled: !this.isCreateMode }],
+      isDeleted: [{ value: false, disabled: !this.isCreateMode }],
+      isActive: [{ value: false, disabled: !this.isCreateMode }],
+      isValid: [{ value: false, disabled: !this.isCreateMode }],
+      isChanged: [{ value: false, disabled: !this.isCreateMode }],
+      deletedAt: [{ value: '', disabled: !this.isCreateMode }],
+      deletedBy: [{ value: '', disabled: !this.isCreateMode }],
+      createdAt: [{ value: '', disabled: !this.isCreateMode }],
+      createdBy: [{ value: '', disabled: !this.isCreateMode }],
+      date: [{ value: '', disabled: !this.isCreateMode }],
+      bankId: [{ value: '', disabled: !this.isCreateMode }],
+      refNo: [{ value: '', disabled: !this.isCreateMode }],
+    });
+  }
+
+  fillForm() {
+    if (this.cashDeposit) {
+      this.cashDepositForm.patchValue({
+        id: this.cashDeposit.id,
+        subscriptionId: this.cashDeposit.subscriptionId,
+        isDeleted: this.cashDeposit.isDeleted,
+        isActive: this.cashDeposit.isActive,
+        isValid: this.cashDeposit.isValid,
+        isChanged: this.cashDeposit.isChanged,
+        deletedAt: this.cashDeposit.deletedAt,
+        deletedBy: this.cashDeposit.deletedBy,
+        createdAt: this.cashDeposit.createdAt,
+        createdBy: this.cashDeposit.createdBy,
+        date: this.datePipe.transform(this.cashDeposit.date, 'yyyy-MM-dd'),
+        bankId: this.cashDeposit.bankId,
+        refNo: this.cashDeposit.refNo,
+      });
+    }
+  }
+
+  getItemById(id: string) {
+    this.loading.startLoading();
+    this.cashDepositService
+      .getById<Result<CashDepositDetailsDTO>>(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.cashDeposit = res.entity;
+            this.fillForm();
+          }
+          this.loading.endLoading();
+        },
+      });
+  }
+
+  onButtonClick(buttonId: string) {
+    switch (buttonId) {
+      case 'btn-save':
+        this.save();
+        break;
+      case 'btn-cancel':
+        this.cancel();
+        break;
+      case 'btn-delete':
+        this.delete();
+        break;
+      case 'btn-update':
+        this.update();
+        break;
+    }
+  }
+
+  save() {
+    if (this.cashDepositForm.valid) {
+      this.loading.startLoading();
+      const cashDepositData = this.cashDepositForm.value;
+      if (this.isCreateMode) {
+        this.createCashDeposit(cashDepositData);
+      } else {
+        this.updateCashDeposit(cashDepositData);
+      }
+    }
+  }
+
+  createCashDeposit(data: any) {
+    const cashDepositData: CashDepositCreateDTO = {
+      id: this.id,
+      subscriptionId: this.getSubscriptionId(),
+      isDeleted: data.isDeleted,
+      isActive: data.isActive,
+      isValid: data.isValid,
+      isChanged: data.isChanged,
+      deletedAt: data.deletedAt,
+      deletedBy: data.deletedBy,
+      createdAt: data.createdAt,
+      createdBy: this.cashDeposit?.createdBy,
+      date: data.date,
+      bankId: data.bankId,
+      refNo: data.refNo,
+    };
+
+    this.cashDepositService
+      .post(cashDepositData)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.router.navigate(['/CashDeposit']);
+          }
+          this.loading.endLoading();
+        },
+      });
+  }
+
+  updateCashDeposit(data: any) {
+    const cashDepositData: CashDepositCreateDTO = {
+      id: this.id,
+      subscriptionId: data.subscriptionId,
+      isDeleted: false,
+      isActive: true,
+      isValid: false,
+      isChanged: false,
+      deletedAt: data.deletedAt,
+      deletedBy: data.deletedBy,
+      createdAt: data.createdAt,
+      date: data.date,
+      bankId: data.bankId,
+      refNo: data.refNo,
+      createdBy: this.cashDeposit?.createdBy,
+    };
+
+    this.cashDepositService
+      .put(cashDepositData)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.router.navigate(['/CashDeposit']);
+          }
+          this.loading.endLoading();
+        },
+      });
+  }
+
+  cancel() {
+    this.router.navigate(['/CashDeposit']);
+  }
+
+  delete() {
+    this.loading.startLoading();
+
+    this.cashDepositService
+      .delete(this.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          if (res.isSuccess) {
+            this.router.navigate(['/CashDeposit']);
+          }
+          this.loading.endLoading();
+        },
+      });
+  }
+
+  update() {
+    const fieldsToEnable = [
+      'id',
+      'subscriptionId',
+      'isDeleted',
+      'isActive',
+      'isValid',
+      'isChanged',
+      'deletedAt',
+      'deletedBy',
+      'createdAt',
+      'createdBy',
+      'date',
+      'bankId',
+      'refNo',
+      'createdAt',
+      'createdBy',
+      'date',
+      'bankId',
+      'refNo',
+    ];
+
+    fieldsToEnable.forEach((field) => {
+      this.cashDepositForm.get(field)?.enable();
+    });
+  }
+
+  //#endregion
+}

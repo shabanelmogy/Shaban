@@ -1,0 +1,207 @@
+<div
+  class="sigma-data-table"
+  [class.sigma-data-table--scrollable]="scrollable"
+  [class.sigma-data-table--flow]="!scrollable"
+  [class.sigma-data-table--fill]="fill && scrollable"
+  [style.--sigma-data-table-scroll-height]="resolvedScrollHeight"
+>
+  @if (hasActions) {
+    <app-action-button
+      [moreActions]="actions"
+      (SendActionTemplate)="setActionTemplate($event)"
+    ></app-action-button>
+  }
+
+  <p-table
+    [value]="renderedValue"
+    [dataKey]="dataKey"
+    styleClass="sigma-data-table__table"
+    responsiveLayout="scroll"
+    [scrollable]="scrollable"
+    [scrollHeight]="scrollable ? resolvedScrollHeight : ''"
+    sortMode="single"
+    [lazy]="lazy"
+    [lazyLoadOnInit]="false"
+    [paginator]="paginator"
+    [alwaysShowPaginator]="alwaysShowPaginator"
+    [first]="resolvedFirst"
+    [rows]="rows"
+    [totalRecords]="resolvedTotalRecords"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [loading]="loading"
+    [sortField]="sortField"
+    [sortOrder]="sortOrder"
+    [selectionMode]="selectable ? 'multiple' : undefined"
+    [selection]="selection"
+    [selectionPageOnly]="selectionPageOnly"
+    [showCurrentPageReport]="resolvedShowCurrentPageReport"
+    [currentPageReportTemplate]="resolvedCurrentPageReport | translate"
+    paginatorDropdownAppendTo="body"
+    (onLazyLoad)="onTableLazyLoad($event)"
+    (firstChange)="onTableFirstChange($event)"
+    (onPage)="onTablePage($event)"
+    (selectionChange)="updateSelection($event)"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        @if (selectable) {
+          <th scope="col" class="sigma-data-table__selection-column">
+            <p-tableHeaderCheckbox
+              [disabled]="selectionDisabled"
+              [ariaLabel]="selectAllAriaLabel"
+            ></p-tableHeaderCheckbox>
+          </th>
+        }
+        @if (hasActions) {
+          <th scope="col" class="sigma-data-table__actions-column">
+            {{ 'general.actions' | translate }}
+          </th>
+        }
+        @for (column of columns; track column.field + ':' + column.header) {
+          <th
+            scope="col"
+            [ngClass]="column.headerClass"
+            [style.width]="column.width || null"
+            [pSortableColumn]="column.field"
+            [pSortableColumnDisabled]="!column.sortable"
+          >
+            {{ column.header | translate }}
+            @if (column.sortable) {
+              <p-sortIcon [field]="column.field"></p-sortIcon>
+            }
+          </th>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr
+        [attr.data-row-tone]="rowTone ? rowTone(row) : null"
+        [class.sigma-data-table__row--interactive]="hasRowActivation"
+        [class.sigma-data-table__hierarchy-root]="hierarchy && hierarchyLevel(row) === 0"
+        [attr.tabindex]="hasRowActivation ? 0 : null"
+        [attr.role]="hasRowActivation && !selectable ? 'button' : null"
+        (click)="activateRow(row, $event)"
+        (keydown.enter)="activateRow(row, $event)"
+        (keydown.space)="activateRow(row, $event)"
+      >
+        @if (selectable) {
+          <td
+            class="sigma-data-table__selection-column"
+            (click)="$event.stopPropagation()"
+            (keydown)="$event.stopPropagation()"
+          >
+            <p-tableCheckbox
+              [disabled]="selectionDisabled"
+              [value]="row"
+              [ariaLabel]="selectionLabel(row)"
+            ></p-tableCheckbox>
+          </td>
+        }
+        @if (hasActions) {
+          <td class="sigma-data-table__actions-column">
+            @if (actionTemplate) {
+              <ng-container
+                *ngTemplateOutlet="actionTemplate; context: { $implicit: row }"
+              ></ng-container>
+            }
+          </td>
+        }
+        @for (column of columns; track column.field + ':' + column.header; let isFirst = $first) {
+          <td [ngClass]="column.cellClass" [style.width]="column.width || null">
+            @if (column.cellTemplate) {
+              <ng-container
+                *ngTemplateOutlet="column.cellTemplate; context: {
+                  $implicit: row,
+                  row,
+                  column
+                }"
+              ></ng-container>
+            } @else if (hierarchy && isFirst) {
+              <div
+                class="sigma-data-table__hierarchy-cell"
+                [style.padding-inline-start.px]="hierarchyLevel(row) * 14"
+              >
+                @if (hasHierarchyChildren(row)) {
+                  <button
+                    type="button"
+                    class="sigma-data-table__hierarchy-toggle"
+                    [attr.aria-expanded]="hierarchyExpanded(row)"
+                    [attr.aria-label]="hierarchyLabel(row, column)"
+                    (click)="toggleHierarchy(row, $event)"
+                  >
+                    <i
+                      class="bi"
+                      [class.bi-chevron-down]="hierarchyExpanded(row)"
+                      [class.bi-chevron-right]="!hierarchyExpanded(row)"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                } @else {
+                  <span class="sigma-data-table__hierarchy-spacer" aria-hidden="true"></span>
+                }
+                @if (hierarchyCode(row); as code) {
+                  <span class="sigma-data-table__hierarchy-code">{{ code }}</span>
+                }
+                @if (hierarchy.activate && (!hierarchy.activateEnabled || hierarchy.activateEnabled(row))) {
+                  <button
+                    type="button"
+                    class="sigma-data-table__cell-link"
+                    [title]="hierarchy.activateTitle ? (hierarchy.activateTitle | translate) : ''"
+                    [attr.aria-label]="hierarchyActivateAriaLabel(row, column)"
+                    (click)="hierarchyActivate(row, $event)"
+                  >
+                    {{ hierarchyLabel(row, column) }}
+                  </button>
+                } @else {
+                  <span>{{ hierarchyLabel(row, column) }}</span>
+                }
+              </div>
+            } @else if (column.link && (!column.link.enabled || column.link.enabled(row))) {
+              <div
+                class="sigma-data-table__indented-cell"
+                [style.padding-inline-start.px]="columnIndent(row, column) * 14"
+              >
+                <button
+                  type="button"
+                  class="sigma-data-table__cell-link"
+                  [title]="column.link.title ? (column.link.title | translate) : ''"
+                  [attr.aria-label]="cellLinkAriaLabel(row, column)"
+                  (click)="cellLinkActivate(row, column, $event)"
+                >
+                  {{ displayValue(row, column) }}
+                </button>
+              </div>
+            } @else if (column.indent) {
+              <div
+                class="sigma-data-table__indented-cell"
+                [style.padding-inline-start.px]="columnIndent(row, column) * 14"
+              >
+                {{ displayValue(row, column) }}
+              </div>
+            } @else {
+              @if (statusOf(row, column); as status) {
+                <span [class]="statusClass(status)">{{ status.label | translate }}</span>
+              } @else {
+                {{ displayValue(row, column) }}
+              }
+            }
+          </td>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr class="sigma-data-table__empty-row">
+        <td [attr.colspan]="columnCount" class="sigma-data-table__empty-cell">
+          @if (!loading && showEmpty) {
+            <div class="sigma-data-table__empty" role="status">
+              <i [class]="emptyIcon" aria-hidden="true"></i>
+              {{ emptyMessage | translate }}
+            </div>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,0 +1,23 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/cashdepositdetail.routes.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/cashdepositdetail.routes.ts (current)
+index 13279a4..e69de29 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/cashdepositdetail.routes.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/cashdepositdetail.routes.ts (current)	
+@@ -1,18 +0,0 @@
+-import { Routes } from '@angular/router';
+-import {CashDepositDetailsComponent } from './components/list/list.component';
+-import { DetailsComponent } from './components/details/details.component';
+-
+-export const CashDepositDetail_Routes: Routes = [
+-  {
+-    path: '',
+-    component: CashDepositDetailsComponent,
+-  },
+-  {
+-    path: 'details/:id',
+-    component: DetailsComponent,
+-  },
+-  {
+-    path: 'create',
+-    component: DetailsComponent,
+-  },
+-];

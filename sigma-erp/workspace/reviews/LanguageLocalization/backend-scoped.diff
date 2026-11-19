@@ -1,0 +1,3130 @@
+diff --git a/SiGma.Business/IServices/ILanguageService.cs b/SiGma.Business/IServices/ILanguageService.cs
+index a300c71c..05c8cae7 100644
+--- a/SiGma.Business/IServices/ILanguageService.cs
++++ b/SiGma.Business/IServices/ILanguageService.cs
+@@ -6,8 +6,9 @@ namespace SiGma.Business.IServices
+     public interface
+         ILanguageService : IService<LanguageAddVM, LanguageUpdateVM, LanguageDetailVM, LanguageListVM>
+     {
+-
+-
++        Task<Result<LanguageOptionsVM>> GetOptionsAsync();
++        Task<Result> SetDefaultAsync(LanguageDefaultVM vm);
++        Task<LanguageSettingsVM?> GetSettingsAsync();
+     }
+ 
+-}
+\ No newline at end of file
++}
+diff --git a/SiGma.Business/MapperConfig/LanguageProfiler.cs b/SiGma.Business/MapperConfig/LanguageProfiler.cs
+index 2a2557e5..ebafa3ec 100644
+--- a/SiGma.Business/MapperConfig/LanguageProfiler.cs
++++ b/SiGma.Business/MapperConfig/LanguageProfiler.cs
+@@ -7,10 +7,13 @@ namespace SiGma.Business.MapperConfig
+         public LanguageProfiler()
+         {
+ 
+-            CreateMap<Language, LanguageDetailVM>().ReverseMap();
+-            CreateMap<Language, LanguageListVM>().ReverseMap();
+-            CreateMap<LanguageAddVM, Language>().ReverseMap();
+-            CreateMap<LanguageUpdateVM, Language>().ReverseMap();
++            CreateMap<Language, LanguageDetailVM>();
++            CreateMap<Language, LanguageListVM>();
++            CreateMap<LanguageAddVM, Language>();
++            CreateMap<LanguageUpdateVM, Language>();
++            CreateMap<LanguageSettings, LanguageSettingsVM>();
++            CreateMap<LanguageDefaultVM, LanguageSettings>()
++                .ForMember(x => x.DefaultLanguageCode, x => x.MapFrom(v => v.CultureCode));
+         }
+     }
+ }
+diff --git a/SiGma.Business/Services/AccountServices/AccountService.cs b/SiGma.Business/Services/AccountServices/AccountService.cs
+index 2a8f9a35..b9b48d68 100644
+--- a/SiGma.Business/Services/AccountServices/AccountService.cs
++++ b/SiGma.Business/Services/AccountServices/AccountService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using Microsoft.Data.SqlClient;
+ using Microsoft.Extensions.Logging;
+ using System.Security.Claims;
+@@ -597,7 +597,7 @@ public class AccountService :
+             return new Results<AccountListVM>
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToFound),
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToFound)),
+                 Entities = new List<AccountListVM>()
+             };
+         }
+diff --git a/SiGma.Business/Services/AccountServices/LinkAccountsService.cs b/SiGma.Business/Services/AccountServices/LinkAccountsService.cs
+index 56559d24..72d6a287 100644
+--- a/SiGma.Business/Services/AccountServices/LinkAccountsService.cs
++++ b/SiGma.Business/Services/AccountServices/LinkAccountsService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Services.HelperServices;
++﻿using SiGma.Business.Services.HelperServices;
+ using SiGma.Helpers.Extensions;
+ using SiGma.ViewModels.ViewModels.LinkAccounts;
+ 
+@@ -175,7 +175,7 @@ public class LinkAccountsService : ILinkAccountsService
+         CancellationToken cancellationToken)
+     {
+         if (request?.ReplaceTypes is not { Count: > 0 } || request.Mappings is null)
+-            return Failure(Localization.GetString(GeneralMessage.FailedToAdd));
++            return Failure(Localization.GetString(nameof(GeneralMessage.FailedToAdd)));
+ 
+         var replaceTypes = request.ReplaceTypes.Distinct().ToList();
+         if (replaceTypes.Any(type => !Enum.IsDefined(typeof(LinkAccountsType), type)))
+@@ -230,7 +230,7 @@ public class LinkAccountsService : ILinkAccountsService
+             IsSuccess = saved,
+             Message = saved
+                 ? BuildSaveMessage(changeSet)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -283,7 +283,7 @@ public class LinkAccountsService : ILinkAccountsService
+             IsSuccess = saved,
+             Message = saved
+                 ? Localization["HrmAccountLinksSaved"]
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/AdministrationsServices/SettingsCommonModelService.cs b/SiGma.Business/Services/AdministrationsServices/SettingsCommonModelService.cs
+index 083ecda7..c3baf93a 100644
+--- a/SiGma.Business/Services/AdministrationsServices/SettingsCommonModelService.cs
++++ b/SiGma.Business/Services/AdministrationsServices/SettingsCommonModelService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using SiGma.ViewModels.ViewModels.SettingsCommonModel;
+ using System.Security.Claims;
+ 
+@@ -71,8 +71,8 @@ Service<SettingsCommonModelAddVM, SettingsCommonModelUpdateVM, SettingsCommonMod
+             IsSuccess = result,
+             IsInfo = false,
+             Message = result
+-            ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-            : Localization.GetString(GeneralMessage.FailedToUpdate)
++            ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++            : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ }
+diff --git a/SiGma.Business/Services/AgreementServices/AgreementService.cs b/SiGma.Business/Services/AgreementServices/AgreementService.cs
+index 83eb552d..075ac309 100644
+--- a/SiGma.Business/Services/AgreementServices/AgreementService.cs
++++ b/SiGma.Business/Services/AgreementServices/AgreementService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Helpers.Dtos;
++﻿using SiGma.Helpers.Dtos;
+ using SiGma.Helpers.Exceptions;
+ using SiGma.Helpers.Filters;
+ using SiGma.Helpers.Request;
+@@ -117,7 +117,7 @@ public class AgreementService :
+         {
+             IsSuccess = true,
+             Id        = agreement.Id,
+-            Message   = Localization.GetString(GeneralMessage.SuccessedToAdd)
++            Message   = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+         };
+     }
+ 
+@@ -161,8 +161,8 @@ public class AgreementService :
+             IsSuccess = result,
+             Id        = entity.Id,
+             Message   = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/AgreementServices/RentalAgreementService.cs b/SiGma.Business/Services/AgreementServices/RentalAgreementService.cs
+index 9ce7c9f6..95f243ba 100644
+--- a/SiGma.Business/Services/AgreementServices/RentalAgreementService.cs
++++ b/SiGma.Business/Services/AgreementServices/RentalAgreementService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Services;
++﻿using SiGma.Business.Services;
+ using SiGma.Business.Resolver;
+ using SiGma.Helpers.Dtos;
+ using SiGma.Helpers.Enum;
+@@ -270,8 +270,8 @@ public class RentalAgreementService :
+             IsSuccess = saved,
+             Id = agreement.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -331,8 +331,8 @@ public class RentalAgreementService :
+             IsSuccess = saved,
+             Id = agreement.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+@@ -355,8 +355,8 @@ public class RentalAgreementService :
+             IsSuccess = saved,
+             Id = id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                : Localization.GetString(GeneralMessage.FailedToRemove)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+         };
+     }
+ 
+@@ -858,7 +858,7 @@ public class RentalAgreementService :
+             return new Result<RentalAgreementDetailVM>
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToFound)
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+             };
+ 
+         return new Result<RentalAgreementDetailVM>
+diff --git a/SiGma.Business/Services/AssetsServices/AssetService.cs b/SiGma.Business/Services/AssetsServices/AssetService.cs
+index 71ad74b5..1bab54d4 100644
+--- a/SiGma.Business/Services/AssetsServices/AssetService.cs
++++ b/SiGma.Business/Services/AssetsServices/AssetService.cs
+@@ -78,8 +78,8 @@ Service<AssetAddVM, AssetUpdateVM, AssetDetailVM,
+             IsInfo = false,
+             Id = asset.Id,
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+ 
+ 
+diff --git a/SiGma.Business/Services/AssetsServices/AssetTypeService.cs b/SiGma.Business/Services/AssetsServices/AssetTypeService.cs
+index 6b8fb2a1..cbde5ed8 100644
+--- a/SiGma.Business/Services/AssetsServices/AssetTypeService.cs
++++ b/SiGma.Business/Services/AssetsServices/AssetTypeService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.AssetType;
++﻿using SiGma.ViewModels.ViewModels.AssetType;
+ 
+ namespace SiGma.Business.Services.AssetsServices;
+ 
+@@ -76,8 +76,8 @@ public class AssetTypeService :
+                 IsSuccess = saved,
+                 Id = saved ? entity.Id : null,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd),
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd)),
+             };
+         }
+         catch (DbUpdateException)
+@@ -119,8 +119,8 @@ public class AssetTypeService :
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate),
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate)),
+             };
+         }
+         catch (DbUpdateException)
+@@ -150,8 +150,8 @@ public class AssetTypeService :
+             IsSuccess = saved,
+             Id = saved ? id : null,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                : Localization.GetString(GeneralMessage.FailedToRemove),
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                : Localization.GetString(nameof(GeneralMessage.FailedToRemove)),
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/AssetsServices/DepreciationService.cs b/SiGma.Business/Services/AssetsServices/DepreciationService.cs
+index 24bf695f..1aa4c0b7 100644
+--- a/SiGma.Business/Services/AssetsServices/DepreciationService.cs
++++ b/SiGma.Business/Services/AssetsServices/DepreciationService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Resolver;
++﻿using SiGma.Business.Resolver;
+ using SiGma.Helpers.Dtos;
+ using SiGma.Helpers.Helpers;
+ using SiGma.ViewModels.ViewModels.Depreciation;
+@@ -137,7 +137,7 @@ public class DepreciationService(
+                 return new Result
+                 {
+                     IsSuccess = true,
+-                    Message = localization[GeneralMessage.SuccessedToAdd]
++                    Message = localization[nameof(GeneralMessage.SuccessedToAdd)]
+                 };
+             }
+             catch (JournalPostingException exception)
+diff --git a/SiGma.Business/Services/BanksServices/CardTransactionBankTransferService.cs b/SiGma.Business/Services/BanksServices/CardTransactionBankTransferService.cs
+index 3db533b8..2e2adcd5 100644
+--- a/SiGma.Business/Services/BanksServices/CardTransactionBankTransferService.cs
++++ b/SiGma.Business/Services/BanksServices/CardTransactionBankTransferService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Resolver;
++﻿using SiGma.Business.Resolver;
+ using SiGma.Helpers.Helpers;
+ using SiGma.ViewModels.ViewModels.CardTransactionBankTransfer;
+ using SiGma.ViewModels.ViewModels.CardTransactionBankTransferDetail;
+@@ -124,7 +124,7 @@ namespace SiGma.Business.Services.BanksServices
+                 {
+                     IsSuccess = true,
+                     Id        = transfer.Id,
+-                    Message   = Localization.GetString(GeneralMessage.SuccessedToAdd)
++                    Message   = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+                 };
+             }
+             catch (JournalPostingException exception)
+@@ -251,7 +251,7 @@ namespace SiGma.Business.Services.BanksServices
+                 {
+                     IsSuccess = true,
+                     Id        = transfer.Id,
+-                    Message   = Localization.GetString(GeneralMessage.SuccessedToUpdate)
++                    Message   = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
+                 };
+             }
+             catch (JournalPostingException exception)
+@@ -329,8 +329,8 @@ namespace SiGma.Business.Services.BanksServices
+                 {
+                     IsSuccess = result,
+                     Message   = result
+-                        ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                        : Localization.GetString(GeneralMessage.FailedToRemove)
++                        ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                        : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+                 };
+             }
+             catch (JournalPostingException exception)
+diff --git a/SiGma.Business/Services/BanksServices/CustomerDepositService.cs b/SiGma.Business/Services/BanksServices/CustomerDepositService.cs
+index 8dcce32a..9d384cb2 100644
+--- a/SiGma.Business/Services/BanksServices/CustomerDepositService.cs
++++ b/SiGma.Business/Services/BanksServices/CustomerDepositService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Extensions;
++﻿using SiGma.Business.Extensions;
+ using SiGma.Business.Resolver;
+ using SiGma.Helpers.Dtos;
+ using SiGma.Helpers.Helpers;
+@@ -43,7 +43,7 @@ public class CustomerDepositService :
+             return new Result
+             {
+                 IsSuccess = true,
+-                Message = Localization.GetString(GeneralMessage.SuccessedToAdd)
++                Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+             };
+         });
+ 
+@@ -64,7 +64,7 @@ public class CustomerDepositService :
+             return new Result
+             {
+                 IsSuccess = true,
+-                Message = Localization.GetString(GeneralMessage.SuccessedToUpdate)
++                Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
+             };
+         });
+ 
+@@ -104,7 +104,7 @@ public class CustomerDepositService :
+         await UnitOfWork.Repository.AddAsync(deposit, cancellationToken);
+         await UnitOfWork.SaveChangesAsync(cancellationToken);
+ 
+-        return new Result { IsSuccess = true, Id = deposit.Id, Message = Localization.GetString(GeneralMessage.SuccessedToAdd) };
++        return new Result { IsSuccess = true, Id = deposit.Id, Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) };
+     }
+ 
+     // ═══════════════════════════════════════════════════════════════════════
+@@ -134,7 +134,7 @@ public class CustomerDepositService :
+         return new Result
+         {
+             IsSuccess = result, Id = deposit.Id,
+-            Message = result ? Localization.GetString(GeneralMessage.SuccessedToUpdate) : Localization.GetString(GeneralMessage.FailedToUpdate)
++            Message = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)) : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+@@ -196,8 +196,8 @@ public class CustomerDepositService :
+         {
+             IsSuccess = result,
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                : Localization.GetString(GeneralMessage.FailedToRemove)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/BanksServices/PDCPayableService.cs b/SiGma.Business/Services/BanksServices/PDCPayableService.cs
+index 39303d25..e8b9d047 100644
+--- a/SiGma.Business/Services/BanksServices/PDCPayableService.cs
++++ b/SiGma.Business/Services/BanksServices/PDCPayableService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using SiGma.Business.Resolver;
+ using SiGma.Helpers.Dtos;
+ using SiGma.ViewModels.ViewModels.PDCPayable;
+@@ -108,7 +108,7 @@ public class PDCPayableService :
+         return new Result
+         {
+             IsSuccess = result,
+-            Message = result ? Localization.GetString(GeneralMessage.SuccessedToRemove) : Localization.GetString(GeneralMessage.FailedToRemove)
++            Message = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove)) : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/BanksServices/PDCReceivableService.cs b/SiGma.Business/Services/BanksServices/PDCReceivableService.cs
+index 87f34713..515e95ce 100644
+--- a/SiGma.Business/Services/BanksServices/PDCReceivableService.cs
++++ b/SiGma.Business/Services/BanksServices/PDCReceivableService.cs
+@@ -1,4 +1,4 @@
+-using System.ComponentModel.DataAnnotations;
++﻿using System.ComponentModel.DataAnnotations;
+ using System.Globalization;
+ using Microsoft.Data.SqlClient;
+ using Microsoft.Extensions.Logging;
+@@ -177,7 +177,7 @@ public class PDCReceivableService :
+         {
+             await UnitOfWork.Repository.AddRangeAsync(entities, cancellationToken);
+             if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                return NotSavedImport(result, GeneralMessage.FailedToAdd);
++                return NotSavedImport(result, nameof(GeneralMessage.FailedToAdd));
+         }
+         catch (Exception exception) when (!PreserveExceptionBoundary(exception))
+         {
+@@ -190,13 +190,13 @@ public class PDCReceivableService :
+         {
+             result.Rows[index].IsSuccess = true;
+             result.Rows[index].Id = entities[index].Id;
+-            result.Rows[index].Message = Localization[GeneralMessage.SuccessedToAdd];
++            result.Rows[index].Message = Localization[nameof(GeneralMessage.SuccessedToAdd)];
+         }
+         return new Result<PDCImportResultVM>
+         {
+             IsSuccess = true,
+             Entity = result,
+-            Message = Localization[GeneralMessage.SuccessedToAdd]
++            Message = Localization[nameof(GeneralMessage.SuccessedToAdd)]
+         };
+     }
+ 
+@@ -222,7 +222,7 @@ public class PDCReceivableService :
+         {
+             IsSuccess = result,
+             Id        = pdc.Id,
+-            Message   = result ? Localization.GetString(GeneralMessage.SuccessedToUpdate) : Localization.GetString(GeneralMessage.FailedToUpdate)
++            Message   = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)) : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+@@ -244,7 +244,7 @@ public class PDCReceivableService :
+         return new Result
+         {
+             IsSuccess = result,
+-            Message   = result ? Localization.GetString(GeneralMessage.SuccessedToRemove) : Localization.GetString(GeneralMessage.FailedToRemove)
++            Message   = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove)) : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+         };
+     }
+ 
+@@ -290,7 +290,7 @@ public class PDCReceivableService :
+                 var receipt = CreateReceipt(pdc, vm.MaturityDate, branchId, (int)jvResult.Id!);
+                 await UnitOfWork.Repository.AddAsync(receipt, cancellationToken);
+                 if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                    return BusinessFailure(GeneralMessage.FailedToAdd);
++                    return BusinessFailure(nameof(GeneralMessage.FailedToAdd));
+ 
+                 pdc.Status       = PDCStatus.Cleared;
+                 pdc.ReceiptId    = receipt.Id;
+@@ -300,7 +300,7 @@ public class PDCReceivableService :
+             }
+ 
+             if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                return BusinessFailure(GeneralMessage.FailedToUpdate);
++                return BusinessFailure(nameof(GeneralMessage.FailedToUpdate));
+             await transaction.CommitAsync(cancellationToken);
+ 
+             return new Result { IsSuccess = true, Message = Localization["PDCReceivableBulkMatured"] };
+@@ -349,7 +349,7 @@ public class PDCReceivableService :
+ 
+             await UnitOfWork.Repository.AddAsync(receipt, cancellationToken);
+             if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                return BusinessFailure(GeneralMessage.FailedToAdd);
++                return BusinessFailure(nameof(GeneralMessage.FailedToAdd));
+ 
+             pdc.Status       = PDCStatus.Cleared;
+             pdc.ReceiptId    = receipt.Id;
+@@ -358,7 +358,7 @@ public class PDCReceivableService :
+ 
+             UnitOfWork.Repository.Update(pdc);
+             if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                return BusinessFailure(GeneralMessage.FailedToUpdate);
++                return BusinessFailure(nameof(GeneralMessage.FailedToUpdate));
+             await transaction.CommitAsync(cancellationToken);
+ 
+             return new Result { IsSuccess = true, Id = pdcReceivableId, Message = Localization["PDCReceivableMatured"] };
+@@ -455,7 +455,7 @@ public class PDCReceivableService :
+ 
+             UnitOfWork.Repository.Update(pdc);
+             if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                return BusinessFailure(GeneralMessage.FailedToUpdate);
++                return BusinessFailure(nameof(GeneralMessage.FailedToUpdate));
+             if (transaction is not null) await transaction.CommitAsync(cancellationToken);
+ 
+             return new Result { IsSuccess = true, Id = pdcReceivableId, Message = Localization["PDCReceivableReturned"] };
+@@ -496,7 +496,7 @@ public class PDCReceivableService :
+ 
+         return saved
+             ? new Result { IsSuccess = true, Id = pdcReceivableId, Message = Localization["PDCReceivableResubmitted"] }
+-            : BusinessFailure(GeneralMessage.FailedToUpdate);
++            : BusinessFailure(nameof(GeneralMessage.FailedToUpdate));
+     }
+ 
+     // ═══════════════════════════════════════════════════════════════════════
+diff --git a/SiGma.Business/Services/Bases/InvoiceBaseService.cs b/SiGma.Business/Services/Bases/InvoiceBaseService.cs
+index 0cdab941..c6109a71 100644
+--- a/SiGma.Business/Services/Bases/InvoiceBaseService.cs
++++ b/SiGma.Business/Services/Bases/InvoiceBaseService.cs
+@@ -45,8 +45,8 @@ public abstract class InvoiceBaseService<TAddVm, TUpdateVm, TDetailVm, TListVm,
+             IsInfo = false,
+             Id = entityToAdd.Id,
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+         //var donnne = await base.UpdateAsync(updateVm);
+         //if (foundEnteredSku)
+diff --git a/SiGma.Business/Services/Bases/PartnerService.cs b/SiGma.Business/Services/Bases/PartnerService.cs
+index 67d36f05..a3b11983 100644
+--- a/SiGma.Business/Services/Bases/PartnerService.cs
++++ b/SiGma.Business/Services/Bases/PartnerService.cs
+@@ -108,8 +108,8 @@ public abstract class InvoiceBaseService<TAddVm, TUpdateVm, TDetailVm, TListVm,
+             IsInfo = false,
+             Id = entityToAdd.Id,
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+         //var donnne = await base.UpdateAsync(updateVm);
+         //if (foundEnteredSku)
+diff --git a/SiGma.Business/Services/Bases/Service.cs b/SiGma.Business/Services/Bases/Service.cs
+index 71b1d5b2..e956031a 100644
+--- a/SiGma.Business/Services/Bases/Service.cs
++++ b/SiGma.Business/Services/Bases/Service.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using SiGma.Business.IServices.Bases;
+ using SiGma.Helpers.Dtos;
+ using SiGma.Helpers.EntityBases;
+@@ -54,8 +54,8 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+             IsInfo = false,
+             Id = entityToAdd.Id,
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -71,8 +71,8 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+             IsInfo = false,
+             // Optionally return IDs if you need them
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -87,8 +87,8 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+             IsSuccess = result,
+             IsInfo = false,
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -108,7 +108,7 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+             return new Result
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToUpdate),
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToUpdate)),
+                 ErrorStatusCode = StatusCodes.Status404NotFound
+             };
+ 
+@@ -496,7 +496,7 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+             return new Result<TDetailVm>
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToFound)
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+             };
+         return new Result<TDetailVm>
+         {
+@@ -911,7 +911,7 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+         if (entity == null)
+             return new Result
+             {
+-                Message = Localization.GetString(GeneralMessage.FailedToRemove)
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+             };
+         UnitOfWork.Repository.Delete(entity);
+         // No explicit transaction: EF Core implicit transaction is sufficient.
+@@ -920,8 +920,8 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+         {
+             IsSuccess = result,
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                : Localization.GetString(GeneralMessage.FailedToRemove)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+         };
+     }
+ 
+@@ -1091,7 +1091,7 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+             return new Result
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToRemove),
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToRemove)),
+                 ErrorStatusCode = StatusCodes.Status404NotFound
+             };
+ 
+@@ -1103,8 +1103,8 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+         {
+             IsSuccess = result,
+             Message = result
+-                ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                : Localization.GetString(GeneralMessage.FailedToRemove)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+         };
+     }
+ 
+@@ -1278,7 +1278,7 @@ public abstract class Service<TAddVm, TUpdateVm, TDetailVm, TListVm, TContext, T
+             return new Result<TDetailVm>
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToFound)
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+             };
+         return new Result<TDetailVm>
+         {
+diff --git a/SiGma.Business/Services/ClauseTypeService.cs b/SiGma.Business/Services/ClauseTypeService.cs
+index 489b29c9..e6904196 100644
+--- a/SiGma.Business/Services/ClauseTypeService.cs
++++ b/SiGma.Business/Services/ClauseTypeService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.ClauseType;
++﻿using SiGma.ViewModels.ViewModels.ClauseType;
+ 
+ namespace SiGma.Business.Services;
+ 
+@@ -64,7 +64,7 @@ public class ClauseTypeService :
+             return new Result<ClauseTypeDetailVm>
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToFound),
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToFound)),
+             };
+ 
+         entity.Clauses = await TemplateClauses(id)
+@@ -108,8 +108,8 @@ public class ClauseTypeService :
+             IsSuccess = saved,
+             Id = entity.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd),
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd)),
+         };
+     }
+ 
+@@ -124,7 +124,7 @@ public class ClauseTypeService :
+                 false)
+             .FirstOrDefaultAsync();
+         if (entity is null)
+-            return Fail(GeneralMessage.FailedToFound);
++            return Fail(nameof(GeneralMessage.FailedToFound));
+ 
+         var nameChanged = !string.Equals(
+             entity.Name?.Trim(),
+@@ -157,8 +157,8 @@ public class ClauseTypeService :
+             IsSuccess = saved,
+             Id = entity.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate),
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate)),
+         };
+     }
+ 
+@@ -168,7 +168,7 @@ public class ClauseTypeService :
+             .Query<ClauseType>(x => x.Id == id)
+             .FirstOrDefaultAsync();
+         if (entity is null)
+-            return Fail(GeneralMessage.FailedToRemove);
++            return Fail(nameof(GeneralMessage.FailedToRemove));
+ 
+         var clauses = await TemplateClauses(id, includeInactive: true).ToListAsync();
+         UnitOfWork.Repository.DeleteRange(clauses);
+@@ -180,8 +180,8 @@ public class ClauseTypeService :
+             IsSuccess = saved,
+             Id = id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                : Localization.GetString(GeneralMessage.FailedToRemove),
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                : Localization.GetString(nameof(GeneralMessage.FailedToRemove)),
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/CollectionMovementService.cs b/SiGma.Business/Services/CollectionMovementService.cs
+index ddbaa33d..bad60fe8 100644
+--- a/SiGma.Business/Services/CollectionMovementService.cs
++++ b/SiGma.Business/Services/CollectionMovementService.cs
+@@ -1,4 +1,4 @@
+-using AutoMapper;
++﻿using AutoMapper;
+ using Microsoft.AspNetCore.Http;
+ using Microsoft.EntityFrameworkCore;
+ using Microsoft.Extensions.Localization;
+@@ -178,7 +178,7 @@ public class CollectionMovementService :
+             return new Result<CollectionMovementDetailVm>
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToFound)
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+             };
+         }
+ 
+@@ -269,7 +269,7 @@ public class CollectionMovementService :
+         {
+             IsSuccess = saved,
+             Id = entity.Id,
+-            Message = saved ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++            Message = saved ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -320,7 +320,7 @@ public class CollectionMovementService :
+             || (request.fromDate.HasValue && request.toDate.HasValue
+                 && request.fromDate.Value.Date > request.toDate.Value.Date))
+         {
+-            return FailedMovementLogResult(Localization.GetString(GeneralMessage.InvalidDateRange));
++            return FailedMovementLogResult(Localization.GetString(nameof(GeneralMessage.InvalidDateRange)));
+         }
+ 
+         if (request.movementType.HasValue && !IsSupportedMovementType(request.movementType.Value))
+diff --git a/SiGma.Business/Services/ContactGroupService.cs b/SiGma.Business/Services/ContactGroupService.cs
+index 402169aa..33f3f6c1 100644
+--- a/SiGma.Business/Services/ContactGroupService.cs
++++ b/SiGma.Business/Services/ContactGroupService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.ContactGroup;
++﻿using SiGma.ViewModels.ViewModels.ContactGroup;
+ using SiGma.Helpers.Dtos;
+ 
+ namespace SiGma.Business.Services;
+@@ -34,7 +34,7 @@ public class ContactGroupService :
+ 
+         await UnitOfWork.Repository.AddAsync(entityToAdd, cancellationToken);
+         if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-            return BusinessFailure(GeneralMessage.FailedToAdd);
++            return BusinessFailure(nameof(GeneralMessage.FailedToAdd));
+ 
+         var linkAccount = new LinkAccounts
+         {
+@@ -46,7 +46,7 @@ public class ContactGroupService :
+         };
+         await UnitOfWork.Repository.AddAsync(linkAccount, cancellationToken);
+         if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-            return BusinessFailure(GeneralMessage.FailedToAdd);
++            return BusinessFailure(nameof(GeneralMessage.FailedToAdd));
+ 
+         await transaction.CommitAsync(cancellationToken);
+ 
+@@ -55,7 +55,7 @@ public class ContactGroupService :
+             IsSuccess = true,
+             IsInfo = false,
+             Id = entityToAdd.Id,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToAdd)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/CustodyMovementService.cs b/SiGma.Business/Services/CustodyMovementService.cs
+index 9f95fdde..c4ab700b 100644
+--- a/SiGma.Business/Services/CustodyMovementService.cs
++++ b/SiGma.Business/Services/CustodyMovementService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using Microsoft.EntityFrameworkCore;
+ using SiGma.Helpers.Filters;
+ using SiGma.Helpers.Models.Movements;
+@@ -139,7 +139,7 @@ namespace SiGma.Business.Services
+                 return new Result<CustodyMovementDetailVM>
+                 {
+                     IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.FailedToFound)
++                    Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+                 };
+             }
+ 
+@@ -199,7 +199,7 @@ namespace SiGma.Business.Services
+             {
+                 IsSuccess = saved,
+                 Id = entity.Id,
+-                Message = saved ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++                Message = saved ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+     }
+diff --git a/SiGma.Business/Services/DeliveryMovementService.cs b/SiGma.Business/Services/DeliveryMovementService.cs
+index d9a298c5..8f7ce575 100644
+--- a/SiGma.Business/Services/DeliveryMovementService.cs
++++ b/SiGma.Business/Services/DeliveryMovementService.cs
+@@ -172,7 +172,7 @@ namespace SiGma.Business.Services
+                 return new Result<DeliveryMovementDetailVM>
+                 {
+                     IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.FailedToFound)
++                    Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+                 };
+             }
+ 
+@@ -251,7 +251,7 @@ namespace SiGma.Business.Services
+             {
+                 IsSuccess = saved,
+                 Id = entity.Id,
+-                Message = saved ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++                Message = saved ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/DeliveryNoteService.cs b/SiGma.Business/Services/DeliveryNoteService.cs
+index d0013710..2b3bbbda 100644
+--- a/SiGma.Business/Services/DeliveryNoteService.cs
++++ b/SiGma.Business/Services/DeliveryNoteService.cs
+@@ -1,4 +1,4 @@
+-using System;
++﻿using System;
+ using System.Collections.Generic;
+ using System.Linq;
+ using System.Threading.Tasks;
+@@ -234,7 +234,7 @@ namespace SiGma.Business.Services
+                 return new Result<DeliveryNoteDetailVM>
+                 {
+                     IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.FailedToFound),
++                    Message = Localization.GetString(nameof(GeneralMessage.FailedToFound)),
+                 };
+ 
+             return new Result<DeliveryNoteDetailVM>
+diff --git a/SiGma.Business/Services/DepartmentService.cs b/SiGma.Business/Services/DepartmentService.cs
+index dd12e23b..c8dd67b8 100644
+--- a/SiGma.Business/Services/DepartmentService.cs
++++ b/SiGma.Business/Services/DepartmentService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Helpers.Models.Staffs;
++﻿using SiGma.Helpers.Models.Staffs;
+ using SiGma.ViewModels.ViewModels.Department;
+ using System.Linq.Expressions;
+ 
+@@ -35,7 +35,7 @@ namespace SiGma.Business.Services
+             {
+                 IsSuccess = result,
+                 Id = entity.Id,
+-                Message = result ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++                Message = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+@@ -55,7 +55,7 @@ namespace SiGma.Business.Services
+             {
+                 IsSuccess = result,
+                 Id = entity.Id,
+-                Message = result ? Localization.GetString(GeneralMessage.SuccessedToUpdate) : Localization.GetString(GeneralMessage.FailedToUpdate)
++                Message = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)) : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/DriverTimeSheetService.cs b/SiGma.Business/Services/DriverTimeSheetService.cs
+index c1dd7860..a67d73a8 100644
+--- a/SiGma.Business/Services/DriverTimeSheetService.cs
++++ b/SiGma.Business/Services/DriverTimeSheetService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.EntityFrameworkCore;
++﻿using Microsoft.EntityFrameworkCore;
+ using SiGma.Helpers.Localization.Shared;
+ using SiGma.Helpers.Models;
+ using SiGma.Helpers.Models.Agreements.Rentals;
+@@ -60,7 +60,7 @@ public class DriverTimeSheetService :
+         CancellationToken cancellationToken = default)
+     {
+         if (agreementId <= 0)
+-            return Failure<List<DriverTimeSheetRowVm>>(Localization.GetString(GeneralMessage.FailedToFound));
++            return Failure<List<DriverTimeSheetRowVm>>(Localization.GetString(nameof(GeneralMessage.FailedToFound)));
+ 
+         var includeClosed = await ShouldIncludeClosedAgreementsAsync(cancellationToken);
+         var agreement = await UnitOfWork.Repository
+@@ -71,7 +71,7 @@ public class DriverTimeSheetService :
+             .FirstOrDefaultAsync(cancellationToken);
+ 
+         if (agreement is null)
+-            return Failure<List<DriverTimeSheetRowVm>>(Localization.GetString(GeneralMessage.FailedToFound));
++            return Failure<List<DriverTimeSheetRowVm>>(Localization.GetString(nameof(GeneralMessage.FailedToFound)));
+ 
+         var startDate = agreement.DateAndTime.Date;
+         var endDate = agreement.ReturnDateAndTime.Date;
+@@ -121,12 +121,12 @@ public class DriverTimeSheetService :
+         DriverTimeSheetAddVm addVm,
+         CancellationToken cancellationToken = default)
+     {
+-        return Task.FromResult(Failure(Localization.GetString(GeneralMessage.FailedToAdd)));
++        return Task.FromResult(Failure(Localization.GetString(nameof(GeneralMessage.FailedToAdd))));
+     }
+ 
+     public override Task<Result> UpdateAsync(DriverTimeSheetUpdateVm updateVm)
+     {
+-        return Task.FromResult(Failure(Localization.GetString(GeneralMessage.FailedToUpdate)));
++        return Task.FromResult(Failure(Localization.GetString(nameof(GeneralMessage.FailedToUpdate))));
+     }
+ 
+     public override Task<Result> AddListAsync(IEnumerable<DriverTimeSheetAddVm> addVms)
+@@ -161,15 +161,15 @@ public class DriverTimeSheetService :
+     {
+         if (rows.Count == 0)
+             return Failure(isUpdate
+-                ? Localization.GetString(GeneralMessage.FailedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToAdd));
++                ? Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd)));
+ 
+         var agreementIds = rows.Select(row => row.AgreementId).Distinct().ToList();
+         if (agreementIds.Count != 1 || agreementIds[0] <= 0)
+             return Failure("All time sheet rows must belong to one agreement.");
+ 
+         if (!isUpdate && rows.Any(row => row.Id > 0))
+-            return Failure(Localization.GetString(GeneralMessage.FailedToAdd));
++            return Failure(Localization.GetString(nameof(GeneralMessage.FailedToAdd)));
+ 
+         var agreementId = agreementIds[0];
+         var includeClosed = await ShouldIncludeClosedAgreementsAsync(cancellationToken);
+@@ -180,7 +180,7 @@ public class DriverTimeSheetService :
+             .FirstOrDefaultAsync(cancellationToken);
+ 
+         if (agreement is null)
+-            return Failure(Localization.GetString(GeneralMessage.FailedToFound));
++            return Failure(Localization.GetString(nameof(GeneralMessage.FailedToFound)));
+ 
+         if (agreement.Invoiced)
+             return Failure("Invoiced driver time sheets cannot be edited.");
+@@ -286,8 +286,8 @@ public class DriverTimeSheetService :
+ 
+         if (!UnitOfWork.Context.ChangeTracker.HasChanges())
+             return Success(isUpdate
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.SuccessedToAdd));
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)));
+ 
+         var saved = await UnitOfWork.SaveChangesAsync(cancellationToken);
+         return new Result
+@@ -296,11 +296,11 @@ public class DriverTimeSheetService :
+             IsInfo = false,
+             Message = saved
+                 ? (isUpdate
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.SuccessedToAdd))
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)))
+                 : (isUpdate
+-                    ? Localization.GetString(GeneralMessage.FailedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)),
++                    ? Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))),
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/EquipmentRentalInvoiceService.cs b/SiGma.Business/Services/EquipmentRentalInvoiceService.cs
+index c40ddfc9..8a76e261 100644
+--- a/SiGma.Business/Services/EquipmentRentalInvoiceService.cs
++++ b/SiGma.Business/Services/EquipmentRentalInvoiceService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.EquipmentRentalInvoice;
++﻿using SiGma.ViewModels.ViewModels.EquipmentRentalInvoice;
+ using SiGma.Business.Extensions;
+ 
+ namespace SiGma.Business.Services
+@@ -36,7 +36,7 @@ namespace SiGma.Business.Services
+                     var result = await base.UpdateAsync(row);
+                     if (!result.IsSuccess) return result;
+                 }
+-                return new Result { IsSuccess = true, Message = LocalizeMessage(GeneralMessage.SuccessedToUpdate) };
++                return new Result { IsSuccess = true, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToUpdate)) };
+             });
+     }
+ }
+diff --git a/SiGma.Business/Services/EquipmentService.cs b/SiGma.Business/Services/EquipmentService.cs
+index daf2815b..88f0efbf 100644
+--- a/SiGma.Business/Services/EquipmentService.cs
++++ b/SiGma.Business/Services/EquipmentService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Helpers.ViewModelsBases.Active;
++﻿using SiGma.Helpers.ViewModelsBases.Active;
+ using SiGma.ViewModels.ViewModels.Equipment;
+ using Microsoft.AspNetCore.Http;
+ 
+@@ -100,8 +100,8 @@ public class EquipmentService :
+             IsSuccess = saved,
+             Id = entity.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/FiscalYearService.cs b/SiGma.Business/Services/FiscalYearService.cs
+index 50a9ec05..58c2ebaf 100644
+--- a/SiGma.Business/Services/FiscalYearService.cs
++++ b/SiGma.Business/Services/FiscalYearService.cs
+@@ -1,4 +1,4 @@
+-using System.Data;
++﻿using System.Data;
+ using SiGma.Business.Resolver;
+ using SiGma.Helpers.Dtos;
+ using SiGma.ViewModels.ViewModels.FiscalYear;
+@@ -120,8 +120,8 @@ public class FiscalYearService :
+             IsSuccess = saved,
+             Id = entity.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -172,8 +172,8 @@ public class FiscalYearService :
+             IsSuccess = saved,
+             Id = entity.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/JobCategoryService.cs b/SiGma.Business/Services/JobCategoryService.cs
+index a80e3daa..6c004ac0 100644
+--- a/SiGma.Business/Services/JobCategoryService.cs
++++ b/SiGma.Business/Services/JobCategoryService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.JobCategory;
++﻿using SiGma.ViewModels.ViewModels.JobCategory;
+ 
+ namespace SiGma.Business.Services
+ {
+@@ -62,8 +62,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+@@ -88,8 +88,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/LabourActivitiesService.cs b/SiGma.Business/Services/LabourActivitiesService.cs
+index 1bec0b8d..bf73e361 100644
+--- a/SiGma.Business/Services/LabourActivitiesService.cs
++++ b/SiGma.Business/Services/LabourActivitiesService.cs
+@@ -62,8 +62,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+@@ -88,8 +88,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/LanguageService.cs b/SiGma.Business/Services/LanguageService.cs
+index 86e08228..7625fb71 100644
+--- a/SiGma.Business/Services/LanguageService.cs
++++ b/SiGma.Business/Services/LanguageService.cs
+@@ -1,14 +1,261 @@
++using System.Globalization;
++using System.ComponentModel.DataAnnotations;
++using SiGma.Business.Services.HelperServices;
++using SiGma.Business.Services.Localization;
++using SiGma.Helpers.Dtos;
++using SiGma.Helpers.ViewModelsBases.Active;
+ using SiGma.ViewModels.ViewModels.Language;
+ 
+-namespace SiGma.Business.Services
++namespace SiGma.Business.Services;
++
++public class LanguageService :
++    Service<LanguageAddVM, LanguageUpdateVM, LanguageDetailVM, LanguageListVM, SiGmaDbContext, Language>, ILanguageService
+ {
+-    public class LanguageService :
+-    Service<LanguageAddVM, LanguageUpdateVM, LanguageDetailVM,
+-        LanguageListVM, SiGmaDbContext, Language>, ILanguageService
++    private readonly IServiceHelper settings;
++
++    public LanguageService(IUnitOfWork<SiGmaDbContext> unitOfWork, IMapper mapper,
++        IStringLocalizer<GeneralMessage> localization, IServiceHelper settings)
++        : base(unitOfWork, mapper, localization)
++    {
++        this.settings = settings;
++    }
++
++    public Task<LanguageSettingsVM?> GetSettingsAsync()
++        => settings.GetSingleAsync<LanguageSettingsVM, LanguageSettings>();
++
++    private async Task<List<LanguageListVM>> RowsAsync()
++    {
++        var rows = await UnitOfWork.Repository.Query<Language>().AsNoTracking()
++            .Select(x => new LanguageListVM
++            {
++                Id = x.Id,
++                LanguageName = x.LanguageName,
++                Flag = x.Flag,
++                CultureCode = x.CultureCode,
++                IsActive = x.IsActive,
++                CreatedAt = x.CreatedAt,
++                CreatedBy = x.CreatedBy
++            }).ToListAsync();
++        foreach (var row in rows)
++            row.CultureCode = LocalizationRules.ResolveCode(row.CultureCode, row.LanguageName);
++        rows.InsertRange(0, LocalizationRules.BuiltIns());
++        var defaultCode = (await GetSettingsAsync())?.DefaultLanguageCode ?? "en";
++        foreach (var row in rows)
++            row.IsDefault = row.CultureCode == defaultCode;
++        return rows;
++    }
++
++    public override async Task<Results<LanguageListVM>> GetManyAsync(ListSmBase searchModel)
+     {
+-        public LanguageService(IUnitOfWork<SiGmaDbContext> unitOfWork, IMapper mapper,
+-            IStringLocalizer<GeneralMessage> localization) : base(unitOfWork, mapper, localization)
++        var (pageNo, pageSize) = NormalizePaging(searchModel);
++        IEnumerable<LanguageListVM> rows = await RowsAsync();
++        var filters = searchModel.Filters;
++        if (filters != null && filters.TryGetValue("languageName", out var search) && !string.IsNullOrWhiteSpace(search))
++            rows = rows.Where(x => (x.LanguageName?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false)
++                || (x.CultureCode?.Contains(search, StringComparison.OrdinalIgnoreCase) ?? false));
++        var field = filters?.GetValueOrDefault("sortField");
++        var descending = filters?.GetValueOrDefault("sortOrder") == "-1";
++        Func<LanguageListVM, object?> selector = field switch
+         {
+-        }
++            "cultureCode" => x => x.CultureCode,
++            "createdAt" => x => x.CreatedAt,
++            "createdBy" => x => x.CreatedBy,
++            "isBuiltIn" => x => x.IsBuiltIn,
++            "isDefault" => x => x.IsDefault,
++            "isActive" => x => x.IsActive,
++            _ => x => x.LanguageName
++        };
++        rows = descending ? rows.OrderByDescending(selector).ThenBy(x => x.Id) : rows.OrderBy(selector).ThenBy(x => x.Id);
++        var count = rows.Count();
++        var page = pageNo ?? 1;
++        var size = pageSize ?? 10;
++        if ((long)(page - 1) * size > int.MaxValue)
++            return new Results<LanguageListVM>
++            {
++                IsSuccess = false,
++                Message = LocalizeMessage("LocalizationInvalidQuery")
++            };
++        return new Results<LanguageListVM>
++        {
++            IsSuccess = true,
++            Entities = pageNo == null && pageSize == null ? rows.ToList() : rows.Skip((page - 1) * size).Take(size).ToList(),
++            TotalCount = count,
++            TotalPages = pageSize == null ? (count == 0 ? 0 : 1) : (int)Math.Ceiling(count / (double)size),
++            PageNo = pageNo ?? 0,
++            PageSize = pageSize ?? 0
++        };
+     }
+-}
+\ No newline at end of file
++
++    public override Task<Results<LanguageListVM>> GetManyWithNavigationsAsync(ListSmBase searchModel)
++        => GetManyAsync(searchModel);
++
++    public override async Task<Results<LanguageListVM>> GetAllWithNavigationsAsync()
++        => new()
++        {
++            IsSuccess = true,
++            Entities = await RowsAsync()
++        };
++
++    public override async Task<Result<LanguageDetailVM>> DetailAsync(int id)
++    {
++        var row = (await RowsAsync()).SingleOrDefault(x => x.Id == id);
++        return row == null ? BusinessFailure<LanguageDetailVM>("LanguageNotFound", 404)
++            : new Result<LanguageDetailVM>
++            {
++                IsSuccess = true,
++                Entity = new LanguageDetailVM
++                {
++                    Id = row.Id,
++                    LanguageName = row.LanguageName,
++                    Flag = row.Flag,
++                    CultureCode = row.CultureCode,
++                    IsBuiltIn = row.IsBuiltIn
++                }
++            };
++    }
++
++    public override Task<Result<LanguageDetailVM>> DetailWithNavigationsAsync(int id) => DetailAsync(id);
++
++    public async Task<Result<LanguageOptionsVM>> GetOptionsAsync()
++    {
++        var rows = await RowsAsync();
++        var setting = await GetSettingsAsync();
++        // Built-in wins a legacy duplicate. Ambiguous custom identities stay visible in the list only.
++        var options = rows.Where(x => x.IsActive == true && x.CultureCode != null)
++            .GroupBy(x => x.CultureCode!, StringComparer.OrdinalIgnoreCase)
++            .Select(g => g.FirstOrDefault(x => x.IsBuiltIn) ?? (g.Count() == 1 ? g.Single() : null))
++            .Where(x => x != null)
++            .Select(x => new LanguageOptionVM
++            {
++                Id = x!.Id,
++                CultureCode = x.CultureCode!,
++                LanguageName = x.LanguageName,
++                Flag = x.Flag,
++                IsBuiltIn = x.IsBuiltIn,
++                IsDefault = x.IsDefault,
++                IsActive = true,
++                IsRightToLeft = CultureInfo.GetCultureInfo(x.CultureCode!).TextInfo.IsRightToLeft
++            }).ToList();
++        return new Result<LanguageOptionsVM>
++        {
++            IsSuccess = true,
++            Entity = new LanguageOptionsVM
++            {
++                Languages = options,
++                Sources = LocalizationRules.Sources,
++                DefaultLanguageCode = setting?.DefaultLanguageCode ?? "en",
++                SettingsVersion = LocalizationRules.Token(setting?.Version)
++            }
++        };
++    }
++
++    public override async Task<Results<DropdownDto>> SelectAsync()
++    {
++        var options = await GetOptionsAsync();
++        return new Results<DropdownDto>
++        {
++            IsSuccess = true,
++            Entities = options.Entity!.Languages.Select(x => new DropdownDto
++            {
++                Id = x.Id,
++                Value = x.LanguageName
++            })
++        };
++    }
++
++    public override Task<Result> AddAsync(LanguageAddVM vm, CancellationToken cancellationToken = default)
++        => UnitOfWork.ExecuteUniqueWriteAsync<Language>(async () =>
++        {
++            if (!Validator.TryValidateObject(vm, new ValidationContext(vm), [], true))
++                return BusinessFailure("LocalizationInvalidQuery");
++            var code = LocalizationRules.Culture(vm.CultureCode);
++            if (code == null)
++                return BusinessFailure("LanguageInvalidCulture");
++            if ((await RowsAsync()).Any(x => x.CultureCode == code))
++                return BusinessFailure("LanguageCultureExists");
++            vm.CultureCode = code;
++            return await base.AddAsync(vm, cancellationToken);
++        }, cancellationToken);
++
++    public override Task<Result> UpdateAsync(LanguageUpdateVM vm)
++        => UnitOfWork.ExecuteUniqueWriteAsync<Language>(async () =>
++        {
++            if (!Validator.TryValidateObject(vm, new ValidationContext(vm), [], true))
++                return BusinessFailure("LocalizationInvalidQuery");
++            if (vm.Id <= 0)
++                return BusinessFailure("LanguageBuiltInLocked");
++            var entity = await UnitOfWork.Repository.FindByIdAsync<Language>(vm.Id);
++            if (entity == null)
++                return BusinessFailure("LanguageNotFound", 404);
++            if (await InvalidInputAsync(vm, vm.Id) is { } invalid)
++                return invalid;
++            var oldCode = LocalizationRules.ResolveCode(entity.CultureCode, entity.LanguageName);
++            var code = LocalizationRules.Culture(vm.CultureCode);
++            if (code == null)
++                return BusinessFailure("LanguageInvalidCulture");
++            if (oldCode != code && await UsedAsync(oldCode))
++                return BusinessFailure("LanguageInUse");
++            if ((await RowsAsync()).Any(x => x.Id != vm.Id && x.CultureCode == code)
++                && oldCode != code)
++                return BusinessFailure("LanguageCultureExists");
++            if (await UnitOfWork.Repository.ExistsAsync<Language>(
++                x => x.Id != vm.Id && x.CultureCode == code))
++                return BusinessFailure("LanguageCultureExists");
++            // A changed legacy name must not silently change a resolved identity.
++            // Persist its existing identity when renaming, but never rewrite on read.
++            entity.LanguageName = vm.LanguageName;
++            entity.Flag = vm.Flag;
++            if (entity.CultureCode != null || oldCode != code
++                || LocalizationRules.ResolveCode(null, vm.LanguageName) != oldCode)
++                entity.CultureCode = code;
++            return await SaveUpdateAsync(entity, CancellationToken.None);
++        });
++
++    private async Task<bool> UsedAsync(string? code)
++        => code != null && (((await GetSettingsAsync())?.DefaultLanguageCode ?? "en") == code
++            || await UnitOfWork.Repository.ExistsAsync<LanguageTextOverride>(x => x.LanguageCode == code));
++
++    public override Task<Result> RemoveAsync(int id)
++        => UnitOfWork.ExecuteUniqueWriteAsync<Language>(async () =>
++        {
++            if (id <= 0)
++                return BusinessFailure("LanguageBuiltInLocked");
++            var entity = await UnitOfWork.Repository.FindByIdAsync<Language>(id);
++            if (entity == null)
++                return BusinessFailure("LanguageNotFound", 404);
++            if (await UsedAsync(LocalizationRules.ResolveCode(entity.CultureCode, entity.LanguageName)))
++                return BusinessFailure("LanguageInUse");
++            return await RemoveWithChildrenAsync(id, CancellationToken.None);
++        });
++
++    public Task<Result> SetDefaultAsync(LanguageDefaultVM vm)
++        => UnitOfWork.ExecuteUniqueWriteAsync<Language>(async () =>
++        {
++            var code = LocalizationRules.Culture(vm.CultureCode);
++            var options = await GetOptionsAsync();
++            if (code == null || !options.Entity!.Languages.Any(x => x.CultureCode == code))
++                return BusinessFailure("LanguageInvalidCulture");
++            var current = await GetSettingsAsync();
++            if (LocalizationRules.Token(current?.Version) != vm.ExpectedVersion)
++                return BusinessFailure("LocalizationConflict", 409);
++            vm.CultureCode = code;
++            await settings.UpsertSingleAsync<LanguageDefaultVM, LanguageSettings>(vm, CancellationToken.None);
++            try
++            {
++                var saved = await UnitOfWork.SaveChangesAsync();
++                return saved ? new Result { IsSuccess = true } : BusinessFailure("LocalizationConflict", 409);
++            }
++            catch (DbUpdateConcurrencyException)
++            {
++                return BusinessFailure("LocalizationConflict", 409);
++            }
++        });
++
++    // These old generic entry points cannot express the per-row identity/version contracts.
++    public override Task<Result> AddListAsync(IEnumerable<LanguageAddVM> vms)
++        => Task.FromResult(BusinessFailure("LanguageBulkNotSupported"));
++    public override Task<Result> UpdateListAsync(IEnumerable<LanguageUpdateVM> vms)
++        => Task.FromResult(BusinessFailure("LanguageBulkNotSupported"));
++    public override Task<Result> HandleActiveAsync(ActiveVm vm)
++        => Task.FromResult(BusinessFailure("LanguageBulkNotSupported"));
++}
+diff --git a/SiGma.Business/Services/LeaseCostParameterService.cs b/SiGma.Business/Services/LeaseCostParameterService.cs
+index cb5c720c..5bb960c3 100644
+--- a/SiGma.Business/Services/LeaseCostParameterService.cs
++++ b/SiGma.Business/Services/LeaseCostParameterService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Helpers.Dtos;
++﻿using SiGma.Helpers.Dtos;
+ using SiGma.ViewModels.ViewModels.LeaseCostParameter;
+ 
+ namespace SiGma.Business.Services
+@@ -102,8 +102,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+@@ -134,8 +134,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/LeaseCostSettingService.cs b/SiGma.Business/Services/LeaseCostSettingService.cs
+index 36ceb03e..534ad675 100644
+--- a/SiGma.Business/Services/LeaseCostSettingService.cs
++++ b/SiGma.Business/Services/LeaseCostSettingService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.LeaseCostSetting;
++﻿using SiGma.ViewModels.ViewModels.LeaseCostSetting;
+ using SiGma.ViewModels.ViewModels.LeaseCostSettingItem;
+ 
+ namespace SiGma.Business.Services
+@@ -99,7 +99,7 @@ namespace SiGma.Business.Services
+                 return new Result<LeaseCostSettingDetailVM>
+                 {
+                     IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.FailedToFound)
++                    Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+                 };
+ 
+             return new Result<LeaseCostSettingDetailVM>
+@@ -146,8 +146,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+@@ -244,8 +244,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+ 
+@@ -276,8 +276,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                    : Localization.GetString(GeneralMessage.FailedToRemove)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/LeaseTariffService.cs b/SiGma.Business/Services/LeaseTariffService.cs
+index 0fe9588f..886f833a 100644
+--- a/SiGma.Business/Services/LeaseTariffService.cs
++++ b/SiGma.Business/Services/LeaseTariffService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.EntityFrameworkCore;
++﻿using Microsoft.EntityFrameworkCore;
+ using SiGma.Helpers.EntityBases;
+ using SiGma.Helpers.Models.Agreements.Leases;
+ using SiGma.Helpers.Models.Vehicles;
+@@ -62,8 +62,8 @@ namespace SiGma.Business.Services
+                     IsSuccess = saved,
+                     Id = entity.Id,
+                     Message = saved
+-                        ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                        : Localization.GetString(GeneralMessage.FailedToAdd)
++                        ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                        : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+                 };
+             }
+             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+@@ -76,7 +76,7 @@ namespace SiGma.Business.Services
+             }
+             catch
+             {
+-                return Fail(Localization.GetString(GeneralMessage.FailedToAdd));
++                return Fail(Localization.GetString(nameof(GeneralMessage.FailedToAdd)));
+             }
+         }
+ 
+@@ -89,7 +89,7 @@ namespace SiGma.Business.Services
+             var entity = await AggregateQuery(x => x.Id == vm.Id)
+                 .FirstOrDefaultAsync();
+             if (entity is null)
+-                return Fail(Localization.GetString(GeneralMessage.FailedToFound), vm.Id);
++                return Fail(Localization.GetString(nameof(GeneralMessage.FailedToFound)), vm.Id);
+ 
+             if (!OwnsChildIds(vm.RentalRates.Select(x => x.Id), entity.RentalRates.Select(x => x.Id)) ||
+                 !OwnsChildIds(vm.Protections.Select(x => x.Id), entity.Protections.Select(x => x.Id)) ||
+@@ -124,8 +124,8 @@ namespace SiGma.Business.Services
+                     IsSuccess = saved,
+                     Id = entity.Id,
+                     Message = saved
+-                        ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                        : Localization.GetString(GeneralMessage.FailedToUpdate)
++                        ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                        : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+                 };
+             }
+             catch (DbUpdateException)
+@@ -134,7 +134,7 @@ namespace SiGma.Business.Services
+             }
+             catch
+             {
+-                return Fail(Localization.GetString(GeneralMessage.FailedToUpdate), vm.Id);
++                return Fail(Localization.GetString(nameof(GeneralMessage.FailedToUpdate)), vm.Id);
+             }
+         }
+ 
+@@ -181,7 +181,7 @@ namespace SiGma.Business.Services
+                 return new Result<BookingChargeSummary>
+                 {
+                     IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.InvalidDateRange)
++                    Message = Localization.GetString(nameof(GeneralMessage.InvalidDateRange))
+                 };
+             }
+ 
+@@ -201,7 +201,7 @@ namespace SiGma.Business.Services
+                     return new Result<BookingChargeSummary>
+                     {
+                         IsSuccess = false,
+-                        Message = Localization.GetString(GeneralMessage.FailedToFound)
++                        Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+                     };
+                 }
+ 
+@@ -214,7 +214,7 @@ namespace SiGma.Business.Services
+             return new Result<BookingChargeSummary>
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToFound)
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/LimousinesServices/LimoQuotationService.cs b/SiGma.Business/Services/LimousinesServices/LimoQuotationService.cs
+index bfa526d5..77460c01 100644
+--- a/SiGma.Business/Services/LimousinesServices/LimoQuotationService.cs
++++ b/SiGma.Business/Services/LimousinesServices/LimoQuotationService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Resolver;
++﻿using SiGma.Business.Resolver;
+ using AutoMapper.QueryableExtensions;
+ using SiGma.Helpers.Filters;
+ using SiGma.Helpers.Models.Limousines;
+@@ -101,8 +101,8 @@ namespace SiGma.Business.Services.LimousinesServices
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+@@ -138,8 +138,8 @@ namespace SiGma.Business.Services.LimousinesServices
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+ 
+@@ -162,8 +162,8 @@ namespace SiGma.Business.Services.LimousinesServices
+             {
+                 IsSuccess = result,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                    : Localization.GetString(GeneralMessage.FailedToRemove)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/LimousinesServices/LimousineTariffService.cs b/SiGma.Business/Services/LimousinesServices/LimousineTariffService.cs
+index f1faee60..80307300 100644
+--- a/SiGma.Business/Services/LimousinesServices/LimousineTariffService.cs
++++ b/SiGma.Business/Services/LimousinesServices/LimousineTariffService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Helpers.Models.Limousines;
++﻿using SiGma.Helpers.Models.Limousines;
+ using SiGma.Helpers.Reports.LimousineTariffReports;
+ using SiGma.ViewModels.ViewModels.LimousineTariff;
+ 
+@@ -218,7 +218,7 @@ namespace SiGma.Business.Services.LimousinesServices
+             return new Result
+             {
+                 IsSuccess = true,
+-                Message = Localization.GetString(GeneralMessage.SuccessedToUpdate),
++                Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)),
+                 Id = addCount + updateCount + itemsToDelete.Count
+             };
+         }
+diff --git a/SiGma.Business/Services/LimousinesServices/LocationService.cs b/SiGma.Business/Services/LimousinesServices/LocationService.cs
+index 91389244..37520d40 100644
+--- a/SiGma.Business/Services/LimousinesServices/LocationService.cs
++++ b/SiGma.Business/Services/LimousinesServices/LocationService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.Location;
++﻿using SiGma.ViewModels.ViewModels.Location;
+ using System.Globalization;
+ using System.Text.Json;
+ using System.Text.Json.Serialization;
+@@ -104,8 +104,8 @@ namespace SiGma.Business.Services.LimousinesServices
+                 IsInfo = false,
+                 Id = entityToAdd.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+@@ -120,7 +120,7 @@ namespace SiGma.Business.Services.LimousinesServices
+                 return new Result
+                 {
+                     IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.FailedToUpdate)
++                    Message = Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+                 };
+             }
+ 
+@@ -143,8 +143,8 @@ namespace SiGma.Business.Services.LimousinesServices
+                 IsInfo = false,
+                 Id = entityToUpdate.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/LimousinesServices/TripBookingService.cs b/SiGma.Business/Services/LimousinesServices/TripBookingService.cs
+index e489233f..c41f4dda 100644
+--- a/SiGma.Business/Services/LimousinesServices/TripBookingService.cs
++++ b/SiGma.Business/Services/LimousinesServices/TripBookingService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Resolver;
++﻿using SiGma.Business.Resolver;
+ using AutoMapper.QueryableExtensions;
+ using SiGma.Helpers.Filters;
+ using SiGma.Helpers.Dtos;
+@@ -86,7 +86,7 @@ Service<TripBookingAddVM, TripBookingUpdateVM, TripBookingDetailVM,
+                 var result = await UpdateTripCoreAsync(row);
+                 if (!result.IsSuccess) return result;
+             }
+-            return new Result { IsSuccess = true, Message = Localization.GetString(GeneralMessage.SuccessedToUpdate) };
++            return new Result { IsSuccess = true, Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)) };
+         });
+ 
+     public override async Task<Result> AddAsync(TripBookingAddVM vm, CancellationToken cancellationToken = default)
+@@ -117,7 +117,7 @@ Service<TripBookingAddVM, TripBookingUpdateVM, TripBookingDetailVM,
+         {
+             IsSuccess = true,
+             Id = entity.Id,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToAdd)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+         };
+     }
+ 
+@@ -187,7 +187,7 @@ Service<TripBookingAddVM, TripBookingUpdateVM, TripBookingDetailVM,
+         {
+             IsSuccess = true,
+             Id = entity.Id,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToUpdate)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
+         };
+     }
+ 
+@@ -705,7 +705,7 @@ Service<TripBookingAddVM, TripBookingUpdateVM, TripBookingDetailVM,
+         {
+             IsSuccess = true,
+             Id = booking.Id,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToRemove)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/LimousinesServices/TripTypeService.cs b/SiGma.Business/Services/LimousinesServices/TripTypeService.cs
+index c1f16f14..d1747914 100644
+--- a/SiGma.Business/Services/LimousinesServices/TripTypeService.cs
++++ b/SiGma.Business/Services/LimousinesServices/TripTypeService.cs
+@@ -129,8 +129,8 @@ Service<TripTypeAddVm, TripTypeUpdateVm, TripTypeDetailVm,
+             IsSuccess = saved,
+             Id = tripType.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/NRMService.cs b/SiGma.Business/Services/NRMService.cs
+index 6b2430be..27d7cb04 100644
+--- a/SiGma.Business/Services/NRMService.cs
++++ b/SiGma.Business/Services/NRMService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using Microsoft.EntityFrameworkCore;
+ using SiGma.Helpers.Filters;
+ using SiGma.Helpers.Models.Movements;
+@@ -136,7 +136,7 @@ namespace SiGma.Business.Services
+             {
+                 IsSuccess = saved,
+                 Id = entity.Id,
+-                Message = saved ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++                Message = saved ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+     }
+diff --git a/SiGma.Business/Services/RoleService.cs b/SiGma.Business/Services/RoleService.cs
+index 1ae31346..2ea2ca98 100644
+--- a/SiGma.Business/Services/RoleService.cs
++++ b/SiGma.Business/Services/RoleService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.Role;
++﻿using SiGma.ViewModels.ViewModels.Role;
+ 
+ namespace SiGma.Business.Services;
+ 
+@@ -59,7 +59,7 @@ public class RoleService :
+         {
+             IsSuccess = result,
+             Id = entity.Id,
+-            Message = result ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++            Message = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -72,6 +72,8 @@ public class RoleService :
+             return Fail("A role with this name already exists.");
+ 
+         Mapper.Map(vm, entity);
++        // Legacy header writes participate in the configuration workspace revision.
++        entity.AccessVersion = Guid.NewGuid();
+         UnitOfWork.Repository.Update(entity);
+         var result = await UnitOfWork.SaveChangesAsync();
+ 
+@@ -79,17 +81,24 @@ public class RoleService :
+         {
+             IsSuccess = result,
+             Id = entity.Id,
+-            Message = result ? Localization.GetString(GeneralMessage.SuccessedToUpdate) : Localization.GetString(GeneralMessage.FailedToUpdate)
++            Message = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)) : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+     public override async Task<Result> RemoveAsync(int id)
+     {
++        // The shared reference helper intentionally skips composite tenant FKs.
++        if (await UnitOfWork.Repository.ExistsAsync<UserRoleAssignment>(x => x.RoleId == id))
++            return Fail(Localization["AuthorizationRoleInUse"]);
++
++        if (await UnitOfWork.Repository.ExistsAsync<User>(x => x.Roles.Any(role => role.Id == id)))
++            return Fail(Localization["AuthorizationRoleInUse"]);
++
+         if (await UnitOfWork.Repository.ExistsAsync<Staff>(x => x.RoleId == id))
+             return Fail("Cannot delete — role is referenced by Staff.");
+ 
+-        return await base.RemoveAsync(id);
++        return await RemoveWithChildrenAsync(id, CancellationToken.None, x => x.PermissionGrants);
+     }
+ 
+     private static Result Fail(string message) => new() { IsSuccess = false, Message = message };
+-}
+\ No newline at end of file
++}
+diff --git a/SiGma.Business/Services/SalesAgreementService.cs b/SiGma.Business/Services/SalesAgreementService.cs
+index cbe681bb..6822cad4 100644
+--- a/SiGma.Business/Services/SalesAgreementService.cs
++++ b/SiGma.Business/Services/SalesAgreementService.cs
+@@ -1,4 +1,4 @@
+-using System.Globalization;
++﻿using System.Globalization;
+ using System.Linq.Expressions;
+ using Microsoft.AspNetCore.Http;
+ using Microsoft.Data.SqlClient;
+@@ -85,8 +85,8 @@ public class SalesAgreementService :
+         await UnitOfWork.Repository.AddAsync(entity, cancellationToken);
+         var saved = await UnitOfWork.SaveChangesAsync(cancellationToken);
+         return saved
+-            ? new Result { IsSuccess = true, Id = entity.Id, Message = LocalizeMessage(GeneralMessage.SuccessedToAdd) }
+-            : BusinessFailure(GeneralMessage.FailedToAdd);
++            ? new Result { IsSuccess = true, Id = entity.Id, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToAdd)) }
++            : BusinessFailure(nameof(GeneralMessage.FailedToAdd));
+     }
+ 
+     protected override async Task<Result> UpdateCoreAsync(SalesAgreementUpdateVM vm)
+@@ -170,8 +170,8 @@ public class SalesAgreementService :
+ 
+         var saved = await UnitOfWork.SaveChangesAsync();
+         return saved
+-            ? new Result { IsSuccess = true, Id = id, Message = LocalizeMessage(GeneralMessage.SuccessedToRemove) }
+-            : BusinessFailure(GeneralMessage.FailedToRemove);
++            ? new Result { IsSuccess = true, Id = id, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToRemove)) }
++            : BusinessFailure(nameof(GeneralMessage.FailedToRemove));
+     }
+ 
+     // ── Actions ───────────────────────────────────────────────────
+@@ -345,7 +345,7 @@ public class SalesAgreementService :
+             await _resolver.EnsurePeriodOpenAsync(invoiceDate, cancellationToken);
+             await UnitOfWork.Repository.AddAsync(invoice, cancellationToken);
+             if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                return BusinessFailure(GeneralMessage.FailedToAdd);
++                return BusinessFailure(nameof(GeneralMessage.FailedToAdd));
+ 
+             var jv = _resolver.NewJV(invoiceDate, invoice.BranchId, VoucherTypeName.MiscellaneousInvoice, VoucherSubType.JV);
+             _resolver.AddLine(jv, customerAccountId.Value, invoice.TotalAmount, 0, $"Sales agreement {entity.No}", entity.CustomerId);
+@@ -403,14 +403,14 @@ public class SalesAgreementService :
+             }
+ 
+             if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                return BusinessFailure(GeneralMessage.FailedToUpdate);
++                return BusinessFailure(nameof(GeneralMessage.FailedToUpdate));
+         }
+         catch (JournalPostingException exception)
+         {
+             return BusinessFailure(exception.Message);
+         }
+ 
+-        return new Result { IsSuccess = true, Id = invoice.Id, Message = LocalizeMessage(GeneralMessage.SuccessedToAdd) };
++        return new Result { IsSuccess = true, Id = invoice.Id, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToAdd)) };
+     }
+ 
+     private async Task<Result> DeliverCoreAsync(int id, SalesAgreementDeliverRequest request, CancellationToken cancellationToken)
+diff --git a/SiGma.Business/Services/Security/SecurityService.cs b/SiGma.Business/Services/Security/SecurityService.cs
+index d3c8c021..4537fa41 100644
+--- a/SiGma.Business/Services/Security/SecurityService.cs
++++ b/SiGma.Business/Services/Security/SecurityService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.IServices.Security;
++﻿using SiGma.Business.IServices.Security;
+ using SiGma.Helpers.Enum;
+ using SiGma.Helpers.Helpers;
+ using SiGma.Helpers.ViewModelsBases.Security;
+@@ -355,7 +355,7 @@ public class SecurityService : ISecurityService
+         }
+         return new Result
+         {
+-            Message = _localization.GetString(GeneralMessage.FailToAuth)
++            Message = _localization.GetString(nameof(GeneralMessage.FailToAuth))
+         };
+     }
+ 
+@@ -367,7 +367,7 @@ public class SecurityService : ISecurityService
+             return await registerResponse.Content.ReadFromJsonAsync<Result>();
+         return new Result
+         {
+-            Message = _localization.GetString(GeneralMessage.FailToAuth)
++            Message = _localization.GetString(nameof(GeneralMessage.FailToAuth))
+         };
+     }
+     public async Task<Result?> RegisterMobileAsync(RegisterVm user)
+@@ -396,7 +396,7 @@ public class SecurityService : ISecurityService
+         //return await registerResponse.Content.ReadFromJsonAsync<Result>();
+         return new Result
+         {
+-            Message = _localization.GetString(GeneralMessage.FailToAuth)
++            Message = _localization.GetString(nameof(GeneralMessage.FailToAuth))
+         };
+     }
+     //public async Task<Result?> PreRegisterMobileAsync(PreRegisterVm user)
+@@ -452,11 +452,11 @@ public class SecurityService : ISecurityService
+             registerResponse.StatusCode == HttpStatusCode.InternalServerError)
+             return await registerResponse.Content.ReadFromJsonAsync<Result>() ?? new Result()
+             {
+-                Message = _localization.GetString(GeneralMessage.FailedToChangePassword)
++                Message = _localization.GetString(nameof(GeneralMessage.FailedToChangePassword))
+             };
+         return new Result
+         {
+-            Message = _localization.GetString(GeneralMessage.FailedToChangePassword)
++            Message = _localization.GetString(nameof(GeneralMessage.FailedToChangePassword))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/SeedDataService.cs b/SiGma.Business/Services/SeedDataService.cs
+index a58a96f7..9ab87398 100644
+--- a/SiGma.Business/Services/SeedDataService.cs
++++ b/SiGma.Business/Services/SeedDataService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Helpers.Enum.Accounts;
++﻿using SiGma.Helpers.Enum.Accounts;
+ using Microsoft.AspNetCore.Http;
+ using System.Security.Claims;
+ using SiGma.Helpers.Helpers;
+@@ -93,8 +93,8 @@ public class SeedDataService : ISeedDataService
+                 IsInfo = false,
+                 Id = entityToAdd.Id,
+                 Message = result
+-                    ? _localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : _localization.GetString(GeneralMessage.FailedToAdd)
++                    ? _localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : _localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+         catch (Exception ex)
+diff --git a/SiGma.Business/Services/ServiceItemService.cs b/SiGma.Business/Services/ServiceItemService.cs
+index 9d6b9859..43b7c9a2 100644
+--- a/SiGma.Business/Services/ServiceItemService.cs
++++ b/SiGma.Business/Services/ServiceItemService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.ServiceItem;
++﻿using SiGma.ViewModels.ViewModels.ServiceItem;
+ 
+ namespace SiGma.Business.Services
+ {
+@@ -66,8 +66,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = result,
+                 Id = entity.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate),
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate)),
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/StaffServices/StaffService.cs b/SiGma.Business/Services/StaffServices/StaffService.cs
+index b1bc4128..ec7152ba 100644
+--- a/SiGma.Business/Services/StaffServices/StaffService.cs
++++ b/SiGma.Business/Services/StaffServices/StaffService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using Microsoft.EntityFrameworkCore;
+ using SiGma.Business.Extensions;
+ using SiGma.Business.IServices;
+@@ -94,7 +94,7 @@ public class StaffService :
+         {
+             IsSuccess = result,
+             Id = entity.Id,
+-            Message = result ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++            Message = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -215,7 +215,7 @@ public class StaffService :
+             return new Result<StaffSalaryRevisionResponseVm>
+             {
+                 IsSuccess = false,
+-                Message = Localization.GetString(GeneralMessage.FailedToUpdate)
++                Message = Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+ 
+         return new Result<StaffSalaryRevisionResponseVm>
+@@ -223,7 +223,7 @@ public class StaffService :
+             IsSuccess = true,
+             Id = staff.Id,
+             Entity = ToSalaryRevisionResponse(staff.Id, staff.SalaryPackages, applicableFrom),
+-            Message = Localization.GetString(GeneralMessage.SuccessedToUpdate)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
+         };
+     }
+ 
+@@ -1650,7 +1650,7 @@ public class StaffService :
+         if (UnitOfWork.Context.ChangeTracker.HasChanges() &&
+             !await UnitOfWork.SaveChangesAsync(cancellationToken))
+             return new Result<StaffDutyScheduleSaveResponseDto>
+-                { IsSuccess = false, Message = Localization.GetString(GeneralMessage.FailedToUpdate) };
++                { IsSuccess = false, Message = Localization.GetString(nameof(GeneralMessage.FailedToUpdate)) };
+ 
+         var refreshedSchedule = await GetStaffDutyScheduleAsync(
+             new StaffDutyScheduleRequestDto
+@@ -1671,7 +1671,7 @@ public class StaffService :
+         return new Result<StaffDutyScheduleSaveResponseDto>
+         {
+             IsSuccess = true,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToUpdate),
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)),
+             Entity = new StaffDutyScheduleSaveResponseDto
+             {
+                 StaffId = request.StaffId,
+@@ -2141,7 +2141,7 @@ public class StaffService :
+         if (UnitOfWork.Context.ChangeTracker.HasChanges() &&
+             !await UnitOfWork.SaveChangesAsync(cancellationToken))
+             return new Result<StaffOvertimeSaveResponseDto>
+-                { IsSuccess = false, Message = Localization.GetString(GeneralMessage.FailedToUpdate) };
++                { IsSuccess = false, Message = Localization.GetString(nameof(GeneralMessage.FailedToUpdate)) };
+ 
+         // Refresh and return updated data
+         var refreshed = await GetStaffOvertimeDataAsync(
+@@ -2163,7 +2163,7 @@ public class StaffService :
+         return new Result<StaffOvertimeSaveResponseDto>
+         {
+             IsSuccess = true,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToUpdate),
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)),
+             Entity = new StaffOvertimeSaveResponseDto
+             {
+                 StaffId = request.StaffId,
+diff --git a/SiGma.Business/Services/TariffCardService.cs b/SiGma.Business/Services/TariffCardService.cs
+index 687dbe0f..d1bef8c6 100644
+--- a/SiGma.Business/Services/TariffCardService.cs
++++ b/SiGma.Business/Services/TariffCardService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.TariffCard;
++﻿using SiGma.ViewModels.ViewModels.TariffCard;
+ 
+ namespace SiGma.Business.Services;
+ 
+@@ -110,8 +110,8 @@ public class TariffCardService :
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+         catch (DbUpdateException)
+@@ -162,8 +162,8 @@ public class TariffCardService :
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+         catch (DbUpdateException)
+diff --git a/SiGma.Business/Services/TariffService.cs b/SiGma.Business/Services/TariffService.cs
+index 3f0a7ed9..52114c9b 100644
+--- a/SiGma.Business/Services/TariffService.cs
++++ b/SiGma.Business/Services/TariffService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.Tariff;
++﻿using SiGma.ViewModels.ViewModels.Tariff;
+ using SiGma.Helpers.EntityBases;
+ using System.Globalization;
+ 
+@@ -62,8 +62,8 @@ public sealed class TariffService :
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                    : Localization.GetString(GeneralMessage.FailedToAdd)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+@@ -76,7 +76,7 @@ public sealed class TariffService :
+         }
+         catch
+         {
+-            return Fail(Localization.GetString(GeneralMessage.FailedToAdd));
++            return Fail(Localization.GetString(nameof(GeneralMessage.FailedToAdd)));
+         }
+     }
+ 
+@@ -89,7 +89,7 @@ public sealed class TariffService :
+         var entity = await AggregateQuery(x => x.Id == vm.Id)
+             .FirstOrDefaultAsync();
+         if (entity is null)
+-            return Fail(Localization.GetString(GeneralMessage.FailedToFound), vm.Id);
++            return Fail(Localization.GetString(nameof(GeneralMessage.FailedToFound)), vm.Id);
+ 
+         if (!OwnsChildIds(vm.RentalRates.Select(x => x.Id), entity.RentalRates.Select(x => x.Id)) ||
+             !OwnsChildIds(vm.Protections.Select(x => x.Id), entity.Protections.Select(x => x.Id)) ||
+@@ -135,8 +135,8 @@ public sealed class TariffService :
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+         catch (DbUpdateException)
+@@ -145,7 +145,7 @@ public sealed class TariffService :
+         }
+         catch
+         {
+-            return Fail(Localization.GetString(GeneralMessage.FailedToUpdate), vm.Id);
++            return Fail(Localization.GetString(nameof(GeneralMessage.FailedToUpdate)), vm.Id);
+         }
+     }
+ 
+@@ -583,7 +583,7 @@ public sealed class TariffService :
+ 
+     private Result<TariffDetailVM> ToDetailResult(Tariff? tariff)
+         => tariff is null
+-            ? FailDetail(Localization.GetString(GeneralMessage.FailedToFound))
++            ? FailDetail(Localization.GetString(nameof(GeneralMessage.FailedToFound)))
+             : SuccessDetail(tariff, isSavedForSelection: true);
+ 
+     private Result<TariffDetailVM> SuccessDetail(
+diff --git a/SiGma.Business/Services/TariffSettingService.cs b/SiGma.Business/Services/TariffSettingService.cs
+index 0b027545..7cb20b8e 100644
+--- a/SiGma.Business/Services/TariffSettingService.cs
++++ b/SiGma.Business/Services/TariffSettingService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.TariffSetting;
++﻿using SiGma.ViewModels.ViewModels.TariffSetting;
+ 
+ namespace SiGma.Business.Services;
+ 
+@@ -135,7 +135,7 @@ public class TariffSettingService : ITariffSettingService
+         }
+         catch
+         {
+-            return Fail(Localization.GetString(GeneralMessage.FailedToUpdate));
++            return Fail(Localization.GetString(nameof(GeneralMessage.FailedToUpdate)));
+         }
+ 
+         return new Result
+@@ -143,8 +143,8 @@ public class TariffSettingService : ITariffSettingService
+             IsSuccess = saved,
+             IsInfo = false,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/TransportationAgreementService.cs b/SiGma.Business/Services/TransportationAgreementService.cs
+index d27568bd..bf2be4e3 100644
+--- a/SiGma.Business/Services/TransportationAgreementService.cs
++++ b/SiGma.Business/Services/TransportationAgreementService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using Microsoft.EntityFrameworkCore;
+ using SiGma.Helpers.Dtos;
+ using SiGma.Helpers.Filters;
+@@ -126,7 +126,7 @@ namespace SiGma.Business.Services
+                 return new Result<TransportationAgreementDetailVM>
+                 {
+                     IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.FailedToFound)
++                    Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+                 };
+             }
+ 
+@@ -212,8 +212,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = result,
+                 Id = agreement.Id,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+         public async Task<Results<TransportationTripsDto>> GetScheduledTripsAsync(
+@@ -317,7 +317,7 @@ namespace SiGma.Business.Services
+ 
+             if (agreement == null)
+             {
+-                return new Result { IsSuccess = false, Message = Localization.GetString(GeneralMessage.FailedToFound) };
++                return new Result { IsSuccess = false, Message = Localization.GetString(nameof(GeneralMessage.FailedToFound)) };
+             }
+ 
+             var item = new TransportationAgreementItem
+@@ -344,7 +344,7 @@ namespace SiGma.Business.Services
+             {
+                 IsSuccess = saved,
+                 Id = item.Id,
+-                Message = saved ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++                Message = saved ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+ 
+@@ -356,7 +356,7 @@ namespace SiGma.Business.Services
+ 
+             if (item == null)
+             {
+-                return new Result { IsSuccess = false, Message = Localization.GetString(GeneralMessage.FailedToFound) };
++                return new Result { IsSuccess = false, Message = Localization.GetString(nameof(GeneralMessage.FailedToFound)) };
+             }
+ 
+             item.IsDeleted = true;
+@@ -367,7 +367,7 @@ namespace SiGma.Business.Services
+             {
+                 IsSuccess = saved,
+                 Id = item.Id,
+-                Message = saved ? Localization.GetString(GeneralMessage.SuccessedToRemove) : Localization.GetString(GeneralMessage.FailedToRemove)
++                Message = saved ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove)) : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/UserService.cs b/SiGma.Business/Services/UserService.cs
+index a021a385..8ee686fd 100644
+--- a/SiGma.Business/Services/UserService.cs
++++ b/SiGma.Business/Services/UserService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.User;
++﻿using SiGma.ViewModels.ViewModels.User;
+ 
+ namespace SiGma.Business.Services
+ {
+@@ -10,5 +10,25 @@ namespace SiGma.Business.Services
+             IStringLocalizer<GeneralMessage> localization) : base(unitOfWork, mapper, localization)
+         {
+         }
++
++        protected override async Task<Result> UpdateCoreAsync(UserUpdateVM input)
++        {
++            var user = await UnitOfWork.Repository.FindByIdAsync<User>(input.Id);
++            if (user is null)
++                return new Result
++                {
++                    IsSuccess = false,
++                    ErrorStatusCode = 404,
++                    Message = Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
++                };
++
++            if (await InvalidInputAsync(input, input.Id) is { } invalid)
++                return invalid;
++
++            // Do not route profile updates through generic child reconciliation:
++            // UserUpdateVM.Roles is legacy and must never clear stored role definitions.
++            Mapper.Map(input, user);
++            return await SaveUpdateAsync(user);
++        }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/SiGma.Business/Services/VehicleQRLabelService.cs b/SiGma.Business/Services/VehicleQRLabelService.cs
+index 1cc7d7c0..a74374c3 100644
+--- a/SiGma.Business/Services/VehicleQRLabelService.cs
++++ b/SiGma.Business/Services/VehicleQRLabelService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.VehicleQRLabel;
++﻿using SiGma.ViewModels.ViewModels.VehicleQRLabel;
+ 
+ namespace SiGma.Business.Services
+ {
+@@ -171,8 +171,8 @@ namespace SiGma.Business.Services
+                 IsSuccess = saved,
+                 Id = entity.Id,
+                 Message = saved
+-                    ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                    : Localization.GetString(GeneralMessage.FailedToUpdate)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+             };
+         }
+ 
+diff --git a/SiGma.Business/Services/VehicleServiceService.cs b/SiGma.Business/Services/VehicleServiceService.cs
+index aff34c09..4a0352d7 100644
+--- a/SiGma.Business/Services/VehicleServiceService.cs
++++ b/SiGma.Business/Services/VehicleServiceService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.ViewModels.ViewModels.VehicleService;
++﻿using SiGma.ViewModels.ViewModels.VehicleService;
+ using VehicleServiceEntity = SiGma.Helpers.Models.ServicesModels.VehicleService;
+ 
+ namespace SiGma.Business.Services
+@@ -125,13 +125,13 @@ namespace SiGma.Business.Services
+                 // Removed: EF Core implicit transaction is sufficient.
+                 var saved = await UnitOfWork.SaveChangesAsync(cancellationToken);
+                 if (!saved)
+-                    return Fail(Localization.GetString(GeneralMessage.FailedToAdd));
++                    return Fail(Localization.GetString(nameof(GeneralMessage.FailedToAdd)));
+ 
+                 return new Result
+                 {
+                     IsSuccess = true,
+                     Id = entity.Id,
+-                    Message = Localization.GetString(GeneralMessage.SuccessedToAdd),
++                    Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)),
+                 };
+             }
+             catch
+@@ -178,13 +178,13 @@ namespace SiGma.Business.Services
+                 var hasChanges = UnitOfWork.Context.ChangeTracker.HasChanges();
+                 // Removed: EF Core implicit transaction is sufficient.
+                 if (hasChanges && !await UnitOfWork.SaveChangesAsync())
+-                    return Fail(Localization.GetString(GeneralMessage.FailedToUpdate));
++                    return Fail(Localization.GetString(nameof(GeneralMessage.FailedToUpdate)));
+ 
+                 return new Result
+                 {
+                     IsSuccess = true,
+                     Id = entity.Id,
+-                    Message = Localization.GetString(GeneralMessage.SuccessedToUpdate),
++                    Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)),
+                 };
+             }
+             catch
+@@ -214,13 +214,13 @@ namespace SiGma.Business.Services
+                 // Removed: EF Core implicit transaction is sufficient.
+                 var saved = await UnitOfWork.SaveChangesAsync();
+                 if (!saved)
+-                    return Fail(Localization.GetString(GeneralMessage.FailedToRemove));
++                    return Fail(Localization.GetString(nameof(GeneralMessage.FailedToRemove)));
+ 
+                 return new Result
+                 {
+                     IsSuccess = true,
+                     Id = id,
+-                    Message = Localization.GetString(GeneralMessage.SuccessedToRemove),
++                    Message = Localization.GetString(nameof(GeneralMessage.SuccessedToRemove)),
+                 };
+             }
+             catch
+diff --git a/SiGma.Business/Services/VehicleTypeServices.cs b/SiGma.Business/Services/VehicleTypeServices.cs
+index 4cfebefc..bf6978f2 100644
+--- a/SiGma.Business/Services/VehicleTypeServices.cs
++++ b/SiGma.Business/Services/VehicleTypeServices.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.Data.SqlClient;
++﻿using Microsoft.Data.SqlClient;
+ using SiGma.Helpers.Models.Limousines;
+ using SiGma.ViewModels.ViewModels.VehicleType;
+ using VehicleTypeEntity = SiGma.Helpers.Models.Vehicles.VehicleType;
+@@ -120,8 +120,8 @@ public class VehicleTypeServices :
+             IsSuccess = saved,
+             Id = entity.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToAdd)
+-                : Localization.GetString(GeneralMessage.FailedToAdd)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
++                : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+         };
+     }
+ 
+@@ -164,8 +164,8 @@ public class VehicleTypeServices :
+             IsSuccess = saved,
+             Id = entity.Id,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+@@ -226,8 +226,8 @@ public class VehicleTypeServices :
+         {
+             IsSuccess = saved,
+             Message = saved
+-                ? Localization.GetString(GeneralMessage.SuccessedToUpdate)
+-                : Localization.GetString(GeneralMessage.FailedToUpdate)
++                ? Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
++                : Localization.GetString(nameof(GeneralMessage.FailedToUpdate))
+         };
+     }
+ 
+diff --git a/SiGma.Business/Services/VouchersServices/CreditNoteService.cs b/SiGma.Business/Services/VouchersServices/CreditNoteService.cs
+index 0f8fc6a8..dbb0f70e 100644
+--- a/SiGma.Business/Services/VouchersServices/CreditNoteService.cs
++++ b/SiGma.Business/Services/VouchersServices/CreditNoteService.cs
+@@ -104,7 +104,7 @@ public class CreditNoteService :
+         {
+             IsSuccess = true,
+             Id = creditNote.Id,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToAdd)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+         };
+     }
+ 
+@@ -283,7 +283,7 @@ public class CreditNoteService :
+         {
+             IsSuccess = true,
+             Id = creditNote.Id,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToUpdate)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
+         };
+     }
+ 
+@@ -359,8 +359,8 @@ public class CreditNoteService :
+             {
+                 IsSuccess = result,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                    : Localization.GetString(GeneralMessage.FailedToRemove)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+             };
+         }
+         catch (JournalPostingException ex) { return new Result { IsSuccess = false, Message = ex.Message }; }
+@@ -524,7 +524,7 @@ public class CreditNoteService :
+         UnitOfWork.Repository.Update(entity);
+         UnitOfWork.Repository.Update(journalVoucher);
+         if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-            return BusinessFailure(GeneralMessage.FailedToUpdate);
++            return BusinessFailure(nameof(GeneralMessage.FailedToUpdate));
+ 
+         return new Result { IsSuccess = true, Id = entity.Id, Message = $"Credit note status changed to {entity.ApprovalStatus}." };
+     }
+@@ -611,7 +611,7 @@ public class CreditNoteService :
+                 var result = await UpdateAllocationCoreAsync(row);
+                 if (!result.IsSuccess) return result;
+             }
+-            return new Result { IsSuccess = true, Message = LocalizeMessage(GeneralMessage.SuccessedToUpdate) };
++            return new Result { IsSuccess = true, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToUpdate)) };
+         });
+ 
+     public async Task<Results<CreditNoteAllocationDetailDetailVM>> GetInvoicesByCustomerIdAsync(int customerId)
+diff --git a/SiGma.Business/Services/VouchersServices/DebitNoteService.cs b/SiGma.Business/Services/VouchersServices/DebitNoteService.cs
+index 8296fa63..e11d8d3d 100644
+--- a/SiGma.Business/Services/VouchersServices/DebitNoteService.cs
++++ b/SiGma.Business/Services/VouchersServices/DebitNoteService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Helpers.Helpers;
++﻿using SiGma.Helpers.Helpers;
+ using SiGma.Business.Extensions;
+ using SiGma.Business.Resolver;
+ using SiGma.Helpers.Dtos;
+@@ -76,7 +76,7 @@ public class DebitNoteService :
+             }
+ 
+             await transaction.CommitAsync(cancellationToken);
+-            return new Result { IsSuccess = true, Id = debitNote.Id, Message = Localization.GetString(GeneralMessage.SuccessedToAdd) };
++            return new Result { IsSuccess = true, Id = debitNote.Id, Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) };
+         }
+         catch (Exception ex)
+         {
+@@ -195,7 +195,7 @@ public class DebitNoteService :
+                 await ProcessAllocationsAsync(debitNote);
+ 
+             await transaction.CommitAsync();
+-            return new Result { IsSuccess = true, Id = debitNote.Id, Message = Localization.GetString(GeneralMessage.SuccessedToUpdate) };
++            return new Result { IsSuccess = true, Id = debitNote.Id, Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)) };
+         }
+         catch (Exception ex)
+         {
+@@ -253,7 +253,7 @@ public class DebitNoteService :
+             return new Result
+             {
+                 IsSuccess = result,
+-                Message = result ? Localization.GetString(GeneralMessage.SuccessedToRemove) : Localization.GetString(GeneralMessage.FailedToRemove)
++                Message = result ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove)) : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+             };
+         }
+         catch (Exception ex)
+diff --git a/SiGma.Business/Services/VouchersServices/InvoiceService.cs b/SiGma.Business/Services/VouchersServices/InvoiceService.cs
+index c6bef526..38844816 100644
+--- a/SiGma.Business/Services/VouchersServices/InvoiceService.cs
++++ b/SiGma.Business/Services/VouchersServices/InvoiceService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Helpers.Helpers;
++﻿using SiGma.Helpers.Helpers;
+ using SiGma.Business.Extensions;
+ using SiGma.Business.IServices;
+ using SiGma.ViewModels.ViewModels.Invoice;
+@@ -111,14 +111,14 @@ public class InvoiceService :
+         return new Result
+         {
+             IsSuccess = true, Id = createdIds,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToAdd)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+         };
+     }
+ 
+     private async Task<Result> GenerateInvoicesCoreAsync(IReadOnlyList<GenerateInvoiceRequest> items)
+     {
+         if (items == null || !items.Any())
+-            return new Result { IsSuccess = false, Message = Localization.GetString(GeneralMessage.FailedToFound) };
++            return new Result { IsSuccess = false, Message = Localization.GetString(nameof(GeneralMessage.FailedToFound)) };
+ 
+         // 1. Validation
+         var validation = await ValidateGenerateInvoicesRequestAsync(items);
+@@ -217,7 +217,7 @@ public class InvoiceService :
+         {
+             IsSuccess = true,
+             Id = createdIds,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToAdd)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+         };
+     }
+     public override Task<Result> UpdateAsync(InvoiceUpdateVM vm)
+@@ -238,7 +238,7 @@ public class InvoiceService :
+                 var result = await UpdateInvoiceCoreAsync(request);
+                 if (!result.IsSuccess) return result;
+             }
+-            return new Result { IsSuccess = true, Id = ids, Message = LocalizeMessage(GeneralMessage.SuccessedToUpdate) };
++            return new Result { IsSuccess = true, Id = ids, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToUpdate)) };
+         }));
+     }
+ 
+@@ -535,7 +535,7 @@ public class InvoiceService :
+         {
+             IsSuccess = true,
+             Id = invoice.Id,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToUpdate)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
+         };
+     }
+     public override async Task<Result<InvoiceDetailVM>> DetailAsync(int id)
+@@ -843,8 +843,8 @@ public class InvoiceService :
+             {
+                 IsSuccess = result,
+                 Message = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                    : Localization.GetString(GeneralMessage.FailedToRemove)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+             };
+         }
+         catch (Exception)
+diff --git a/SiGma.Business/Services/VouchersServices/JournalVoucherService.cs b/SiGma.Business/Services/VouchersServices/JournalVoucherService.cs
+index c239f831..e7ecf1a0 100644
+--- a/SiGma.Business/Services/VouchersServices/JournalVoucherService.cs
++++ b/SiGma.Business/Services/VouchersServices/JournalVoucherService.cs
+@@ -188,7 +188,7 @@ public class JournalVoucherService :
+         {
+             IsSuccess = true,
+             Id        = entity.Id,
+-            Message   = Localization.GetString(GeneralMessage.SuccessedToAdd)
++            Message   = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+         };
+     }
+ 
+@@ -274,7 +274,7 @@ public class JournalVoucherService :
+         {
+             IsSuccess = true,
+             Id        = entity.Id,
+-            Message   = Localization.GetString(GeneralMessage.SuccessedToUpdate)
++            Message   = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
+         };
+     }
+ 
+@@ -569,7 +569,7 @@ public class JournalVoucherService :
+                 var result = await UpdateJournalCoreAsync(row);
+                 if (!result.IsSuccess) return result;
+             }
+-            return new Result { IsSuccess = true, Message = LocalizeMessage(GeneralMessage.SuccessedToUpdate) };
++            return new Result { IsSuccess = true, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToUpdate)) };
+         });
+ 
+     public async Task<Result<List<JournalVoucherAllocationLineVM>>> GetAllocationLinesAsync(
+diff --git a/SiGma.Business/Services/VouchersServices/LimousineInvoiceService.cs b/SiGma.Business/Services/VouchersServices/LimousineInvoiceService.cs
+index 3240f47a..71cf2ec8 100644
+--- a/SiGma.Business/Services/VouchersServices/LimousineInvoiceService.cs
++++ b/SiGma.Business/Services/VouchersServices/LimousineInvoiceService.cs
+@@ -1,4 +1,4 @@
+-using AutoMapper.QueryableExtensions;
++﻿using AutoMapper.QueryableExtensions;
+ using SiGma.Helpers.Enum;
+ using SiGma.Helpers.Dtos;
+ using SiGma.Helpers.Enum.Agreement;
+@@ -194,7 +194,7 @@ public class LimousineInvoiceService :
+                 var result = await UpdateAsync(row);
+                 if (!result.IsSuccess) return result;
+             }
+-            return new Result { IsSuccess = true, Message = Localization.GetString(GeneralMessage.SuccessedToUpdate) };
++            return new Result { IsSuccess = true, Message = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)) };
+         });
+ 
+     public async Task<Results<LimousineInvoiceScreenAfterSaveVM>> AddFromScreenAsync(IEnumerable<LimousineInvoiceScreenItemDto> items,
+diff --git a/SiGma.Business/Services/VouchersServices/MiscellaneousInvoiceService.cs b/SiGma.Business/Services/VouchersServices/MiscellaneousInvoiceService.cs
+index c0fbee81..d9e2fbe8 100644
+--- a/SiGma.Business/Services/VouchersServices/MiscellaneousInvoiceService.cs
++++ b/SiGma.Business/Services/VouchersServices/MiscellaneousInvoiceService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Resolver;
++﻿using SiGma.Business.Resolver;
+ using SiGma.ViewModels.ViewModels.MiscellaneousInvoice;
+ using SiGma.Helpers.Helpers;
+ using SiGma.ViewModels.ViewModels.Invoice;
+@@ -65,7 +65,7 @@ Service<MiscellaneousInvoiceAddVM, MiscellaneousInvoiceUpdateVM, MiscellaneousIn
+         {
+             await UnitOfWork.Repository.AddAsync(invoice, cancellationToken);
+             if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                return BusinessFailure(GeneralMessage.FailedToAdd);
++                return BusinessFailure(nameof(GeneralMessage.FailedToAdd));
+ 
+             var jv = _resolver.NewJV(invoice.InvoiceDate, invoice.BranchId, VoucherTypeName.MiscellaneousInvoice, VoucherSubType.JV);
+             AddJournalLines(jv, invoice, accounts);
+@@ -74,7 +74,7 @@ Service<MiscellaneousInvoiceAddVM, MiscellaneousInvoiceUpdateVM, MiscellaneousIn
+                 invoice.JournalVoucherId = await _resolver.SaveAndPostJVAsync(jv, cancellationToken);
+                 UnitOfWork.Repository.Update(invoice);
+                 if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+-                    return BusinessFailure(GeneralMessage.FailedToAdd);
++                    return BusinessFailure(nameof(GeneralMessage.FailedToAdd));
+             }
+ 
+             if (transaction is not null)
+@@ -91,7 +91,7 @@ Service<MiscellaneousInvoiceAddVM, MiscellaneousInvoiceUpdateVM, MiscellaneousIn
+         {
+             IsSuccess = true,
+             Id = invoice.Id,
+-            Message = Localization.GetString(GeneralMessage.SuccessedToAdd)
++            Message = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+         };
+     }
+ 
+@@ -165,7 +165,7 @@ Service<MiscellaneousInvoiceAddVM, MiscellaneousInvoiceUpdateVM, MiscellaneousIn
+             {
+                 UnitOfWork.Repository.DeleteRange(jv.JournalVoucherDetails);
+                 if (!await UnitOfWork.SaveChangesAsync())
+-                    return BusinessFailure(GeneralMessage.FailedToUpdate);
++                    return BusinessFailure(nameof(GeneralMessage.FailedToUpdate));
+                 jv.JournalVoucherDetails.Clear();
+                 jv.Date = invoice.InvoiceDate;
+                 jv.BranchId = invoice.BranchId;
+@@ -188,7 +188,7 @@ Service<MiscellaneousInvoiceAddVM, MiscellaneousInvoiceUpdateVM, MiscellaneousIn
+ 
+             UnitOfWork.Repository.Update(invoice);
+             if (!await UnitOfWork.SaveChangesAsync())
+-                return BusinessFailure(GeneralMessage.FailedToUpdate);
++                return BusinessFailure(nameof(GeneralMessage.FailedToUpdate));
+             if (transaction is not null) await transaction.CommitAsync();
+             return result;
+         }
+@@ -246,7 +246,7 @@ Service<MiscellaneousInvoiceAddVM, MiscellaneousInvoiceUpdateVM, MiscellaneousIn
+                 var result = await UpdateInvoiceCoreAsync(row);
+                 if (!result.IsSuccess) return result;
+             }
+-            return new Result { IsSuccess = true, Message = LocalizeMessage(GeneralMessage.SuccessedToUpdate) };
++            return new Result { IsSuccess = true, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToUpdate)) };
+         });
+ 
+     // A line keeps the rate it was priced with; a new line takes the settings rate, or 0 when
+diff --git a/SiGma.Business/Services/VouchersServices/ReceiptService.cs b/SiGma.Business/Services/VouchersServices/ReceiptService.cs
+index cb3eca5e..6abea433 100644
+--- a/SiGma.Business/Services/VouchersServices/ReceiptService.cs
++++ b/SiGma.Business/Services/VouchersServices/ReceiptService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.Resolver;
++﻿using SiGma.Business.Resolver;
+ using SiGma.Helpers.Enum.Booking;
+ using SiGma.Helpers.Helpers;
+ using SiGma.ViewModels.ViewModels.CreditNoteAllocationDetail;
+@@ -98,7 +98,7 @@ public class ReceiptService :
+             {
+                 IsSuccess = true,
+                 Id        = receipt.Id,
+-                Message   = Localization.GetString(GeneralMessage.SuccessedToAdd)
++                Message   = Localization.GetString(nameof(GeneralMessage.SuccessedToAdd))
+             };
+         }
+         catch (JournalPostingException ex)
+@@ -252,7 +252,7 @@ public class ReceiptService :
+             {
+                 IsSuccess = true,
+                 Id        = receipt.Id,
+-                Message   = Localization.GetString(GeneralMessage.SuccessedToUpdate)
++                Message   = Localization.GetString(nameof(GeneralMessage.SuccessedToUpdate))
+             };
+         }
+         catch (JournalPostingException ex)
+@@ -346,8 +346,8 @@ public class ReceiptService :
+             {
+                 IsSuccess = result,
+                 Message   = result
+-                    ? Localization.GetString(GeneralMessage.SuccessedToRemove)
+-                    : Localization.GetString(GeneralMessage.FailedToRemove)
++                    ? Localization.GetString(nameof(GeneralMessage.SuccessedToRemove))
++                    : Localization.GetString(nameof(GeneralMessage.FailedToRemove))
+             };
+         }
+         catch (JournalPostingException ex)
+@@ -758,7 +758,7 @@ public class ReceiptService :
+                 var result = await AddReceiptAsync(row, CancellationToken.None);
+                 if (!result.IsSuccess) return result;
+             }
+-            return new Result { IsSuccess = true, Message = LocalizeMessage(GeneralMessage.SuccessedToAdd) };
++            return new Result { IsSuccess = true, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToAdd)) };
+         });
+ 
+     public override Task<Result> UpdateListAsync(IEnumerable<ReceiptUpdateVM> updateVms)
+@@ -772,7 +772,7 @@ public class ReceiptService :
+                 var result = await UpdateReceiptAsync(row);
+                 if (!result.IsSuccess) return result;
+             }
+-            return new Result { IsSuccess = true, Message = LocalizeMessage(GeneralMessage.SuccessedToUpdate) };
++            return new Result { IsSuccess = true, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToUpdate)) };
+         });
+ 
+     private async Task<bool> IsSettlementSourceConsumedAsync(int receiptId, CancellationToken cancellationToken = default)
+diff --git a/SiGma.Business/Services/VouchersServices/RentalInvoiceGenerationService.cs b/SiGma.Business/Services/VouchersServices/RentalInvoiceGenerationService.cs
+index 1d02a4de..51ab0b06 100644
+--- a/SiGma.Business/Services/VouchersServices/RentalInvoiceGenerationService.cs
++++ b/SiGma.Business/Services/VouchersServices/RentalInvoiceGenerationService.cs
+@@ -1,4 +1,4 @@
+-using System.Security.Cryptography;
++﻿using System.Security.Cryptography;
+ using System.Text.Json;
+ using SiGma.Business.Resolver;
+ using SiGma.Helpers.Helpers;
+@@ -319,7 +319,7 @@ public sealed class RentalInvoiceGenerationService : IRentalInvoiceGenerationSer
+             { Message = _localization["InvoiceSaveFailed"] };
+         return new Result<RentalInvoiceGenerationResultVM>
+         {
+-            IsSuccess = true, Message = _localization[GeneralMessage.SuccessedToAdd],
++            IsSuccess = true, Message = _localization[nameof(GeneralMessage.SuccessedToAdd)],
+             Id = invoices.Select(invoice => invoice.Id).ToList(),
+             Entity = new RentalInvoiceGenerationResultVM
+             {
+diff --git a/SiGma.Business/Services/VouchersServices/TaxAdvanceService.cs b/SiGma.Business/Services/VouchersServices/TaxAdvanceService.cs
+index 613fd607..7464de3c 100644
+--- a/SiGma.Business/Services/VouchersServices/TaxAdvanceService.cs
++++ b/SiGma.Business/Services/VouchersServices/TaxAdvanceService.cs
+@@ -1,4 +1,4 @@
+-using SiGma.Business.IServices;
++﻿using SiGma.Business.IServices;
+ using SiGma.Business.Extensions;
+ using SiGma.Business.Resolver;
+ using SiGma.Helpers.Dtos;
+@@ -193,7 +193,7 @@ public sealed class TaxAdvanceService : ITaxAdvanceService
+             }, cancellationToken);
+             await _unitOfWork.SaveChangesAsync(cancellationToken);
+             if (transaction is not null) await transaction.CommitAsync(cancellationToken);
+-            return new Result { IsSuccess = true, Id = new List<int> { invoice.Id }, Message = _localization.GetString(GeneralMessage.SuccessedToAdd) };
++            return new Result { IsSuccess = true, Id = new List<int> { invoice.Id }, Message = _localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) };
+         }
+         catch
+         {
+@@ -420,7 +420,7 @@ public sealed class TaxAdvanceService : ITaxAdvanceService
+         if (!await _unitOfWork.SaveChangesAsync(cancellationToken))
+             return Failure("FailedToUpdate");
+ 
+-        return new Result { IsSuccess = true, Message = _localization.GetString(GeneralMessage.SuccessedToUpdate) };
++        return new Result { IsSuccess = true, Message = _localization.GetString(nameof(GeneralMessage.SuccessedToUpdate)) };
+     }
+ 
+     public async Task<Result<TaxAdvanceAllocationDetailsVm>> GetTaxAdvanceAllocationDetailsAsync(int taxAdvanceInvoiceId, CancellationToken cancellationToken = default)
+diff --git a/SiGma.Business/Services/VouchersServices/TransportationInvoiceService.cs b/SiGma.Business/Services/VouchersServices/TransportationInvoiceService.cs
+index e42e246d..9150bb50 100644
+--- a/SiGma.Business/Services/VouchersServices/TransportationInvoiceService.cs
++++ b/SiGma.Business/Services/VouchersServices/TransportationInvoiceService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using SiGma.Business.Extensions;
+ using SiGma.ViewModels.ViewModels.TransportationInvoice;
+ using System.Security.Claims;
+@@ -44,7 +44,7 @@ namespace SiGma.Business.Services.VouchersServices
+                     var result = await base.UpdateAsync(row);
+                     if (!result.IsSuccess) return result;
+                 }
+-                return new Result { IsSuccess = true, Message = LocalizeMessage(GeneralMessage.SuccessedToUpdate) };
++                return new Result { IsSuccess = true, Message = LocalizeMessage(nameof(GeneralMessage.SuccessedToUpdate)) };
+             });
+     }
+ }
+diff --git a/SiGma.Business/Services/WorkShopServices/WorkshopMovementService.cs b/SiGma.Business/Services/WorkShopServices/WorkshopMovementService.cs
+index 8fb252e2..1af13c07 100644
+--- a/SiGma.Business/Services/WorkShopServices/WorkshopMovementService.cs
++++ b/SiGma.Business/Services/WorkShopServices/WorkshopMovementService.cs
+@@ -1,4 +1,4 @@
+-using Microsoft.AspNetCore.Http;
++﻿using Microsoft.AspNetCore.Http;
+ using Microsoft.EntityFrameworkCore;
+ using SiGma.Helpers.Filters;
+ using SiGma.Helpers.Models.Movements;
+@@ -134,7 +134,7 @@ namespace SiGma.Business.Services
+                 return new Result<WorkshopMovementDetailVM>
+                 {
+                     IsSuccess = false,
+-                    Message = Localization.GetString(GeneralMessage.FailedToFound)
++                    Message = Localization.GetString(nameof(GeneralMessage.FailedToFound))
+                 };
+             }
+ 
+@@ -166,7 +166,7 @@ namespace SiGma.Business.Services
+             {
+                 IsSuccess = saved,
+                 Id = entity.Id,
+-                Message = saved ? Localization.GetString(GeneralMessage.SuccessedToAdd) : Localization.GetString(GeneralMessage.FailedToAdd)
++                Message = saved ? Localization.GetString(nameof(GeneralMessage.SuccessedToAdd)) : Localization.GetString(nameof(GeneralMessage.FailedToAdd))
+             };
+         }
+     }
+diff --git a/SiGma.DataAccess/Configuration/LanguageConfig.cs b/SiGma.DataAccess/Configuration/LanguageConfig.cs
+index 615d911f..82697af2 100644
+--- a/SiGma.DataAccess/Configuration/LanguageConfig.cs
++++ b/SiGma.DataAccess/Configuration/LanguageConfig.cs
+@@ -5,6 +5,9 @@ namespace SiGma.DataAccess.Configuration
+         public void Configure(EntityTypeBuilder<Language> builder)
+         {
+             builder.ToTable(nameof(Language));
++            builder.Property(x => x.CultureCode).HasMaxLength(32);
++            builder.HasIndex(x => new { x.SubscriptionId, x.CultureCode }).IsUnique()
++                .HasFilter("[IsDeleted] = 0 AND [CultureCode] IS NOT NULL");
+         }
+     }
+ 
+diff --git a/SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx b/SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx
+index e0d2f07b..79978757 100644
+--- a/SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx
++++ b/SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx
+@@ -2318,4 +2318,24 @@
+   <data name="PurchaseRequestDescriptionRequired" xml:space="preserve"><value>أدخل وصفًا لكل بند في طلب الشراء العام.</value></data>
+   <data name="PurchaseRequestItemRequired" xml:space="preserve"><value>اختر صنفًا لكل بند في طلب شراء المخزون.</value></data>
+   <data name="PurchaseRequestAssetTypeRequired" xml:space="preserve"><value>اختر نوع أصل لكل بند في طلب شراء الأصول.</value></data>
++  <data name="AuthorizationUnknownPermission" xml:space="preserve"><value>اختر صلاحيات معروفة جرى تصنيف عملياتها فقط.</value></data>
++  <data name="AuthorizationDuplicatePermission" xml:space="preserve"><value>يجب اختيار كل صلاحية مرة واحدة فقط.</value></data>
++  <data name="AuthorizationDuplicateRole" xml:space="preserve"><value>يجب اختيار كل دور مرة واحدة فقط.</value></data>
++  <data name="AuthorizationRoleNameExists" xml:space="preserve"><value>يوجد دور آخر بالاسم نفسه.</value></data>
++  <data name="AuthorizationRoleInUse" xml:space="preserve"><value>هذا الدور مسند لمستخدم أو مرتبط بسجل آخر ولا يمكن حذفه.</value></data>
++  <data name="AuthorizationInvalidSnapshot" xml:space="preserve"><value>أرسل اختيار الأدوار والصلاحيات كاملًا مع إصداره الحالي. حدّث البيانات ثم حاول مرة أخرى.</value></data>
++  <data name="AuthorizationRoleInactive" xml:space="preserve"><value>لا تضيف الأدوار غير النشطة صلاحيات إلى معاينة الإعدادات.</value></data>
++  <data name="LanguageNotFound" xml:space="preserve"><value>لم يتم العثور على اللغة.</value></data>
++  <data name="LanguageBuiltInLocked" xml:space="preserve"><value>لا يمكن تعديل أو حذف تعريفات اللغات المدمجة.</value></data>
++  <data name="LanguageInvalidCulture" xml:space="preserve"><value>اختر لغة نشطة ذات رمز ثقافة صالح.</value></data>
++  <data name="LanguageCultureExists" xml:space="preserve"><value>رمز الثقافة هذا مستخدم بالفعل للغة أخرى.</value></data>
++  <data name="LanguageInUse" xml:space="preserve"><value>هذه اللغة افتراضية أو لها ترجمات ولا يمكن حذفها أو تغيير رمز ثقافتها.</value></data>
++  <data name="LanguageBulkNotSupported" xml:space="preserve"><value>استخدم محرر اللغة لتعديل لغة واحدة في كل مرة.</value></data>
++  <data name="LocalizationConflict" xml:space="preserve"><value>تغيرت هذه القيمة بعد فتحها. أعد تحميلها قبل الحفظ.</value></data>
++  <data name="LocalizationInvalidQuery" xml:space="preserve"><value>اختر لغات صالحة ومصدر ترجمة ثم ابحث مرة أخرى.</value></data>
++  <data name="LocalizationSnapshotTooLarge" xml:space="preserve"><value>يتجاوز هذا التحديد ٥٠٬٠٠٠ مفتاح. ضيق نطاق البحث قبل فتح المحرر.</value></data>
++  <data name="LocalizationKeyNotFound" xml:space="preserve"><value>لم يعد مفتاح الترجمة هذا متاحاً. حدّث القائمة.</value></data>
++  <data name="LocalizationInvalidValue" xml:space="preserve"><value>أدخل نصاً عادياً لا يتجاوز ٤٠٠٠ حرف مع الحفاظ على العناصر النائبة المطلوبة أو اترك القيمة فارغة.</value></data>
++  <data name="LocalizationCatalogUnavailable" xml:space="preserve"><value>كتالوج الترجمات غير مهيأ. اطلب من المسؤول تطبيق ترحيل قاعدة بيانات اللغات واستيراد كتالوج المصدر.</value></data>
++  <data name="LocalizationCatalogInvalid" xml:space="preserve"><value>كتالوج المصدر غير صالح أو غير مكتمل. أعد إنشاء الكتالوج الكامل ثم حاول مرة أخرى.</value></data>
+ </root>
+diff --git a/SiGma.Helpers/Localization/Shared/GeneralMessage.resx b/SiGma.Helpers/Localization/Shared/GeneralMessage.resx
+index b30a8326..6520f4eb 100644
+--- a/SiGma.Helpers/Localization/Shared/GeneralMessage.resx
++++ b/SiGma.Helpers/Localization/Shared/GeneralMessage.resx
+@@ -2318,4 +2318,24 @@
+   <data name="PurchaseRequestDescriptionRequired" xml:space="preserve"><value>Enter a description for every General purchase request line.</value></data>
+   <data name="PurchaseRequestItemRequired" xml:space="preserve"><value>Select an item for every Stock purchase request line.</value></data>
+   <data name="PurchaseRequestAssetTypeRequired" xml:space="preserve"><value>Select an asset type for every Asset purchase request line.</value></data>
++  <data name="AuthorizationUnknownPermission" xml:space="preserve"><value>Select only known permissions whose operations have been classified.</value></data>
++  <data name="AuthorizationDuplicatePermission" xml:space="preserve"><value>Each permission must be selected only once.</value></data>
++  <data name="AuthorizationDuplicateRole" xml:space="preserve"><value>Each role must be selected only once.</value></data>
++  <data name="AuthorizationRoleNameExists" xml:space="preserve"><value>A role with this name already exists.</value></data>
++  <data name="AuthorizationRoleInUse" xml:space="preserve"><value>This role is assigned to a user or referenced by another record and cannot be deleted.</value></data>
++  <data name="AuthorizationInvalidSnapshot" xml:space="preserve"><value>Send the complete role and permission selection with its current version. Refresh and try again.</value></data>
++  <data name="AuthorizationRoleInactive" xml:space="preserve"><value>Inactive roles do not contribute permissions to the configuration preview.</value></data>
++  <data name="LanguageNotFound" xml:space="preserve"><value>The language was not found.</value></data>
++  <data name="LanguageBuiltInLocked" xml:space="preserve"><value>Built-in language definitions cannot be changed or deleted.</value></data>
++  <data name="LanguageInvalidCulture" xml:space="preserve"><value>Select an active language with a valid culture code.</value></data>
++  <data name="LanguageCultureExists" xml:space="preserve"><value>This culture code already belongs to a language.</value></data>
++  <data name="LanguageInUse" xml:space="preserve"><value>This language is the default or has translations and cannot be deleted or change its culture code.</value></data>
++  <data name="LanguageBulkNotSupported" xml:space="preserve"><value>Use the language editor to change one language at a time.</value></data>
++  <data name="LocalizationConflict" xml:space="preserve"><value>This value changed after you opened it. Reload before saving.</value></data>
++  <data name="LocalizationInvalidQuery" xml:space="preserve"><value>Select valid languages and a translation source, then search again.</value></data>
++  <data name="LocalizationSnapshotTooLarge" xml:space="preserve"><value>This selection exceeds 50,000 keys. Narrow the search before opening the editor.</value></data>
++  <data name="LocalizationKeyNotFound" xml:space="preserve"><value>This translation key is no longer available. Refresh the list.</value></data>
++  <data name="LocalizationInvalidValue" xml:space="preserve"><value>Enter plain text within 4,000 characters and preserve the required placeholders, or leave the value empty.</value></data>
++  <data name="LocalizationCatalogUnavailable" xml:space="preserve"><value>The translation catalog is not initialized. Ask the administrator to apply the localization migration and import the source catalog.</value></data>
++  <data name="LocalizationCatalogInvalid" xml:space="preserve"><value>The source catalog is invalid or incomplete. Regenerate the complete catalog and retry.</value></data>
+ </root>
+diff --git a/SiGma.Helpers/Models/Language.cs b/SiGma.Helpers/Models/Language.cs
+index 0e2525a3..94f3c856 100644
+--- a/SiGma.Helpers/Models/Language.cs
++++ b/SiGma.Helpers/Models/Language.cs
+@@ -1,13 +1,12 @@
+-﻿namespace SiGma.Helpers.Models
++namespace SiGma.Helpers.Models
+ {
+     public class Language : EntityBase
+     {
+         public string? LanguageName { get; set; }
+         public string? Flag { get; set; }
++        public string? CultureCode { get; set; }
+     }
+ 
+ 
+ 
+ }
+-
+-
+diff --git a/SiGma.ServerAPI/Controller/LanguageController.cs b/SiGma.ServerAPI/Controller/LanguageController.cs
+index d35f2640..8e3fd419 100644
+--- a/SiGma.ServerAPI/Controller/LanguageController.cs
++++ b/SiGma.ServerAPI/Controller/LanguageController.cs
+@@ -9,7 +9,13 @@ namespace SiGma.ServerAPI.Controller
+         public LanguageController(ILanguageService service) : base(service)
+         {
+         }
++        [HttpGet("Options")]
++        public async Task<IActionResult> OptionsAsync()
++            => ToActionResult(await Service.GetOptionsAsync());
+ 
++        [HttpPut("Default")]
++        public async Task<IActionResult> DefaultAsync(LanguageDefaultVM vm)
++            => ToActionResult(await Service.SetDefaultAsync(vm));
+ 
+     }
+ }
+diff --git a/SiGma.ServerAPI/Extensions/DependencyResolver.cs b/SiGma.ServerAPI/Extensions/DependencyResolver.cs
+index c97976f9..01ca6421 100644
+--- a/SiGma.ServerAPI/Extensions/DependencyResolver.cs
++++ b/SiGma.ServerAPI/Extensions/DependencyResolver.cs
+@@ -10,10 +10,15 @@ using Microsoft.IdentityModel.Tokens;
+ using SiGma.Business.MapperConfig;
+ using SiGma.Business.IServices;
+ using SiGma.Business.Services;
++using SiGma.Business.Services.Localization;
+ using SiGma.Repos.UnitOfWork;
+ using SiGma.Helpers.Helpers;
+ using System.Globalization;
+ using System.Text;
++using SiGma.Business.IServices.Authorization;
++using SiGma.ServerAPI.Authorization;
++using SiGma.ServerAPI.Localization;
++using SiGma.Helpers.Localization.Shared;
+ 
+ namespace SiGma.ServerAPI.Extensions
+ {
+@@ -36,6 +41,9 @@ namespace SiGma.ServerAPI.Extensions
+             #region Localization
+ 
+             services.AddLocalization();
++            services.AddScoped<RequestLocalizationSnapshot>();
++            services.AddScoped<IStringLocalizer<GeneralMessage>, RequestDictionaryLocalizer<GeneralMessage>>();
++            services.AddScoped<IStringLocalizer<MockDataMessage>, RequestDictionaryLocalizer<MockDataMessage>>();
+             var enUsCulture = new CultureInfo("en-US", false);
+             var arSaCulture = new CultureInfo("ar-SA", false);
+ 
+@@ -43,9 +51,11 @@ namespace SiGma.ServerAPI.Extensions
+             {
+                 var supportedCultures = new[]
+                 {
+-                enUsCulture,
+-                arSaCulture
+-            };
++                    enUsCulture,
++                    arSaCulture,
++                    CultureInfo.GetCultureInfo("en"),
++                    CultureInfo.GetCultureInfo("ar")
++                };
+                 options.DefaultRequestCulture = new RequestCulture(enUsCulture);
+                 options.SupportedCultures = supportedCultures;
+                 options.SupportedUICultures = supportedCultures;
+@@ -130,6 +140,7 @@ namespace SiGma.ServerAPI.Extensions
+             #endregion
+             #region Http Client
+             services.AddHttpContextAccessor();
++            services.AddSingleton<IAuthorizationCatalog, ApiPermissionCatalog>();
+             services.TryAddScoped(typeof(ApiSecurityHelper));
+             services.AddHttpClient("Server", opt => opt.BaseAddress = new Uri(configuration["Servers:AuthenticationServer"]));
+             services.AddHttpClient("DeepSeekMockData", client =>
+@@ -154,6 +165,7 @@ namespace SiGma.ServerAPI.Extensions
+ 
+             //Helper Service
+             services.TryAddScoped<IServiceHelper, ServiceHelper>();
++            services.AddScoped<LocalizationCatalogImporter>();
+ 
+             #endregion
+             #region Cycle
+diff --git a/SiGma.ServerAPI/Extensions/TrimIncomingStrings.cs b/SiGma.ServerAPI/Extensions/TrimIncomingStrings.cs
+index 7861ad17..a26c2fa8 100644
+--- a/SiGma.ServerAPI/Extensions/TrimIncomingStrings.cs
++++ b/SiGma.ServerAPI/Extensions/TrimIncomingStrings.cs
+@@ -1,4 +1,5 @@
+ using System.Text.Json.Serialization.Metadata;
++using SiGma.ViewModels.ViewModels.Localization;
+ 
+ namespace SiGma.ServerAPI.Extensions;
+ 
+@@ -16,7 +17,9 @@ public static class TrimIncomingStrings
+         foreach (var property in typeInfo.Properties)
+         {
+             if (property.PropertyType != typeof(string) || property.Set is not { } set
+-                || property.Name.Contains("password", StringComparison.OrdinalIgnoreCase))
++                || property.Name.Contains("password", StringComparison.OrdinalIgnoreCase)
++                || (typeInfo.Type == typeof(LanguageTextSaveVM)
++                    && property.Name.Equals(nameof(LanguageTextSaveVM.Value), StringComparison.OrdinalIgnoreCase)))
+                 continue;
+ 
+             var nullable = property.IsSetNullable;
+diff --git a/SiGma.ServerAPI/Program.cs b/SiGma.ServerAPI/Program.cs
+index c78b5da9..b2a1291f 100644
+--- a/SiGma.ServerAPI/Program.cs
++++ b/SiGma.ServerAPI/Program.cs
+@@ -1,6 +1,7 @@
+ using Microsoft.EntityFrameworkCore;
+ using Microsoft.OpenApi.Models;
+ using SiGma.Business.Resolver;
++using SiGma.Business.Services.Localization;
+ using SiGma.DataAccess;
+ using SiGma.DataAccess.Auditing;
+ using SiGma.DataAccess.Configuration;
+@@ -69,6 +70,29 @@ builder.Services.AddTransient<FinancialNumberPolicyResolver>();
+ 
+ var app = builder.Build();
+ 
++// Operator-only import mode. It never starts HTTP endpoints or hosted warmup.
++var importOption = Array.IndexOf(args, "--import-localization-catalog");
++if (importOption >= 0)
++{
++    if (importOption + 1 >= args.Length || string.IsNullOrWhiteSpace(args[importOption + 1]))
++    {
++        Console.Error.WriteLine("Provide the catalog JSON path after --import-localization-catalog.");
++        Environment.ExitCode = 2;
++        return;
++    }
++
++    var catalogPath = Path.GetFullPath(args[importOption + 1]);
++    await using var scope = app.Services.CreateAsyncScope();
++    await using var catalogStream = File.OpenRead(catalogPath);
++    var importer = scope.ServiceProvider.GetRequiredService<LocalizationCatalogImporter>();
++    var result = await importer.ImportAsync(catalogStream, CancellationToken.None);
++    Console.WriteLine(result.Message ?? (result.IsSuccess
++        ? "Localization catalog imported successfully."
++        : "Localization catalog import failed."));
++    Environment.ExitCode = result.IsSuccess ? 0 : 1;
++    return;
++}
++
+ app.UseSwagger();
+ 
+ if (app.Environment.IsDevelopment())
+@@ -109,9 +133,10 @@ app.UseStaticFiles();
+ app.UseMiddleware<AccountingConfigurationExceptionMiddleware>();
+ // Capture unexpected HTTP errors in a fresh context; known business conflicts retain the outer owner.
+ app.UseMiddleware<ErrorLogsMiddleware>();
++app.UseRequestLocalization();
+ app.UseAuthentication();
++app.UseMiddleware<DatabaseLocalizationMiddleware>();
+ app.UseAuthorization();
+ app.MapControllers();
+-app.UseRequestLocalization();
+ 
+ app.Run();
+diff --git a/SiGma.ViewModels/ViewModels/Language/LanguageAddVM.cs b/SiGma.ViewModels/ViewModels/Language/LanguageAddVM.cs
+index eabef4e4..798cbbef 100644
+--- a/SiGma.ViewModels/ViewModels/Language/LanguageAddVM.cs
++++ b/SiGma.ViewModels/ViewModels/Language/LanguageAddVM.cs
+@@ -1,10 +1,11 @@
++using System.ComponentModel.DataAnnotations;
+ using SiGma.Helpers.ViewModelsBases.Add;
+ 
+-namespace SiGma.ViewModels.ViewModels.Language
++namespace SiGma.ViewModels.ViewModels.Language;
++
++public class LanguageAddVM : AddBaseVm
+ {
+-    public class LanguageAddVM : AddBaseVm
+-    {
+-        public string? LanguageName { get; set; }
+-        public string Flag { get; set; }
+-    }
++    [Required, MaxLength(250)] public string LanguageName { get; set; } = "";
++    [Required, MaxLength(100)] public string Flag { get; set; } = "";
++    [Required, MaxLength(32)] public string CultureCode { get; set; } = "";
+ }
+diff --git a/SiGma.ViewModels/ViewModels/Language/LanguageDetailVM.cs b/SiGma.ViewModels/ViewModels/Language/LanguageDetailVM.cs
+index 7feb0f1f..ab08fb51 100644
+--- a/SiGma.ViewModels/ViewModels/Language/LanguageDetailVM.cs
++++ b/SiGma.ViewModels/ViewModels/Language/LanguageDetailVM.cs
+@@ -1,10 +1,11 @@
+ using SiGma.Helpers.ViewModelsBases.Detail;
+ 
+-namespace SiGma.ViewModels.ViewModels.Language
++namespace SiGma.ViewModels.ViewModels.Language;
++
++public class LanguageDetailVM : LeanDetailBaseVm
+ {
+-    public class LanguageDetailVM : DetailBaseVm
+-    {
+-        public string? LanguageName { get; set; }
+-        public string Flag { get; set; }
+-    }
++    public string? LanguageName { get; set; }
++    public string? Flag { get; set; }
++    public string? CultureCode { get; set; }
++    public bool IsBuiltIn { get; set; }
+ }
+diff --git a/SiGma.ViewModels/ViewModels/Language/LanguageListVM.cs b/SiGma.ViewModels/ViewModels/Language/LanguageListVM.cs
+index 275006d0..84f4ecd5 100644
+--- a/SiGma.ViewModels/ViewModels/Language/LanguageListVM.cs
++++ b/SiGma.ViewModels/ViewModels/Language/LanguageListVM.cs
+@@ -1,11 +1,14 @@
+-using SiGma.Helpers.ViewModelsBases.List;
++namespace SiGma.ViewModels.ViewModels.Language;
+ 
+-namespace SiGma.ViewModels.ViewModels.Language
++public class LanguageListVM
+ {
+-    public class LanguageListVM : ListBaseVm
+-    {
+-        public string? LanguageName { get; set; }
+-
+-        public string Flag { get; set; }
+-    }
++    public int Id { get; set; }
++    public string? LanguageName { get; set; }
++    public string? Flag { get; set; }
++    public string? CultureCode { get; set; }
++    public bool IsBuiltIn { get; set; }
++    public bool IsDefault { get; set; }
++    public bool? IsActive { get; set; }
++    public string? CreatedBy { get; set; }
++    public DateTime? CreatedAt { get; set; }
+ }
+diff --git a/SiGma.ViewModels/ViewModels/Language/LanguageUpdateVM.cs b/SiGma.ViewModels/ViewModels/Language/LanguageUpdateVM.cs
+index da1f5342..317cfa42 100644
+--- a/SiGma.ViewModels/ViewModels/Language/LanguageUpdateVM.cs
++++ b/SiGma.ViewModels/ViewModels/Language/LanguageUpdateVM.cs
+@@ -1,11 +1,11 @@
++using System.ComponentModel.DataAnnotations;
+ using SiGma.Helpers.ViewModelsBases.Update;
+ 
+-namespace SiGma.ViewModels.ViewModels.Language
+-{
+-    public class LanguageUpdateVM : UpdateBaseVm
+-    {
+-        public string? LanguageName { get; set; }
++namespace SiGma.ViewModels.ViewModels.Language;
+ 
+-        public string Flag { get; set; }
+-    }
++public class LanguageUpdateVM : UpdateBaseVm
++{
++    [Required, MaxLength(250)] public string LanguageName { get; set; } = "";
++    [Required, MaxLength(100)] public string Flag { get; set; } = "";
++    [Required, MaxLength(32)] public string CultureCode { get; set; } = "";
+ }

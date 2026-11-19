@@ -1,0 +1,56 @@
+<div appMockData [formGroup]="form" class="p-4">
+  <div class="table-responsive">
+    <table class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4">
+      <thead>
+        <tr class="fw-bolder text-muted bg-light">
+          <th class="ps-4 min-w-150px rounded-start text-uppercase">
+            {{ "settings.agreementDocumentModel.name" | translate }}
+          </th>
+          <th class="min-w-120px text-center text-uppercase">
+            {{ "settings.agreementDocumentModel.required" | translate }}
+          </th>
+          <th class="min-w-120px text-center rounded-end text-uppercase">
+            {{ "settings.agreementDocumentModel.printWithInvoice" | translate }}
+          </th>
+        </tr>
+      </thead>
+      <tbody formArrayName="documents" cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr *ngFor="let doc of documents.controls; let i = index" [formGroupName]="i" cdkDrag>
+          <td>
+            <div class="d-flex align-items-center">
+              <div cdkDragHandle
+                class="d-flex align-items-center justify-content-center w-30px h-30px bg-light-primary rounded me-3 cursor-move">
+                <i class="bi bi-list text-primary"></i>
+              </div>
+              <div
+                class="d-flex align-items-center justify-content-center w-30px h-30px bg-light-danger rounded me-3 cursor-pointer"
+                (click)="removeDocument(i)">
+                <i class="bi bi-x-lg text-danger"></i>
+              </div>
+              <div class="d-flex justify-content-start flex-column flex-grow-1">
+                <input pInputText type="text" formControlName="name" class="form-control form-control-flush"
+                  placeholder="{{
+                    'settings.agreementDocumentModel.enterName' | translate
+                  }}" />
+              </div>
+            </div>
+          </td>
+          <td class="text-center">
+            <p-checkbox formControlName="isRequired" [binary]="true"></p-checkbox>
+          </td>
+          <td class="text-center">
+            <p-checkbox formControlName="printWithInvoice" [binary]="true"></p-checkbox>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-4">
+    <a href="javascript:;" (click)="addDocument()"
+      class="btn btn-link btn-color-primary btn-active-color-primary fw-bolder">
+      {{ "settings.agreementDocumentModel.addRow" | translate }}
+    </a>
+    <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+  </div>
+</div>

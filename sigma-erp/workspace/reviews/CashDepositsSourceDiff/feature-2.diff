@@ -1,0 +1,17 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.scss (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.scss (current)
+index e69de29..855c8c9 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.scss (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.scss (current)	
+@@ -0,0 +1,12 @@
++.cash-deposit-header {
++  flex: 0 1 auto;
++  min-block-size: 0;
++  max-block-size: 45%;
++}
++
++.cash-deposit-lines,
++.cash-deposit-table-area {
++  flex: 1 1 0;
++  min-block-size: 0;
++  overflow: hidden;
++}

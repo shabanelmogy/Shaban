@@ -1,0 +1,26 @@
+# HRM_BUSINESS_LOGIC — current state (generated index)
+
+| Item | Value |
+|---|---|
+| Status (first recorded in the main file) | Draft |
+| Owner verification pending | yes |
+| Latest date found | 2026-10-23 |
+| Full file | [HRM_BUSINESS_LOGIC_FULL_STACK_REVIEW.md](HRM_BUSINESS_LOGIC_FULL_STACK_REVIEW.md) (47 KB) |
+
+Generated index, not a written summary (Master8). Read the needed section of the full file by
+heading. When this feature is next touched, replace this file with an English summary of at most 4 KB.
+
+## Sections of HRM_BUSINESS_LOGIC_FULL_STACK_REVIEW.md
+
+- Manifest
+- نتيجة المراجعة
+- خريطة التغطية الحالية
+- الأدلة على العيوب المؤكدة
+- فجوات الدورة والسياسات
+- مقارنة بالممارسات الموثقة وتوطين مصر والدول العربية
+- التصميم المستهدف المقترح — Draft
+- Impact Map وتصنيف التطوير
+- القرارات المفتوحة قبل التنفيذ
+- خطة التنفيذ الموصى بها وترتيبها
+- سيناريوهات تحقق المالك
+- المصالحة النهائية وحدود التسليم

@@ -1,0 +1,889 @@
+[
+  {
+    "endpoint": "Branch/GetSelect",
+    "service": "BranchService",
+    "serviceFile": "src/app/modules/Administration/Branches/services/branch.service.ts",
+    "callSites": 88,
+    "files": [
+      "src/app/modules/Accounts/BalanceSheetMonthWise/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeComparison/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatement/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatement2/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatementFy/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatementFy2/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatementYtd/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.ts",
+      "src/app/modules/Accounts/Ledger/components/ledger/ledger.component.ts",
+      "src/app/modules/Accounts/Link Accounts/LinkAccounts/components/payment-methods/payment-methods.component.ts",
+      "src/app/modules/Accounts/openingBalances/components/accounts/accounts.component.ts",
+      "src/app/modules/Accounts/openingBalances/components/cost-center/cost-center.component.ts",
+      "src/app/modules/Accounts/TrailBalance/components/list/list.component.ts",
+      "src/app/modules/Accounts/VehicleIncomeStatement/components/list/list.component.ts",
+      "src/app/modules/Administration/PaymentMethods/components/details/details.component.ts",
+      "src/app/modules/Administration/Users/components/details/details.component.ts",
+      "src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransfer/services/cardtransactionbanktransfer.service.ts",
+      "src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service.ts",
+      "src/app/modules/Banking/ChequesPayables/components/details/details.component.ts",
+      "src/app/modules/Banking/ChequesPayables/components/list/list.component.ts",
+      "src/app/modules/Banking/ChequesReceivables/components/details/details.component.ts",
+      "src/app/modules/Banking/ChequesReceivables/components/list/list.component.ts",
+      "src/app/modules/Customers/BalancesSummary/components/list/list.component.ts",
+      "src/app/modules/Customers/Companies/CompanyPartner/components/details/details.component.ts",
+      "src/app/modules/Customers/Companies/CompanyPartner/components/list/list.component.ts",
+      "src/app/modules/Customers/Individual/IndividualPartner/components/details/details.component.ts",
+      "src/app/modules/Customers/Individual/IndividualPartner/components/list/list.component.ts",
+      "src/app/modules/Customers/ReceivableAgeAnalysis/components/list/list.component.ts",
+      "src/app/modules/Equipment Rental/DeliveryNote/components/list/list.component.ts",
+      "src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service.ts",
+      "src/app/modules/Fleet/Vehicle/components/details/details.component.ts",
+      "src/app/modules/Fleet/Vehicle/components/list/list.component.ts",
+      "src/app/modules/Fleet/VehicleQRLabel/components/details/details.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/closing/closing.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/deposit/deposit.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/list/list.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/vehicle-replacement/vehicle-replacement.component.ts",
+      "src/app/modules/Limousine/LimousineInvoice/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/list/list.component.ts",
+      "src/app/modules/Limousine/UtilizationReport/components/utilization-report.component.ts",
+      "src/app/modules/Movements/collectionMovement/services/collection-movement.service.ts",
+      "src/app/modules/Movements/CustodyMovement/services/custodymovement.service.ts",
+      "src/app/modules/Rental/Agreement/components/deposit/deposit.component.ts",
+      "src/app/modules/Rental/Agreement/components/list/list.component.ts",
+      "src/app/modules/Sales/Fleet/components/details/details.component.ts",
+      "src/app/modules/Sales/Fleet/components/list/list.component.ts",
+      "src/app/modules/shared/components/branch-tariff-settings/branch-tariff-settings.component.ts",
+      "src/app/modules/Staff/Staff/components/details/details.component.ts",
+      "src/app/modules/Staff/StaffBalancesSummary/components/list/list.component.ts",
+      "src/app/modules/Stock/Item/components/details/details.component.ts",
+      "src/app/modules/Stock/ItemIssue/components/details/details.component.ts",
+      "src/app/modules/Stock/ItemRequisition/components/issue/issue.component.ts",
+      "src/app/modules/Stock/ItemReturn/components/details/details.component.ts",
+      "src/app/modules/Stock/StockTransfer/components/details/details.component.ts",
+      "src/app/modules/stockReports/DetailedStockReport/component/detailed-stock-report/detailed-stock-report.component.ts",
+      "src/app/modules/stockReports/StockSummary/component/stock-summary/stock-summary.component.ts",
+      "src/app/modules/Suppliers/SupplierBalancesSummary/components/list/list.component.ts",
+      "src/app/modules/Transportation/TransportationAgreementItem/components/details/details.component.ts",
+      "src/app/modules/Transportation/TripSheet/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/list/list.component.ts",
+      "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/CreditNote/components/list/list.component.ts",
+      "src/app/modules/Vouchers/DebitNotes/DebitNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/DebitNotes/DebitNote/components/list/list.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Invoices/Invoice/components/workshop-editor/workshop-editor.component.ts",
+      "src/app/modules/Vouchers/JVs/components/details/details.component.ts",
+      "src/app/modules/Vouchers/JVs/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Payments/Payment/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Payments/Payment/components/list/list.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/list/list.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/create-purchase-order/create-purchase-order.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/list/list.component.ts",
+      "src/app/modules/Vouchers/PurchaseReturns/PurchaseReturn/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseReturns/PurchaseReturn/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Receipts/Receipt/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Receipts/Receipt/components/list/list.component.ts",
+      "src/app/modules/Workshop/Job/components/list/list.component.ts",
+      "src/app/modules/Workshop/JobEstimation/components/list/list.component.ts",
+      "src/app/modules/Workshop/WorkOrder/components/details/details.component.ts",
+      "src/app/modules/Workshop/WorkOrder/components/list/list.component.ts",
+      "src/app/modules/Workshop/workshopVehicles/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Customer/GetSelect",
+    "service": "CustomerService",
+    "serviceFile": "src/app/modules/shared/service/customer.service.ts",
+    "callSites": 54,
+    "files": [
+      "src/app/modules/Accounts/openingBalances/components/customers/customers.component.ts",
+      "src/app/modules/Accounts/openingBalances/components/deposit/deposit.component.ts",
+      "src/app/modules/Administration/CustomerProjects/CustomerProject/components/details/details.component.ts",
+      "src/app/modules/Administration/CustomerRequests/components/details/details.component.ts",
+      "src/app/modules/Administration/CustomerRequests/components/list/list.component.ts",
+      "src/app/modules/Banking/ChequesPayables/components/details/details.component.ts",
+      "src/app/modules/Banking/ChequesReceivables/components/details/details.component.ts",
+      "src/app/modules/Banking/ChequesReceivables/components/list/list.component.ts",
+      "src/app/modules/Customers/alerts/components/list/list.component.ts",
+      "src/app/modules/Customers/BalancesSummary/components/list/list.component.ts",
+      "src/app/modules/Customers/followUpReport/components/list/list.component.ts",
+      "src/app/modules/Customers/ReceivableAgeAnalysis/components/list/list.component.ts",
+      "src/app/modules/Customers/StatementOfAccount/components/list/list.component.ts",
+      "src/app/modules/Equipment Rental/DeliveryNote/components/list/list.component.ts",
+      "src/app/modules/Equipment Rental/EquipmentMasterAgreement/services/equipmentmasteragreement.service.ts",
+      "src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service.ts",
+      "src/app/modules/Equipment Rental/TimeSheet/components/details/details.component.ts",
+      "src/app/modules/Fleet/ServiceBookings/services/vehicle-service-bookings.service.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/details/details.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/list/list.component.ts",
+      "src/app/modules/Limousine/LimoQuotation/components/details/details.component.ts",
+      "src/app/modules/Limousine/LimoQuotation/components/list/list.component.ts",
+      "src/app/modules/Limousine/LimousineInvoice/components/details/details.component.ts",
+      "src/app/modules/Limousine/LimousineInvoice/components/list/list.component.ts",
+      "src/app/modules/Limousine/limousineTariff/components/limousine-tariff/limousine-tariff-editor.component.ts",
+      "src/app/modules/Limousine/limousineTariffReport/components/limousine-tariff-report.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/list/list.component.ts",
+      "src/app/modules/Limousine/UtilizationReport/components/utilization-report.component.ts",
+      "src/app/modules/Movements/logsMovement/components/list/list.component.ts",
+      "src/app/modules/Rental/Agreement/components/details/details.component.ts",
+      "src/app/modules/Rental/Agreement/components/list/list.component.ts",
+      "src/app/modules/Reports/CustomerWiseCollection/components/customer-wise-collection.component.ts",
+      "src/app/modules/Sales/DueInstallments/components/list/list.component.ts",
+      "src/app/modules/Transportation/TransportationInvoice/components/details/details.component.ts",
+      "src/app/modules/Transportation/Trips/components/list/list.component.ts",
+      "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/CreditNote/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Invoices/Invoice/components/core-editor/core-editor.component.ts",
+      "src/app/modules/Vouchers/Invoices/Invoice/components/rental-generation/rental-generation.component.ts",
+      "src/app/modules/Vouchers/Invoices/Invoice/components/workshop-editor/workshop-editor.component.ts",
+      "src/app/modules/Vouchers/Payments/Payment/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Payments/Payment/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Provisions/Provision/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Provisions/Provision/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Receipts/Receipt/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Receipts/Receipt/components/list/list.component.ts",
+      "src/app/modules/Workshop/Job/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/Job/components/list/list.component.ts",
+      "src/app/modules/Workshop/JobEstimation/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/JobEstimation/components/list/list.component.ts",
+      "src/app/modules/Workshop/LubricationJob/components/create/create.component.ts",
+      "src/app/modules/Workshop/WorkOrder/components/details/details.component.ts",
+      "src/app/modules/Workshop/WorkOrder/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Staff/GetSelect",
+    "service": "StaffService",
+    "serviceFile": "src/app/modules/Staff/Staff/services/staff.service.ts",
+    "callSites": 34,
+    "files": [
+      "src/app/modules/Accounts/openingBalances/components/staff/staff.component.ts",
+      "src/app/modules/Customers/BalancesSummary/components/list/list.component.ts",
+      "src/app/modules/Customers/Companies/CompanyPartner/components/details/details.component.ts",
+      "src/app/modules/Customers/Individual/IndividualPartner/components/details/details.component.ts",
+      "src/app/modules/Customers/ReceivableAgeAnalysis/components/list/list.component.ts",
+      "src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service.ts",
+      "src/app/modules/HRM/Administration/Leave Opening Balance/LeaveOpeningBalance/components/details/details.component.ts",
+      "src/app/modules/HRM/Administration/Leave Opening Balance/LeaveOpeningBalance/components/list/list.component.ts",
+      "src/app/modules/HRM/Attendances/Attendance/components/list/list.component.ts",
+      "src/app/modules/HRM/Attendances/StaffTimesheet/components/list/list.component.ts",
+      "src/app/modules/HRM/Deductions/Deduction/components/details/details.component.ts",
+      "src/app/modules/HRM/Deductions/Deduction/components/list/list.component.ts",
+      "src/app/modules/HRM/Leaves/Leave/components/dashboard/dashboard.component.ts",
+      "src/app/modules/HRM/Leaves/Leave/components/details/details.component.ts",
+      "src/app/modules/HRM/Leaves/Leave/components/list/list.component.ts",
+      "src/app/modules/HRM/Leaves/LeaveType/components/details/details.component.ts",
+      "src/app/modules/HRM/Overtimes/Overtime/components/details/details.component.ts",
+      "src/app/modules/HRM/Reports/components/payrolls-report.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/details/details.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/extend-period/extend-rate-period.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/list/list.component.ts",
+      "src/app/modules/Movements/NRM/services/nrm.service.ts",
+      "src/app/modules/Rental/Agreement/components/details/details.component.ts",
+      "src/app/modules/Rental/Agreement/components/list/list.component.ts",
+      "src/app/modules/Staff/Staff/components/details/details.component.ts",
+      "src/app/modules/Staff/StaffBalancesSummary/components/list/list.component.ts",
+      "src/app/modules/Staff/StaffDutySchedule/components/list/list.component.ts",
+      "src/app/modules/Suppliers/SupplierBalancesSummary/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Invoices/Invoice/components/core-editor/core-editor.component.ts",
+      "src/app/modules/Vouchers/Invoices/Invoice/components/rental-generation/rental-generation.component.ts",
+      "src/app/modules/Workshop/Job/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/Job/components/list/list.component.ts",
+      "src/app/modules/Workshop/JobEstimation/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/LabourActivitiesReport/components/report/report.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Vehicle/GetSelect",
+    "service": "VehicleService",
+    "serviceFile": "src/app/modules/Fleet/Vehicle/services/vehicle.service.ts",
+    "callSites": 28,
+    "files": [
+      "src/app/modules/Accounts/openingBalances/components/prepaid/prepaid.component.ts",
+      "src/app/modules/Fleet/Accidents/services/accidents.service.ts",
+      "src/app/modules/Fleet/ServiceLog/services/servicelogs.service.ts",
+      "src/app/modules/Fleet/vehicle-tracker/components/vehicle-tracker.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/list/list.component.ts",
+      "src/app/modules/Movements/collectionMovement/services/collection-movement.service.ts",
+      "src/app/modules/Movements/CustodyMovement/services/custodymovement.service.ts",
+      "src/app/modules/Movements/NRM/services/nrm.service.ts",
+      "src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/list/list.component.ts",
+      "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/DebitNotes/DebitNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Invoices/Invoice/components/workshop-editor/workshop-editor.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/list/list.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/list/list.component.ts",
+      "src/app/modules/Vouchers/TrafficFines/TrafficFine/components/details/details.component.ts",
+      "src/app/modules/Vouchers/TrafficFines/TrafficFine/components/list/list.component.ts",
+      "src/app/modules/Workshop/Job/components/close-job/close-job.component.ts",
+      "src/app/modules/Workshop/Job/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/Job/components/invoice-customer/invoice-customer.component.ts",
+      "src/app/modules/Workshop/JobEstimation/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/LubricationJob/components/create/create.component.ts",
+      "src/app/modules/Workshop/WorkOrder/components/details/details.component.ts",
+      "src/app/modules/Workshop/WorkOrder/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Supplier/GetSelect",
+    "service": "SupplierSharedService",
+    "serviceFile": "src/app/modules/shared/service/supplierShared.service.ts",
+    "callSites": 22,
+    "files": [
+      "src/app/modules/Accounts/openingBalances/components/suppliers/suppliers.component.ts",
+      "src/app/modules/Banking/ChequesPayables/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/details/details.component.ts",
+      "src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service.ts",
+      "src/app/modules/stockReports/GetGrnPendingReport/component/get-grn-pending-report/get-grn-pending-report.component.ts",
+      "src/app/modules/stockReports/purchaseDetailsReport/component/purchase-details-report/purchase-details-report.component.ts",
+      "src/app/modules/stockReports/purchaseOrdersDetailReport/component/purchase-orders-detail-report/purchase-orders-detail-report.component.ts",
+      "src/app/modules/Suppliers/PayableAgeAnalysis/components/list/list.component.ts",
+      "src/app/modules/Suppliers/SupplierBalancesSummary/components/list/list.component.ts",
+      "src/app/modules/Suppliers/SupplierStatementOfAccount/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/list/list.component.ts",
+      "src/app/modules/Vouchers/DebitNotes/DebitNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/DebitNotes/DebitNote/components/list/list.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/list/list.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/list/list.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/list/list.component.ts",
+      "src/app/modules/Vouchers/PurchaseReturns/PurchaseReturn/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseReturns/PurchaseReturn/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Job/GetSelect",
+    "service": "JobService",
+    "serviceFile": "src/app/modules/Workshop/Job/services/job.service.ts",
+    "callSites": 17,
+    "files": [
+      "src/app/modules/Stock/ItemIssue/components/details/details.component.ts",
+      "src/app/modules/Stock/ItemIssue/components/list/list.component.ts",
+      "src/app/modules/Stock/ItemRequisition/components/details/details.component.ts",
+      "src/app/modules/Stock/ItemRequisition/components/list/list.component.ts",
+      "src/app/modules/Stock/ItemReturn/components/details/details.component.ts",
+      "src/app/modules/Stock/ItemReturn/components/list/list.component.ts",
+      "src/app/modules/stockReports/itemsIssueReport/component/items-issue-report/items-issue-report.component.ts",
+      "src/app/modules/stockReports/itemsReturnReport/component/items-return-report/items-return-report.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/list/list.component.ts",
+      "src/app/modules/Vouchers/JVs/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Provisions/Provision/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/list/list.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Item/GetSelect",
+    "service": "ItemService",
+    "serviceFile": "src/app/modules/Stock/Item/services/item.service.ts",
+    "callSites": 16,
+    "files": [
+      "src/app/modules/Accounts/openingBalances/components/stock/stock.component.ts",
+      "src/app/modules/Fleet/VehicleService/components/details/details.component.ts",
+      "src/app/modules/Stock/ItemIssue/components/details/details.component.ts",
+      "src/app/modules/Stock/ItemRequisition/components/details/details.component.ts",
+      "src/app/modules/Stock/ItemReturn/components/details/details.component.ts",
+      "src/app/modules/Stock/StockTransfer/components/details/details.component.ts",
+      "src/app/modules/stockReports/DetailedStockReport/component/detailed-stock-report/detailed-stock-report.component.ts",
+      "src/app/modules/stockReports/GetPartsMovingReport/component/get-parts-moving-report/get-parts-moving-report.component.ts",
+      "src/app/modules/stockReports/purchaseDetailsReport/component/purchase-details-report/purchase-details-report.component.ts",
+      "src/app/modules/stockReports/StockSummary/component/stock-summary/stock-summary.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/details/details.component.ts",
+      "src/app/modules/Workshop/Job/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/JobEstimation/components/editor/editor.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Account/GetSelect",
+    "service": "AccountService",
+    "serviceFile": "src/app/modules/Accounts/Account/services/account.service.ts",
+    "callSites": 15,
+    "files": [
+      "src/app/modules/Accounts/BudgetVariance/components/budget-variance/budget-variance.component.ts",
+      "src/app/modules/Accounts/Journal/components/journal/journal.component.ts",
+      "src/app/modules/Accounts/Ledger/components/ledger/ledger.component.ts",
+      "src/app/modules/Accounts/Link Accounts/LinkAccounts/components/details/details.component.ts",
+      "src/app/modules/Accounts/openingBalances/components/accounts/accounts.component.ts",
+      "src/app/modules/Accounts/openingBalances/components/cost-center/cost-center.component.ts",
+      "src/app/modules/Accounts/openingBalances/components/prepaid/prepaid.component.ts",
+      "src/app/modules/Assets/assetType/components/details/details.component.ts",
+      "src/app/modules/Banking/ChequesPayables/components/mature/mature.component.ts",
+      "src/app/modules/HRM/Administration/Account Linking/LinkAccounts/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/loan-plan/loan-plan.component.ts",
+      "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/JVs/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseReturns/PurchaseReturn/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "CostCenterGroup/GetSelect",
+    "service": "CostCenterGroupService",
+    "serviceFile": "src/app/modules/shared/service/costCenterGroup.service.ts",
+    "callSites": 12,
+    "files": [
+      "src/app/modules/Accounts/BalanceSheetMonthWise/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeComparison/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatement/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatementFy/components/list/list.component.ts",
+      "src/app/modules/Accounts/IncomeStatementYtd/components/list/list.component.ts",
+      "src/app/modules/Accounts/Ledger/components/ledger/ledger.component.ts",
+      "src/app/modules/Accounts/openingBalances/components/cost-center/cost-center.component.ts",
+      "src/app/modules/Accounts/TrailBalance/components/list/list.component.ts",
+      "src/app/modules/Accounts/VehicleIncomeStatement/components/list/list.component.ts",
+      "src/app/modules/Administration/CostCenters/components/details/details.component.ts",
+      "src/app/modules/Administration/CostCenters/components/list/list.component.ts",
+      "src/app/modules/Fleet/Vehicle/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Bank/GetSelect",
+    "service": "BankService",
+    "serviceFile": "src/app/modules/Banking/Bank/services/bank.service.ts",
+    "callSites": 11,
+    "files": [
+      "src/app/modules/Banking/Bank Reconciliation/components/list/list.component.ts",
+      "src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransfer/services/cardtransactionbanktransfer.service.ts",
+      "src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service.ts",
+      "src/app/modules/Banking/ChequesPayables/components/details/details.component.ts",
+      "src/app/modules/Banking/ChequesPayables/components/import/import.component.ts",
+      "src/app/modules/Banking/ReconciliationReport/components/reconciliation-report/list.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/deposit/deposit.component.ts",
+      "src/app/modules/Rental/Agreement/components/deposit/deposit.component.ts",
+      "src/app/modules/Vouchers/Receipts/Receipt/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "VehicleType/GetSelect",
+    "service": "VehicleTypeService",
+    "serviceFile": "src/app/modules/shared/service/vehicletype.service.ts",
+    "callSites": 10,
+    "files": [
+      "src/app/modules/Fleet/Vehicle/components/details/details.component.ts",
+      "src/app/modules/Limousine/limousineTariff/components/limousine-tariff/limousine-tariff-editor.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/list/list.component.ts",
+      "src/app/modules/Limousine/UtilizationReport/components/utilization-report.component.ts",
+      "src/app/modules/Rental/Agreement/components/details/details.component.ts",
+      "src/app/modules/Reports/VehicleRentalDetails/components/vehicle-rental-details.component.ts",
+      "src/app/modules/Sales/Fleet/components/details/details.component.ts",
+      "src/app/modules/Sales/Fleet/components/list/list.component.ts",
+      "src/app/modules/Workshop/LabourTariff/components/labour-tariff/labour-tariff.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Driver/GetSelect",
+    "service": "DriverService",
+    "serviceFile": "src/app/modules/shared/service/driver.service.ts",
+    "callSites": 9,
+    "files": [
+      "src/app/modules/Fleet/Accidents/services/accidents.service.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/list/list.component.ts",
+      "src/app/modules/Movements/collectionMovement/services/collection-movement.service.ts",
+      "src/app/modules/Movements/DeliveryMovement/services/deliverymovement.service.ts",
+      "src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service.ts",
+      "src/app/modules/Rental/DriverTimeSheet/components/list/list.component.ts",
+      "src/app/modules/Transportation/Trips/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "PaymentMethod/GetSelect",
+    "service": "PaymentMethodService",
+    "serviceFile": "src/app/modules/Administration/PaymentMethods/services/paymentmethod.service.ts",
+    "callSites": 9,
+    "files": [
+      "src/app/modules/Administration/Settings/components/payment-gateway-setting/payment-gateway-setting.component.ts",
+      "src/app/modules/Banking/Bank Reconciliation/components/list/list.component.ts",
+      "src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransfer/services/cardtransactionbanktransfer.service.ts",
+      "src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/deposit/deposit.component.ts",
+      "src/app/modules/Rental/Agreement/components/deposit/deposit.component.ts",
+      "src/app/modules/Vouchers/Payments/Payment/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Payments/Payment/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Receipts/Receipt/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "AssetType/GetSelect",
+    "service": "AssetTypeService",
+    "serviceFile": "src/app/modules/Assets/assetType/services/assettype.service.ts",
+    "callSites": 8,
+    "files": [
+      "src/app/modules/Assets/asset/components/details/details.component.ts",
+      "src/app/modules/Assets/asset/components/list/list.component.ts",
+      "src/app/modules/Assets/depreciationDetail/components/list/list.component.ts",
+      "src/app/modules/Assets/depreciationSummary/components/list/list.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "RentalAgreement/GetSelect",
+    "service": "RentalAgreementService",
+    "serviceFile": "src/app/modules/Rental/Agreement/services/agreement.service.ts",
+    "callSites": 7,
+    "files": [
+      "src/app/modules/Movements/collectionMovement/services/collection-movement.service.ts",
+      "src/app/modules/Movements/CustodyMovement/services/custodymovement.service.ts",
+      "src/app/modules/Movements/DeliveryMovement/services/deliverymovement.service.ts",
+      "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/DebitNotes/DebitNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Receipts/Receipt/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Receipts/Receipt/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Country/GetSelect",
+    "service": "CountryService",
+    "serviceFile": "src/app/modules/Administration/Country/services/country.service.ts",
+    "callSites": 6,
+    "files": [
+      "src/app/modules/Customers/Companies/CompanyPartner/components/details/details.component.ts",
+      "src/app/modules/Customers/Individual/IndividualPartner/components/details/details.component.ts",
+      "src/app/modules/Lease/LeaseAgreement/components/vehicle-replacement/vehicle-replacement.component.ts",
+      "src/app/modules/Rental/Agreement/components/details/details.component.ts",
+      "src/app/modules/Staff/Staff/components/details/details.component.ts",
+      "src/app/modules/Suppliers/Supplier/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "LeaveType/GetSelect",
+    "service": "LeaveTypeService",
+    "serviceFile": "src/app/modules/HRM/Leaves/LeaveType/services/leavetype.service.ts",
+    "callSites": 6,
+    "files": [
+      "src/app/modules/HRM/Administration/Leave Opening Balance/LeaveOpeningBalance/components/details/details.component.ts",
+      "src/app/modules/HRM/Administration/Leave Opening Balance/LeaveOpeningBalance/components/list/list.component.ts",
+      "src/app/modules/HRM/Leaves/Leave/components/dashboard/dashboard.component.ts",
+      "src/app/modules/HRM/Leaves/Leave/components/details/details.component.ts",
+      "src/app/modules/HRM/Leaves/Leave/components/list/list.component.ts",
+      "src/app/modules/Staff/Staff/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "CarMake/GetSelect",
+    "service": "CarMakeService",
+    "serviceFile": "src/app/modules/shared/service/car-make.service.ts",
+    "callSites": 5,
+    "files": [
+      "src/app/modules/Fleet/Vehicle/components/details/details.component.ts",
+      "src/app/modules/Rental/RentalPlanner/services/rental-planner.service.ts",
+      "src/app/modules/Sales/Fleet/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Currency/GetSelect",
+    "service": "CurrencyService",
+    "serviceFile": "src/app/modules/Administration/Currency/services/currency.service.ts",
+    "callSites": 5,
+    "files": [
+      "src/app/modules/Banking/Bank/components/details/details.component.ts",
+      "src/app/modules/Customers/Companies/CompanyPartner/components/details/details.component.ts",
+      "src/app/modules/Customers/Individual/IndividualPartner/components/details/details.component.ts",
+      "src/app/modules/Customers/ReceivableAgeAnalysis/components/list/list.component.ts",
+      "src/app/modules/Suppliers/Supplier/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "UnitsOfMeasures/GetSelect",
+    "service": "UnitsOfMeasuresService",
+    "serviceFile": "src/app/modules/Stock/UnitsOfMeasures/services/units-of-measures.service.ts",
+    "callSites": 5,
+    "files": [
+      "src/app/modules/Stock/Item/components/details/details.component.ts",
+      "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/details/details.component.ts",
+      "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "CostCenter/GetSelect",
+    "service": "CostCenterService",
+    "serviceFile": "src/app/modules/Administration/CostCenters/services/costcenter.service.ts",
+    "callSites": 4,
+    "files": [
+      "src/app/modules/Accounts/Account/components/details/details.component.ts",
+      "src/app/modules/Accounts/openingBalances/components/accounts/accounts.component.ts",
+      "src/app/modules/Administration/ContactGroups/components/details/details.component.ts",
+      "src/app/modules/Assets/asset/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Shift/GetSelect",
+    "service": "ShiftService",
+    "serviceFile": "src/app/modules/HRM/Attendances/Shift/services/shift.service.ts",
+    "callSites": 4,
+    "files": [
+      "src/app/modules/HRM/Attendances/Attendance/components/list/list.component.ts",
+      "src/app/modules/HRM/Attendances/StaffTimesheet/components/list/list.component.ts",
+      "src/app/modules/Staff/Staff/components/details/details.component.ts",
+      "src/app/modules/Staff/StaffDutySchedule/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "TariffGroup/GetSelect",
+    "service": "TariffGroupService",
+    "serviceFile": "src/app/modules/shared/service/TariffGroup.service.ts",
+    "callSites": 4,
+    "files": [
+      "src/app/modules/Fleet/Vehicle/components/list/list.component.ts",
+      "src/app/modules/Fleet/VehicleQRLabel/components/details/details.component.ts",
+      "src/app/modules/Limousine/LimoQuotation/components/details/details.component.ts",
+      "src/app/modules/Workshop/workshopVehicles/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "User/GetSelect",
+    "service": "UserzService",
+    "serviceFile": "src/app/modules/Administration/Users/services/user.service.ts",
+    "callSites": 4,
+    "files": [
+      "src/app/modules/Administration/PaymentMethods/components/details/details.component.ts",
+      "src/app/modules/Customers/followUpReport/components/list/list.component.ts",
+      "src/app/modules/Rental/Agreement/components/list/list.component.ts",
+      "src/app/modules/Workshop/JobEstimation/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "FiscalYear/GetSelect",
+    "service": "FiscalYearService",
+    "serviceFile": "src/app/modules/Accounts/FiscalYears/services/fiscalYear.service.ts",
+    "callSites": 3,
+    "files": [
+      "src/app/modules/Accounts/Budget/components/budget/budget.component.ts",
+      "src/app/modules/Accounts/BudgetVariance/components/budget-variance/budget-variance.component.ts",
+      "src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Location/GetSelect",
+    "service": "LocationService",
+    "serviceFile": "src/app/modules/Limousine/Location/services/location.service.ts",
+    "callSites": 3,
+    "files": [
+      "src/app/modules/Limousine/LimoQuotation/components/details/details.component.ts",
+      "src/app/modules/Limousine/limousineTariff/components/limousine-tariff/limousine-tariff-editor.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "TripType/GetSelect",
+    "service": "TripTypeService",
+    "serviceFile": "src/app/modules/Limousine/TripTypes/services/trip-type.service.ts",
+    "callSites": 3,
+    "files": [
+      "src/app/modules/Limousine/LimoQuotation/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/details/details.component.ts",
+      "src/app/modules/Limousine/TripBooking/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "UNRESOLVED:service",
+    "service": "",
+    "serviceFile": "",
+    "callSites": 3,
+    "files": [
+      "src/app/modules/Stock/ItemRequisition/components/purchase-request/purchase-request.component.ts",
+      "src/app/modules/Transportation/TransportationAgreement/components/details/details.component.ts",
+      "src/app/modules/Transportation/TransportationAgreement/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "WorkshopActivity/GetSelect",
+    "service": "WorkshopActivityService",
+    "serviceFile": "src/app/modules/Workshop/WorkshopActivity/services/WorkshopActivity.service.ts",
+    "callSites": 3,
+    "files": [
+      "src/app/modules/Workshop/Job/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/JobEstimation/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/LabourTariff/components/labour-tariff/labour-tariff.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Asset/GetSelect",
+    "service": "AssetService",
+    "serviceFile": "src/app/modules/Assets/asset/services/asset.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Assets/depreciationDetail/components/list/list.component.ts",
+      "src/app/modules/Assets/depreciationSummary/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Contact/GetSelect",
+    "service": "ContactService",
+    "serviceFile": "src/app/modules/shared/service/ContactService.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Administration/Users/components/details/details.component.ts",
+      "src/app/modules/Vouchers/DebitNotes/DebitNote/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "CustomerProject/GetSelect",
+    "service": "CustomerProjectService",
+    "serviceFile": "src/app/modules/Administration/CustomerProjects/CustomerProject/services/customerproject.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Rental/Agreement/components/details/details.component.ts",
+      "src/app/modules/Rental/Agreement/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "DeliveryNote/GetSelect",
+    "service": "DeliveryNoteService",
+    "serviceFile": "src/app/modules/Equipment Rental/DeliveryNote/services/deliverynote.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Equipment Rental/TimeSheet/components/details/details.component.ts",
+      "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "PurchaseOrder/GetSelect",
+    "service": "PurchaseOrderService",
+    "serviceFile": "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/services/purchaseorder.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service.ts",
+      "src/app/modules/stockReports/GetGrnPendingReport/component/get-grn-pending-report/get-grn-pending-report.component.ts"
+    ]
+  },
+  {
+    "endpoint": "ServiceItem/GetSelect",
+    "service": "ServiceItemService",
+    "serviceFile": "src/app/modules/Fleet/ServiceItem/services/serviceitem.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Fleet/ServiceBookings/services/vehicle-service-bookings.service.ts",
+      "src/app/modules/Fleet/VehicleService/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "SourceCode/GetSelect",
+    "service": "SourceCodeService",
+    "serviceFile": "src/app/modules/Fleet/SourceCode/services/sourcecode.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Rental/Agreement/components/details/details.component.ts",
+      "src/app/modules/Rental/Agreement/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "StaffDesignation/GetSelect",
+    "service": "DesignationService",
+    "serviceFile": "src/app/modules/Staff/designations/service/designation.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/HRM/Reports/components/payrolls-report.component.ts",
+      "src/app/modules/Staff/Staff/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "StaffProfile/GetSelect",
+    "service": "StaffProfileService",
+    "serviceFile": "src/app/modules/Staff/StaffProfile/services/StaffProfile.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Workshop/Job/components/editor/editor.component.ts",
+      "src/app/modules/Workshop/LabourTariff/components/labour-tariff/labour-tariff.component.ts"
+    ]
+  },
+  {
+    "endpoint": "TariffCard/GetSelect",
+    "service": "TariffCardsService",
+    "serviceFile": "src/app/modules/Rental/TariffCard/services/tariffcard.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Customers/Companies/CompanyPartner/components/details/details.component.ts",
+      "src/app/modules/Customers/Individual/IndividualPartner/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Workshop/GetSelect",
+    "service": "WorkshopService",
+    "serviceFile": "src/app/modules/Movements/Workshop/services/workshop.service.ts",
+    "callSites": 2,
+    "files": [
+      "src/app/modules/Fleet/ServiceLog/services/servicelogs.service.ts",
+      "src/app/modules/Workshop/Job/components/editor/editor.component.ts"
+    ]
+  },
+  {
+    "endpoint": "CarModel/GetSelect",
+    "service": "CarModelService",
+    "serviceFile": "src/app/modules/shared/service/car-model.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service.ts"
+    ]
+  },
+  {
+    "endpoint": "Department/GetSelect",
+    "service": "DepartmentService",
+    "serviceFile": "src/app/modules/HRM/Administration/Departments/Department/services/department.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Staff/Staff/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Equipment/GetSelect",
+    "service": "FleetService",
+    "serviceFile": "src/app/modules/Sales/Fleet/services/fleet.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service.ts"
+    ]
+  },
+  {
+    "endpoint": "EquipmentMasterAgreement/GetSelect",
+    "service": "EquipmentMasterAgreementService",
+    "serviceFile": "src/app/modules/Equipment Rental/EquipmentMasterAgreement/services/equipmentmasteragreement.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Equipment Rental/TimeSheet/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "IndividualPartner/GetSelect",
+    "service": "IndividualPartnerService",
+    "serviceFile": "src/app/modules/Customers/Individual/IndividualPartner/services/individualpartner.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Reports/SalesPersonInvoices/components/sales-person-invoices.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Invoice/GetSelect",
+    "service": "InvoiceService",
+    "serviceFile": "src/app/modules/Vouchers/Invoices/Invoice/services/invoice.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "JobCategory/GetSelect",
+    "service": "JobCategoryService",
+    "serviceFile": "src/app/modules/Workshop/JobCategory/services/jobcategory.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Accounts/Link Accounts/LinkAccounts/components/workshop/workshop.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Quotation/GetSelect",
+    "service": "EquipmentQuotationService",
+    "serviceFile": "src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Equipment Rental/EquipmentMasterAgreement/services/equipmentmasteragreement.service.ts"
+    ]
+  },
+  {
+    "endpoint": "RentalMasterAgreement/GetSelect",
+    "service": "MasterAgreementService",
+    "serviceFile": "src/app/modules/Rental/MasterAgreement/services/masteragreement.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Rental/Agreement/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "ReplacementReason/GetSelect",
+    "service": "ReplacementReasonService",
+    "serviceFile": "src/app/modules/Administration/ReplacementReasons/services/replacementreason.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Lease/LeaseAgreement/components/vehicle-replacement/vehicle-replacement.component.ts"
+    ]
+  },
+  {
+    "endpoint": "Role/GetSelect",
+    "service": "RoleService",
+    "serviceFile": "src/app/modules/Administration/Roles/services/role.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Staff/Staff/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "SettingsCostCentersModel/GetSelect",
+    "service": "SettingsCostCentersModelService",
+    "serviceFile": "src/app/modules/Administration/Settings/services/settings-cost-centers-model.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Administration/Settings/components/cost-centers/cost-centers.component.ts"
+    ]
+  },
+  {
+    "endpoint": "SponserShip/GetSelect",
+    "service": "SponserShipService",
+    "serviceFile": "src/app/modules/Administration/SponserShips/services/sponsership.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Staff/Staff/components/details/details.component.ts"
+    ]
+  },
+  {
+    "endpoint": "TransportationAgreement/GetSelect",
+    "service": "TransportationAgreementService",
+    "serviceFile": "src/app/modules/Transportation/TransportationAgreement/services/transportationagreement.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Transportation/TripSheet/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "UNRESOLVED:field.service",
+    "service": "",
+    "serviceFile": "",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Vouchers/Invoices/Invoice/components/list/list.component.ts"
+    ]
+  },
+  {
+    "endpoint": "VehicleService/GetSelect",
+    "service": "FleetVehicleServiceService",
+    "serviceFile": "src/app/modules/Fleet/VehicleService/services/fleet-vehicle-service.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Fleet/ServiceLog/services/servicelogs.service.ts"
+    ]
+  },
+  {
+    "endpoint": "WorkOrder/GetSelect",
+    "service": "WorkOrderService",
+    "serviceFile": "src/app/modules/Workshop/WorkOrder/services/workorder.service.ts",
+    "callSites": 1,
+    "files": [
+      "src/app/modules/Workshop/Job/components/editor/editor.component.ts"
+    ]
+  }
+]

@@ -1,0 +1,120 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/list/list.component.html (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/list/list.component.html (current)
+index d51d2c7..2ce5693 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/list/list.component.html (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/list/list.component.html (current)	
+@@ -1,10 +1,105 @@
+-<div class="card">
+-  <table-list
+-    [columns]="columns"
+-    [list]="data()"
+-    [hasCreate]="true"
+-    [moreActions]="moreActions"
+-    (openDialog)="goCreate($event)"
+-    (clickSearch)="search($event)"
+-  ></table-list>
+-</div>
++<section class="sigma-list-page">
++  <div class="sigma-list-panel">
++    <header class="sigma-list-header">
++      <app-feature-title [title]="'cashDeposits.title' | translate"
++        [subtitle]="'cashDeposits.subtitle' | translate" icon="bi bi-cash-stack">
++        <app-primary-action-button [label]="'cashDeposits.create' | translate"
++          icon="bi bi-plus-lg" [disabled]="actionBusy() || confirmationPending()" (pressed)="openCreate()" />
++      </app-feature-title>
++    </header>
++
++    <form appFilterPanel [stableLayout]="true" [mainColumns]="4" [formGroup]="filterForm"
++      [busy]="loadingList()" (ngSubmit)="search()" (resetRequested)="resetFilters()">
++      <div class="sigma-filter-field">
++        <label for="cash-deposit-no">{{ 'cashDeposits.filters.no' | translate }}</label>
++        <input id="cash-deposit-no" type="text" formControlName="no" />
++      </div>
++      <div class="sigma-filter-field">
++        <label for="cash-deposit-date-range">{{ 'cashDeposits.filters.dateRange' | translate }}</label>
++        <p-calendar appDatePicker inputId="cash-deposit-date-range" formControlName="dateRange"
++          selectionMode="range" [numberOfMonths]="2" [placeholder]="'cashDeposits.filters.dateRange' | translate"
++          styleClass="w-100" appendTo="body" />
++        <app-field-error [control]="dateRange" reserveMessage="validationMessages.date" />
++      </div>
++      <div class="sigma-filter-field">
++        <label for="cash-deposit-bank">{{ 'cashDeposits.filters.bank' | translate }}</label>
++        <p-dropdown inputId="cash-deposit-bank" formControlName="bankId" [options]="banks()"
++          optionLabel="value" optionValue="id" [filter]="true" filterBy="value" [showClear]="true"
++          [loading]="lookupsLoading()" [placeholder]="'cashDeposits.selectBank' | translate"
++          styleClass="w-100" appendTo="body" />
++      </div>
++      <div class="sigma-filter-field">
++        <label for="cash-deposit-branch">{{ 'cashDeposits.filters.branch' | translate }}</label>
++        <p-dropdown inputId="cash-deposit-branch" formControlName="branchId" [options]="branches()"
++          optionLabel="value" optionValue="id" [filter]="true" filterBy="value" [showClear]="true"
++          [loading]="lookupsLoading()" [placeholder]="'cashDeposits.selectBranch' | translate"
++          styleClass="w-100" appendTo="body" />
++      </div>
++      <ng-container appFilterActions>
++        <button type="button" class="sigma-secondary-button" [disabled]="loadingList() || loadingReport()"
++          (click)="openReport()">
++          <i class="bi bi-file-earmark-bar-graph" aria-hidden="true"></i>{{ 'general.report' | translate }}
++        </button>
++        <button type="button" class="sigma-secondary-button" [disabled]="exporting() || loadingList()"
++          (click)="exportExcel()">
++          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i>{{ 'general.exportExcel' | translate }}
++        </button>
++        <app-primary-action-button type="submit" [label]="'general.search' | translate" icon="bi bi-search"
++          [loading]="loadingList()" [disabled]="filterForm.invalid" />
++      </ng-container>
++    </form>
++
++    @if (errorMessage()) {
++      <app-state-message kind="error" [message]="errorMessage()" />
++      <button type="button" class="sigma-secondary-button" [disabled]="loadingList()" (click)="retryList()">
++        {{ 'general.retry' | translate }}
++      </button>
++    }
++    @if (lookupError()) {
++      <app-state-message kind="error" [message]="lookupError()" />
++      <button type="button" class="sigma-secondary-button" [disabled]="lookupsLoading()" (click)="loadLookups()">
++        {{ 'general.retry' | translate }}
++      </button>
++    }
++
++    <div class="sigma-list-table">
++      <app-data-table [value]="data()" [columns]="columns" [actions]="actions" dataKey="id"
++        [lazy]="true" [paginator]="true" [first]="(pageNo() - 1) * pageSize()" [rows]="pageSize()"
++        [rowsPerPageOptions]="rowsPerPageOptions" [totalRecords]="totalRecords()" [loading]="loadingList()"
++        [showEmpty]="!errorMessage()" [sortField]="sortField()" [sortOrder]="sortOrder()" [fill]="true"
++        currentPageReport="cashDeposits.showingEntries" emptyMessage="general.noDataFound"
++        (lazyLoad)="onLazyLoad($event)" />
++    </div>
++  </div>
++</section>
++
++@if (reportVisible()) {
++  <app-editor-dialog [visible]="true" [title]="'cashDeposits.report.title' | translate"
++    [subtitle]="'cashDeposits.report.subtitle' | translate: { count: reportRows().length }" icon="bi bi-printer" mode="view"
++    dialogClass="sigma-report-print-dialog" [contentPadded]="true" [primaryActionVisible]="false"
++    [closeDisabled]="printing()" [closeLabel]="'general.close' | translate"
++    (closeRequested)="closeReport()" (escapeRequested)="closeReport()">
++    <div class="sigma-editor-scroll flex-fill sigma-print-flow">
++      <h2>{{ 'cashDeposits.report.title' | translate }}</h2>
++      <p>{{ reportContext() }}</p>
++      @if (loadingReport()) {
++        <app-state-message class="no-print" kind="loading" />
++      } @else if (reportError()) {
++        <app-state-message class="no-print" kind="error" [message]="reportError()" />
++        <button type="button" class="sigma-secondary-button no-print" (click)="retryReport()">
++          {{ 'general.retry' | translate }}
++        </button>
++      } @else {
++        <app-data-table class="sigma-print-flow" [value]="reportRows()" [columns]="reportColumns" dataKey="id"
++          [lazy]="false" [paginator]="false" [scrollable]="false" [rowInteractive]="false"
++          emptyMessage="general.noDataFound" />
++      }
++    </div>
++    <div editorDialogHint appReportActions [ariaLabel]="'general.actions' | translate">
++      <button type="button" class="sigma-secondary-button"
++        [disabled]="loadingReport() || !!reportError() || !reportRows().length || printing()" (click)="printReport()">
++        <i class="bi bi-printer" aria-hidden="true"></i>{{ 'general.print' | translate }}
++      </button>
++    </div>
++  </app-editor-dialog>
++}

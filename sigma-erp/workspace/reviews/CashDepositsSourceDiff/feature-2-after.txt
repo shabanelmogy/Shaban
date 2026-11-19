@@ -1,0 +1,12 @@
+.cash-deposit-header {
+  flex: 0 1 auto;
+  min-block-size: 0;
+  max-block-size: 45%;
+}
+
+.cash-deposit-lines,
+.cash-deposit-table-area {
+  flex: 1 1 0;
+  min-block-size: 0;
+  overflow: hidden;
+}

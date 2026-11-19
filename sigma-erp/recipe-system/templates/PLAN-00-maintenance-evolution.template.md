@@ -214,7 +214,8 @@ the default/backfill behavior for existing records.
 - Historical data, migration, API compatibility, and direct consumers are named.
 - Implementation slices are dependency ordered and map back to canonical phases.
 - Verification is defined before implementation and distinguishes source review
-  from owner-run build, runtime, browser, migration, and database evidence.
+  from scoped build, test and lint results (Master5), migration evidence
+  (Master7), and owner-run runtime, browser and database acceptance.
 
 ## Expected handoff
 

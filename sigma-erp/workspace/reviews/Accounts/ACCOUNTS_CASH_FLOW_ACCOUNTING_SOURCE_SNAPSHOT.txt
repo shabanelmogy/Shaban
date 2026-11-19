@@ -1,0 +1,2286 @@
+SOURCE: src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+import { CashFlowDTO, CashFlowFilter, CashFlowLine } from '../../models/list';
+import { CashFlowStatementRow } from '../../models/cash-flow-statement-row';
+import { CashFlowStatementService } from '../../services/cash-flow-statement.service';
+import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
+import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
+import { reportNumber, reportDate } from '../../../shared/report-family/account-report-values';
+
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
+import { Router } from '@angular/router';
+import { DataTableColumn, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+
+@Component({
+  selector: 'app-accounts', standalone: true,
+  imports: [AccountReportPageComponent],
+  templateUrl: './list.component.html', styleUrl: './list.component.scss',
+  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+})
+export class CashFlowStatementComponent {
+  private readonly service = inject(CashFlowStatementService);
+  private readonly fiscalYears = inject(FiscalYearService);
+  private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+  private readonly columns: ReadonlyArray<DataTableColumn<CashFlowStatementRow>> = [
+    {
+      field: 'name', header: 'cashFlowStatement.account', width: '78%',
+      cellClass: 'sigma-data-table__cell--wrap',
+      value: row => row.labelKey
+        ? this.translate.instant(row.labelKey)
+        : [row.code, row.name].filter(Boolean).join(' — ') || '—',
+      link: {
+        enabled: row => row.accountId > 0 && row.tone === null,
+        activate: row => this.openLedger(row.accountId),
+        title: 'cashFlowStatement.openLedger',
+      },
+    },
+    {
+      field: 'amount', header: 'cashFlowStatement.amount', width: '22%', type: 'money',
+      headerClass: 'text-end', cellClass: 'text-end sigma-data-table__cell--numeric',
+    },
+  ];
+  readonly config: AccountReportConfig<CashFlowDTO, CashFlowFilter, CashFlowStatementRow> = {
+    id: 'cashFlowStatement', titleKey: 'cashFlowStatement.title', icon: 'bi bi-file-earmark-spreadsheet', exportFileName: 'CashFlowStatement',
+    filters: [
+      { key: 'fiscalYearId', labelKey: 'cashFlowStatement.fiscalYear', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.fiscalYears.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
+      { key: 'asOfDate', labelKey: 'cashFlowStatement.asOfDate', kind: 'date', initialValue: null }
+    ],
+    load: filter => this.service.getReport(filter),
+    buildFilter: raw => {
+
+      return { filter: { fiscalYearId: reportNumber(raw, 'fiscalYearId'), asOfDate: reportDate(raw, 'asOfDate') } };
+    },
+    sections: response => [
+      {
+        id: 'statement', dataKey: 'id', minWidth: '32rem',
+        rows: this.statementRows(response), columns: this.columns, rowTone: row => row.tone,
+      },
+    ],
+    exportRows: (response, _sections, translate) => this.exportRows(response, translate),
+  };
+
+  private statementRows(response: CashFlowDTO): CashFlowStatementRow[] {
+    const rows: CashFlowStatementRow[] = [];
+    const activities = [
+      { key: 'operatingActivities', lines: response.operatingActivities ?? [], totalKey: 'netCashFromOperating', total: response.netCashFromOperating },
+      { key: 'investingActivities', lines: response.investingActivities ?? [], totalKey: 'netCashFromInvesting', total: response.netCashFromInvesting },
+      { key: 'financingActivities', lines: response.financingActivities ?? [], totalKey: 'netCashFromFinancing', total: response.netCashFromFinancing },
+    ];
+    for (const activity of activities) {
+      rows.push(this.statementLabel(activity.key, null, 'section'));
+      if (activity.key === 'operatingActivities' && !activity.lines.some(line => this.isNetIncomeLine(line))) {
+        rows.push(this.statementLabel('netIncome', response.netIncome, null));
+      }
+      activity.lines.forEach((line, index) => rows.push({
+        ...line, id: `${activity.key}-${index}`, tone: null,
+        labelKey: activity.key === 'operatingActivities' && this.isNetIncomeLine(line)
+          ? 'cashFlowStatement.netIncome' : undefined,
+      }));
+      rows.push(this.statementLabel(activity.totalKey, activity.total, 'subtotal'));
+    }
+    rows.push(this.statementLabel('netChangeInCash', response.netChangeInCash, 'total'));
+    return rows;
+  }
+
+  private statementLabel(key: string, amount: number | null, tone: CashFlowStatementRow['tone']): CashFlowStatementRow {
+    return { id: key, accountId: 0, code: '', name: '', labelKey: `cashFlowStatement.${key}`, amount, tone };
+  }
+
+  private isNetIncomeLine(line: CashFlowLine): boolean {
+    return line.accountId === 0 && !line.code && line.name === 'Net Income';
+  }
+
+  private exportRows(response: CashFlowDTO, translate: (key: string) => string): Array<Record<string, string | number>> {
+    const columns: ReadonlyArray<DataTableColumn<CashFlowLine>> = [
+      { field: 'name', header: 'cashFlowStatement.account', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—' },
+      { field: 'amount', header: 'cashFlowStatement.amount', type: 'money' },
+    ];
+    return [
+      { key: 'operatingActivities', lines: response.operatingActivities ?? [] },
+      { key: 'investingActivities', lines: response.investingActivities ?? [] },
+      { key: 'financingActivities', lines: response.financingActivities ?? [] },
+    ].flatMap(activity => dataTableExportRows(activity.lines, columns, translate).map(row => ({
+      [translate('accountReports.section')]: translate(`cashFlowStatement.${activity.key}`), ...row,
+    })));
+  }
+
+  private openLedger(accountId: number): void {
+    if (accountId > 0) void this.router.navigate(['/Ledger'], { queryParams: { accountId } });
+  }
+}
+
+
+SOURCE: src/app/modules/Accounts/CashFlowStatement/models/cash-flow-statement-row.ts
+export interface CashFlowStatementRow {
+  id: string;
+  accountId: number;
+  code: string;
+  name: string;
+  labelKey?: string;
+  amount: number | null;
+  tone: 'section' | 'subtotal' | 'total' | null;
+}
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report.models.ts
+import { Observable } from 'rxjs';
+
+import {
+  DataTableColumn,
+  DataTableHierarchy,
+} from 'src/app/modules/shared/components/data-table/data-table.component';
+import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Result } from 'src/app/modules/shared/models/result';
+import { Results } from 'src/app/modules/shared/models/results';
+
+export type AccountReportFilterValue = Date | Date[] | string | number | boolean | null | undefined;
+export type AccountReportFilterRaw = Readonly<Record<string, AccountReportFilterValue>>;
+export type AccountReportFilterKind =
+  | 'date-range'
+  | 'date'
+  | 'month'
+  | 'select'
+  | 'number'
+  | 'text'
+  | 'checkbox';
+
+export interface AccountReportFilterOption {
+  value: string | number;
+  label?: string;
+  labelKey?: string;
+}
+
+export interface AccountReportFilterDefinition {
+  key: string;
+  labelKey: string;
+  kind: AccountReportFilterKind;
+  initialValue: AccountReportFilterValue;
+  required?: boolean;
+  min?: number;
+  max?: number;
+  wide?: boolean;
+  options?: ReadonlyArray<AccountReportFilterOption>;
+  loadOptions?: () => Observable<Results<DropDownSelect>>;
+  requiredLookup?: boolean;
+}
+
+export interface AccountReportBuildResult<TFilter extends object> {
+  filter?: TFilter;
+  errorKey?: string;
+  focusKey?: string;
+}
+
+export interface AccountReportSection<TRow extends object> {
+  id: string;
+  titleKey?: string;
+  icon?: string;
+  rows: ReadonlyArray<TRow>;
+  columns: ReadonlyArray<DataTableColumn<TRow>>;
+  hierarchy?: DataTableHierarchy<TRow>;
+  dataKey?: string;
+  minWidth?: string;
+  rowTone?: (row: TRow) => 'section' | 'subtotal' | 'total' | null;
+}
+
+export interface AccountReportConfig<
+  TResponse extends object,
+  TFilter extends object,
+  TRow extends object,
+> {
+  id: string;
+  titleKey: string;
+  icon: string;
+  exportFileName: string;
+  sectionLayout?: 'panels' | 'document';
+  summaryDensity?: 'comfortable' | 'compact' | 'dense' | 'slim';
+  summaryMaxHeight?: number;
+  filters: ReadonlyArray<AccountReportFilterDefinition>;
+  load: (filter: TFilter) => Observable<Result<TResponse>>;
+  buildFilter: (raw: AccountReportFilterRaw) => AccountReportBuildResult<TFilter>;
+  sections: (
+    response: TResponse,
+    appliedFilters: AccountReportFilterRaw,
+  ) => ReadonlyArray<AccountReportSection<TRow>>;
+  summaryCards?: (response: TResponse) => ReadonlyArray<SummaryCard>;
+  responseContext?: (response: TResponse) => string;
+  normalizeResponse?: (response: TResponse) => TResponse;
+  exportRows?: (
+    response: TResponse,
+    sections: ReadonlyArray<AccountReportSection<TRow>>,
+    translate: (key: string) => string,
+  ) => Array<Record<string, string | number>>;
+  loadErrorKey?: string;
+  searchPromptKey?: string;
+  autoSearch?: boolean;
+  showBack?: boolean;
+}
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report-page.component.ts
+import { CommonModule, Location } from '@angular/common';
+import {
+  Component,
+  DestroyRef,
+  Input,
+  OnInit,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  FormControl,
+  FormRecord,
+  ReactiveFormsModule,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CalendarModule } from 'primeng/calendar';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { catchError, defer, finalize, forkJoin, map, of, Subject, switchMap } from 'rxjs';
+
+import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
+import {
+  DataTableComponent,
+  dataTableExportRows,
+} from 'src/app/modules/shared/components/data-table/data-table.component';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import { ReportActionsComponent } from 'src/app/modules/shared/components/report-actions/report-actions.component';
+import { ReportPageComponent } from 'src/app/modules/shared/components/report-page/report-page.component';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { SummaryCardsComponent } from 'src/app/modules/shared/components/summary-cards/summary-cards.component';
+import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ReportPrintService } from 'src/app/modules/shared/service/report-print.service';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import {
+  dateRangeValidator,
+  dateValueValidator,
+  formatDisplayDate,
+  parseDateRange,
+  parseDateValue,
+  parseMonthValue,
+} from 'src/app/modules/shared/utils/date-utils';
+import { focusField } from 'src/app/modules/shared/utils/focus-field';
+import {
+  AccountReportConfig,
+  AccountReportFilterDefinition,
+  AccountReportFilterOption,
+  AccountReportFilterRaw,
+  AccountReportFilterValue,
+  AccountReportSection,
+} from './account-report.models';
+
+interface ReportRequest<TFilter extends object> {
+  filter: TFilter;
+  raw: AccountReportFilterRaw;
+}
+
+interface ReportOutcome<TResponse extends object, TFilter extends object> {
+  request: ReportRequest<TFilter>;
+  response?: TResponse;
+  declaredMessage?: string;
+  error?: unknown;
+}
+
+@Component({
+  selector: 'app-account-report-page',
+  standalone: true,
+  imports: [
+    CalendarModule,
+    CheckboxModule,
+    CommonModule,
+    DataTableComponent,
+    DatePickerDirective,
+    DropdownModule,
+    FeatureTitleComponent,
+    FieldErrorComponent,
+    InputTextModule,
+    InputNumberModule,
+    PrimaryActionButtonComponent,
+    ReactiveFormsModule,
+    ReportActionsComponent,
+    ReportPageComponent,
+    StateMessageComponent,
+    SummaryCardsComponent,
+    TranslateModule,
+  ],
+  templateUrl: './account-report-page.component.html',
+  styleUrl: './account-report-page.component.scss',
+  host: { class: 'sigma-route-host sigma-print-flow' },
+})
+export class AccountReportPageComponent<
+  TResponse extends object,
+  TFilter extends object,
+  TRow extends object,
+> extends BaseComponentService implements OnInit {
+  @Input({ required: true }) config!: AccountReportConfig<TResponse, TFilter, TRow>;
+
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
+  private readonly reportPrint = inject(ReportPrintService);
+  private readonly location = inject(Location);
+  private readonly requests = new Subject<ReportRequest<TFilter>>();
+  private readonly printSession = this.reportPrint.createSession(this.destroyRef);
+  private readonly sectionRowCache = new WeakMap<AccountReportSection<TRow>, TRow[]>();
+
+  readonly printing = this.printSession.printing;
+  readonly filterForm = new FormRecord<FormControl<AccountReportFilterValue>>({});
+  readonly response = signal<TResponse | null>(null);
+  readonly appliedFilters = signal<AccountReportFilterRaw>({});
+  readonly loadingReport = signal(false);
+  readonly loadingLookups = signal(false);
+  readonly lookupErrors = signal<ReadonlySet<string>>(new Set());
+  readonly lookupOptions = signal<Readonly<Record<string, ReadonlyArray<AccountReportFilterOption>>>>({});
+  readonly errorMessage = signal('');
+  readonly hasSearched = signal(false);
+
+  readonly sections = computed<ReadonlyArray<AccountReportSection<TRow>>>(() => {
+    const response = this.response();
+    return response ? this.config.sections(response, this.appliedFilters()) : [];
+  });
+  readonly summaryCards = computed(() => {
+    const response = this.response();
+    return response && this.config.summaryCards ? this.config.summaryCards(response) : [];
+  });
+  readonly responseContext = computed(() => {
+    const response = this.response();
+    return response && this.config.responseContext ? this.config.responseContext(response) : '';
+  });
+  readonly rowCount = computed(() =>
+    this.sections().reduce((count, section) => count + this.flattenRows(section).length, 0),
+  );
+  readonly hasRequiredLookupError = computed(() =>
+    this.config.filters.some(
+      (filter) => filter.requiredLookup && this.lookupErrors().has(filter.key),
+    ),
+  );
+
+  ngOnInit(): void {
+    this.initializeForm();
+    this.bindRequests();
+    this.filterForm.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.invalidateOutput());
+    this.loadLookups(this.config.autoSearch ?? false);
+  }
+
+  controlId(filter: AccountReportFilterDefinition): string {
+    return `${this.config.id}-${filter.key}`;
+  }
+
+  optionsFor(filter: AccountReportFilterDefinition): AccountReportFilterOption[] {
+    const options = filter.options ?? this.lookupOptions()[filter.key] ?? [];
+    return options.map((option) => ({
+      ...option,
+      label: option.labelKey ? this.translate.instant(option.labelKey) : option.label,
+    }));
+  }
+
+  search(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups() || this.hasRequiredLookupError()) return;
+    const raw = this.rawFilters();
+    const result = this.config.buildFilter(raw);
+    if (this.filterForm.invalid || !result.filter) {
+      this.filterForm.markAllAsTouched();
+      this.errorMessage.set(result.errorKey || 'accountReports.invalidFilters');
+      const focusKey = result.focusKey || Object.keys(this.filterForm.controls).find(key => this.filterForm.controls[key].invalid);
+      if (focusKey) focusField(`${this.config.id}-${focusKey}`);
+      return;
+    }
+
+    this.errorMessage.set('');
+    this.response.set(null);
+    this.hasSearched.set(true);
+    this.loadingReport.set(true);
+    this.filterForm.disable({ emitEvent: false });
+    this.loading.startLoading();
+    this.requests.next({ filter: result.filter, raw });
+  }
+
+  refresh(): void {
+    this.search();
+  }
+
+  reset(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    const values: Record<string, AccountReportFilterValue> = {};
+    this.config.filters.forEach((filter) => {
+      values[filter.key] = this.cloneValue(filter.initialValue);
+    });
+    this.filterForm.reset(values);
+    this.invalidateOutput();
+  }
+
+  retryLookups(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    this.loadLookups(false);
+  }
+
+  print(): void {
+    if (this.response() && this.rowCount() && !this.printing() && !this.loadingReport() && !this.loadingLookups()) this.printSession.print();
+  }
+
+  export(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    const response = this.response();
+    if (!response || !this.rowCount()) return;
+    const translate = (key: string): string => this.translate.instant(key);
+    const sections = this.sections();
+    const rows = this.config.exportRows
+      ? this.config.exportRows(response, sections, translate)
+      : this.defaultExportRows(sections, translate);
+    if (rows.length) onExportToExcel(signal(rows), this.config.exportFileName);
+  }
+
+  back(): void {
+    if (this.printing() || this.loadingReport() || this.loadingLookups()) return;
+    this.location.back();
+  }
+
+  appliedFilterItems(): ReadonlyArray<{ labelKey: string; value: string }> {
+    const raw = this.appliedFilters();
+    return this.config.filters
+      .map((filter) => ({ labelKey: filter.labelKey, value: this.filterDisplay(filter, raw[filter.key]) }))
+      .filter((item) => !!item.value);
+  }
+
+  private initializeForm(): void {
+    this.config.filters.forEach((filter) => {
+      this.filterForm.addControl(
+        filter.key,
+        new FormControl<AccountReportFilterValue>(
+          this.cloneValue(filter.initialValue),
+          { validators: this.validatorsFor(filter) },
+        ),
+      );
+    });
+  }
+  sectionRows(section: AccountReportSection<TRow>): TRow[] {
+    let rows = this.sectionRowCache.get(section);
+    if (!rows) {
+      rows = [...section.rows];
+      this.sectionRowCache.set(section, rows);
+    }
+    return rows;
+  }
+
+  private validatorsFor(filter: AccountReportFilterDefinition): ValidatorFn[] {
+    const validators: ValidatorFn[] = [];
+    if (filter.required) validators.push(Validators.required);
+    if (filter.kind === 'date-range') validators.push(dateRangeValidator);
+    if (filter.kind === 'date') validators.push(dateValueValidator);
+    if (filter.kind === 'month') {
+      validators.push((control) => {
+        if (control.value === null || control.value === '') return filter.required ? { required: true } : null;
+        return parseMonthValue(control.value as Date | string | null) ? null : { date: true };
+      });
+    }
+    if (filter.min !== undefined) validators.push(Validators.min(filter.min));
+    if (filter.max !== undefined) validators.push(Validators.max(filter.max));
+    if (filter.kind === 'number') {
+      validators.push(control => control.value == null ||
+        (typeof control.value === 'number' && Number.isFinite(control.value) && Number.isInteger(control.value))
+        ? null : { number: true });
+    }
+    if (filter.kind === 'select') {
+      validators.push(control => control.value == null ||
+        this.optionsFor(filter).some(option => option.value === control.value)
+        ? null : { invalidSelection: true });
+    }
+    return validators;
+  }
+
+  private bindRequests(): void {
+    this.requests
+      .pipe(
+        switchMap((request) =>
+          defer(() => this.config.load(request.filter)).pipe(
+            map((result): ReportOutcome<TResponse, TFilter> => {
+              if (result.isSuccess && result.entity) {
+                return {
+                  request,
+                  response: this.config.normalizeResponse
+                    ? this.config.normalizeResponse(result.entity)
+                    : result.entity,
+                };
+              }
+              return { request, declaredMessage: result.message };
+            }),
+            catchError((error) => of({ request, error } as ReportOutcome<TResponse, TFilter>)),
+            finalize(() => {
+              this.loadingReport.set(false);
+              this.filterForm.enable({ emitEvent: false });
+              this.loading.endLoading();
+            }),
+          ),
+        ),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((outcome) => {
+        if (outcome.response) {
+          this.response.set(outcome.response);
+          this.appliedFilters.set(outcome.request.raw);
+          this.errorMessage.set('');
+          return;
+        }
+        this.response.set(null);
+        this.appliedFilters.set({});
+        this.errorMessage.set(
+          outcome.error
+            ? apiErrorMessage(outcome.error, this.config.loadErrorKey || 'accountReports.loadError')
+            : outcome.declaredMessage || this.config.loadErrorKey || 'accountReports.loadError',
+        );
+      });
+  }
+
+  private loadLookups(autoSearch: boolean): void {
+    const definitions = this.config.filters.filter((filter) => !!filter.loadOptions);
+    if (!definitions.length) {
+      if (autoSearch) queueMicrotask(() => this.search());
+      return;
+    }
+
+    this.loadingLookups.set(true);
+    forkJoin(
+      definitions.map((filter) =>
+        filter.loadOptions!().pipe(
+          map((result) => ({ filter, result })),
+          catchError((error) => of({ filter, error })),
+        ),
+      ),
+    )
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.loadingLookups.set(false)),
+      )
+      .subscribe((outcomes) => {
+        const options = { ...this.lookupOptions() };
+        const errors = new Set<string>();
+        outcomes.forEach((outcome) => {
+          if ('result' in outcome && outcome.result.isSuccess) {
+            options[outcome.filter.key] = (outcome.result.entities ?? []).map((item) => ({
+              value: item.id,
+              label: item.value,
+            }));
+          } else {
+            errors.add(outcome.filter.key);
+            options[outcome.filter.key] = [];
+          }
+        });
+        this.lookupOptions.set(options);
+        this.lookupErrors.set(errors);
+        definitions.forEach(filter => this.filterForm.controls[filter.key].updateValueAndValidity({ emitEvent: false }));
+        if (autoSearch && !errors.size) queueMicrotask(() => this.search());
+      });
+  }
+
+  private invalidateOutput(): void {
+    this.response.set(null);
+    this.appliedFilters.set({});
+    this.hasSearched.set(false);
+    this.errorMessage.set('');
+  }
+
+  private rawFilters(): AccountReportFilterRaw {
+    const raw = this.filterForm.getRawValue();
+    const result: Record<string, AccountReportFilterValue> = {};
+    Object.keys(raw).forEach((key) => {
+      result[key] = this.cloneValue(raw[key]);
+    });
+    return result;
+  }
+
+  private cloneValue(value: AccountReportFilterValue): AccountReportFilterValue {
+    if (Array.isArray(value)) return value.map((item) => new Date(item)) as Date[];
+    return value instanceof Date ? new Date(value) : value;
+  }
+
+  private flattenRows(section: AccountReportSection<TRow>): TRow[] {
+    const rows: TRow[] = [];
+    const visit = (source: ReadonlyArray<TRow>): void => {
+      source.forEach((row) => {
+        rows.push(row);
+        const children = section.hierarchy?.children(row) ?? [];
+        if (children.length) visit(children);
+      });
+    };
+    visit(section.rows);
+    return rows;
+  }
+
+  private defaultExportRows(
+    sections: ReadonlyArray<AccountReportSection<TRow>>,
+    translate: (key: string) => string,
+  ): Array<Record<string, string | number>> {
+    const sectionHeader = translate('accountReports.section');
+    const includeSection = sections.length > 1;
+    const rows: Array<Record<string, string | number>> = [];
+    sections.forEach((section) => {
+      const title = section.titleKey ? translate(section.titleKey) : translate(this.config.titleKey);
+      dataTableExportRows(this.flattenRows(section), section.columns, translate).forEach((row) => {
+        rows.push(includeSection ? { [sectionHeader]: title, ...row } : row);
+      });
+    });
+    return rows;
+  }
+
+  private filterDisplay(filter: AccountReportFilterDefinition, value: AccountReportFilterValue): string {
+    if (value === undefined || value === null || value === '' || value === false) return '';
+    if (filter.kind === 'date-range') {
+      const [from, to] = parseDateRange(value);
+      return from && to ? `${formatDisplayDate(from)} – ${formatDisplayDate(to)}` : '';
+    }
+    if (filter.kind === 'date') {
+      const date = parseDateValue(value);
+      return date ? formatDisplayDate(date) : '';
+    }
+    if (filter.kind === 'month') return parseMonthValue(value as Date | string | null) ?? '';
+    if (filter.kind === 'select') {
+      return this.optionsFor(filter).find((option) => option.value === value)?.label ?? String(value);
+    }
+    if (filter.kind === 'checkbox') return this.translate.instant('general.yes');
+    return String(value);
+  }
+}
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report-page.component.html
+<section appReportPage class="sigma-report-page--fill sigma-print-flow">
+  <div class="sigma-report-panel sigma-print-flow">
+    <app-feature-title
+      [title]="config.titleKey | translate"
+      [icon]="config.icon"
+    ></app-feature-title>
+
+    <form
+      class="sigma-filter-form sigma-report-filter-panel no-print"
+      [formGroup]="filterForm"
+      (ngSubmit)="search()"
+    >
+      @for (filter of config.filters; track filter.key) {
+        @if (filter.kind === 'checkbox') {
+          <label class="sigma-report-filter-check" [for]="controlId(filter)">
+            <p-checkbox
+              [inputId]="controlId(filter)"
+              [formControlName]="filter.key"
+              [binary]="true"
+            ></p-checkbox>
+            <span>{{ filter.labelKey | translate }}</span>
+          </label>
+        } @else {
+          <div
+            class="sigma-report-filter-field"
+            [class.sigma-report-filter-field--wide]="filter.wide"
+          >
+            <label [for]="controlId(filter)">
+              {{ filter.labelKey | translate }}
+              @if (filter.required) { <span aria-hidden="true">*</span> }
+            </label>
+
+            @switch (filter.kind) {
+              @case ('date-range') {
+                <p-calendar
+                  appDatePicker
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  selectionMode="range"
+                  [numberOfMonths]="2"
+                  dataType="date"
+                  dateFormat="dd/mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  [hideOnDateTimeSelect]="false"
+                  placeholder="dd/mm/yyyy - dd/mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('date') {
+                <p-calendar
+                  appDatePicker
+                  [dateInputMask]="true"
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  dateFormat="dd/mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  placeholder="dd/mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('month') {
+                <p-calendar
+                  appDatePicker
+                  [dateInputMask]="true"
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  view="month"
+                  dateFormat="mm/yy"
+                  [readonlyInput]="false"
+                  [keepInvalid]="true"
+                  [showClear]="true"
+                  [showButtonBar]="true"
+                  placeholder="mm/yyyy"
+                  panelStyleClass="sigma-datepicker-panel"
+                  appendTo="body"
+                ></p-calendar>
+              }
+              @case ('select') {
+                <p-dropdown
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  [options]="optionsFor(filter)"
+                  optionLabel="label"
+                  optionValue="value"
+                  [filter]="true"
+                  [showClear]="true"
+                  appendTo="body"
+                  [placeholder]="filter.labelKey | translate"
+                ></p-dropdown>
+              }
+              @case ('number') {
+                <p-inputNumber
+                  [inputId]="controlId(filter)"
+                  [formControlName]="filter.key"
+                  [min]="filter.min"
+                  [max]="filter.max"
+                  [minFractionDigits]="0"
+                  [maxFractionDigits]="0"
+                  [useGrouping]="false"
+                />
+              }
+              @case ('text') {
+                <input
+                  pInputText
+                  [id]="controlId(filter)"
+                  type="text"
+                  [formControlName]="filter.key"
+                  [placeholder]="filter.labelKey | translate"
+                />
+              }
+            }
+            <app-field-error [control]="filterForm.controls[filter.key]" />
+          </div>
+        }
+      }
+
+      <div
+        appReportActions
+        class="sigma-report-filter-actions"
+        [ariaLabel]="'general.actions' | translate"
+      >
+        @if (config.showBack) {
+          <button type="button" class="btn btn-secondary sigma-report-action--reset" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="back()">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+            {{ 'general.back' | translate }}
+          </button>
+        }
+        <app-primary-action-button
+          type="submit"
+          [label]="'general.search' | translate"
+          icon="bi bi-search"
+          [loading]="loadingReport()"
+          [disabled]="printing() || loadingLookups() || hasRequiredLookupError()"
+        ></app-primary-action-button>
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="refresh()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          {{ 'general.refresh' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--reset" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="reset()">
+          <i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i>
+          {{ 'general.reset' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" [disabled]="printing() || !response() || !rowCount() || loadingReport() || loadingLookups()" (click)="print()">
+          <i class="bi bi-printer" aria-hidden="true"></i>
+          {{ 'general.print' | translate }}
+        </button>
+        <button type="button" class="btn btn-secondary sigma-report-action--export" [disabled]="printing() || !response() || !rowCount() || loadingReport() || loadingLookups()" (click)="export()">
+          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i>
+          {{ 'general.exportExcel' | translate }}
+        </button>
+      </div>
+    </form>
+
+    @if (lookupErrors().size) {
+      <div class="accounts-report-lookup-error no-print" role="alert">
+        <app-state-message kind="error" message="accountReports.lookupError"></app-state-message>
+        <button type="button" class="btn btn-secondary sigma-report-action--refresh" [disabled]="printing() || loadingReport() || loadingLookups()" (click)="retryLookups()">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          {{ 'accountReports.retryLookups' | translate }}
+        </button>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <app-state-message class="no-print" kind="error" [message]="errorMessage()"></app-state-message>
+    }
+
+    @if (appliedFilterItems().length) {
+      <div class="accounts-report-applied-filters" aria-live="polite">
+        @for (item of appliedFilterItems(); track item.labelKey) {
+          <span><strong>{{ item.labelKey | translate }}:</strong> {{ item.value }}</span>
+        }
+      </div>
+    }
+
+    @if (responseContext()) {
+      <p class="mb-0" role="status">{{ responseContext() }}</p>
+    }
+
+    @if (summaryCards().length) {
+      <app-summary-cards
+        [ariaLabel]="'accountReports.summary' | translate"
+        [cards]="summaryCards()"
+        [density]="config.summaryDensity || 'dense'"
+        layout="row"
+        [minCardWidth]="150"
+        [maxHeight]="config.summaryMaxHeight ?? null"
+      ></app-summary-cards>
+    }
+
+    <div
+      class="accounts-report-results sigma-print-flow"
+      [class.accounts-report-results--document]="config.sectionLayout === 'document'"
+      [class.sigma-report-table-frame]="config.sectionLayout === 'document'"
+      [attr.tabindex]="config.sectionLayout === 'document' ? 0 : null"
+      [attr.role]="config.sectionLayout === 'document' ? 'region' : null"
+      [attr.aria-label]="config.sectionLayout === 'document' ? (config.titleKey | translate) : null"
+    >
+      @if (loadingReport()) {
+        <app-state-message kind="loading"></app-state-message>
+      } @else if (!response()) {
+        @if (!errorMessage()) {
+          <app-state-message kind="empty" [message]="config.searchPromptKey || 'accountReports.searchPrompt'"></app-state-message>
+        }
+      } @else {
+        <div class="accounts-report-sections sigma-print-flow" [attr.data-count]="sections().length">
+          @for (section of sections(); track section.id) {
+            <section
+              class="accounts-report-section sigma-print-flow"
+              [id]="config.id + '-panel-' + section.id"
+              [attr.aria-labelledby]="section.titleKey ? config.id + '-' + section.id + '-heading' : null"
+              [attr.aria-label]="!section.titleKey ? (config.titleKey | translate) : null"
+            >
+              @if (section.titleKey) {
+                <h2 [id]="config.id + '-' + section.id + '-heading'">{{ section.titleKey | translate }}</h2>
+              }
+              @if (config.sectionLayout === 'document' && !section.rows.length) {
+                <app-state-message kind="empty" message="general.noData"></app-state-message>
+              } @else {
+                <app-data-table
+                  class="accounts-report-grid"
+                  [style.--sigma-data-table-min-width]="section.minWidth || '42rem'"
+                  [value]="sectionRows(section)"
+                  [columns]="section.columns"
+                  [dataKey]="section.dataKey || 'accountId'"
+                  [hierarchy]="section.hierarchy"
+                  [rowTone]="section.rowTone"
+                  [printAllRows]="printing()"
+                  [lazy]="false"
+                  [paginator]="false"
+                  [fill]="config.sectionLayout !== 'document'"
+                  [scrollable]="config.sectionLayout !== 'document' && !printing()"
+                  [loading]="false"
+                  [showEmpty]="true"
+                  emptyMessage="general.noData"
+                ></app-data-table>
+              }
+            </section>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+
+SOURCE: src/app/modules/Accounts/shared/report-family/account-report-page.component.scss
+.accounts-report-lookup-error {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.accounts-report-applied-filters {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  color: var(--sigma-muted);
+  font-size: 11px;
+}
+
+.accounts-report-results,
+.accounts-report-sections,
+.accounts-report-section {
+  min-width: 0;
+  min-height: 0;
+}
+
+.accounts-report-results {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.accounts-report-sections {
+  display: grid;
+  flex: 1 1 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 10px;
+  overflow: hidden;
+}
+
+.accounts-report-section {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.accounts-report-section > h2 {
+  flex: 0 0 auto;
+  margin: 0 0 6px;
+  color: var(--sigma-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.accounts-report-grid {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.accounts-report-results.accounts-report-results--document {
+  overflow: auto;
+
+  .accounts-report-sections {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 16px;
+    overflow: visible;
+  }
+
+  .accounts-report-section,
+  .accounts-report-grid {
+    flex: 0 0 auto;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 760px) {
+  .accounts-report-sections {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .accounts-report-results.accounts-report-results--document {
+    overflow: visible;
+
+    .accounts-report-sections {
+      display: block;
+    }
+  }
+
+  .sigma-report-panel,
+  .accounts-report-results,
+  .accounts-report-sections,
+  .accounts-report-section {
+    display: block;
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .accounts-report-section {
+    margin-block-end: 16px;
+    break-inside: auto;
+  }
+}
+
+
+SOURCE: src/app/modules/shared/components/data-table/data-table.component.ts
+import { CommonModule } from '@angular/common';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  TemplateRef,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
+
+import { ActionList } from '../../models/action-list';
+import { ActionButtonComponent } from '../action-button/action-button.component';
+import {
+  DataTableCellValue,
+  DataTableColumnFormat,
+  DataTableStatus,
+  dataTableCellText,
+} from './data-table.format';
+import { DEFAULT_PAGE_SIZE } from '../../utils/list-query';
+
+export type {
+  DataTableCellValue,
+  DataTableColumnType,
+  DataTableStatus,
+  DataTableStatusTone,
+} from './data-table.format';
+export { dataTableExportRows, formatMoney } from './data-table.format';
+
+export interface DataTablePaginationEvent {
+  page: number;
+  pageSize: number;
+  first: number;
+  sortField?: string;
+  sortOrder?: 1 | -1;
+}
+
+export interface DataTableCellContext<T extends object> {
+  $implicit: T;
+  row: T;
+  column: DataTableColumn<T>;
+}
+
+export interface DataTableCellLink<T extends object> {
+  activate: (row: T) => void;
+  enabled?: (row: T) => boolean;
+  title?: string;
+  ariaLabel?: (row: T) => string;
+}
+
+/** Optional read-only hierarchy for complete report datasets (UI blocks 6/20). */
+export interface DataTableHierarchy<T extends object> {
+  rowKey: (row: T) => string | number;
+  children: (row: T) => ReadonlyArray<T> | null | undefined;
+  code?: (row: T) => DataTableCellValue;
+  label?: (row: T) => DataTableCellValue;
+  activate?: (row: T) => void;
+  activateTitle?: string;
+  activateAriaLabel?: (row: T) => string;
+  defaultExpanded?: boolean;
+}
+
+/**
+ * A grid column (UI block 5). `type` formats the field (date, dateTime, money, number) or draws a
+ * status badge from `status(row)`; `value` and `cellTemplate` stay for anything else.
+ */
+export interface DataTableColumn<T extends object> extends DataTableColumnFormat<T> {
+  width?: string;
+  sortable?: boolean;
+  cellTemplate?: TemplateRef<DataTableCellContext<T>>;
+  headerClass?: string;
+  cellClass?: string;
+  /** Optional logical indentation for a flat hierarchy such as IncomeStatementFy2. */
+  indent?: (row: T) => number;
+  /** Optional inline navigation for a read-only report cell. */
+  link?: DataTableCellLink<T>;
+}
+
+@Component({
+  selector: 'app-data-table',
+  standalone: true,
+  imports: [ActionButtonComponent, CommonModule, TableModule, TranslateModule],
+  templateUrl: './data-table.component.html',
+  styleUrl: './data-table.component.scss',
+})
+export class DataTableComponent<T extends object> implements OnChanges {
+  private readonly translate = inject(TranslateService);
+  @ViewChild(Table) private readonly table?: Table;
+
+  /** Reset the shared row viewport without exposing PrimeNG internals to features. */
+  scrollToStart(): void {
+    this.table?.scrollTo({ top: 0, left: 0 });
+  }
+
+  @Input({ required: true }) value: T[] = [];
+  @Input({ required: true }) columns: ReadonlyArray<DataTableColumn<T>> = [];
+  @Input() actions: ActionList[] = [];
+  @Input() dataKey = 'id';
+  @Input() loading = false;
+  @Input() lazy = true;
+  @Input() paginator = true;
+  @Input() alwaysShowPaginator = true;
+  @Input() page = 1;
+  @Input() first?: number;
+  private _rows = DEFAULT_PAGE_SIZE;
+
+  @Input()
+  get rows(): number {
+    return this._rows;
+  }
+  set rows(value: number | null | undefined) {
+    if (!value) {
+      this._rows = DEFAULT_PAGE_SIZE;
+      return;
+    }
+    // 10 stays the minimum page size (the token interceptor enforces it on requests too).
+    this._rows = Math.max(10, value);
+  }
+
+  private _rowsPerPageOptions: number[] = [10, 15, 20, 50, 100];
+
+  @Input()
+  get rowsPerPageOptions(): number[] {
+    return this._rowsPerPageOptions;
+  }
+  set rowsPerPageOptions(options: number[] | null | undefined) {
+    if (!options || options.length === 0 || this.isLegacyRowsPerPage(options)) {
+      this._rowsPerPageOptions = [10, 15, 20, 50, 100];
+      return;
+    }
+    this._rowsPerPageOptions = options;
+  }
+
+  private isLegacyRowsPerPage(options: number[]): boolean {
+    const key = options.join(',');
+    return (
+      key === '10,20,50,100' ||
+      key === '5,10,25,50' ||
+      key === '5,10,20,50,100' ||
+      key === '10,25,50' ||
+      key === '5,10,25' ||
+      options.some((opt) => opt < 10)
+    );
+  }
+
+  @Input() totalRecords = 0;
+  @Input() sortField = '';
+  @Input() sortOrder: 1 | -1 = 1;
+  @Input() scrollHeight = '288px';
+  /** External report frames own scrolling when false (UI blocks 6/20/21). */
+  @Input() scrollable = true;
+  /**
+   * Fill mode (UI block 6, backlog 34): the grid takes the remaining height of its flex parent,
+   * rows scroll inside it and the paginator stays at the bottom. Replaces the feature-level
+   * `::ng-deep` fill workaround; `scrollHeight` is ignored.
+   */
+  @Input() fill = false;
+  @Input() showCurrentPageReport?: boolean;
+  @Input() currentPageReport = '';
+  @Input() emptyMessage = 'general.noDataFound';
+  @Input() emptyIcon = 'bi bi-inbox';
+  @Input() showEmpty = true;
+  @Input() rowInteractive = false;
+  @Input() selectable = false;
+  @Input() selectionDisabled = false;
+  @Input() selection: T[] = [];
+  @Input() selectionPageOnly = true;
+  @Input() selectAllAriaLabel = '';
+  @Input() rowSelectionAriaLabel?: (row: T) => string;
+  @Input() hierarchy?: DataTableHierarchy<T>;
+  /** Print preparation renders every descendant without mutating screen expansion. */
+  @Input() printAllRows = false;
+  @Input() rowTone?: (row: T) => 'section' | 'subtotal' | 'total' | null;
+
+  @Output() readonly pageChange = new EventEmitter<number>();
+  @Output() readonly rowsChange = new EventEmitter<number>();
+  @Output() readonly paginationChange = new EventEmitter<DataTablePaginationEvent>();
+  @Output() readonly lazyLoad = new EventEmitter<TableLazyLoadEvent>();
+  @Output() readonly rowActivated = new EventEmitter<T>();
+  @Output() readonly selectionChange = new EventEmitter<T[]>();
+
+  protected actionTemplate?: TemplateRef<unknown>;
+  private readonly expandedHierarchyKeys = new Set<string>();
+  private readonly initializedHierarchyKeys = new Set<string>();
+  private readonly hierarchyLevels = new Map<string, number>();
+  private visibleHierarchyRows: T[] = [];
+
+  ngOnChanges(): void {
+    this.rebuildHierarchyRows();
+  }
+
+  protected get hasActions(): boolean {
+    return this.actions.length > 0;
+  }
+
+  protected get columnCount(): number {
+    return Math.max(
+      1,
+      this.columns.length + (this.hasActions ? 1 : 0) + (this.selectable ? 1 : 0),
+    );
+  }
+
+  protected get hasRowActivation(): boolean {
+    return this.rowInteractive;
+  }
+
+  protected get resolvedScrollHeight(): string {
+    if (this.fill) {
+      return 'flex';
+    }
+    if (!this.scrollHeight || this.scrollHeight === '100%') {
+      return '288px';
+    }
+    return this.scrollHeight;
+  }
+
+  protected get resolvedFirst(): number {
+    if (this.first !== undefined && this.first !== null) {
+      return this.first;
+    }
+    return Math.max(0, (this.page - 1) * this.rows);
+  }
+
+  protected get resolvedTotalRecords(): number {
+    if (!this.lazy && (!this.totalRecords || this.totalRecords === 0)) {
+      return this.value?.length ?? 0;
+    }
+    return this.totalRecords;
+  }
+
+  protected get renderedValue(): T[] {
+    return this.hierarchy ? this.visibleHierarchyRows : this.value;
+  }
+
+  protected get resolvedShowCurrentPageReport(): boolean {
+    if (this.showCurrentPageReport !== undefined && this.showCurrentPageReport !== null) {
+      return this.showCurrentPageReport;
+    }
+    return !!this.currentPageReport || (this.paginator && this.resolvedTotalRecords > 0);
+  }
+
+  protected get resolvedCurrentPageReport(): string {
+    return this.currentPageReport || '{first} - {last} / {totalRecords}';
+  }
+
+  protected onTableLazyLoad(event: TableLazyLoadEvent): void {
+    const rawRows = Number(event.rows ?? this.rows);
+    const newRows = Math.max(10, Number.isNaN(rawRows) || rawRows < 10 ? 10 : rawRows);
+    const newFirst = Math.max(0, Number(event.first ?? 0));
+    const newPage = Math.floor(newFirst / newRows) + 1;
+
+    this.first = newFirst;
+
+    if (this._rows !== newRows) {
+      this._rows = newRows;
+      this.rowsChange.emit(newRows);
+    }
+
+    if (this.page !== newPage) {
+      this.page = newPage;
+      this.pageChange.emit(newPage);
+    }
+
+    const sortField = typeof event.sortField === 'string'
+      ? event.sortField
+      : (Array.isArray(event.sortField) ? event.sortField[0] : undefined);
+    const sortOrder = event.sortOrder === 1 || event.sortOrder === -1
+      ? event.sortOrder
+      : undefined;
+
+    this.paginationChange.emit({
+      page: newPage,
+      pageSize: newRows,
+      first: newFirst,
+      sortField,
+      sortOrder,
+    });
+
+    this.lazyLoad.emit({
+      ...event,
+      rows: newRows,
+      first: newFirst,
+    });
+  }
+
+  /** PrimeNG local sorting resets first without emitting onPage. Keep controlled paging in sync. */
+  protected onTableFirstChange(first: number): void {
+    if (this.lazy || !this.paginator || first === this.resolvedFirst) return;
+    this.onTablePage({ first, rows: this.rows });
+  }
+
+  protected onTablePage(event: { first: number; rows: number; page?: number }): void {
+    const newRows = Math.max(1, Number(event.rows ?? this.rows));
+    const newFirst = Math.max(0, Number(event.first ?? 0));
+    const newPage = event.page !== undefined ? event.page + 1 : Math.floor(newFirst / newRows) + 1;
+
+    this.first = newFirst;
+
+    if (this.rows !== newRows) {
+      this.rows = newRows;
+      this.rowsChange.emit(newRows);
+    }
+
+    if (this.page !== newPage) {
+      this.page = newPage;
+      this.pageChange.emit(newPage);
+    }
+
+    this.paginationChange.emit({
+      page: newPage,
+      pageSize: newRows,
+      first: newFirst,
+    });
+  }
+
+  protected setActionTemplate(template: TemplateRef<unknown>): void {
+    this.actionTemplate = template;
+  }
+
+  protected displayValue(row: T, column: DataTableColumn<T>): DataTableCellValue {
+    return dataTableCellText(row, column, (key) => this.translate.instant(key));
+  }
+
+  protected statusOf(row: T, column: DataTableColumn<T>): DataTableStatus | null {
+    return column.type === 'status' && column.status ? column.status(row) : null;
+  }
+
+  protected statusClass(status: DataTableStatus): string {
+    return !status.tone || status.tone === 'neutral'
+      ? 'sigma-status-badge'
+      : `sigma-status-badge sigma-status-badge--${status.tone}`;
+  }
+
+  protected selectionLabel(row: T): string {
+    return this.rowSelectionAriaLabel?.(row) ?? '';
+  }
+
+  protected hierarchyLevel(row: T): number {
+    const hierarchy = this.hierarchy;
+    return hierarchy ? this.hierarchyLevels.get(String(hierarchy.rowKey(row))) ?? 0 : 0;
+  }
+
+  protected columnIndent(row: T, column: DataTableColumn<T>): number {
+    return Math.max(0, Math.floor(column.indent?.(row) ?? 0));
+  }
+
+  protected hasHierarchyChildren(row: T): boolean {
+    return (this.hierarchy?.children(row)?.length ?? 0) > 0;
+  }
+
+  protected hierarchyExpanded(row: T): boolean {
+    const hierarchy = this.hierarchy;
+    return !!hierarchy && this.expandedHierarchyKeys.has(String(hierarchy.rowKey(row)));
+  }
+
+  protected toggleHierarchy(row: T, event: Event): void {
+    event.stopPropagation();
+    const hierarchy = this.hierarchy;
+    if (!hierarchy || !this.hasHierarchyChildren(row)) return;
+    const key = String(hierarchy.rowKey(row));
+    if (this.expandedHierarchyKeys.has(key)) this.expandedHierarchyKeys.delete(key);
+    else this.expandedHierarchyKeys.add(key);
+    this.rebuildHierarchyRows();
+  }
+
+  protected hierarchyCode(row: T): string {
+    return String(this.hierarchy?.code?.(row) ?? '');
+  }
+
+  protected hierarchyLabel(row: T, column: DataTableColumn<T>): string {
+    return String(this.hierarchy?.label?.(row) ?? this.displayValue(row, column) ?? '');
+  }
+
+  protected hierarchyActivate(row: T, event: Event): void {
+    event.stopPropagation();
+    this.hierarchy?.activate?.(row);
+  }
+
+  protected hierarchyActivateAriaLabel(row: T, column: DataTableColumn<T>): string {
+    return this.hierarchy?.activateAriaLabel?.(row) || this.hierarchyLabel(row, column);
+  }
+
+  protected cellLinkActivate(row: T, column: DataTableColumn<T>, event: Event): void {
+    event.stopPropagation();
+    if (!column.link?.enabled || column.link.enabled(row)) column.link?.activate(row);
+  }
+
+  protected cellLinkAriaLabel(row: T, column: DataTableColumn<T>): string {
+    return String(column.link?.ariaLabel?.(row) || this.displayValue(row, column) || '');
+  }
+
+  protected updateSelection(value: T[] | T | null): void {
+    if (this.selectionDisabled) return;
+    this.selectionChange.emit(Array.isArray(value) ? value : []);
+  }
+
+  protected activateRow(row: T, event: Event): void {
+    if (!this.hasRowActivation) return;
+
+    const target = event.target;
+    if (target instanceof Element) {
+      const interactiveTarget = target.closest(
+        'button, a[href], input, select, textarea, option, label, summary, '
+          + '[contenteditable="true"], [tabindex]:not([tabindex="-1"]), [role]',
+      );
+      if (interactiveTarget && interactiveTarget !== event.currentTarget) return;
+    }
+
+    if (event.type === 'keydown') event.preventDefault();
+    this.rowActivated.emit(row);
+  }
+
+  private rebuildHierarchyRows(): void {
+    this.hierarchyLevels.clear();
+    if (!this.hierarchy) {
+      this.visibleHierarchyRows = [];
+      return;
+    }
+    const rows: T[] = [];
+    this.appendHierarchyRows(this.value, 0, rows, this.hierarchy);
+    this.visibleHierarchyRows = rows;
+  }
+
+  private appendHierarchyRows(
+    source: ReadonlyArray<T>,
+    level: number,
+    target: T[],
+    hierarchy: DataTableHierarchy<T>,
+  ): void {
+    source.forEach((row) => {
+      const key = String(hierarchy.rowKey(row));
+      if (!this.initializedHierarchyKeys.has(key)) {
+        this.initializedHierarchyKeys.add(key);
+        if (hierarchy.defaultExpanded) this.expandedHierarchyKeys.add(key);
+      }
+      this.hierarchyLevels.set(key, level);
+      target.push(row);
+      const children = hierarchy.children(row) ?? [];
+      if (children.length && (this.printAllRows || this.expandedHierarchyKeys.has(key))) {
+        this.appendHierarchyRows(children, level + 1, target, hierarchy);
+      }
+    });
+  }
+}
+
+
+SOURCE: src/app/modules/shared/components/data-table/data-table.component.html
+<div
+  class="sigma-data-table"
+  [class.sigma-data-table--scrollable]="scrollable"
+  [class.sigma-data-table--flow]="!scrollable"
+  [class.sigma-data-table--fill]="fill && scrollable"
+  [style.--sigma-data-table-scroll-height]="resolvedScrollHeight"
+>
+  @if (hasActions) {
+    <app-action-button
+      [moreActions]="actions"
+      (SendActionTemplate)="setActionTemplate($event)"
+    ></app-action-button>
+  }
+
+  <p-table
+    [value]="renderedValue"
+    [dataKey]="dataKey"
+    styleClass="sigma-data-table__table"
+    responsiveLayout="scroll"
+    [scrollable]="scrollable"
+    [scrollHeight]="scrollable ? resolvedScrollHeight : ''"
+    sortMode="single"
+    [lazy]="lazy"
+    [lazyLoadOnInit]="false"
+    [paginator]="paginator"
+    [alwaysShowPaginator]="alwaysShowPaginator"
+    [first]="resolvedFirst"
+    [rows]="rows"
+    [totalRecords]="resolvedTotalRecords"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [loading]="loading"
+    [sortField]="sortField"
+    [sortOrder]="sortOrder"
+    [selectionMode]="selectable ? 'multiple' : undefined"
+    [selection]="selection"
+    [selectionPageOnly]="selectionPageOnly"
+    [showCurrentPageReport]="resolvedShowCurrentPageReport"
+    [currentPageReportTemplate]="resolvedCurrentPageReport | translate"
+    paginatorDropdownAppendTo="body"
+    (onLazyLoad)="onTableLazyLoad($event)"
+    (firstChange)="onTableFirstChange($event)"
+    (onPage)="onTablePage($event)"
+    (selectionChange)="updateSelection($event)"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        @if (selectable) {
+          <th scope="col" class="sigma-data-table__selection-column">
+            <p-tableHeaderCheckbox
+              [disabled]="selectionDisabled"
+              [ariaLabel]="selectAllAriaLabel"
+            ></p-tableHeaderCheckbox>
+          </th>
+        }
+        @if (hasActions) {
+          <th scope="col" class="sigma-data-table__actions-column">
+            {{ 'general.actions' | translate }}
+          </th>
+        }
+        @for (column of columns; track column.field + ':' + column.header) {
+          <th
+            scope="col"
+            [ngClass]="column.headerClass"
+            [style.width]="column.width || null"
+            [pSortableColumn]="column.field"
+            [pSortableColumnDisabled]="!column.sortable"
+          >
+            {{ column.header | translate }}
+            @if (column.sortable) {
+              <p-sortIcon [field]="column.field"></p-sortIcon>
+            }
+          </th>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-row>
+      <tr
+        [attr.data-row-tone]="rowTone ? rowTone(row) : null"
+        [class.sigma-data-table__row--interactive]="hasRowActivation"
+        [class.sigma-data-table__hierarchy-root]="hierarchy && hierarchyLevel(row) === 0"
+        [attr.tabindex]="hasRowActivation ? 0 : null"
+        [attr.role]="hasRowActivation && !selectable ? 'button' : null"
+        (click)="activateRow(row, $event)"
+        (keydown.enter)="activateRow(row, $event)"
+        (keydown.space)="activateRow(row, $event)"
+      >
+        @if (selectable) {
+          <td
+            class="sigma-data-table__selection-column"
+            (click)="$event.stopPropagation()"
+            (keydown)="$event.stopPropagation()"
+          >
+            <p-tableCheckbox
+              [disabled]="selectionDisabled"
+              [value]="row"
+              [ariaLabel]="selectionLabel(row)"
+            ></p-tableCheckbox>
+          </td>
+        }
+        @if (hasActions) {
+          <td class="sigma-data-table__actions-column">
+            @if (actionTemplate) {
+              <ng-container
+                *ngTemplateOutlet="actionTemplate; context: { $implicit: row }"
+              ></ng-container>
+            }
+          </td>
+        }
+        @for (column of columns; track column.field + ':' + column.header; let isFirst = $first) {
+          <td [ngClass]="column.cellClass" [style.width]="column.width || null">
+            @if (column.cellTemplate) {
+              <ng-container
+                *ngTemplateOutlet="column.cellTemplate; context: {
+                  $implicit: row,
+                  row,
+                  column
+                }"
+              ></ng-container>
+            } @else if (hierarchy && isFirst) {
+              <div
+                class="sigma-data-table__hierarchy-cell"
+                [style.padding-inline-start.px]="hierarchyLevel(row) * 14"
+              >
+                @if (hasHierarchyChildren(row)) {
+                  <button
+                    type="button"
+                    class="sigma-data-table__hierarchy-toggle"
+                    [attr.aria-expanded]="hierarchyExpanded(row)"
+                    [attr.aria-label]="hierarchyLabel(row, column)"
+                    (click)="toggleHierarchy(row, $event)"
+                  >
+                    <i
+                      class="bi"
+                      [class.bi-chevron-down]="hierarchyExpanded(row)"
+                      [class.bi-chevron-right]="!hierarchyExpanded(row)"
+                      aria-hidden="true"
+                    ></i>
+                  </button>
+                } @else {
+                  <span class="sigma-data-table__hierarchy-spacer" aria-hidden="true"></span>
+                }
+                @if (hierarchyCode(row); as code) {
+                  <span class="sigma-data-table__hierarchy-code">{{ code }}</span>
+                }
+                @if (hierarchy.activate) {
+                  <button
+                    type="button"
+                    class="sigma-data-table__cell-link"
+                    [title]="hierarchy.activateTitle ? (hierarchy.activateTitle | translate) : ''"
+                    [attr.aria-label]="hierarchyActivateAriaLabel(row, column)"
+                    (click)="hierarchyActivate(row, $event)"
+                  >
+                    {{ hierarchyLabel(row, column) }}
+                  </button>
+                } @else {
+                  <span>{{ hierarchyLabel(row, column) }}</span>
+                }
+              </div>
+            } @else if (column.link && (!column.link.enabled || column.link.enabled(row))) {
+              <div
+                class="sigma-data-table__indented-cell"
+                [style.padding-inline-start.px]="columnIndent(row, column) * 14"
+              >
+                <button
+                  type="button"
+                  class="sigma-data-table__cell-link"
+                  [title]="column.link.title ? (column.link.title | translate) : ''"
+                  [attr.aria-label]="cellLinkAriaLabel(row, column)"
+                  (click)="cellLinkActivate(row, column, $event)"
+                >
+                  {{ displayValue(row, column) }}
+                </button>
+              </div>
+            } @else if (column.indent) {
+              <div
+                class="sigma-data-table__indented-cell"
+                [style.padding-inline-start.px]="columnIndent(row, column) * 14"
+              >
+                {{ displayValue(row, column) }}
+              </div>
+            } @else {
+              @if (statusOf(row, column); as status) {
+                <span [class]="statusClass(status)">{{ status.label | translate }}</span>
+              } @else {
+                {{ displayValue(row, column) }}
+              }
+            }
+          </td>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr class="sigma-data-table__empty-row">
+        <td [attr.colspan]="columnCount" class="sigma-data-table__empty-cell">
+          @if (!loading && showEmpty) {
+            <div class="sigma-data-table__empty" role="status">
+              <i [class]="emptyIcon" aria-hidden="true"></i>
+              {{ emptyMessage | translate }}
+            </div>
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+
+SOURCE: src/app/modules/shared/components/data-table/data-table.component.scss
+:host {
+  --_sigma-data-table-border: var(--sigma-data-table-border, #d7dade);
+  --_sigma-data-table-header-background: var(--sigma-data-table-header-background, #f3f3f3);
+  --_sigma-data-table-header-color: var(--sigma-data-table-header-color, #222);
+  --_sigma-data-table-row-background: var(--sigma-data-table-row-background, #fff);
+  --_sigma-data-table-row-alt-background: var(--sigma-data-table-row-alt-background, #f1f1f1);
+  --_sigma-data-table-row-hover-background: var(--sigma-data-table-row-hover-background, #f3f8fc);
+  --_sigma-data-table-text: var(--sigma-data-table-text, #3f4850);
+  --_sigma-data-table-muted: var(--sigma-data-table-muted, #728596);
+  --_sigma-data-table-10-rows-height: 288px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+.sigma-data-table {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.sigma-data-table__empty {
+  display: flex;
+  height: 100%;
+  min-height: calc(var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height)) - 28px);
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--_sigma-data-table-muted);
+  pointer-events: none;
+  font-size: 12px;
+}
+
+:host ::ng-deep .sigma-data-table p-table {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  justify-content: space-between;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height)) !important;
+  height: var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height));
+  overflow-x: auto !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--scrollable {
+  min-height: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--scrollable p-table {
+  min-height: 0;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--scrollable .p-datatable {
+  min-height: 0;
+  width: 100%;
+  flex: 1 1 auto;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--scrollable .p-datatable-wrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height)) !important;
+  height: var(--sigma-data-table-scroll-height, var(--_sigma-data-table-10-rows-height));
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-thead > tr > th {
+  position: sticky;
+  z-index: 2;
+  top: 0;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-table {
+  min-width: var(--sigma-data-table-min-width, 640px);
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-table:has(.sigma-data-table__empty-row) {
+  height: 100%;
+  flex: 1 1 auto;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__empty-row {
+  height: 100% !important;
+  background: transparent !important;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__empty-cell {
+  height: 100% !important;
+  vertical-align: middle !important;
+  border-bottom: 0 !important;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody,
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr,
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr > td {
+  overflow: visible !important;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-thead > tr > th {
+  height: 28px;
+  padding: 5px 7px;
+  border-color: var(--_sigma-data-table-border);
+  color: var(--_sigma-data-table-header-color);
+  background: var(--_sigma-data-table-header-background);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr > td {
+  height: 25px;
+  max-width: 360px;
+  overflow: hidden !important;
+  padding: 3px 7px;
+  border-color: var(--_sigma-data-table-border);
+  color: var(--_sigma-data-table-text);
+  background: var(--_sigma-data-table-row-background);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr > td.sigma-data-table__cell--wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  overflow: visible !important;
+  text-overflow: clip;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr:nth-child(even) > td {
+  background: var(--_sigma-data-table-row-alt-background);
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr:hover > td {
+  background: var(--_sigma-data-table-row-hover-background);
+}
+
+/* Optional accounting statement roles, with no change to ordinary grid rows. */
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr[data-row-tone='section'] > td {
+  color: var(--_sigma-data-table-header-color);
+  background: var(--_sigma-data-table-header-background);
+  font-weight: 700;
+  border-block-start: 1px solid var(--_sigma-data-table-border);
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr[data-row-tone='subtotal'] > td,
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr[data-row-tone='total'] > td {
+  font-weight: 700;
+  border-block-start: 1px solid var(--_sigma-data-table-border);
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr[data-row-tone='total'] > td {
+  border-block-start: 3px double var(--_sigma-data-table-border);
+  border-block-end: 3px double var(--_sigma-data-table-border);
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__cell--numeric {
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+}
+
+.sigma-data-table__hierarchy-cell,
+.sigma-data-table__indented-cell {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+.sigma-data-table__hierarchy-toggle,
+.sigma-data-table__cell-link {
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+}
+
+.sigma-data-table__hierarchy-toggle {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 3px;
+  color: var(--_sigma-data-table-muted);
+}
+
+.sigma-data-table__hierarchy-toggle:hover,
+.sigma-data-table__hierarchy-toggle:focus-visible,
+.sigma-data-table__cell-link:focus-visible {
+  outline: 0;
+  box-shadow: var(--sigma-control-focus-ring);
+}
+
+.sigma-data-table__hierarchy-spacer {
+  width: 22px;
+  flex: 0 0 22px;
+}
+
+.sigma-data-table__hierarchy-code {
+  min-width: 52px;
+  color: var(--_sigma-data-table-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sigma-data-table__cell-link {
+  min-width: 0;
+  padding: 0;
+  color: var(--sigma-primary);
+  cursor: pointer;
+  overflow: hidden;
+  text-align: start;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sigma-data-table__cell-link:hover {
+  color: var(--sigma-primary-hover);
+  text-decoration: underline;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__cell--wrap .sigma-data-table__cell-link {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-overflow: clip;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr.sigma-data-table__hierarchy-root > td {
+  font-weight: 650;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr.sigma-data-table__row--interactive {
+  cursor: pointer;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr.sigma-data-table__row--interactive:focus-visible {
+  outline: 2px solid var(--sigma-primary);
+  outline-offset: -2px;
+}
+
+:host ::ng-deep .sigma-data-table .p-datatable-tbody > tr.sigma-data-table__row--interactive:focus-visible > td {
+  background: var(--_sigma-data-table-row-hover-background);
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__actions-column {
+  width: 1%;
+  overflow: visible !important;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column {
+  width: 30px;
+  min-width: 30px;
+  padding-inline: 4px;
+  text-align: center;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column .p-checkbox {
+  width: 15px;
+  height: 15px;
+  vertical-align: middle;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column .p-checkbox-box {
+  width: 15px;
+  height: 15px;
+  border-width: 1px;
+  border-radius: 2px;
+}
+
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column .p-checkbox-icon,
+:host ::ng-deep .sigma-data-table .sigma-data-table__selection-column .p-icon {
+  width: 9px;
+  height: 9px;
+  font-size: 9px;
+}
+
+:host ::ng-deep .sigma-data-table .action-button-toggle {
+  min-width: 86px;
+  min-height: 24px;
+  padding: 2px 8px;
+  border-color: var(--sigma-primary) !important;
+  border-radius: 2px;
+  color: #fff !important;
+  background: var(--sigma-primary) !important;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+:host ::ng-deep .sigma-data-table .action-button-toggle i {
+  color: #fff !important;
+}
+
+:host ::ng-deep .sigma-data-table .action-button-toggle:hover,
+:host ::ng-deep .sigma-data-table .action-button-toggle:focus-visible,
+:host ::ng-deep .sigma-data-table .action-button-toggle:active,
+:host ::ng-deep .sigma-data-table .action-button-toggle.show {
+  border-color: var(--sigma-primary-hover) !important;
+  color: #fff !important;
+  background: var(--sigma-primary-hover) !important;
+}
+
+:host ::ng-deep .sigma-data-table .dropdown-menu {
+  z-index: 1100;
+  max-height: min(70vh, 420px);
+  overflow-y: auto;
+}
+
+:host ::ng-deep .sigma-data-table p-paginator {
+  display: block;
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 0 12px;
+  border: 0;
+  background: transparent;
+  margin-top: auto;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-current {
+  width: auto;
+  min-width: max-content;
+  height: auto;
+  flex: 0 0 auto;
+  margin-inline: 4px;
+  padding-inline: 6px;
+  overflow: visible;
+  white-space: nowrap;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-pages {
+  display: inline-flex;
+  align-items: center;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-pages:empty::before {
+  content: '1';
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 2.125rem !important;
+  height: 2.125rem !important;
+  min-width: 2.125rem !important;
+  padding: 0 !important;
+  margin: 0.143rem;
+  border-radius: 50% !important;
+  border: 1px solid var(--sigma-primary) !important;
+  color: #fff !important;
+  background: var(--sigma-primary) !important;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: default;
+  user-select: none;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page {
+  border-radius: 50% !important;
+  width: 2.125rem !important;
+  height: 2.125rem !important;
+  min-width: 2.125rem !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0.143rem;
+  font-size: 11px;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-first,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-prev,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-next,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-last {
+  border-radius: 50% !important;
+  width: 2.125rem !important;
+  height: 2.125rem !important;
+  min-width: 2.125rem !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:hover,
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:focus-visible {
+  border-radius: 50% !important;
+  border: 1px solid var(--sigma-primary) !important;
+  color: #fff !important;
+  background: var(--sigma-primary) !important;
+  font-weight: 700;
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:focus-visible {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--sigma-primary) 28%, transparent);
+}
+
+:host ::ng-deep .sigma-data-table .p-paginator .p-paginator-rpp-options.p-disabled {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+:host-context([data-bs-theme='dark']) {
+  --_sigma-data-table-border: var(--sigma-data-table-border, #405364);
+  --_sigma-data-table-header-background: var(--sigma-data-table-header-background, #20313d);
+  --_sigma-data-table-header-color: var(--sigma-data-table-header-color, #e5edf4);
+  --_sigma-data-table-row-background: var(--sigma-data-table-row-background, #182630);
+  --_sigma-data-table-row-alt-background: var(--sigma-data-table-row-alt-background, #1d2b36);
+  --_sigma-data-table-row-hover-background: var(--sigma-data-table-row-hover-background, #243746);
+  --_sigma-data-table-text: var(--sigma-data-table-text, #dce7ee);
+  --_sigma-data-table-muted: var(--sigma-data-table-muted, #a9bdca);
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator-current {
+  color: var(--_sigma-data-table-muted);
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:hover,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page.p-highlight:focus-visible,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-pages:empty::before {
+  border-radius: 50% !important;
+  border-color: #246b98 !important;
+  background: #246b98 !important;
+  color: #fff !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page:not(.p-highlight) {
+  color: var(--_sigma-data-table-muted) !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-page:not(.p-highlight):hover {
+  color: #fff !important;
+  background: #304454 !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-first,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-prev,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-next,
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-last {
+  color: var(--_sigma-data-table-muted) !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-first:hover:not(.p-disabled),
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-prev:hover:not(.p-disabled),
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-next:hover:not(.p-disabled),
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-paginator-last:hover:not(.p-disabled) {
+  color: #fff !important;
+  background: #304454 !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-dropdown {
+  border-color: #405364 !important;
+  color: #e5edf4 !important;
+  background: #22313e !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-dropdown .p-dropdown-label {
+  color: #e5edf4 !important;
+}
+
+:host-context([data-bs-theme='dark']) ::ng-deep .sigma-data-table .p-paginator .p-dropdown .p-dropdown-trigger {
+  color: #aebdca !important;
+}
+
+/*
+ * Fill mode (`[fill]="true"`, UI block 6, backlog 34). Kept last so it wins over the fixed
+ * scroll-height rules above: the grid fills its flex parent, rows are the scroll owner, the
+ * paginator is grounded at the bottom with compact spacing.
+ */
+.sigma-data-table.sigma-data-table--fill {
+  height: 100%;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill p-table,
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill .p-datatable {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill .p-datatable-wrapper {
+  flex: 1 1 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill p-paginator,
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill .p-paginator {
+  flex-shrink: 0 !important;
+  margin-top: auto !important;
+}
+
+:host ::ng-deep .sigma-data-table.sigma-data-table--fill .p-paginator {
+  padding: 6px 0 4px !important;
+}
+
+/* Reports can keep the shared grid palette while their outer frame owns scrolling. */
+:host ::ng-deep .sigma-data-table.sigma-data-table--flow,
+:host ::ng-deep .sigma-data-table.sigma-data-table--flow p-table,
+:host ::ng-deep .sigma-data-table.sigma-data-table--flow .p-datatable,
+:host ::ng-deep .sigma-data-table.sigma-data-table--flow .p-datatable-wrapper {
+  display: block;
+  height: auto;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.sigma-data-table--flow .sigma-data-table__empty {
+  min-height: 260px;
+}
+
+@media print {
+  :host ::ng-deep .sigma-data-table--flow p-paginator {
+    display: none !important;
+  }
+
+  :host ::ng-deep .sigma-data-table--flow .p-datatable-table {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  :host ::ng-deep .sigma-data-table--flow .p-datatable-thead > tr > th,
+  :host ::ng-deep .sigma-data-table--flow .p-datatable-tbody > tr > td {
+    position: static;
+    max-width: none;
+    overflow: visible !important;
+    color: #222 !important;
+    background: #fff !important;
+    border-color: #d7dade;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    text-overflow: clip;
+  }
+
+  :host ::ng-deep .sigma-data-table--flow .p-datatable-tbody > tr {
+    break-inside: avoid;
+  }
+
+  .sigma-data-table--flow .sigma-data-table__empty {
+    min-height: 0;
+  }
+
+  .sigma-data-table__hierarchy-toggle,
+  .sigma-data-table__hierarchy-spacer {
+    display: none;
+  }
+}

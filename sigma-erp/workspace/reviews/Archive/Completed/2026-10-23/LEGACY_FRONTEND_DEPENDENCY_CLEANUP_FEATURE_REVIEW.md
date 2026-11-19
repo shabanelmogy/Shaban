@@ -1,0 +1,37 @@
+# Remove unused frontend dependency candidates
+
+| Item | Value |
+|---|---|
+| Status | Implemented — source-only |
+| Owner verification pending | yes |
+| Date | 2026-10-15 |
+
+Owner explicitly requests removing all candidates from the preceding dependency review. Scope: seven runtime declarations (@angular/material, ngx-clipboard, clipboard, nouislider, datatables.net, datatables.net-bs5, jquery), the orphan @types/datatables.net/@types/jquery declarations, and their direct source/asset/bootstrap integration. Keep Angular/PrimeNG and all unrelated versions/contracts. This is infrastructure cleanup, not a screen/business rewrite; backend/schema/API/editor state/routes remain unchanged.
+
+Pre-edit source evidence: no Material or clipboard/noUi runtime feature usage; ClipboardModule is registered only in AppModule. DataTables assets/jQuery scripts are explicitly loaded by angular.json, but application plugin initialization is absent. Two legacy demo createdRow callbacks still call jQuery and will be converted to native DOM classList operations, preserving the same target cell/classes. Two unrelated-looking imports of jquery.data are unused and removed. The unimplemented Saas toolbar noUi placeholder has no initialization and the containing toolbar outlet is commented; remove that placeholder and the dedicated legacy plugin SCSS/mixin integrations. src/typings.d.ts contains only an unused ClipboardJS ambient declaration; remove it.
+
+Important preservation finding: AgreementDocumentComponent imports DragDropModule/CdkDragDrop from @angular/cdk/drag-drop. CDK currently exists only through Material's dependency chain. Add direct @angular/cdk at the current locked17.3.10 before uninstalling Material, keeping drag/drop code, template and exact CDK version unchanged. Never delete CDK as an orphan merely because Material was its package parent.
+
+Conformance: Master5 dependency/source preservation; UI1 actual AppModule root imports and existing AgreementDocumentComponent/CDK declaration; Phase05/06 source wiring/diff checks. Recipe -Check passed all8 before work. Required Sigma skill inspected; no new UI shape or reference-layout copy is introduced. No user-facing business behavior or guide instructions change, so no new in-app guide/navigation entry is needed for this package-only cleanup.
+
+Implementation choice: use npm uninstall for the explicit targets with --ignore-scripts --offline --no-audit --no-fund. This updates lockfile and installed dependency tree without invoking lifecycle builds/tests or changing dependency policy. Preserve unrelated locked versions and review any resolution changes before handoff. Do not use --force or --legacy-peer-deps as an unexamined workaround.
+
+Verification: source imports and obsolete globals/plugin hooks, JSON consistency, TypeScript/template source parsers, remaining dependency graph/versions, full scoped frontend diff and whitespace. Build/tests/lint/browser/database/migrations/commits/deploy stay unexecuted. Owner validates the next build and Agreement Document drag/drop along with normal layout/table navigation. No subagent: one small sequential source-to-package removal, so parallel overhead would exceed benefit.
+
+## Implementation and final reconciliation
+
+The frozen scope was implemented without business/API changes. npm uninstall completed successfully using the exact options above and reported 67 installed packages removed. The committed lockfile graph lost 66 package entries: the nine explicit declarations and their unused Material/clipboard/type dependencies. Installed-tree pruning and lockfile counts are recorded separately. All nine targets are absent from package.json, package-lock.json and their node_modules paths. No surviving locked version changed and no package entry was added. The sole surviving-entry metadata change is CDK losing its peer-only marker after becoming an explicit dependency at the same17.3.10 version; its drag-drop declaration entry still exists. npm also sorted the existing encode-utf8 entry without changing its content.
+
+Source/configuration changes: package.json/package-lock.json; angular.json plugin scripts, CSS and unused clipboard CommonJS allowance; AppModule ClipboardModule registration; unused jquery imports in Fines/Provision; native first-cell class operations in UserListing/RoleDetails; dormant Saas noUi placeholder; legacy plugin Sass entry points/styles/mixin; unused ClipboardJS-only src/typings.d.ts.18 frontend files were changed/deleted. No backend, schema, mappings, calculations, permissions, business screen columns, editor payloads or routes changed. No migration is required. Screenshot classification is not applicable to this dependency-only request.
+
+Source checks passed: three JSON files parse and root lock declarations match package.json; five changed TypeScript files parse; one changed HTML template parses; git diff --check passes. Targeted searches found no remaining removed-package imports, global jQuery calls, clipboard directives or noUi hooks. The only remaining mentions are three commented DataTables.Settings examples and the existing historical jQuery Easing credit; neither creates a dependency. The complete scoped source diff was reviewed, and the entire lockfile change was reconciled structurally against the saved pre-uninstall graph. Evidence: LEGACY_FRONTEND_DEPENDENCY_CLEANUP_SOURCE_AUDIT.json, produced by Audit-LegacyFrontendDependencies.cjs. These are parser/source checks, not compilation or runtime verification.
+
+Applied: scoped discovery, preservation contract freeze, dependency/source integration, final source reconciliation. Skipped: new screen patterns/guides and backend/detail-write phases because no live screen workflow or contract is introduced. The existing Agreement Document guide/route remains applicable. No reusable new screen rule was established, so no canonical-book/skill edits or packet regeneration were needed; the pre-work drift check passed.
+
+Owner verification pending: run the normal frontend build, then check Agreement Document drag/drop and the usual sidebar/table navigation. Build, tests, lint, browser/runtime verification, database commands, migrations, commits/pushes and deployment were not run by the agent. Suggested frontend commit: `chore(deps): remove unused frontend libraries`.
+
+## Follow-up: missing global plugin assets after removal
+
+Owner reported missing DataTables/jQuery global CSS/JS files. A fresh scoped search of the frontend repository (excluding installed packages, generated output, Git and Angular cache) found no remaining references to those asset paths. Current angular.json build styles contain only src/styles.scss and Leaflet, and scripts contain only Bootstrap; test configuration also has no removed assets. No new source edit is required by this evidence.
+
+Process inspection found the Angular CLI development server command running with creation time2026-10-15 18:33:18, preceding angular.json's last write at19:20:21. This supports the diagnosis that the running serve session retained its earlier global entry configuration. Owner should stop that terminal session with Ctrl+C and restart using npm start from the frontend repository to load the updated workspace settings. Runtime resolution remains owner-pending; the agent did not stop/restart the server, run a build or clear caches. All8 recipe drift checks passed again. This is a small sequential follow-up; no delegation or screen guide change applies.

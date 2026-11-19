@@ -1,5 +1,71 @@
 # Sigma documentation changes
 
+## 2026-11-19 — Verify routing and public reference checks
+
+The Arabic Verify command links to the live command table for its permissions.
+The reference checker covers the public entry pages, the book indexes, the active
+review index and local Markdown section links. The Master index example now
+cites the existing contracts block.
+
+## 2026-11-19 — Topic folders for the remaining large blocks
+
+UI2, UI6, UI7, UI14, UI22, UI24, BE15 and BE18 moved independent topics verbatim
+into their `NN/` topic folders, keeping block numbers and main files (main files
+now 2.0–15.3 KB; largest topic file 16.5 KB). No canonical block remains over
+30 KB. Master8 lists every block with a topic folder. All eight packets were
+regenerated and checked; the reference check reports no findings.
+
+## 2026-11-19 — Block topic folders, English files, generated current-state indexes
+
+Owner-approved. UI1, UI13 and UI20 keep their block numbers and main files and
+move independent topics verbatim into `ui/01/`, `ui/13/` and `ui/20/` (main files
+now 7.7, 13.4 and 21.5 KB; topic files 1.4–22 KB). The generator fingerprints a
+block's main file plus its topic folder, so topic edits stale dependent packets
+(verified). Links into moved sections (UI3 → UI20 title width, screen catalog 02
+→ UI13 routed editor baseline) were repointed. Master8 and the companion record
+the owner decision that agent-facing files are English; `reviews/INDEX.md` and
+the five written current-state files were rewritten in English. 52 generated
+current-state indexes (status, latest date, files, section headings) now cover
+every review over 40 KB; each is replaced by a written English summary when its
+feature is next touched. `Check-BookReferences.ps1` checks topic folders,
+excludes `reviews/evidence/`, and skips current-state files in duplicate
+detection. All eight packets were regenerated and checked.
+
+## 2026-11-19 — Token reduction in books and reviews
+
+Five large reviews gained `<FEATURE>_CURRENT_STATE.md` files of 2–3.5 KB
+(Equipment Rental, Workshop, Sales, Limousine, documentation system); the full
+reviews keep their paths. Master8 adds section-level reading, current-state
+files and rule text without history; the skill routes to named sections of UI1,
+UI13, UI20 and UI22. UI22 was consolidated (50 → 39 KB) without rule changes:
+the four restatements of the one-visible-indicator rule became one section and
+supersession narratives were dropped. UI1, UI13 and UI20 lost status-only
+sentences, provenance date parentheticals and heading dates (about 1–2 %; their
+content is current rules). Removed dates and wording are preserved in
+`archive/2026-11-19-block-history/`. `Check-BookReferences.ps1` budgets
+current-state files at 4 KB and warns for blocks over 30 KB and reviews over
+40 KB without a current-state file. UI3's link to UI20's title section was
+corrected. All eight packets were regenerated and checked.
+
+## 2026-11-19 — Instruction slimming for speed and error prevention
+
+Owner-requested remediation of the instruction-system review. The mandatory
+pre-task reading dropped from about 380 KB to about 30 KB:
+`reviews/INDEX.md` became a short recent-work table (narrative preserved in
+`reviews/INDEX_HISTORY.md`; artifacts are found by name); the live companion
+became a short core with on-demand `.agents/workflow/` section files; the skill
+became a gate checklist and pointer table with five revision rows (history in
+`archive/SKILL_REVISION_HISTORY.md`). One authority order now lives in companion
+section 1. Master5 grants scoped tests for changed code and changed-file lint
+during authorized implementation (UI29, Master1/7 and the PHASE-06, PLAN-00 and
+artifact templates aligned). Master1's opening disclosure is tier-scaled and its
+migration rule has its own heading. Master8 records one-owner-per-rule, the
+skill row limit and size budgets, which `Check-BookReferences.ps1` now enforces
+together with table-structure and repeated-paragraph checks; the script also
+runs under `powershell -File`. Codex model routing is labelled tool-specific.
+Previous texts: `archive/2026-11-19-instruction-slimming/`. All eight packets
+were regenerated and checked.
+
 ## 2026-11-13 — Authorization scenario evidence and completion wording
 
 Master5/7 and the phase templates require applicable producer-to-consumer

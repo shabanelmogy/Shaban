@@ -1,0 +1,583 @@
+using Microsoft.AspNetCore.Http;
+using SiGma.Business.Resolver;
+using SiGma.Helpers.Helpers;
+using SiGma.ViewModels.ViewModels.CashDeposit;
+using SiGma.ViewModels.ViewModels.CashDepositDetail;
+using System.Linq.Expressions;
+
+namespace SiGma.Business.Services.BanksServices;
+
+public class CashDepositService :
+    Service<CashDepositAddVM, CashDepositUpdateVM, CashDepositDetailVM,
+        CashDepositListVM, SiGmaDbContext, CashDeposit>, ICashDepositService
+{
+    private readonly JournalVoucherResolver _jvResolver;
+
+    public CashDepositService(IUnitOfWork<SiGmaDbContext> unitOfWork, IMapper mapper,
+        IStringLocalizer<GeneralMessage> localization, JournalVoucherResolver jvResolver)
+        : base(unitOfWork, mapper, localization) => _jvResolver = jvResolver;
+
+    protected override Expression<Func<CashDeposit, string?>>[] SearchColumns => [x => x.No];
+
+    protected override IQueryable<CashDeposit> ApplyListFilters(
+        IQueryable<CashDeposit> query, Dictionary<string, string> filters)
+    {
+        if (FilterHelper.GetDate(filters, "dateFrom") is { } from)
+            query = query.Where(x => x.Date >= from.Date);
+        if (FilterHelper.GetDate(filters, "dateTo") is { } to && to.Date < DateTime.MaxValue.Date)
+            query = query.Where(x => x.Date < to.Date.AddDays(1));
+        return query;
+    }
+
+    protected override async Task<IEnumerable<CashDepositListVM>> MaterializeListAsync(IQueryable<CashDeposit> query)
+        => await query.ProjectTo<CashDepositListVM>(Mapper.ConfigurationProvider).ToListAsync();
+
+    // Trim before the generic scalar predicate is built; the base owns all paging.
+    public override Task<Results<CashDepositListVM>> GetManyAsync(ListSmBase searchModel)
+    {
+        if (searchModel.Filters is { } filters)
+        {
+            foreach (var key in filters.Keys.Where(x => string.Equals(x, "no", StringComparison.OrdinalIgnoreCase)).ToList())
+            {
+                if (FilterHelper.GetString(filters, key) is { } no)
+                    filters[key] = no.Trim();
+                else
+                    filters.Remove(key);
+            }
+        }
+        return base.GetManyAsync(searchModel);
+    }
+
+    // The shallow endpoint needs navigation labels and only the editor's live lines.
+    // The deep endpoint retains its inherited isolated read and profile mapping.
+    public override async Task<Result<CashDepositDetailVM>> DetailAsync(int id)
+    {
+        var vm = await UnitOfWork.Repository.Query<CashDeposit>(x => x.Id == id)
+            .AsNoTracking().Select(x => new CashDepositDetailVM
+            {
+                Id = x.Id, No = x.No, Date = x.Date, BankId = x.BankId,
+                BankName = x.Bank != null ? x.Bank.Name : null,
+                RefNo = x.RefNo, Description = x.Description, PaymentMethodId = x.PaymentMethodId,
+                PaymentMethodName = x.PaymentMethod != null ? x.PaymentMethod.Name : null,
+                BranchId = x.BranchId, BranchName = x.Branch != null ? x.Branch.Name : null,
+                Amount = x.Amount, ApprovalStatus = x.ApprovalStatus, IsPosted = x.IsPosted,
+                IsVoided = x.IsVoided,
+                CashDepositDetails = x.CashDepositDetails.Where(d => d.IsDeleted != true)
+                    .OrderBy(d => d.Date).ThenBy(d => d.Id).Select(d => new CashDepositDetailDetailVM
+                    {
+                        Id = d.Id, SourceType = d.SourceType, SourceReceiptId = d.SourceReceiptId,
+                        SourcePaymentId = d.SourcePaymentId, Date = d.Date, VoucherLabel = d.VoucherLabel,
+                        No = d.No, Description = d.Description, Amount = d.Amount, Deposited = d.Deposited,
+                        DueAmount = d.DueAmount, DepositedNow = d.DepositedNow
+                    }).ToList()
+            }).FirstOrDefaultAsync();
+        return vm is null
+            ? BusinessFailure<CashDepositDetailVM>("CashDepositNotFound", StatusCodes.Status404NotFound)
+            : new Result<CashDepositDetailVM> { IsSuccess = true, Entity = vm };
+    }
+
+    public override Task<Result> AddAsync(CashDepositAddVM vm, CancellationToken cancellationToken = default)
+        // Kept: Multiple SaveChangesAsync() calls must be committed atomically. The shared
+        // write guard owns that transaction before all reads and mutations; no nested transaction.
+        => UnitOfWork.ExecuteUniqueWriteAsync<CashDeposit>(() => AddDepositAsync(vm, cancellationToken), cancellationToken);
+
+    private async Task<Result> AddDepositAsync(CashDepositAddVM vm, CancellationToken cancellationToken)
+    {
+        if (vm.CashDepositDetails is not { Count: > 0 })
+            return BusinessFailure("CashDepositLinesRequired");
+        if (vm.CashDepositDetails.Any(x => x is null))
+            return BusinessFailure("CashDepositInvalidSource");
+        // The base validates header references; BuildLinesAsync validates all source IDs
+        // together, avoiding a repeated generic existence query for every source line.
+        if (await InvalidInputAsync(new { vm.BankId, vm.PaymentMethodId, vm.BranchId }, null, cancellationToken) is { } invalid)
+            return invalid;
+        if (vm.Date == default)
+            return BusinessFailure("CashDepositDateRequired");
+
+        try
+        {
+            var moneyDecimals = await _jvResolver.GetMoneyDecimalPlacesAsync(cancellationToken);
+            var built = await BuildLinesAsync(vm.CashDepositDetails.Select(x =>
+                (0, x.SourceType, x.SourceReceiptId, x.SourcePaymentId, x.DepositedNow)),
+                null, moneyDecimals, cancellationToken);
+            if (built.Failure is not null)
+                return built.Failure;
+            if (await ValidateJournalInputsAsync(vm.Date, vm.PaymentMethodId, cancellationToken) is { } accountingError)
+                return accountingError;
+
+            var entity = Mapper.Map<CashDeposit>(vm);
+            entity.CashDepositDetails = built.Lines!;
+            var sourceNumbers = built.Lines!.ToDictionary(SourceKey, x => x.No);
+            entity.Recalculate();
+            if (!IsValidTotal(entity.Amount, moneyDecimals))
+                return BusinessFailure("CashDepositTotalMustBePositive");
+            await UnitOfWork.Repository.AddAsync(entity, cancellationToken);
+            if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+                return BusinessFailure("FailedToAdd");
+            RestoreSourceNumbers(entity, sourceNumbers);
+            var journalResult = await SaveJournalAsync(entity, null, cancellationToken);
+            if (!journalResult.IsSuccess)
+                return journalResult;
+            return new Result { IsSuccess = true, Id = entity.Id, Message = LocalizeMessage("SuccessedToAdd") };
+        }
+        catch (JournalPostingException exception)
+        {
+            return BusinessFailure(exception.Message);
+        }
+        catch (OverflowException)
+        {
+            return BusinessFailure("CashDepositInvalidAmount");
+        }
+    }
+
+    public override Task<Result> UpdateAsync(CashDepositUpdateVM vm)
+        // Kept: The tenant lock transaction covers the aggregate and JV rebuild.
+        => UnitOfWork.ExecuteUniqueWriteAsync<CashDeposit>(() => UpdateCoreAsync(vm));
+
+    protected override async Task<Result> UpdateCoreAsync(CashDepositUpdateVM vm)
+    {
+        var entity = await UnitOfWork.Repository.Query<CashDeposit>(x => x.Id == vm.Id)
+            .Include(x => x.CashDepositDetails.Where(d => d.IsDeleted != true)).FirstOrDefaultAsync();
+        if (entity is null)
+            return BusinessFailure("CashDepositNotFound", StatusCodes.Status404NotFound);
+        if (IsLocked(entity))
+            return BusinessFailure("CashDepositEditLocked");
+        if (await HasAllocationsAsync(entity))
+            return AllocationFailure(entity, false);
+        if (vm.CashDepositDetails is not { Count: > 0 })
+            return BusinessFailure("CashDepositLinesRequired");
+        if (vm.CashDepositDetails.Any(x => x is null))
+            return BusinessFailure("CashDepositInvalidSource");
+        if (!OwnsAll(vm.CashDepositDetails, entity.CashDepositDetails))
+            return BusinessFailure("ChildRowOwnershipInvalid");
+        if (await InvalidInputAsync(new { vm.BankId, vm.PaymentMethodId, vm.BranchId }, vm.Id) is { } invalid)
+            return invalid;
+        if (vm.Date == default)
+            return BusinessFailure("CashDepositDateRequired");
+
+        try
+        {
+            var moneyDecimals = await _jvResolver.GetMoneyDecimalPlacesAsync();
+            var built = await BuildLinesAsync(vm.CashDepositDetails.Select(x =>
+                (x.Id, x.SourceType, x.SourceReceiptId, x.SourcePaymentId, x.DepositedNow)),
+                entity.Id, moneyDecimals, default);
+            if (built.Failure is not null)
+                return built.Failure;
+            if (!IsValidTotal(built.Lines!.Sum(x => x.DepositedNow), moneyDecimals))
+                return BusinessFailure("CashDepositTotalMustBePositive");
+            if (await ValidateJournalInputsAsync(vm.Date, vm.PaymentMethodId) is { } accountingError)
+                return accountingError;
+
+            var journal = entity.JournalVoucherId.HasValue
+                ? await UnitOfWork.Repository.Query<JournalVoucher>(x => x.Id == entity.JournalVoucherId)
+                    .Include(x => x.JournalVoucherDetails.Where(d => d.IsDeleted != true)).FirstOrDefaultAsync()
+                : null;
+            if (entity.JournalVoucherId.HasValue && journal is null)
+                return BusinessFailure("CashDepositJournalNotFound");
+            if (journal is not null)
+            {
+                if (journal.IsPosted || journal.IsVoided || journal.ApprovalStatus == ApprovalStatus.Approved)
+                    return BusinessFailure("CashDepositEditLocked");
+                // Changing the date must not bypass the old journal's closed period.
+                await _jvResolver.EnsurePeriodOpenAsync(journal.Date);
+            }
+
+            if (await RemoveDroppedAsync(entity.CashDepositDetails, vm.CashDepositDetails) is { } inUse)
+                return inUse;
+            var snapshots = built.Lines!.ToDictionary(SourceKey);
+            var sourceNumbers = built.Lines!.ToDictionary(SourceKey, x => x.No);
+            Mapper.Map(vm, entity);
+            ReconcileOwned(entity.CashDepositDetails, vm.CashDepositDetails,
+                (input, target) => CopyLine(snapshots[(input.SourceType, input.SourceReceiptId ?? input.SourcePaymentId ?? 0)], target));
+            // Recalculate against the live snapshot. Deleted rows keep their FK until soft-delete save.
+            RecalculateLive(entity);
+            if (!await UnitOfWork.SaveChangesAsync())
+                return BusinessFailure("FailedToUpdate");
+            RestoreSourceNumbers(entity, sourceNumbers);
+
+            if (journal is not null)
+            {
+                foreach (var row in journal.JournalVoucherDetails)
+                    UnitOfWork.Repository.Delete(row);
+                if (!await UnitOfWork.SaveChangesAsync())
+                    return BusinessFailure("FailedToUpdate");
+                journal.JournalVoucherDetails.Clear();
+            }
+            var journalResult = await SaveJournalAsync(entity, journal);
+            if (!journalResult.IsSuccess)
+                return journalResult;
+            return new Result { IsSuccess = true, Id = entity.Id, Message = LocalizeMessage("SuccessedToUpdate") };
+        }
+        catch (JournalPostingException exception)
+        {
+            return BusinessFailure(exception.Message);
+        }
+        catch (OverflowException)
+        {
+            return BusinessFailure("CashDepositInvalidAmount");
+        }
+    }
+
+    public override Task<Result> RemoveAsync(int id)
+        => UnitOfWork.ExecuteUniqueWriteAsync<CashDeposit>(() => RemoveDepositAsync(id));
+
+    private async Task<Result> RemoveDepositAsync(int id)
+    {
+        var entity = await UnitOfWork.Repository.Query<CashDeposit>(x => x.Id == id)
+            .Include(x => x.CashDepositDetails.Where(d => d.IsDeleted != true)).FirstOrDefaultAsync();
+        if (entity is null)
+            return BusinessFailure("CashDepositNotFound", StatusCodes.Status404NotFound);
+        if (IsLocked(entity))
+            return BusinessFailure("CashDepositDeleteLocked");
+        if (await HasAllocationsAsync(entity))
+            return AllocationFailure(entity, false);
+        try
+        {
+            var journal = entity.JournalVoucherId.HasValue
+                ? await UnitOfWork.Repository.Query<JournalVoucher>(x => x.Id == entity.JournalVoucherId)
+                    .Include(x => x.JournalVoucherDetails.Where(d => d.IsDeleted != true)).FirstOrDefaultAsync()
+                : null;
+            if (entity.JournalVoucherId.HasValue && journal is null)
+                return BusinessFailure("CashDepositJournalNotFound");
+            if (journal is not null)
+            {
+                if (journal.IsPosted || journal.IsVoided || journal.ApprovalStatus == ApprovalStatus.Approved)
+                    return BusinessFailure("CashDepositDeleteLocked");
+                await _jvResolver.EnsurePeriodOpenAsync(journal.Date);
+                foreach (var row in journal.JournalVoucherDetails)
+                    UnitOfWork.Repository.Delete(row);
+                UnitOfWork.Repository.Delete(journal);
+            }
+            foreach (var row in entity.CashDepositDetails)
+                UnitOfWork.Repository.Delete(row);
+            UnitOfWork.Repository.Delete(entity);
+            var saved = await UnitOfWork.SaveChangesAsync();
+            return new Result { IsSuccess = saved, Message = LocalizeMessage(saved ? "SuccessedToRemove" : "FailedToRemove") };
+        }
+        catch (JournalPostingException exception)
+        {
+            return BusinessFailure(exception.Message);
+        }
+    }
+
+    // Generic bulk graph mapping bypasses source eligibility and ownership reconciliation.
+    public override Task<Result> AddListAsync(IEnumerable<CashDepositAddVM> rows)
+        => Task.FromResult(BusinessFailure("CashDepositBulkUnsupported"));
+
+    public override Task<Result> UpdateListAsync(IEnumerable<CashDepositUpdateVM> rows)
+        => Task.FromResult(BusinessFailure("CashDepositBulkUnsupported"));
+
+    public Task<Result> ToggleApprovalStatusAsync(int id, CancellationToken cancellationToken = default)
+        => UnitOfWork.ExecuteUniqueWriteAsync<CashDeposit>(() => ToggleApprovalCoreAsync(id, cancellationToken), cancellationToken);
+
+    private async Task<Result> ToggleApprovalCoreAsync(int id, CancellationToken cancellationToken)
+    {
+        var entity = await UnitOfWork.Repository.FindByIdAsync<CashDeposit>(id, cancellationToken);
+        if (entity is null)
+            return BusinessFailure("CashDepositNotFound", StatusCodes.Status404NotFound);
+        if (entity.IsVoided)
+            return BusinessFailure("CashDepositApprovalVoided");
+        var journal = entity.JournalVoucherId.HasValue
+            ? await UnitOfWork.Repository.Query<JournalVoucher>(x => x.Id == entity.JournalVoucherId).FirstOrDefaultAsync(cancellationToken)
+            : null;
+        if (journal is null)
+            return BusinessFailure("CashDepositJournalNotFound");
+        var approved = entity.ApprovalStatus == ApprovalStatus.Approved;
+        if ((entity.ApprovalStatus != ApprovalStatus.Approved && entity.ApprovalStatus != ApprovalStatus.NotApproved)
+            || entity.IsPosted != approved || journal.IsPosted != approved
+            || journal.ApprovalStatus != entity.ApprovalStatus || journal.IsVoided)
+            return BusinessFailure("CashDepositStateInvalid");
+        try
+        {
+            if (approved)
+            {
+                if (await HasAllocationsAsync(entity, cancellationToken))
+                    return AllocationFailure(entity, false);
+                await _jvResolver.UnpostAsync(journal, cancellationToken);
+                entity.ApprovalStatus = ApprovalStatus.NotApproved;
+                entity.IsPosted = false;
+            }
+            else
+            {
+                await _jvResolver.PostAsync(journal, cancellationToken);
+                entity.ApprovalStatus = ApprovalStatus.Approved;
+                entity.IsPosted = true;
+            }
+            var saved = await UnitOfWork.SaveChangesAsync(cancellationToken);
+            return new Result { IsSuccess = saved, Id = id,
+                Message = LocalizeMessage(saved ? "CashDepositApprovalChanged" : "FailedToUpdate") };
+        }
+        catch (JournalPostingException exception)
+        {
+            return BusinessFailure(exception.Message);
+        }
+    }
+
+    public Task<Result> ToggleVoidStatusAsync(int id, CancellationToken cancellationToken = default)
+        => UnitOfWork.ExecuteUniqueWriteAsync<CashDeposit>(() => ToggleVoidCoreAsync(id, cancellationToken), cancellationToken);
+
+    private async Task<Result> ToggleVoidCoreAsync(int id, CancellationToken cancellationToken)
+    {
+        var entity = await UnitOfWork.Repository.Query<CashDeposit>(x => x.Id == id)
+            .Include(x => x.CashDepositDetails.Where(d => d.IsDeleted != true)).FirstOrDefaultAsync(cancellationToken);
+        if (entity is null)
+            return BusinessFailure("CashDepositNotFound", StatusCodes.Status404NotFound);
+        var voiding = !entity.IsVoided;
+        if (voiding && await HasAllocationsAsync(entity, cancellationToken))
+            return AllocationFailure(entity, true);
+        var journal = entity.JournalVoucherId.HasValue
+            ? await UnitOfWork.Repository.Query<JournalVoucher>(x => x.Id == entity.JournalVoucherId).FirstOrDefaultAsync(cancellationToken)
+            : null;
+        try
+        {
+            // Voiding releases source capacity. Re-read every source and other live deposit
+            // inside the same tenant lock before restoring this document's reservation.
+            if (!voiding)
+            {
+                var moneyDecimals = await _jvResolver.GetMoneyDecimalPlacesAsync(cancellationToken);
+                var restored = await BuildLinesAsync(entity.CashDepositDetails.Select(x =>
+                    (x.Id, x.SourceType, x.SourceReceiptId, x.SourcePaymentId, x.DepositedNow)),
+                    entity.Id, moneyDecimals, cancellationToken);
+                if (restored.Failure is not null)
+                    return restored.Failure;
+                if (!IsValidTotal(restored.Lines!.Sum(x => x.DepositedNow), moneyDecimals))
+                    return BusinessFailure("CashDepositTotalMustBePositive");
+            }
+            if (journal is not null)
+            {
+                await _jvResolver.EnsurePeriodOpenAsync(journal.Date, cancellationToken);
+                // Frozen compatibility: J-1 reversing journals belong to the coordinated voucher plan.
+                journal.IsVoided = voiding;
+            }
+            entity.IsVoided = voiding;
+            var saved = await UnitOfWork.SaveChangesAsync(cancellationToken);
+            return new Result { IsSuccess = saved, Id = id,
+                Message = LocalizeMessage(saved ? (voiding ? "CashDepositVoided" : "CashDepositUnvoided") : "FailedToUpdate") };
+        }
+        catch (JournalPostingException exception)
+        {
+            return BusinessFailure(exception.Message);
+        }
+    }
+
+    public async Task<Results<UndepositedVoucherDto>> GetUndepositedVouchersAsync(
+        int? excludeCashDepositId = null, CancellationToken cancellationToken = default)
+    {
+        if (excludeCashDepositId.HasValue && (excludeCashDepositId <= 0
+            || !await UnitOfWork.Repository.Query<CashDeposit>(x => x.Id == excludeCashDepositId).AnyAsync(cancellationToken)))
+            return new Results<UndepositedVoucherDto> { IsSuccess = false, Entities = [],
+                Message = LocalizeMessage("CashDepositNotFound"), ErrorStatusCode = StatusCodes.Status404NotFound };
+        var receipts = await UnitOfWork.Repository.Query<Receipt>(x => !x.IsVoided
+                && x.PaymentMethod != null && x.PaymentMethod.Type == PaymentType.Cash)
+            .AsNoTracking().ToListAsync(cancellationToken);
+        var payments = await UnitOfWork.Repository.Query<Payment>(x => x.PaymentMethod != null
+                && x.PaymentMethod.Type == PaymentType.Cash)
+            .AsNoTracking().Include(x => x.PaymentDetails.Where(d => d.IsDeleted != true)).ToListAsync(cancellationToken);
+        var receiptDeposits = await ReceiptDepositsAsync(receipts.Select(x => x.Id).ToList(), excludeCashDepositId, cancellationToken);
+        var paymentDeposits = await PaymentDepositsAsync(payments.Select(x => x.Id).ToList(), excludeCashDepositId, cancellationToken);
+        var rows = receipts.Select(x => Voucher(x, receiptDeposits.GetValueOrDefault(x.Id)))
+            .Concat(payments.Select(x => Voucher(x, paymentDeposits.GetValueOrDefault(x.Id))))
+            .Where(x => x.DueAmount != 0).OrderBy(x => x.Date).ThenBy(x => x.VoucherLabel)
+            .ThenBy(x => x.No).ThenBy(x => x.SourceType).ThenBy(x => x.SourceReceiptId ?? x.SourcePaymentId).ToList();
+        return new Results<UndepositedVoucherDto> { IsSuccess = true, Entities = rows };
+    }
+
+    private async Task<(List<CashDepositDetail>? Lines, Result? Failure)> BuildLinesAsync(
+        IEnumerable<(int Id, CashDepositSourceType SourceType, int? SourceReceiptId,
+            int? SourcePaymentId, decimal DepositedNow)> input,
+        int? excluded, int moneyDecimals, CancellationToken cancellationToken)
+    {
+        var rows = input.ToList();
+        if (rows.Count == 0)
+            return (null, BusinessFailure("CashDepositLinesRequired"));
+        if (rows.Any(x => !Enum.IsDefined(x.SourceType)
+            || x.SourceReceiptId.HasValue == x.SourcePaymentId.HasValue
+            || (x.SourceType == CashDepositSourceType.Receipt) != x.SourceReceiptId.HasValue
+            || (x.SourceReceiptId ?? x.SourcePaymentId ?? 0) <= 0))
+            return (null, BusinessFailure("CashDepositInvalidSource"));
+        if (rows.Select(x => (x.SourceType, x.SourceReceiptId ?? x.SourcePaymentId)).Distinct().Count() != rows.Count)
+            return (null, BusinessFailure("CashDepositDuplicateSource"));
+        if (rows.Any(x => x.DepositedNow == 0 || !IsValidMoney(x.DepositedNow, moneyDecimals)))
+            return (null, BusinessFailure("CashDepositInvalidAmount"));
+        var receiptIds = rows.Where(x => x.SourceType == CashDepositSourceType.Receipt).Select(x => x.SourceReceiptId!.Value).ToList();
+        var paymentIds = rows.Where(x => x.SourceType == CashDepositSourceType.Payment).Select(x => x.SourcePaymentId!.Value).ToList();
+        var receipts = await UnitOfWork.Repository.Query<Receipt>(x => receiptIds.Contains(x.Id)
+                && !x.IsVoided && x.PaymentMethod != null && x.PaymentMethod.Type == PaymentType.Cash)
+            .AsNoTracking().ToDictionaryAsync(x => x.Id, cancellationToken);
+        var payments = await UnitOfWork.Repository.Query<Payment>(x => paymentIds.Contains(x.Id)
+                && x.PaymentMethod != null && x.PaymentMethod.Type == PaymentType.Cash)
+            .AsNoTracking().Include(x => x.PaymentDetails.Where(d => d.IsDeleted != true))
+            .ToDictionaryAsync(x => x.Id, cancellationToken);
+        if (receipts.Count != receiptIds.Count || payments.Count != paymentIds.Count)
+            return (null, BusinessFailure("CashDepositSourceUnavailable"));
+        var receiptDeposits = await ReceiptDepositsAsync(receiptIds, excluded, cancellationToken);
+        var paymentDeposits = await PaymentDepositsAsync(paymentIds, excluded, cancellationToken);
+        var lines = new List<CashDepositDetail>();
+        foreach (var row in rows)
+        {
+            var voucher = row.SourceType == CashDepositSourceType.Receipt
+                ? Voucher(receipts[row.SourceReceiptId!.Value], receiptDeposits.GetValueOrDefault(row.SourceReceiptId.Value))
+                : Voucher(payments[row.SourcePaymentId!.Value], paymentDeposits.GetValueOrDefault(row.SourcePaymentId.Value));
+            if (!IsValidMoney(voucher.Amount, moneyDecimals) || !IsValidMoney(voucher.Deposited, moneyDecimals)
+                || !IsValidMoney(voucher.DueAmount, moneyDecimals))
+                return (null, BusinessFailure("CashDepositInvalidAmount"));
+            if (Math.Sign(row.DepositedNow) != Math.Sign(voucher.DueAmount)
+                || Math.Abs(row.DepositedNow) > Math.Abs(voucher.DueAmount))
+                return (null, BusinessFailure("CashDepositAmountExceedsDue"));
+            var line = new CashDepositDetail
+            {
+                Id = row.Id, SourceType = row.SourceType, SourceReceiptId = row.SourceReceiptId,
+                SourcePaymentId = row.SourcePaymentId, Date = voucher.Date, VoucherLabel = voucher.VoucherLabel,
+                No = voucher.No, Description = voucher.Description, Amount = voucher.Amount,
+                Deposited = voucher.Deposited, DepositedNow = row.DepositedNow
+            };
+            line.Recalculate();
+            lines.Add(line);
+        }
+        return (lines, null);
+    }
+
+    private async Task<Dictionary<int, decimal>> ReceiptDepositsAsync(
+        List<int> ids, int? excluded, CancellationToken cancellationToken)
+        => await UnitOfWork.Repository.Query<CashDepositDetail>(x => x.SourceReceiptId.HasValue
+                && ids.Contains(x.SourceReceiptId.Value) && (!excluded.HasValue || x.CashDepositId != excluded)
+                && x.CashDeposit != null && x.CashDeposit.IsDeleted != true && !x.CashDeposit.IsVoided)
+            .GroupBy(x => x.SourceReceiptId!.Value).Select(g => new { Id = g.Key, Amount = g.Sum(x => x.DepositedNow) })
+            .ToDictionaryAsync(x => x.Id, x => x.Amount, cancellationToken);
+
+    private async Task<Dictionary<int, decimal>> PaymentDepositsAsync(
+        List<int> ids, int? excluded, CancellationToken cancellationToken)
+        => await UnitOfWork.Repository.Query<CashDepositDetail>(x => x.SourcePaymentId.HasValue
+                && ids.Contains(x.SourcePaymentId.Value) && (!excluded.HasValue || x.CashDepositId != excluded)
+                && x.CashDeposit != null && x.CashDeposit.IsDeleted != true && !x.CashDeposit.IsVoided)
+            .GroupBy(x => x.SourcePaymentId!.Value).Select(g => new { Id = g.Key, Amount = g.Sum(x => x.DepositedNow) })
+            .ToDictionaryAsync(x => x.Id, x => x.Amount, cancellationToken);
+
+    private async Task<Result?> ValidateJournalInputsAsync(DateTime date, int paymentMethodId, CancellationToken cancellationToken = default)
+    {
+        if (await _jvResolver.GetPaymentMethodAccountIdAsync(paymentMethodId, cancellationToken: cancellationToken) is null or <= 0)
+            return BusinessFailure("CashDepositBankAccountMissing");
+        if (await _jvResolver.GetGeneralAccountIdAsync(LinkAccountsGeneral.CustomerCashDepositsAccount, cancellationToken: cancellationToken) is null or <= 0)
+            return BusinessFailure("CashDepositClearingAccountMissing");
+        await _jvResolver.EnsurePeriodOpenAsync(date, cancellationToken);
+        return null;
+    }
+
+    private async Task<Result> SaveJournalAsync(CashDeposit entity, JournalVoucher? existing, CancellationToken cancellationToken = default)
+    {
+        var bank = await _jvResolver.GetPaymentMethodAccountIdAsync(entity.PaymentMethodId!.Value, cancellationToken: cancellationToken);
+        if (bank is null or <= 0)
+            return BusinessFailure("CashDepositBankAccountMissing");
+        // Frozen compatibility: F5 source debit-account clearing needs the wider voucher plan.
+        var clearing = await _jvResolver.GetGeneralAccountIdAsync(LinkAccountsGeneral.CustomerCashDepositsAccount, cancellationToken: cancellationToken);
+        if (clearing is null or <= 0)
+            return BusinessFailure("CashDepositClearingAccountMissing");
+        var journal = existing ?? _jvResolver.NewJV(entity.Date, entity.BranchId, VoucherTypeName.Receipt, VoucherSubType.JV);
+        journal.Date = entity.Date;
+        journal.BranchId = entity.BranchId;
+        _jvResolver.AddLine(journal, bank.Value, entity.Amount, 0, "Cash Deposit - Bank");
+        _jvResolver.AddLine(journal, clearing.Value, 0, entity.Amount, "Cash Deposit - Clear Collected Cash");
+        var id = await _jvResolver.SaveJVAsync(journal, cancellationToken);
+        if (existing is null)
+        {
+            entity.JournalVoucherId = id;
+            if (!await UnitOfWork.SaveChangesAsync(cancellationToken))
+                return BusinessFailure("FailedToUpdate");
+        }
+        return new Result { IsSuccess = true };
+    }
+
+    private Task<bool> HasAllocationsAsync(CashDeposit entity, CancellationToken cancellationToken = default)
+        => entity.JournalVoucherId.HasValue
+            ? _jvResolver.HasActiveAllocationsAsync(entity.JournalVoucherId.Value, cancellationToken)
+            : Task.FromResult(false);
+
+    private Result AllocationFailure(CashDeposit entity, bool voiding)
+    {
+        var key = voiding ? "CashDepositVoidAllocated" : "CashDepositAllocated";
+        _jvResolver.LogBlockedOperation("CashDeposit", entity.No ?? entity.Id.ToString(), LocalizeMessage(key));
+        return BusinessFailure(key);
+    }
+
+    private static bool IsLocked(CashDeposit entity)
+        => entity.ApprovalStatus == ApprovalStatus.Approved || entity.IsPosted || entity.IsVoided;
+
+    private static bool IsValidMoney(decimal amount, int moneyDecimals)
+        => amount >= -9999999999999999.99m && amount <= 9999999999999999.99m
+            && FinancialNumberPolicy.HasValidMoneyScale(amount, moneyDecimals)
+            && FinancialNumberPolicy.HasValidMoneyScale(amount, FinancialNumberPolicy.LedgerAmountStorageDecimalPlaces);
+
+    private static bool IsValidTotal(decimal total, int moneyDecimals) => total > 0 && IsValidMoney(total, moneyDecimals);
+
+    private void RecalculateLive(CashDeposit entity)
+    {
+        var tracked = entity.CashDepositDetails;
+        entity.CashDepositDetails = tracked.Where(x => x.IsDeleted != true
+            && UnitOfWork.Context.Entry(x).State != EntityState.Deleted).ToList();
+        entity.Recalculate();
+        entity.CashDepositDetails = tracked;
+    }
+
+    private static (CashDepositSourceType Type, int Id) SourceKey(CashDepositDetail line)
+        => (line.SourceType, line.SourceReceiptId ?? line.SourcePaymentId ?? 0);
+
+    private static void RestoreSourceNumbers(CashDeposit entity,
+        Dictionary<(CashDepositSourceType Type, int Id), string?> sourceNumbers)
+    {
+        // UnitOfWork numbers every new EntityBase with an empty No. A line's No is
+        // a source snapshot, so preserve empty source numbers before the next owning save.
+        foreach (var line in entity.CashDepositDetails.Where(x => x.IsDeleted != true))
+            line.No = sourceNumbers[SourceKey(line)];
+    }
+
+    private static void CopyLine(CashDepositDetail source, CashDepositDetail target)
+    {
+        target.SourceType = source.SourceType;
+        target.SourceReceiptId = source.SourceReceiptId;
+        target.SourcePaymentId = source.SourcePaymentId;
+        target.Date = source.Date;
+        target.VoucherLabel = source.VoucherLabel;
+        target.No = source.No;
+        target.Description = source.Description;
+        target.Amount = source.Amount;
+        target.Deposited = source.Deposited;
+        target.DepositedNow = source.DepositedNow;
+        target.Recalculate();
+    }
+
+    private static UndepositedVoucherDto Voucher(Receipt source, decimal deposited) => new()
+    {
+        SourceType = CashDepositSourceType.Receipt, SourceReceiptId = source.Id, Date = source.Date,
+        VoucherLabel = ReceiptLabel(source.ReceiptType), No = source.No,
+        Description = source.Detail ?? source.AdditionalDetail, Amount = source.Amount,
+        Deposited = deposited, DueAmount = source.Amount - deposited
+    };
+
+    private static UndepositedVoucherDto Voucher(Payment source, decimal deposited)
+    {
+        var amount = source.PaymentDetails.Sum(x => x.Amount);
+        return new UndepositedVoucherDto
+        {
+            SourceType = CashDepositSourceType.Payment, SourcePaymentId = source.Id,
+            Date = source.Date ?? DateTime.Today, VoucherLabel = PaymentLabel(source.PaymentType),
+            No = source.No, Description = source.Note, Amount = amount,
+            Deposited = deposited, DueAmount = amount - deposited
+        };
+    }
+
+    private static string ReceiptLabel(ReceiptType type) => type switch
+    {
+        ReceiptType.ContactReceipt => "Contact Receipt", ReceiptType.GeneralReceipt => "General Receipt",
+        ReceiptType.StaffReceipt => "Staff Receipt", ReceiptType.AdvanceReceipt => "Advance Receipt",
+        ReceiptType.AdvanceTaxReceipt => "Advance Tax Receipt", ReceiptType.AssetSaleReceipt => "Asset Sale Receipt",
+        _ => type.ToString()
+    };
+
+    private static string PaymentLabel(PaymentType? type) => type switch
+    {
+        PaymentType.Cash => "Cash Payment", PaymentType.CreditCard => "Credit Card Payment",
+        PaymentType.DebitCard => "Debit Card Payment", PaymentType.Cheque => "Cheque Payment",
+        PaymentType.BankTransfer => "Bank Transfer Payment", PaymentType.CardRefund => "Card Refund",
+        PaymentType.Other => "General Payment", _ => "Payment"
+    };
+}

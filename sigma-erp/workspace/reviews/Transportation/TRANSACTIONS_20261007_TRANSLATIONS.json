@@ -1,0 +1,152 @@
+{
+  "en": {
+    "transportTransaction": {
+      "title": "Transactions",
+      "subtitle": "Manage saved transactions.",
+      "createTitle": "Create transaction",
+      "editTitle": "Edit transaction",
+      "viewTitle": "View transaction",
+      "recordSubtitle": "Record #{{id}}",
+      "generalSection": "Details",
+      "guidFormat": "Enter a GUID in the format 00000000-0000-0000-0000-000000000000.",
+      "showingEntries": "Showing {first} to {last} of {totalRecords} entries",
+      "empty": "No transactions found.",
+      "deleteTitle": "Delete record",
+      "deleteMessage": "Delete this saved record?",
+      "discardTitle": "Discard changes",
+      "discardMessage": "Your changes have not been saved. Discard them?",
+      "discard": "Discard",
+      "fields": {
+        "id": "ID",
+        "guiId": "GUI identifier",
+        "poType": "PO type",
+        "date": "Date",
+        "supplierQuotationNo": "Supplier quotation number",
+        "supplierId": "Supplier identifier",
+        "notes": "Notes",
+        "discount": "Discount",
+        "createdAt": "Created at"
+      },
+      "errors": {
+        "list": "Unable to load records.",
+        "load": "Unable to load this record.",
+        "save": "Unable to save this record.",
+        "delete": "Unable to delete this record.",
+        "export": "Unable to export all matching records.",
+        "filters": "Correct the invalid filters before searching."
+      }
+    },
+    "transportTransactionItem": {
+      "title": "Transaction items",
+      "subtitle": "Manage saved transaction items.",
+      "createTitle": "Create transaction item",
+      "editTitle": "Edit transaction item",
+      "viewTitle": "View transaction item",
+      "recordSubtitle": "Record #{{id}}",
+      "generalSection": "Details",
+      "guidFormat": "Enter a GUID in the format 00000000-0000-0000-0000-000000000000.",
+      "showingEntries": "Showing {first} to {last} of {totalRecords} entries",
+      "empty": "No transaction items found.",
+      "deleteTitle": "Delete record",
+      "deleteMessage": "Delete this saved record?",
+      "discardTitle": "Discard changes",
+      "discardMessage": "Your changes have not been saved. Discard them?",
+      "discard": "Discard",
+      "fields": {
+        "id": "ID",
+        "guiId": "GUI identifier",
+        "description": "Description",
+        "purchaseOrderId": "Purchase order identifier",
+        "vehicleId": "Vehicle identifier",
+        "quantity": "Quantity",
+        "uom": "Unit of measure",
+        "unitPrice": "Unit price",
+        "tax": "Tax amount",
+        "createdAt": "Created at"
+      },
+      "errors": {
+        "list": "Unable to load records.",
+        "load": "Unable to load this record.",
+        "save": "Unable to save this record.",
+        "delete": "Unable to delete this record.",
+        "export": "Unable to export all matching records.",
+        "filters": "Correct the invalid filters before searching."
+      }
+    }
+  },
+  "ar": {
+    "transportTransaction": {
+      "title": "المعاملات",
+      "subtitle": "إدارة المعاملات المحفوظة.",
+      "createTitle": "إضافة معاملة",
+      "editTitle": "تعديل معاملة",
+      "viewTitle": "عرض معاملة",
+      "recordSubtitle": "السجل رقم {{id}}",
+      "generalSection": "البيانات",
+      "guidFormat": "أدخل المعرّف بالصيغة 00000000-0000-0000-0000-000000000000.",
+      "showingEntries": "عرض {first} إلى {last} من {totalRecords} سجل",
+      "empty": "لا توجد المعاملات.",
+      "deleteTitle": "حذف السجل",
+      "deleteMessage": "هل تريد حذف هذا السجل المحفوظ؟",
+      "discardTitle": "تجاهل التغييرات",
+      "discardMessage": "لم تُحفظ التغييرات. هل تريد تجاهلها؟",
+      "discard": "تجاهل",
+      "fields": {
+        "id": "الرقم التعريفي",
+        "guiId": "معرّف GUI",
+        "poType": "نوع أمر الشراء",
+        "date": "التاريخ",
+        "supplierQuotationNo": "رقم عرض المورد",
+        "supplierId": "معرّف المورد",
+        "notes": "ملاحظات",
+        "discount": "الخصم",
+        "createdAt": "تاريخ الإنشاء"
+      },
+      "errors": {
+        "list": "تعذّر تحميل السجلات.",
+        "load": "تعذّر تحميل هذا السجل.",
+        "save": "تعذّر حفظ هذا السجل.",
+        "delete": "تعذّر حذف هذا السجل.",
+        "export": "تعذّر تصدير جميع السجلات المطابقة.",
+        "filters": "صحّح قيم البحث غير الصالحة قبل البحث."
+      }
+    },
+    "transportTransactionItem": {
+      "title": "بنود المعاملات",
+      "subtitle": "إدارة بنود المعاملات المحفوظة.",
+      "createTitle": "إضافة بند معاملة",
+      "editTitle": "تعديل بند معاملة",
+      "viewTitle": "عرض بند معاملة",
+      "recordSubtitle": "السجل رقم {{id}}",
+      "generalSection": "البيانات",
+      "guidFormat": "أدخل المعرّف بالصيغة 00000000-0000-0000-0000-000000000000.",
+      "showingEntries": "عرض {first} إلى {last} من {totalRecords} سجل",
+      "empty": "لا توجد بنود المعاملات.",
+      "deleteTitle": "حذف السجل",
+      "deleteMessage": "هل تريد حذف هذا السجل المحفوظ؟",
+      "discardTitle": "تجاهل التغييرات",
+      "discardMessage": "لم تُحفظ التغييرات. هل تريد تجاهلها؟",
+      "discard": "تجاهل",
+      "fields": {
+        "id": "الرقم التعريفي",
+        "guiId": "معرّف GUI",
+        "description": "الوصف",
+        "purchaseOrderId": "معرّف أمر الشراء",
+        "vehicleId": "معرّف المركبة",
+        "quantity": "الكمية",
+        "uom": "وحدة القياس",
+        "unitPrice": "سعر الوحدة",
+        "tax": "مبلغ الضريبة",
+        "createdAt": "تاريخ الإنشاء"
+      },
+      "errors": {
+        "list": "تعذّر تحميل السجلات.",
+        "load": "تعذّر تحميل هذا السجل.",
+        "save": "تعذّر حفظ هذا السجل.",
+        "delete": "تعذّر حذف هذا السجل.",
+        "export": "تعذّر تصدير جميع السجلات المطابقة.",
+        "filters": "صحّح قيم البحث غير الصالحة قبل البحث."
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+| Field | Value |
+|---|---|
+| Status | Frozen |
+| Owner verification pending | yes |
+
+# Staff reports, alerts and designations — 2026-10-03
+
+Root-owned handoff, source-backed without screenshots. Preserve API aliases, allocation enum 0 Payment/1 CreditNote/2 Journal, posted/nonvoided account semantics and full-scope totals. No new accounting policy, permission or schema.
+
+| Screen | Frozen grid/filter/read contract | Write/action contract |
+|---|---|---|
+| Statement | Complete GET Staff/Statement Filters staffId,fromDate,toDate,ledger/outstanding,includeInactive,subLedger. Contact + beginning/debit/credit/ending/current + ledgerLines + advanceTaxInvoiceLines. Grid date,voucherType,voucherNo,description,age,PO (ledger),allocations,debit,credit,due (outstanding),runningBalance; minimum JV/detail identity and canAllocate kept. Shared tabs, SummaryCards, complete local paging default15, whole-report print, selected complete section export. One dual range defaults current month; dependent staff/subledger requests cancel; edited filters invalidate results. | Allocation GET/POST existing endpoint, fixed applied staff/JV/detail identity, unchanged enum and editable positive allocatedNow only. Shared dialog/table, typed controls, available/source capacity validation, dirty discard, load/save gates, response identity checks. Mutation interceptor owns feedback; successful save refreshes statement. |
+| Balances | Optional IncludeAllRows=true returns complete items, full totalBalance/count, PageNumber1/PageSize=max(1,count)/TotalPages=count?1:0; paged callers unchanged. Grid code,name,contactPerson,mobile,contactNo,email,balance; salesPerson remains filter/read compatibility field but hidden column excluded from ordinary mirror export. Filters currentMonth dualrange,branchId,staffId,status active/inactive,salesPersonId,balanceType all/debit/credit/range. Local sort/paging15/print/export operate complete frozen result. | Row activates read-only statement dialog with immutable selected staff and dual range. Applied report month seeds statement; shared statement columns/cards; cancellation prevents closed/replaced dialog response. |
+| Alerts | GET Staff/Alerts PageNumber/PageSize + Filters staffId,search,status,sortField/order. Grid srNo,staffName,documentType,documentNo,issuedBy,issueDate,expiryDate,status + expiry detail; id/staffId required identity. Summary counts preserve staff-only scope. Shared FilterPanel/SummaryCards/DataTable status; canonicalpaging15/complete fetchAllPages export of applied query. | Read-only. Required lookup failures visible/retryable, no silently empty success. |
+| Designations | GET StaffDesignation generic Results, complete fetchAllPages proves collection before local name/category filtering and sort; no capped PageSize1000 assumption. Grid name,staffCategory translated(enum0/1/2),hourlyRate; id minimalidentity. One canonical list+modal with typed Name<=50,nullablecategory/hourlyrate>=0. | POST/PUT client editable name,staffCategory,hourlyRate; PUT adds id only. No subscriptionId/server audit inputs. Existing backend source validation preserved/base adopted. Detail loaded by identity before View/Edit; failures gate actions. Delete/dirty-close use shared confirmation; standard mutations one interceptor feedback owner. Unrouted redundant Details wrappers redirect to same editor if retained. |
+
+Root reference conformance: UI1/3/4/5/6 Workshop/Job list and shared DataTable; UI20 TrialBalance report strip + CustomerStatement section semantics; UI13 shared EditorDialog/Fleet VehicleService; UI14 shared EditableCollectionTable/openingBalances mechanical frame; UI17 shared DatePicker/date-utils; UI8 dataTableExportRows/fetchAllPages; UI21 ReportPrintService session; UI22 StateMessage/apiErrorMessage; UI24 SummaryCards/tokens; UI28 switchMap/finalize/takeUntilDestroyed. Report source exceptions retain financial semantics and allocation workflow; no copy of feature CSS/palette. Supplier implementation was inspected only as a compatible consumer, never promoted to reference authority.
+
+Inline reads opt out of global error interceptor and use apiErrorMessage; mutations retain global interceptor. All lookups/API endpoints retain AuthGuard authentication; no fabricated authorization. Source-only verification; no migration expected for these contract/presentation changes. Root owns these four folders and Staff/shared view helper, translations/config/artifacts; record/operational/backend agents own separate files.
+
+## Balance Type presentation amendment — 2026-10-03
+
+Owner's latest instruction supersedes the proposed first-position second row: put Balance Type in **More Filters**, as in `Customers/BalancesSummary`. This is a scoped main-filter presentation exception to the UI20 report strip, using the canonical UI4 shared FilterPanel rather than a report-local toggle. The report shell, statement-dialog filter strip, full-result contract, columns, totals and backend remain governed by the earlier frozen handoff.
+
+| Concern | Book / source evidence | Shared owner / target decision |
+|---|---|---|
+| Main and advanced filters | UI4; `Workshop/Job/components/list/list.component.html` appFilterPanel; owner-selected `Customers/BalancesSummary/components/list/list.component.html` appFilterAdvanced | FilterPanelComponent + FilterAdvancedDirective; five existing main fields with public mainColumns=5; Balance Type first and only advanced field, fieldset/legend/native radios using choice/wide modifiers; collapsed by default |
+| Form and value lifetime | UI4/20; Customers advancedFilterNames/advancedFiltersVisible; shared advanced.template projection | Existing typed filterForm remains the single parent; balanceType values all/debit/credit/range and default all retained; closing advanced content does not reset its control or request a report |
+| Actions and busy state | UI4 shared filter-panel toolbar/reset; UI20 shared ReportActionsComponent | FilterActionsDirective projects existing Search/Refresh/Print/Excel into the shared toolbar; exactly one shared Reset restores defaults and searches page1; form loading/printing disable gates retained |
+| Geometry/theme/RTL | UI4 FilterPanel SCSS: 34px controls, logical shared layout, responsive 3/1 columns, choice/wide radio wrap; UI20 panel/title edges | No feature filter CSS; existing mx-0 utility removes the list-specific 8px inline inset so the shared filter keeps the existing report panel/title edges |
+
+Recipe drift check passed for all eight packets before reading PHASE-02. Only Phase02 presentation and its source reconciliation apply; backend/write/domain phases do not apply. No new screenshot, schema, DTO, mapping or accounting decision. Source reconciliation and owner visual acceptance are recorded in the feature review.
+
+## Owner filter-stability amendment — 2026-10-03
+
+Owner extends the moving-filter repair to Staff Balance Summary. Existing five-main-fields/Balance-Type-More-Filters form opts into shared stableLayout; the report and historical nonzero Range contracts above remain unchanged. Later frozen presentation evidence and source reconciliation: BALANCE_SUMMARY_FILTER_LAYOUT_CONTRACT_FREEZE.md and BALANCE_SUMMARY_FILTER_LAYOUT_FEATURE_REVIEW.md. Visual/runtime acceptance pending.

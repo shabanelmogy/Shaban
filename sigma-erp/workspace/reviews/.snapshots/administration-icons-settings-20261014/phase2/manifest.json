@@ -1,0 +1,26 @@
+[
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\e-darb\\e-darb.component.ts",
+    "relative": "e-darb/e-darb.component.ts",
+    "time": 1791968312228.187,
+    "sha256": "879eb0a03e54cd2a5ad072c8e010b0ecdfb54451569ea3f94f4d32b373f3facb"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\e-salik\\e-salik.component.ts",
+    "relative": "e-salik/e-salik.component.ts",
+    "time": 1791968312266.6016,
+    "sha256": "84860f08a1efcb8397447074a2f165cab31862e234436f8598072cb3bbe4b47d"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\fines\\fines.component.ts",
+    "relative": "fines/fines.component.ts",
+    "time": 1791968312315.4524,
+    "sha256": "9b35ff338c566f44733594cbd37cd45086d1af19a427b27ff849a39fbb494970"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\fines\\fines.component.html",
+    "relative": "fines/fines.component.html",
+    "time": 1791968312309.4685,
+    "sha256": "da681cf89da86fc31d52ecc60130f378972e5d6ccf5f0ba802fdc5a36df753a7"
+  }
+]

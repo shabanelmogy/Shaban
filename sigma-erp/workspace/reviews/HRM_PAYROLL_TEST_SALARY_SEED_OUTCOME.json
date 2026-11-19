@@ -1,0 +1,823 @@
+{
+  "Committed": true,
+  "EffectiveFrom": "2026-10-01",
+  "AddedStaff": 27,
+  "AddedRows": 162,
+  "ExistingRowsUnchanged": 31,
+  "PreservedCompleteStaff": 3,
+  "ActiveStaffUpdated": 9,
+  "BackupPath": "F:\\My Work\\Sigma\\reviews\\HRM_PAYROLL_TEST_SALARY_SEED_20261009T164323734Z_BACKUP.json",
+  "BackupSHA256": "2CFBA3659BBA58231C50EB639CBD402A59FDD446C9B53DA9F000C2976B89F883",
+  "InsertedRows": [
+    {
+      "Id": 35,
+      "StaffId": 97,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 36,
+      "StaffId": 97,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 37,
+      "StaffId": 97,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 38,
+      "StaffId": 97,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 39,
+      "StaffId": 97,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 40,
+      "StaffId": 97,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 41,
+      "StaffId": 98,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 42,
+      "StaffId": 98,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 43,
+      "StaffId": 98,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 44,
+      "StaffId": 98,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 45,
+      "StaffId": 98,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 46,
+      "StaffId": 98,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 47,
+      "StaffId": 268,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 48,
+      "StaffId": 268,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 49,
+      "StaffId": 268,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 50,
+      "StaffId": 268,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 51,
+      "StaffId": 268,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 52,
+      "StaffId": 268,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 53,
+      "StaffId": 269,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 54,
+      "StaffId": 269,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 55,
+      "StaffId": 269,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 56,
+      "StaffId": 269,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 57,
+      "StaffId": 269,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 58,
+      "StaffId": 269,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 59,
+      "StaffId": 270,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 60,
+      "StaffId": 270,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 61,
+      "StaffId": 270,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 62,
+      "StaffId": 270,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 63,
+      "StaffId": 270,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 64,
+      "StaffId": 270,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 65,
+      "StaffId": 271,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 66,
+      "StaffId": 271,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 67,
+      "StaffId": 271,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 68,
+      "StaffId": 271,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 69,
+      "StaffId": 271,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 70,
+      "StaffId": 271,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 71,
+      "StaffId": 272,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 72,
+      "StaffId": 272,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 73,
+      "StaffId": 272,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 74,
+      "StaffId": 272,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 75,
+      "StaffId": 272,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 76,
+      "StaffId": 272,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 77,
+      "StaffId": 275,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 78,
+      "StaffId": 275,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 79,
+      "StaffId": 275,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 80,
+      "StaffId": 275,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 81,
+      "StaffId": 275,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 82,
+      "StaffId": 275,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 83,
+      "StaffId": 278,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 84,
+      "StaffId": 278,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 85,
+      "StaffId": 278,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 86,
+      "StaffId": 278,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 87,
+      "StaffId": 278,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 88,
+      "StaffId": 278,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 89,
+      "StaffId": 279,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 90,
+      "StaffId": 279,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 91,
+      "StaffId": 279,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 92,
+      "StaffId": 279,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 93,
+      "StaffId": 279,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 94,
+      "StaffId": 279,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 95,
+      "StaffId": 282,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 96,
+      "StaffId": 282,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 97,
+      "StaffId": 282,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 98,
+      "StaffId": 282,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 99,
+      "StaffId": 282,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 100,
+      "StaffId": 282,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 101,
+      "StaffId": 285,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 102,
+      "StaffId": 285,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 103,
+      "StaffId": 285,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 104,
+      "StaffId": 285,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 105,
+      "StaffId": 285,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 106,
+      "StaffId": 285,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 107,
+      "StaffId": 286,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 108,
+      "StaffId": 286,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 109,
+      "StaffId": 286,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 110,
+      "StaffId": 286,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 111,
+      "StaffId": 286,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 112,
+      "StaffId": 286,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 113,
+      "StaffId": 287,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 114,
+      "StaffId": 287,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 115,
+      "StaffId": 287,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 116,
+      "StaffId": 287,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 117,
+      "StaffId": 287,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 118,
+      "StaffId": 287,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 119,
+      "StaffId": 288,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 120,
+      "StaffId": 288,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 121,
+      "StaffId": 288,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 122,
+      "StaffId": 288,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 123,
+      "StaffId": 288,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 124,
+      "StaffId": 288,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 125,
+      "StaffId": 289,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 126,
+      "StaffId": 289,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 127,
+      "StaffId": 289,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 128,
+      "StaffId": 289,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 129,
+      "StaffId": 289,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 130,
+      "StaffId": 289,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 131,
+      "StaffId": 296,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 132,
+      "StaffId": 296,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 133,
+      "StaffId": 296,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 134,
+      "StaffId": 296,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 135,
+      "StaffId": 296,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 136,
+      "StaffId": 296,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 137,
+      "StaffId": 297,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 138,
+      "StaffId": 297,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 139,
+      "StaffId": 297,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 140,
+      "StaffId": 297,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 141,
+      "StaffId": 297,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 142,
+      "StaffId": 297,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 143,
+      "StaffId": 299,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 144,
+      "StaffId": 299,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 145,
+      "StaffId": 299,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 146,
+      "StaffId": 299,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 147,
+      "StaffId": 299,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 148,
+      "StaffId": 299,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 149,
+      "StaffId": 300,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 150,
+      "StaffId": 300,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 151,
+      "StaffId": 300,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 152,
+      "StaffId": 300,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 153,
+      "StaffId": 300,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 154,
+      "StaffId": 300,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 155,
+      "StaffId": 301,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 156,
+      "StaffId": 301,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 157,
+      "StaffId": 301,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 158,
+      "StaffId": 301,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 159,
+      "StaffId": 301,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 160,
+      "StaffId": 301,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 161,
+      "StaffId": 302,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 162,
+      "StaffId": 302,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 163,
+      "StaffId": 302,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 164,
+      "StaffId": 302,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 165,
+      "StaffId": 302,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 166,
+      "StaffId": 302,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 167,
+      "StaffId": 318,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 168,
+      "StaffId": 318,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 169,
+      "StaffId": 318,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 170,
+      "StaffId": 318,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 171,
+      "StaffId": 318,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 172,
+      "StaffId": 318,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 173,
+      "StaffId": 327,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 174,
+      "StaffId": 327,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 175,
+      "StaffId": 327,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 176,
+      "StaffId": 327,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 177,
+      "StaffId": 327,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 178,
+      "StaffId": 327,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 179,
+      "StaffId": 328,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 180,
+      "StaffId": 328,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 181,
+      "StaffId": 328,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 182,
+      "StaffId": 328,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 183,
+      "StaffId": 328,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 184,
+      "StaffId": 328,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 185,
+      "StaffId": 329,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 186,
+      "StaffId": 329,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 187,
+      "StaffId": 329,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 188,
+      "StaffId": 329,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 189,
+      "StaffId": 329,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 190,
+      "StaffId": 329,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 191,
+      "StaffId": 330,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 192,
+      "StaffId": 330,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 193,
+      "StaffId": 330,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 194,
+      "StaffId": 330,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 195,
+      "StaffId": 330,
+      "SubscriptionId": 1007
+    },
+    {
+      "Id": 196,
+      "StaffId": 330,
+      "SubscriptionId": 1007
+    }
+  ]
+}

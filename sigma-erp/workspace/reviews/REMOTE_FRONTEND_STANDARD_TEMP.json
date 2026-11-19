@@ -1,0 +1,477 @@
+[
+  {
+    "p": "src\\app\\modules\\Workshop\\workshopVehicles\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "WorkshopVehicleFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Workshop\\WorkOrder\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "WorkOrderFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Workshop\\JobEstimation\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "JobEstimationFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Workshop\\Job\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "JobFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\PurchaseReturns\\PurchaseReturn\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "SearchFilter"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "PurchaseRequestFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "PurchaseOrderFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\Invoices\\Invoice\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "InvoiceListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\list\\list.component.ts",
+    "snapshot": "applied",
+    "type": "GoodsReceivedNoteFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\Bills\\Bill\\components\\list\\list.component.ts",
+    "snapshot": "applied",
+    "type": "BillFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\TripSheet\\components\\list\\list.component.ts",
+    "snapshot": "applied",
+    "type": "{ month: string; agreementId: number | null; tripNo: string }"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\Trips\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "TripFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\TransportationInvoice\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "TransportationInvoiceFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\TransportationAgreementItem\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "TransportationAgreementItemFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\TransactionItem\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "TransactionItemListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\Transaction\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "TransactionListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Support\\SupportSlaAgreement\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "SupportSlaAgreementFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Support\\SupportRequest\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "SupportRequestFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Suppliers\\Supplier\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "SupplierListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Stock\\StockTransfer\\components\\list\\list.component.ts",
+    "snapshot": "applied",
+    "type": "StockTransferFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Stock\\ItemReturn\\components\\list\\list.component.ts",
+    "snapshot": "applied",
+    "type": "ItemReturnFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Stock\\ItemRequisition\\components\\list\\list.component.ts",
+    "snapshot": "applied",
+    "type": "ItemRequisitionFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Stock\\ItemIssue\\components\\list\\list.component.ts",
+    "snapshot": "applied",
+    "type": "ItemIssueFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Staff\\Staff\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "StaffListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Staff\\alerts\\components\\alerts\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "StaffAlertListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Sales\\SalesQuotation\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "SalesQuotationFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Sales\\SalesAgreement\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "SalesAgreementFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Sales\\Fleet\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "EquipmentListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\RentalTariff\\components\\list\\list.component.ts",
+    "snapshot": "lastFilters",
+    "type": "VehicleTypeListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\RentalQuotation\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "RentalQuotationListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\MasterAgreement\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "MasterAgreementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\Booking\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "BookingListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\Agreement\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "RentalAgreementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\WorkshopMovement\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "WorkshopMovementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\Workshop\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "WorkshopFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\NRM\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "NRMListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\logsMovement\\components\\list\\list.component.ts",
+    "snapshot": "lastListFilter",
+    "type": "LogsMovementFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\DeliveryMovement\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "DeliveryMovementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\CustodyMovement\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "CustodyMovementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\collectionMovement\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "CollectionMovementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Limousine\\TripBooking\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "Record<string, string | number | boolean>"
+  },
+  {
+    "p": "src\\app\\modules\\Limousine\\LimousineInvoice\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "LimousineInvoiceFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Limousine\\LimoQuotation\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "LimoQuotationFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseTariff\\components\\list\\list.component.ts",
+    "snapshot": "lastFilters",
+    "type": "VehicleTypeListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseQuotation\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "LeaseQuotationListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseMasterAgreement\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "LeaseMasterAgreementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseCostParameter\\components\\list\\list.component.ts",
+    "snapshot": "lastFilters",
+    "type": "LeaseCostParameterListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseAgreement\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "LeaseAgreementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Payroll\\PaySlips\\components\\list\\pay-slips.component.ts",
+    "snapshot": "activeFilters",
+    "type": "PaySlipFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "PayrollListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Overtimes\\Overtime\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "OvertimeFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "LeaveTypeFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Leaves\\Leave\\components\\list\\list.component.ts",
+    "snapshot": "applied",
+    "type": "LeaveFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Holidays\\Holiday\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "HolidayFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Deductions\\Deduction\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "DeductionFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Attendances\\StaffTimesheet\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "StaffTimesheetFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Attendances\\Shift\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "ShiftFilters"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Attendances\\Attendance\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "AttendanceFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Fleet\\VehicleType\\components\\list\\list.component.ts",
+    "snapshot": "lastFilters",
+    "type": "VehicleTypeListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Equipment Rental\\TimeSheet\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "TimeSheetListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Equipment Rental\\EquipmentRentalInvoice\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "EquipmentRentalInvoiceListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Equipment Rental\\EquipmentQuotation\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "EquipmentQuotationListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "EquipmentMasterAgreementListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Equipment Rental\\DeliveryNote\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "DeliveryNoteListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Data Entry Corrections\\shared\\correction-workspace.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "CorrectionFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Customers\\Individual\\IndividualPartner\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "IndividualPartnerListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Customers\\Companies\\CompanyPartner\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "CompanyPartnerListFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Customers\\BalancesSummary\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "BalancesSummaryFilter | null"
+  },
+  {
+    "p": "src\\app\\modules\\Banking\\ChequesReceivables\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "PDCReceivableFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Banking\\ChequesPayables\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "PDCPayableFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Banking\\Cash Deposits\\CashDeposit\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "CashDepositFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Banking\\Card Transactions Bank Transfers\\CardTransactionBankTransfer\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "CardTransferFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Banking\\Bank\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "BankFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Assets\\asset\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "AssetFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\VoucherReasons\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "VoucherReasonFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\VehicleNotReadyReasons\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "VehicleNotReadyReasonFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\SponserShips\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "SponserShipFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\SaleOrigins\\SaleOrigin\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "SaleOriginFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\ReplacementReasons\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "ReplacementReasonFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\PaymentMethods\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "PaymentMethodFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\messageLogs\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "MessageLogFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\Languages\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "{ languageName?: string }"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\Industries\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "IndustryFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\ErrorLogs\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "ErrorLogFilters | null"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\CustomLookups\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "CustomLookupFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\CustomerRequests\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "CustomerRequestFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\CustomerProjects\\CustomerProject\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "CustomerProjectFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\Currencies\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "CurrencyFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\Countries\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "CountryFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\CostCenters\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "CostCenterFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\ContactGroups\\components\\list\\list.component.ts",
+    "snapshot": "appliedFilters",
+    "type": "ContactGroupFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\ChecklistItem\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "ChecklistItemFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\Branches\\components\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "BranchFilters"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\auditTrail\\list\\list.component.ts",
+    "snapshot": "activeFilters",
+    "type": "AuditTrailFilters | null"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\Journal\\components\\journal\\journal.component.ts",
+    "snapshot": "appliedFilter",
+    "type": "JournalFilter | null"
+  }
+]

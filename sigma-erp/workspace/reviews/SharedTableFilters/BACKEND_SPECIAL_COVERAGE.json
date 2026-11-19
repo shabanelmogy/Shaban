@@ -1,0 +1,143 @@
+{
+  "Status": "Implemented — source-only",
+  "OwnerVerificationPending": true,
+  "Scope": "Owned special read endpoints plus bounded coverage gap audit from 129 frontend consumers",
+  "Verification": "Source and scoped diff only; no build, test, lint, runtime or database execution",
+  "entries": [
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/TransportationAgreementService.cs",
+      "symbol": "GetTransportationTrips / GetTransportationTripsCoreAsync",
+      "transport": "GET TransportationAgreement/Trips; Filters[grid] query dictionary passed controller→interface→service",
+      "countStage": "Existing complete generated DTO rows → GridFilter → TripDate order → Count → Skip/Take",
+      "exclusions": [
+        "TripTime is TimeSpan and is not a displayed filter column"
+      ],
+      "pendingRuntime": true
+    },
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/TransportationAgreementService.cs",
+      "symbol": "GetScheduledTripsAsync",
+      "transport": "GET TransportationAgreement/TripSheetScheduled; Filters[grid]",
+      "countStage": "Private existing trip generation core → GridFilter AND scheduled-only predicate → count/page",
+      "correction": "Scheduled-only selection moved before pagination; existing post-page exclusion could underfill pages and misstate counts",
+      "pendingRuntime": true
+    },
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/TransportationAgreementService.cs",
+      "symbol": "GetExtraTripsAsync",
+      "transport": "GET TransportationAgreement/TripSheetExtra; Filters[grid]",
+      "countStage": "Existing complete extra DTO rows → tripNo predicate → GridFilter → count/page",
+      "correction": "Return TotalCount and normalize paging to1–100 with overflow-safe skip",
+      "pendingRuntime": true
+    },
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/Localization/LocalizationService.cs",
+      "symbol": "Query / GetTextsAsync / GetKeysAsync",
+      "transport": "GET LanguageText; initialized LanguageTextQuery.Filters",
+      "countStage": "Existing override/baseline SQL projection → search/state criteria → GridFilter → count/order/page; key snapshot uses same query",
+      "exclusions": [
+        "Internal PlaceholderContract explicitly rejected",
+        "Version is an internal byte[] concurrency token, not a displayed filter column"
+      ],
+      "pendingRuntime": true
+    },
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/AccountServices/AccountReportsService.cs",
+      "symbol": "GetJournalsAsync",
+      "transport": "GET AccountReports/Journals; existing request.Filters",
+      "countStage": "Existing complete projected allLines → chassis/plate predicate → GridFilter → count/page",
+      "correction": "No change to row Debit/Credit or any other report/accounting calculation",
+      "pendingRuntime": true
+    },
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/AgreementServices/LeaseCustomerSmsService.cs",
+      "symbol": "SearchAsync",
+      "transport": "GET LeaseCustomerSms; initialized LeaseCustomerSmsSearchVm.Filters",
+      "countStage": "Existing scoped partner/lease recipient SQL projection → screen search → GridFilter → CountAsync/order/page",
+      "correction": "Standalone service previously ignored grid constraints; exact recipient DTO supports Code/Name/MobileNo/Email/IsInactive",
+      "pendingRuntime": true
+    },
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/DataEntryCorrectionService.cs",
+      "symbol": "Inherited GetManyAsync / ListQuery",
+      "transport": "GET DataEntryCorrection; inherited ListSmBase.Filters",
+      "countStage": "Base scoped entity query → generic projected identity grid predicate → count/page",
+      "evidence": "DataEntryCorrectionProfiler retains exact EntryNo and By fallback expressions; no list override bypasses base",
+      "sourceEdited": false,
+      "pendingRuntime": true
+    },
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/DataEntryCorrectionModelService.cs",
+      "symbol": "Inherited GetManyAsync / ListQuery",
+      "transport": "GET DataEntryCorrectionModel; inherited ListSmBase.Filters",
+      "countStage": "Base scoped entity query → generic projected identity grid predicate → count/page",
+      "sourceEdited": false,
+      "pendingRuntime": true
+    },
+    {
+      "file": "SigmaBackend/SiGma.Business/Services/TripGridCustomizationService.cs",
+      "symbol": "Inherited GetManyAsync / ListQuery",
+      "transport": "GET TripGridCustomization; inherited ListSmBase.Filters",
+      "countStage": "Base entity query → DTO Column enum / Hide bool → grid → count/page",
+      "evidence": "TripGridCustomizationProfiler maps declared scalar values; frontend supplies stable enum choices and bool metadata",
+      "sourceEdited": false,
+      "pendingRuntime": true
+    }
+  ],
+  "coverageAudit": {
+    "frontendConsumers": 129,
+    "frontendInstances": 131,
+    "source": "reviews/SharedTableFilters/FRONTEND_COVERAGE.json",
+    "method": "Inspect route/service inheritance for suspicious custom endpoints; scan actual base-controller tokens for custom GetManyAsync/GetManyWithNavigationsAsync/SearchAsync/SearchWorkshopVehiclesAsync/GetWorkshopGridAsync/GetMovements/AlertsAsync methods lacking grid or base delegation, and scan count/page occurring before grid",
+    "findings": [
+      "LeaseCustomerSms was the confirmed missing binding/filter path and is now corrected",
+      "No remaining unmatched method or count-before-grid candidate in this bounded method scan",
+      "Classification dynamic controller kind and custom response projections remain part of root/projection-owner semantic reconciliation"
+    ],
+    "limitations": "The scoped structural scan is supporting source evidence, not a runtime/SQL translation pass or independent proof of every field formula"
+  },
+  "finalRootAudit": {
+    "status": "Source-only review",
+    "ownerVerificationPending": true,
+    "files": [
+      "SiGma.Helpers/Filters/GridFilter.cs",
+      "SiGma.Helpers/Filters/GridFilterParameterVisitor.cs",
+      "SiGma.Business/Services/Bases/Service.cs",
+      "SiGma.Business/Services/Payrolls/PayrollRunService.cs",
+      "SiGma.Business/Services/Payrolls/PaySlipService.cs",
+      "SiGma.Business/Services/StaffServices/StaffService.cs",
+      "SiGma.Business/Services/Customers/CustomerService.cs",
+      "SiGma.Business/Services/BanksServices/CashDepositService.cs",
+      "SiGma.Business/Services/BanksServices/CardTransactionBankTransferService.cs",
+      "SiGma.Business/Services/VouchersServices/BillService.cs",
+      "SiGma.ServerAPI/Program.cs",
+      "SiGma.ServerAPI/web.config"
+    ],
+    "confirmed": [
+      "GridFilter/base parameter expressions use declared scalar types; visitor and EF.Query/Reflection imports resolve",
+      "Business GlobalUsing.cs imports SiGma.Helpers.Filters for custom services",
+      "Payroll/PaySlip native status formulas and synthetic slip number match owning UI and filter before count/page",
+      "StaffAlerts native enum/date/day/status projection matches existing post-page displayed formulas; summary counters retain original screen scope",
+      "Banking DisplayStatus formulas and BankName fallback match existing profiles/UI",
+      "Bill HasPayable/LineId/effective allocations reproduce existing due/status calculation before count/page",
+      "Customer grid filtering acts on existing complete rows, before filtered totals/page; no new full materialization",
+      "Kestrel192KiB request line and HTTP2 field size cover worst-case URL encoding expansion of the16KiB semantic bound with room for ordinary query keys"
+    ],
+    "reportedFindings": [
+      {
+        "file": "SiGma.Business/Services/Customers/CustomerService.cs",
+        "symbol": "GetCustomerBalancesSummaryAsync",
+        "finding": "Empty partnerIds early return precedes helper validation, so invalid grid can succeed silently in an empty screen result",
+        "rootNotified": true
+      },
+      {
+        "file": "SiGma.ServerAPI/web.config / Program.cs",
+        "finding": "IIS HTTP.sys request-line/header defaults remain independent host settings; web.config and Kestrel limits alone do not establish full16KiB encoded JSON acceptance",
+        "rootNotified": true,
+        "source": "https://learn.microsoft.com/en-us/troubleshoot/developer/webapps/iis/site-behavior-performance/troubleshoot-http-400-errors-in-iis"
+      }
+    ],
+    "compilerDefectsFound": [],
+    "runtimeExecuted": false
+  }
+}

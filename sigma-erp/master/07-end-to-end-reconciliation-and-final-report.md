@@ -152,9 +152,9 @@ Before completion:
 - check that the required in-app guide exists and matches the final screen,
   including its module menu link and English/Arabic content;
 - preserve unrelated changes;
-- record source verification and scoped local build results separately. A test
-  project build checks compilation. Keep unexecuted tests, runtime, browser and
-  database checks explicitly pending.
+- record source verification, scoped local build, scoped test and lint results
+  separately (Master5). A test project build checks compilation only. Keep
+  unexecuted tests, runtime, browser and database checks explicitly pending.
 
 ### Final report
 
@@ -190,10 +190,11 @@ limit, nulls in a required column, and a data copy before dropping a column.
 
 ### Migration handoff and suggested commit messages
 
-A direct request to create or apply an EF migration authorizes the requested
-step and its verification. Creation includes the generated designer and model
-snapshot. Review the model diff and generated SQL, verify the target database
-and applied baseline, then apply the explicit migration ID. Verify the new
+An authorized implementation includes its required EF migration on the verified
+experimental Sigma database under Master1 (owner, 2026-11-17). A direct
+migration request authorizes the named scope. Review the generated designer,
+model snapshot and SQL. Verify the target, applied baseline and dependencies,
+then apply only the scoped migration ID. Do not apply unrelated pending migrations. Verify the new
 history entry, constraints and affected rows. Record the target, migration ID,
 data handling and remaining runtime checks. For an authorized experimental
 data backfill, use a valid same-tenant reference and document how it was chosen.
@@ -206,8 +207,8 @@ database/environment, tenant and record-selection rule, executed operation and
 affected row counts, resulting reference/financial/permission checks and
 remaining uncertainty. Keep proposed commands and pending schema work separate
 from executed data changes. This data permission does not authorize production/
-out-of-project targets, schema changes/migrations, a full data reset or database
-drop; the explicit migration handoff above remains in force.
+out-of-project targets, a full data reset or database drop. Scoped schema changes
+use the separate experimental migration rule above.
 
 For a pending schema change, record the reason and proposed migration name.
 Commit messages remain suggestions.

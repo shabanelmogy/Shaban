@@ -1,0 +1,2933 @@
+{
+  "status": "Implemented — source-only",
+  "ownerVerificationPending": true,
+  "forms": [
+    {
+      "file": "src/app/modules\\Billing\\BillSettings\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Data Entry Corrections\\DataEntryCorrectionModel\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\TimeSheet\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\VoucherReasons\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Billing\\BillingInvoice\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Data Entry Corrections\\DataEntryCorrection\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\WorkOrder\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\Account\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\VehicleNotReadyReasons\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\EquipmentRentalInvoice\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Assets\\assetType\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Billing\\BillDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\LubricationJob\\components\\create\\create.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\sales-orders\\sales-orders.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Users\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Assets\\asset\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\suppliers\\suppliers.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\SponserShips\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Customers\\PDCReceivable\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\EquipmentQuotation\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\LabourActivities\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Customers\\OpeningBalanceCustomer\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\cost-center\\cost-center.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\stock\\stock.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\workshop\\workshop.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\user-management\\user-management.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\accounts\\accounts.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\staff\\staff.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Individual\\IndividualPartner\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\JobEstimation\\components\\logs\\logs-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\prepaid\\prepaid.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\profile\\profile.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Banking\\ChequesReceivables\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\JobEstimation\\components\\editor\\editor.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\payment-gateway-setting\\payment-gateway-setting.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Agreements Dashboard 2\\ProvisionDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Banking\\ChequesReceivables\\components\\actions\\actions.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\deposit\\deposit.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\notifications\\notifications.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\customers\\customers.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\nation-id-format\\nation-idformat.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\JobCategory\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\limousine\\limousine.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Agreements Dashboard 2\\PreTerminationRule\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Banking\\ChequesPayables\\components\\mature\\mature.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\hrm\\hrm.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\PaymentMethods\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\Job\\components\\time-logs\\time-logs.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\holidays-setting\\holidays-setting.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Agreements Dashboard 2\\Clause\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Banking\\ChequesPayables\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\forms-and-fields\\forms-and-fields.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\fines\\fines.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Banking\\Cash Deposits\\CashDeposit\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Staff\\StaffStatementOfAccount\\components\\allocation\\staff-allocation-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Languages\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\equipment\\equipment.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\Job\\components\\logs\\log-entry.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Banking\\Card Transactions Bank Transfers\\CardTransactionBankTransfer\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\drivers\\driver-fields.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\e-salik\\e-salik.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\e-salik\\e-salik.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Industries\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\e-darb\\e-darb.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\e-darb\\e-darb.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\detail\\detail.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\detail\\detail.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\document-number\\document-number.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\dda\\dda.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\cost-centers\\cost-centers.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\billing-info\\billing-info.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\billing-info\\billing-info.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\billing-info\\billing-info.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\billing-info\\billing-info.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\billing-info\\billing-info.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\FiscalYears\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\common\\common.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Banking\\Bank\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\charges\\charges.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\emailTemplates\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\Job\\components\\invoice-customer\\invoice-customer.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Banking\\Bank\\components\\cheque-settings\\cheque-settings.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Staff\\Staff\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\broker\\broker.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Staff\\Staff\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\approvals\\approvals.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\Job\\components\\editor\\editor.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\Job\\components\\close-job\\close-job.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\Job\\components\\close-job\\close-job.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Settings\\components\\agreement-document\\agreement-document.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Staff\\designations\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\SaleOrigins\\SaleOrigin\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\CustomLookups\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Currencies\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\CostCenters\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Roles\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\correctVehicleStatus\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\TrafficFines\\TrafficFine\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Countries\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\ReplacementReasons\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\CustomerRequests\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\ContactGroups\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\CustomerProjects\\CustomerProject\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\SalaryVouchers\\SalaryVoucher\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\ChecklistItem\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\shared\\components\\branch-tariff-settings\\branch-tariff-settings.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Movements\\WorkshopMovement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\changeVoucherNo\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Attendances\\StaffTimesheet\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Administration\\Staff Roles\\StaffRole\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Receipts\\Receipt\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Administration\\Branches\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Attendances\\Shift\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Administration\\Settings\\HrmSetting\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Movements\\Workshop\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Attendances\\Attendance\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Movements\\NRM\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Administration\\Leave Opening Balance\\LeaveOpeningBalance\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNoteDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturnDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Leaves\\LeaveType\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Administration\\Departments\\Department\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Sales\\SalesQuotation\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Payroll\\PayrollProcess\\components\\disbursement\\payroll-disbursement.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Leaves\\Leave\\components\\rejection-dialog\\rejection-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturn\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Deductions\\Deduction\\components\\import\\import.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\VehicleType\\components\\manage-groups\\manage-groups.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Deductions\\Deduction\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Leaves\\Leave\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Sales\\SalesAgreement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\DebitNotes\\DebitNote\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\VehicleType\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\process\\process.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Movements\\DeliveryMovement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Sales\\Fleet\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Sales\\Fleet\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Sales\\Fleet\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Holidays\\Holiday\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequestDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\VehicleService\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\CreditNote\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Movements\\CustodyMovement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Movements\\collectionMovement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\VehicleQRLabel\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseTariff\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Bills\\BillDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\TariffCard\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripTypes\\components\\tariff-settings\\tariff-settings.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Vehicle\\components\\tariff\\tariff.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseQuotation\\components\\rejection-dialog\\rejection-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Bills\\Bill\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripTypes\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseQuotation\\components\\master-agreement-dialog\\master-agreement-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Vehicle\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Vehicle\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Vehicle\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrderDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\RentalTariff\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\DriverTimeSheet\\components\\list\\list.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseQuotation\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripGridCustomization\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\SourceCode\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\RentalQuotation\\components\\rejection-dialog\\rejection-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripBooking\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripBooking\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripBooking\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripBooking\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\RentalQuotation\\components\\master-agreement-dialog\\master-agreement-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripBooking\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\RentalQuotation\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Booking\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseInquiry\\components\\stage-dialog\\stage-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\ServiceLog\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TripSheet\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Booking\\components\\deposit\\deposit.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\Location\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseInquiry\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Provisions\\ProvisionDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Agreement\\components\\void\\void.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Agreement\\components\\sales-person\\sales-person.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\limousineTariff\\components\\limousine-tariff\\limousine-tariff-editor.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\MasterAgreement\\components\\create\\create.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseCustomerSms\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TransportationInvoice\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Provisions\\Provision\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\LimousineInvoice\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseCostSetting\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\ServiceItem\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TransportationAgreementItem\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\LimoQuotation\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Payments\\PaymentDetail\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseCostParameter\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\ServiceChecklistItem1\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TransportationAgreement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Agreement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Payments\\Payment\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Agreement\\components\\deposit\\deposit.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseClause\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseClause\\components\\clauses\\clauses.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TransactionItem\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Agreement\\components\\delivery-date\\delivery-date.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\ServiceBookings\\components\\editor\\editor.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\Transaction\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\JVs\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\void\\void.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\vehicle-replacement\\vehicle-replacement.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemIssue\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Suppliers\\Supplier\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\DownloadProcessTolls\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\DownloadProcessTolls\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\UnitsOfMeasures\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\payment-instructions\\payment-instructions.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\DownloadProcessFines\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\DownloadProcessFines\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\InvoiceBase\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\extend-period\\extend-rate-period.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\StockTransfer\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\extend-period\\extend-period.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\Item\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\DownloadProcessDarbTolls\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\DownloadProcessDarbTolls\\components\\list\\list.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Alerts\\components\\renew-insurance-dialog\\renew-insurance-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\driver-replacement\\driver-replacement.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\delivery-date\\delivery-date.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\MiscInvoiceItem\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\closing\\closing.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\workshop-editor\\workshop-editor.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Alerts\\components\\complete-service-dialog\\complete-service-dialog.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemType\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemRequisition\\components\\purchase-request\\purchase-request.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\additional-charges\\additional-charges.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\tax-advance-details\\tax-advance-details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\deposit\\deposit.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemRequisition\\components\\issue\\issue.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\discounts\\discounts.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemRequisition\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\MiscellaneousInvoice\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemReturn\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\details\\details.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\action-dialog\\invoice-action-dialog.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\action-dialog\\invoice-action-dialog.component.html",
+      "element": "div"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Accidents\\components\\editor\\editor.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\core-editor\\core-editor.component.html",
+      "element": "form"
+    },
+    {
+      "file": "src/app/modules\\Sales\\shared\\reason-dialog\\reason-dialog.component.ts",
+      "element": "form",
+      "inline": true
+    },
+    {
+      "file": "src/app/modules\\Sales\\SalesAgreement\\components\\action-dialog\\action-dialog.component.ts",
+      "element": "form",
+      "inline": true
+    }
+  ],
+  "excluded": [
+    {
+      "file": "src/app/modules\\Banking\\ReconciliationReport\\components\\void\\void.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\workshopVehicles\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Banking\\ReconciliationReport\\components\\reconciliation-report\\list.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\shared\\report-family\\account-report-page.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Administration\\auditTrail\\list\\list.component.html",
+      "form": "searchForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\WorkOrder\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Banking\\ChequesReceivables\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\suppliers\\suppliers.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Administration\\messageLogs\\list\\list.component.html",
+      "form": "searchForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\LabourActivitiesReport\\components\\report\\report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\prepaid\\prepaid.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Banking\\ChequesPayables\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\LabourActivities\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\shared\\components\\reports\\reports.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\deposit\\deposit.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\openingBalances\\components\\customers\\customers.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Banking\\Cash Deposits\\CashDeposit\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Administration\\ErrorLogs\\list\\list.component.html",
+      "form": "searchForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\JobEstimation\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Banking\\Card Transactions Bank Transfers\\CardTransactionBankTransfer\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\MonthClose\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\JobCategory\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Banking\\Bank Reconciliation\\components\\list\\list.component.html",
+      "form": "searchForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Banking\\Bank\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\Link Accounts\\LinkAccounts\\components\\details\\details.component.html",
+      "form": "searchForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Workshop\\Job\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\auth\\components\\registration\\registration.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Sales\\SalesQuotation\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\Budget\\components\\budget\\budget.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\auth\\components\\login\\login.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\auth\\components\\forgot-password\\forgot-password.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Accounts\\Journal\\components\\journal\\journal.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Sales\\SalesAgreement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Assets\\asset\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Assets\\depreciationSummary\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Assets\\depreciationDetail\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\UtilizationReport\\components\\utilization-report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Sales\\Fleet\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Assets\\depreciationReportFy\\components\\list\\list.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Assets\\depreciation\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\ChauffeurForcedAllocationsReport\\components\\chauffeur-forced-allocations-report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripTypes\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Sales\\DueInstallments\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\TimeSheet\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseTariff\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Administration\\Staff Roles\\StaffRole\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Reports\\components\\payrolls-report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Reports\\components\\driver-time-sheet-report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\EquipmentRentalInvoice\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Payroll\\PaySlips\\components\\list\\pay-slips.component.html",
+      "form": "form",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\TripBooking\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseQuotation\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\EquipmentQuotation\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Administration\\Leave Opening Balance\\LeaveOpeningBalance\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\Location\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseMasterAgreement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Administration\\Departments\\Department\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\limousineTariffReport\\components\\limousine-tariff-report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Payroll\\FinalSettlementProcess\\components\\process\\final-settlement-process.component.html",
+      "form": "form",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Equipment Rental\\DeliveryNote\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseInquiry\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\limousineTariff\\components\\limousine-tariff\\limousine-tariff-editor.component.html",
+      "form": "contextForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\LimousineInvoice\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Holidays\\Holiday\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\LimousineInvoice\\components\\details\\details.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseCustomerSms\\components\\list\\list.component.html",
+      "form": "searchForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\VehicleType\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Limousine\\LimoQuotation\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Deductions\\Deduction\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\StatementOfAccount\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseCostParameter\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\ReceivableAgeAnalysis\\components\\list\\list.component.html",
+      "form": "form",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Leaves\\Leave\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Attendances\\StaffTimesheet\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\VehicleQRLabel\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Leaves\\Leave\\components\\dashboard\\dashboard.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\vehicle-tracker\\components\\vehicle-tracker.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Attendances\\Shift\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Individual\\IndividualPartner\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Rental\\RentalTariff\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Vehicle\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Booking\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\HRM\\Attendances\\Attendance\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\followUpReport\\components\\list\\list.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\SourceCode\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\debtCollection\\components\\report\\report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Lease\\LeaseAgreement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Rental\\RentalQuotation\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\debtCollection\\components\\followup-report\\followup-report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\ServiceLog\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Rental\\RentalPlanner\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Rental\\MasterAgreement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TripSheet\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Rental\\Agreement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TransactionItem\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\Trips\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TransportationAgreementItem\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\ServiceBookings\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\stockReports\\shared\\stock-report-page.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\Transaction\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TransportationInvoice\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Transportation\\TransportationAgreement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\RepairVehicleDamages\\components\\fleet-repair-vehicle-damages.component.html",
+      "form": "searchForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Suppliers\\SupplierStatementOfAccount\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\rental-generation\\rental-generation.component.html",
+      "form": "form",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\equipment-rental-details\\equipment-rental-details.component.html",
+      "form": "invoiceFilterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Movements\\WorkshopMovement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\RepairedDamagesHistory\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\BalancesSummary\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\BalancesSummary\\components\\list\\list.component.html",
+      "form": "statementForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\rental-details\\rental-details.component.html",
+      "form": "invoiceFilterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Suppliers\\SupplierBalancesSummary\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Suppliers\\SupplierBalancesSummary\\components\\list\\list.component.html",
+      "form": "statementForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\limousine-bulk-details\\limousine-bulk-details.component.html",
+      "form": "invoiceFilterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Customers\\alerts\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\lease-details\\lease-details.component.html",
+      "form": "invoiceFilterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Suppliers\\Supplier\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Movements\\Workshop\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\DailyServiceLogs\\components\\report\\report.component.html",
+      "reason": "authentication/documentation/report owner"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Alerts\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Suppliers\\PayableAgeAnalysis\\components\\list\\list.component.html",
+      "form": "form",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Movements\\NRM\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Movements\\CustodyMovement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Loan\\Loan EMI's\\LoanEMI\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Movements\\collectionMovement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Fleet\\Accidents\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Movements\\DeliveryMovement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Stock\\UnitsOfMeasures\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Movements\\logsMovement\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemRequisition\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Stock\\Item\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Stock\\StockTransfer\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemIssue\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemReturn\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Staff\\StaffStatementOfAccount\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Stock\\ItemType\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Staff\\designations\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Staff\\Staff\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Staff\\alerts\\components\\alerts\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Staff\\StaffOverTime\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Staff\\StaffDutySchedule\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Staff\\StaffBalancesSummary\\components\\list\\list.component.html",
+      "form": "filterForm",
+      "reason": "filter/search/query"
+    },
+    {
+      "file": "src/app/modules\\Staff\\StaffBalancesSummary\\components\\list\\list.component.html",
+      "form": "statementForm",
+      "reason": "filter/search/query"
+    }
+  ],
+  "imports": [
+    "src/app/modules\\Accounts\\Budget\\components\\budget\\budget.component.ts",
+    "src/app/modules\\Accounts\\Account\\components\\list\\list.component.ts",
+    "src/app/modules\\Accounts\\Account\\components\\details\\details.component.ts",
+    "src/app/modules\\Accounts\\FiscalYears\\components\\details\\details.component.ts",
+    "src/app/modules\\Banking\\ReconciliationReport\\components\\void\\void.component.ts",
+    "src/app/modules\\Banking\\ReconciliationReport\\components\\reconciliation-report\\list.component.ts",
+    "src/app/modules\\Accounts\\MonthClose\\components\\list\\list.component.ts",
+    "src/app/modules\\Accounts\\shared\\report-family\\account-report-page.component.ts",
+    "src/app/modules\\Banking\\ChequesReceivables\\components\\list\\list.component.ts",
+    "src/app/modules\\Workshop\\workshopVehicles\\components\\list\\list.component.ts",
+    "src/app/modules\\Banking\\ChequesReceivables\\components\\details\\details.component.ts",
+    "src/app/modules\\Banking\\ChequesReceivables\\components\\actions\\actions.component.ts",
+    "src/app/modules\\Accounts\\Journal\\components\\journal\\journal.component.ts",
+    "src/app/modules\\Agreements Dashboard 2\\ProvisionDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Agreements Dashboard 2\\ProvisionDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Agreements Dashboard 2\\PreTerminationRule\\components\\list\\list.component.ts",
+    "src/app/modules\\Agreements Dashboard 2\\PreTerminationRule\\components\\details\\details.component.ts",
+    "src/app/modules\\Banking\\ChequesPayables\\components\\mature\\mature.component.ts",
+    "src/app/modules\\Banking\\ChequesPayables\\components\\list\\list.component.ts",
+    "src/app/modules\\Banking\\ChequesPayables\\components\\details\\details.component.ts",
+    "src/app/modules\\Workshop\\WorkOrder\\components\\list\\list.component.ts",
+    "src/app/modules\\Accounts\\openingBalances\\components\\suppliers\\suppliers.component.ts",
+    "src/app/modules\\Workshop\\WorkOrder\\components\\details\\details.component.ts",
+    "src/app/modules\\Accounts\\openingBalances\\components\\stock\\stock.component.ts",
+    "src/app/modules\\Accounts\\openingBalances\\components\\staff\\staff.component.ts",
+    "src/app/modules\\Accounts\\Link Accounts\\LinkAccounts\\components\\details\\details.component.ts",
+    "src/app/modules\\Accounts\\openingBalances\\components\\prepaid\\prepaid.component.ts",
+    "src/app/modules\\Workshop\\LubricationJob\\components\\create\\create.component.ts",
+    "src/app/modules\\Accounts\\openingBalances\\components\\deposit\\deposit.component.ts",
+    "src/app/modules\\Accounts\\openingBalances\\components\\customers\\customers.component.ts",
+    "src/app/modules\\Accounts\\openingBalances\\components\\cost-center\\cost-center.component.ts",
+    "src/app/modules\\Accounts\\openingBalances\\components\\accounts\\accounts.component.ts",
+    "src/app/modules\\Banking\\Bank Reconciliation\\components\\list\\list.component.ts",
+    "src/app/modules\\Agreements Dashboard 2\\Clause\\components\\list\\list.component.ts",
+    "src/app/modules\\Banking\\Cash Deposits\\CashDeposit\\components\\list\\list.component.ts",
+    "src/app/modules\\Agreements Dashboard 2\\Clause\\components\\details\\details.component.ts",
+    "src/app/modules\\Banking\\Cash Deposits\\CashDeposit\\components\\details\\details.component.ts",
+    "src/app/modules\\Assets\\depreciationSummary\\components\\list\\list.component.ts",
+    "src/app/modules\\Banking\\Card Transactions Bank Transfers\\CardTransactionBankTransfer\\components\\list\\list.component.ts",
+    "src/app/modules\\Banking\\Bank\\components\\list\\list.component.ts",
+    "src/app/modules\\Banking\\Card Transactions Bank Transfers\\CardTransactionBankTransfer\\components\\details\\details.component.ts",
+    "src/app/modules\\Banking\\Bank\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\VoucherReasons\\components\\list\\list.component.ts",
+    "src/app/modules\\Sales\\shared\\reason-dialog\\reason-dialog.component.ts",
+    "src/app/modules\\Banking\\Bank\\components\\cheque-settings\\cheque-settings.component.ts",
+    "src/app/modules\\Workshop\\LabourTariff\\components\\labour-tariff\\labour-tariff.component.ts",
+    "src/app/modules\\Administration\\VoucherReasons\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportVehicles\\components\\list\\list.component.ts",
+    "src/app/modules\\Limousine\\UtilizationReport\\components\\utilization-report.component.ts",
+    "src/app/modules\\Sales\\SalesQuotation\\components\\list\\list.component.ts",
+    "src/app/modules\\Assets\\depreciationReportFy\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseTariff\\components\\list\\list.component.ts",
+    "src/app/modules\\Sales\\SalesQuotation\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseTariff\\components\\details\\details.component.ts",
+    "src/app/modules\\Workshop\\LabourActivitiesReport\\components\\report\\report.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportSuppliers\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\VehicleNotReadyReasons\\components\\list\\list.component.ts",
+    "src/app/modules\\Limousine\\TripTypes\\components\\tariff-settings\\tariff-settings.component.ts",
+    "src/app/modules\\Sales\\SalesAgreement\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\VehicleNotReadyReasons\\components\\details\\details.component.ts",
+    "src/app/modules\\Limousine\\TripTypes\\components\\list\\list.component.ts",
+    "src/app/modules\\Sales\\SalesAgreement\\components\\details\\details.component.ts",
+    "src/app/modules\\Assets\\depreciationDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Sales\\SalesAgreement\\components\\action-dialog\\action-dialog.component.ts",
+    "src/app/modules\\Limousine\\TripTypes\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseQuotation\\components\\rejection-dialog\\rejection-dialog.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportStaff\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseQuotation\\components\\master-agreement-dialog\\master-agreement-dialog.component.ts",
+    "src/app/modules\\Administration\\Users\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseQuotation\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Users\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportSalik\\components\\list\\list.component.ts",
+    "src/app/modules\\Assets\\depreciation\\components\\list\\list.component.ts",
+    "src/app/modules\\Sales\\Fleet\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseQuotation\\components\\details\\details.component.ts",
+    "src/app/modules\\Workshop\\LabourActivities\\components\\list\\list.component.ts",
+    "src/app/modules\\Sales\\Fleet\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Reports\\components\\payrolls-report.component.ts",
+    "src/app/modules\\Workshop\\LabourActivities\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Reports\\components\\driver-time-sheet-report.component.ts",
+    "src/app/modules\\Administration\\SponserShips\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\SponserShips\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportRentalAgreements\\components\\list\\list.component.ts",
+    "src/app/modules\\Sales\\DueInstallments\\components\\list\\list.component.ts",
+    "src/app/modules\\Assets\\assetType\\components\\details\\details.component.ts",
+    "src/app/modules\\Limousine\\TripGridCustomization\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportLeaseAgreements\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Payroll\\PaySlips\\components\\list\\pay-slips.component.ts",
+    "src/app/modules\\Workshop\\JobEstimation\\components\\logs\\logs-dialog.component.ts",
+    "src/app/modules\\Workshop\\JobEstimation\\components\\list\\list.component.ts",
+    "src/app/modules\\Assets\\asset\\components\\list\\list.component.ts",
+    "src/app/modules\\Reports\\VehicleRentalDetails\\components\\vehicle-rental-details.component.ts",
+    "src/app/modules\\Workshop\\JobEstimation\\components\\editor\\editor.component.ts",
+    "src/app/modules\\Assets\\asset\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportItems\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseMasterAgreement\\components\\list\\list.component.ts",
+    "src/app/modules\\Reports\\VehiclePurchase\\components\\vehicle-purchase.component.ts",
+    "src/app/modules\\Limousine\\TripBooking\\components\\list\\list.component.ts",
+    "src/app/modules\\Limousine\\TripBooking\\components\\details\\details.component.ts",
+    "src/app/modules\\Workshop\\JobCategory\\components\\list\\list.component.ts",
+    "src/app/modules\\Reports\\VehicleProfitAndLossByChasisNo\\components\\vehicle-profit-and-loss-by-chasis-no.component.ts",
+    "src/app/modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts",
+    "src/app/modules\\Workshop\\JobCategory\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Deductions\\Deduction\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Deductions\\Deduction\\components\\import\\import.component.ts",
+    "src/app/modules\\HRM\\Deductions\\Deduction\\components\\details\\details.component.ts",
+    "src/app/modules\\Reports\\VehiclePriceBasedOnTariffGroup\\components\\vehicle-price-based-on-tariff-group.component.ts",
+    "src/app/modules\\Limousine\\Location\\components\\list\\list.component.ts",
+    "src/app/modules\\Limousine\\Location\\components\\details\\details.component.ts",
+    "src/app/modules\\Reports\\SalesPersonInvoices\\components\\sales-person-invoices.component.ts",
+    "src/app/modules\\HRM\\Attendances\\StaffTimesheet\\components\\list\\list.component.ts",
+    "src/app/modules\\Limousine\\limousineTariffReport\\components\\limousine-tariff-report.component.ts",
+    "src/app/modules\\Reports\\SaleReportBaseOnInvoice\\components\\sale-report-base-on-invoice.component.ts",
+    "src/app/modules\\Reports\\SaleReport\\components\\sale-report.component.ts",
+    "src/app/modules\\Reports\\RentalSalesForSixtBahrain\\components\\rental-sales-for-sixt-bahrain.component.ts",
+    "src/app/modules\\Limousine\\limousineTariff\\components\\limousine-tariff\\limousine-tariff-editor.component.ts",
+    "src/app/modules\\Limousine\\LimousineInvoice\\components\\list\\list.component.ts",
+    "src/app/modules\\Limousine\\LimousineInvoice\\components\\details\\details.component.ts",
+    "src/app/modules\\Reports\\ProfitAndLoss\\components\\profit-and-loss.component.ts",
+    "src/app/modules\\Limousine\\LimoQuotation\\components\\list\\list.component.ts",
+    "src/app/modules\\Limousine\\LimoQuotation\\components\\details\\details.component.ts",
+    "src/app/modules\\Workshop\\Job\\components\\time-logs\\time-logs.component.ts",
+    "src/app/modules\\HRM\\Attendances\\StaffTimesheet\\components\\details\\details.component.ts",
+    "src/app/modules\\Reports\\DailyBusiness\\components\\daily-business.component.ts",
+    "src/app/modules\\Workshop\\Job\\components\\logs\\log-entry.component.ts",
+    "src/app/modules\\Workshop\\Job\\components\\list\\list.component.ts",
+    "src/app/modules\\Workshop\\Job\\components\\invoice-customer\\invoice-customer.component.ts",
+    "src/app/modules\\Reports\\CustomerWiseCollection\\components\\customer-wise-collection.component.ts",
+    "src/app/modules\\Workshop\\Job\\components\\editor\\editor.component.ts",
+    "src/app/modules\\HRM\\Attendances\\Shift\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportFines\\components\\list\\list.component.ts",
+    "src/app/modules\\Workshop\\Job\\components\\close-job\\close-job.component.ts",
+    "src/app/modules\\Limousine\\ChauffeurForcedAllocationsReport\\components\\chauffeur-forced-allocations-report.component.ts",
+    "src/app/modules\\HRM\\Attendances\\Shift\\components\\details\\details.component.ts",
+    "src/app/modules\\Reports\\CollectionAndRefunds2\\components\\collection-and-refunds2.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportDarb\\components\\list\\list.component.ts",
+    "src/app/modules\\Reports\\CollectionAndRefunds\\components\\collection-and-refunds.component.ts",
+    "src/app/modules\\Reports\\Collection\\components\\collection.component.ts",
+    "src/app/modules\\Lease\\LeaseInquiry\\components\\stage-dialog\\stage-dialog.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportCustomers\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNoteDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.ts",
+    "src/app/modules\\Lease\\LeaseInquiry\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNoteDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseInquiry\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Payroll\\PayrollProcess\\components\\disbursement\\payroll-disbursement.component.ts",
+    "src/app/modules\\Vouchers\\TrafficFines\\TrafficFine\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\TrafficFines\\TrafficFine\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportClosedRentalAgreements\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Attendances\\Attendance\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\TariffCard\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Payroll\\FinalSettlementProcess\\components\\process\\final-settlement-process.component.ts",
+    "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Attendances\\Attendance\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportClosedLeaseAgreements\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseCustomerSms\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\SalaryVouchers\\SalaryVoucher\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\SalaryVouchers\\SalaryVoucher\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\DebitNotes\\DebitNote\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\process\\process.component.ts",
+    "src/app/modules\\Vouchers\\DebitNotes\\DebitNote\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\RentalTariff\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\DataImport\\ImportAssets\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\RentalTariff\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\CreditNote\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\CreditNote\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\CustomLookups\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\RentalQuotation\\components\\rejection-dialog\\rejection-dialog.component.ts",
+    "src/app/modules\\Administration\\CustomLookups\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\RentalQuotation\\components\\master-agreement-dialog\\master-agreement-dialog.component.ts",
+    "src/app/modules\\HRM\\Leaves\\LeaveType\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Receipts\\Receipt\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\RentalQuotation\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Receipts\\Receipt\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\RentalQuotation\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\workshop\\workshop.component.ts",
+    "src/app/modules\\HRM\\Administration\\Staff Roles\\StaffRole\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\user-management\\user-management.component.ts",
+    "src/app/modules\\Vouchers\\Bills\\BillDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\profile\\profile.component.ts",
+    "src/app/modules\\Administration\\CustomerRequests\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Administration\\Staff Roles\\StaffRole\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Leaves\\Leave\\components\\rejection-dialog\\rejection-dialog.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\payment-gateway-setting\\payment-gateway-setting.component.ts",
+    "src/app/modules\\Lease\\LeaseCostSetting\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\CustomerRequests\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\RentalPlanner\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Leaves\\Leave\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\notifications\\notifications.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturnDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\nation-id-format\\nation-idformat.component.ts",
+    "src/app/modules\\Vouchers\\Bills\\BillDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\limousine\\limousine.component.ts",
+    "src/app/modules\\HRM\\Leaves\\Leave\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturnDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\hrm\\hrm.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\holidays-setting\\holidays-setting.component.ts",
+    "src/app/modules\\HRM\\Leaves\\Leave\\components\\dashboard\\dashboard.component.ts",
+    "src/app/modules\\HRM\\Administration\\Settings\\HrmSetting\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\forms-and-fields\\forms-and-fields.component.ts",
+    "src/app/modules\\Lease\\LeaseCostParameter\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseCostParameter\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Bills\\Bill\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\CustomerProjects\\CustomerProject\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Bills\\Bill\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\CustomerProjects\\CustomerProject\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\MasterAgreement\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\MasterAgreement\\components\\create\\create.component.ts",
+    "src/app/modules\\HRM\\Holidays\\Holiday\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Administration\\Leave Opening Balance\\LeaveOpeningBalance\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Holidays\\Holiday\\components\\details\\details.component.ts",
+    "src/app/modules\\HRM\\Administration\\Leave Opening Balance\\LeaveOpeningBalance\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\fines\\fines.component.ts",
+    "src/app/modules\\Lease\\LeaseClause\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Currencies\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseClause\\components\\clauses\\clauses.component.ts",
+    "src/app/modules\\Administration\\Currencies\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\DriverTimeSheet\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Administration\\Departments\\Department\\components\\list\\list.component.ts",
+    "src/app/modules\\HRM\\Administration\\Departments\\Department\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\equipment\\equipment.component.ts",
+    "src/app/modules\\HRM\\Administration\\Account Linking\\LinkAccounts\\components\\list\\list.component.ts",
+    "src/app/modules\\Transportation\\TripSheet\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturn\\components\\list\\list.component.ts",
+    "src/app/modules\\Transportation\\TripSheet\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\e-salik\\e-salik.component.ts",
+    "src/app/modules\\Rental\\Booking\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\e-darb\\e-darb.component.ts",
+    "src/app/modules\\Administration\\Countries\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturn\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\document-number\\document-number.component.ts",
+    "src/app/modules\\Administration\\Countries\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\Booking\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\Booking\\components\\deposit\\deposit.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\dda\\dda.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\cost-centers\\cost-centers.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\common\\common.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\void\\void.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\charges\\charges.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\vehicle-replacement\\vehicle-replacement.component.ts",
+    "src/app/modules\\Administration\\CostCenters\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\broker\\broker.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\payment-instructions\\payment-instructions.component.ts",
+    "src/app/modules\\Fleet\\VehicleType\\components\\manage-groups\\manage-groups.component.ts",
+    "src/app/modules\\Administration\\CostCenters\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\approvals\\approvals.component.ts",
+    "src/app/modules\\Fleet\\VehicleType\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Settings\\components\\agreement-document\\agreement-document.component.ts",
+    "src/app/modules\\Transportation\\Trips\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\VehicleType\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\extend-period\\extend-rate-period.component.ts",
+    "src/app/modules\\Vouchers\\Provisions\\ProvisionDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\extend-period\\extend-period.component.ts",
+    "src/app/modules\\Vouchers\\Provisions\\ProvisionDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\driver-replacement\\driver-replacement.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\discounts\\discounts.component.ts",
+    "src/app/modules\\Administration\\correctVehicleStatus\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\SaleOrigins\\SaleOrigin\\components\\list\\list.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\SaleOrigins\\SaleOrigin\\components\\details\\details.component.ts",
+    "src/app/modules\\Fleet\\VehicleService\\components\\details\\details.component.ts",
+    "src/app/modules\\Transportation\\TransportationInvoice\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequestDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Transportation\\TransportationInvoice\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Provisions\\Provision\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Provisions\\Provision\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\ContactGroups\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\ContactGroups\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\deposit\\deposit.component.ts",
+    "src/app/modules\\Administration\\Roles\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\Agreement\\components\\void\\void.component.ts",
+    "src/app/modules\\Administration\\Roles\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\Agreement\\components\\sales-person\\sales-person.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequestDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\delivery-date\\delivery-date.component.ts",
+    "src/app/modules\\Administration\\ChecklistItem\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Payments\\PaymentDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\ChecklistItem\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Payments\\PaymentDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\closing\\closing.component.ts",
+    "src/app/modules\\Rental\\Agreement\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\ReplacementReasons\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\Agreement\\components\\documents\\documents.component.ts",
+    "src/app/modules\\Administration\\changeVoucherNo\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\ReplacementReasons\\components\\details\\details.component.ts",
+    "src/app/modules\\Rental\\Agreement\\components\\details\\details.component.ts",
+    "src/app/modules\\Lease\\LeaseAgreement\\components\\additional-charges\\additional-charges.component.ts",
+    "src/app/modules\\Rental\\Agreement\\components\\deposit\\deposit.component.ts",
+    "src/app/modules\\Fleet\\VehicleQRLabel\\components\\list\\list.component.ts",
+    "src/app/modules\\Rental\\Agreement\\components\\delivery-date\\delivery-date.component.ts",
+    "src/app/modules\\Fleet\\VehicleQRLabel\\components\\details\\details.component.ts",
+    "src/app/modules\\Transportation\\TransportationAgreementItem\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Branches\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Payments\\Payment\\components\\list\\list.component.ts",
+    "src/app/modules\\Transportation\\TransportationAgreementItem\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Branches\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\details\\details.component.ts",
+    "src/app/modules\\Suppliers\\SupplierStatementOfAccount\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Payments\\Payment\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\PaymentMethods\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\auditTrail\\list\\list.component.ts",
+    "src/app/modules\\Administration\\PaymentMethods\\components\\details\\details.component.ts",
+    "src/app/modules\\Transportation\\TransportationAgreement\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\JVs\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\messageLogs\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\vehicle-tracker\\components\\vehicle-tracker.component.ts",
+    "src/app/modules\\Transportation\\TransportationAgreement\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\JVs\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrderDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Suppliers\\SupplierBalancesSummary\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrderDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\ErrorLogs\\list\\list.component.ts",
+    "src/app/modules\\Transportation\\TransactionItem\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\Vehicle\\components\\tariff\\tariff.component.ts",
+    "src/app/modules\\Transportation\\TransactionItem\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\MiscInvoiceItem\\components\\list\\list.component.ts",
+    "src/app/modules\\Suppliers\\Supplier\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\Vehicle\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\MiscInvoiceItem\\components\\details\\details.component.ts",
+    "src/app/modules\\Suppliers\\Supplier\\components\\details\\details.component.ts",
+    "src/app/modules\\Fleet\\Vehicle\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\emailTemplates\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Languages\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Languages\\components\\details\\details.component.ts",
+    "src/app/modules\\Suppliers\\PayableAgeAnalysis\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\MiscellaneousInvoice\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\MiscellaneousInvoice\\components\\details\\details.component.ts",
+    "src/app/modules\\Transportation\\Transaction\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\DownloadProcessFines\\components\\list\\list.component.ts",
+    "src/app/modules\\Movements\\WorkshopMovement\\components\\list\\list.component.ts",
+    "src/app/modules\\Transportation\\Transaction\\components\\details\\details.component.ts",
+    "src/app/modules\\Fleet\\Accidents\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\DownloadProcessDarbTolls\\components\\list\\list.component.ts",
+    "src/app/modules\\Movements\\WorkshopMovement\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\InvoiceBase\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\Accidents\\components\\editor\\editor.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\InvoiceBase\\components\\details\\details.component.ts",
+    "src/app/modules\\Fleet\\SourceCode\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\DailyServiceLogs\\components\\report\\report.component.ts",
+    "src/app/modules\\Fleet\\SourceCode\\components\\details\\details.component.ts",
+    "src/app/modules\\Administration\\Industries\\components\\list\\list.component.ts",
+    "src/app/modules\\Administration\\Industries\\components\\details\\details.component.ts",
+    "src/app/modules\\Fleet\\Alerts\\components\\renew-insurance-dialog\\renew-insurance-dialog.component.ts",
+    "src/app/modules\\Fleet\\ServiceLog\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\ServiceLog\\components\\details\\details.component.ts",
+    "src/app/modules\\Fleet\\Alerts\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\Alerts\\components\\complete-service-dialog\\complete-service-dialog.component.ts",
+    "src/app/modules\\Customers\\StatementOfAccount\\components\\list\\list.component.ts",
+    "src/app/modules\\Movements\\Workshop\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\RepairedDamagesHistory\\components\\list\\list.component.ts",
+    "src/app/modules\\Movements\\Workshop\\components\\details\\details.component.ts",
+    "src/app/modules\\Fleet\\ServiceItem\\components\\details\\details.component.ts",
+    "src/app/modules\\Customers\\ReceivableAgeAnalysis\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\DownloadProcessTolls\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\ServiceBookings\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\workshop-editor\\workshop-editor.component.ts",
+    "src/app/modules\\Fleet\\ServiceBookings\\components\\editor\\editor.component.ts",
+    "src/app/modules\\Customers\\PDCReceivable\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\tax-advance-details\\tax-advance-details.component.ts",
+    "src/app/modules\\Customers\\PDCReceivable\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\rental-generation\\rental-generation.component.ts",
+    "src/app/modules\\Equipment Rental\\TimeSheet\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\rental-details\\rental-details.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\list\\list.component.ts",
+    "src/app/modules\\Fleet\\ServiceChecklistItem1\\components\\list\\list.component.ts",
+    "src/app/modules\\Equipment Rental\\TimeSheet\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\limousine-bulk-details\\limousine-bulk-details.component.ts",
+    "src/app/modules\\Fleet\\ServiceChecklistItem1\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\lease-details\\lease-details.component.ts",
+    "src/app/modules\\Fleet\\RepairVehicleDamages\\components\\fleet-repair-vehicle-damages.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\equipment-rental-details\\equipment-rental-details.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\details\\details.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\core-editor\\core-editor.component.ts",
+    "src/app/modules\\Movements\\NRM\\components\\list\\list.component.ts",
+    "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\action-dialog\\invoice-action-dialog.component.ts",
+    "src/app/modules\\Movements\\CustodyMovement\\components\\list\\list.component.ts",
+    "src/app/modules\\Movements\\NRM\\components\\details\\details.component.ts",
+    "src/app/modules\\Movements\\CustodyMovement\\components\\details\\details.component.ts",
+    "src/app/modules\\Customers\\OpeningBalanceCustomer\\components\\list\\list.component.ts",
+    "src/app/modules\\Movements\\DeliveryMovement\\components\\list\\list.component.ts",
+    "src/app/modules\\Customers\\OpeningBalanceCustomer\\components\\details\\details.component.ts",
+    "src/app/modules\\Movements\\DeliveryMovement\\components\\details\\details.component.ts",
+    "src/app/modules\\Movements\\logsMovement\\components\\view\\view.component.ts",
+    "src/app/modules\\Movements\\collectionMovement\\components\\list\\list.component.ts",
+    "src/app/modules\\Movements\\logsMovement\\components\\list\\list.component.ts",
+    "src/app/modules\\Movements\\collectionMovement\\components\\details\\details.component.ts",
+    "src/app/modules\\Customers\\Individual\\IndividualPartner\\components\\list\\list.component.ts",
+    "src/app/modules\\Staff\\StaffStatementOfAccount\\components\\list\\list.component.ts",
+    "src/app/modules\\Customers\\Individual\\IndividualPartner\\components\\details\\details.component.ts",
+    "src/app/modules\\Equipment Rental\\EquipmentRentalInvoice\\components\\list\\list.component.ts",
+    "src/app/modules\\Staff\\StaffBalancesSummary\\components\\list\\list.component.ts",
+    "src/app/modules\\Staff\\StaffStatementOfAccount\\components\\allocation\\staff-allocation-dialog.component.ts",
+    "src/app/modules\\Loan\\Loan EMI's\\LoanEMI\\components\\list\\list.component.ts",
+    "src/app/modules\\Equipment Rental\\EquipmentRentalInvoice\\components\\details\\details.component.ts",
+    "src/app/modules\\Customers\\BalancesSummary\\components\\list\\list.component.ts",
+    "src/app/modules\\Customers\\followUpReport\\components\\list\\list.component.ts",
+    "src/app/modules\\Staff\\designations\\list\\list.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\list\\list.component.ts",
+    "src/app/modules\\Customers\\alerts\\components\\list\\list.component.ts",
+    "src/app/modules\\Staff\\StaffOverTime\\components\\list\\list.component.ts",
+    "src/app/modules\\Equipment Rental\\EquipmentQuotation\\components\\list\\list.component.ts",
+    "src/app/modules\\Staff\\alerts\\components\\alerts\\list.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\drivers\\driver-fields.component.ts",
+    "src/app/modules\\Customers\\debtCollection\\components\\report\\report.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\drivers\\driver-draft.component.ts",
+    "src/app/modules\\Equipment Rental\\EquipmentQuotation\\components\\details\\details.component.ts",
+    "src/app/modules\\Customers\\debtCollection\\components\\followup-report\\followup-report.component.ts",
+    "src/app/modules\\Staff\\Staff\\components\\list\\list.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\documents\\documents.component.ts",
+    "src/app/modules\\Staff\\Staff\\components\\details\\details.component.ts",
+    "src/app/modules\\Staff\\StaffDutySchedule\\components\\list\\list.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\detail\\detail.component.ts",
+    "src/app/modules\\Stock\\UnitsOfMeasures\\components\\list\\list.component.ts",
+    "src/app/modules\\Stock\\UnitsOfMeasures\\components\\details\\details.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\credit-cards\\credit-cards.component.ts",
+    "src/app/modules\\Equipment Rental\\DeliveryNote\\components\\list\\list.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\contact-persons\\contact-persons.component.ts",
+    "src/app/modules\\Billing\\BillSettings\\components\\list\\list.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\billing-info\\billing-info.component.ts",
+    "src/app/modules\\Billing\\BillSettings\\components\\details\\details.component.ts",
+    "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\details\\details.component.ts",
+    "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\sales-orders\\sales-orders.component.ts",
+    "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\list\\list.component.ts",
+    "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\details\\details.component.ts",
+    "src/app/modules\\Stock\\StockTransfer\\components\\list\\list.component.ts",
+    "src/app/modules\\Stock\\ItemRequisition\\components\\purchase-request\\purchase-request.component.ts",
+    "src/app/modules\\Stock\\ItemReturn\\components\\list\\list.component.ts",
+    "src/app/modules\\Stock\\StockTransfer\\components\\details\\details.component.ts",
+    "src/app/modules\\Stock\\ItemRequisition\\components\\list\\list.component.ts",
+    "src/app/modules\\Stock\\ItemReturn\\components\\details\\details.component.ts",
+    "src/app/modules\\Stock\\ItemRequisition\\components\\issue\\issue.component.ts",
+    "src/app/modules\\Data Entry Corrections\\DataEntryCorrectionModel\\components\\list\\list.component.ts",
+    "src/app/modules\\Stock\\ItemRequisition\\components\\details\\details.component.ts",
+    "src/app/modules\\Billing\\BillingInvoice\\components\\list\\list.component.ts",
+    "src/app/modules\\Data Entry Corrections\\DataEntryCorrectionModel\\components\\details\\details.component.ts",
+    "src/app/modules\\Billing\\BillingInvoice\\components\\details\\details.component.ts",
+    "src/app/modules\\Stock\\ItemType\\components\\list\\list.component.ts",
+    "src/app/modules\\Billing\\BillDetail\\components\\list\\list.component.ts",
+    "src/app/modules\\Stock\\ItemType\\components\\details\\details.component.ts",
+    "src/app/modules\\Billing\\BillDetail\\components\\details\\details.component.ts",
+    "src/app/modules\\Data Entry Corrections\\DataEntryCorrection\\components\\list\\list.component.ts",
+    "src/app/modules\\Data Entry Corrections\\DataEntryCorrection\\components\\details\\details.component.ts",
+    "src/app/modules\\Stock\\ItemIssue\\components\\list\\list.component.ts",
+    "src/app/modules\\Stock\\ItemIssue\\components\\details\\details.component.ts",
+    "src/app/modules\\Stock\\Item\\components\\details\\details.component.ts",
+    "src/app/modules\\Stock\\Item\\components\\list\\list.component.ts",
+    "src/app/modules\\shared\\components\\branch-tariff-settings\\branch-tariff-settings.component.ts",
+    "src/app/modules\\shared\\components\\reports\\reports.component.ts"
+  ],
+  "unsupported": [],
+  "sourceVerification": {
+    "diagnostics": [],
+    "translationKeys": 34,
+    "routineDiffs": 628,
+    "scopedFiles": [
+      "src/app/modules\\Accounts\\Budget\\components\\budget\\budget.component.ts",
+      "src/app/modules\\Accounts\\Account\\components\\list\\list.component.ts",
+      "src/app/modules\\Accounts\\Account\\components\\details\\details.component.ts",
+      "src/app/modules\\Accounts\\FiscalYears\\components\\details\\details.component.ts",
+      "src/app/modules\\Banking\\ReconciliationReport\\components\\void\\void.component.ts",
+      "src/app/modules\\Banking\\ReconciliationReport\\components\\reconciliation-report\\list.component.ts",
+      "src/app/modules\\Accounts\\MonthClose\\components\\list\\list.component.ts",
+      "src/app/modules\\Accounts\\shared\\report-family\\account-report-page.component.ts",
+      "src/app/modules\\Banking\\ChequesReceivables\\components\\list\\list.component.ts",
+      "src/app/modules\\Workshop\\workshopVehicles\\components\\list\\list.component.ts",
+      "src/app/modules\\Banking\\ChequesReceivables\\components\\details\\details.component.ts",
+      "src/app/modules\\Banking\\ChequesReceivables\\components\\actions\\actions.component.ts",
+      "src/app/modules\\Accounts\\Journal\\components\\journal\\journal.component.ts",
+      "src/app/modules\\Agreements Dashboard 2\\ProvisionDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Agreements Dashboard 2\\ProvisionDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Agreements Dashboard 2\\PreTerminationRule\\components\\list\\list.component.ts",
+      "src/app/modules\\Agreements Dashboard 2\\PreTerminationRule\\components\\details\\details.component.ts",
+      "src/app/modules\\Banking\\ChequesPayables\\components\\mature\\mature.component.ts",
+      "src/app/modules\\Banking\\ChequesPayables\\components\\list\\list.component.ts",
+      "src/app/modules\\Banking\\ChequesPayables\\components\\details\\details.component.ts",
+      "src/app/modules\\Workshop\\WorkOrder\\components\\list\\list.component.ts",
+      "src/app/modules\\Accounts\\openingBalances\\components\\suppliers\\suppliers.component.ts",
+      "src/app/modules\\Workshop\\WorkOrder\\components\\details\\details.component.ts",
+      "src/app/modules\\Accounts\\openingBalances\\components\\stock\\stock.component.ts",
+      "src/app/modules\\Accounts\\openingBalances\\components\\staff\\staff.component.ts",
+      "src/app/modules\\Accounts\\Link Accounts\\LinkAccounts\\components\\details\\details.component.ts",
+      "src/app/modules\\Accounts\\openingBalances\\components\\prepaid\\prepaid.component.ts",
+      "src/app/modules\\Workshop\\LubricationJob\\components\\create\\create.component.ts",
+      "src/app/modules\\Accounts\\openingBalances\\components\\deposit\\deposit.component.ts",
+      "src/app/modules\\Accounts\\openingBalances\\components\\customers\\customers.component.ts",
+      "src/app/modules\\Accounts\\openingBalances\\components\\cost-center\\cost-center.component.ts",
+      "src/app/modules\\Accounts\\openingBalances\\components\\accounts\\accounts.component.ts",
+      "src/app/modules\\Banking\\Bank Reconciliation\\components\\list\\list.component.ts",
+      "src/app/modules\\Agreements Dashboard 2\\Clause\\components\\list\\list.component.ts",
+      "src/app/modules\\Banking\\Cash Deposits\\CashDeposit\\components\\list\\list.component.ts",
+      "src/app/modules\\Agreements Dashboard 2\\Clause\\components\\details\\details.component.ts",
+      "src/app/modules\\Banking\\Cash Deposits\\CashDeposit\\components\\details\\details.component.ts",
+      "src/app/modules\\Assets\\depreciationSummary\\components\\list\\list.component.ts",
+      "src/app/modules\\Banking\\Card Transactions Bank Transfers\\CardTransactionBankTransfer\\components\\list\\list.component.ts",
+      "src/app/modules\\Banking\\Bank\\components\\list\\list.component.ts",
+      "src/app/modules\\Banking\\Card Transactions Bank Transfers\\CardTransactionBankTransfer\\components\\details\\details.component.ts",
+      "src/app/modules\\Banking\\Bank\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\VoucherReasons\\components\\list\\list.component.ts",
+      "src/app/modules\\Sales\\shared\\reason-dialog\\reason-dialog.component.ts",
+      "src/app/modules\\Banking\\Bank\\components\\cheque-settings\\cheque-settings.component.ts",
+      "src/app/modules\\Workshop\\LabourTariff\\components\\labour-tariff\\labour-tariff.component.ts",
+      "src/app/modules\\Administration\\VoucherReasons\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportVehicles\\components\\list\\list.component.ts",
+      "src/app/modules\\Limousine\\UtilizationReport\\components\\utilization-report.component.ts",
+      "src/app/modules\\Sales\\SalesQuotation\\components\\list\\list.component.ts",
+      "src/app/modules\\Assets\\depreciationReportFy\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseTariff\\components\\list\\list.component.ts",
+      "src/app/modules\\Sales\\SalesQuotation\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseTariff\\components\\details\\details.component.ts",
+      "src/app/modules\\Workshop\\LabourActivitiesReport\\components\\report\\report.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportSuppliers\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\VehicleNotReadyReasons\\components\\list\\list.component.ts",
+      "src/app/modules\\Limousine\\TripTypes\\components\\tariff-settings\\tariff-settings.component.ts",
+      "src/app/modules\\Sales\\SalesAgreement\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\VehicleNotReadyReasons\\components\\details\\details.component.ts",
+      "src/app/modules\\Limousine\\TripTypes\\components\\list\\list.component.ts",
+      "src/app/modules\\Sales\\SalesAgreement\\components\\details\\details.component.ts",
+      "src/app/modules\\Assets\\depreciationDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Sales\\SalesAgreement\\components\\action-dialog\\action-dialog.component.ts",
+      "src/app/modules\\Limousine\\TripTypes\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseQuotation\\components\\rejection-dialog\\rejection-dialog.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportStaff\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseQuotation\\components\\master-agreement-dialog\\master-agreement-dialog.component.ts",
+      "src/app/modules\\Administration\\Users\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseQuotation\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Users\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportSalik\\components\\list\\list.component.ts",
+      "src/app/modules\\Assets\\depreciation\\components\\list\\list.component.ts",
+      "src/app/modules\\Sales\\Fleet\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseQuotation\\components\\details\\details.component.ts",
+      "src/app/modules\\Workshop\\LabourActivities\\components\\list\\list.component.ts",
+      "src/app/modules\\Sales\\Fleet\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Reports\\components\\payrolls-report.component.ts",
+      "src/app/modules\\Workshop\\LabourActivities\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Reports\\components\\driver-time-sheet-report.component.ts",
+      "src/app/modules\\Administration\\SponserShips\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\SponserShips\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportRentalAgreements\\components\\list\\list.component.ts",
+      "src/app/modules\\Sales\\DueInstallments\\components\\list\\list.component.ts",
+      "src/app/modules\\Assets\\assetType\\components\\details\\details.component.ts",
+      "src/app/modules\\Limousine\\TripGridCustomization\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportLeaseAgreements\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Payroll\\PaySlips\\components\\list\\pay-slips.component.ts",
+      "src/app/modules\\Workshop\\JobEstimation\\components\\logs\\logs-dialog.component.ts",
+      "src/app/modules\\Workshop\\JobEstimation\\components\\list\\list.component.ts",
+      "src/app/modules\\Assets\\asset\\components\\list\\list.component.ts",
+      "src/app/modules\\Reports\\VehicleRentalDetails\\components\\vehicle-rental-details.component.ts",
+      "src/app/modules\\Workshop\\JobEstimation\\components\\editor\\editor.component.ts",
+      "src/app/modules\\Assets\\asset\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportItems\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseMasterAgreement\\components\\list\\list.component.ts",
+      "src/app/modules\\Reports\\VehiclePurchase\\components\\vehicle-purchase.component.ts",
+      "src/app/modules\\Limousine\\TripBooking\\components\\list\\list.component.ts",
+      "src/app/modules\\Limousine\\TripBooking\\components\\details\\details.component.ts",
+      "src/app/modules\\Workshop\\JobCategory\\components\\list\\list.component.ts",
+      "src/app/modules\\Reports\\VehicleProfitAndLossByChasisNo\\components\\vehicle-profit-and-loss-by-chasis-no.component.ts",
+      "src/app/modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts",
+      "src/app/modules\\Workshop\\JobCategory\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Deductions\\Deduction\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Deductions\\Deduction\\components\\import\\import.component.ts",
+      "src/app/modules\\HRM\\Deductions\\Deduction\\components\\details\\details.component.ts",
+      "src/app/modules\\Reports\\VehiclePriceBasedOnTariffGroup\\components\\vehicle-price-based-on-tariff-group.component.ts",
+      "src/app/modules\\Limousine\\Location\\components\\list\\list.component.ts",
+      "src/app/modules\\Limousine\\Location\\components\\details\\details.component.ts",
+      "src/app/modules\\Reports\\SalesPersonInvoices\\components\\sales-person-invoices.component.ts",
+      "src/app/modules\\HRM\\Attendances\\StaffTimesheet\\components\\list\\list.component.ts",
+      "src/app/modules\\Limousine\\limousineTariffReport\\components\\limousine-tariff-report.component.ts",
+      "src/app/modules\\Reports\\SaleReportBaseOnInvoice\\components\\sale-report-base-on-invoice.component.ts",
+      "src/app/modules\\Reports\\SaleReport\\components\\sale-report.component.ts",
+      "src/app/modules\\Reports\\RentalSalesForSixtBahrain\\components\\rental-sales-for-sixt-bahrain.component.ts",
+      "src/app/modules\\Limousine\\limousineTariff\\components\\limousine-tariff\\limousine-tariff-editor.component.ts",
+      "src/app/modules\\Limousine\\LimousineInvoice\\components\\list\\list.component.ts",
+      "src/app/modules\\Limousine\\LimousineInvoice\\components\\details\\details.component.ts",
+      "src/app/modules\\Reports\\ProfitAndLoss\\components\\profit-and-loss.component.ts",
+      "src/app/modules\\Limousine\\LimoQuotation\\components\\list\\list.component.ts",
+      "src/app/modules\\Limousine\\LimoQuotation\\components\\details\\details.component.ts",
+      "src/app/modules\\Workshop\\Job\\components\\time-logs\\time-logs.component.ts",
+      "src/app/modules\\HRM\\Attendances\\StaffTimesheet\\components\\details\\details.component.ts",
+      "src/app/modules\\Reports\\DailyBusiness\\components\\daily-business.component.ts",
+      "src/app/modules\\Workshop\\Job\\components\\logs\\log-entry.component.ts",
+      "src/app/modules\\Workshop\\Job\\components\\list\\list.component.ts",
+      "src/app/modules\\Workshop\\Job\\components\\invoice-customer\\invoice-customer.component.ts",
+      "src/app/modules\\Reports\\CustomerWiseCollection\\components\\customer-wise-collection.component.ts",
+      "src/app/modules\\Workshop\\Job\\components\\editor\\editor.component.ts",
+      "src/app/modules\\HRM\\Attendances\\Shift\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportFines\\components\\list\\list.component.ts",
+      "src/app/modules\\Workshop\\Job\\components\\close-job\\close-job.component.ts",
+      "src/app/modules\\Limousine\\ChauffeurForcedAllocationsReport\\components\\chauffeur-forced-allocations-report.component.ts",
+      "src/app/modules\\HRM\\Attendances\\Shift\\components\\details\\details.component.ts",
+      "src/app/modules\\Reports\\CollectionAndRefunds2\\components\\collection-and-refunds2.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportDarb\\components\\list\\list.component.ts",
+      "src/app/modules\\Reports\\CollectionAndRefunds\\components\\collection-and-refunds.component.ts",
+      "src/app/modules\\Reports\\Collection\\components\\collection.component.ts",
+      "src/app/modules\\Lease\\LeaseInquiry\\components\\stage-dialog\\stage-dialog.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportCustomers\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNoteDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Payroll\\PayrollProcess\\components\\process\\payroll-process.component.ts",
+      "src/app/modules\\Lease\\LeaseInquiry\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNoteDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseInquiry\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Payroll\\PayrollProcess\\components\\disbursement\\payroll-disbursement.component.ts",
+      "src/app/modules\\Vouchers\\TrafficFines\\TrafficFine\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\TrafficFines\\TrafficFine\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportClosedRentalAgreements\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Attendances\\Attendance\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\TariffCard\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Payroll\\FinalSettlementProcess\\components\\process\\final-settlement-process.component.ts",
+      "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Attendances\\Attendance\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportClosedLeaseAgreements\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseCustomerSms\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\SalaryVouchers\\SalaryVoucher\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\SalaryVouchers\\SalaryVoucher\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\DebitNotes\\DebitNote\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\process\\process.component.ts",
+      "src/app/modules\\Vouchers\\DebitNotes\\DebitNote\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\RentalTariff\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\DataImport\\ImportAssets\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\RentalTariff\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\CreditNote\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\CreditNote\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\CustomLookups\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\RentalQuotation\\components\\rejection-dialog\\rejection-dialog.component.ts",
+      "src/app/modules\\Administration\\CustomLookups\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\RentalQuotation\\components\\master-agreement-dialog\\master-agreement-dialog.component.ts",
+      "src/app/modules\\HRM\\Leaves\\LeaveType\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Receipts\\Receipt\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\RentalQuotation\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Receipts\\Receipt\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\RentalQuotation\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\workshop\\workshop.component.ts",
+      "src/app/modules\\HRM\\Administration\\Staff Roles\\StaffRole\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\user-management\\user-management.component.ts",
+      "src/app/modules\\Vouchers\\Bills\\BillDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\profile\\profile.component.ts",
+      "src/app/modules\\Administration\\CustomerRequests\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Administration\\Staff Roles\\StaffRole\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Leaves\\Leave\\components\\rejection-dialog\\rejection-dialog.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\payment-gateway-setting\\payment-gateway-setting.component.ts",
+      "src/app/modules\\Lease\\LeaseCostSetting\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\CustomerRequests\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\RentalPlanner\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Leaves\\Leave\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\notifications\\notifications.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturnDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\nation-id-format\\nation-idformat.component.ts",
+      "src/app/modules\\Vouchers\\Bills\\BillDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\limousine\\limousine.component.ts",
+      "src/app/modules\\HRM\\Leaves\\Leave\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturnDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\hrm\\hrm.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\holidays-setting\\holidays-setting.component.ts",
+      "src/app/modules\\HRM\\Leaves\\Leave\\components\\dashboard\\dashboard.component.ts",
+      "src/app/modules\\HRM\\Administration\\Settings\\HrmSetting\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\forms-and-fields\\forms-and-fields.component.ts",
+      "src/app/modules\\Lease\\LeaseCostParameter\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseCostParameter\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Bills\\Bill\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\CustomerProjects\\CustomerProject\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Bills\\Bill\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\CustomerProjects\\CustomerProject\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\MasterAgreement\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\MasterAgreement\\components\\create\\create.component.ts",
+      "src/app/modules\\HRM\\Holidays\\Holiday\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Administration\\Leave Opening Balance\\LeaveOpeningBalance\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Holidays\\Holiday\\components\\details\\details.component.ts",
+      "src/app/modules\\HRM\\Administration\\Leave Opening Balance\\LeaveOpeningBalance\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\fines\\fines.component.ts",
+      "src/app/modules\\Lease\\LeaseClause\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Currencies\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseClause\\components\\clauses\\clauses.component.ts",
+      "src/app/modules\\Administration\\Currencies\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\DriverTimeSheet\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Administration\\Departments\\Department\\components\\list\\list.component.ts",
+      "src/app/modules\\HRM\\Administration\\Departments\\Department\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\equipment\\equipment.component.ts",
+      "src/app/modules\\HRM\\Administration\\Account Linking\\LinkAccounts\\components\\list\\list.component.ts",
+      "src/app/modules\\Transportation\\TripSheet\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturn\\components\\list\\list.component.ts",
+      "src/app/modules\\Transportation\\TripSheet\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\e-salik\\e-salik.component.ts",
+      "src/app/modules\\Rental\\Booking\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\e-darb\\e-darb.component.ts",
+      "src/app/modules\\Administration\\Countries\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturn\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\document-number\\document-number.component.ts",
+      "src/app/modules\\Administration\\Countries\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\Booking\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\Booking\\components\\deposit\\deposit.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\dda\\dda.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\cost-centers\\cost-centers.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\common\\common.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\void\\void.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\charges\\charges.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\vehicle-replacement\\vehicle-replacement.component.ts",
+      "src/app/modules\\Administration\\CostCenters\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\broker\\broker.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\payment-instructions\\payment-instructions.component.ts",
+      "src/app/modules\\Fleet\\VehicleType\\components\\manage-groups\\manage-groups.component.ts",
+      "src/app/modules\\Administration\\CostCenters\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\approvals\\approvals.component.ts",
+      "src/app/modules\\Fleet\\VehicleType\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Settings\\components\\agreement-document\\agreement-document.component.ts",
+      "src/app/modules\\Transportation\\Trips\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\VehicleType\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\extend-period\\extend-rate-period.component.ts",
+      "src/app/modules\\Vouchers\\Provisions\\ProvisionDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\extend-period\\extend-period.component.ts",
+      "src/app/modules\\Vouchers\\Provisions\\ProvisionDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\driver-replacement\\driver-replacement.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\discounts\\discounts.component.ts",
+      "src/app/modules\\Administration\\correctVehicleStatus\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\SaleOrigins\\SaleOrigin\\components\\list\\list.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\SaleOrigins\\SaleOrigin\\components\\details\\details.component.ts",
+      "src/app/modules\\Fleet\\VehicleService\\components\\details\\details.component.ts",
+      "src/app/modules\\Transportation\\TransportationInvoice\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequestDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Transportation\\TransportationInvoice\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Provisions\\Provision\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Provisions\\Provision\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\ContactGroups\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\ContactGroups\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\deposit\\deposit.component.ts",
+      "src/app/modules\\Administration\\Roles\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\Agreement\\components\\void\\void.component.ts",
+      "src/app/modules\\Administration\\Roles\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\Agreement\\components\\sales-person\\sales-person.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequestDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\delivery-date\\delivery-date.component.ts",
+      "src/app/modules\\Administration\\ChecklistItem\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Payments\\PaymentDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\ChecklistItem\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Payments\\PaymentDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\closing\\closing.component.ts",
+      "src/app/modules\\Rental\\Agreement\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\ReplacementReasons\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\Agreement\\components\\documents\\documents.component.ts",
+      "src/app/modules\\Administration\\changeVoucherNo\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\ReplacementReasons\\components\\details\\details.component.ts",
+      "src/app/modules\\Rental\\Agreement\\components\\details\\details.component.ts",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\additional-charges\\additional-charges.component.ts",
+      "src/app/modules\\Rental\\Agreement\\components\\deposit\\deposit.component.ts",
+      "src/app/modules\\Fleet\\VehicleQRLabel\\components\\list\\list.component.ts",
+      "src/app/modules\\Rental\\Agreement\\components\\delivery-date\\delivery-date.component.ts",
+      "src/app/modules\\Fleet\\VehicleQRLabel\\components\\details\\details.component.ts",
+      "src/app/modules\\Transportation\\TransportationAgreementItem\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Branches\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Payments\\Payment\\components\\list\\list.component.ts",
+      "src/app/modules\\Transportation\\TransportationAgreementItem\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Branches\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\details\\details.component.ts",
+      "src/app/modules\\Suppliers\\SupplierStatementOfAccount\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Payments\\Payment\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\PaymentMethods\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\auditTrail\\list\\list.component.ts",
+      "src/app/modules\\Administration\\PaymentMethods\\components\\details\\details.component.ts",
+      "src/app/modules\\Transportation\\TransportationAgreement\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\JVs\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\messageLogs\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\vehicle-tracker\\components\\vehicle-tracker.component.ts",
+      "src/app/modules\\Transportation\\TransportationAgreement\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\JVs\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrderDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Suppliers\\SupplierBalancesSummary\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrderDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\ErrorLogs\\list\\list.component.ts",
+      "src/app/modules\\Transportation\\TransactionItem\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\Vehicle\\components\\tariff\\tariff.component.ts",
+      "src/app/modules\\Transportation\\TransactionItem\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\MiscInvoiceItem\\components\\list\\list.component.ts",
+      "src/app/modules\\Suppliers\\Supplier\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\Vehicle\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\MiscInvoiceItem\\components\\details\\details.component.ts",
+      "src/app/modules\\Suppliers\\Supplier\\components\\details\\details.component.ts",
+      "src/app/modules\\Fleet\\Vehicle\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\emailTemplates\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Languages\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Languages\\components\\details\\details.component.ts",
+      "src/app/modules\\Suppliers\\PayableAgeAnalysis\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\MiscellaneousInvoice\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\MiscellaneousInvoice\\components\\details\\details.component.ts",
+      "src/app/modules\\Transportation\\Transaction\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\DownloadProcessFines\\components\\list\\list.component.ts",
+      "src/app/modules\\Movements\\WorkshopMovement\\components\\list\\list.component.ts",
+      "src/app/modules\\Transportation\\Transaction\\components\\details\\details.component.ts",
+      "src/app/modules\\Fleet\\Accidents\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\DownloadProcessDarbTolls\\components\\list\\list.component.ts",
+      "src/app/modules\\Movements\\WorkshopMovement\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\InvoiceBase\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\Accidents\\components\\editor\\editor.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\InvoiceBase\\components\\details\\details.component.ts",
+      "src/app/modules\\Fleet\\SourceCode\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\DailyServiceLogs\\components\\report\\report.component.ts",
+      "src/app/modules\\Fleet\\SourceCode\\components\\details\\details.component.ts",
+      "src/app/modules\\Administration\\Industries\\components\\list\\list.component.ts",
+      "src/app/modules\\Administration\\Industries\\components\\details\\details.component.ts",
+      "src/app/modules\\Fleet\\Alerts\\components\\renew-insurance-dialog\\renew-insurance-dialog.component.ts",
+      "src/app/modules\\Fleet\\ServiceLog\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\ServiceLog\\components\\details\\details.component.ts",
+      "src/app/modules\\Fleet\\Alerts\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\Alerts\\components\\complete-service-dialog\\complete-service-dialog.component.ts",
+      "src/app/modules\\Customers\\StatementOfAccount\\components\\list\\list.component.ts",
+      "src/app/modules\\Movements\\Workshop\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\RepairedDamagesHistory\\components\\list\\list.component.ts",
+      "src/app/modules\\Movements\\Workshop\\components\\details\\details.component.ts",
+      "src/app/modules\\Fleet\\ServiceItem\\components\\details\\details.component.ts",
+      "src/app/modules\\Customers\\ReceivableAgeAnalysis\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\DownloadProcessTolls\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\ServiceBookings\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\workshop-editor\\workshop-editor.component.ts",
+      "src/app/modules\\Fleet\\ServiceBookings\\components\\editor\\editor.component.ts",
+      "src/app/modules\\Customers\\PDCReceivable\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\tax-advance-details\\tax-advance-details.component.ts",
+      "src/app/modules\\Customers\\PDCReceivable\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\rental-generation\\rental-generation.component.ts",
+      "src/app/modules\\Equipment Rental\\TimeSheet\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\rental-details\\rental-details.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\list\\list.component.ts",
+      "src/app/modules\\Fleet\\ServiceChecklistItem1\\components\\list\\list.component.ts",
+      "src/app/modules\\Equipment Rental\\TimeSheet\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\limousine-bulk-details\\limousine-bulk-details.component.ts",
+      "src/app/modules\\Fleet\\ServiceChecklistItem1\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\lease-details\\lease-details.component.ts",
+      "src/app/modules\\Fleet\\RepairVehicleDamages\\components\\fleet-repair-vehicle-damages.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\equipment-rental-details\\equipment-rental-details.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\details\\details.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\core-editor\\core-editor.component.ts",
+      "src/app/modules\\Movements\\NRM\\components\\list\\list.component.ts",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\action-dialog\\invoice-action-dialog.component.ts",
+      "src/app/modules\\Movements\\CustodyMovement\\components\\list\\list.component.ts",
+      "src/app/modules\\Movements\\NRM\\components\\details\\details.component.ts",
+      "src/app/modules\\Movements\\CustodyMovement\\components\\details\\details.component.ts",
+      "src/app/modules\\Customers\\OpeningBalanceCustomer\\components\\list\\list.component.ts",
+      "src/app/modules\\Movements\\DeliveryMovement\\components\\list\\list.component.ts",
+      "src/app/modules\\Customers\\OpeningBalanceCustomer\\components\\details\\details.component.ts",
+      "src/app/modules\\Movements\\DeliveryMovement\\components\\details\\details.component.ts",
+      "src/app/modules\\Movements\\logsMovement\\components\\view\\view.component.ts",
+      "src/app/modules\\Movements\\collectionMovement\\components\\list\\list.component.ts",
+      "src/app/modules\\Movements\\logsMovement\\components\\list\\list.component.ts",
+      "src/app/modules\\Movements\\collectionMovement\\components\\details\\details.component.ts",
+      "src/app/modules\\Customers\\Individual\\IndividualPartner\\components\\list\\list.component.ts",
+      "src/app/modules\\Staff\\StaffStatementOfAccount\\components\\list\\list.component.ts",
+      "src/app/modules\\Customers\\Individual\\IndividualPartner\\components\\details\\details.component.ts",
+      "src/app/modules\\Equipment Rental\\EquipmentRentalInvoice\\components\\list\\list.component.ts",
+      "src/app/modules\\Staff\\StaffBalancesSummary\\components\\list\\list.component.ts",
+      "src/app/modules\\Staff\\StaffStatementOfAccount\\components\\allocation\\staff-allocation-dialog.component.ts",
+      "src/app/modules\\Loan\\Loan EMI's\\LoanEMI\\components\\list\\list.component.ts",
+      "src/app/modules\\Equipment Rental\\EquipmentRentalInvoice\\components\\details\\details.component.ts",
+      "src/app/modules\\Customers\\BalancesSummary\\components\\list\\list.component.ts",
+      "src/app/modules\\Customers\\followUpReport\\components\\list\\list.component.ts",
+      "src/app/modules\\Staff\\designations\\list\\list.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\list\\list.component.ts",
+      "src/app/modules\\Customers\\alerts\\components\\list\\list.component.ts",
+      "src/app/modules\\Staff\\StaffOverTime\\components\\list\\list.component.ts",
+      "src/app/modules\\Equipment Rental\\EquipmentQuotation\\components\\list\\list.component.ts",
+      "src/app/modules\\Staff\\alerts\\components\\alerts\\list.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\drivers\\driver-fields.component.ts",
+      "src/app/modules\\Customers\\debtCollection\\components\\report\\report.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\drivers\\driver-draft.component.ts",
+      "src/app/modules\\Equipment Rental\\EquipmentQuotation\\components\\details\\details.component.ts",
+      "src/app/modules\\Customers\\debtCollection\\components\\followup-report\\followup-report.component.ts",
+      "src/app/modules\\Staff\\Staff\\components\\list\\list.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\documents\\documents.component.ts",
+      "src/app/modules\\Staff\\Staff\\components\\details\\details.component.ts",
+      "src/app/modules\\Staff\\StaffDutySchedule\\components\\list\\list.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\detail\\detail.component.ts",
+      "src/app/modules\\Stock\\UnitsOfMeasures\\components\\list\\list.component.ts",
+      "src/app/modules\\Stock\\UnitsOfMeasures\\components\\details\\details.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\credit-cards\\credit-cards.component.ts",
+      "src/app/modules\\Equipment Rental\\DeliveryNote\\components\\list\\list.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\contact-persons\\contact-persons.component.ts",
+      "src/app/modules\\Billing\\BillSettings\\components\\list\\list.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\billing-info\\billing-info.component.ts",
+      "src/app/modules\\Billing\\BillSettings\\components\\details\\details.component.ts",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\details\\details.component.ts",
+      "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\sales-orders\\sales-orders.component.ts",
+      "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\list\\list.component.ts",
+      "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\details\\details.component.ts",
+      "src/app/modules\\Stock\\StockTransfer\\components\\list\\list.component.ts",
+      "src/app/modules\\Stock\\ItemRequisition\\components\\purchase-request\\purchase-request.component.ts",
+      "src/app/modules\\Stock\\ItemReturn\\components\\list\\list.component.ts",
+      "src/app/modules\\Stock\\StockTransfer\\components\\details\\details.component.ts",
+      "src/app/modules\\Stock\\ItemRequisition\\components\\list\\list.component.ts",
+      "src/app/modules\\Stock\\ItemReturn\\components\\details\\details.component.ts",
+      "src/app/modules\\Stock\\ItemRequisition\\components\\issue\\issue.component.ts",
+      "src/app/modules\\Data Entry Corrections\\DataEntryCorrectionModel\\components\\list\\list.component.ts",
+      "src/app/modules\\Stock\\ItemRequisition\\components\\details\\details.component.ts",
+      "src/app/modules\\Billing\\BillingInvoice\\components\\list\\list.component.ts",
+      "src/app/modules\\Data Entry Corrections\\DataEntryCorrectionModel\\components\\details\\details.component.ts",
+      "src/app/modules\\Billing\\BillingInvoice\\components\\details\\details.component.ts",
+      "src/app/modules\\Stock\\ItemType\\components\\list\\list.component.ts",
+      "src/app/modules\\Billing\\BillDetail\\components\\list\\list.component.ts",
+      "src/app/modules\\Stock\\ItemType\\components\\details\\details.component.ts",
+      "src/app/modules\\Billing\\BillDetail\\components\\details\\details.component.ts",
+      "src/app/modules\\Data Entry Corrections\\DataEntryCorrection\\components\\list\\list.component.ts",
+      "src/app/modules\\Data Entry Corrections\\DataEntryCorrection\\components\\details\\details.component.ts",
+      "src/app/modules\\Stock\\ItemIssue\\components\\list\\list.component.ts",
+      "src/app/modules\\Stock\\ItemIssue\\components\\details\\details.component.ts",
+      "src/app/modules\\Stock\\Item\\components\\details\\details.component.ts",
+      "src/app/modules\\Stock\\Item\\components\\list\\list.component.ts",
+      "src/app/modules\\shared\\components\\branch-tariff-settings\\branch-tariff-settings.component.ts",
+      "src/app/modules\\shared\\components\\reports\\reports.component.ts",
+      "src/app/modules\\Billing\\BillSettings\\components\\details\\details.component.html",
+      "src/app/modules\\Data Entry Corrections\\DataEntryCorrectionModel\\components\\details\\details.component.html",
+      "src/app/modules\\Equipment Rental\\TimeSheet\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\VoucherReasons\\components\\details\\details.component.html",
+      "src/app/modules\\Billing\\BillingInvoice\\components\\details\\details.component.html",
+      "src/app/modules\\Data Entry Corrections\\DataEntryCorrection\\components\\details\\details.component.html",
+      "src/app/modules\\Workshop\\WorkOrder\\components\\details\\details.component.html",
+      "src/app/modules\\Accounts\\Account\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\VehicleNotReadyReasons\\components\\details\\details.component.html",
+      "src/app/modules\\Equipment Rental\\EquipmentRentalInvoice\\components\\details\\details.component.html",
+      "src/app/modules\\Assets\\assetType\\components\\details\\details.component.html",
+      "src/app/modules\\Billing\\BillDetail\\components\\details\\details.component.html",
+      "src/app/modules\\Workshop\\LubricationJob\\components\\create\\create.component.html",
+      "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\sales-orders\\sales-orders.component.html",
+      "src/app/modules\\Administration\\Users\\components\\details\\details.component.html",
+      "src/app/modules\\Assets\\asset\\components\\details\\details.component.html",
+      "src/app/modules\\Accounts\\openingBalances\\components\\suppliers\\suppliers.component.html",
+      "src/app/modules\\Equipment Rental\\EquipmentMasterAgreement\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\SponserShips\\components\\details\\details.component.html",
+      "src/app/modules\\Customers\\PDCReceivable\\components\\details\\details.component.html",
+      "src/app/modules\\Equipment Rental\\EquipmentQuotation\\components\\details\\details.component.html",
+      "src/app/modules\\Workshop\\LabourActivities\\components\\details\\details.component.html",
+      "src/app/modules\\Customers\\OpeningBalanceCustomer\\components\\details\\details.component.html",
+      "src/app/modules\\Accounts\\openingBalances\\components\\cost-center\\cost-center.component.html",
+      "src/app/modules\\Accounts\\openingBalances\\components\\stock\\stock.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\workshop\\workshop.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\user-management\\user-management.component.html",
+      "src/app/modules\\Accounts\\openingBalances\\components\\accounts\\accounts.component.html",
+      "src/app/modules\\Accounts\\openingBalances\\components\\staff\\staff.component.html",
+      "src/app/modules\\Customers\\Individual\\IndividualPartner\\components\\details\\details.component.html",
+      "src/app/modules\\Workshop\\JobEstimation\\components\\logs\\logs-dialog.component.html",
+      "src/app/modules\\Accounts\\openingBalances\\components\\prepaid\\prepaid.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\profile\\profile.component.html",
+      "src/app/modules\\Banking\\ChequesReceivables\\components\\details\\details.component.html",
+      "src/app/modules\\Workshop\\JobEstimation\\components\\editor\\editor.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\payment-gateway-setting\\payment-gateway-setting.component.html",
+      "src/app/modules\\Agreements Dashboard 2\\ProvisionDetail\\components\\details\\details.component.html",
+      "src/app/modules\\Banking\\ChequesReceivables\\components\\actions\\actions.component.html",
+      "src/app/modules\\Accounts\\openingBalances\\components\\deposit\\deposit.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\notifications\\notifications.component.html",
+      "src/app/modules\\Accounts\\openingBalances\\components\\customers\\customers.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\nation-id-format\\nation-idformat.component.html",
+      "src/app/modules\\Workshop\\JobCategory\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\limousine\\limousine.component.html",
+      "src/app/modules\\Agreements Dashboard 2\\PreTerminationRule\\components\\details\\details.component.html",
+      "src/app/modules\\Banking\\ChequesPayables\\components\\mature\\mature.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\hrm\\hrm.component.html",
+      "src/app/modules\\Administration\\PaymentMethods\\components\\details\\details.component.html",
+      "src/app/modules\\Workshop\\Job\\components\\time-logs\\time-logs.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\holidays-setting\\holidays-setting.component.html",
+      "src/app/modules\\Agreements Dashboard 2\\Clause\\components\\details\\details.component.html",
+      "src/app/modules\\Banking\\ChequesPayables\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\forms-and-fields\\forms-and-fields.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\fines\\fines.component.html",
+      "src/app/modules\\Banking\\Cash Deposits\\CashDeposit\\components\\details\\details.component.html",
+      "src/app/modules\\Staff\\StaffStatementOfAccount\\components\\allocation\\staff-allocation-dialog.component.html",
+      "src/app/modules\\Administration\\Languages\\components\\details\\details.component.html",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\list\\list.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\equipment\\equipment.component.html",
+      "src/app/modules\\Workshop\\Job\\components\\logs\\log-entry.component.html",
+      "src/app/modules\\Banking\\Card Transactions Bank Transfers\\CardTransactionBankTransfer\\components\\details\\details.component.html",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\drivers\\driver-fields.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\e-salik\\e-salik.component.html",
+      "src/app/modules\\Administration\\Industries\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\e-darb\\e-darb.component.html",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\detail\\detail.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\document-number\\document-number.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\dda\\dda.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\cost-centers\\cost-centers.component.html",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\detalisForm\\billing-info\\billing-info.component.html",
+      "src/app/modules\\Accounts\\FiscalYears\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\common\\common.component.html",
+      "src/app/modules\\Customers\\Companies\\CompanyPartner\\components\\details\\details.component.html",
+      "src/app/modules\\Banking\\Bank\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\charges\\charges.component.html",
+      "src/app/modules\\Administration\\emailTemplates\\components\\list\\list.component.html",
+      "src/app/modules\\Workshop\\Job\\components\\invoice-customer\\invoice-customer.component.html",
+      "src/app/modules\\Banking\\Bank\\components\\cheque-settings\\cheque-settings.component.html",
+      "src/app/modules\\Staff\\Staff\\components\\list\\list.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\broker\\broker.component.html",
+      "src/app/modules\\Staff\\Staff\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\approvals\\approvals.component.html",
+      "src/app/modules\\Workshop\\Job\\components\\editor\\editor.component.html",
+      "src/app/modules\\Workshop\\Job\\components\\close-job\\close-job.component.html",
+      "src/app/modules\\Administration\\Settings\\components\\agreement-document\\agreement-document.component.html",
+      "src/app/modules\\Staff\\designations\\list\\list.component.html",
+      "src/app/modules\\Administration\\SaleOrigins\\SaleOrigin\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\CustomLookups\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Currencies\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\CostCenters\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Roles\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\correctVehicleStatus\\components\\list\\list.component.html",
+      "src/app/modules\\Vouchers\\TrafficFines\\TrafficFine\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Countries\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\ReplacementReasons\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\CustomerRequests\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\ContactGroups\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\CustomerProjects\\CustomerProject\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\SalaryVouchers\\SalaryVoucher\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\ChecklistItem\\components\\details\\details.component.html",
+      "src/app/modules\\shared\\components\\branch-tariff-settings\\branch-tariff-settings.component.html",
+      "src/app/modules\\Movements\\WorkshopMovement\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\changeVoucherNo\\components\\list\\list.component.html",
+      "src/app/modules\\HRM\\Attendances\\StaffTimesheet\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Administration\\Staff Roles\\StaffRole\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Receipts\\Receipt\\components\\details\\details.component.html",
+      "src/app/modules\\Administration\\Branches\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Attendances\\Shift\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Administration\\Settings\\HrmSetting\\components\\list\\list.component.html",
+      "src/app/modules\\Movements\\Workshop\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Attendances\\Attendance\\components\\details\\details.component.html",
+      "src/app/modules\\Movements\\NRM\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Administration\\Leave Opening Balance\\LeaveOpeningBalance\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNoteDetail\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturnDetail\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Leaves\\LeaveType\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Administration\\Departments\\Department\\components\\details\\details.component.html",
+      "src/app/modules\\Sales\\SalesQuotation\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Payroll\\PayrollProcess\\components\\disbursement\\payroll-disbursement.component.html",
+      "src/app/modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Leaves\\Leave\\components\\rejection-dialog\\rejection-dialog.component.html",
+      "src/app/modules\\Vouchers\\PurchaseReturns\\PurchaseReturn\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Deductions\\Deduction\\components\\import\\import.component.html",
+      "src/app/modules\\Fleet\\VehicleType\\components\\manage-groups\\manage-groups.component.html",
+      "src/app/modules\\HRM\\Deductions\\Deduction\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Leaves\\Leave\\components\\details\\details.component.html",
+      "src/app/modules\\Sales\\SalesAgreement\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\DebitNotes\\DebitNote\\components\\details\\details.component.html",
+      "src/app/modules\\Fleet\\VehicleType\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\process\\process.component.html",
+      "src/app/modules\\Movements\\DeliveryMovement\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Overtimes\\Overtime\\components\\details\\details.component.html",
+      "src/app/modules\\Sales\\Fleet\\components\\details\\details.component.html",
+      "src/app/modules\\HRM\\Holidays\\Holiday\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequestDetail\\components\\details\\details.component.html",
+      "src/app/modules\\Fleet\\VehicleService\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\CreditNote\\components\\details\\details.component.html",
+      "src/app/modules\\Movements\\CustodyMovement\\components\\details\\details.component.html",
+      "src/app/modules\\Movements\\collectionMovement\\components\\details\\details.component.html",
+      "src/app/modules\\Fleet\\VehicleQRLabel\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseTariff\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Bills\\BillDetail\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\TariffCard\\components\\details\\details.component.html",
+      "src/app/modules\\Limousine\\TripTypes\\components\\tariff-settings\\tariff-settings.component.html",
+      "src/app/modules\\Fleet\\Vehicle\\components\\tariff\\tariff.component.html",
+      "src/app/modules\\Lease\\LeaseQuotation\\components\\rejection-dialog\\rejection-dialog.component.html",
+      "src/app/modules\\Vouchers\\Bills\\Bill\\components\\details\\details.component.html",
+      "src/app/modules\\Limousine\\TripTypes\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseQuotation\\components\\master-agreement-dialog\\master-agreement-dialog.component.html",
+      "src/app/modules\\Fleet\\Vehicle\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrderDetail\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\RentalTariff\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\DriverTimeSheet\\components\\list\\list.component.html",
+      "src/app/modules\\Lease\\LeaseQuotation\\components\\details\\details.component.html",
+      "src/app/modules\\Limousine\\TripGridCustomization\\components\\details\\details.component.html",
+      "src/app/modules\\Fleet\\SourceCode\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\RentalQuotation\\components\\rejection-dialog\\rejection-dialog.component.html",
+      "src/app/modules\\Limousine\\TripBooking\\components\\list\\list.component.html",
+      "src/app/modules\\Rental\\RentalQuotation\\components\\master-agreement-dialog\\master-agreement-dialog.component.html",
+      "src/app/modules\\Limousine\\TripBooking\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\RentalQuotation\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\Booking\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseInquiry\\components\\stage-dialog\\stage-dialog.component.html",
+      "src/app/modules\\Fleet\\ServiceLog\\components\\details\\details.component.html",
+      "src/app/modules\\Transportation\\TripSheet\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\Booking\\components\\deposit\\deposit.component.html",
+      "src/app/modules\\Limousine\\Location\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseInquiry\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Provisions\\ProvisionDetail\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\Agreement\\components\\void\\void.component.html",
+      "src/app/modules\\Rental\\Agreement\\components\\sales-person\\sales-person.component.html",
+      "src/app/modules\\Limousine\\limousineTariff\\components\\limousine-tariff\\limousine-tariff-editor.component.html",
+      "src/app/modules\\Rental\\MasterAgreement\\components\\create\\create.component.html",
+      "src/app/modules\\Lease\\LeaseCustomerSms\\components\\list\\list.component.html",
+      "src/app/modules\\Transportation\\TransportationInvoice\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Provisions\\Provision\\components\\details\\details.component.html",
+      "src/app/modules\\Limousine\\LimousineInvoice\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseCostSetting\\components\\details\\details.component.html",
+      "src/app/modules\\Fleet\\ServiceItem\\components\\details\\details.component.html",
+      "src/app/modules\\Transportation\\TransportationAgreementItem\\components\\details\\details.component.html",
+      "src/app/modules\\Limousine\\LimoQuotation\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Payments\\PaymentDetail\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseCostParameter\\components\\details\\details.component.html",
+      "src/app/modules\\Fleet\\ServiceChecklistItem1\\components\\details\\details.component.html",
+      "src/app/modules\\Transportation\\TransportationAgreement\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\Agreement\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Payments\\Payment\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\Agreement\\components\\deposit\\deposit.component.html",
+      "src/app/modules\\Lease\\LeaseClause\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseClause\\components\\clauses\\clauses.component.html",
+      "src/app/modules\\Transportation\\TransactionItem\\components\\details\\details.component.html",
+      "src/app/modules\\Rental\\Agreement\\components\\delivery-date\\delivery-date.component.html",
+      "src/app/modules\\Fleet\\ServiceBookings\\components\\editor\\editor.component.html",
+      "src/app/modules\\Transportation\\Transaction\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\JVs\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\void\\void.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\vehicle-replacement\\vehicle-replacement.component.html",
+      "src/app/modules\\Stock\\ItemIssue\\components\\details\\details.component.html",
+      "src/app/modules\\Suppliers\\Supplier\\components\\details\\details.component.html",
+      "src/app/modules\\Fleet\\DownloadProcessTolls\\components\\list\\list.component.html",
+      "src/app/modules\\Stock\\UnitsOfMeasures\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\payment-instructions\\payment-instructions.component.html",
+      "src/app/modules\\Fleet\\DownloadProcessFines\\components\\list\\list.component.html",
+      "src/app/modules\\Vouchers\\Invoices\\InvoiceBase\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\extend-period\\extend-rate-period.component.html",
+      "src/app/modules\\Stock\\StockTransfer\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\extend-period\\extend-period.component.html",
+      "src/app/modules\\Stock\\Item\\components\\details\\details.component.html",
+      "src/app/modules\\Fleet\\DownloadProcessDarbTolls\\components\\list\\list.component.html",
+      "src/app/modules\\Fleet\\Alerts\\components\\renew-insurance-dialog\\renew-insurance-dialog.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\driver-replacement\\driver-replacement.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\delivery-date\\delivery-date.component.html",
+      "src/app/modules\\Vouchers\\Invoices\\MiscInvoiceItem\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\closing\\closing.component.html",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\workshop-editor\\workshop-editor.component.html",
+      "src/app/modules\\Fleet\\Alerts\\components\\complete-service-dialog\\complete-service-dialog.component.html",
+      "src/app/modules\\Stock\\ItemType\\components\\details\\details.component.html",
+      "src/app/modules\\Stock\\ItemRequisition\\components\\purchase-request\\purchase-request.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\additional-charges\\additional-charges.component.html",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\tax-advance-details\\tax-advance-details.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\deposit\\deposit.component.html",
+      "src/app/modules\\Stock\\ItemRequisition\\components\\issue\\issue.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\discounts\\discounts.component.html",
+      "src/app/modules\\Stock\\ItemRequisition\\components\\details\\details.component.html",
+      "src/app/modules\\Lease\\LeaseAgreement\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Invoices\\MiscellaneousInvoice\\components\\details\\details.component.html",
+      "src/app/modules\\Stock\\ItemReturn\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\details\\details.component.html",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\action-dialog\\invoice-action-dialog.component.html",
+      "src/app/modules\\Fleet\\Accidents\\components\\editor\\editor.component.html",
+      "src/app/modules\\Vouchers\\Invoices\\Invoice\\components\\core-editor\\core-editor.component.html",
+      "src/app/modules/Administration/Settings/components/api-key/api-key.component.ts",
+      "src/app/modules/Administration/Settings/components/api-key/api-key.component.html",
+      "src/app/modules/Administration/Settings/components/settings-layout/settings-layout.component.ts",
+      "src/app/modules/Administration/Settings/components/settings-layout/settings-layout.component.html",
+      "src/app/modules/Administration/Settings/components/settings-layout/settings-layout.component.scss",
+      "src/app/modules/Administration/Settings/services/api-key.service.ts",
+      "src/app/modules/Administration/Settings/settings.routes.ts",
+      "src/app/modules/shared/components/mock-data",
+      "src/app/modules/shared/service/mock-data.service.ts",
+      "src/app/modules/shared/components/editable-collection-table",
+      "src/app/modules/shared/components/form-section/form-section.component.ts",
+      "src/app/modules/shared/components/form-section/form-section.component.html",
+      "src/app/modules/shared/components/form-section/form-section.component.scss",
+      "src/app/modules/UserGuide/content/shared-screen-guidance.ts",
+      "src/app/modules/UserGuide/content/administration-guide.ts",
+      "src/app/modules/UserGuide/content/customer-profile-topics.ts",
+      "src/app/modules/UserGuide/components/reader/guide-reader.component.ts",
+      "src/app/_metronic/layout/components/sidebar/sidebar-menu/sidebar-menu-data.ts",
+      "src/app/modules/i18n/vocabs/en.ts",
+      "src/app/modules/i18n/vocabs/ar.ts",
+      "tsconfig.app.json"
+    ]
+  }
+}

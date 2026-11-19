@@ -1,0 +1,56 @@
+{
+  "en": {
+    "deliveryMovement": {
+      "editorSubtitle": "Delivery movement information",
+      "loadError": "Unable to load delivery movements.",
+      "lookupError": "Unable to load delivery movement choices.",
+      "agreementError": "Unable to load the selected agreement. Retry to continue.",
+      "saveError": "Unable to save the delivery movement.",
+      "exportError": "Unable to export delivery movements.",
+      "delivered": "Delivered",
+      "discardTitle": "Discard delivery movement changes?",
+      "discardMessage": "Your unsaved delivery movement changes will be lost.",
+      "discard": "Discard",
+      "movementTypes": {
+        "AgreementDelivery": "Agreement Delivery",
+        "ReplacementDelivery": "Replacement Delivery"
+      }
+    },
+    "custodymovement": {
+      "loadError": "Unable to load custody movements.",
+      "lookupError": "Unable to load custody movement choices.",
+      "saveError": "Unable to save the custody movement.",
+      "exportError": "Unable to export custody movements.",
+      "discardTitle": "Discard custody movement changes?",
+      "discardMessage": "Your unsaved custody movement changes will be lost.",
+      "discard": "Discard"
+    }
+  },
+  "ar": {
+    "deliveryMovement": {
+      "editorSubtitle": "معلومات حركة التسليم",
+      "loadError": "تعذر تحميل حركات التسليم.",
+      "lookupError": "تعذر تحميل خيارات حركة التسليم.",
+      "agreementError": "تعذر تحميل الاتفاقية المحددة. أعد المحاولة للمتابعة.",
+      "saveError": "تعذر حفظ حركة التسليم.",
+      "exportError": "تعذر تصدير حركات التسليم.",
+      "delivered": "تم التسليم",
+      "discardTitle": "تجاهل تغييرات حركة التسليم؟",
+      "discardMessage": "ستفقد التغييرات غير المحفوظة في حركة التسليم.",
+      "discard": "تجاهل",
+      "movementTypes": {
+        "AgreementDelivery": "تسليم اتفاقية",
+        "ReplacementDelivery": "تسليم استبدال"
+      }
+    },
+    "custodymovement": {
+      "loadError": "تعذر تحميل حركات العهدة.",
+      "lookupError": "تعذر تحميل خيارات حركة العهدة.",
+      "saveError": "تعذر حفظ حركة العهدة.",
+      "exportError": "تعذر تصدير حركات العهدة.",
+      "discardTitle": "تجاهل تغييرات حركة العهدة؟",
+      "discardMessage": "ستفقد التغييرات غير المحفوظة في حركة العهدة.",
+      "discard": "تجاهل"
+    }
+  }
+}

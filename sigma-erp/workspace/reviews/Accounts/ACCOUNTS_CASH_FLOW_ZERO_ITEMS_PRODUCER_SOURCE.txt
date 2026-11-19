@@ -1,0 +1,150 @@
+public async Task<Result<CashFlowVm>> GetCashFlowIndirectAsync(
+        CashFlowRequestDto request,
+        CancellationToken cancellationToken = default)
+    {
+        var filters = request.Filters ?? [];
+        var fiscalYearId = FilterHelper.GetInt(filters, "fiscalYearId");
+        var asOfDate     = FilterHelper.GetDate(filters, "asOfDate");
+
+        DateTime fromDate;
+        DateTime toDate;
+
+        if (fiscalYearId.HasValue)
+        {
+            var fiscalYear = await _unitOfWork.Repository
+                .Query<FiscalYear>(fy => fy.Id == fiscalYearId.Value)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(cancellationToken);
+
+            if (fiscalYear == null)
+                return AccountReportHelper.Fail<CashFlowVm>("Fiscal year not found.");
+
+            fromDate = fiscalYear.StartDate;
+            toDate   = fiscalYear.EndDate;
+        }
+        else if (asOfDate.HasValue)
+        {
+            fromDate = new DateTime(asOfDate.Value.Year, 1, 1);
+            toDate   = asOfDate.Value;
+        }
+        else
+        {
+            return AccountReportHelper.Fail<CashFlowVm>("Either fiscalYearId or asOfDate is required.");
+        }
+
+        var accounts = await AccountReportHelper.LoadAccountsMetaAsync(_unitOfWork, cancellationToken);
+        var metaById = accounts.ToDictionary(x => x.Id);
+
+        // Period movements
+        var details             = AccountReportHelper.QueryDetails(_unitOfWork, fromDate, toDate, asOf: null, includeZeros: false);
+        var perAccountMovements = await AccountReportHelper.AggregatePerAccountAsync(details, cancellationToken);
+
+        decimal SumMovements(int accountId)
+        {
+            var m = perAccountMovements.FirstOrDefault(x => x.AccountId == accountId);
+            return m == null ? 0m : m.Debit - m.Credit;
+        }
+
+        // Opening / Closing balances for ? calculations
+        var openingBalances = await AccountReportHelper.AggregatePerAccountAsync(AccountReportHelper.QueryDetails(_unitOfWork, null, null, fromDate.AddDays(-1), false), cancellationToken);
+        var closingBalances = await AccountReportHelper.AggregatePerAccountAsync(AccountReportHelper.QueryDetails(_unitOfWork, null, null, toDate, false), cancellationToken);
+
+        var openingMap = openingBalances.ToDictionary(x => x.AccountId, x => x.Debit - x.Credit);
+        var closingMap = closingBalances.ToDictionary(x => x.AccountId, x => x.Debit - x.Credit);
+
+        decimal GetDelta(int accountId)
+        {
+            var open  = openingMap.TryGetValue(accountId, out var o) ? o : 0m;
+            var close = closingMap.TryGetValue(accountId, out var c) ? c : 0m;
+            return close - open;
+        }
+
+        // Net Income from P&L � Revenue accounts start with "4", Expense with "5"
+        decimal totalRevenue  = 0m;
+        decimal totalExpenses = 0m;
+
+        foreach (var m in perAccountMovements)
+        {
+            if (!metaById.TryGetValue(m.AccountId, out var meta)) continue;
+            if (meta.Category == AccountCategory.Revenue)  totalRevenue  += m.Credit - m.Debit;
+            if (meta.Category == AccountCategory.Expense) totalExpenses += m.Debit  - m.Credit;
+        }
+
+        decimal netIncome = totalRevenue - totalExpenses;
+
+        // Operating Activities
+        decimal operating      = netIncome;
+        var operatingLines     = new List<CashFlowLineVm>
+        {
+            new() { AccountId = 0, Code = "", Name = "Net Income", Amount = netIncome }
+        };
+
+        foreach (var acc in CashFlowAccountCodes.IS_NonCashExpenses)
+        {
+            var amount = SumMovements(acc);
+            if (!metaById.ContainsKey(acc)) continue;
+            operating += amount;
+            operatingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = amount });
+        }
+
+        foreach (var acc in CashFlowAccountCodes.IS_NonCashRevenues)
+        {
+            var amount = SumMovements(acc);
+            if (!metaById.ContainsKey(acc)) continue;
+            operating -= amount;
+            operatingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = -amount });
+        }
+
+        foreach (var acc in CashFlowAccountCodes.BS_CurrentAssets)
+        {
+            var delta = GetDelta(acc);
+            if (!metaById.ContainsKey(acc)) continue;
+            operating -= delta;
+            operatingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = -delta });
+        }
+
+        foreach (var acc in CashFlowAccountCodes.BS_CurrentLiabilities)
+        {
+            var delta = GetDelta(acc);
+            if (!metaById.ContainsKey(acc)) continue;
+            operating += delta;
+            operatingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = delta });
+        }
+
+        // Investing Activities
+        decimal investing      = 0m;
+        var investingLines     = new List<CashFlowLineVm>();
+
+        foreach (var acc in CashFlowAccountCodes.BS_NonCurrentAssets)
+        {
+            var delta = GetDelta(acc);
+            if (!metaById.ContainsKey(acc)) continue;
+            investing -= delta;
+            investingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = -delta });
+        }
+
+        // Financing Activities
+        decimal financing      = 0m;
+        var financingLines     = new List<CashFlowLineVm>();
+
+        foreach (var acc in CashFlowAccountCodes.BS_FinancingAccounts)
+        {
+            var delta = GetDelta(acc);
+            if (!metaById.ContainsKey(acc)) continue;
+            financing += delta;
+            financingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = delta });
+        }
+
+        return AccountReportHelper.Ok(new CashFlowVm
+        {
+            NetIncome             = netIncome,
+            OperatingActivities   = operatingLines,
+            InvestingActivities   = investingLines,
+            FinancingActivities   = financingLines,
+            NetCashFromOperating  = operating,
+            NetCashFromInvesting  = investing,
+            NetCashFromFinancing  = financing,
+            NetChangeInCash       = operating + investing + financing
+        });
+    }
+

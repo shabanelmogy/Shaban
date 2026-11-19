@@ -1,0 +1,235 @@
+{
+  "date": "2026-11-01",
+  "kind": "source declarations only",
+  "pages": [
+    {
+      "name": "common",
+      "route": "common",
+      "title": "settings.common",
+      "controls": 232,
+      "sections": [
+        "general",
+        "tax",
+        "rental",
+        "invoicing",
+        "payments",
+        "customers",
+        "fleet",
+        "workshop",
+        "reports",
+        "booking",
+        "fuel"
+      ]
+    },
+    {
+      "name": "profile",
+      "route": "profile",
+      "title": "settings.profile",
+      "controls": 0,
+      "sections": []
+    },
+    {
+      "name": "document-number",
+      "route": "documentNumber",
+      "title": "settings.documentNumber",
+      "controls": 164,
+      "sections": [
+        "agreements",
+        "quotations",
+        "bookings",
+        "invoices",
+        "cheques",
+        "vouchers",
+        "workshop",
+        "catalogs"
+      ]
+    },
+    {
+      "name": "user-management",
+      "route": "userManagement",
+      "title": "settings.userManagement",
+      "controls": 4,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "e-salik",
+      "route": "eSalik",
+      "title": "settings.eSalik",
+      "controls": 19,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "e-darb",
+      "route": "eDarb",
+      "title": "settings.eDarb",
+      "controls": 15,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "dda",
+      "route": "directDebitAuthorizationSetting",
+      "title": "settings.dda",
+      "controls": 8,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "limousine",
+      "route": "limousineSettings",
+      "title": "settings.limousine",
+      "controls": 15,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "notifications",
+      "route": "notificationsSettingsModel",
+      "title": "settings.notifications",
+      "controls": 8,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "payment-gateway-setting",
+      "route": "paymentGatewaySetting",
+      "title": "settings.paymentGateway",
+      "controls": 4,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "approvals",
+      "route": "approvalLevel",
+      "title": "settings.approvals",
+      "controls": 3,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "workshop",
+      "route": "workshopSetting",
+      "title": "settings.workshop",
+      "controls": 7,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "fines",
+      "route": "finesSettings",
+      "title": "settings.fines",
+      "controls": 2,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "charges",
+      "route": "chargeSettings",
+      "title": "settings.charges",
+      "controls": 7,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "broker",
+      "route": "brokerSetting",
+      "title": "settings.broker",
+      "controls": 3,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "nation-id-format",
+      "route": "nationIDFormat",
+      "title": "settings.nationIdFormat",
+      "controls": 2,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "hrm",
+      "route": "hrmSetting",
+      "title": "settings.hrm",
+      "controls": 3,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "api-key",
+      "route": "apiKeySetting",
+      "title": "settings.apiKey",
+      "controls": 1,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "agreement-document",
+      "route": "agreementDocument",
+      "title": "settings.agreementDocuments",
+      "controls": 3,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "forms-and-fields",
+      "route": "formsAndFields",
+      "title": "settings.formsAndFields",
+      "controls": 1,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "fields",
+      "route": "fields",
+      "title": "settings.fields",
+      "controls": 0,
+      "sections": []
+    },
+    {
+      "name": "cost-centers",
+      "route": "costCenters",
+      "title": "settings.costCenters",
+      "controls": 2,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "equipment",
+      "route": "equipment",
+      "title": "settings.equipment",
+      "controls": 1,
+      "sections": [
+        "الصفحة"
+      ]
+    },
+    {
+      "name": "holidays-setting",
+      "route": "holidaysSetting",
+      "title": "settings.holidays",
+      "controls": 3,
+      "sections": [
+        "الصفحة"
+      ]
+    }
+  ]
+}

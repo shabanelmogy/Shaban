@@ -1,0 +1,27 @@
+using SiGma.Helpers.Enum;
+using SiGma.Helpers.ViewModelsBases.Update;
+using System.ComponentModel.DataAnnotations;
+
+namespace SiGma.ViewModels.ViewModels.CashDepositDetail;
+
+public class CashDepositDetailUpdateVM : UpdateBaseVm
+{
+    [Required] public int CashDepositId { get; set; }
+
+    [Required] public CashDepositSourceType SourceType { get; set; }
+
+    public int? SourceReceiptId { get; set; }
+    public int? SourcePaymentId { get; set; }
+
+    public DateTime Date { get; set; }
+    [MaxLength(100)] public string? VoucherLabel { get; set; }
+    [MaxLength(100)] public string? No { get; set; }
+    [MaxLength(1000)] public string? Description { get; set; }
+
+    public decimal Amount { get; set; }
+    public decimal Deposited { get; set; }
+
+    // DueAmount is server-calculated — NOT included here
+
+    public decimal DepositedNow { get; set; }
+}

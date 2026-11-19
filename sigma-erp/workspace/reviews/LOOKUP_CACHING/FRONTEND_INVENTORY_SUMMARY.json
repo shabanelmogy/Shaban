@@ -1,0 +1,240 @@
+{
+  "scannedRuntimeTsFiles": 2230,
+  "ordinarySelectCalls": 437,
+  "ordinaryConsumerFiles": 194,
+  "resolvedCalls": 433,
+  "endpointGroups": 55,
+  "candidateCalls": 1168,
+  "unresolved": [
+    {
+      "file": "src/app/modules/Stock/ItemRequisition/components/purchase-request/purchase-request.component.ts",
+      "line": 267,
+      "owner": "ItemRequisitionPurchaseRequestComponent",
+      "receiver": "service",
+      "method": "getSelectList",
+      "service": "",
+      "endpoint": "",
+      "serviceFile": "",
+      "kind": "ordinary-select"
+    },
+    {
+      "file": "src/app/modules/Transportation/TransportationAgreement/components/details/details.component.ts",
+      "line": 173,
+      "owner": "DetailsComponent",
+      "receiver": "service",
+      "method": "getSelectList",
+      "service": "",
+      "endpoint": "",
+      "serviceFile": "",
+      "kind": "ordinary-select"
+    },
+    {
+      "file": "src/app/modules/Transportation/TransportationAgreement/components/list/list.component.ts",
+      "line": 169,
+      "owner": "TransportationAgreementsComponent",
+      "receiver": "service",
+      "method": "getSelectList",
+      "service": "",
+      "endpoint": "",
+      "serviceFile": "",
+      "kind": "ordinary-select"
+    },
+    {
+      "file": "src/app/modules/Vouchers/Invoices/Invoice/components/list/list.component.ts",
+      "line": 230,
+      "owner": "InvoicesComponent",
+      "receiver": "field.service",
+      "method": "getSelectList",
+      "service": "",
+      "endpoint": "",
+      "serviceFile": "",
+      "kind": "ordinary-select"
+    }
+  ],
+  "top": [
+    {
+      "endpoint": "Branch/GetSelect",
+      "service": "BranchService",
+      "serviceFile": "src/app/modules/Administration/Branches/services/branch.service.ts",
+      "callSites": 88,
+      "consumerFiles": 86
+    },
+    {
+      "endpoint": "Customer/GetSelect",
+      "service": "CustomerService",
+      "serviceFile": "src/app/modules/shared/service/customer.service.ts",
+      "callSites": 54,
+      "consumerFiles": 54
+    },
+    {
+      "endpoint": "Staff/GetSelect",
+      "service": "StaffService",
+      "serviceFile": "src/app/modules/Staff/Staff/services/staff.service.ts",
+      "callSites": 34,
+      "consumerFiles": 34
+    },
+    {
+      "endpoint": "Vehicle/GetSelect",
+      "service": "VehicleService",
+      "serviceFile": "src/app/modules/Fleet/Vehicle/services/vehicle.service.ts",
+      "callSites": 28,
+      "consumerFiles": 28
+    },
+    {
+      "endpoint": "Supplier/GetSelect",
+      "service": "SupplierSharedService",
+      "serviceFile": "src/app/modules/shared/service/supplierShared.service.ts",
+      "callSites": 22,
+      "consumerFiles": 22
+    },
+    {
+      "endpoint": "Job/GetSelect",
+      "service": "JobService",
+      "serviceFile": "src/app/modules/Workshop/Job/services/job.service.ts",
+      "callSites": 17,
+      "consumerFiles": 17
+    },
+    {
+      "endpoint": "Item/GetSelect",
+      "service": "ItemService",
+      "serviceFile": "src/app/modules/Stock/Item/services/item.service.ts",
+      "callSites": 16,
+      "consumerFiles": 16
+    },
+    {
+      "endpoint": "Account/GetSelect",
+      "service": "AccountService",
+      "serviceFile": "src/app/modules/Accounts/Account/services/account.service.ts",
+      "callSites": 15,
+      "consumerFiles": 15
+    },
+    {
+      "endpoint": "CostCenterGroup/GetSelect",
+      "service": "CostCenterGroupService",
+      "serviceFile": "src/app/modules/shared/service/costCenterGroup.service.ts",
+      "callSites": 12,
+      "consumerFiles": 12
+    },
+    {
+      "endpoint": "Bank/GetSelect",
+      "service": "BankService",
+      "serviceFile": "src/app/modules/Banking/Bank/services/bank.service.ts",
+      "callSites": 11,
+      "consumerFiles": 9
+    },
+    {
+      "endpoint": "VehicleType/GetSelect",
+      "service": "VehicleTypeService",
+      "serviceFile": "src/app/modules/shared/service/vehicletype.service.ts",
+      "callSites": 10,
+      "consumerFiles": 10
+    },
+    {
+      "endpoint": "Driver/GetSelect",
+      "service": "DriverService",
+      "serviceFile": "src/app/modules/shared/service/driver.service.ts",
+      "callSites": 9,
+      "consumerFiles": 9
+    },
+    {
+      "endpoint": "PaymentMethod/GetSelect",
+      "service": "PaymentMethodService",
+      "serviceFile": "src/app/modules/Administration/PaymentMethods/services/paymentmethod.service.ts",
+      "callSites": 9,
+      "consumerFiles": 9
+    },
+    {
+      "endpoint": "AssetType/GetSelect",
+      "service": "AssetTypeService",
+      "serviceFile": "src/app/modules/Assets/assetType/services/assettype.service.ts",
+      "callSites": 8,
+      "consumerFiles": 8
+    },
+    {
+      "endpoint": "RentalAgreement/GetSelect",
+      "service": "RentalAgreementService",
+      "serviceFile": "src/app/modules/Rental/Agreement/services/agreement.service.ts",
+      "callSites": 7,
+      "consumerFiles": 7
+    },
+    {
+      "endpoint": "Country/GetSelect",
+      "service": "CountryService",
+      "serviceFile": "src/app/modules/Administration/Country/services/country.service.ts",
+      "callSites": 6,
+      "consumerFiles": 6
+    },
+    {
+      "endpoint": "LeaveType/GetSelect",
+      "service": "LeaveTypeService",
+      "serviceFile": "src/app/modules/HRM/Leaves/LeaveType/services/leavetype.service.ts",
+      "callSites": 6,
+      "consumerFiles": 6
+    },
+    {
+      "endpoint": "CarMake/GetSelect",
+      "service": "CarMakeService",
+      "serviceFile": "src/app/modules/shared/service/car-make.service.ts",
+      "callSites": 5,
+      "consumerFiles": 3
+    },
+    {
+      "endpoint": "Currency/GetSelect",
+      "service": "CurrencyService",
+      "serviceFile": "src/app/modules/Administration/Currency/services/currency.service.ts",
+      "callSites": 5,
+      "consumerFiles": 5
+    },
+    {
+      "endpoint": "UnitsOfMeasures/GetSelect",
+      "service": "UnitsOfMeasuresService",
+      "serviceFile": "src/app/modules/Stock/UnitsOfMeasures/services/units-of-measures.service.ts",
+      "callSites": 5,
+      "consumerFiles": 5
+    },
+    {
+      "endpoint": "CostCenter/GetSelect",
+      "service": "CostCenterService",
+      "serviceFile": "src/app/modules/Administration/CostCenters/services/costcenter.service.ts",
+      "callSites": 4,
+      "consumerFiles": 4
+    },
+    {
+      "endpoint": "Shift/GetSelect",
+      "service": "ShiftService",
+      "serviceFile": "src/app/modules/HRM/Attendances/Shift/services/shift.service.ts",
+      "callSites": 4,
+      "consumerFiles": 4
+    },
+    {
+      "endpoint": "TariffGroup/GetSelect",
+      "service": "TariffGroupService",
+      "serviceFile": "src/app/modules/shared/service/TariffGroup.service.ts",
+      "callSites": 4,
+      "consumerFiles": 4
+    },
+    {
+      "endpoint": "User/GetSelect",
+      "service": "UserzService",
+      "serviceFile": "src/app/modules/Administration/Users/services/user.service.ts",
+      "callSites": 4,
+      "consumerFiles": 4
+    },
+    {
+      "endpoint": "FiscalYear/GetSelect",
+      "service": "FiscalYearService",
+      "serviceFile": "src/app/modules/Accounts/FiscalYears/services/fiscalYear.service.ts",
+      "callSites": 3,
+      "consumerFiles": 3
+    }
+  ],
+  "duplicateServiceNames": [
+    "FollowUpReportService",
+    "ApiKeyService",
+    "BillDetailService",
+    "TransportationInvoiceService",
+    "ProvisionDetailService"
+  ],
+  "directHttpRouteCandidates": 46,
+  "enumOptionsCalls": 152
+}

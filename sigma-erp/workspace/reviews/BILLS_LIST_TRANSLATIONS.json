@@ -1,0 +1,26 @@
+{
+ "english": {
+  "no":"Bill No","listTitle":"Bills","listSubtitle":"Search supplier bills and view saved amounts","purchaseOrderNos":"PO No","listApprovalStatus":"Approval Status","unknownApproval":"Unknown approval status",
+  "listAmount":"Amount","dueAmount":"Due Amount","listStatus":"Settlement Status","createdBy":"Created By","listView":"View","listDateRange":"Date Range","listDateFrom":"From Date","listDateTo":"To Date","listDateBasis":"Date basis","listCreationDate":"Creation Date","listLoanBills":"Loan Bills","listContact":"Contact (Supplier)",
+  "listSelectVehicle":"Select a vehicle","listSelectBranch":"Select a branch","listSelectSupplier":"Select a supplier","listMoreFilters":"More filters","listAllTypes":"All types","listAllStatuses":"All known statuses","listSearch":"Search bill, supplier bill or supplier",
+  "listTypes":{"GeneralBill":"General Bill","StockBill":"Stock Bill","AssetBill":"Asset Bill","StockGRNBill":"Stock GRN Bill","AssetGRNBill":"Asset GRN Bill"},
+  "listStatuses":{"Open":"Open","Closed":"Closed","Unknown":"Unknown"},
+  "listReport":"Bills Report","listTaxReport":"Saved Tax Report","listSubTotal":"Subtotal","listTaxAdjustment":"Tax Adjustment","listTotalTax":"Total Tax","listReportCount":"Matching bills: {{count}}",
+  "listTaxNotice":"This report shows the tax figures saved on each bill. It does not recalculate tax or submit a tax return.",
+  "listStageNotice":"Approval, due-date and deal filters and additional accounting actions are not available yet. Approval is shown as unknown; settlement status appears only when a valid outstanding balance is available.",
+  "listEmpty":"No bills match the applied filters","listShowingEntries":"Showing {first} to {last} of {totalRecords} bills",
+  "listErrors":{"load":"Could not load bills. Retry the applied search.","lookups":"Could not load all filter options. Retry without losing your filters.","output":"Could not load the complete output. No partial output was produced."}
+ },
+ "arabic": {
+  "no":"رقم الفاتورة","listTitle":"الفواتير","listSubtitle":"البحث في فواتير الموردين وعرض المبالغ المحفوظة","purchaseOrderNos":"رقم أمر الشراء","listApprovalStatus":"حالة الموافقة","unknownApproval":"حالة الموافقة غير معروفة",
+  "listAmount":"المبلغ","dueAmount":"المبلغ المستحق","listStatus":"حالة التسوية","createdBy":"أنشأها","listView":"عرض","listDateRange":"الفترة الزمنية","listDateFrom":"من تاريخ","listDateTo":"إلى تاريخ","listDateBasis":"أساس التاريخ","listCreationDate":"تاريخ الإنشاء","listLoanBills":"فواتير التقسيط","listContact":"جهة الاتصال (المورد)",
+  "listSelectVehicle":"اختر المركبة","listSelectBranch":"اختر الفرع","listSelectSupplier":"اختر المورد","listMoreFilters":"مرشحات إضافية","listAllTypes":"كل الأنواع","listAllStatuses":"كل الحالات المعروفة","listSearch":"بحث برقم الفاتورة أو فاتورة المورد أو المورد",
+  "listTypes":{"GeneralBill":"فاتورة عامة","StockBill":"فاتورة مخزنية","AssetBill":"فاتورة أصول","StockGRNBill":"فاتورة استلام مخزني","AssetGRNBill":"فاتورة استلام أصول"},
+  "listStatuses":{"Open":"مفتوحة","Closed":"مغلقة","Unknown":"غير معروفة"},
+  "listReport":"تقرير الفواتير","listTaxReport":"تقرير الضريبة المحفوظة","listSubTotal":"الإجمالي قبل الخصم","listTaxAdjustment":"تسوية الضريبة","listTotalTax":"إجمالي الضريبة","listReportCount":"عدد الفواتير المطابقة: {{count}}",
+  "listTaxNotice":"يعرض التقرير قيم الضريبة المحفوظة بكل فاتورة، دون إعادة احتساب الضريبة أو تقديم إقرار ضريبي.",
+  "listStageNotice":"مرشحات الموافقة وتاريخ الاستحقاق والصفقة والإجراءات المحاسبية الإضافية غير متاحة بعد. تظهر الموافقة كغير معروفة، وحالة التسوية فقط عند توفر رصيد مستحق موثوق.",
+  "listEmpty":"لا توجد فواتير مطابقة للمرشحات المطبقة","listShowingEntries":"عرض {first} إلى {last} من {totalRecords} فاتورة",
+  "listErrors":{"load":"تعذر تحميل الفواتير. أعد محاولة البحث المطبق.","lookups":"تعذر تحميل بعض خيارات البحث. أعد المحاولة مع الاحتفاظ بالمرشحات.","output":"تعذر تحميل النتائج كاملة. لم يتم إنشاء مخرجات جزئية."}
+ }
+}

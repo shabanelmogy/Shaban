@@ -1,0 +1,15 @@
+{
+  "checks": [
+    {
+      "name": "Existing dialog is appended to body and holds a live unsaved draft",
+      "passed": true,
+      "detail": {
+        "branchId": 63
+      }
+    },
+    {
+      "name": "Withdrawing View hides portal fields while Update remains granted",
+      "passed": false
+    }
+  ]
+}

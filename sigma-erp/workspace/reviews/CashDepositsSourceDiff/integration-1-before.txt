@@ -1,0 +1,864 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { InlineSVGModule } from 'ng-inline-svg-2';
+import { RouterModule, Routes } from '@angular/router';
+import {
+  NgbDropdownModule,
+  NgbProgressbarModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslationModule } from '../../modules/i18n';
+import { LayoutComponent } from './layout.component';
+import { ExtrasModule } from '../partials/layout/extras/extras.module';
+import { Routing } from '../../pages/routing';
+import { HeaderComponent } from './components/header/header.component';
+import { ContentComponent } from './components/content/content.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { ScriptsInitComponent } from './components/scripts-init/scripts-init.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { TopbarComponent } from './components/topbar/topbar.component';
+import { PageTitleComponent } from './components/header/page-title/page-title.component';
+import { HeaderMenuComponent } from './components/header/header-menu/header-menu.component';
+import { DrawersModule, DropdownMenusModule, ModalsModule } from '../partials';
+import { ThemeModeModule } from '../partials/layout/theme-mode-switcher/theme-mode.module';
+import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { NavbarComponent } from './components/header/navbar/navbar.component';
+import { AppbarShortcutsComponent } from './components/header/appbar-shortcuts/appbar-shortcuts.component';
+import { AccountingComponent } from './components/toolbar/accounting/accounting.component';
+import { ExtendedComponent } from './components/toolbar/extended/extended.component';
+import { ReportsComponent } from './components/toolbar/reports/reports.component';
+import { SaasComponent } from './components/toolbar/saas/saas.component';
+import { KeeniconComponent } from '../shared/keenicon/keenicon.component';
+import { UserService } from 'src/app/pages/user/services/user.service';
+import { AccountService } from 'src/app/modules/Accounts/Account/services/account.service';
+import { BillingInvoiceService } from 'src/app/modules/Billing/BillingInvoice/services/billinginvoice.service';
+import { BillDetailService } from 'src/app/modules/Billing/BillDetail/services/billdetail.service';
+import { AttendanceService } from 'src/app/modules/HRM/Attendances/Attendance/services/attendance.service';
+import { RentalAgreementService } from 'src/app/modules/Rental/Agreement/services/agreement.service';
+import { BillSettingsService } from 'src/app/modules/Billing/BillSettings/services/billsettings.service';
+import { LinkAccountsService } from 'src/app/modules/Accounts/Link Accounts/LinkAccounts/services/linkaccounts.service';
+import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
+import { ChecklistItemService } from 'src/app/modules/Administration/ChecklistItem/services/checklistitem.service';
+import { ContactGroupService } from 'src/app/modules/Administration/ContactGroups/services/contactgroup.service';
+import { CostCenterService } from 'src/app/modules/Administration/CostCenters/services/costcenter.service';
+import { CustomerProjectService } from 'src/app/modules/Administration/CustomerProjects/CustomerProject/services/customerproject.service';
+import { CustomLookupService } from 'src/app/modules/Administration/CustomLookups/services/customlookup.service';
+import { IndustryService } from 'src/app/modules/Administration/Industries/services/industry.service';
+import { LanguageService } from 'src/app/modules/Administration/Languages/services/language.service';
+import { PaymentMethodService } from 'src/app/modules/Administration/PaymentMethods/services/paymentmethod.service';
+import { ReplacementReasonService } from 'src/app/modules/Administration/ReplacementReasons/services/replacementreason.service';
+import { RoleService } from 'src/app/modules/Administration/Roles/services/role.service';
+import { SaleOriginService } from 'src/app/modules/Administration/SaleOrigins/SaleOrigin/services/saleorigin.service';
+import { VehicleNotReadyReasonService } from 'src/app/modules/Administration/VehicleNotReadyReasons/services/vehiclenotreadyreason.service';
+import { VoucherReasonService } from 'src/app/modules/Administration/VoucherReasons/services/voucherreason.service';
+import { ClauseService } from 'src/app/modules/Agreements Dashboard 2/Clause/services/clause.service';
+import { PreTerminationRuleService } from 'src/app/modules/Agreements Dashboard 2/PreTerminationRule/services/preterminationrule.service';
+import { ProvisionDetailService } from 'src/app/modules/Agreements Dashboard 2/ProvisionDetail/services/provisiondetail.service';
+import { CardTransactionBankTransferService } from 'src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransfer/services/cardtransactionbanktransfer.service';
+import { CardTransactionBankTransferDetailService } from 'src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransferDetail/services/cardtransactionbanktransferdetail.service';
+import { CashDepositService } from 'src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service';
+import { CashDepositDetailService } from 'src/app/modules/Banking/Cash Deposits/CashDepositDetail/services/cashdepositdetail.service';
+import { CompanyPartnerService } from 'src/app/modules/Customers/Companies/CompanyPartner/services/companypartner.service';
+import { IndividualPartnerService } from 'src/app/modules/Customers/Individual/IndividualPartner/services/individualpartner.service';
+import { DataEntryCorrectionService } from 'src/app/modules/Data Entry Corrections/DataEntryCorrection/services/dataentrycorrection.service';
+import { DataEntryCorrectionModelService } from 'src/app/modules/Data Entry Corrections/DataEntryCorrectionModel/services/dataentrycorrectionmodel.service';
+import { DeliveryNoteService } from 'src/app/modules/Equipment Rental/DeliveryNote/services/deliverynote.service';
+import { EquipmentService } from 'src/app/modules/Equipment Rental/Equipment/services/equipment.service';
+import { EquipmentRentalInvoiceService } from 'src/app/modules/Equipment Rental/EquipmentRentalInvoice/services/equipmentrentalinvoice.service';
+import { TimeSheetService } from 'src/app/modules/Equipment Rental/TimeSheet/services/timesheet.service';
+import { ServiceChecklistItem1Service } from 'src/app/modules/Fleet/ServiceChecklistItem1/services/servicechecklistitem1.service';
+import { ServiceItemService } from 'src/app/modules/Fleet/ServiceItem/services/serviceitem.service';
+import { FleetServiceLogService } from 'src/app/modules/Fleet/ServiceLog/services/servicelogs.service';
+import { DailyServiceLogsService } from 'src/app/modules/Fleet/DailyServiceLogs/services/daily-service-logs.service';
+import { SourceCodeService } from 'src/app/modules/Fleet/SourceCode/services/sourcecode.service';
+import { VehicleService } from 'src/app/modules/Fleet/Vehicle/services/vehicle.service';
+import { VehicleQRLabelService } from 'src/app/modules/Fleet/VehicleQRLabel/services/vehicleqrlabel.service';
+import { DepartmentService } from 'src/app/modules/HRM/Administration/Departments/Department/services/department.service';
+import { HrmSettingService } from 'src/app/modules/HRM/Administration/Settings/HrmSetting/services/hrmsetting.service';
+import { StaffRoleService } from 'src/app/modules/HRM/Administration/Staff Roles/StaffRole/services/staffrole.service';
+import { DeductionService } from 'src/app/modules/HRM/Deductions/Deduction/services/deduction.service';
+import { HolidayService } from 'src/app/modules/HRM/Holidays/Holiday/services/holiday.service';
+import { LeaveService } from 'src/app/modules/HRM/Leaves/Leave/services/leave.service';
+import { LeaveTypeService } from 'src/app/modules/HRM/Leaves/LeaveType/services/leavetype.service';
+import { OvertimeService } from 'src/app/modules/HRM/Overtimes/Overtime/services/overtime.service';
+import { ShiftService } from 'src/app/modules/HRM/Shifts/Shift/services/shift.service';
+import { LeaseAgreementService } from 'src/app/modules/Lease/LeaseAgreement/services/leaseagreement.service';
+import { LeaseCostParameterService } from 'src/app/modules/Lease/LeaseCostParameter/services/leasecostparameter.service';
+import { LeaseCostSettingService } from 'src/app/modules/Lease/LeaseCostSetting/services/leasecostsetting.service';
+import { LeaseCostSettingItemService } from 'src/app/modules/Lease/LeaseCostSettingItem/services/leasecostsettingitem.service';
+import { LeaseInquiryService } from 'src/app/modules/Lease/LeaseInquiry/services/leaseinquiry.service';
+import { LimoQuotationService } from 'src/app/modules/Limousine/LimoQuotation/services/limoquotation.service';
+import { LimousineInvoiceService } from 'src/app/modules/Limousine/LimousineInvoice/services/limousineinvoice.service';
+import { LocationService } from 'src/app/modules/Limousine/Location/services/location.service';
+import { TripBookingService } from 'src/app/modules/Limousine/TripBooking/services/tripbooking.service';
+import { TripGridCustomizationService } from 'src/app/modules/Limousine/TripGridCustomization/services/tripgridcustomization.service';
+import { LoanEMIService } from "src/app/modules/Loan/Loan EMI's/LoanEMI/services/loanemi.service";
+import { CustodyMovementService } from 'src/app/modules/Movements/CustodyMovement/services/custodymovement.service';
+import { DeliveryMovementService } from 'src/app/modules/Movements/DeliveryMovement/services/deliverymovement.service';
+import { NRMService } from 'src/app/modules/Movements/NRM/services/nrm.service';
+import { LogsMovementService } from 'src/app/modules/Movements/logsMovement/services/logs-movement.service';
+import { WorkshopService } from 'src/app/modules/Movements/Workshop/services/workshop.service';
+import { WorkshopMovementService } from 'src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service';
+import { BookingService } from 'src/app/modules/Rental/Booking/services/booking.service';
+import { BookingChargeService } from 'src/app/modules/Rental/BookingCharge/services/bookingcharge.service';
+import { BookingNotificationFlagsService } from 'src/app/modules/Rental/BookingNotificationFlags/services/bookingnotificationflags.service';
+import { RentalBookingNotificationService } from 'src/app/modules/Rental/RentalBookingNotification/services/rentalbookingnotification.service';
+import { RentalNotificationEventsService } from 'src/app/modules/Rental/RentalNotificationEvents/services/rentalnotificationevents.service';
+import { RentalTariffService } from 'src/app/modules/Rental/RentalTariff/services/rentaltariff.service';
+import { TariffCardsService } from 'src/app/modules/Rental/TariffCard/services/tariffcard.service';
+import { SalesAgreementService } from 'src/app/modules/Sales/SalesAgreement/services/salesagreement.service';
+import { DueInstallmentsService } from 'src/app/modules/Sales/DueInstallments/services/due-installments.service';
+import { FleetService } from 'src/app/modules/Sales/Fleet/services/fleet.service';
+import { SalesQuotationService } from 'src/app/modules/Sales/SalesQuotation/services/salesquotation.service';
+import { StaffService } from 'src/app/modules/Staff/Staff/services/staff.service';
+import { StaffProfileService } from 'src/app/modules/Staff/StaffProfile/services/StaffProfile.service';
+import { StaffTimesheetService } from 'src/app/modules/Staff/StaffTimesheet/services/stafftimesheet.service';
+import { ItemIssueItemService } from 'src/app/modules/Stock/ItemIssueItem/services/itemissueitem.service';
+import { ItemRequisitionItemService } from 'src/app/modules/Stock/ItemRequisitionItem/services/itemrequisitionitem.service';
+import { ItemReturnItemService } from 'src/app/modules/Stock/ItemReturnItem/services/itemreturnitem.service';
+import { StockTransferItemService } from 'src/app/modules/Stock/StockTransferItem/services/stocktransferitem.service';
+import { SupplierService } from 'src/app/modules/Suppliers/Supplier/services/supplier.service';
+import { TransactionService } from 'src/app/modules/Transportation/Transaction/services/transaction.service';
+import { TransactionItemService } from 'src/app/modules/Transportation/TransactionItem/services/transactionitem.service';
+import { TransportationAgreementService } from 'src/app/modules/Transportation/TransportationAgreement/services/transportationagreement.service';
+import { TransportationAgreementItemService } from 'src/app/modules/Transportation/TransportationAgreementItem/services/transportationagreementitem.service';
+import { TransportationInvoiceService } from 'src/app/modules/Transportation/TransportationInvoice/services/transportationinvoice.service';
+import { CreditNoteService } from 'src/app/modules/Vouchers/CreditNote/services/creditnote.service';
+import { DebitNoteService } from 'src/app/modules/Vouchers/DebitNotes/DebitNote/services/debitnote.service';
+import { GoodsReceivedNoteDetailService } from 'src/app/modules/Vouchers/GRNs/GoodsReceivedNoteDetail/services/goodsreceivednotedetail.service';
+import { InvoiceService } from 'src/app/modules/Vouchers/Invoices/Invoice/services/invoice.service';
+import { InvoiceBaseService } from 'src/app/modules/Vouchers/Invoices/InvoiceBase/services/invoicebase.service';
+import { MiscellaneousInvoiceService } from 'src/app/modules/Vouchers/Invoices/MiscellaneousInvoice/services/miscellaneousinvoice.service';
+import { MiscInvoiceItemService } from 'src/app/modules/Vouchers/Invoices/MiscInvoiceItem/services/miscinvoiceitem.service';
+import { PaymentService } from 'src/app/modules/Vouchers/Payments/Payment/services/payment.service';
+import { PaymentDetailService } from 'src/app/modules/Vouchers/Payments/PaymentDetail/services/paymentdetail.service';
+import { PurchaseOrderService } from 'src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/services/purchaseorder.service';
+import { PurchaseOrderDetailService } from 'src/app/modules/Vouchers/PurchaseOrders/PurchaseOrderDetail/services/purchaseorderdetail.service';
+import { PurchaseRequestService } from 'src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/services/purchaserequest.service';
+import { PurchaseRequestDetailService } from 'src/app/modules/Vouchers/PurchaseRequests/PurchaseRequestDetail/services/purchaserequestdetail.service';
+import { PurchaseReturnService } from 'src/app/modules/Vouchers/PurchaseReturns/PurchaseReturn/services/purchasereturn.service';
+import { PurchaseReturnDetailService } from 'src/app/modules/Vouchers/PurchaseReturns/PurchaseReturnDetail/services/purchasereturndetail.service';
+import { ReceiptService } from 'src/app/modules/Vouchers/Receipts/Receipt/services/receipt.service';
+import { SalaryVoucherService } from 'src/app/modules/Vouchers/SalaryVouchers/SalaryVoucher/services/salaryvoucher.service';
+import { TrafficFineService } from 'src/app/modules/Vouchers/TrafficFines/TrafficFine/services/trafficfine.service';
+import { JobService } from 'src/app/modules/Workshop/Job/services/job.service';
+import { JobEstimationService } from 'src/app/modules/Workshop/JobEstimation/services/jobestimation.service';
+import { LubricationJobService } from 'src/app/modules/Workshop/LubricationJob/services/lubricationjob.service';
+import { JobCategoryService } from 'src/app/modules/Workshop/JobCategory/services/jobcategory.service';
+import { LabourActivitiesReportService } from 'src/app/modules/Workshop/LabourActivitiesReport/services/labour-activities-report.service';
+import { LabourTariffService } from 'src/app/modules/Workshop/LabourTariff/services/labour-tariff.service';
+import { WorkshopActivityService } from 'src/app/modules/Workshop/WorkshopActivity/services/WorkshopActivity.service';
+import { WorkOrderService } from 'src/app/modules/Workshop/WorkOrder/services/workorder.service';
+// import { OpeningBalanceCustomerService } from 'src/app/modules/Customers/OpeningBalanceCustomer/services/openingbalancecustomer.service';
+import { RentalQuotationSettingsService } from 'src/app/modules/Rental/RentalQuotationSettings/services/rentalquotationsettings.service';
+import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
+import { MonthCloseService } from 'src/app/modules/Accounts/MonthClose/services/month-close.service';
+import { LabourActivitiesService } from 'src/app/modules/Workshop/LabourActivities/services/labouractivities.service';
+import { TripTypeService } from 'src/app/modules/Limousine/TripTypes/services/trip-type.service';
+import { GrnService } from 'src/app/modules/Vouchers/GRNs/GoodsReceivedNote/services/goodsreceivednote.service';
+import { BillService } from 'src/app/modules/Vouchers/Bills/Bill/services/bill.service';
+import { JVService } from 'src/app/modules/Vouchers/JVs/services/journal-voucher.service';
+import { ProvisionService } from 'src/app/modules/Vouchers/Provisions/Provision/services/provision.service';
+import { PDCReceivableService } from 'src/app/modules/Banking/ChequesReceivables/services/pdc-receivable.service';
+import { PDCPayableService } from 'src/app/modules/Banking/ChequesPayables/services/pdc-payable.service';
+import { CustomerRequestService } from 'src/app/modules/Administration/CustomerRequests/services/customerrequest.service';
+import { UserzService } from 'src/app/modules/Administration/Users/services/user.service';
+import { BalancesSummaryService } from 'src/app/modules/Customers/BalancesSummary/services/balances-summary.service';
+import { ReceivableAgeAnalysisService } from 'src/app/modules/Customers/ReceivableAgeAnalysis/services/receivable-age-analysis.service';
+import { SupplierStatementService } from 'src/app/modules/Suppliers/SupplierStatementOfAccount/services/supplierstatementofaccount.service';
+import { SupplierBalancesSummaryService } from 'src/app/modules/Suppliers/SupplierBalancesSummary/services/supplier-balances-summary.service';
+import { PayableAgeAnalysisService } from 'src/app/modules/Suppliers/PayableAgeAnalysis/services/payable-age-analysis.service';
+import { StaffStatementService } from 'src/app/modules/Staff/StaffStatementOfAccount/services/staffstatementofaccount.service';
+import { StaffBalancesSummaryService } from 'src/app/modules/Staff/StaffBalancesSummary/services/staff-balances-summary.service';
+import { StaffOverTimeService } from 'src/app/modules/Staff/StaffOverTime/services/staffovertime.service';
+import { StaffDutyScheduleService } from 'src/app/modules/Staff/StaffDutySchedule/services/staffdutyschedule.service';
+import { LeaseQuotationService } from 'src/app/modules/Lease/LeaseQuotation/services/leasequotation.service';
+import { LeaseMasterAgreementService } from 'src/app/modules/Lease/LeaseMasterAgreement/services/leasemasteragreement.service';
+import { LeaseClauseService } from 'src/app/modules/Lease/LeaseClause/services/leaseclause.service';
+import { RentalQuotationService } from 'src/app/modules/Rental/RentalQuotation/services/rentalquotation.service';
+import { RentalPlannerService } from 'src/app/modules/Rental/RentalPlanner/services/rental-planner.service';
+import { MasterAgreementService } from 'src/app/modules/Rental/MasterAgreement/services/masteragreement.service';
+import { DriverTimeSheetService } from 'src/app/modules/Rental/DriverTimeSheet/services/driver-time-sheet.service';
+import { EquipmentQuotationService } from 'src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service';
+import { EquipmentMasterAgreementService } from 'src/app/modules/Equipment Rental/EquipmentMasterAgreement/services/equipmentmasteragreement.service';
+import { FileUploadService } from 'src/app/modules/shared/service/file-upload.service';
+import { LeaseTariffService } from 'src/app/modules/Lease/LeaseTariff/services/leasetariff.service';
+import { AssetService } from 'src/app/modules/assets/asset/services/asset.service';
+import { AssetTypeService } from 'src/app/modules/assets/assetType/services/assettype.service';
+import { TariffSettingService } from 'src/app/modules/shared/service/tariffSetting.service';
+import { VehicleTypeService } from 'src/app/modules/shared/service/vehicletype.service';
+import { FleetVehicleTypeService } from 'src/app/modules/Fleet/VehicleType/services/vehicle-type.service';
+import { CustomerService } from 'src/app/modules/shared/service/customer.service';
+import { DriverService } from 'src/app/modules/shared/service/driver.service';
+import { CollectionMovementService } from 'src/app/modules/Movements/collectionMovement/services/collection-movement.service';
+import { ContactService } from 'src/app/modules/shared/service/ContactService';
+import { TransportationTripService } from 'src/app/modules/Transportation/Trips/services/trips.service';
+import { CarMakeService } from 'src/app/modules/shared/service/car-make.service';
+import { CarModelService } from 'src/app/modules/shared/service/car-model.service';
+import { FleetVehicleServiceService } from 'src/app/modules/Fleet/VehicleService/services/fleet-vehicle-service.service';
+import { VehicleServiceBookingsService } from 'src/app/modules/Fleet/ServiceBookings/services/vehicle-service-bookings.service';
+import { AccidentsService } from 'src/app/modules/Fleet/Accidents/services/accidents.service';
+import { TripSheetService } from 'src/app/modules/Transportation/TripSheet/services/tripsheet.service';
+import { CostCenterGroupService } from 'src/app/modules/shared/service/costCenterGroup.service';
+import { CustomerStatementOfAccountService } from 'src/app/modules/Customers/StatementOfAccount/services/customer-statement-of-account.service';
+import { LimousineTariffService } from 'src/app/modules/Limousine/limousineTariff/service/limousine-tariff.service';
+import { LimousineTariffReportService } from 'src/app/modules/Limousine/limousineTariffReport/services/limousine-tariff-report.service';
+import { UtilizationReportService } from 'src/app/modules/Limousine/UtilizationReport/services/utilization-report.service';
+import { ChauffeurForcedAllocationsReportService } from 'src/app/modules/Limousine/ChauffeurForcedAllocationsReport/services/chauffeur-forced-allocations-report.service';
+import { CreditNoteVoucherDetailService } from 'src/app/modules/shared/service/creditNoteVoucherDetail.service';
+import { OpeningBalanceSuppliersService } from 'src/app/modules/Accounts/openingBalances/services/opening-balances-suppliers.service';
+import { SupplierSharedService } from 'src/app/modules/shared/service/supplierShared.service';
+import { OpeningBalanceCustomersService } from 'src/app/modules/Accounts/openingBalances/services/opening-balances-customers.service';
+import { OpeningBalancePrepaidService } from 'src/app/modules/Accounts/openingBalances/services/opening-balances-prepaid.service';
+import { OpeningBalanceDepositService } from 'src/app/modules/Accounts/openingBalances/services/opening-balances-deposit.service';
+import { DesignationsComponent } from 'src/app/modules/Staff/designations/list/list.component';
+import { AttendanceTimesheetService } from 'src/app/modules/HRM/StaffTimesheets/StaffTimesheet/services/attendanceTimesheet.service';
+import { BalanceSheetService } from 'src/app/modules/Accounts/BalanceSheet/services/balance-sheet.service';
+import { BalanceSheetMonthWiseService } from 'src/app/modules/Accounts/BalanceSheetMonthWise/services/balance-sheet-month-wise.service';
+import { SettingsProfileModelService } from 'src/app/modules/Administration/Settings/services/profile.service';
+import { ApiKeyService } from 'src/app/modules/shared/service/api-key.service';
+import { ImportVehicleService } from 'src/app/modules/Administration/DataImport/ImportVehicles/services/import-vehicle.service';
+import { ImportSalikService } from 'src/app/modules/Administration/DataImport/ImportSalik/services/import-salik.service';
+import { ImportDarbService } from 'src/app/modules/Administration/DataImport/ImportDarb/services/import-darb.service';
+import { ImportFineService } from 'src/app/modules/Administration/DataImport/ImportFines/services/import-fines.service';
+import { ImportStaffService } from 'src/app/modules/Administration/DataImport/ImportStaff/services/import-staff.service';
+import { ImportSupplierService } from 'src/app/modules/Administration/DataImport/ImportSuppliers/services/import-suppliers.service';
+import { ImportCompaniesService } from 'src/app/modules/Administration/DataImport/ImportCompanies/services/import-companies.service';
+import { ImportCustomerService } from 'src/app/modules/Administration/DataImport/ImportCustomers/services/import-customers.service';
+import { ImportAssetService } from 'src/app/modules/Administration/DataImport/ImportAssets/services/import-assets.service';
+import { ImportItemService } from 'src/app/modules/Administration/DataImport/ImportItems/services/import-items.service';
+import { ImportRentalAgreementService } from 'src/app/modules/Administration/DataImport/ImportRentalAgreements/services/import-rental-agreements.service';
+import { ImportClosedRentalAgreementService } from 'src/app/modules/Administration/DataImport/ImportClosedRentalAgreements/services/import-closed-rental-agreements.service';
+import { ImportLeaseAgreementService } from 'src/app/modules/Administration/DataImport/ImportLeaseAgreements/services/import-lease-agreements.service';
+import { ImportClosedLeaseAgreementService } from 'src/app/modules/Administration/DataImport/ImportClosedLeaseAgreements/services/import-closed-lease-agreements.service';
+import { ImportIndividualPartnerService } from 'src/app/modules/Administration/DataImport/ImportIndividualPartner/services/import-individual-partner.service'; 
+import { IncomeStatementService } from 'src/app/modules/Accounts/IncomeStatement/services/income-statement.service';
+import { NationIdFormatService } from 'src/app/modules/Administration/Settings/services/nation-id-format.service';
+import { DDAService } from 'src/app/modules/Administration/Settings/services/dda.service';
+import { HrmService } from 'src/app/modules/Administration/Settings/services/hrm.service';
+import { SettingsDocumentNumberModelService } from 'src/app/modules/Administration/Settings/services/document-number.service';
+import { CommonSettingsService } from 'src/app/modules/Administration/Settings/services/common.service';
+import { RegistrationSettingsService } from 'src/app/modules/Administration/Settings/services/UM-registration.service';
+import { AgreementDocumentService } from 'src/app/modules/Administration/Settings/services/agreement-document.service';
+import { FormsAndFieldsService } from 'src/app/modules/Administration/Settings/services/forms-fields.service';
+import { PaymentGatewaySettingService } from 'src/app/modules/Administration/Settings/services/payment-gateway-setting.service';
+import { SalikSettingsService } from 'src/app/modules/Administration/Settings/services/salik.service';
+import { SettingsCostCentersModelService } from 'src/app/modules/Administration/Settings/services/settings-cost-centers-model.service';
+import { HolidaysSettingService } from 'src/app/modules/Administration/Settings/services/holidays-setting.service';
+import { MasterSalikSettingsService } from 'src/app/modules/Administration/Settings/services/master-salik.service';
+import { LimousineService } from 'src/app/modules/Administration/Settings/services/limousine.service';
+import { DarbSettingsService } from 'src/app/modules/Administration/Settings/services/darb.service';
+import { MasterDarbSettingsService } from 'src/app/modules/Administration/Settings/services/master-darb.service';
+import { FieldsService } from 'src/app/modules/Administration/Settings/services/fields.service';
+import { CashFlowStatementService } from 'src/app/modules/Accounts/CashFlowStatement/services/cash-flow-statement.service';
+import { PurchaseOrdersDetailReportService } from 'src/app/modules/stockReports/purchaseOrdersDetailReport/service/purchase-orders-detail-report.service';
+import { OpeningBalanceCostCenterService } from 'src/app/modules/Accounts/openingBalances/services/opening-balances-cost-center.service';
+import { OpeningBalanceStockService } from 'src/app/modules/Accounts/openingBalances/services/opening-balances-stock.service';
+import { OpeningBalanceStaffService } from 'src/app/modules/Accounts/openingBalances/services/opening-balances-staff.service';
+import { OpeningBalanceAccountService } from 'src/app/modules/Accounts/openingBalances/services/opening-balances-account.service';
+import { OpeningBalanceBatchService } from 'src/app/modules/Accounts/openingBalances/services/opening-balance-batch.service';
+import { OpeningBalanceStateService } from 'src/app/modules/Accounts/openingBalances/services/opening-balance-state.service';
+import { FinancialNumberPolicyService } from 'src/app/modules/shared/service/financial-number-policy.service';
+import { DetailedStockReportService } from 'src/app/modules/stockReports/DetailedStockReport/service/DetailedStockReport.service';
+import { StockSummaryService } from 'src/app/modules/stockReports/StockSummary/service/StockSummary.service';
+import { ApprovalsService } from 'src/app/modules/Administration/Settings/services/approvals.service';
+import { ItemsIssueReportService } from 'src/app/modules/stockReports/itemsIssueReport/service/items-issue-report.service';
+import { ItemsReturnReportService } from 'src/app/modules/stockReports/itemsReturnReport/service/itemsReturnReport.service';
+import { AlertsService } from 'src/app/modules/Customers/alerts/services/alerts.service';
+import { FleetAlertsService } from 'src/app/modules/Fleet/Alerts/services/fleet-alerts.service';
+import { LeaseCustomerSmsService } from 'src/app/modules/Lease/LeaseCustomerSms/services/lease-customer-sms.service';
+import { NotificationsSettingsService } from 'src/app/modules/Administration/Settings/services/notifications.service';
+import { GetGrnPendingReportService } from 'src/app/modules/stockReports/GetGrnPendingReport/service/GetGrnPendingReport.service';
+import { PurchaseDetailsReportService } from 'src/app/modules/stockReports/purchaseDetailsReport/service/purchase-details-report.service';
+import { GetPartsMovingReportService } from 'src/app/modules/stockReports/GetPartsMovingReport/service/GetPartsMovingReport.service';
+import { AlertsStaffService } from 'src/app/modules/Staff/alerts/service/alerts.service';
+import { DesignationService } from 'src/app/modules/Staff/designations/service/designation.service';
+import { TrialBalanceService } from 'src/app/modules/Accounts/TrailBalance/services/trial-balance.service';
+import { CollectionAndRefundsReportService } from 'src/app/modules/Reports/CollectionAndRefunds/services/collection-and-refunds.service';
+import { WorkshopVehiclesService } from 'src/app/modules/Workshop/workshopVehicles/services/workshopVehicles.service';
+import { TariffGroupService } from 'src/app/modules/shared/service/TariffGroup.service';
+import { ChargesService } from 'src/app/modules/Administration/Settings/services/charges.service';
+import { CollectionAndRefunds2ReportService } from 'src/app/modules/Reports/CollectionAndRefunds2/services/collection-and-refunds2.service';
+import { CustomerWiseCollectionsReportService } from 'src/app/modules/Reports/CustomerWiseCollection/services/customer-wise-collection.service';
+import { SaleReportService } from 'src/app/modules/Reports/SaleReport/services/sale-report.service';
+import { SaleReportBaseOnInvoiceReportService } from 'src/app/modules/Reports/SaleReportBaseOnInvoice/services/sale-report-base-on-invoice.service';
+import { SalesPersonInvoiceReportService } from 'src/app/modules/Reports/SalesPersonInvoices/services/sales-person-invoices.service';
+import { VehiclePurchaseReportService } from 'src/app/modules/Reports/VehiclePurchase/services/vehicle-purchase.service';
+import { VehiclePriceBasedOnTariffGroupReportService } from 'src/app/modules/Reports/VehiclePriceBasedOnTariffGroup/services/vehicle-price-based-on-tariff-group.service';
+import { VehicleRentalDetailsReportService } from 'src/app/modules/Reports/VehicleRentalDetails/services/vehicle-rental-details.service';
+import { RentalSalesForSixtBahrainReportService } from 'src/app/modules/Reports/RentalSalesForSixtBahrain/services/rental-sales-for-sixt-bahrain.service';
+import { CollectionReportService } from 'src/app/modules/Reports/Collection/services/collection.service';
+import { ProfitAndLossReportService } from 'src/app/modules/Reports/ProfitAndLoss/services/profit-and-loss.service';
+import { VehicleProfitAndLossByChasisNoReportService } from 'src/app/modules/Reports/VehicleProfitAndLossByChasisNo/services/vehicle-profit-and-loss-by-chasis-no.service';
+import { DailyBusinessReportService } from 'src/app/modules/Reports/DailyBusiness/services/daily-business.service';
+import { EmailTemplatesService } from 'src/app/modules/Administration/emailTemplates/services/emailTemplates.service';
+import { FinesService } from 'src/app/modules/Administration/Settings/services/fines.service';
+import { CorrectVehicleStatusService } from 'src/app/modules/Administration/correctVehicleStatus/services/correctVehicleStatus.service';
+import { DebtCollectionReportService } from 'src/app/modules/Customers/debtCollection/services/debtCollection.service';
+import { FollowUpReportService } from 'src/app/modules/Customers/debtCollection/services/followUp-report.service';
+import { FollowUpReportService as FollowUpReportPageService } from 'src/app/modules/Customers/followUpReport/services/followUpReport.service';
+import { BlackListService } from 'src/app/modules/Customers/debtCollection/services/black-list.service';
+import { LedgerService } from 'src/app/modules/Accounts/Ledger/services/ledger.service';
+import { VehicleIncomeStatementService } from 'src/app/modules/Accounts/VehicleIncomeStatement/services/vehicle-income-statement.service';
+import { IncomeComparisonService } from 'src/app/modules/Accounts/IncomeComparison/services/income-comparison.service';
+import { IncomeStatement2Service } from 'src/app/modules/Accounts/IncomeStatement2/services/income-statement2.service';
+import { IncomeStatementYtdService } from 'src/app/modules/Accounts/IncomeStatementYtd/services/income-statement-ytd.service';
+import { IncomeStatementYtd2Service } from 'src/app/modules/Accounts/IncomeStatementYtd2/services/income-statement-ytd2.service';
+import { IncomeStatementFyService } from 'src/app/modules/Accounts/IncomeStatementFy/services/income-statement-fy.service';
+import { IncomeStatementFy2Service } from 'src/app/modules/Accounts/IncomeStatementFy2/services/income-statement-fy2.service';
+import { JournalService } from 'src/app/modules/Accounts/Journal/services/journal.service';
+import { BudgetService } from 'src/app/modules/Accounts/Budget/services/budget.service';
+import { BudgetVarianceService } from 'src/app/modules/Accounts/BudgetVariance/services/budget-variance.service';
+import { CountryService } from 'src/app/modules/Administration/Country/services/country.service';
+import { CurrencyService } from 'src/app/modules/Administration/Currency/services/currency.service';
+import { SponserShipService } from 'src/app/modules/Administration/SponserShips/services/sponsership.service';
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: LayoutComponent,
+    children: Routing,
+  },
+];
+
+@NgModule({
+  declarations: [
+    LayoutComponent,
+    HeaderComponent,
+    ContentComponent,
+    FooterComponent,
+    ScriptsInitComponent,
+    ToolbarComponent,
+    TopbarComponent,
+    PageTitleComponent,
+    HeaderMenuComponent,
+    NavbarComponent,
+    AccountingComponent,
+    ExtendedComponent,
+    ReportsComponent,
+    SaasComponent,
+  ],
+  imports: [
+    CommonModule,
+    RouterModule.forChild(routes),
+    TranslationModule,
+    InlineSVGModule,
+    NgbDropdownModule,
+    NgbProgressbarModule,
+    ExtrasModule,
+    ModalsModule,
+    DrawersModule,
+    DropdownMenusModule,
+    NgbTooltipModule,
+    TranslateModule,
+    ThemeModeModule,
+    SidebarComponent,
+    AppbarShortcutsComponent,
+    KeeniconComponent,
+  ],
+  exports: [RouterModule],
+  providers: [
+    AccountService,
+    AttendanceService,
+    BillDetailService,
+    BillingInvoiceService,
+    BillSettingsService,
+    BookingChargeService,
+    BookingNotificationFlagsService,
+    BookingService,
+    BranchService,
+    CardTransactionBankTransferDetailService,
+    CardTransactionBankTransferService,
+    CashDepositDetailService,
+    CashDepositService,
+    ChecklistItemService,
+    ClauseService,
+    CompanyPartnerService,
+    ContactGroupService,
+    CostCenterService,
+    DriverTimeSheetService,
+    DriverService,
+    CreditNoteService,
+    CustodyMovementService,
+    CustomerProjectService,
+    CustomerRequestService,
+    CustomLookupService,
+    CustomerService,
+    DataEntryCorrectionModelService,
+    DataEntryCorrectionService,
+    DebitNoteService,
+    DeductionService,
+    DeliveryMovementService,
+    DeliveryNoteService,
+    DepartmentService,
+    EquipmentRentalInvoiceService,
+    EquipmentService,
+    FleetService,
+    FleetVehicleServiceService,
+    VehicleServiceBookingsService,
+    AccidentsService,
+    GoodsReceivedNoteDetailService,
+    GrnService,
+    HolidayService,
+    HrmSettingService,
+    IndividualPartnerService,
+    IndustryService,
+    InvoiceBaseService,
+    InvoiceService,
+    ItemIssueItemService,
+    ItemRequisitionItemService,
+    ItemReturnItemService,
+    JobCategoryService,
+    JobEstimationService,
+    LabourTariffService,
+    LabourActivitiesReportService,
+    JobService,
+    LubricationJobService,
+    JVService,
+    LanguageService,
+    EquipmentQuotationService,
+    EquipmentMasterAgreementService,
+    LeaseAgreementService,
+    LeaseMasterAgreementService,
+    LeaseClauseService,
+    LeaseCostParameterService,
+    LeaseCostSettingItemService,
+    LeaseCostSettingService,
+    LeaseInquiryService,
+    LeaseQuotationService,
+    LeaveService,
+    LeaveTypeService,
+    LimoQuotationService,
+    LimousineInvoiceService,
+    LinkAccountsService,
+    LoanEMIService,
+    MiscellaneousInvoiceService,
+    MiscInvoiceItemService,
+    LogsMovementService,
+    NRMService,
+    OvertimeService,
+    CustomerStatementOfAccountService,
+    SupplierStatementService,
+    SupplierBalancesSummaryService,
+    PayableAgeAnalysisService,
+    StaffStatementService,
+    StaffBalancesSummaryService,
+    SalesQuotationService,
+    SalesAgreementService,
+    DueInstallmentsService,
+    StaffOverTimeService,
+    StaffDutyScheduleService,
+    PaymentDetailService,
+    PaymentService,
+    PreTerminationRuleService,
+    ProvisionDetailService,
+    ProvisionService,
+    PurchaseOrderDetailService,
+    PurchaseOrderService,
+    PurchaseRequestDetailService,
+    PurchaseRequestService,
+    PurchaseReturnDetailService,
+    PurchaseReturnService,
+    ReceiptService,
+    RentalBookingNotificationService,
+    RentalNotificationEventsService,
+    ReplacementReasonService,
+    RoleService,
+    SalaryVoucherService,
+    SaleOriginService,
+    SalesAgreementService,
+    ServiceChecklistItem1Service,
+    ShiftService,
+    SourceCodeService,
+    StaffRoleService,
+    StaffService,
+    StaffProfileService,
+    AttendanceTimesheetService,
+    StockTransferItemService,
+    SupplierService,
+    PurchaseOrdersDetailReportService,
+    GetGrnPendingReportService,
+    ItemsIssueReportService,
+    ItemsReturnReportService,
+    DetailedStockReportService,
+    PurchaseDetailsReportService,
+    StockSummaryService,
+    GetPartsMovingReportService,
+    TariffCardsService,
+    TimeSheetService,
+    TariffSettingService,
+    LeaseTariffService,
+    TrafficFineService,
+    TransactionItemService,
+    TransactionService,
+    TransportationAgreementItemService,
+    TransportationAgreementService,
+    TransportationInvoiceService,
+    TripGridCustomizationService,
+    TripSheetService,
+    UserService,
+    UserzService,
+    VehicleNotReadyReasonService,
+    VehicleQRLabelService,
+    VehicleService,
+    VehicleTypeService,
+    FleetVehicleTypeService,
+    VoucherReasonService,
+    WorkOrderService,
+    WorkshopActivityService,
+    WorkshopMovementService,
+    WorkshopService,
+    TripTypeService,
+    LimousineTariffService,
+    LimousineTariffReportService,
+    UtilizationReportService,
+    ChauffeurForcedAllocationsReportService,
+    AttendanceService,
+    BillDetailService,
+    BillingInvoiceService,
+    BillService,
+    BillSettingsService,
+    BookingChargeService,
+    BookingNotificationFlagsService,
+    BookingService,
+    BranchService,
+    CardTransactionBankTransferDetailService,
+    CardTransactionBankTransferService,
+    CashDepositDetailService,
+    CashDepositService,
+    ClauseService,
+    CompanyPartnerService,
+    ContactGroupService,
+    CreditNoteService,
+    CustodyMovementService,
+    CustomerProjectService,
+    CustomLookupService,
+    DataEntryCorrectionModelService,
+    DataEntryCorrectionService,
+    DebitNoteService,
+    DeductionService,
+    DeliveryMovementService,
+    CollectionMovementService,
+    DeliveryNoteService,
+    DepartmentService,
+    EquipmentRentalInvoiceService,
+    GoodsReceivedNoteDetailService,
+    HolidayService,
+    HrmSettingService,
+    IndividualPartnerService,
+    IndustryService,
+    InvoiceBaseService,
+    InvoiceService,
+    ItemIssueItemService,
+    ItemRequisitionItemService,
+    ItemReturnItemService,
+    JobCategoryService,
+    JobEstimationService,
+    LabourTariffService,
+    LabourActivitiesService,
+    JobService,
+    LubricationJobService,
+    LanguageService,
+    LeaseCostParameterService,
+    LeaseCostSettingItemService,
+    LeaseCostSettingService,
+    LeaseInquiryService,
+    LeaveService,
+    LeaveTypeService,
+    LimoQuotationService,
+    LimousineInvoiceService,
+    LoanEMIService,
+    LocationService,
+    TripBookingService,
+    MiscellaneousInvoiceService,
+    MiscInvoiceItemService,
+    NRMService,
+    OvertimeService,
+    PaymentDetailService,
+    PaymentMethodService,
+    PaymentService,
+    PreTerminationRuleService,
+    ProvisionDetailService,
+    ProvisionService,
+    PurchaseOrderDetailService,
+    PurchaseOrderService,
+    PurchaseRequestDetailService,
+    PurchaseRequestService,
+    PurchaseReturnDetailService,
+    PurchaseReturnService,
+    ReceiptService,
+    RentalBookingNotificationService,
+    RentalNotificationEventsService,
+    RentalAgreementService,
+    CreditNoteVoucherDetailService,
+    ReplacementReasonService,
+    RoleService,
+    SalaryVoucherService,
+    SaleOriginService,
+    SalesAgreementService,
+    ServiceChecklistItem1Service,
+    ServiceItemService,
+    FleetServiceLogService,
+    DailyServiceLogsService,
+    ShiftService,
+    SourceCodeService,
+    StaffRoleService,
+    StaffService,
+    StaffTimesheetService,
+    StockTransferItemService,
+    SupplierService,
+    RentalTariffService,
+    RentalQuotationService,
+    RentalPlannerService,
+    MasterAgreementService,
+    TimeSheetService,
+    TrafficFineService,
+    TransactionItemService,
+    TransactionService,
+    TransportationAgreementItemService,
+    TransportationAgreementService,
+    TransportationInvoiceService,
+    TransportationTripService,
+    TripGridCustomizationService,
+    BalancesSummaryService,
+    ReceivableAgeAnalysisService,
+    UserService,
+    VehicleNotReadyReasonService,
+    VehicleService,
+    VoucherReasonService,
+    WorkOrderService,
+    WorkshopMovementService,
+    WorkshopService,
+    ContactService,
+    CarMakeService,
+    CarModelService,
+    CostCenterGroupService,
+    SupplierSharedService,
+    OpeningBalanceCustomersService,
+    OpeningBalanceSuppliersService,
+    OpeningBalancePrepaidService,
+    OpeningBalanceStaffService,
+    OpeningBalanceDepositService,
+    OpeningBalanceCostCenterService,
+    OpeningBalanceStockService,
+    OpeningBalanceAccountService,
+    OpeningBalanceBatchService,
+    OpeningBalanceStateService,
+    FinancialNumberPolicyService,
+    BalanceSheetService,
+    BalanceSheetMonthWiseService,
+    CashFlowStatementService,
+    IncomeStatementService,
+    LedgerService,
+    VehicleIncomeStatementService,
+    IncomeComparisonService,
+    IncomeStatement2Service,
+    IncomeStatementYtdService,
+    IncomeStatementYtd2Service,
+    IncomeStatementFyService,
+    IncomeStatementFy2Service,
+    JournalService,
+    SettingsProfileModelService,
+    DesignationsComponent,
+    CommonSettingsService,
+    ApiKeyService,
+    ImportVehicleService,
+    ImportSalikService,
+    ImportDarbService,
+    ImportFineService,
+    ImportStaffService,
+    ImportSupplierService,
+    ImportCompaniesService,
+    ImportCustomerService,
+    ImportAssetService,
+    ImportItemService,
+    ImportRentalAgreementService,
+    ImportClosedRentalAgreementService,
+    ImportLeaseAgreementService,
+    ImportClosedLeaseAgreementService,
+    ImportIndividualPartnerService,
+    SettingsDocumentNumberModelService,
+    AgreementDocumentService,
+    FormsAndFieldsService,
+    SettingsCostCentersModelService,
+    PaymentGatewaySettingService,
+    SalikSettingsService,
+    MasterSalikSettingsService,
+    DarbSettingsService,
+    MasterDarbSettingsService,
+    FieldsService,
+    EquipmentService,
+    AlertsService,
+    FleetAlertsService,
+    LeaseCustomerSmsService,
+    AlertsStaffService,
+    DesignationService,
+    TrialBalanceService,
+    ProfitAndLossReportService,
+    CollectionReportService,
+    CollectionAndRefundsReportService,
+    CollectionAndRefunds2ReportService,
+    CustomerWiseCollectionsReportService,
+    SaleReportService,
+    SaleReportBaseOnInvoiceReportService,
+    SalesPersonInvoiceReportService,
+    VehiclePurchaseReportService,
+    VehiclePriceBasedOnTariffGroupReportService,
+    VehicleRentalDetailsReportService,
+    RentalSalesForSixtBahrainReportService,
+    VehicleProfitAndLossByChasisNoReportService,
+    DailyBusinessReportService,
+    WorkshopVehiclesService,
+    BudgetService,
+    BudgetVarianceService,
+    // UserService,
+    // AccountSettingsService,
+    // AddressInfoService,
+    // AgreementDocumentService,
+    // AgreementSettingsService,
+    // ApiKeySettingService,
+    // ApplicationUserService,
+    // ApprovalLevelService,
+    // BrokerSettingService,
+    // CarMakeService,
+    // CarModelService,
+    // CarTypeService,
+    // ChangeDescriptionModelService,
+    // ChangeRequestModelService,
+    // ChargeSettingService,
+    // ChargeSettingsService,
+    // ChartOfAccountsSettingsService,
+    // CheckCardSettingsService,
+    // CompanyCustomerSettingsService,
+    // ContactInfoService,
+    // CostCenterGroupService,
+    // CostCenterSettingsService,
+    // CreditCardInfoService,
+    // CreditNoteSettingsService,
+    // CustomerDocumentService,
+    // CustomerService,
+    // DDAService,
+    // DirectDebitAuthorizationSettingService,
+    // DocumentNumberFormatService,
+    // DocumentNumberSettingsService,
+    // DocumentRequirementService,
+    // DriverService,
+    // EmailSMTPSettingsService,
+    // EntityCodeSettingsService,
+    // ExpenseTypeService,
+    // FieldRequirementService,
+    // FineDownloadSettingsService,
+    // FineSearchRequestService,
+    // FineSearchResultService,
+    // FineSettingsService,
+    // FinesUserMappingService,
+    FiscalYearService,
+    MonthCloseService,
+    AssetService,
+    AssetTypeService,
+    // FormConfigurationService,
+    // FormFieldService,
+    // FuelChargeService,
+    // FuelSettingsService,
+    // GeneralSettingsService,
+    // IndividualCustomerSettingsService,
+    // InvoiceGenerationRequestService,
+    // InvoiceGenerationResultService,
+    // InvoiceSettingsService,
+    // ItemPriceSettingService,
+    // ItemSettingsService,
+    // ItemReturnSettingsService,
+    // JobSettingsService,
+    // JVSettingsService,
+    // LeaseInquirySettingsService,
+    // LeaseInvoicingSettingsService,
+    // LetterHeadSettingsService,
+    // LimoQuotationSettingsService,
+    // LimousineSettingsService,
+    // LubricationJobItemService,
+    // LubricationJobService,
+    // MemberPartnerService,
+    // NationalIdFormatSettingModelService,
+    // NationIDFormatService,
+    // NonRentalMovementService,
+    // NotificationSettingsService,
+    // OpeningBalanceAccountService,
+    // OpeningBalanceCostCenterService,
+    // OpeningBalanceCustomerService,
+    // OpeningBalanceDepositService,
+    // OpeningBalancePrepaidService,
+    // OpeningBalanceStaffService,
+    // OpeningBalanceStockService,
+    // OpeningBalanceSupplierService,
+    // OtherSettingsService,
+    // PaymentGatewayService,
+    // PaymentSettingsService,
+    PDCPayableService,
+    PDCReceivableService,
+    // PermissionService,
+    // POSettingsService,
+    // ProjectService,
+    // PurchaseRequestSettingsService,
+    // QrLabelService,
+    // ReceiptAllocationDetailService,
+    RegistrationSettingsService,
+    RentalQuotationSettingsService,
+    // RentalSettingsService,
+    // RolePermissionService,
+    // ServiceSettingsService,
+    // SettingsApprovalModelService,
+    // SettingsChargesModelService,
+    // SettingsCommonModelService,
+    // SettingsEmailSmtpModelService,
+    // SettingsFinesModelService,
+    // SettingsFormsAndFieldsModelService,
+    // SettingsHolidayModelService,
+    // SettingsNotificationModelService,
+    // SettingsSmtpModelService,
+    // StaffSettingsService,
+    // SupplierSettingsService,
+    // SupportRequestModelService,
+    // SupportRequestService,
+    // TariffExtraChargeService,
+    TariffGroupService,
+    // TariffMileageService,
+    // TariffProtectionService,
+    // TariffRentalRateService,
+    // TaxAdvanceInvoiceDetailService,
+    // TaxAdvanceInvoiceService,
+    // TimeSettingsService,
+    // TollAccountService,
+    // TollSettingsService,
+    // TripSettingsService,
+    // UserRoleService,
+    // UtilizationSettingsService,
+    // VehicleCategoryService,
+    // VehicleExpenseService,
+    // VehicleServicePlanService,
+    // VehicleServiceService,
+    // VehicleSettingsService,
+    // VoucherTypeService,
+    EmailTemplatesService,
+    NationIdFormatService,
+    ApiKeyService,
+    DDAService,
+    HrmService,
+    FileUploadService,
+    HolidaysSettingService,
+    LimousineService,
+    ApprovalsService,
+    NotificationsSettingsService,
+    ChargesService,
+    FinesService,
+    CorrectVehicleStatusService,
+    DebtCollectionReportService,
+    FollowUpReportService,
+    FollowUpReportPageService,
+    BlackListService,
+    CountryService,
+    CurrencyService,
+    SponserShipService,
+  ],
+})
+export class LayoutModule { }

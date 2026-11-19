@@ -1,0 +1,28 @@
+diff --git a/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositDetailVm.cs (initial) b/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositDetailVm.cs (current)
+index 01de371..93a57eb 100644
+--- a/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositDetailVm.cs (initial)	
++++ b/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositDetailVm.cs (current)	
+@@ -1,11 +1,12 @@
+ using SiGma.Helpers.Enum;
+-using SiGma.Helpers.ViewModelsBases.Detail;
+ using SiGma.ViewModels.ViewModels.CashDepositDetail;
+ 
+ namespace SiGma.ViewModels.ViewModels.CashDeposit
+ {
+-    public class CashDepositDetailVM : DetailBaseVm
++    public class CashDepositDetailVM
+     {
++        public int Id { get; set; }
++        public string? No { get; set; }
+         public DateTime Date { get; set; }
+         public int? BankId { get; set; }
+         public string? BankName { get; set; }
+@@ -22,8 +23,6 @@ namespace SiGma.ViewModels.ViewModels.CashDeposit
+         public ApprovalStatus ApprovalStatus { get; set; }
+         public bool IsPosted { get; set; }
+         public bool IsVoided { get; set; }
+-        public int? JournalVoucherId { get; set; }
+-
+         public List<CashDepositDetailDetailVM> CashDepositDetails { get; set; } = [];
+     }
+ }

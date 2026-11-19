@@ -131,9 +131,9 @@ same-path query navigation, effective shell visibility, no duplicate spinner,
 and retained busy/error/Retry. Record backend per-page action enrichment query
 budgets under BE7 when touched, with source improvements separate from measured
 SQL/latency. Resolve known in-scope source gaps and record missing evidence.
-Use Master5 for scoped local builds and Master7 for explicitly requested
-migration creation, application and verification. Browser execution requires
-its own authorization.
+Use Master5 for scoped local builds, affected tests and changed-file lint, and
+Master7 for authorized migration creation, application and verification.
+Browser execution requires its own authorization.
 
 Apply UI22's single-visible-owner correction: reconcile page + lookup,
 lookup-only, dialog read + background page work, and dialog save + local lookup

@@ -1,0 +1,89 @@
+:host {
+  display: inline-flex;
+}
+
+.app-primary-action-button {
+  display: inline-flex;
+  min-height: 35px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-inline: 16px;
+  border: 1px solid var(--sigma-primary);
+  border-radius: 2px;
+  color: #fff;
+  background: var(--sigma-primary);
+  box-shadow: 0 2px 4px rgb(0 0 0 / 18%);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.app-primary-action-button i {
+  color: currentColor !important;
+}
+
+.app-primary-action-button:disabled {
+  cursor: not-allowed;
+  opacity: .65;
+}
+
+.app-primary-action-button--loading:disabled {
+  cursor: wait;
+}
+
+.app-primary-action-button:not(:disabled):hover,
+.app-primary-action-button:not(:disabled):focus-visible {
+  border-color: var(--sigma-primary-hover);
+  color: #fff;
+  background: var(--sigma-primary-hover);
+  outline: 0;
+}
+
+.app-primary-action-button:not(:disabled):focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sigma-primary) 22%, transparent);
+}
+
+.app-primary-action-button__loading-icon {
+  animation: app-primary-action-button-spin 900ms linear infinite;
+}
+
+/* Report actions retain the Trial Balance strip's compact button grammar. */
+:host-context(.sigma-report-filter-actions) .app-primary-action-button {
+  min-height: var(--sigma-filter-control-height);
+  padding: 0 10px;
+  border-radius: var(--sigma-control-radius);
+  box-shadow: none;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+:host-context(.sigma-report-filter-actions) .app-primary-action-button:not(:disabled):focus-visible {
+  box-shadow: var(--sigma-control-focus-ring);
+}
+
+@media (max-width: 640px) {
+  :host-context(.sigma-report-action-group) {
+    display: flex;
+    min-width: 0;
+  }
+
+  :host-context(.sigma-report-action-group) .app-primary-action-button {
+    width: 100%;
+  }
+}
+
+:host-context([dir='rtl']) .app-primary-action-button .bi-arrow-left,
+:host-context([dir='rtl']) .app-primary-action-button .bi-arrow-right {
+  transform: rotate(180deg);
+}
+
+@keyframes app-primary-action-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,196 @@
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { Component, DestroyRef, OnInit, computed, inject, input, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateModule } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { Subscription, finalize } from 'rxjs';
+import {
+  EditableCollectionRowDirective,
+  EditableCollectionTableColumn,
+  EditableCollectionTableComponent,
+} from 'src/app/modules/shared/components/editable-collection-table/editable-collection-table.component';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { LinkAccountsListVM, LinkAccountsUpsertDTO, toLinkAccountsUpsert } from '../../models/list';
+import { LinkAccountsService } from '../../services/linkaccounts.service';
+import { LinkAccountTabStateComponent } from '../tab-state/tab-state.component';
+
+@Component({
+  selector: 'app-prepaid-expense',
+  standalone: true,
+  imports: [
+    StateMessageComponent,    FormsModule,
+    DropdownModule,
+    TranslateModule,
+    LinkAccountTabStateComponent,
+    EditableCollectionRowDirective,
+    EditableCollectionTableComponent,
+  ],
+  templateUrl: './prepaid-expense.component.html',
+  styleUrl: './prepaid-expense.component.scss',
+})
+export class PrepaidExpenseComponent extends BaseComponentService implements OnInit {
+  private readonly linkAccountsService = inject(LinkAccountsService);
+  private readonly confirmationDialog = inject(ConfirmationDialogService);
+  private readonly destroyRef = inject(DestroyRef);
+  private loadRequest?: Subscription;
+  readonly loaded = output<void>();
+  readonly busy = input(false);
+  readonly refreshing = input(false);
+  readonly confirmationPending = signal(false);
+  readonly accounts = input<DropDownSelect[]>([]);
+  readonly searchTerm = input('');
+  readonly typeId = input.required<number>();
+  readonly defaultLinkSectionId = input.required<number>();
+  readonly rows = signal<LinkAccountsListVM[]>([]);
+  readonly ready = signal(false);
+  readonly dirty = signal(false);
+  readonly tabLoading = signal(true);
+  readonly loadFailed = signal(false);
+  readonly valid = computed(() => this.rows().every((row) =>
+    row.value !== undefined &&
+    row.value !== null &&
+    row.accountId !== undefined &&
+    row.accountId !== null
+  ));
+  readonly columns: ReadonlyArray<EditableCollectionTableColumn> = [
+    { header: 'linkAccounts.prepaidAccount', required: true, width: '280px' },
+    { header: 'linkAccounts.expenseAccount', required: true, width: '280px' },
+  ];
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+    if (this.busy() && !this.refreshing()) return;
+    this.loadRequest?.unsubscribe();
+    this.ready.set(false);
+    this.tabLoading.set(true);
+    this.loadFailed.set(false);
+    this.loadRequest = this.linkAccountsService.getLinkAccountsByType(this.typeId()).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => this.tabLoading.set(false))
+    ).subscribe({
+      next: (response) => {
+        if (!response.isSuccess) {
+          this.loadFailed.set(true);
+          return;
+        }
+        this.rows.set(response.entities);
+        this.dirty.set(false);
+        this.ready.set(true);
+          this.loaded.emit();
+      },
+      error: () => this.loadFailed.set(true),
+    });
+  }
+
+  addMapping(): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => [
+      ...rows,
+      { type: this.typeId(), linkSection: this.defaultLinkSectionId() },
+    ]);
+    this.dirty.set(true);
+  }
+
+  removeMapping(target: LinkAccountsListVM): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => rows.filter((row) => row !== target));
+    this.dirty.set(true);
+  }
+
+  removeVisibleMapping(index: number): void {
+    const target = this.visibleRows()[index];
+    if (!target || this.busy() || !this.ready() || this.confirmationPending()) return;
+
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.confirmationPending.set(true);
+    this.confirmationDialog
+      .confirm({
+        severity: 'warning',
+        title: { key: 'linkAccounts.removeTitle' },
+        message: { key: 'linkAccounts.removeMessage' },
+        confirmLabel: { key: 'linkAccounts.removeConfirm' },
+        cancelLabel: { key: 'general.cancel' },
+        confirmIcon: 'bi bi-trash3',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false)))
+      .subscribe((confirmed) => {
+        this.confirmationPending.set(false);
+        if (confirmed && !this.busy() && this.ready() && this.rows().includes(target)) this.removeMapping(target);
+      });
+  }
+
+  onPrepaidAccountChange(target: LinkAccountsListVM, accountId: number | null): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => rows.map((row) =>
+      row === target ? { ...row, value: accountId ?? undefined } : row
+    ));
+    this.dirty.set(true);
+  }
+
+  onExpenseAccountChange(target: LinkAccountsListVM, accountId: number | null): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => rows.map((row) =>
+      row === target ? { ...row, accountId: accountId ?? undefined } : row
+    ));
+    this.dirty.set(true);
+  }
+
+  visibleRows(): LinkAccountsListVM[] {
+    const query = this.searchTerm().trim().toLocaleLowerCase();
+    if (!query) return this.rows();
+
+    const accountLabels = new Map(
+      this.accounts().map((account) => [Number(account.id), account.value])
+    );
+
+    return this.rows().filter((row) =>
+      [
+        row.value,
+        row.accountId,
+        row.value ? accountLabels.get(row.value) : '',
+        row.accountId ? accountLabels.get(row.accountId) : '',
+      ]
+        .filter((value) => value !== undefined && value !== null)
+        .join(' ')
+        .toLocaleLowerCase()
+        .includes(query)
+    );
+  }
+
+  prepaidAccountOptions(target: LinkAccountsListVM): DropDownSelect[] {
+    const usedAccountIds = new Set(
+      this.rows()
+        .filter((row) => row !== target && row.value !== undefined)
+        .map((row) => row.value)
+    );
+
+    return this.accounts().filter(
+      (account) => !usedAccountIds.has(Number(account.id))
+    );
+  }
+
+  isRowInvalid(row: LinkAccountsListVM): boolean {
+    const hasPrepaid = row.value !== undefined && row.value !== null;
+    const hasExpense = row.accountId !== undefined && row.accountId !== null;
+    return !hasPrepaid || !hasExpense;
+  }
+
+  getPayload(): LinkAccountsUpsertDTO[] {
+    return toLinkAccountsUpsert(
+      this.rows().filter(
+        (row) => row.value !== undefined && row.accountId !== undefined
+      ),
+      this.defaultLinkSectionId()
+    );
+  }
+
+  markSaved(): void {
+    this.dirty.set(false);
+  }
+}

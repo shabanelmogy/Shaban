@@ -1,0 +1,369 @@
+SOURCE: SiGma.Business/IServices/IOpeningBalanceStateService.cs
+using SiGma.ViewModels.ViewModels.OpeningBalanceState;
+
+namespace SiGma.Business.IServices;
+
+public interface IOpeningBalanceStateService
+{
+    Task<Result<List<OpeningBalanceTabStateVM>>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Result<List<OpeningBalanceTabStateVM>>> GetForSourceAsync(string sourceKey, CancellationToken cancellationToken = default);
+}
+SOURCE: SiGma.ServerAPI/Controller/OpeningBalanceStateController.cs
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SiGma.Business.IServices;
+
+namespace SiGma.ServerAPI.Controller;
+
+[ApiController]
+[Authorize]
+[Route("[controller]")]
+public sealed class OpeningBalanceStateController : ControllerBase
+{
+    private readonly IOpeningBalanceStateService _service;
+
+    public OpeningBalanceStateController(IOpeningBalanceStateService service)
+    {
+        _service = service;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAsync(CancellationToken cancellationToken, [FromQuery] string? sourceKey = null)
+    {
+        var result = sourceKey is null
+            ? await _service.GetAllAsync(cancellationToken)
+            : await _service.GetForSourceAsync(sourceKey, cancellationToken);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+}
+SOURCE: SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceStateService.cs
+using SiGma.Business.Resolver;
+using SiGma.Helpers.EntityBases;
+using SiGma.ViewModels.ViewModels.OpeningBalanceState;
+
+namespace SiGma.Business.Services.AccountServices.OpeneingBalances;
+
+public sealed class OpeningBalanceStateService : IOpeningBalanceStateService
+{
+    private readonly IUnitOfWork<SiGmaDbContext> _unitOfWork;
+    private readonly JournalVoucherResolver _journalVoucherResolver;
+
+    public OpeningBalanceStateService(
+        IUnitOfWork<SiGmaDbContext> unitOfWork,
+        JournalVoucherResolver journalVoucherResolver)
+    {
+        _unitOfWork = unitOfWork;
+        _journalVoucherResolver = journalVoucherResolver;
+    }
+
+    public Task<Result<List<OpeningBalanceTabStateVM>>> GetAllAsync(
+        CancellationToken cancellationToken = default)
+        => GetStatesAsync(null, cancellationToken);
+
+    public Task<Result<List<OpeningBalanceTabStateVM>>> GetForSourceAsync(
+        string sourceKey,
+        CancellationToken cancellationToken = default)
+        => GetStatesAsync(sourceKey, cancellationToken);
+
+    private async Task<Result<List<OpeningBalanceTabStateVM>>> GetStatesAsync(
+        string? sourceKey,
+        CancellationToken cancellationToken)
+    {
+        if (sourceKey is not null && sourceKey is not (
+            nameof(OpeningBalanceAccount) or nameof(OpeningBalanceCostCenter) or
+            nameof(OpeningBalanceCustomer) or nameof(OpeningBalanceSupplier) or
+            nameof(OpeningBalanceStaff) or nameof(OpeningBalanceStock) or
+            nameof(OpeningBalancePrepaid) or nameof(OpeningBalanceDeposit)))
+        {
+            return new Result<List<OpeningBalanceTabStateVM>>
+            {
+                IsSuccess = false,
+                Message = "Invalid opening balance source key."
+            };
+        }
+
+        var batches = await _unitOfWork.Repository
+            .Query<OpeningBalanceBatch>()
+            .AsNoTracking()
+            .OrderBy(batch => batch.Id)
+            .Take(2)
+            .ToListAsync(cancellationToken);
+
+        if (batches.Count > 1)
+        {
+            return new Result<List<OpeningBalanceTabStateVM>>
+            {
+                IsSuccess = false,
+                Message = "More than one active Opening Balance Batch exists. Correct the duplicate batch before continuing."
+            };
+        }
+
+        var states = new List<OpeningBalanceTabStateVM>();
+        if (sourceKey is null || sourceKey == nameof(OpeningBalanceAccount))
+            states.Add(await BuildStateAsync<OpeningBalanceAccount>(batches, cancellationToken));
+        if (sourceKey is null || sourceKey == nameof(OpeningBalanceCostCenter))
+            states.Add(await BuildStateAsync<OpeningBalanceCostCenter>(batches, cancellationToken));
+        if (sourceKey is null || sourceKey == nameof(OpeningBalanceCustomer))
+            states.Add(await BuildStateAsync<OpeningBalanceCustomer>(batches, cancellationToken));
+        if (sourceKey is null || sourceKey == nameof(OpeningBalanceSupplier))
+            states.Add(await BuildStateAsync<OpeningBalanceSupplier>(batches, cancellationToken));
+        if (sourceKey is null || sourceKey == nameof(OpeningBalanceStaff))
+            states.Add(await BuildStateAsync<OpeningBalanceStaff>(batches, cancellationToken));
+        if (sourceKey is null || sourceKey == nameof(OpeningBalanceStock))
+            states.Add(await BuildStateAsync<OpeningBalanceStock>(batches, cancellationToken));
+        if (sourceKey is null || sourceKey == nameof(OpeningBalancePrepaid))
+            states.Add(await BuildStateAsync<OpeningBalancePrepaid>(batches, cancellationToken));
+        if (sourceKey is null || sourceKey == nameof(OpeningBalanceDeposit))
+            states.Add(await BuildStateAsync<OpeningBalanceDeposit>(batches, cancellationToken));
+
+        return new Result<List<OpeningBalanceTabStateVM>>
+        {
+            IsSuccess = true,
+            Entity = states
+        };
+    }
+
+    private async Task<OpeningBalanceTabStateVM> BuildStateAsync<TEntity>(
+        IReadOnlyList<OpeningBalanceBatch> batches,
+        CancellationToken cancellationToken)
+        where TEntity : EntityBase
+    {
+        var batch = batches.SingleOrDefault();
+        var marker = OpeningBalanceAggregateStateHelper.MarkerFor<TEntity>();
+        var vouchers = await _unitOfWork.Repository
+            .Query<JournalVoucher>(
+                voucher => voucher.VoucherType == VoucherTypeName.JournalVoucher &&
+                           voucher.VoucherSubType == VoucherSubType.OpeningBalanceJV &&
+                           voucher.JournalVoucherDetails.Any(detail =>
+                               detail.IsDeleted != true && detail.SubLookUp == marker))
+            .AsNoTracking()
+            .OrderBy(voucher => voucher.BranchId)
+            .ThenBy(voucher => voucher.Id)
+            .Select(voucher => new OpeningBalanceJournalVoucherStateVM
+            {
+                Id = voucher.Id,
+                No = voucher.No,
+                BranchId = voucher.BranchId,
+                Date = voucher.Date,
+                PostingDate = voucher.PostingDate,
+                IsPosted = voucher.IsPosted,
+                IsVoided = voucher.IsVoided,
+                ApprovalStatus = voucher.ApprovalStatus.ToString(),
+                Status = voucher.IsVoided
+                    ? "Voided"
+                    : voucher.IsPosted
+                        ? "Posted"
+                        : voucher.ApprovalStatus == ApprovalStatus.Approved
+                            ? "Approved"
+                        : "Draft"
+            })
+            .ToListAsync(cancellationToken);
+
+        string? lockReason = null;
+        foreach (var voucher in vouchers)
+        {
+            if (voucher.IsVoided)
+            {
+                lockReason = "VoidedJournal";
+                break;
+            }
+
+            if (await _journalVoucherResolver.HasActiveAllocationsAsync(voucher.Id, cancellationToken))
+            {
+                lockReason = "ActiveAllocations";
+                break;
+            }
+        }
+
+        if (lockReason is null && batch is null)
+            lockReason = "OpeningDateNotConfigured";
+
+        var hasMixedDates = batch is not null &&
+                            vouchers.Any(voucher => voucher.Date.Date != batch.OpeningDate.Date);
+
+        return new OpeningBalanceTabStateVM
+        {
+            SourceKey = typeof(TEntity).Name,
+            Version = await OpeningBalanceAggregateStateHelper.ComputeVersionAsync<TEntity>(
+                _unitOfWork,
+                cancellationToken,
+                knownBatches: batches),
+            OpeningDate = batch?.OpeningDate,
+            HasMixedDates = hasMixedDates,
+            IsLocked = lockReason is not null,
+            LockReason = lockReason,
+            JournalVouchers = vouchers
+        };
+    }
+}
+SOURCE: SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceAggregateStateHelper.cs
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
+using SiGma.Helpers.EntityBases;
+
+namespace SiGma.Business.Services.AccountServices.OpeneingBalances;
+
+internal static class OpeningBalanceAggregateStateHelper
+{
+    private const string MarkerPrefix = "OpeningBalance:";
+
+    public static string MarkerFor<TEntity>() where TEntity : EntityBase
+        => $"{MarkerPrefix}{typeof(TEntity).Name}";
+
+    public static async Task<string> ComputeVersionAsync<TEntity>(
+        IUnitOfWork<SiGmaDbContext> unitOfWork,
+        CancellationToken cancellationToken = default,
+        IReadOnlyList<OpeningBalanceBatch>? knownBatches = null)
+        where TEntity : EntityBase
+    {
+        var entityType = unitOfWork.Context.Model.FindEntityType(typeof(TEntity))
+            ?? throw new InvalidOperationException($"Entity type {typeof(TEntity).Name} is not mapped.");
+
+        var scalarProperties = entityType
+            .GetProperties()
+            .Where(property => property.PropertyInfo is not null)
+            .OrderBy(property => property.Name, StringComparer.Ordinal)
+            .ToList();
+
+        var rows = await unitOfWork.Repository
+            .Query<TEntity>()
+            .AsNoTracking()
+            .OrderBy(row => row.Id)
+            .ToListAsync(cancellationToken);
+
+        // State reads already validated this batch snapshot. Writers still query it independently.
+        var batches = knownBatches is null
+            ? await unitOfWork.Repository
+            .Query<OpeningBalanceBatch>()
+            .AsNoTracking()
+            .OrderBy(batch => batch.Id)
+            .Select(batch => new
+            {
+                batch.Id,
+                batch.OpeningDate,
+                batch.FiscalYearId,
+                batch.Description
+            })
+            .ToListAsync(cancellationToken)
+            : knownBatches.Select(batch => new
+            {
+                batch.Id,
+                batch.OpeningDate,
+                batch.FiscalYearId,
+                batch.Description
+            }).ToList();
+
+        var marker = MarkerFor<TEntity>();
+        var journalVouchers = await unitOfWork.Repository
+            .Query<JournalVoucher>(
+                voucher => voucher.VoucherType == VoucherTypeName.JournalVoucher &&
+                           voucher.VoucherSubType == VoucherSubType.OpeningBalanceJV &&
+                           voucher.JournalVoucherDetails.Any(detail =>
+                               detail.IsDeleted != true && detail.SubLookUp == marker))
+            .AsNoTracking()
+            .OrderBy(voucher => voucher.Id)
+            .Select(voucher => new
+            {
+                voucher.Id,
+                voucher.No,
+                voucher.Date,
+                voucher.PostingDate,
+                voucher.BranchId,
+                voucher.ApprovalStatus,
+                voucher.IsPosted,
+                voucher.IsVoided
+            })
+            .ToListAsync(cancellationToken);
+
+        var journalDetails = await unitOfWork.Repository
+            .Query<JournalVoucherDetail>(detail =>
+                detail.SubLookUp == marker &&
+                detail.JournalVoucher != null &&
+                detail.JournalVoucher.IsDeleted != true &&
+                detail.JournalVoucher.VoucherType == VoucherTypeName.JournalVoucher &&
+                detail.JournalVoucher.VoucherSubType == VoucherSubType.OpeningBalanceJV)
+            .AsNoTracking()
+            .OrderBy(detail => detail.JournalVoucherId)
+            .ThenBy(detail => detail.Id)
+            .Select(detail => new
+            {
+                detail.Id,
+                detail.JournalVoucherId,
+                detail.AccountId,
+                detail.Debit,
+                detail.Credit,
+                detail.Description,
+                detail.PartnerId,
+                detail.BranchId,
+                detail.CostCenterId
+            })
+            .ToListAsync(cancellationToken);
+
+        var builder = new StringBuilder(typeof(TEntity).FullName);
+
+        foreach (var batch in batches)
+        {
+            builder.Append("|BATCH:")
+                .Append(batch.Id).Append(';')
+                .Append(batch.OpeningDate.ToString("O", CultureInfo.InvariantCulture)).Append(';')
+                .Append(batch.FiscalYearId).Append(';')
+                .Append(batch.Description);
+        }
+
+        foreach (var row in rows)
+        {
+            builder.Append('|');
+            foreach (var property in scalarProperties)
+            {
+                builder.Append(property.Name)
+                    .Append('=')
+                    .Append(FormatValue(property.PropertyInfo!.GetValue(row)))
+                    .Append(';');
+            }
+        }
+
+        foreach (var voucher in journalVouchers)
+        {
+            builder.Append("|JV:")
+                .Append(voucher.Id).Append(';')
+                .Append(voucher.No).Append(';')
+                .Append(voucher.Date.ToString("O", CultureInfo.InvariantCulture)).Append(';')
+                .Append(voucher.PostingDate?.ToString("O", CultureInfo.InvariantCulture)).Append(';')
+                .Append(voucher.BranchId?.ToString(CultureInfo.InvariantCulture)).Append(';')
+                .Append((int)voucher.ApprovalStatus).Append(';')
+                .Append(voucher.IsPosted ? '1' : '0').Append(';')
+                .Append(voucher.IsVoided ? '1' : '0');
+        }
+
+        foreach (var detail in journalDetails)
+        {
+            builder.Append("|JVD:")
+                .Append(detail.JournalVoucherId?.ToString(CultureInfo.InvariantCulture)).Append(';')
+                .Append(detail.Id).Append(';')
+                .Append(detail.AccountId?.ToString(CultureInfo.InvariantCulture)).Append(';')
+                .Append(FormatValue(detail.Debit)).Append(';')
+                .Append(FormatValue(detail.Credit)).Append(';')
+                .Append(detail.Description).Append(';')
+                .Append(detail.PartnerId?.ToString(CultureInfo.InvariantCulture)).Append(';')
+                .Append(detail.BranchId?.ToString(CultureInfo.InvariantCulture)).Append(';')
+                .Append(detail.CostCenterId?.ToString(CultureInfo.InvariantCulture));
+        }
+
+        var bytes = Encoding.UTF8.GetBytes(builder.ToString());
+        return Convert.ToHexString(SHA256.HashData(bytes));
+    }
+
+    private static string FormatValue(object? value)
+        => value switch
+        {
+            null => "<null>",
+            DateTime dateTime => dateTime.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture),
+            DateTimeOffset dateTimeOffset => dateTimeOffset.ToUniversalTime().ToString("O", CultureInfo.InvariantCulture),
+            decimal decimalValue => decimalValue.ToString("G29", CultureInfo.InvariantCulture),
+            double doubleValue => doubleValue.ToString("R", CultureInfo.InvariantCulture),
+            float floatValue => floatValue.ToString("R", CultureInfo.InvariantCulture),
+            IFormattable formattable => formattable.ToString(null, CultureInfo.InvariantCulture),
+            _ => value.ToString() ?? string.Empty
+        };
+}

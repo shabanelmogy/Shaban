@@ -1,0 +1,25 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/models/list.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/models/list.ts (current)
+index a8fa14e..e69de29 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/models/list.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDepositDetail/models/list.ts (current)	
+@@ -1,20 +0,0 @@
+-export interface CashDepositDetailDTO {
+-  id: string;
+-  subscriptionId: number;
+-  isDeleted: boolean;
+-  isActive: boolean;
+-  isValid: boolean;
+-  isChanged: boolean;
+-  deletedAt: string;
+-  deletedBy: string;
+-  createdAt: string;
+-  createdBy: string;
+-  cashDepositId: number;
+-  date: string;
+-  no?: string;
+-  description?: string;
+-  amount: number;
+-  dueAmount: number;
+-  depositedNow: number;
+-}
+-

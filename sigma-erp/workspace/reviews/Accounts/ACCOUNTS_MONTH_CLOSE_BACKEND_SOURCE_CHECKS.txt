@@ -1,0 +1,8 @@
+Source-only C# syntax/XML checks; compilation/EF translation/runtime pending.
+SiGma.Business/Services/AccountServices/MonthCloseService.cs: 0 syntax errors
+SiGma.Business/IServices/IMonthCloseService.cs: 0 syntax errors
+SiGma.ServerAPI/Controller/MonthCloseController.cs: 0 syntax errors
+SiGma.ViewModels/ViewModels/MonthClose/MonthCloseCheckVM.cs: 0 syntax errors
+SiGma.ViewModels/ViewModels/MonthClose/MonthCloseIssueVM.cs: 0 syntax errors
+SiGma.Helpers/Localization/Shared/GeneralMessage.resx: valid XML, 19 unique MonthClose keys
+SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx: valid XML, 19 unique MonthClose keys

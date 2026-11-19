@@ -1,0 +1,44 @@
+<div class="card">
+    <div class="m-3">
+        <p class="h3">{{ 'settings.nationIdFormat' | translate }}</p>
+    </div>
+    <div class="card-body">
+        <form appMockData [formGroup]="nationIdFormatForm">
+            <div class="row justify-content-around my-8">
+                <p class="col-lg-5 col-md-2 d-none d-lg-block h3 ">{{ 'settings.nationIdFormatModel.country' | translate
+                    }}</p>
+                <p class="col-lg-5 col-md-2 d-none d-lg-block h3 ">{{ 'settings.nationIdFormatModel.format' | translate
+                    }}</p>
+            </div>
+            <div formArrayName="items">
+
+                <div *ngFor="let fg of detailsCountryFormats.controls; let i = index" [formGroupName]="i"
+                    class="row mb-3">
+
+                    <div class=" col-lg-5 col-md-3 my-md-4">
+                        <input class="form-control" formControlName="country"
+                            placeholder="{{ 'settings.nationIdFormatModel.country' | translate }}" />
+                    </div>
+
+                    <div class=" col-lg-5 col-md-3 my-md-4">
+                        <input class="form-control" formControlName="format"
+                            placeholder="{{ 'settings.nationIdFormatModel.format' | translate }}" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger  my-md-3" (click)="removeCountryFormat(i)"> {{
+                            'settings.nationIdFormatModel.deleteRow' | translate }} </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button type="button" class="btn btn-primary my-6" (click)="addCountryFormat()"> {{
+                'settings.nationIdFormatModel.addRow' | translate }} </button>
+            <div>
+                <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+export interface CashDepositDTO {
+  id: string;
+  subscriptionId: number;
+  isDeleted: boolean;
+  isActive: boolean;
+  isValid: boolean;
+  isChanged: boolean;
+  deletedAt: string;
+  deletedBy: string;
+  createdAt: string;
+  createdBy: string;
+  date: string;
+  bankId?: number;
+  refNo?: string;
+}
+

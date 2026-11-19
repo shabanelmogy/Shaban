@@ -1,0 +1,31 @@
+{
+  "checks": [
+    {
+      "name": "Existing dialog is appended to body and holds a live unsaved draft",
+      "passed": true,
+      "detail": {
+        "branchId": 64
+      }
+    },
+    {
+      "name": "Withdrawing View hides portal fields while Update remains granted",
+      "passed": true
+    },
+    {
+      "name": "Withdrawing View blocks portal Save",
+      "passed": true
+    },
+    {
+      "name": "Restoring View preserves the existing unsaved dialog draft",
+      "passed": true
+    },
+    {
+      "name": "Portal workflow has no browser errors or failed API calls",
+      "passed": true,
+      "detail": {
+        "errors": [],
+        "failed": []
+      }
+    }
+  ]
+}

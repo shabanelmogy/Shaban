@@ -1,0 +1,59 @@
+The 'vendorChunk' option is not used by this builder and will be ignored.
+- Building...
+
+Application bundle generation failed. [67.185 seconds]
+
+X [ERROR] Could not resolve "~socicon/css/socicon.css"
+
+    src/styles.scss:10:8:
+      10 │ @import "~socicon/css/socicon.css";
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "~socicon/css/socicon.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+X [ERROR] Could not resolve "~@fortawesome/fontawesome-free/css/all.min.css"
+
+    src/styles.scss:11:8:
+      11 │ @import "~@fortawesome/fontawesome-free/css/all.min.css";
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "~@fortawesome/fontawesome-free/css/all.min.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+X [ERROR] Could not resolve "~line-awesome/dist/line-awesome/css/line-awesome.css"
+
+    src/styles.scss:12:8:
+      12 │ @import "~line-awesome/dist/line-awesome/css/line-awesome.css";
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "~line-awesome/dist/line-awesome/css/line-awesome.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+X [ERROR] Could not resolve "~prism-themes/themes/prism-shades-of-purple.css"
+
+    src/styles.scss:13:8:
+      13 │ @import "~prism-themes/themes/prism-shades-of-purple.css";
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "~prism-themes/themes/prism-shades-of-purple.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+X [ERROR] Could not resolve "~bootstrap-icons/font/bootstrap-icons.css"
+
+    src/styles.scss:14:8:
+      14 │ @import "~bootstrap-icons/font/bootstrap-icons.css";
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "~bootstrap-icons/font/bootstrap-icons.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+
+X [ERROR] Could not resolve "~animate.css/animate.css"
+
+    src/styles.scss:15:8:
+      15 │ @import "~animate.css/animate.css";
+         ╵         ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  You can mark the path "~animate.css/animate.css" as external to exclude it from the bundle, which will remove this error and leave the unresolved path in the bundle.
+
+

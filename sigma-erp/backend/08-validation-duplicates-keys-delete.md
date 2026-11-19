@@ -257,6 +257,14 @@ repository's active-row semantics with a filter such as `[IsDeleted] = 0`; other
 a deleted setup row passes the service duplicate check but blocks recreation at the
 database layer.
 
+**Unique link on a TPT-derived row.** When the unique column lives on a derived table
+(TPT) while `SubscriptionId`/`IsDeleted` live on the base table, one index cannot
+include the soft-delete key. Index the link column alone with `IsUnique()` and
+`HasFilter("[Col] IS NOT NULL")` (the linked row already belongs to one tenant), and
+make the entity implement `IReleasesLinksOnRemove`: `Service.MarkRemovedAsync` calls
+it before the soft delete, so every removal path (direct delete, aggregate drop,
+aggregate delete) clears the link. Example: `Driver.StaffId` → `UX_Driver_StaffId`.
+
 ### 2. Foreign key existence check
 
 Every incoming id must be proven to exist before the save. Because the
