@@ -1,0 +1,1041 @@
+diff --git a/src/app/modules/Accounts/openingBalances/components/details/details.component.html b/src/app/modules/Accounts/openingBalances/components/details/details.component.html
+index 23ac4c9..b24c6ee 100644
+--- a/src/app/modules/Accounts/openingBalances/components/details/details.component.html
++++ b/src/app/modules/Accounts/openingBalances/components/details/details.component.html
+@@ -1,5 +1,5 @@
+-<section class="opening-balances-page">
+-  <div class="opening-balances-panel">
++<section class="sigma-editor-page opening-balances-page">
++  <div class="sigma-editor-panel opening-balances-panel">
+     <app-feature-title
+       [title]="'openingBalancesEditor.title' | translate"
+       [subtitle]="'openingBalancesEditor.manage' | translate"
+@@ -12,7 +12,7 @@
+         <span class="opening-balance-header-date__value">
+           <i class="bi bi-calendar-check" aria-hidden="true"></i>
+           @if (openingDate()) {
+-            {{ openingDate() | date:'dd/MM/yyyy' }}
++            {{ openingDate() }}
+           } @else {
+             {{ 'openingBalancesEditor.noOpenFiscalYear' | translate }}
+           }
+@@ -21,6 +21,12 @@
+       </div>
+     </app-feature-title>
+ 
++    <app-opening-balance-editor-state
++      [loading]="batchLoading()"
++      [error]="batchError()"
++      (retry)="loadBatch()"
++    />
++
+     @if (batchReady()) {
+       <app-editor-tabs
+         [tabs]="uiTabs"
+@@ -28,13 +34,11 @@
+         [ariaLabel]="'openingBalancesEditor.title' | translate"
+         idPrefix="opening-balances"
+         appearance="workspace"
+-        [disabled]="isActiveSaving()"
++        [disabled]="isActiveSaving() || discardPending()"
+         (activeTabChange)="setCurrentTab($event)"
+       />
+ 
+-      <app-opening-balance-state-banner [state]="currentState()" />
+-
+-      <div class="opening-balances-content">
++      <div class="opening-balances-content" role="tabpanel" [id]="'opening-balances-panel-' + currentTab" [attr.aria-labelledby]="'opening-balances-tab-' + currentTab" tabindex="0">
+         @switch (currentTab) {
+           @case ('Accounts') { <app-accounts /> }
+           @case ('CostCenter') { <app-cost-center /> }
+diff --git a/src/app/modules/Accounts/openingBalances/components/details/details.component.scss b/src/app/modules/Accounts/openingBalances/components/details/details.component.scss
+index a0fd324..0ec2de0 100644
+--- a/src/app/modules/Accounts/openingBalances/components/details/details.component.scss
++++ b/src/app/modules/Accounts/openingBalances/components/details/details.component.scss
+@@ -1,76 +1,24 @@
+-.opening-balances-page {
+-  --opening-balances-filter-surface: #f8fbfd;
+-  --opening-balances-filter-border: #d7e3eb;
+-  --opening-balances-filter-label: #4a6174;
+-
+-  box-sizing: border-box;
+-  display: flex;
+-  min-width: 0;
+-  min-height: 0;
+-  max-height: calc(
+-    100dvh - var(--bs-app-header-height, 74px) -
+-      var(--bs-app-toolbar-height, 55px) -
+-      var(--bs-app-footer-height, 60px) - 60px
+-  );
+-  flex-direction: column;
+-  padding: 8px 12px 12px;
+-  color: var(--sigma-text, #3f4850);
+-  background: var(--sigma-canvas, #f1f3f7);
+-  overflow: hidden;
+-}
+-
+-.opening-balances-panel {
+-  display: flex;
+-  min-width: 0;
+-  min-height: 0;
+-  flex: 1 1 auto;
+-  flex-direction: column;
+-  padding: 26px 16px 14px;
+-  border: 1px solid var(--sigma-border, #c9d2dc);
+-  border-radius: 8px;
+-  background: var(--sigma-surface, #fff);
+-  box-shadow: 0 2px 6px rgb(28 47 65 / 8%);
+-  overflow: hidden;
+-}
+-
+-.opening-balances-panel > app-feature-title {
+-  display: block;
++.opening-balances-panel > app-feature-title,
++.opening-balances-panel > app-editor-tabs {
+   flex: 0 0 auto;
+-  margin: -18px -8px 14px;
+ }
+ 
+ .opening-balance-header-date {
+   display: grid;
+-  min-width: 190px;
+-  gap: 2px;
+-  padding-inline-start: 12px;
+-  border-inline-start: 1px solid var(--sigma-border, #c9d2dc);
+-}
+-
+-.opening-balance-header-date__label {
+-  color: var(--sigma-text, #3f4850);
+-  font-size: 10px;
+-  font-weight: 800;
++  gap: 0.125rem;
++  min-width: 12rem;
++  color: var(--sigma-muted);
++  text-align: end;
+ }
+ 
++.opening-balance-header-date__label,
+ .opening-balance-header-date small {
+-  max-width: 320px;
+-  color: var(--sigma-muted, #728596);
+-  font-size: 9px;
+-  line-height: 1.25;
++  font-size: 0.75rem;
+ }
+ 
+ .opening-balance-header-date__value {
+-  display: inline-flex;
+-  align-items: center;
+-  gap: 6px;
+-  color: var(--sigma-text, #3f4850);
+-  font-size: 13px;
+-  font-weight: 800;
+-}
+-
+-.opening-balance-header-date__value i {
+-  color: var(--sigma-primary, #3498db);
++  color: var(--sigma-text);
++  font-weight: 700;
+ }
+ 
+ .opening-balances-content {
+@@ -78,420 +26,11 @@
+   min-width: 0;
+   min-height: 0;
+   flex: 1 1 auto;
+-  flex-direction: column;
+   overflow: hidden;
+ }
+ 
+-.opening-balances-panel > app-opening-balance-state-banner {
+-  display: block;
+-  flex: 0 0 auto;
+-}
+-
+-.opening-balances-content > app-accounts,
+-.opening-balances-content > app-cost-center,
+-.opening-balances-content > app-customers,
+-.opening-balances-content > app-suppliers,
+-.opening-balances-content > app-staff,
+-.opening-balances-content > app-stock,
+-.opening-balances-content > app-prepaid,
+-.opening-balances-content > app-deposit {
+-  display: flex;
+-  min-width: 0;
+-  min-height: 0;
+-  flex: 1 1 auto;
+-  flex-direction: column;
+-  overflow: hidden;
+-}
+-
+-.opening-balances-content > app-accounts > form,
+-.opening-balances-content > app-cost-center > form,
+-.opening-balances-content > app-customers > form,
+-.opening-balances-content > app-suppliers > form,
+-.opening-balances-content > app-staff > form,
+-.opening-balances-content > app-stock > form,
+-.opening-balances-content > app-prepaid > form,
+-.opening-balances-content > app-deposit > form {
+-  display: flex;
+-  min-width: 0;
+-  min-height: 0;
+-  flex: 1 1 auto;
+-  flex-direction: column;
+-  overflow: hidden;
+-}
+-
+-.opening-balances-content app-editable-collection-table {
+-  display: flex;
+-  min-width: 0;
+-  min-height: 0;
+-  flex: 1 1 auto;
+-  flex-direction: column;
+-}
+-
+-.opening-balances-content .app-editable-collection-table {
+-  display: flex;
++.opening-balances-content > * {
+   min-width: 0;
+   min-height: 0;
+   flex: 1 1 auto;
+-  flex-direction: column;
+-}
+-
+-.opening-balances-content .app-editable-collection-table__toolbar {
+-  flex: 0 0 auto;
+-}
+-
+-.opening-balances-content .app-editable-collection-table__frame {
+-  min-height: 0;
+-  flex: 1 1 auto;
+-  overflow: auto;
+-  overscroll-behavior: contain;
+-  scrollbar-gutter: stable both-edges;
+-}
+-
+-.opening-balances-content .app-editable-collection-table__frame thead th {
+-  position: sticky;
+-  z-index: 1;
+-  top: 0;
+-}
+-
+-.opening-balances-content form > .opening-balance-filters,
+-.opening-balances-content form > .opening-balance-summary-bar,
+-.opening-balances-content form > .d-flex {
+-  flex: 0 0 auto;
+-}
+-
+-.opening-balance-summary-bar {
+-  display: flex;
+-  min-width: 0;
+-  align-items: center;
+-  justify-content: space-between;
+-  gap: 12px;
+-  margin-top: 8px;
+-  padding: 8px 10px;
+-  border: 1px solid var(--sigma-border, #c9d2dc);
+-  border-radius: 8px;
+-  background: var(--sigma-surface-soft, #f7fafc);
+-}
+-
+-.opening-balance-totals {
+-  display: flex;
+-  min-width: 0;
+-  flex-wrap: wrap;
+-  align-items: stretch;
+-  gap: 7px;
+-}
+-
+-.opening-balance-total {
+-  display: grid;
+-  min-width: 132px;
+-  grid-template-columns: auto;
+-  gap: 1px;
+-  padding: 6px 10px;
+-  border: 1px solid var(--sigma-border, #c9d2dc);
+-  border-radius: 7px;
+-  background: var(--sigma-surface, #fff);
+-  box-shadow: 0 1px 3px rgb(28 47 65 / 5%);
+-}
+-
+-.opening-balance-total__label {
+-  color: var(--sigma-muted, #728596);
+-  font-size: 9px;
+-  font-weight: 800;
+-  letter-spacing: 0.02em;
+-}
+-
+-.opening-balance-total__value {
+-  color: var(--sigma-text, #3f4850);
+-  font-size: 14px;
+-  font-variant-numeric: tabular-nums;
+-  font-weight: 800;
+-  line-height: 1.2;
+-}
+-
+-.opening-balance-total--debit {
+-  border-inline-start: 3px solid #2f9d72;
+-}
+-
+-.opening-balance-total--debit .opening-balance-total__value {
+-  color: #237b59;
+-}
+-
+-.opening-balance-total--credit {
+-  border-inline-start: 3px solid #c46a52;
+-}
+-
+-.opening-balance-total--credit .opening-balance-total__value {
+-  color: #9e503d;
+-}
+-
+-.opening-balance-total--balance {
+-  border-inline-start: 3px solid var(--sigma-primary, #3498db);
+-}
+-
+-.opening-balance-total--balance .opening-balance-total__value {
+-  color: #176f9d;
+-}
+-
+-.opening-balances-page .opening-balance-filters {
+-  display: flex;
+-  flex-wrap: wrap;
+-  align-items: flex-end;
+-  gap: 5px 8px;
+-  margin: 0 0 6px;
+-  padding: 5px 8px 6px;
+-  border: 1px solid var(--opening-balances-filter-border);
+-  border-inline-start: 3px solid var(--sigma-primary, #3498db);
+-  border-radius: 8px;
+-  background:
+-    linear-gradient(
+-      135deg,
+-      color-mix(in srgb, var(--sigma-primary) 5%, transparent),
+-      transparent 42%
+-    ),
+-    var(--opening-balances-filter-surface);
+-  box-shadow: 0 3px 10px rgb(29 54 73 / 5%);
+-}
+-
+-.opening-balances-page .opening-balance-filter-field {
+-  min-width: 170px;
+-  max-width: 300px;
+-  flex: 1 1 170px;
+-}
+-
+-.opening-balances-page .opening-balance-filter-field .form-label {
+-  display: block;
+-  margin: 0 0 2px;
+-  color: var(--opening-balances-filter-label);
+-  font-size: 11px;
+-  font-weight: 700;
+-  letter-spacing: 0.01em;
+-}
+-
+-.opening-balances-page .opening-balance-filter-field input.p-inputtext,
+-.opening-balances-page .opening-balance-filter-field .p-dropdown {
+-  width: 100%;
+-  min-height: var(--sigma-filter-control-height, 34px);
+-  border: 1px solid var(--sigma-border-strong, #b8c7d8);
+-  border-radius: var(--sigma-control-radius, 6px);
+-  color: var(--sigma-text, #3f4850);
+-  background: var(--sigma-surface, #fff);
+-  font-size: 11px;
+-  box-shadow: none;
+-  transition:
+-    border-color 140ms ease,
+-    box-shadow 140ms ease,
+-    background-color 140ms ease;
+-}
+-
+-.opening-balances-page .opening-balance-filter-field input.p-inputtext {
+-  padding-inline: 10px;
+-}
+-
+-.opening-balances-page .opening-balance-filter-field input.p-inputtext:hover,
+-.opening-balances-page .opening-balance-filter-field .p-dropdown:not(.p-disabled):hover {
+-  border-color: color-mix(in srgb, var(--sigma-primary) 55%, var(--sigma-border-strong));
+-}
+-
+-.opening-balances-page .opening-balance-filter-field input.p-inputtext:focus,
+-.opening-balances-page .opening-balance-filter-field .p-dropdown:not(.p-disabled).p-focus {
+-  border-color: var(--sigma-primary, #3498db);
+-  outline: 0;
+-  box-shadow: var(--sigma-control-focus-ring);
+-}
+-
+-.opening-balances-page .opening-balance-filter-field .p-dropdown-label {
+-  display: flex;
+-  align-items: center;
+-  padding-inline: 10px;
+-  color: var(--sigma-text, #3f4850);
+-  font-size: 11px;
+-}
+-
+-.opening-balances-page .opening-balance-filter-field .p-dropdown-trigger,
+-.opening-balances-page .opening-balance-filter-field .p-dropdown-clear-icon {
+-  color: #718697;
+-}
+-
+-.opening-balances-page .opening-balance-filter-actions {
+-  display: flex;
+-  min-width: max-content;
+-  align-items: center;
+-  justify-content: flex-end;
+-  gap: 5px;
+-}
+-
+-.opening-balances-page .opening-balance-filter-actions .p-button {
+-  min-height: var(--sigma-filter-control-height, 34px);
+-  padding: 0 10px;
+-  border-radius: 6px;
+-  box-shadow: none;
+-  font-size: 10px;
+-  font-weight: 800;
+-  letter-spacing: 0.01em;
+-}
+-
+-.opening-balances-page .opening-balance-filter-actions .opening-balance-filter-search {
+-  border-color: var(--sigma-primary, #3498db);
+-  color: #fff;
+-  background: var(--sigma-primary, #3498db);
+-}
+-
+-.opening-balances-page .opening-balance-filter-actions .opening-balance-filter-search:hover,
+-.opening-balances-page .opening-balance-filter-actions .opening-balance-filter-search:focus-visible {
+-  border-color: var(--sigma-primary-hover, #2587c5);
+-  color: #fff;
+-  background: var(--sigma-primary-hover, #2587c5);
+-}
+-
+-.opening-balances-page .opening-balance-filter-actions .opening-balance-filter-reset {
+-  border-color: var(--sigma-border-strong, #b8c7d8);
+-  color: #4d6476;
+-  background: var(--sigma-surface, #fff);
+-}
+-
+-.opening-balances-page .opening-balance-filter-actions .opening-balance-filter-reset:hover,
+-.opening-balances-page .opening-balance-filter-actions .opening-balance-filter-reset:focus-visible {
+-  border-color: var(--sigma-primary, #3498db);
+-  color: #176f9d;
+-  background: #eef8fd;
+-}
+-
+-.opening-balances-page .opening-balance-filter-actions .p-button .p-button-icon {
+-  margin-inline-end: 4px;
+-  font-size: 11px;
+-}
+-
+-.opening-balances-page .app-editable-collection-table th.is-number,
+-.opening-balances-page .opening-balance-amount-cell {
+-  width: 130px;
+-  min-width: 130px;
+-  max-width: 130px;
+-}
+-
+-[data-bs-theme='dark'] .opening-balances-page {
+-  --opening-balances-filter-surface: #172630;
+-  --opening-balances-filter-border: #3d5262;
+-  --opening-balances-filter-label: #b3c4d0;
+-}
+-
+-[data-bs-theme='dark'] .opening-balances-panel {
+-  box-shadow: 0 6px 18px rgb(0 0 0 / 22%);
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-summary-bar,
+-[data-bs-theme='dark'] .opening-balance-total {
+-  border-color: #3d5262;
+-  background: #172630;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-total__label {
+-  color: #9fb3c1;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-total--debit .opening-balance-total__value {
+-  color: #7fd6b2;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-total--credit .opening-balance-total__value {
+-  color: #f0a28d;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-total--balance .opening-balance-total__value {
+-  color: #8fd7f5;
+-}
+-
+-[data-bs-theme='dark'] .opening-balances-page .opening-balance-filter-field input.p-inputtext,
+-[data-bs-theme='dark'] .opening-balances-page .opening-balance-filter-field .p-dropdown {
+-  border-color: #405364;
+-  color: #e5edf4;
+-  background: #14212a;
+-}
+-
+-[data-bs-theme='dark'] .opening-balances-page .opening-balance-filter-field .p-dropdown-label,
+-[data-bs-theme='dark'] .opening-balances-page .opening-balance-filter-field .p-dropdown-trigger,
+-[data-bs-theme='dark'] .opening-balances-page .opening-balance-filter-field .p-dropdown-clear-icon {
+-  color: #dce7ee;
+-}
+-
+-[data-bs-theme='dark'] .opening-balances-page .opening-balance-filter-actions .opening-balance-filter-reset {
+-  border-color: #45596a;
+-  color: #dce7ee;
+-  background: #253542;
+-}
+-
+-[data-bs-theme='dark'] .opening-balances-page .opening-balance-filter-actions .opening-balance-filter-reset:hover,
+-[data-bs-theme='dark'] .opening-balances-page .opening-balance-filter-actions .opening-balance-filter-reset:focus-visible {
+-  border-color: #58abd5;
+-  color: #fff;
+-  background: #304454;
+-}
+-
+-html[dir='rtl'] .opening-balances-page,
+-body[dir='rtl'] .opening-balances-page {
+-  direction: rtl;
+-  text-align: start;
+-}
+-
+-@media (max-width: 640px) {
+-  .opening-balances-page {
+-    padding-inline: 0;
+-  }
+-
+-  .opening-balances-panel {
+-    padding-inline: 10px;
+-    border-inline: 0;
+-    border-radius: 0;
+-  }
+-
+-  .opening-balance-summary-bar {
+-    align-items: stretch;
+-    flex-direction: column;
+-  }
+-
+-  .opening-balance-totals {
+-    display: grid;
+-    grid-template-columns: repeat(2, minmax(0, 1fr));
+-  }
+-
+-  .opening-balance-total {
+-    min-width: 0;
+-  }
+-
+-  .opening-balance-summary-bar app-primary-action-button {
+-    align-self: stretch;
+-  }
+-
+-  .opening-balance-header-date {
+-    width: 100%;
+-    min-width: 0;
+-    padding-inline-start: 0;
+-    padding-top: 8px;
+-    border-inline-start: 0;
+-    border-top: 1px solid var(--sigma-border, #c9d2dc);
+-  }
+-
+-  .opening-balances-page .opening-balance-filters {
+-    flex-direction: column;
+-    align-items: stretch;
+-    gap: 5px;
+-    padding: 6px 8px;
+-  }
+-
+-  .opening-balances-page .opening-balance-filter-field {
+-    width: 100%;
+-    min-width: 0;
+-    max-width: none;
+-    flex: 0 0 auto;
+-  }
+-
+-  .opening-balances-page .opening-balance-filter-actions {
+-    display: grid;
+-    grid-template-columns: repeat(2, minmax(0, 1fr));
+-    width: 100%;
+-    min-width: 0;
+-  }
+-
+-  .opening-balances-page .opening-balance-filter-actions .p-button {
+-    width: 100%;
+-    justify-content: center;
+-  }
+ }
+diff --git a/src/app/modules/Accounts/openingBalances/components/details/details.component.ts b/src/app/modules/Accounts/openingBalances/components/details/details.component.ts
+index 22fb585..4765f7c 100644
+--- a/src/app/modules/Accounts/openingBalances/components/details/details.component.ts
++++ b/src/app/modules/Accounts/openingBalances/components/details/details.component.ts
+@@ -1,9 +1,8 @@
+ import { CommonModule } from '@angular/common';
+-import { Component, DestroyRef, inject, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
++import { Component, DestroyRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+-import { MessageService } from 'primeng/api';
+-import { EMPTY, finalize, of, switchMap } from 'rxjs';
++import { TranslateModule } from '@ngx-translate/core';
++import { EMPTY, Observable, finalize, map, of, switchMap } from 'rxjs';
+ 
+ import { AccountsOpeningBalancesTypeEnum } from 'src/app/_metronic/shared/enums/accountsOpeningBalancesType';
+ import {
+@@ -13,13 +12,13 @@ import {
+ import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+ import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+ import { LoadingService } from 'src/app/modules/shared/service/loading.service';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { formatDisplayDate } from 'src/app/modules/shared/utils/date-utils';
+ 
+ import { OpeningBalanceBatch } from '../../models/batch';
+-import { OpeningBalanceSourceKey } from '../../models/state';
+ import { OpeningBalanceBatchService } from '../../services/opening-balance-batch.service';
+ import { OpeningBalanceStateService } from '../../services/opening-balance-state.service';
+-import { OpeningBalanceStateBannerComponent } from '../../shared/opening-balance-state-banner/opening-balance-state-banner.component';
+-import { parseLocalCalendarDate } from '../../shared/opening-balance-editor.utils';
++import { OpeningBalanceEditorStateComponent } from '../../shared/opening-balance-editor-state/opening-balance-editor-state.component';
+ import { AccountsComponent } from '../accounts/accounts.component';
+ import { CostCenterComponent } from '../cost-center/cost-center.component';
+ import { CustomersComponent } from '../customers/customers.component';
+@@ -45,19 +44,17 @@ import { SuppliersComponent } from '../suppliers/suppliers.component';
+     StockComponent,
+     PrepaidComponent,
+     DepositComponent,
+-    OpeningBalanceStateBannerComponent,
++    OpeningBalanceEditorStateComponent,
+   ],
+   templateUrl: './details.component.html',
+   styleUrl: './details.component.scss',
+-  encapsulation: ViewEncapsulation.None,
++  host: { class: 'sigma-route-host' },
+ })
+ export class DetailsComponent implements OnInit {
+   private readonly confirmationDialog = inject(ConfirmationDialogService);
+   private readonly destroyRef = inject(DestroyRef);
+   private readonly openingBalanceStateService = inject(OpeningBalanceStateService);
+   private readonly openingBalanceBatchService = inject(OpeningBalanceBatchService);
+-  private readonly messageService = inject(MessageService);
+-  private readonly translate = inject(TranslateService);
+   private readonly loading = inject(LoadingService);
+ 
+   @ViewChild(AccountsComponent) private accountsTab?: AccountsComponent;
+@@ -85,20 +82,13 @@ export class DetailsComponent implements OnInit {
+     label: `AccountsOpeningBalancesTypeEnum.${tab}`,
+     icon: this.tabIcons[tab],
+   }));
+-  readonly tabSourceKeys: Record<AccountsOpeningBalancesTypeEnum, OpeningBalanceSourceKey> = {
+-    [AccountsOpeningBalancesTypeEnum.Accounts]: 'OpeningBalanceAccount',
+-    [AccountsOpeningBalancesTypeEnum.CostCenter]: 'OpeningBalanceCostCenter',
+-    [AccountsOpeningBalancesTypeEnum.Customers]: 'OpeningBalanceCustomer',
+-    [AccountsOpeningBalancesTypeEnum.Suppliers]: 'OpeningBalanceSupplier',
+-    [AccountsOpeningBalancesTypeEnum.Staff]: 'OpeningBalanceStaff',
+-    [AccountsOpeningBalancesTypeEnum.Stock]: 'OpeningBalanceStock',
+-    [AccountsOpeningBalancesTypeEnum.Prepaid]: 'OpeningBalancePrepaid',
+-    [AccountsOpeningBalancesTypeEnum.Deposit]: 'OpeningBalanceDeposit',
+-  };
+ 
+   currentTab = AccountsOpeningBalancesTypeEnum.Accounts;
+   readonly batchReady = signal(false);
+-  readonly openingDate = signal<Date | null>(null);
++  readonly batchLoading = signal(false);
++  readonly batchError = signal('');
++  readonly discardPending = signal(false);
++  readonly openingDate = signal('');
+ 
+   ngOnInit(): void {
+     this.loadBatch();
+@@ -106,43 +96,51 @@ export class DetailsComponent implements OnInit {
+ 
+   setCurrentTab(tab: AccountsOpeningBalancesTypeEnum): void {
+     if (tab === this.currentTab) return;
+-    if (this.isActiveSaving()) return;
++    if (this.isActiveSaving() || this.discardPending()) return;
+ 
+     if (!this.activeEditor()?.hasUnsavedChanges()) {
+       this.currentTab = tab;
+       return;
+     }
+ 
++    this.discardPending.set(true);
+     this.confirmationDialog
+-      .confirm({
+-        title: { key: 'openingBalancesEditor.unsavedTitle' },
+-        message: { key: 'openingBalancesEditor.unsavedMessage' },
+-        severity: 'warning',
+-        confirmLabel: { key: 'openingBalancesEditor.discardChanges' },
+-      })
++      .confirmDiscard('openingBalancesEditor')
+       .pipe(takeUntilDestroyed(this.destroyRef))
+       .subscribe((confirmed) => {
+-        if (confirmed) this.currentTab = tab;
++        this.discardPending.set(false);
++        if (confirmed && !this.isActiveSaving()) this.currentTab = tab;
+       });
+   }
+ 
+-  currentState() {
+-    return this.openingBalanceStateService.states()[this.tabSourceKeys[this.currentTab]] ?? null;
++  canDeactivate(): boolean | Observable<boolean> {
++    if (this.isActiveSaving()) return false;
++    if (!this.activeEditor()?.hasUnsavedChanges()) return true;
++    if (this.discardPending()) return false;
++
++    this.discardPending.set(true);
++    return this.confirmationDialog.confirmDiscard('openingBalancesEditor').pipe(
++      map((confirmed) => confirmed && !this.isActiveSaving()),
++      finalize(() => this.discardPending.set(false)),
++    );
+   }
+ 
+   isActiveSaving(): boolean {
+-    return this.activeEditor()?.saving() ?? false;
++    return this.activeEditor()?.isBusy() ?? false;
+   }
+ 
+-  private loadBatch(): void {
++  loadBatch(): void {
++    if (this.batchLoading() || this.isActiveSaving() || this.discardPending()) return;
+     this.loading.startLoading();
+     this.batchReady.set(false);
++    this.batchLoading.set(true);
++    this.batchError.set('');
+     this.openingBalanceBatchService
+       .get()
+       .pipe(
+         switchMap((result) => {
+           if (!result.isSuccess || !result.entity) {
+-            this.showBatchFailure(result.message);
++            this.batchError.set(result.message?.trim() || 'apiErrors.requestSummary');
+             return EMPTY;
+           }
+ 
+@@ -151,7 +149,7 @@ export class DetailsComponent implements OnInit {
+           if (result.entity.isConfigured) return of(result);
+ 
+           if (!result.entity.openingDate) {
+-            this.showBatchFailure(this.translate.instant('openingBalancesEditor.noOpenFiscalYear'));
++            this.batchError.set('openingBalancesEditor.noOpenFiscalYear');
+             return EMPTY;
+           }
+ 
+@@ -162,7 +160,7 @@ export class DetailsComponent implements OnInit {
+         }),
+         switchMap((result) => {
+           if (!result.isSuccess || !result.entity) {
+-            this.showBatchFailure(result.message);
++            this.batchError.set(result.message?.trim() || 'apiErrors.requestSummary');
+             return EMPTY;
+           }
+ 
+@@ -170,46 +168,32 @@ export class DetailsComponent implements OnInit {
+           return this.openingBalanceStateService.load(true);
+         }),
+         takeUntilDestroyed(this.destroyRef),
+-        finalize(() => this.loading.endLoading()),
++        finalize(() => {
++          this.batchLoading.set(false);
++          this.loading.endLoading();
++        }),
+       )
+       .subscribe({
+         next: (stateResult) => {
+           if (!stateResult.isSuccess) {
+-            this.showBatchFailure(stateResult.message);
++            this.batchError.set(stateResult.message?.trim() || 'apiErrors.requestSummary');
+             return;
+           }
+ 
+           this.batchReady.set(true);
+         },
+-        error: (error) => this.showBatchFailure(this.extractServerMessage(error)),
++        error: (error) => this.batchError.set(apiErrorMessage(error, 'apiErrors.unexpectedMessage')),
+       });
+   }
+ 
+   private applyBatch(batch: OpeningBalanceBatch): void {
+-    this.openingDate.set(
+-      batch.openingDate ? parseLocalCalendarDate(batch.openingDate) : null,
+-    );
+-  }
+-
+-  private showBatchFailure(message?: string | null): void {
+-    this.messageService.add({
+-      key: 'global',
+-      severity: 'error',
+-      summary: this.translate.instant('apiErrors.requestTitle'),
+-      detail: message || this.translate.instant('apiErrors.requestSummary'),
+-    });
+-  }
+-
+-  private extractServerMessage(error: unknown): string {
+-    const candidate = error as { error?: { message?: unknown } };
+-    return typeof candidate?.error?.message === 'string'
+-      ? candidate.error.message
+-      : this.translate.instant('apiErrors.unexpectedMessage');
++    this.openingDate.set(batch.openingDate ? formatDisplayDate(batch.openingDate) : '');
+   }
+ 
+   private activeEditor(): {
+     hasUnsavedChanges(): boolean;
+     saving(): boolean;
++    isBusy(): boolean;
+     reloadEditor(): void;
+   } | undefined {
+     switch (this.currentTab) {
+diff --git a/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.html b/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.html
+deleted file mode 100644
+index fc4bd15..0000000
+--- a/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.html
++++ /dev/null
+@@ -1,61 +0,0 @@
+-@if (state) {
+-  <div class="opening-balance-state" [class.is-locked]="state.isLocked">
+-    <div class="opening-balance-state__summary">
+-      <span class="opening-balance-state__label">
+-        {{ 'openingBalancesEditor.accountingState' | translate }}
+-      </span>
+-
+-      @if (state.journalVouchers.length === 0) {
+-        <span class="opening-balance-state__chip is-draft">
+-          <i class="bi bi-pencil-square" aria-hidden="true"></i>
+-          {{ 'openingBalancesEditor.noJournalYet' | translate }}
+-        </span>
+-      } @else {
+-        @for (voucher of state.journalVouchers; track voucher.id) {
+-          <span
+-            class="opening-balance-state__chip"
+-            [class.is-draft]="voucher.status === 'Draft'"
+-            [class.is-approved]="voucher.status === 'Approved'"
+-            [class.is-posted]="voucher.status === 'Posted'"
+-            [class.is-voided]="voucher.status === 'Voided'"
+-          >
+-            <i
+-              [class]="voucher.status === 'Posted'
+-                ? 'bi bi-check-circle-fill'
+-                : voucher.status === 'Approved'
+-                  ? 'bi bi-patch-check-fill'
+-                : voucher.status === 'Voided'
+-                  ? 'bi bi-x-octagon-fill'
+-                  : 'bi bi-pencil-square'"
+-              aria-hidden="true"
+-            ></i>
+-            <span>{{ statusKey(voucher.status) | translate }}</span>
+-            @if (voucher.no) {
+-              <strong>#{{ voucher.no }}</strong>
+-            }
+-            @if (voucher.isPosted && voucher.postingDate) {
+-              <span class="opening-balance-state__posting-date">
+-                {{ 'openingBalancesEditor.postingDate' | translate }}:
+-                {{ voucher.postingDate | date: 'yyyy-MM-dd HH:mm' }}
+-              </span>
+-            }
+-          </span>
+-        }
+-      }
+-
+-      @if (state.hasMixedDates) {
+-        <span class="opening-balance-state__meta is-warning">
+-          <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+-          {{ 'openingBalancesEditor.mixedDates' | translate }}
+-        </span>
+-      }
+-    </div>
+-
+-    @if (state.isLocked && state.lockReason) {
+-      <div class="opening-balance-state__lock" role="alert">
+-        <i class="bi bi-lock-fill" aria-hidden="true"></i>
+-        <span>{{ lockReasonKey(state.lockReason) | translate }}</span>
+-      </div>
+-    }
+-  </div>
+-}
+diff --git a/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.scss b/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.scss
+deleted file mode 100644
+index 881f4f1..0000000
+--- a/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.scss
++++ /dev/null
+@@ -1,144 +0,0 @@
+-:host {
+-  display: block;
+-  min-width: 0;
+-}
+-
+-.opening-balance-state {
+-  display: flex;
+-  min-width: 0;
+-  align-items: center;
+-  justify-content: space-between;
+-  gap: 10px;
+-  margin: 0 0 8px;
+-  padding: 7px 9px;
+-  border: 1px solid var(--sigma-border, #d2dce5);
+-  border-radius: 7px;
+-  background: var(--sigma-surface-soft, #f7fafc);
+-}
+-
+-.opening-balance-state__summary {
+-  display: flex;
+-  min-width: 0;
+-  flex-wrap: wrap;
+-  align-items: center;
+-  gap: 6px;
+-}
+-
+-.opening-balance-state__label {
+-  color: var(--sigma-muted, #728596);
+-  font-size: 10px;
+-  font-weight: 800;
+-}
+-
+-.opening-balance-state__chip,
+-.opening-balance-state__meta {
+-  display: inline-flex;
+-  align-items: center;
+-  gap: 4px;
+-  min-height: 25px;
+-  padding: 3px 7px;
+-  border-radius: 999px;
+-  font-size: 10px;
+-  font-weight: 700;
+-  white-space: nowrap;
+-}
+-
+-.opening-balance-state__chip {
+-  border: 1px solid #d2dce5;
+-  color: #536a7d;
+-  background: #fff;
+-}
+-
+-.opening-balance-state__chip.is-draft {
+-  border-color: #c5d7e5;
+-  color: #37657f;
+-  background: #eef6fb;
+-}
+-
+-.opening-balance-state__chip.is-posted {
+-  border-color: #b9dbc4;
+-  color: #2d6c42;
+-  background: #eef9f1;
+-}
+-
+-.opening-balance-state__chip.is-approved {
+-  border-color: #d7c990;
+-  color: #735f16;
+-  background: #fff9df;
+-}
+-
+-.opening-balance-state__posting-date {
+-  color: inherit;
+-  font-weight: 600;
+-  opacity: 0.82;
+-}
+-
+-.opening-balance-state__chip.is-voided {
+-  border-color: #efc2c7;
+-  color: #a32f3b;
+-  background: #fff1f2;
+-}
+-
+-.opening-balance-state__meta {
+-  color: var(--sigma-muted, #728596);
+-  background: color-mix(in srgb, var(--sigma-primary, #3498db) 7%, transparent);
+-}
+-
+-.opening-balance-state__meta.is-warning {
+-  color: #8a5c00;
+-  background: #fff8df;
+-}
+-
+-.opening-balance-state__lock {
+-  display: inline-flex;
+-  max-width: 520px;
+-  align-items: center;
+-  gap: 6px;
+-  padding: 5px 8px;
+-  border: 1px solid #efc2c7;
+-  border-radius: 6px;
+-  color: #a32f3b;
+-  background: #fff1f2;
+-  font-size: 10px;
+-  font-weight: 700;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-state {
+-  border-color: #405364;
+-  background: #20313d;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-state__chip {
+-  border-color: #405364;
+-  background: #182630;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-state__chip.is-posted {
+-  border-color: #366f4a;
+-  color: #bfe9cb;
+-  background: #173223;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-state__chip.is-approved {
+-  border-color: #74652f;
+-  color: #f4dfa0;
+-  background: #382f16;
+-}
+-
+-[data-bs-theme='dark'] .opening-balance-state__chip.is-voided,
+-[data-bs-theme='dark'] .opening-balance-state__lock {
+-  border-color: #7c4147;
+-  color: #ffc5cb;
+-  background: #3a2024;
+-}
+-
+-@media (max-width: 767px) {
+-  .opening-balance-state {
+-    align-items: stretch;
+-    flex-direction: column;
+-  }
+-
+-  .opening-balance-state__lock {
+-    max-width: none;
+-  }
+-}
+diff --git a/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.ts b/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.ts
+deleted file mode 100644
+index b7fb8c8..0000000
+--- a/src/app/modules/Accounts/openingBalances/shared/opening-balance-state-banner/opening-balance-state-banner.component.ts
++++ /dev/null
+@@ -1,36 +0,0 @@
+-import { CommonModule } from '@angular/common';
+-import { Component, Input } from '@angular/core';
+-import { TranslateModule } from '@ngx-translate/core';
+-
+-import {
+-  OpeningBalanceTabState,
+-  openingBalanceLockReasonKey,
+-} from '../../models/state';
+-
+-@Component({
+-  selector: 'app-opening-balance-state-banner',
+-  standalone: true,
+-  imports: [CommonModule, TranslateModule],
+-  templateUrl: './opening-balance-state-banner.component.html',
+-  styleUrl: './opening-balance-state-banner.component.scss',
+-})
+-export class OpeningBalanceStateBannerComponent {
+-  @Input() state: OpeningBalanceTabState | null = null;
+-
+-  statusKey(status: string): string {
+-    switch (status) {
+-      case 'Posted':
+-        return 'openingBalancesEditor.statusPosted';
+-      case 'Approved':
+-        return 'openingBalancesEditor.statusApproved';
+-      case 'Voided':
+-        return 'openingBalancesEditor.statusVoided';
+-      default:
+-        return 'openingBalancesEditor.statusDraft';
+-    }
+-  }
+-
+-  lockReasonKey(reason: string | null): string {
+-    return openingBalanceLockReasonKey(reason);
+-  }
+-}

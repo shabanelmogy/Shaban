@@ -1,0 +1,27 @@
+{
+  "status": "Draft",
+  "ownerVerificationPending": true,
+  "scope": "Fleet route and full list/editor/preparation event adoption, 2026-11-07",
+  "verification": "137 focused Angular tests passed; final app build and runtime/visual acceptance tracked in FLEET_ACCESS_ADOPTION_FINAL_RECONCILIATION.md",
+  "rows": [
+    {
+      "route": "Fleet",
+      "resource": ["Equipment", "EquipmentSalePreparation"],
+      "view": ["Equipment.View"],
+      "create": ["Equipment.Create", "Branch.Lookup", "CarMake.Lookup", "CarModel.View", "VehicleType.Lookup"],
+      "update": ["Equipment.View", "Equipment.Update", "Branch.Lookup", "CarMake.Lookup", "CarModel.View", "VehicleType.Lookup"],
+      "keys": ["Equipment.View", "Equipment.Create", "Equipment.Update", "Equipment.Delete", "Branch.Lookup", "CarMake.Lookup", "CarMake.Create", "CarModel.View", "CarModel.Create", "CarModel.GetMakeAndModelDropdown", "VehicleType.Lookup", "EquipmentSalePreparation.Get", "EquipmentSalePreparation.Assets", "EquipmentSalePreparation.Preview", "EquipmentSalePreparation.Confirm", "Media.UploadMedia", "Media.DeleteMedia"],
+      "optionalListLookupKeys": ["Branch.Lookup", "CarModel.GetMakeAndModelDropdown", "VehicleType.Lookup"],
+      "optionalEnhancementKeys": ["MockData.GetSettings", "MockData.Generate"],
+      "evidence": [
+        "pages/routing.ts Fleet lazy route and Sales/Fleet/fleet.routes.ts list/create/edit/view/details alias",
+        "FleetService actual Equipment list/detail/POST/PUT/DELETE and CarMake/CarModel POST requests",
+        "CarModelService.getGetMakeAndModels calls CarModel/GetMakeAndModel -> CarModelController.GetMakeAndModelDropdownAsync",
+        "EquipmentController inherits supported generic operations; EquipmentSalePreparationController Get/Assets/Preview/Confirm have independent keys",
+        "Fleet list/actions/handlers and editor mode requirements plus create callback current-read reload, row-specific Media cleanup, MockData/editor dialog requirements",
+        "Sale preparation request cancellation and direct handlers include the parent dialog requirement; confirm already sent retains its outcome; journal links consult real route policy",
+        "Shared FileField, DocumentUploadTracker and EditableRows/Table preserve defaults and fence new operations without cancelling sent upload/cleanup outcomes"
+      ]
+    }
+  ]
+}

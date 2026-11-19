@@ -1,0 +1,133 @@
+Status: Implemented — source-only
+Owner verification pending: yes
+Current complete component/new model. Historical prior refactor changes remain in scoped diff.
+
+src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.ts
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { IncomeStatementYtd2DTO, IncomeStatementYtd2Filter, IncomeStatementYtd2Line } from '../../models/list';
+import { IncomeStatementYtd2Row } from '../../models/income-statement-ytd2-row';
+import { IncomeStatementYtd2Service } from '../../services/income-statement-ytd2.service';
+import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
+import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
+import { reportNumber, reportMonth, reportBoolean } from '../../../shared/report-family/account-report-values';
+
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
+import { DataTableColumn, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+
+@Component({
+  selector: 'app-income-statement-ytd2', standalone: true,
+  imports: [AccountReportPageComponent],
+  templateUrl: './list.component.html', styleUrl: './list.component.scss',
+  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+})
+export class IncomeStatementYtd2Component {
+  private readonly service = inject(IncomeStatementYtd2Service);
+  private readonly translate = inject(TranslateService);
+  private readonly branches = inject(BranchService);
+  private readonly amountColumns: ReadonlyArray<DataTableColumn<IncomeStatementYtd2Row>> =
+    (['currentMonth', 'currentYtd', 'previousYearMonth'] as const).map<DataTableColumn<IncomeStatementYtd2Row>>(field => ({
+      field, header: `incomeStatementYtd2.${field}`, type: 'money', width: '18%',
+      headerClass: 'text-end', cellClass: 'text-end sigma-data-table__cell--numeric',
+    }));
+  private readonly columns: ReadonlyArray<DataTableColumn<IncomeStatementYtd2Row>> = [
+    {
+      field: 'name', header: 'incomeStatementYtd2.account', width: '46%',
+      cellClass: 'sigma-data-table__cell--wrap',
+      value: row => row.labelKey ? this.translate.instant(row.labelKey)
+        : [row.code, row.name].filter(Boolean).join(' — ') || '—',
+    },
+    ...this.amountColumns,
+  ];
+  readonly config: AccountReportConfig<IncomeStatementYtd2DTO, IncomeStatementYtd2Filter, IncomeStatementYtd2Row> = {
+    id: 'incomeStatementYtd2', titleKey: 'incomeStatementYtd2.title', icon: 'bi bi-file-earmark-spreadsheet', exportFileName: 'IncomeStatementYtd2',
+    summaryDensity: 'slim', summaryMaxHeight: 80,
+    filters: [
+      { key: 'month', labelKey: 'incomeStatementYtd2.month', kind: 'month', initialValue: new Date(), required: true },
+      { key: 'branchId', labelKey: 'incomeStatementYtd2.branch', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
+      { key: 'hideZeroActivity', labelKey: 'incomeStatementYtd2.hideZeroActivity', kind: 'checkbox', initialValue: false },
+      { key: 'summaryReport', labelKey: 'incomeStatementYtd2.summaryReport', kind: 'checkbox', initialValue: false }
+    ],
+    load: filter => this.service.getReport(filter),
+    buildFilter: raw => {
+
+      return { filter: { month: reportMonth(raw, 'month'), branchId: reportNumber(raw, 'branchId'), hideZeroActivity: reportBoolean(raw, 'hideZeroActivity'), summaryReport: reportBoolean(raw, 'summaryReport') } };
+    },
+    sections: response => [
+      {
+        id: 'statement', dataKey: 'id', minWidth: '52rem',
+        rows: [...(response.lines ?? []).map(line => this.accountRow(line, true)), ...this.subtotalRows(response)],
+        columns: this.columns, rowTone: row => row.tone,
+        hierarchy: { rowKey: row => row.id, children: row => row.children, defaultExpanded: true },
+      },
+    ],
+    exportRows: (response, _sections, translate) => this.exportRows(response, translate),
+    summaryCards: response => [
+      { id: 'profitLossCurrentMonth', labelKey: 'incomeStatementYtd2.profitLossCurrentMonth', value: response.profitLossCurrentMonth, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'profitLossCurrentYtd', labelKey: 'incomeStatementYtd2.profitLossCurrentYtd', value: response.profitLossCurrentYtd, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+      { id: 'profitLossPreviousYearMonth', labelKey: 'incomeStatementYtd2.profitLossPreviousYearMonth', value: response.profitLossPreviousYearMonth, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' }
+    ]
+  };
+
+  private accountRow(line: IncomeStatementYtd2Line, root = false): IncomeStatementYtd2Row {
+    return {
+      ...line, id: `account-${line.accountId}`, tone: root ? 'section' : null,
+      children: (line.children ?? []).map(child => this.accountRow(child)),
+    };
+  }
+
+  private subtotalRows(response: IncomeStatementYtd2DTO): IncomeStatementYtd2Row[] {
+    const entries = [
+      { key: 'grossProfitLoss', value: response.grossProfitLoss },
+      { key: 'profitLossBeforeSaleOfAssets', value: response.profitLossBeforeSaleOfAssets },
+      { key: 'profitLossOnSaleOfAssets', value: response.profitLossOnSaleOfAssets },
+      { key: 'netProfitLoss', value: response.netProfitLoss },
+    ];
+    return entries.map((entry, index) => ({
+      ...entry.value, id: `subtotal-${entry.key}`, labelKey: `incomeStatementYtd2.${entry.key}`,
+      accountId: -(index + 1), code: '', name: '', level: 1, parentId: null,
+      allowChildren: false, children: [], tone: entry.key === 'netProfitLoss' ? 'total' : 'subtotal',
+    }));
+  }
+
+  private exportRows(response: IncomeStatementYtd2DTO, translate: (key: string) => string): Array<Record<string, string | number>> {
+    const subtotalColumns: ReadonlyArray<DataTableColumn<IncomeStatementYtd2Row>> = [
+      { field: 'name', header: 'incomeStatementYtd2.subtotal', value: row => translate(row.labelKey!) },
+      ...this.amountColumns,
+    ];
+    const accountColumns: ReadonlyArray<DataTableColumn<IncomeStatementYtd2Line>> = [
+      { field: 'name', header: 'incomeStatementYtd2.account', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—' },
+      { field: 'currentMonth', header: 'incomeStatementYtd2.currentMonth', type: 'money' },
+      { field: 'currentYtd', header: 'incomeStatementYtd2.currentYtd', type: 'money' },
+      { field: 'previousYearMonth', header: 'incomeStatementYtd2.previousYearMonth', type: 'money' },
+    ];
+    const rows: Array<Record<string, string | number>> = dataTableExportRows(this.subtotalRows(response), subtotalColumns, translate).map(row => ({
+      [translate('accountReports.section')]: translate('incomeStatementYtd2.subtotal'), ...row,
+    }));
+    const accounts: IncomeStatementYtd2Line[] = [];
+    const visit = (source: ReadonlyArray<IncomeStatementYtd2Line>): void => {
+      for (const line of source) {
+        accounts.push(line);
+        visit(line.children ?? []);
+      }
+    };
+    visit(response.lines ?? []);
+    for (const row of dataTableExportRows(accounts, accountColumns, translate)) {
+      rows.push({ [translate('accountReports.section')]: translate('incomeStatementYtd2.title'), ...row });
+    }
+    return rows;
+  }
+}
+
+
+src/app/modules/Accounts/IncomeStatementYtd2/models/income-statement-ytd2-row.ts
+import { IncomeStatementYtd2Line } from './list';
+
+export interface IncomeStatementYtd2Row extends IncomeStatementYtd2Line {
+  id: string;
+  labelKey?: string;
+  tone: 'section' | 'subtotal' | 'total' | null;
+  children: IncomeStatementYtd2Row[];
+}

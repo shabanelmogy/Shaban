@@ -1,0 +1,731 @@
+diff --git a/src/app/modules/Accounts/Budget/components/budget/budget.component.html b/src/app/modules/Accounts/Budget/components/budget/budget.component.html
+index 8303016..dad4e2b 100644
+--- a/src/app/modules/Accounts/Budget/components/budget/budget.component.html
++++ b/src/app/modules/Accounts/Budget/components/budget/budget.component.html
+@@ -1,149 +1,53 @@
+-<!-- ═══════════════════ FILTER FORM ═══════════════════ -->
+-<form class="sigma-filter-form" [formGroup]="filterForm">
+-  <div class="row g-3 align-items-end">
+-
+-    <!-- Fiscal Year (required) -->
+-    <div class="col-md-4">
+-      <label class="form-label fw-semibold">
+-        {{ 'budget.fiscalYear' | translate }}
+-        <span class="text-danger">*</span>
+-      </label>
+-      <p-dropdown formControlName="fiscalYearId" [options]="fiscalYears()" optionLabel="value" optionValue="id"
+-        [showClear]="true" [filter]="true" placeholder="{{ 'budget.selectFiscalYear' | translate }}"
+-        [ngClass]="{ 'ng-invalid ng-dirty': filterForm.get('fiscalYearId')?.invalid && filterForm.get('fiscalYearId')?.touched }">
+-      </p-dropdown>
+-      <small class="text-danger"
+-        *ngIf="filterForm.get('fiscalYearId')?.invalid && filterForm.get('fiscalYearId')?.touched">
+-        {{ 'budget.fiscalYearRequired' | translate }}
+-      </small>
+-    </div>
+-
+-    <!-- Account Type -->
+-    <div class="col-md-4">
+-      <label class="form-label fw-semibold">{{ 'budget.accountType' | translate }}</label>
+-      <p-dropdown formControlName="accountType" [options]="accountTypes()" optionLabel="label" optionValue="value"
+-        [showClear]="false" placeholder="{{ 'budget.selectAccountType' | translate }}">
+-      </p-dropdown>
+-    </div>
+-  </div>
+-
+-  <!-- Buttons -->
+-  <div class="d-flex justify-content-end my-4">
+-    <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)">
+-    </app-buttons>
+-  </div>
+-</form>
+-
+-<!-- ═══════════════════ SUMMARY KPI CARDS ═══════════════════ -->
+-<div class="row g-4 mt-3 mb-6" *ngIf="months().length > 0">
+-  <div class="col-md-6">
+-    <div class="card border-0 shadow-sm budget-kpi-card">
+-      <div class="card-body py-4 d-flex align-items-center gap-3">
+-        <span class="kpi-icon bg-primary-subtle text-primary">
+-          <i class="bi bi-calendar3 fs-4"></i>
+-        </span>
+-        <div>
+-          <div class="text-muted small fw-semibold">{{ 'budget.fiscalPeriod' | translate }}</div>
+-          <div class="fw-bold fs-6">{{ months()[0] }} — {{ months()[months().length - 1] }}</div>
+-        </div>
++<section class="sigma-list-page">
++  <div class="sigma-list-panel">
++    <header class="sigma-list-header">
++      <app-feature-title [title]="'budget.title' | translate" icon="bi bi-calendar2-range" />
++    </header>
++    <form class="budget-filters" appFilterPanel [mainColumns]="2" [stableLayout]="true" [busy]="busy()" [formGroup]="filterForm" (ngSubmit)="search()" (resetRequested)="reset()">
++      <div class="sigma-filter-field">
++        <label for="budget-year">{{ 'budget.fiscalYear' | translate }}</label>
++        <p-dropdown inputId="budget-year" formControlName="fiscalYearId" [options]="fiscalYears()" optionLabel="value" optionValue="id" [showClear]="true" [filter]="true" appendTo="body" />
++        <app-field-error [control]="filterForm.controls.fiscalYearId" reserveMessage="validationMessages.required" />
+       </div>
+-    </div>
+-  </div>
+-  <div class="col-md-6">
+-    <div class="card border-0 shadow-sm budget-kpi-card">
+-      <div class="card-body py-4 d-flex align-items-center gap-3">
+-        <span class="kpi-icon bg-success-subtle text-success">
+-          <i class="bi bi-wallet2 fs-4"></i>
+-        </span>
+-        <div>
+-          <div class="text-muted small fw-semibold">{{ 'budget.totalBudget' | translate }}</div>
+-          <div class="fw-bold fs-5 text-success">{{ totalBudget() | number: '1.2-2' }}</div>
+-        </div>
++      <div class="sigma-filter-field">
++        <label for="budget-category">{{ 'budget.accountType' | translate }}</label>
++        <p-dropdown inputId="budget-category" formControlName="accountType" [options]="accountTypes" optionLabel="label" optionValue="value" appendTo="body">
++          <ng-template pTemplate="item" let-option>{{ ('budget.accountTypes.' + option.value) | translate }}</ng-template>
++          <ng-template pTemplate="selectedItem" let-option>{{ ('budget.accountTypes.' + option.value) | translate }}</ng-template>
++        </p-dropdown>
+       </div>
++      <ng-container appFilterActions>
++        <app-primary-action-button type="submit" [label]="'general.search' | translate" icon="bi bi-search" [disabled]="busy() || !!optionsError()" />
++        <button type="button" class="sigma-secondary-button" (click)="export()" [disabled]="busy() || !rows().length">{{ 'general.exportExcel' | translate }}</button>
++      </ng-container>
++    </form>
++    @if (optionsError()) {
++      <app-state-message kind="error" [message]="optionsError()" />
++      <button type="button" class="btn btn-secondary" (click)="loadOptions()" [disabled]="busy()">{{ 'general.retry' | translate }}</button>
++    }
++    @if (errorMessage()) { <app-state-message kind="error" [message]="errorMessage()" /> }
++    @if (refreshPending()) {
++      <button type="button" class="sigma-secondary-button" (click)="retrySavedRefresh()" [disabled]="busy()">{{ 'general.retry' | translate }}</button>
++    }
++    @if (loadingBudget()) { <app-state-message kind="loading" /> }
++    @if (dirty()) { <div class="sigma-alert" role="status">{{ 'budget.unsavedChanges' | translate }}</div> }
++    <app-summary-cards [cards]="summaryCards()" [ariaLabel]="'budget.totalBudget' | translate" density="slim" layout="row" [minCardWidth]="140" [maxHeight]="80" />
++    <div class="sigma-list-table">
++      <app-editable-collection-table [title]="'budget.title' | translate" [headingVisible]="false" [columns]="columns()" [fillHeight]="true" [stickyHeader]="true" [emptyMessage]="(hasLoaded() ? 'general.noData' : 'budget.selectFiscalYearPrompt') | translate" tableMinWidth="60rem">
++        <ng-template [appEditableCollectionRow]="rows()" let-row>
++          <td>{{ row.source.accountCode || '—' }} — {{ row.source.accountName || '—' }}</td>
++          @for (month of months(); track month) {
++            <td>
++              <p-inputNumber [formControl]="row.amounts.controls[month]" [inputId]="'budget-' + row.source.accountId + '-' + month" [ariaLabel]="(row.source.accountName || row.source.accountCode || row.source.accountId) + ' ' + month" [minFractionDigits]="2" [maxFractionDigits]="2" [useGrouping]="true" mode="decimal" inputStyleClass="sigma-numeric-input" />
++              <app-field-error [control]="row.amounts.controls[month]" />
++            </td>
++          }
++          <td><span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ rowTotal(row) | money }}</span></td>
++        </ng-template>
++      </app-editable-collection-table>
+     </div>
++    <footer class="sigma-editor-footer">
++      <app-primary-action-button [label]="'general.save' | translate" icon="bi bi-floppy" [loading]="saving()" [disabled]="busy() || refreshPending() || !dirty()" (pressed)="save()" />
++    </footer>
+   </div>
+-</div>
+-
+-<!-- ═══════════════════ UNSAVED CHANGES BANNER ═══════════════════ -->
+-<div class="alert alert-warning d-flex align-items-center gap-2 py-2 px-3 mb-3" *ngIf="hasUnsavedChanges()">
+-  <i class="bi bi-exclamation-triangle-fill"></i>
+-  <span>{{ 'budget.unsavedChanges' | translate }}</span>
+-</div>
+-
+-<!-- ═══════════════════ EDITABLE BUDGET TABLE ═══════════════════ -->
+-<div class="budget-table-wrapper" *ngIf="rows().length > 0">
+-  <p-table [value]="rows()" [scrollable]="true" scrollDirection="both" [resizableColumns]="true"
+-    columnResizeMode="expand" styleClass="p-datatable-gridlines budget-table" [tableStyle]="{ 'min-width': '60rem' }">
+-
+-    <!-- ── Header ── -->
+-    <ng-template pTemplate="header">
+-      <tr>
+-        <th pResizableColumn class="col-account frozen-col text-start" style="min-width:260px">
+-          {{ 'budget.account' | translate }}
+-        </th>
+-        <th pResizableColumn *ngFor="let m of months()" class="text-center" style="min-width:7rem">
+-          {{ m }}
+-        </th>
+-        <th pResizableColumn class="text-end fw-bold" style="min-width:140px">
+-          {{ 'budget.total' | translate }}
+-        </th>
+-      </tr>
+-    </ng-template>
+-
+-    <!-- ── Body ── -->
+-    <ng-template pTemplate="body" let-row>
+-      <tr class="budget-row">
+-        <!-- Account name/code -->
+-        <td class="frozen-col" style="min-width:260px">
+-          <span class="account-code text-muted me-1">{{ row.accountCode }}</span>
+-          <span class="account-name">{{ row.accountName }}</span>
+-        </td>
+-
+-        <!-- Monthly amount cells (editable) -->
+-        <td *ngFor="let m of months()" class="text-center" style="min-width:7rem">
+-          <p-inputNumber [(ngModel)]="row.editedAmounts[m]" (ngModelChange)="onCellChange(row, m, $event)"
+-            [minFractionDigits]="2" [maxFractionDigits]="2" inputStyleClass="budget-cell-input" [useGrouping]="true"
+-            mode="decimal">
+-          </p-inputNumber>
+-        </td>
+-
+-        <!-- Row total -->
+-        <td class="text-end fw-semibold" style="min-width:140px">
+-          {{ row.editedTotal | number: '1.2-2' }}
+-        </td>
+-      </tr>
+-    </ng-template>
+-
+-    <!-- ── Footer totals ── -->
+-    <ng-template pTemplate="footer">
+-      <tr class="budget-footer-row">
+-        <td class="frozen-col fw-bold" style="min-width:260px">
+-          {{ 'budget.columnTotal' | translate }}
+-        </td>
+-        <td *ngFor="let m of months()" class="text-center fw-bold" style="min-width:7rem">
+-          {{ getMonthTotal(m) | number: '1.2-2' }}
+-        </td>
+-        <td class="text-end fw-bold text-success" style="min-width:140px">
+-          {{ totalBudget() | number: '1.2-2' }}
+-        </td>
+-      </tr>
+-    </ng-template>
+-
+-    <!-- ── Empty ── -->
+-    <ng-template pTemplate="emptymessage">
+-      <tr>
+-        <td [attr.colspan]="months().length + 2" class="text-center text-muted py-5">
+-          <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+-          {{ 'general.noData' | translate }}
+-        </td>
+-      </tr>
+-    </ng-template>
+-
+-  </p-table>
+-</div>
+-
+-<!-- ═══════════════════ EMPTY STATE (no search yet) ═══════════════════ -->
+-<div class="text-center py-5 text-muted" *ngIf="rows().length === 0 && months().length === 0">
+-  <i class="bi bi-bar-chart-line fs-1 d-block mb-3 opacity-25"></i>
+-  <p class="mb-0">{{ 'budget.selectFiscalYearPrompt' | translate }}</p>
+-</div>
+\ No newline at end of file
++</section>
+diff --git a/src/app/modules/Accounts/Budget/components/budget/budget.component.ts b/src/app/modules/Accounts/Budget/components/budget/budget.component.ts
+index a10e24f..3aef60c 100644
+--- a/src/app/modules/Accounts/Budget/components/budget/budget.component.ts
++++ b/src/app/modules/Accounts/Budget/components/budget/budget.component.ts
+@@ -1,292 +1,264 @@
+-import {
+-  Component,
+-  DestroyRef,
+-  inject,
+-  OnInit,
+-  signal,
+-} from '@angular/core';
+-import {
+-  FormBuilder,
+-  FormGroup,
+-  FormsModule,
+-  ReactiveFormsModule,
+-  Validators,
+-} from '@angular/forms';
+ import { CommonModule } from '@angular/common';
+-import { TranslateModule } from '@ngx-translate/core';
+-import { TableModule } from 'primeng/table';
++import { HttpErrorResponse } from '@angular/common/http';
++import { Component, DestroyRef, OnInit, computed, effect, inject, signal } from '@angular/core';
++import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
++import { FormBuilder, FormControl, FormRecord, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
++import { TranslateModule, TranslateService } from '@ngx-translate/core';
+ import { DropdownModule } from 'primeng/dropdown';
+ import { InputNumberModule } from 'primeng/inputnumber';
+-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+-import { finalize, forkJoin } from 'rxjs';
+-
+-import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+-import { Result } from 'src/app/modules/shared/models/result';
+-import { Results } from 'src/app/modules/shared/models/results';
+-import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+-import { ButtonModel } from 'src/app/modules/shared/models/button-model';
+-import { ButtonsComponent } from 'src/app/modules/shared/components/buttons/buttons.component';
+-import { PageInfoService } from 'src/app/_metronic/layout/core/page-info.service';
++import { MessageService } from 'primeng/api';
++import { Observable, Subscription, finalize, of, switchMap, throwError } from 'rxjs';
+ import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
+-
+ import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
++import { EditableCollectionRowDirective, EditableCollectionTableColumn, EditableCollectionTableComponent } from 'src/app/modules/shared/components/editable-collection-table/editable-collection-table.component';
++import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
++import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
++import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
++import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
++import { SummaryCardsComponent } from 'src/app/modules/shared/components/summary-cards/summary-cards.component';
++import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
++import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
++import { FilterActionsDirective } from 'src/app/modules/shared/components/filter-panel/filter-panel.directives';
++import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
++import { Results } from 'src/app/modules/shared/models/results';
++import { MoneyPipe } from 'src/app/modules/shared/pipes/money.pipe';
++import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
++import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { focusField } from 'src/app/modules/shared/utils/focus-field';
++import { ACCOUNT_TYPES, BudgetDTO, BudgetEntry, BudgetFilter, BudgetPeriod, BudgetRow } from '../../models/budget';
+ import { BudgetService } from '../../services/budget.service';
+-import {
+-  ACCOUNT_TYPES,
+-  AccountTypeOption,
+-  BudgetDTO,
+-  BudgetEntry,
+-  BudgetFilter,
+-  BudgetRow,
+-  BudgetSaveRequest,
+-} from '../../models/budget';
+ 
+-/** Internal row model enriched with editing state */
+-interface BudgetGridRow extends BudgetRow {
+-  /** Current (possibly edited) amounts — keeps original separated from edits */
+-  editedAmounts: { [month: string]: number };
+-  /** Computed total from editedAmounts */
+-  editedTotal: number;
++interface BudgetEditorRow {
++  source: BudgetRow;
++  amounts: FormRecord<FormControl<number | null>>;
+ }
++const finiteAmount: ValidatorFn = control => control.value == null || Number.isFinite(control.value) ? null : { number: true };
+ 
+ @Component({
+-  selector: 'app-budget',
+-  standalone: true,
+-  imports: [
+-    CommonModule,
+-    FormsModule,
+-    ReactiveFormsModule,
+-    TranslateModule,
+-    TableModule,
+-    DropdownModule,
+-    InputNumberModule,
+-    ButtonsComponent,
+-  ],
+-  templateUrl: './budget.component.html',
+-  styleUrl: './budget.component.scss',
++  selector: 'app-budget', standalone: true,
++  imports: [CommonModule, ReactiveFormsModule, TranslateModule, DropdownModule, InputNumberModule,
++    EditableCollectionTableComponent, EditableCollectionRowDirective, FeatureTitleComponent, FieldErrorComponent,
++    PrimaryActionButtonComponent, StateMessageComponent, SummaryCardsComponent, FilterPanelComponent, FilterActionsDirective, MoneyPipe],
++  templateUrl: './budget.component.html', styleUrl: './budget.component.scss',
++  host: { class: 'sigma-route-host' },
+ })
+ export class BudgetComponent extends BaseComponentService implements OnInit {
+-  private budgetService    = inject(BudgetService);
+-  private fiscalYearService = inject(FiscalYearService);
+-  private destroyRef       = inject(DestroyRef);
+-  private fb               = inject(FormBuilder);
+-  private pageInfoService  = inject(PageInfoService);
+-
+-  // ─── Properties ────────────────────────────────────────────────────────────
+-  filterForm!: FormGroup;
+-
+-  fiscalYears    = signal<DropDownSelect[]>([]);
+-  accountTypes   = signal<AccountTypeOption[]>(ACCOUNT_TYPES);
+-  months         = signal<string[]>([]);
+-  rows           = signal<BudgetGridRow[]>([]);
+-  exportData     = signal<any[]>([]);
+-  totalBudget    = signal<number>(0);
+-  isSaving       = signal<boolean>(false);
+-
+-  /** Map of `accountId_monthLabel` → new amount (only changed cells) */
+-  private changedCells = new Map<string, number>();
+-
+-  // ─── Lifecycle ─────────────────────────────────────────────────────────────
+-  ngOnInit(): void {
+-    this.pageInfoService.updateTitle('Budget');
+-    this.initForm();
+-    this.loadDropdowns();
+-  }
+-
+-  // ─── Init ──────────────────────────────────────────────────────────────────
+-  initForm(): void {
+-    this.filterForm = this.fb.group({
+-      fiscalYearId: [null, Validators.required],
+-      accountType:  [1],   // default = Asset
+-    });
+-  }
+-
+-  loadDropdowns(): void {
+-    this.loading.startLoading();
+-    forkJoin({
+-      fiscalYears: this.fiscalYearService.getSelectList<Results<DropDownSelect>>(),
+-    }).pipe(
+-      takeUntilDestroyed(this.destroyRef),
+-      finalize(() => this.loading.endLoading()),
+-    ).subscribe({
+-      next: (res) => {
+-        if (res.fiscalYears.isSuccess && res.fiscalYears.entities?.length)
+-          this.fiscalYears.set(res.fiscalYears.entities);
+-      },
++  private readonly service = inject(BudgetService);
++  private readonly fiscalYearService = inject(FiscalYearService);
++  private readonly destroyRef = inject(DestroyRef);
++  private readonly fb = inject(FormBuilder);
++  private readonly translate = inject(TranslateService);
++  private readonly confirmation = inject(ConfirmationDialogService);
++  private readonly messageService = inject(MessageService);
++  private request?: Subscription;
++  private rowChanges = new Subscription();
++  private applied: BudgetFilter | null = null;
++  private readonly revision = signal(0);
++  readonly fiscalYears = signal<DropDownSelect[]>([]);
++  readonly loadingOptions = signal(false);
++  readonly optionsError = signal('');
++  readonly loadingBudget = signal(false);
++  readonly saving = signal(false);
++  readonly refreshPending = signal(false);
++  readonly confirming = signal(false);
++  readonly errorMessage = signal('');
++  readonly hasLoaded = signal(false);
++  readonly months = signal<string[]>([]);
++  readonly periods = signal<BudgetPeriod[]>([]);
++  readonly rows = signal<BudgetEditorRow[]>([]);
++  readonly accountTypes = ACCOUNT_TYPES;
++  readonly filterForm = this.fb.group({
++    fiscalYearId: this.fb.control<number | null>(null, Validators.required),
++    accountType: this.fb.nonNullable.control(1),
++  });
++  readonly busy = computed(() => this.loadingBudget() || this.loadingOptions() || this.saving() || this.confirming());
++  readonly dirty = computed(() => {
++    this.revision();
++    return this.rows().some(row => this.months().some(month =>
++      (row.amounts.controls[month].value ?? 0) !== (row.source.monthlyAmounts[month] ?? 0)));
++  });
++  readonly columns = computed<ReadonlyArray<EditableCollectionTableColumn>>(() => [
++    { header: 'budget.account', minWidth: '240px' },
++    ...this.months().map(month => ({ header: month, minWidth: '130px', numeric: true })),
++    { header: 'budget.total', minWidth: '130px', numeric: true },
++  ]);
++  readonly summaryCards = computed<ReadonlyArray<SummaryCard>>(() => {
++    this.revision();
++    const months = this.months();
++    if (!months.length) return [];
++    return [
++      { id: 'period', labelKey: 'budget.fiscalPeriod', value: `${months[0]} — ${months[months.length - 1]}`, format: 'text', icon: 'bi bi-calendar3', accent: 'primary' },
++      { id: 'total', labelKey: this.dirty() ? 'budget.totalPreview' : 'budget.totalBudget', value: this.rows().reduce((sum, row) => sum + this.rowTotal(row), 0), format: 'money', icon: 'bi bi-wallet2', accent: 'success' },
++      ...months.map(month => ({ id: month, labelKey: month, value: this.rows().reduce((sum, row) => sum + (row.amounts.controls[month].value ?? 0), 0), format: 'money' as const, icon: 'bi bi-calendar-month', accent: 'primary' as const })),
++    ];
++  });
++
++  constructor() {
++    super();
++    effect(() => {
++      const disabled = this.busy() || this.refreshPending();
++      for (const row of this.rows()) {
++        if (disabled) row.amounts.disable({ emitEvent: false });
++        else row.amounts.enable({ emitEvent: false });
++      }
+     });
++    this.destroyRef.onDestroy(() => this.rowChanges.unsubscribe());
+   }
+ 
+-  // ─── Buttons ───────────────────────────────────────────────────────────────
+-  buttons: ButtonModel[] = [
+-    { id: 'btn-search',  text: 'general.search',     type: 'primary',   class: 'me-2', icon: 'bi bi-search'             },
+-    { id: 'btn-save',    text: 'general.save',        type: 'primary',   class: 'me-2', icon: 'bi bi-floppy'              },
+-    { id: 'btn-reset',   text: 'general.reset',       type: 'secondary', class: 'me-2', icon: 'bi bi-arrow-counterclockwise' },
+-    { id: 'btn-excel',   text: 'general.exportExcel', type: 'secondary', class: 'me-2', icon: 'bi bi-file-earmark-excel' },
+-  ];
+-
+-  onButtonClick(buttonId: string): void {
+-    switch (buttonId) {
+-      case 'btn-search': this.onSearch();  break;
+-      case 'btn-save':   this.onSave();    break;
+-      case 'btn-reset':  this.onReset();   break;
+-      case 'btn-excel':  this.onExcel();   break;
+-    }
+-  }
+-
+-  onSearch(): void {
+-    if (this.filterForm.invalid) {
+-      this.filterForm.markAllAsTouched();
+-      return;
+-    }
+-    this.getListItems();
+-  }
+-
+-  onReset(): void {
+-    this.filterForm.reset({ fiscalYearId: null, accountType: 1 });
+-    this.clearResults();
+-  }
+-
+-  onExcel(): void {
+-    onExportToExcel(this.exportData, 'Budget');
+-  }
+-
+-  // ─── Data Fetch ────────────────────────────────────────────────────────────
+-  getListItems(): void {
+-    const filter = this.buildFilter();
+-    this.loading.startLoading();
+-    this.changedCells.clear();
+-
+-    this.budgetService.get<Result<BudgetDTO>>(filter)
+-      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.endLoading()))
++  ngOnInit(): void { this.loadOptions(); }
++  loadOptions(): void {
++    if (this.loadingOptions()) return;
++    this.loadingOptions.set(true); this.optionsError.set('');
++    this.fiscalYearService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true })
++      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loadingOptions.set(false)))
+       .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess && res.entity) {
+-            const e = res.entity;
+-            const months = e.months ?? [];
+-            const gridRows = this.toGridRows(e.rows ?? [], months);
+-            this.months.set(months);
+-            this.rows.set(gridRows);
+-            this.exportData.set(this.buildExportRows(gridRows, months));
+-            this.recalcTotalBudget();
+-          }
++        next: result => {
++          this.fiscalYears.set(result.isSuccess ? result.entities ?? [] : []);
++          if (!result.isSuccess) this.optionsError.set(result.message || 'apiErrors.unexpectedMessage');
+         },
++        error: error => { this.fiscalYears.set([]); this.optionsError.set(apiErrorMessage(error, 'apiErrors.unexpectedMessage')); },
+       });
+   }
+-
+-  private buildFilter(): BudgetFilter {
+-    const v = this.filterForm.value;
+-    const filter: BudgetFilter = {};
+-    if (v.fiscalYearId != null) filter.fiscalYearId = v.fiscalYearId;
+-    if (v.accountType  != null) filter.accountType  = v.accountType;
+-    return filter;
++  search(): void {
++    if (this.busy() || this.optionsError()) return;
++    if (this.filterForm.invalid) { this.filterForm.markAllAsTouched(); focusField('budget-year'); return; }
++    const values = this.filterForm.getRawValue();
++    const filter: BudgetFilter = { fiscalYearId: values.fiscalYearId!, accountType: values.accountType };
++    this.discard().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
++      if (!confirmed || this.loadingBudget() || this.saving()) return;
++      this.load(filter);
++    });
+   }
+-
+-  private toGridRows(apiRows: BudgetRow[], months: string[]): BudgetGridRow[] {
+-    return apiRows.map(row => {
+-      const editedAmounts: { [m: string]: number } = {};
+-      for (const m of months) editedAmounts[m] = row.monthlyAmounts[m] ?? 0;
+-      return {
+-        ...row,
+-        editedAmounts,
+-        editedTotal: this.sumAmounts(editedAmounts),
+-      };
++  reset(): void {
++    if (this.busy()) return;
++    this.discard().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
++      if (!confirmed || this.loadingBudget() || this.saving()) return;
++      this.filterForm.reset({ fiscalYearId: null, accountType: 1 });
++      this.applied = null; this.rows.set([]); this.months.set([]); this.periods.set([]); this.hasLoaded.set(false); this.refreshPending.set(false); this.errorMessage.set('');
+     });
+   }
+-
+-  // ─── Inline Editing ────────────────────────────────────────────────────────
+-  onCellChange(row: BudgetGridRow, month: string, value: number | null): void {
+-    const amount = value ?? 0;
+-    row.editedAmounts[month] = amount;
+-    row.editedTotal = this.sumAmounts(row.editedAmounts);
+-    this.recalcTotalBudget();
+-
+-    const key = `${row.accountId}_${month}`;
+-    this.changedCells.set(key, amount);
++  canDeactivate(): Observable<boolean> {
++    if (this.busy()) return of(false);
++    return this.discard();
+   }
+-
+-  /** POST only the changed entries to the API */
+-  onSave(): void {
+-    if (this.changedCells.size === 0) return;
+-
+-    const fiscalYearId: number = this.filterForm.value.fiscalYearId;
+-    const entries: BudgetEntry[] = [];
+-
+-    this.changedCells.forEach((amount, key) => {
+-      const [accountIdStr, monthLabel] = key.split(/_(.+)/);  // split on first underscore only
+-      const parsed = this.parseMonthLabel(monthLabel);
+-      if (!parsed) return;
+-      entries.push({ accountId: +accountIdStr, year: parsed.year, month: parsed.month, amount });
+-    });
+-
+-    if (!entries.length) return;
+-
+-    const request: BudgetSaveRequest = { fiscalYearId, entries };
+-    this.isSaving.set(true);
+-    this.budgetService.post<null>(request)
+-      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.isSaving.set(false)))
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess) {
+-            this.changedCells.clear();
+-            // Sync saved state so unsaved-changes banner clears
+-            for (const row of this.rows()) {
+-              for (const m of this.months()) {
+-                row.monthlyAmounts[m] = row.editedAmounts[m];
+-              }
+-              row.total = row.editedTotal;
+-            }
+-          }
++  private discard(): Observable<boolean> {
++    if (!this.dirty()) return of(true);
++    if (this.confirming()) return of(false);
++    this.confirming.set(true);
++    this.filterForm.disable({ emitEvent: false });
++    return this.confirmation.confirmDiscard('budget').pipe(finalize(() => {
++      this.confirming.set(false);
++      if (!this.loadingBudget() && !this.saving()) this.filterForm.enable({ emitEvent: false });
++    }));
++  }
++  private load(filter: BudgetFilter): void {
++    this.request?.unsubscribe(); this.loadingBudget.set(true); this.errorMessage.set('');
++    this.rows.set([]); this.months.set([]); this.periods.set([]); this.applied = null; this.hasLoaded.set(false);
++    this.refreshPending.set(false);
++    this.rowChanges.unsubscribe(); this.rowChanges = new Subscription();
++    this.filterForm.disable({ emitEvent: false });
++    this.request = this.service.loadBudget(filter)
++      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
++        this.loadingBudget.set(false); this.filterForm.enable({ emitEvent: false });
++      })).subscribe({
++        next: result => {
++          if (!result.isSuccess || !result.entity) { this.errorMessage.set(result.message || 'apiErrors.unexpectedMessage'); return; }
++          this.accept(result.entity, filter);
+         },
++        error: error => this.errorMessage.set(apiErrorMessage(error, 'apiErrors.unexpectedMessage')),
+       });
+   }
+-
+-  // ─── Helpers ───────────────────────────────────────────────────────────────
+-  private clearResults(): void {
+-    this.rows.set([]);
+-    this.months.set([]);
+-    this.exportData.set([]);
+-    this.totalBudget.set(0);
+-    this.changedCells.clear();
++  private accept(dto: BudgetDTO, filter: BudgetFilter): void {
++    this.rowChanges.unsubscribe(); this.rowChanges = new Subscription();
++    this.applied = { ...filter }; this.months.set(dto.months ?? []); this.periods.set(dto.periods ?? []);
++    this.rows.set((dto.rows ?? []).map(source => {
++      const amounts = new FormRecord<FormControl<number | null>>({});
++      for (const month of this.months()) {
++        amounts.addControl(month, this.fb.control<number | null>(source.monthlyAmounts[month] ?? 0, finiteAmount));
++      }
++      return { source, amounts };
++    }));
++    for (const row of this.rows()) this.rowChanges.add(row.amounts.valueChanges.subscribe(() => this.amountChanged()));
++    this.hasLoaded.set(true); this.refreshPending.set(false); this.revision.update(value => value + 1);
+   }
+-
+-  private buildExportRows(gridRows: BudgetGridRow[], months: string[]): any[] {
+-    return gridRows.map(row => {
+-      const r: any = { code: row.accountCode, name: row.accountName };
+-      for (const m of months) r[m] = row.editedAmounts[m] ?? 0;
+-      r['total'] = row.editedTotal;
+-      return r;
+-    });
++  amountChanged(): void { this.revision.update(value => value + 1); }
++  rowTotal(row: BudgetEditorRow): number {
++    if (this.months().every(month => (row.amounts.controls[month].value ?? 0) === (row.source.monthlyAmounts[month] ?? 0))) return row.source.total;
++    return Object.values(row.amounts.controls).reduce((sum, control) => sum + (control.value ?? 0), 0);
+   }
+-
+-  private recalcTotalBudget(): void {
+-    const total = this.rows().reduce((sum, r) => sum + r.editedTotal, 0);
+-    this.totalBudget.set(total);
++  private entries(): BudgetEntry[] {
++    const entries: BudgetEntry[] = [];
++    for (const row of this.rows()) for (const month of this.months()) {
++      const value = row.amounts.controls[month].value ?? 0;
++      if (value === (row.source.monthlyAmounts[month] ?? 0)) continue;
++      const parsed = this.parseMonth(month);
++      if (parsed) entries.push({ accountId: row.source.accountId, year: parsed.year, month: parsed.month, amount: value });
++    }
++    return entries;
+   }
+-
+-  private sumAmounts(amounts: { [m: string]: number }): number {
+-    return Object.values(amounts).reduce((s, v) => s + (v ?? 0), 0);
++  private parseMonth(label: string): { year: number; month: number } | null {
++    const period = this.periods().find(value => value.label === label);
++    return period ? { year: period.year, month: period.month } : null;
+   }
+-
+-  /** Parse "JAN-25" → { year: 2025, month: 1 } */
+-  parseMonthLabel(label: string): { year: number; month: number } | null {
+-    if (!label) return null;
+-    const parts = label.split('-');
+-    if (parts.length !== 2) return null;
+-    const monthMap: { [k: string]: number } = {
+-      JAN: 1, FEB: 2, MAR: 3, APR: 4, MAY: 5, JUN: 6,
+-      JUL: 7, AUG: 8, SEP: 9, OCT: 10, NOV: 11, DEC: 12,
+-    };
+-    const month = monthMap[parts[0].toUpperCase()];
+-    const year  = 2000 + parseInt(parts[1], 10);
+-    if (!month || isNaN(year)) return null;
+-    return { year, month };
++  save(): void {
++    if (this.busy() || this.refreshPending() || !this.applied?.fiscalYearId || !this.dirty()) return;
++    for (const row of this.rows()) {
++      if (row.amounts.invalid) {
++        row.amounts.markAllAsTouched();
++        const month = this.months().find(value => row.amounts.controls[value].invalid);
++        if (month) focusField(`budget-${row.source.accountId}-${month}`);
++        return;
++      }
++    }
++    if (this.months().some(month => !this.parseMonth(month))) { this.errorMessage.set('budget.monthContractError'); return; }
++    const filter = { ...this.applied };
++    const request = { fiscalYearId: filter.fiscalYearId!, entries: this.entries() };
++    this.saving.set(true); this.errorMessage.set(''); this.filterForm.disable({ emitEvent: false });
++    this.service.saveBudget(request).pipe(
++      switchMap(result => {
++        if (!result.isSuccess) return throwError(() => new Error(result.message || 'apiErrors.unexpectedMessage'));
++        this.refreshPending.set(true);
++        return this.service.loadBudget(filter);
++      }),
++      takeUntilDestroyed(this.destroyRef),
++      finalize(() => { this.saving.set(false); this.filterForm.enable({ emitEvent: false }); }),
++    ).subscribe({
++      next: result => {
++        if (!result.isSuccess || !result.entity) { this.errorMessage.set('budget.refreshAfterSaveError'); return; }
++        this.accept(result.entity, filter);
++        this.messageService.add({ key: 'global', severity: 'success', summary: this.translate.instant('general.success'), detail: this.translate.instant('budget.savedSuccess') });
++      },
++      error: error => this.errorMessage.set(this.refreshPending() ? 'budget.refreshAfterSaveError'
++        : error instanceof Error && !(error instanceof HttpErrorResponse) ? error.message : apiErrorMessage(error, 'apiErrors.unexpectedMessage')),
++    });
+   }
+-
+-  getMonthTotal(month: string): number {
+-    return this.rows().reduce((s, r) => s + (r.editedAmounts[month] ?? 0), 0);
++  retrySavedRefresh(): void {
++    if (this.busy() || !this.refreshPending() || !this.applied) return;
++    const filter = { ...this.applied };
++    this.saving.set(true); this.errorMessage.set(''); this.filterForm.disable({ emitEvent: false });
++    this.service.loadBudget(filter).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
++      this.saving.set(false); this.filterForm.enable({ emitEvent: false });
++    })).subscribe({
++      next: result => {
++        if (!result.isSuccess || !result.entity) { this.errorMessage.set('budget.refreshAfterSaveError'); return; }
++        this.accept(result.entity, filter);
++        this.messageService.add({ key: 'global', severity: 'success', summary: this.translate.instant('general.success'), detail: this.translate.instant('budget.savedSuccess') });
++      },
++      error: () => this.errorMessage.set('budget.refreshAfterSaveError'),
++    });
+   }
+-
+-  hasUnsavedChanges(): boolean {
+-    return this.changedCells.size > 0;
++  export(): void {
++    if (this.busy() || !this.rows().length) return;
++    const rows: Array<Record<string, string | number>> = this.rows().map(row => {
++      const output: Record<string, string | number> = {
++        [this.translate.instant('journal.accountCode')]: row.source.accountCode ?? '—',
++        [this.translate.instant('journal.accountName')]: row.source.accountName ?? '—',
++      };
++      for (const month of this.months()) output[month] = row.amounts.controls[month].value ?? 0;
++      output[this.translate.instant('budget.total')] = this.rowTotal(row);
++      return output;
++    });
++    onExportToExcel(signal(rows), 'Budget');
+   }
+ }

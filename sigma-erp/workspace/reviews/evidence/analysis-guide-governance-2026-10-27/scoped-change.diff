@@ -1,0 +1,646 @@
+--- before/docs/README.md
++++ after/docs/README.md
+@@ -20,12 +20,18 @@
+ تعديل صغير، شاشة، أو تغيير مشترك. للتغيير الجديد الكبير أو الغامض استخدم
+ [حزمة التخطيط](recipe-system/generated/PLAN-00-maintenance-evolution.md).
+ 
+-٣. اكتشف المصدر والأدلة، وجمّد العقود التي ستستهلكها الشاشة: الحقول، واجهات
++٣. راجع الجزء المرتبط بالشاشة من [دليل التحليل المرجعي](references/speed-analysis/README.md)
++وشرح الشاشة الأصلي المرتبط به قبل تثبيت العقود. سجّل المصادر التي قرأتها وما
++تثبته والفجوات أو التعارضات؛ الدليل يشرح سبيد للاستفادة منه في تحليل سيجما،
++ولا يقرر وحده سلوك سيجما أو تصميمها. اتبع
++[قاعدة مراجعة دليل التحليل](master/02-screenshot-and-visual-evidence-policy.md#mandatory-analysis-guide-review-before-screen-contracts-owner-instruction-2026-10-27).
++
++٤. اكتشف المصدر والأدلة، وجمّد العقود التي ستستهلكها الشاشة: الحقول، واجهات
+ البيانات، التحقق، الإجراءات والحسابات عند وجودها. استخدم
+ [قرارات العقود](master/04-required-decisions-artifacts-and-contract-invariants.md)
+ والمراحل المناسبة؛ لا تنشئ قرارات تجارية من تشابه شاشة أخرى.
+ 
+-٤. نفّذ الشكل المختار بمالكيه المشتركين وقواعد الواجهة والخلفية ذات الصلة.
++٥. نفّذ الشكل المختار بمالكيه المشتركين وقواعد الواجهة والخلفية ذات الصلة.
+ قبل استخدام الحزم شغّل فحص اتساقها الموضح أدناه. انتهِ بالمطابقة ودليل المستخدم
+ داخل التطبيق وفق [متطلبات التسليم](master/07-end-to-end-reconciliation-and-final-report.md).
+ 
+@@ -41,11 +47,16 @@
+ ١. حدّد الشاشة وهدف المراجعة، واقرأ العقد الجاري من
+ [فهرس المراجعات](<F:/My Work/Sigma/reviews/INDEX.md>) إن وُجد.
+ 
+-٢. اختر النوع من الكتالوج، وتتبع المصدر من الحقول إلى الخدمة وواجهة البيانات
++٢. راجع الفصل المناسب من [دليل التحليل وشرح الشاشة](references/speed-analysis/README.md)،
++وقارن وصفه بالعقد الجاري ودليل الشاشة الحالي داخل سيجما إن وُجد. سجّل
++المصادر والاختلافات والقرارات الناقصة قبل تغيير العقود؛ تنطبق هذه الخطوة
++على الصيانة والإصلاح أيضًا، ويكفي للتعديل الصغير الجزء الذي يمسه.
++
++٣. اختر النوع من الكتالوج، وتتبع المصدر من الحقول إلى الخدمة وواجهة البيانات
+ ثم الحفظ أو العرض أو الإجراءات. قارن السلوك والمظهر والعقود بكتلها الحالية.
+ اقرأ المرجع الذي يسميه الشكل؛ لا تعتبر كل ما في المصدر القديم نمطًا صحيحًا.
+ 
+-٣. سجّل المؤكد والمفقود والمتعارض، ثم راجع النتيجة النهائية. المراجعة وحدها
++٤. سجّل المؤكد والمفقود والمتعارض، ثم راجع النتيجة النهائية. المراجعة وحدها
+ قراءة فقط. إصلاح المصدر يحتاج طلب تنفيذ صريحًا وفق تعليمات مساحة العمل؛
+ القوالب والحزم لا تمنح تفويضًا إضافيًا.
+ 
+@@ -87,6 +98,7 @@
+ | كيف تُبنى الواجهة؟ | [كتاب الواجهة](SIGMA_UI_PATTERNS.md)، ثم الكتل التي يسميها نوع الشاشة |
+ | كيف تُبنى الخدمة والعقود والحفظ؟ | [كتاب الخلفية](SIGMA_BACKEND_PATTERNS.md)، ثم أبسط نمط صحيح |
+ | ما الخطة أو العقد الخاص بهذه الميزة؟ | [المراجعات والعقود الجارية](<F:/My Work/Sigma/reviews/INDEX.md>) |
++| ما المرجع التحليلي وشرح الشاشة الذي أراجعه قبل الإنشاء أو الصيانة؟ | [دليل التحليل ومكتبة المصادر](references/speed-analysis/README.md)، وفق حدود الأدلة في الكتاب الرئيسي |
+ | ما الذي تغير سابقًا؟ | [سجل التغيير](CHANGELOG.md) و[الأرشيف](archive/README.md)، عند الحاجة التاريخية فقط |
+ 
+ الوضع المعتمد قد يسبق ترحيل بعض الشاشات. كل استثناء أو نقص يظل مسجلًا؛ وجود
+--- before/docs/CHANGELOG.md
++++ after/docs/CHANGELOG.md
+@@ -2,6 +2,18 @@
+ 
+ Current verification scope and versions are in the book preambles. The archive
+ is historical evidence and does not override the current canonical blocks.
++
++## 2026-10-27 — Analysis guide review for new and maintained screens
++
++Master1/2/4/7 require a scoped review of the relevant analysis-guide chapter and
++original screen explanation before freezing/changing contracts for creation or
++existing-screen maintenance/review/fixes. Record actual sources, applicability,
++accepted/excluded evidence and missing decisions, then reconcile at handoff.
++The Speed collection is relocated under `references/speed-analysis/` and remains
++functional evidence, not Sigma source, permission, accounting or implementation
++authority. README, workspace entry, execution skill and planning/discovery/final
++packet templates route to the same gate. No application-source or runtime change
++is implied; the existing in-app guide completion gate remains separate.
+ 
+ ## 2026-10-26 — Retained editor reference eligibility
+ 
+--- before/docs/master/01-governance-and-review-principles.md
++++ after/docs/master/01-governance-and-review-principles.md
+@@ -77,7 +77,9 @@
+ 
+ **Per-screen checklist:**
+ 1. Pick the screen type (`ui/screens/00-catalog.md`) and the tier (above).
+-2. Freeze the contracts the type lists.
++2. Review the relevant analysis guide and original screen explanation under
++   Master2's mandatory analysis-guide gate; compare any existing contract and
++   Sigma user-guide topic, then freeze the contracts the type lists.
+ 3. Adopt every shared piece the type's blocks name (UI backlog 39 and 40, backend backlog 21–24), and remove the feature copies.
+ 4. Remove the server-owned fields from the payloads (UI block 2).
+ 5. List the *Authorization candidates* (UI block 26).
+@@ -123,6 +125,9 @@
+    writers, readers, calculations, endpoints, Angular consumers, reports,
+    permissions, tenancy, integrations, migrations, and related documentation.
+    Record what already works and what is only partial or legacy.
++   Apply Master2's analysis-guide gate before selecting the target: read the
++   relevant guide chapter and original screen explanation, record applicability
++   and conflicts, and keep reference proposals distinct from Sigma contracts.
+ 3. **Create a Logic Ambiguity Register.** Every unclear rule is marked Confirmed,
+    Derived, Missing, Conflicting, or Uncertain with the source/owner needed to
+    resolve it. Implementation must never silently choose an Uncertain rule.
+--- before/docs/master/02-screenshot-and-visual-evidence-policy.md
++++ after/docs/master/02-screenshot-and-visual-evidence-policy.md
+@@ -21,6 +21,45 @@
+ An external system the owner names as a functional reference (for example the Speed Auto Systems
+ demo for Rental workflows) is behavioural evidence only, never implementation authority. Its
+ access and usage notes are kept outside the governance book: `reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md`.
++
++### Mandatory analysis-guide review before screen contracts (owner instruction, 2026-10-27)
++
++For every new screen and every review, maintenance, fix or refactor of an
++existing screen, review the relevant analysis-guide section **before freezing
++or changing the affected contracts**. Start at the documentation's
++[analysis reference entry](../references/speed-analysis/README.md); select only
++the chapters and original screen explanations related to the requested scope.
++Do not preload the whole library. For an existing screen, also read its current
++feature contract and existing Sigma user-guide topic when available.
++
++The collected guide explains **Speed Auto Systems**, and is an analysis
++reference for Sigma work, not a specification of existing Sigma behavior.
++Follow a summary claim to its original screen explanation in the local library
++or supplied source; record the source ID/link, chapter/topic, known date/version
++and applicability. Video links alone are not reviewed video evidence.
++
++In the existing feature review or plan, record the screen/mode, sources actually
++read, relevant fields/filters/actions/states/validations and financial/workflow
++constraints, then compare them with Sigma's current source and frozen decisions.
++Distinguish directly documented behavior, declared features, reviewer proposals
++and unresolved decisions; map usable evidence into Master2's classifications.
++For a tier S task, a short row covering the changed element is sufficient.
++Record a supported Not applicable outcome when no relevant explanation exists;
++name missing or inaccessible material and any decision it leaves unresolved.
++Missing reference content alone does not block independent source-supported
++work; a missing material business/API/financial decision blocks only its
++dependent contract under Master4.
++
++This review is mandatory evidence discovery, not permission to implement all
++guide features, adopt its proposed data model or copy its layout, API,
++permissions or accounting treatment. Canonical Sigma patterns, frozen feature
++decisions and explicit owner instructions retain their authority. Do not invent
++an unavailable permission mechanism from a reference product. External browser
++access, demo mutation, builds, tests and database work retain their existing
++authorization boundaries; the local reference can be read without running the
++external application. At handoff, reconcile the accepted evidence and exclusions
++with the scoped result (Master7); creating/updating Sigma's in-app explanation
++after implementation is a separate completion gate.
+ 
+ ### Screenshots are not implementation authority
+ 
+--- before/docs/master/04-required-decisions-artifacts-and-contract-invariants.md
++++ after/docs/master/04-required-decisions-artifacts-and-contract-invariants.md
+@@ -8,6 +8,9 @@
+ - source directories and directly related contracts;
+ - existing working-tree changes and their owner when known;
+ - screenshots, videos, notes, and evidence IDs;
++- analysis-guide and original screen-explanation review (Master2): exact
++  chapter/source IDs, applicability, accepted evidence and gaps, or a supported
++  Not applicable outcome for the requested scope;
+ - selected UI shapes and backend pattern;
+ - approved reference per shape;
+ - routes and modes;
+--- before/docs/master/07-end-to-end-reconciliation-and-final-report.md
++++ after/docs/master/07-end-to-end-reconciliation-and-final-report.md
+@@ -13,6 +13,10 @@
+ ### Mandatory comparisons
+ 
+ - Screenshot evidence ↔ implemented functional behavior.
++- Master2 analysis-guide review ↔ original screen-explanation evidence ↔
++  accepted Sigma contracts and scoped result; reconcile exclusions, conflicts,
++  Missing/Uncertain decisions and supported Not applicable outcomes. An unread
++  source or generic claim that the guide was checked is not review evidence.
+ - Grid columns and action needs ↔ frontend list model ↔ backend ListVM.
+ - Filter controls ↔ serialized keys ↔ backend exact lookup keys.
+ - Page request ↔ `CountAsync` total ↔ response metadata ↔ Grid pager state.
+--- before/docs/recipe-system/templates/PLAN-00-maintenance-evolution.template.md
++++ after/docs/recipe-system/templates/PLAN-00-maintenance-evolution.template.md
+@@ -55,6 +55,9 @@
+ - Current Sigma source for the affected writers, readers, persistence, UI,
+   reports, and integrations.
+ - Relevant canonical documentation and existing feature review artifacts.
++- Master2 analysis-guide review: relevant chapters and original screen
++  explanations from the documentation's `references/speed-analysis/README.md`,
++  compared with existing Sigma contracts/user-guide topics when present.
+ - Known production/data constraints when available.
+ - Existing working-tree changes in the affected scope.
+ 
+@@ -65,6 +68,11 @@
+ 2. Audit the current capability end to end: domain/entity/configuration,
+    persistence, writers, readers, calculations, API, Angular, reports,
+    permissions/tenancy, integrations, migrations, and documentation.
++   Before selecting/freezing the target, apply Master2's analysis-guide gate:
++   record sources actually read, applicability, accepted evidence, exclusions
++   and gaps in this plan. Keep Speed descriptions/proposals distinct from Sigma
++   contracts; a supported Not applicable outcome is valid, and tier S only
++   covers the changed element. Existing execution permissions stay unchanged.
+ 3. Record every unclear rule in the Logic Ambiguity Register as Confirmed,
+    Derived, Missing, Conflicting, or Uncertain. Name the evidence or owner needed
+    to resolve each non-confirmed rule.
+@@ -102,6 +110,11 @@
+ 
+ ### Logic Ambiguity Register
+ 
++Record the analysis-guide review beside the current-state evidence. For each
++screen/mode name the guide chapter and original source ID/link, known date or
++version, relevant behavior, Sigma comparison and decision/gap. Do not mark a
++video link as watched or import a reference calculation without confirmation.
++
+ | Rule/question | Current evidence | Status | Why it matters | Required decision/source | Owner |
+ |---|---|---|---|---|---|
+ | | | Confirmed / Derived / Missing / Conflicting / Uncertain | | | |
+--- before/docs/recipe-system/templates/PHASE-00-discovery-evidence.template.md
++++ after/docs/recipe-system/templates/PHASE-00-discovery-evidence.template.md
+@@ -52,6 +52,8 @@
+ - Requested feature and outcome.
+ - Frozen Maintenance / Evolution Plan when the Master Guide requires one.
+ - All supplied evidence.
++- Relevant analysis-guide chapters and original screen explanations reviewed
++  under Master2, with existing Sigma contracts/user-guide topics where present.
+ - Directly related source.
+ - Master Guide.
+ 
+@@ -64,6 +66,12 @@
+    contracts, impact map, implementation slices, and remaining non-blocking open
+    decisions. Do not redesign the target silently in Phase 0.
+ 2. Assign each screenshot or workflow source an Evidence ID.
++   Apply Master2's mandatory analysis-guide review before freezing/changing
++   contracts for both new and existing screens: start at documentation
++   `references/speed-analysis/README.md`, read the relevant guide/source only,
++   compare Sigma evidence and record applicability, accepted items, exclusions
++   and gaps. A supported Not applicable outcome is valid; tier S needs only the
++   affected part. The Speed guide is not Sigma implementation/policy authority.
+ 3. Record known screen, mode, role, locale, direction, viewport, date/version,
+    and whether it is current or historical.
+ 4. Extract only functional and content requirements.
+@@ -92,6 +100,7 @@
+ | Source scope | |
+ | Existing user changes | |
+ | Maintenance / Evolution Plan | Not required / Frozen artifact / Blocked |
++| Analysis-guide review (Master2/4) | Chapter and original source IDs/links actually read, Sigma comparison, applicability, accepted items and gaps, or supported Not applicable |
+ | UI shapes | |
+ | Backend pattern | |
+ | Approved references | |
+@@ -107,6 +116,10 @@
+ | Unresolved requirements | |
+ 
+ ### Functional Evidence Table
++
++Include the analysis-guide source ID/chapter and original explanation in the
++existing evidence rows. Separate documented behavior, declared features and
++reviewer proposals; source absence does not authorize inventing a material rule.
+ 
+ | Evidence | Classification | Required feature behavior | Owning phase | Guide-compliant implementation |
+ |---|---|---|---|---|
+--- before/docs/recipe-system/templates/PHASE-06-final-reconciliation.template.md
++++ after/docs/recipe-system/templates/PHASE-06-final-reconciliation.template.md
+@@ -60,6 +60,11 @@
+ ## Mandatory comparisons
+ 
+ 1. Screenshot evidence ↔ implemented functional behavior.
++   Reconcile Master2's analysis-guide review and original screen explanations
++   with accepted Sigma contracts and the scoped result. Record actual sources,
++   exclusions, conflicts, decisions and supported Not applicable outcomes; a
++   generic claim that the guide was checked does not establish coverage. This
++   discovery gate is separate from updating Sigma's in-app guide after changes.
+ 2. Grid columns/action needs ↔ frontend list model ↔ backend ListVM.
+ 3. Filter controls ↔ query keys ↔ backend exact lookup keys.
+ 4. Page request ↔ total count ↔ response metadata ↔ pager state.
+--- before/docs/recipe-system/templates/FEATURE-REVIEW-ARTIFACTS.template.md
++++ after/docs/recipe-system/templates/FEATURE-REVIEW-ARTIFACTS.template.md
+@@ -35,6 +35,7 @@
+ | Direct shared dependencies | |
+ | Existing user changes | |
+ | Evidence IDs | |
++| Analysis-guide review (Master2/4) | Relevant chapter and original screen-explanation IDs/links actually read, Sigma comparison, accepted/excluded items and gaps, or supported Not applicable |
+ | UI shapes | |
+ | Backend pattern | |
+ | Approved references | |
+--- before/docs/recipe-system/templates/MAINTENANCE-EVOLUTION-ARTIFACT.template.md
++++ after/docs/recipe-system/templates/MAINTENANCE-EVOLUTION-ARTIFACT.template.md
+@@ -22,6 +22,7 @@
+ | Backend book version | |
+ | PLAN packet check result | |
+ | Existing working-tree changes | |
++| Analysis-guide review (Master2/4) | Relevant chapters and original screen explanations actually read, current Sigma contract/topic comparison, accepted/excluded evidence and gaps, or supported Not applicable |
+ 
+ ## Scope and boundaries
+ 
+--- before/docs/recipe-system/generated/PHASE-00-discovery-evidence.md
++++ after/docs/recipe-system/generated/PHASE-00-discovery-evidence.md
+@@ -10,10 +10,10 @@
+ ## Canonical provenance
+ 
+ - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:db2d5dcd4f3dbc77e4f04c332604833d56a556e431fea481bc432e38ce86ee9a
+-- master.1: ## 1. Governance and review principles | sha256:bba26ab8203f2a55202c9f85cd5fc4e71cd6e5d465358bf805edc8575d797bf0
+-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
++- master.1: ## 1. Governance and review principles | sha256:a93e4ab1fb595b43e1638f1cde2fa566975eed5ad74fddccbf90b6e642a9339f
++- master.2: ## 2. Screenshot and visual evidence policy | sha256:4eb6bc26d7094a0b1767322349a40f5da18d6a01a90f708e42c25282c8b793b0
+ - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:4c9e7f3e0d93f66644a9b6236b233b76872e849c2c59cbe8d7ba129dfdb2900d
++- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:cc561d3904edb11573af7b3deafc0083b5a622d7d5c8dc727b78b9c82ac75139
+ - master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+ - master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+@@ -71,6 +71,8 @@
+ - Requested feature and outcome.
+ - Frozen Maintenance / Evolution Plan when the Master Guide requires one.
+ - All supplied evidence.
++- Relevant analysis-guide chapters and original screen explanations reviewed
++  under Master2, with existing Sigma contracts/user-guide topics where present.
+ - Directly related source.
+ - Master Guide.
+ 
+@@ -83,6 +85,12 @@
+    contracts, impact map, implementation slices, and remaining non-blocking open
+    decisions. Do not redesign the target silently in Phase 0.
+ 2. Assign each screenshot or workflow source an Evidence ID.
++   Apply Master2's mandatory analysis-guide review before freezing/changing
++   contracts for both new and existing screens: start at documentation
++   `references/speed-analysis/README.md`, read the relevant guide/source only,
++   compare Sigma evidence and record applicability, accepted items, exclusions
++   and gaps. A supported Not applicable outcome is valid; tier S needs only the
++   affected part. The Speed guide is not Sigma implementation/policy authority.
+ 3. Record known screen, mode, role, locale, direction, viewport, date/version,
+    and whether it is current or historical.
+ 4. Extract only functional and content requirements.
+@@ -111,6 +119,7 @@
+ | Source scope | |
+ | Existing user changes | |
+ | Maintenance / Evolution Plan | Not required / Frozen artifact / Blocked |
++| Analysis-guide review (Master2/4) | Chapter and original source IDs/links actually read, Sigma comparison, applicability, accepted items and gaps, or supported Not applicable |
+ | UI shapes | |
+ | Backend pattern | |
+ | Approved references | |
+@@ -127,6 +136,10 @@
+ 
+ ### Functional Evidence Table
+ 
++Include the analysis-guide source ID/chapter and original explanation in the
++existing evidence rows. Separate documented behavior, declared features and
++reviewer proposals; source absence does not authorize inventing a material rule.
++
+ | Evidence | Classification | Required feature behavior | Owning phase | Guide-compliant implementation |
+ |---|---|---|---|---|
+ | | | | | |
+--- before/docs/recipe-system/generated/PHASE-01-domain-api.md
++++ after/docs/recipe-system/generated/PHASE-01-domain-api.md
+@@ -9,10 +9,10 @@
+ ## Canonical provenance
+ 
+ - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:db2d5dcd4f3dbc77e4f04c332604833d56a556e431fea481bc432e38ce86ee9a
+-- master.1: ## 1. Governance and review principles | sha256:bba26ab8203f2a55202c9f85cd5fc4e71cd6e5d465358bf805edc8575d797bf0
+-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
++- master.1: ## 1. Governance and review principles | sha256:a93e4ab1fb595b43e1638f1cde2fa566975eed5ad74fddccbf90b6e642a9339f
++- master.2: ## 2. Screenshot and visual evidence policy | sha256:4eb6bc26d7094a0b1767322349a40f5da18d6a01a90f708e42c25282c8b793b0
+ - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:4c9e7f3e0d93f66644a9b6236b233b76872e849c2c59cbe8d7ba129dfdb2900d
++- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:cc561d3904edb11573af7b3deafc0083b5a622d7d5c8dc727b78b9c82ac75139
+ - master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+ - master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+--- before/docs/recipe-system/generated/PHASE-02-read-grid.md
++++ after/docs/recipe-system/generated/PHASE-02-read-grid.md
+@@ -9,10 +9,10 @@
+ ## Canonical provenance
+ 
+ - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:db2d5dcd4f3dbc77e4f04c332604833d56a556e431fea481bc432e38ce86ee9a
+-- master.1: ## 1. Governance and review principles | sha256:bba26ab8203f2a55202c9f85cd5fc4e71cd6e5d465358bf805edc8575d797bf0
+-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
++- master.1: ## 1. Governance and review principles | sha256:a93e4ab1fb595b43e1638f1cde2fa566975eed5ad74fddccbf90b6e642a9339f
++- master.2: ## 2. Screenshot and visual evidence policy | sha256:4eb6bc26d7094a0b1767322349a40f5da18d6a01a90f708e42c25282c8b793b0
+ - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:4c9e7f3e0d93f66644a9b6236b233b76872e849c2c59cbe8d7ba129dfdb2900d
++- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:cc561d3904edb11573af7b3deafc0083b5a622d7d5c8dc727b78b9c82ac75139
+ - master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+ - master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+--- before/docs/recipe-system/generated/PHASE-03-detail-write.md
++++ after/docs/recipe-system/generated/PHASE-03-detail-write.md
+@@ -13,10 +13,10 @@
+ ## Canonical provenance
+ 
+ - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:db2d5dcd4f3dbc77e4f04c332604833d56a556e431fea481bc432e38ce86ee9a
+-- master.1: ## 1. Governance and review principles | sha256:bba26ab8203f2a55202c9f85cd5fc4e71cd6e5d465358bf805edc8575d797bf0
+-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
++- master.1: ## 1. Governance and review principles | sha256:a93e4ab1fb595b43e1638f1cde2fa566975eed5ad74fddccbf90b6e642a9339f
++- master.2: ## 2. Screenshot and visual evidence policy | sha256:4eb6bc26d7094a0b1767322349a40f5da18d6a01a90f708e42c25282c8b793b0
+ - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:4c9e7f3e0d93f66644a9b6236b233b76872e849c2c59cbe8d7ba129dfdb2900d
++- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:cc561d3904edb11573af7b3deafc0083b5a622d7d5c8dc727b78b9c82ac75139
+ - master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+ - master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+--- before/docs/recipe-system/generated/PHASE-04-domain-actions.md
++++ after/docs/recipe-system/generated/PHASE-04-domain-actions.md
+@@ -9,10 +9,10 @@
+ ## Canonical provenance
+ 
+ - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:db2d5dcd4f3dbc77e4f04c332604833d56a556e431fea481bc432e38ce86ee9a
+-- master.1: ## 1. Governance and review principles | sha256:bba26ab8203f2a55202c9f85cd5fc4e71cd6e5d465358bf805edc8575d797bf0
+-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
++- master.1: ## 1. Governance and review principles | sha256:a93e4ab1fb595b43e1638f1cde2fa566975eed5ad74fddccbf90b6e642a9339f
++- master.2: ## 2. Screenshot and visual evidence policy | sha256:4eb6bc26d7094a0b1767322349a40f5da18d6a01a90f708e42c25282c8b793b0
+ - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:4c9e7f3e0d93f66644a9b6236b233b76872e849c2c59cbe8d7ba129dfdb2900d
++- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:cc561d3904edb11573af7b3deafc0083b5a622d7d5c8dc727b78b9c82ac75139
+ - master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+ - master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+--- before/docs/recipe-system/generated/PHASE-05-integration-runtime.md
++++ after/docs/recipe-system/generated/PHASE-05-integration-runtime.md
+@@ -9,9 +9,9 @@
+ ## Canonical provenance
+ 
+ - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:db2d5dcd4f3dbc77e4f04c332604833d56a556e431fea481bc432e38ce86ee9a
+-- master.1: ## 1. Governance and review principles | sha256:bba26ab8203f2a55202c9f85cd5fc4e71cd6e5d465358bf805edc8575d797bf0
++- master.1: ## 1. Governance and review principles | sha256:a93e4ab1fb595b43e1638f1cde2fa566975eed5ad74fddccbf90b6e642a9339f
+ - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:4c9e7f3e0d93f66644a9b6236b233b76872e849c2c59cbe8d7ba129dfdb2900d
++- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:cc561d3904edb11573af7b3deafc0083b5a622d7d5c8dc727b78b9c82ac75139
+ - master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+ - master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+--- before/docs/recipe-system/generated/PHASE-06-final-reconciliation.md
++++ after/docs/recipe-system/generated/PHASE-06-final-reconciliation.md
+@@ -9,13 +9,13 @@
+ ## Canonical provenance
+ 
+ - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:db2d5dcd4f3dbc77e4f04c332604833d56a556e431fea481bc432e38ce86ee9a
+-- master.1: ## 1. Governance and review principles | sha256:bba26ab8203f2a55202c9f85cd5fc4e71cd6e5d465358bf805edc8575d797bf0
+-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
++- master.1: ## 1. Governance and review principles | sha256:a93e4ab1fb595b43e1638f1cde2fa566975eed5ad74fddccbf90b6e642a9339f
++- master.2: ## 2. Screenshot and visual evidence policy | sha256:4eb6bc26d7094a0b1767322349a40f5da18d6a01a90f708e42c25282c8b793b0
+ - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:4c9e7f3e0d93f66644a9b6236b233b76872e849c2c59cbe8d7ba129dfdb2900d
++- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:cc561d3904edb11573af7b3deafc0083b5a622d7d5c8dc727b78b9c82ac75139
+ - master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+-- master.7: ## 7. End-to-end reconciliation and final report | sha256:665b5a2892a88b7caccce0101bf4f218219766ba5e776b85e8a56378a03677da
++- master.7: ## 7. End-to-end reconciliation and final report | sha256:4065bb16ed52c875c7f654720c0d275e193a6a135d861d5301bdd551fb0b62bd
+ - master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+ - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:0997576d7fca4aebda4d975ef928463d4d113ffe3d2794a0b87a15b3826b8463
+ - ui.1: ## 1. Feature folders and wiring | sha256:ad82de89c39e9e8e67ce9ff67eaed8b0730e9f17c49ca572313ca7eb72016a23
+@@ -85,6 +85,11 @@
+ ## Mandatory comparisons
+ 
+ 1. Screenshot evidence ↔ implemented functional behavior.
++   Reconcile Master2's analysis-guide review and original screen explanations
++   with accepted Sigma contracts and the scoped result. Record actual sources,
++   exclusions, conflicts, decisions and supported Not applicable outcomes; a
++   generic claim that the guide was checked does not establish coverage. This
++   discovery gate is separate from updating Sigma's in-app guide after changes.
+ 2. Grid columns/action needs ↔ frontend list model ↔ backend ListVM.
+ 3. Filter controls ↔ query keys ↔ backend exact lookup keys.
+ 4. Page request ↔ total count ↔ response metadata ↔ pager state.
+--- before/docs/recipe-system/generated/PLAN-00-maintenance-evolution.md
++++ after/docs/recipe-system/generated/PLAN-00-maintenance-evolution.md
+@@ -11,13 +11,13 @@
+ ## Canonical provenance
+ 
+ - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:db2d5dcd4f3dbc77e4f04c332604833d56a556e431fea481bc432e38ce86ee9a
+-- master.1: ## 1. Governance and review principles | sha256:bba26ab8203f2a55202c9f85cd5fc4e71cd6e5d465358bf805edc8575d797bf0
+-- master.2: ## 2. Screenshot and visual evidence policy | sha256:2765a62adfb7b5913db822c98348b3a456a6ee504e8ed4d2434881a593cf41f5
++- master.1: ## 1. Governance and review principles | sha256:a93e4ab1fb595b43e1638f1cde2fa566975eed5ad74fddccbf90b6e642a9339f
++- master.2: ## 2. Screenshot and visual evidence policy | sha256:4eb6bc26d7094a0b1767322349a40f5da18d6a01a90f708e42c25282c8b793b0
+ - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
+-- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:4c9e7f3e0d93f66644a9b6236b233b76872e849c2c59cbe8d7ba129dfdb2900d
++- master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:cc561d3904edb11573af7b3deafc0083b5a622d7d5c8dc727b78b9c82ac75139
+ - master.5: ## 5. Continuous quality gates | sha256:22a0c5c673edd341f4814488c4405362453f31fadfdc199c31170d34afb8a67c
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+-- master.7: ## 7. End-to-end reconciliation and final report | sha256:665b5a2892a88b7caccce0101bf4f218219766ba5e776b85e8a56378a03677da
++- master.7: ## 7. End-to-end reconciliation and final report | sha256:4065bb16ed52c875c7f654720c0d275e193a6a135d861d5301bdd551fb0b62bd
+ - master.8: ## 8. Packet generation and governance | sha256:a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491
+ - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:0997576d7fca4aebda4d975ef928463d4d113ffe3d2794a0b87a15b3826b8463
+ - ui.29: ## 29. Verification expectations | sha256:1ff1411e4cbc36bb44b06ef153a062ad0ddc7d8ca7728bdc7a3deae3ea99656e
+@@ -72,6 +72,9 @@
+ - Current Sigma source for the affected writers, readers, persistence, UI,
+   reports, and integrations.
+ - Relevant canonical documentation and existing feature review artifacts.
++- Master2 analysis-guide review: relevant chapters and original screen
++  explanations from the documentation's `references/speed-analysis/README.md`,
++  compared with existing Sigma contracts/user-guide topics when present.
+ - Known production/data constraints when available.
+ - Existing working-tree changes in the affected scope.
+ 
+@@ -82,6 +85,11 @@
+ 2. Audit the current capability end to end: domain/entity/configuration,
+    persistence, writers, readers, calculations, API, Angular, reports,
+    permissions/tenancy, integrations, migrations, and documentation.
++   Before selecting/freezing the target, apply Master2's analysis-guide gate:
++   record sources actually read, applicability, accepted evidence, exclusions
++   and gaps in this plan. Keep Speed descriptions/proposals distinct from Sigma
++   contracts; a supported Not applicable outcome is valid, and tier S only
++   covers the changed element. Existing execution permissions stay unchanged.
+ 3. Record every unclear rule in the Logic Ambiguity Register as Confirmed,
+    Derived, Missing, Conflicting, or Uncertain. Name the evidence or owner needed
+    to resolve each non-confirmed rule.
+@@ -119,6 +127,11 @@
+ 
+ ### Logic Ambiguity Register
+ 
++Record the analysis-guide review beside the current-state evidence. For each
++screen/mode name the guide chapter and original source ID/link, known date or
++version, relevant behavior, Sigma comparison and decision/gap. Do not mark a
++video link as watched or import a reference calculation without confirmation.
++
+ | Rule/question | Current evidence | Status | Why it matters | Required decision/source | Owner |
+ |---|---|---|---|---|---|
+ | | | Confirmed / Derived / Missing / Conflicting / Uncertain | | | |
+--- before/workspace/AGENTS.md
++++ after/workspace/AGENTS.md
+@@ -1,6 +1,6 @@
+ # Sigma Feature Review and Implementation
+ 
+-Last reviewed and updated: 2026-10-25 (mandatory load-speed/query/index evidence — Master blocks 5/7, UI block 29, backend blocks 7/2; mandatory loading request/visibility evidence and query-only navigation lifetime — UI block 22 / Master block 5; mandatory per-screen cache source evidence and final conformance — UI block 2 / Master block 5; current-state navigation, proportional skill and lifecycle archive — Master block 8; readable Arabic questions and choices — Default behavior; general shared presentation preference — Master block 5; continuous packet maintenance — Master block 8; mandatory screen user-guide handoff — Master block 7; documentation-system unification remains recorded in `reviews\SIGMA_DOCUMENTATION_SYSTEM_MAINTENANCE_EVOLUTION_PLAN.md`).
++Last reviewed and updated: 2026-10-27 (mandatory pre-contract analysis-guide review for new and maintained screens — Master blocks 1/2/4/7; mandatory load-speed/query/index evidence — Master blocks 5/7, UI block 29, backend blocks 7/2; mandatory loading request/visibility evidence and query-only navigation lifetime — UI block 22 / Master block 5; mandatory per-screen cache source evidence and final conformance — UI block 2 / Master block 5; current-state navigation, proportional skill and lifecycle archive — Master block 8; readable Arabic questions and choices — Default behavior; general shared presentation preference — Master block 5; continuous packet maintenance — Master block 8; mandatory screen user-guide handoff — Master block 7; documentation-system unification remains recorded in `reviews\SIGMA_DOCUMENTATION_SYSTEM_MAINTENANCE_EVOLUTION_PLAN.md`).
+ 
+ These instructions apply whenever the user asks to review, refactor, fix, or implement a Sigma feature in this workspace.
+ 
+@@ -29,6 +29,21 @@
+ - The skill owns screen-specific implementation conventions *as a digest*. This file remains authoritative for task scope, workflow, evidence, contracts, delegation, prohibited actions, and verification. On conflict, follow this file and any frozen feature contract, then the canonical book, then the skill, and record the conflict.
+ 
+ ## Default behavior
++
++- **Mandatory analysis-guide review for new and existing screens (owner instruction, 2026-10-27).**
++  Before freezing or changing screen contracts, apply Master2's mandatory
++  analysis-guide gate. Start at the documentation entry
++  `references/speed-analysis/README.md`, read only the relevant chapter and
++  original screen explanation, and compare current Sigma contracts and its
++  existing user-guide topic when available. Record sources actually read,
++  applicability, accepted evidence, exclusions and gaps in the existing review
++  or plan; a tier S edit needs only its affected part. The collected guide
++  describes Speed as a functional analysis reference, not existing Sigma
++  behavior or implementation authority. Reference proposals and unresolved
++  financial/API/permission rules are not approved contracts. Reconcile accepted
++  evidence at handoff under Master7. Source-only and external-access boundaries
++  stay unchanged; writing the in-app guide after implementation remains a
++  separate deliverable.
+ 
+ - **Mandatory load-speed, query and index review (owner instruction, 2026-10-25).**
+   Apply Master5's performance gate with UI29, BE7 and BE2 for every new or
+--- before/workspace/.agents/skills/sigma-screen-refactor/SKILL.md
++++ after/workspace/.agents/skills/sigma-screen-refactor/SKILL.md
+@@ -29,6 +29,20 @@
+ Relative block paths below are under the documentation root. The book owns the
+ complete rule and rationale. Open the actual named reference/shared owner before
+ editing; do not copy a recently changed feature merely because it looks similar.
++
++## Mandatory analysis-guide review
++
++Before freezing/changing contracts for a new screen or existing-screen
++review/maintenance/fix/refactor, apply Master2's analysis-guide gate. Start at
++documentation `references/speed-analysis/README.md`; read only relevant guide
++chapters and original screen explanations. Compare current Sigma contracts and
++its existing in-app topic when present. In the existing review/plan record
++chapter/source IDs, applicability, accepted evidence, exclusions and unresolved
++decisions; tier S covers only its changed element. A supported Not applicable
++outcome is valid. The collected Speed guide is functional evidence, not Sigma
++implementation authority or approval of proposed models/calculations/permissions.
++Reconcile evidence at handoff (Master4/7); keep source-only boundaries and the
++separate post-implementation in-app guide gate.
+ 
+ ## Mandatory load-speed, query and index gate
+ 
+@@ -616,6 +630,7 @@
+ 
+ | Date | Revision | Owning blocks and evidence |
+ |---|---|---|
++| 2026-10-27 | Review the relevant analysis guide and original screen explanation before new or maintained screen contracts; record applicability and reconcile accepted evidence | Master1/2/4/7; owner requires both creation and maintenance and relocation into documentation; Speed remains a functional reference, not Sigma source or policy authority |
+ | 2026-10-27 | Treat required finite lookup empty completion on context reset as failed bootstrap with Retry, never initialized form readiness | UI2; TransportationAgreements list/editor and ReferenceLookupCacheService outcomes completion source audit; source-only, runtime context-switch acceptance pending |
+ | 2026-10-27 | Accept nullable list identities in shared column-filter membership | BE9; Equipment Rental source audit, ListBaseVm.Id and shared Service.ApplyGridFilters; EF translation/runtime pending |
+ | 2026-10-27 | Keep one dialog lookup progress owner during a failed-member/pending-member overlap, with independent error feedback and settled Retry | UI22; Lease Inquiry/Cost Setting final source reconciliation, shared ReferenceLookupStatus branch correction; runtime overlap pending |
+--- before/workspace/reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md
++++ after/workspace/reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md
+@@ -6,6 +6,21 @@
+ | Owner verification pending | yes |
+ | Date | 2026-10-01 |
+ | Origin | Moved verbatim from Master block 2 (governance book) during the books completion plan (R5); the governance rule stays in Master block 2 *External functional references* |
++
++### Local analysis guide and screen explanations — 2026-10-27
++
++The owner requested reviewing the analysis guide for both new Sigma screens
++and maintenance of existing screens, and moving the collected guide into the
++documentation folder. The current entry is:
++
++[Analysis guide and source library](<F:/My Work/Shaban Documents/Shaban/sigma-erp/references/speed-analysis/README.md>)
++
++The dated collection and its ZIP were moved from `F:\My Work\Speed Documentation`
++without changing guide content. The collection describes Speed, not verified
++Sigma behavior. Master2 owns the mandatory pre-contract review; Master4 records
++the sources/applicability and Master7 reconciles accepted evidence. Read only
++the relevant chapters and original screen explanations, keep uncertain rules
++explicit, and preserve existing source-only/external-access boundaries.
+ 
+ ### External rental simulation reference — Speed Auto Systems
+ 
+--- before/workspace/reviews/SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md
++++ after/workspace/reviews/SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md
+@@ -845,3 +845,55 @@
+ Documentation: docs(current-state): simplify screen workflows and archive history
+ Backend: docs(archive): isolate historical reviews from current endpoint guidance
+ ```
++
++## تحديث مراجعة دليل التحليل عند الإنشاء والصيانة بتاريخ ٢٧ أكتوبر ٢٠٢٦
++
++الحالة: اكتملت صيانة الوثائق المطلوبة. طلب المالك إدراج مراجعة دليل التحليل
++في نظام وثائق سيجما عند إنشاء شاشة جديدة أو صيانة الموجودة، ونقل الدليل
++الذي أُعد في هذه المحادثة إلى مجلد الوثائق. هذه إضافة محددة إلى نظام الوثائق
++القائم؛ لا تغير عقد أعمال أو سياسة مالية أو شكل تنفيذ شاشة.
++
++جرى نقل دليل تحليل سبيد ومكتبته وملف الحزمة المضغوطة وبصمتها إلى
++[مجلد المرجع الحالي](<F:/My Work/Shaban Documents/Shaban/sigma-erp/references/speed-analysis/README.md>).
++حُفظ اسم المنتج الذي يشرحه المرجع، مع توضيح أنه دليل مساعد لتحليل سيجما
++وليس وصفًا مثبتًا لمصدر سيجما أو اعتمادًا تلقائيًا لمقترحات التحليل.
++
++| الموضع | التغيير وسبب اختياره |
++|---|---|
++| الكتاب الرئيسي والكتل الأولى والثانية والرابعة والسابعة | تملك الكتلة الثانية القاعدة؛ تدخل قبل تجميد العقود، وتوثق مصادرها في تقرير الميزة، وتطابق عند التسليم |
++| ملف بداية الوثائق وتعليمات مساحة العمل | مسار واضح للإنشاء والصيانة والمراجعة والإصلاح، مع قراءة الجزء المتعلق بالمهمة فقط |
++| مهارة مراجعة الشاشات | ملخص للقاعدة مع الكتل المالكة وسطر تاريخ، باستخدام مهارة صيانة المهارات |
++| قوالب التخطيط والاكتشاف والمطابقة وقوالب تقارير الميزة والصيانة | تسجيل الفصل ومعرف المصدر المقروء فعلًا والمقارنة مع عقود سيجما والفجوات، أو عدم الانطباق المبرر |
++| مرجع سبيد الخارجي | تحديث الوصول إلى المكتبة المحلية دون تغيير قواعد حساب العرض التجريبي |
++| ملفات المرجع المنقولة | محتوى الدليل والحزمة محفوظ؛ مساعد التصدير يعتمد مجلده الحالي بدل المسار السابق |
++
++التحقق الذي أُنجز:
++
++- نجح فحص الحزم الثماني قبل التحرير. جرى توليدها جميعًا بالأداة، ثم نجح
++  الفحص الختامي. تغيرت أجسام حزم التخطيط والاكتشاف والمطابقة؛ تغيرت بصمات
++  المصادر فقط في حزم المراحل من الأولى إلى الخامسة. تمت مراجعة المعنى:
++  المصدر الخارجي دليل وظيفي، والقرارات غير المحسومة ليست عقود تنفيذ.
++- نجحت أداة فحص مراجع الكتب دون مسح مصدر التطبيق. نجح الفحص الإضافي لسبعة
++  وثلاثين رابطًا محليًا في الملفات ذات الصلة دون أهداف مفقودة، وفحص روابط
++  ثلاثمائة وثلاثة عشر ملفًا في مكتبة المرجع والدليل دون روابط محلية مكسورة.
++- طابقت بصمة دليل وورد قبل النقل وبعده. نقل الملف لا يغير محتواه أو نتيجة
++  مراجعته البصرية السابقة، ولا توجد دعوى باختبار شاشة فعلية في هذه المهمة.
++- تمت مراجعة الفروق المحددة مقابل لقطات الملفات السابقة للمهمة، وفحص
++  المسافات في الفروق داخل مستودع الوثائق. حُفظت التغييرات الموجودة مسبقًا.
++- تعذر تشغيل مدقق المهارة الجاهز لفقد مكتبة تحليل البيانات الوصفية في
++  بيئة بايثون. تمت مراجعة البيانات الوصفية غير المتغيرة وبنية المهارة
++  والروابط وملكية القاعدة بصورة مستقلة؛ لا يُسجل المدقق الجاهز كفحص ناجح.
++
++لا ينطبق اختيار شكل واجهة أو خلفية أو فحص أداء تطبيق أو فهرس بيانات هنا؛
++المهمة تخص مسار الوثائق فقط. لم يُشغل بناء أو اختبار تطبيق أو تدقيق برمجي
++أو متصفح أو قاعدة بيانات أو ترحيل أو حفظ إصدار أو نشر. لم تتغير مصادر
++واجهة سيجما أو خلفيتها. تبقى مراجعة شرح سيجما داخل التطبيق بعد تنفيذ الشاشة
++متطلبًا مستقلًا عن قراءة دليل التحليل قبل تثبيت عقودها.
++
++الأدلة ولقطات ما قبل التعديل والفروق محفوظة في
++[سجل مطابقة المهمة](evidence/analysis-guide-governance-2026-10-27/reconciliation.json).
++رسالة حفظ إصدار مقترحة فقط:
++
++```text
++docs: require analysis guide review for new and maintained Sigma screens
++```

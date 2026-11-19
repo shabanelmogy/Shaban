@@ -1,0 +1,18 @@
+import { Routes } from '@angular/router';
+import {CashDepositDetailsComponent } from './components/list/list.component';
+import { DetailsComponent } from './components/details/details.component';
+
+export const CashDepositDetail_Routes: Routes = [
+  {
+    path: '',
+    component: CashDepositDetailsComponent,
+  },
+  {
+    path: 'details/:id',
+    component: DetailsComponent,
+  },
+  {
+    path: 'create',
+    component: DetailsComponent,
+  },
+];

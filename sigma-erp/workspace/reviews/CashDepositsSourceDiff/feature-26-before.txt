@@ -1,0 +1,24 @@
+using SiGma.ViewModels.ViewModels.CashDepositDetail;
+
+namespace SiGma.ViewModels.ViewModels.CashDeposit
+{
+    public class CashDepositAddVM : AddBaseVm
+    {
+        [Required] public DateTime Date { get; set; }
+
+        /// <summary>Destination bank account ID.</summary>
+        [Required] public int BankId { get; set; }
+
+        [MaxLength(100)] public string? RefNo { get; set; }
+
+        [MaxLength(500)] public string? Description { get; set; }
+
+        /// <summary>Payment method used for the deposit.</summary>
+        public int? PaymentMethodId { get; set; }
+
+        public int? BranchId { get; set; }
+
+        /// <summary>Detail lines — each represents one undeposited payment being included.</summary>
+        public List<CashDepositDetailAddVM> CashDepositDetails { get; set; } = [];
+    }
+}

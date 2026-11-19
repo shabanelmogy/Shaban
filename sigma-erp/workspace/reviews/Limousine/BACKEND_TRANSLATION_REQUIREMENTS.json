@@ -1,0 +1,358 @@
+{
+  "TripBookingNotFound": [
+    "Trip booking not found.",
+    "لم يتم العثور على الرحلة."
+  ],
+  "TripBookingDriverRequiredAfterAssignment": [
+    "Driver is required after a trip booking has been assigned or dispatched.",
+    "يلزم تحديد السائق بعد تخصيص الرحلة أو إرسالها."
+  ],
+  "TripBookingConcurrentChange": [
+    "This trip booking was changed by another user. Refresh and try again.",
+    "عدّل مستخدم آخر هذه الرحلة. حدّث البيانات وأعد المحاولة."
+  ],
+  "TripBookingAssignStateInvalid": [
+    "Only a new trip booking can be assigned.",
+    "يمكن تخصيص الرحلات الجديدة فقط."
+  ],
+  "TripBookingVehicleRequiredToAssign": [
+    "Vehicle is required before assigning a trip.",
+    "يلزم تحديد المركبة قبل تخصيص الرحلة."
+  ],
+  "TripBookingDriverRequiredToAssign": [
+    "Driver is required before assigning a trip.",
+    "يلزم تحديد السائق قبل تخصيص الرحلة."
+  ],
+  "TripBookingAssigned": [
+    "Trip assigned successfully.",
+    "تم تخصيص الرحلة بنجاح."
+  ],
+  "TripBookingDispatchStateInvalid": [
+    "Only a new or assigned trip booking can be dispatched.",
+    "يمكن إرسال الرحلات الجديدة أو المخصصة فقط."
+  ],
+  "TripBookingAssignmentRequiredBeforeDispatch": [
+    "This company requires the trip to be assigned before dispatch.",
+    "تتطلب هذه الشركة تخصيص الرحلة قبل إرسالها."
+  ],
+  "TripBookingVehicleRequiredToDispatch": [
+    "Vehicle is required before dispatching a trip.",
+    "يلزم تحديد المركبة قبل إرسال الرحلة."
+  ],
+  "TripBookingDriverRequiredToDispatch": [
+    "Driver is required before dispatching a trip.",
+    "يلزم تحديد السائق قبل إرسال الرحلة."
+  ],
+  "TripBookingDriverNotFound": [
+    "Driver not found.",
+    "لم يتم العثور على السائق."
+  ],
+  "TripBookingDispatched": [
+    "Trip dispatched successfully.",
+    "تم إرسال الرحلة بنجاح."
+  ],
+  "TripBookingStartStateInvalid": [
+    "Only a dispatched trip can be started.",
+    "يمكن بدء الرحلات المرسلة فقط."
+  ],
+  "TripBookingStartDateRequired": [
+    "Start date and time is required.",
+    "يلزم إدخال تاريخ ووقت البدء."
+  ],
+  "TripBookingStarted": [
+    "Trip started successfully.",
+    "بدأت الرحلة بنجاح."
+  ],
+  "TripBookingFinishStateInvalid": [
+    "Only a started trip can be finished.",
+    "يمكن إنهاء الرحلات التي بدأت فقط."
+  ],
+  "TripBookingDropOffDateRequired": [
+    "Drop-off date and time is required.",
+    "يلزم إدخال تاريخ ووقت الوصول."
+  ],
+  "TripBookingDropOffBeforeStart": [
+    "Drop-off date and time cannot be before the trip start time.",
+    "لا يجوز أن يسبق وقت الوصول وقت بدء الرحلة."
+  ],
+  "TripBookingKmsNegative": [
+    "KMs cannot be negative.",
+    "لا يمكن أن تكون الكيلومترات سالبة."
+  ],
+  "TripBookingTripChargesNegative": [
+    "Trip charges cannot be negative.",
+    "لا يمكن أن تكون رسوم الرحلة سالبة."
+  ],
+  "TripBookingFinished": [
+    "Trip finished successfully.",
+    "انتهت الرحلة بنجاح."
+  ],
+  "TripBookingNoShowStateInvalid": [
+    "Only a dispatched trip can be marked as no show.",
+    "يمكن تسجيل عدم الحضور للرحلات المرسلة فقط."
+  ],
+  "TripBookingMarkedNoShow": [
+    "Trip marked as no show.",
+    "تم تسجيل عدم الحضور للرحلة."
+  ],
+  "TripBookingInvoicedCannotCancel": [
+    "An invoiced trip cannot be cancelled. Reverse the invoice first.",
+    "لا يمكن إلغاء رحلة مفوترة. اعكس الفاتورة أولًا."
+  ],
+  "TripBookingCancellationReasonRequired": [
+    "Cancellation reason is required.",
+    "يلزم إدخال سبب الإلغاء."
+  ],
+  "TripBookingCancelled": [
+    "Trip cancelled successfully.",
+    "تم إلغاء الرحلة بنجاح."
+  ],
+  "TripBookingVehicleTypeRequired": [
+    "Vehicle Type is required.",
+    "يلزم تحديد نوع المركبة."
+  ],
+  "TripBookingInvoicedCannotDelete": [
+    "An invoiced trip cannot be deleted.",
+    "لا يمكن حذف رحلة مفوترة."
+  ],
+  "TripBookingDeleteStateInvalid": [
+    "Only New or Cancelled trip bookings can be deleted.",
+    "يمكن حذف الرحلات الجديدة أو الملغاة فقط."
+  ],
+  "TripBookingDateRangeInvalid": [
+    "From Date must be less than or equal to To Date.",
+    "يجب ألا يتجاوز تاريخ البداية تاريخ النهاية."
+  ],
+  "TripBookingUtilizationBreakupInvalid": [
+    "Utilization Breakup must be Hourly or Daily.",
+    "يجب أن يكون تجميع الاستخدام بالساعة أو باليوم."
+  ],
+  "TripBookingBranchNotFound": [
+    "Branch not found.",
+    "لم يتم العثور على الفرع."
+  ],
+  "TripBookingCustomerNotFound": [
+    "Customer not found.",
+    "لم يتم العثور على العميل."
+  ],
+  "TripBookingVehicleTypeNotFound": [
+    "Vehicle Type not found.",
+    "لم يتم العثور على نوع المركبة."
+  ],
+  "TripBookingCustomerRequired": [
+    "Customer is required.",
+    "يلزم تحديد العميل."
+  ],
+  "TripBookingTripTypeRequired": [
+    "Trip Type is required.",
+    "يلزم تحديد نوع الرحلة."
+  ],
+  "TripBookingPickupLocationRequired": [
+    "Pickup Location is required.",
+    "يلزم تحديد موقع الانطلاق."
+  ],
+  "TripBookingDropOffLocationRequired": [
+    "Drop-off Location is required.",
+    "يلزم تحديد موقع الوصول."
+  ],
+  "TripBookingPickupDateRequired": [
+    "Pickup Date & Time is required.",
+    "يلزم إدخال تاريخ ووقت الانطلاق."
+  ],
+  "TripBookingDropOffDateOrder": [
+    "Drop-off Date & Time must be greater than Pickup Date & Time.",
+    "يجب أن يلي وقت الوصول وقت الانطلاق."
+  ],
+  "TripBookingChargesNegative": [
+    "Charges cannot be negative.",
+    "لا يمكن أن تكون الرسوم سالبة."
+  ],
+  "TripBookingTaxNegative": [
+    "Tax cannot be negative.",
+    "لا يمكن أن تكون الضريبة سالبة."
+  ],
+  "TripBookingDiscountNegative": [
+    "Discount cannot be negative.",
+    "لا يمكن أن يكون الخصم سالبًا."
+  ],
+  "TripBookingSupplierChargesNegative": [
+    "Supplier Charges cannot be negative.",
+    "لا يمكن أن تكون رسوم المورد سالبة."
+  ],
+  "TripBookingTripTypeNotFound": [
+    "Trip Type not found.",
+    "لم يتم العثور على نوع الرحلة."
+  ],
+  "TripBookingPickupLocationNotFound": [
+    "Pickup Location not found.",
+    "لم يتم العثور على موقع الانطلاق."
+  ],
+  "TripBookingDropOffLocationNotFound": [
+    "Drop-off Location not found.",
+    "لم يتم العثور على موقع الوصول."
+  ],
+  "TripBookingVehicleNotFound": [
+    "Vehicle not found.",
+    "لم يتم العثور على المركبة."
+  ],
+  "TripBookingSupplierNotFound": [
+    "Supplier not found.",
+    "لم يتم العثور على المورد."
+  ],
+  "TripBookingExternalRegistrationRequired": [
+    "Vehicle Registration No is required for external vehicle booking.",
+    "يلزم إدخال رقم تسجيل المركبة الخارجية."
+  ],
+  "TripBookingExternalMakeModelRequired": [
+    "Make & Model is required for external vehicle booking.",
+    "يلزم إدخال الماركة والطراز للمركبة الخارجية."
+  ],
+  "TripBookingExternalSupplierRequired": [
+    "Supplier is required for external vehicle booking.",
+    "يلزم تحديد المورد لحجز المركبة الخارجية."
+  ],
+  "TripBookingExternalDriverRequired": [
+    "Driver Name is required for external vehicle booking.",
+    "يلزم إدخال اسم السائق للمركبة الخارجية."
+  ],
+  "TripBookingVehicleSelectionRequired": [
+    "Vehicle is required when Search Vehicle By Any is disabled or no matching vehicle is available.",
+    "يلزم تحديد المركبة عند تعطيل البحث التلقائي أو عدم توفر مركبة مناسبة."
+  ],
+  "TripBookingVehicleTypeMismatch": [
+    "Selected Vehicle does not match the selected Vehicle Type.",
+    "المركبة المختارة لا تطابق نوع المركبة المحدد."
+  ],
+  "TripBookingVehicleUnavailable": [
+    "Selected Vehicle is not available for the selected time.",
+    "المركبة المختارة غير متاحة في الوقت المحدد."
+  ],
+  "TripBookingDriverUnavailable": [
+    "Selected Driver is not available for the selected time.",
+    "السائق المختار غير متاح في الوقت المحدد."
+  ],
+  "TripBookingEditStateInvalid": [
+    "This trip cannot be edited in its current status.",
+    "لا يمكن تعديل الرحلة في حالتها الحالية."
+  ],
+  "TripBookingCancelStateInvalid": [
+    "This trip cannot be cancelled in its current status.",
+    "لا يمكن إلغاء الرحلة في حالتها الحالية."
+  ],
+  "TripBookingInvalidDocumentOwnership": [
+    "Every saved document must belong to this trip and may appear only once.",
+    "يجب أن يتبع كل مستند محفوظ هذه الرحلة وألا يتكرر."
+  ],
+  "LimoQuotationNotFound": [
+    "Limo quotation not found",
+    "لم يتم العثور على عرض سعر الليموزين."
+  ],
+  "LimoQuotationEditStateInvalid": [
+    "Only Pending limo quotations can be edited.",
+    "يمكن تعديل عروض الأسعار قيد الانتظار فقط."
+  ],
+  "LimoQuotationDeleteStateInvalid": [
+    "Only Pending limo quotations can be deleted.",
+    "يمكن حذف عروض الأسعار قيد الانتظار فقط."
+  ],
+  "LimoQuotationInternalApproveStateInvalid": [
+    "Only Pending limo quotations can be internally approved.",
+    "يمكن اعتماد عروض الأسعار قيد الانتظار داخليًا فقط."
+  ],
+  "LimoQuotationInternalRejectStateInvalid": [
+    "Only Pending limo quotations can be internally rejected.",
+    "يمكن رفض عروض الأسعار قيد الانتظار داخليًا فقط."
+  ],
+  "LimoQuotationCustomerApproveStateInvalid": [
+    "Only InternallyApproved limo quotations can be approved by customer.",
+    "يمكن للعميل اعتماد عروض الأسعار المعتمدة داخليًا فقط."
+  ],
+  "LimoQuotationCustomerRejectStateInvalid": [
+    "Only InternallyApproved limo quotations can be rejected by customer.",
+    "يمكن للعميل رفض عروض الأسعار المعتمدة داخليًا فقط."
+  ],
+  "LimoQuotationReviseStateInvalid": [
+    "Only InternallyApproved limo quotations can be revised.",
+    "يمكن مراجعة عروض الأسعار المعتمدة داخليًا فقط."
+  ],
+  "LimoQuotationChargesNegative": [
+    "Charges must not be negative.",
+    "يجب ألا تكون الرسوم سالبة."
+  ],
+  "LimoQuotationTaxNegative": [
+    "Tax must not be negative.",
+    "يجب ألا تكون الضريبة سالبة."
+  ],
+  "LimoQuotationCustomerInvalid": [
+    "Invalid Customer detected.",
+    "العميل المحدد غير صالح."
+  ],
+  "LimoQuotationTripTypeInvalid": [
+    "Invalid Trip Type detected.",
+    "نوع الرحلة المحدد غير صالح."
+  ],
+  "LimoQuotationPickUpLocationInvalid": [
+    "Invalid Pick Up Location detected.",
+    "موقع الانطلاق المحدد غير صالح."
+  ],
+  "LimoQuotationDropOffLocationInvalid": [
+    "Invalid Drop Off Location detected.",
+    "موقع الوصول المحدد غير صالح."
+  ],
+  "LimoQuotationTariffGroupInvalid": [
+    "Invalid Tariff Group detected.",
+    "مجموعة التعريفة المحددة غير صالحة."
+  ],
+  "LimoQuotationFuelChargeInvalid": [
+    "Invalid Fuel Charge detected.",
+    "رسوم الوقود المحددة غير صالحة."
+  ],
+  "LimoQuotationCustomerRequired": [
+    "Customer is required before internal approval.",
+    "يلزم تحديد العميل قبل الاعتماد الداخلي."
+  ],
+  "LimoQuotationTripTypeRequired": [
+    "Trip Type is required before internal approval.",
+    "يلزم تحديد نوع الرحلة قبل الاعتماد الداخلي."
+  ],
+  "LimoQuotationTariffGroupRequired": [
+    "Tariff Group is required before internal approval.",
+    "يلزم تحديد مجموعة التعريفة قبل الاعتماد الداخلي."
+  ],
+  "LimoQuotationPickUpLocationRequired": [
+    "Pick Up Location is required before internal approval.",
+    "يلزم تحديد موقع الانطلاق قبل الاعتماد الداخلي."
+  ],
+  "LimoQuotationDropOffLocationRequired": [
+    "Drop Off Location is required before internal approval.",
+    "يلزم تحديد موقع الوصول قبل الاعتماد الداخلي."
+  ],
+  "LimoQuotationFuelChargeRequired": [
+    "Fuel Charge is required before internal approval.",
+    "يلزم تحديد رسوم الوقود قبل الاعتماد الداخلي."
+  ],
+  "LimoQuotationInternallyApproved": [
+    "Limo quotation internally approved successfully.",
+    "تم اعتماد عرض سعر الليموزين داخليًا بنجاح."
+  ],
+  "LimoQuotationInternallyRejected": [
+    "Limo quotation internally rejected successfully.",
+    "تم رفض عرض سعر الليموزين داخليًا بنجاح."
+  ],
+  "LimoQuotationCustomerApproved": [
+    "Limo quotation approved by customer successfully.",
+    "اعتمد العميل عرض سعر الليموزين بنجاح."
+  ],
+  "LimoQuotationCustomerRejected": [
+    "Limo quotation rejected by customer successfully.",
+    "رفض العميل عرض سعر الليموزين بنجاح."
+  ],
+  "LimoQuotationRevised": [
+    "Limo quotation revised successfully.",
+    "تمت مراجعة عرض سعر الليموزين بنجاح."
+  ],
+  "LimoQuotationStatusUpdateFailed": [
+    "Failed to update limo quotation status.",
+    "تعذر تحديث حالة عرض سعر الليموزين."
+  ]
+}

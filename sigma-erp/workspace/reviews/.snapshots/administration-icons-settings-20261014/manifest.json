@@ -1,0 +1,200 @@
+[
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\agreement-document\\agreement-document.component.html",
+    "time": 1791893792872.7,
+    "sha256": "83c6cdd02dc82b593a0b351a8359d77119760f9f6d7f7537a1afaa01d9b30087",
+    "relative": "components\\agreement-document\\agreement-document.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\agreement-document\\agreement-document.component.ts",
+    "time": 1791896422783.7139,
+    "sha256": "9ae4f945adcf88764af40d15f79d14c3622d8141fb8aadbcba216dd97bbbcd29",
+    "relative": "components\\agreement-document\\agreement-document.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\api-key\\api-key.component.html",
+    "time": 1791895367627.1875,
+    "sha256": "68472a389103196e074540a4b87a85fa4aeaa9f4e1ea48888b39f145fcacee4d",
+    "relative": "components\\api-key\\api-key.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\approvals\\approvals.component.html",
+    "time": 1791893792851.7546,
+    "sha256": "83963ce556241caef894fcdc26258527db250cf74cb5cdfbdb3d342eac151d8c",
+    "relative": "components\\approvals\\approvals.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\approvals\\approvals.component.ts",
+    "time": 1791893796640.603,
+    "sha256": "d39279cad1461d18e955a624dd5ac5af05155622ffa4882433a3855c577b83d7",
+    "relative": "components\\approvals\\approvals.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\broker\\broker.component.ts",
+    "time": 1791893796623.6504,
+    "sha256": "7880d73c95dd6c8b96072548a41a9e66c423cbb31f0803e54c1758dcedb38f21",
+    "relative": "components\\broker\\broker.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\charges\\charges.component.html",
+    "time": 1791893792840.7832,
+    "sha256": "afb7f11948198923a9daafdb2a945dca721a53d398e4784c18c862ac56dc6aa3",
+    "relative": "components\\charges\\charges.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\common\\common.component.html",
+    "time": 1791893792810.2058,
+    "sha256": "0b985505f1f887945177d24c44754fd8918a6e507fdfc7865a900c4d46810181",
+    "relative": "components\\common\\common.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\common\\common.component.ts",
+    "time": 1791896422618.0974,
+    "sha256": "135e1bdc933bbc64d5b245bd56a2d1bec4699634bc61aa16553340cbcfebf6cc",
+    "relative": "components\\common\\common.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\cost-centers\\cost-centers.component.ts",
+    "time": 1791893796591.7346,
+    "sha256": "71e419ec35817e0e200b3f6689abaa8c0a76246ed0dcb38d3de412856b0ee1d2",
+    "relative": "components\\cost-centers\\cost-centers.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\dda\\dda.component.ts",
+    "time": 1791893796587.745,
+    "sha256": "da95187cb586ae864b1b09697d64c678f44201ec46b689bd408f081b887016c1",
+    "relative": "components\\dda\\dda.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\document-number\\document-number.component.ts",
+    "time": 1791896422528.0042,
+    "sha256": "058f06767d1e9e570e34f50e1b070937b7eb52ccd54bcdd3f758bac8792e7ae9",
+    "relative": "components\\document-number\\document-number.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\e-darb\\e-darb.component.html",
+    "time": 1791893792910.221,
+    "sha256": "1f00b7839e1082bc3b806966694ba207203893e56bd3d3f9b2a4045863b8cdeb",
+    "relative": "components\\e-darb\\e-darb.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\e-darb\\e-darb.component.ts",
+    "time": 1791896422479.704,
+    "sha256": "64330b90519c879cc4530084db536926c4148be3a9ee3e9b7a47a5ca14e56bf9",
+    "relative": "components\\e-darb\\e-darb.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\e-salik\\e-salik.component.html",
+    "time": 1791893792887.658,
+    "sha256": "bcb91066aa7b6a61c688f385f6ceb7d0d96458ef3242027fc90fc24e32a47060",
+    "relative": "components\\e-salik\\e-salik.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\e-salik\\e-salik.component.ts",
+    "time": 1791896422435.6523,
+    "sha256": "022e9b87aa7293f3c5777d83ae4dbce835fbf617901b68634c2fd02fbd2f16c3",
+    "relative": "components\\e-salik\\e-salik.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\equipment\\equipment.component.ts",
+    "time": 1791896422358.8464,
+    "sha256": "07da9c5eaa3f4229b6dd0e94bf2e348e513ff5a02fa0042e4f021b95d3cae511",
+    "relative": "components\\equipment\\equipment.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\fields\\fields.component.ts",
+    "time": 1783610869786.9824,
+    "sha256": "91ef65934eafe3c527b474d96bf27e35be7a8e581ab24e0cd80364386a9cea81",
+    "relative": "components\\fields\\fields.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\fines\\fines.component.html",
+    "time": 1791893792844.7727,
+    "sha256": "dc3ab02b1c1e6afedf8894c0776ef0636c5061c9599eaef3ea7547b9ca8a43c8",
+    "relative": "components\\fines\\fines.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\fines\\fines.component.ts",
+    "time": 1791893796466.4946,
+    "sha256": "cdd00d4f3894664efe900d1fb14ec1f705755e14de64357429c42783fb4a442b",
+    "relative": "components\\fines\\fines.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\forms-and-fields\\forms-and-fields.component.ts",
+    "time": 1791896422003.1636,
+    "sha256": "1f6f1c1b68097758a40f077225189abc0dd6d588ec48a2f064dd3e47074cc214",
+    "relative": "components\\forms-and-fields\\forms-and-fields.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\holidays-setting\\holidays-setting.component.html",
+    "time": 1791893792777.1648,
+    "sha256": "d38d7019af889b6c43b2c71e87d9f44f289cb30a2b15489d507aa81f4de91d0f",
+    "relative": "components\\holidays-setting\\holidays-setting.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\holidays-setting\\holidays-setting.component.ts",
+    "time": 1791896421961.3438,
+    "sha256": "39fd7fd6adbcd632fcb67709b9c58385604c18e0db6725a7bd6e7636848fff9d",
+    "relative": "components\\holidays-setting\\holidays-setting.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\hrm\\hrm.component.ts",
+    "time": 1791893796377.7297,
+    "sha256": "55464de7c0af07711d6b2fdb3be4ccaa90eadab20dc2d2525eceaf44b37f8fcf",
+    "relative": "components\\hrm\\hrm.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\limousine\\limousine.component.ts",
+    "time": 1791896421899.2666,
+    "sha256": "9a00da84ef6814da6595247080317481399a7425d2df47a493c26304ec1fcec2",
+    "relative": "components\\limousine\\limousine.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\nation-id-format\\nation-idformat.component.html",
+    "time": 1791893792701.965,
+    "sha256": "b9a6c695a186c5a28b3dede6a31bd3d016c8c6a241ff86fadd2db001e996b7e8",
+    "relative": "components\\nation-id-format\\nation-idformat.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\nation-id-format\\nation-idformat.component.ts",
+    "time": 1791893796360.7732,
+    "sha256": "05181a491b3baf7c5eaeab8c09f565911b61e1b295af943bfda0cca71ceda718",
+    "relative": "components\\nation-id-format\\nation-idformat.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\notifications\\notifications.component.ts",
+    "time": 1791893796351.7983,
+    "sha256": "17f01498c65219b5af45cdf410a7b5deacc25682ef1c469aabb67cd4c6334fdc",
+    "relative": "components\\notifications\\notifications.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\payment-gateway-setting\\payment-gateway-setting.component.ts",
+    "time": 1791893796315.8943,
+    "sha256": "3346f42defcd451d7f28a2b9388c60134417b074901ac20f9bed4c86e1a5107e",
+    "relative": "components\\payment-gateway-setting\\payment-gateway-setting.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\profile\\profile.component.html",
+    "time": 1791893792638.8333,
+    "sha256": "c7c0cb9662aad94ff4b49cc6804fbb7f5815d47463fbc316af64f8be21a02b40",
+    "relative": "components\\profile\\profile.component.html"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\profile\\profile.component.ts",
+    "time": 1791896421737.4966,
+    "sha256": "9ef2bce7a87d8ecb80b58c2f0d6787adc7638f02f63b2bbe4daa1d5297b0c358",
+    "relative": "components\\profile\\profile.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\user-management\\user-management.component.ts",
+    "time": 1791896421712.6592,
+    "sha256": "11ad45ee77b831aa9e5a2b1240ddb325b8ddf5cea1d935b2d92f9486917b4b75",
+    "relative": "components\\user-management\\user-management.component.ts"
+  },
+  {
+    "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Administration\\Settings\\components\\workshop\\workshop.component.ts",
+    "time": 1791893796280.9963,
+    "sha256": "e3996688926b5902d2dc991e772020aad89da4ba8ef94ba3fe24f9d652e3f2e5",
+    "relative": "components\\workshop\\workshop.component.ts"
+  }
+]

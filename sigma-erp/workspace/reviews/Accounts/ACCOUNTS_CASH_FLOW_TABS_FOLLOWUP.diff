@@ -1,0 +1,185 @@
+
+FILE: src/app/modules/Accounts/shared/report-family/account-report.models.ts
+diff --git "a/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\0-before.txt" "b/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\0-after.txt"
+index 03cac6d..8671246 100644
+--- "a/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\0-before.txt"
++++ "b/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\0-after.txt"
+@@ -49,6 +49,7 @@ export interface AccountReportBuildResult<TFilter extends object> {
+ export interface AccountReportSection<TRow extends object> {
+   id: string;
+   titleKey?: string;
++  icon?: string;
+   rows: ReadonlyArray<TRow>;
+   columns: ReadonlyArray<DataTableColumn<TRow>>;
+   hierarchy?: DataTableHierarchy<TRow>;
+@@ -65,7 +66,9 @@ export interface AccountReportConfig<
+   titleKey: string;
+   icon: string;
+   exportFileName: string;
+-  sectionLayout?: 'panels' | 'document';
++  sectionLayout?: 'panels' | 'document' | 'tabs';
++  summaryDensity?: 'comfortable' | 'compact' | 'dense' | 'slim';
++  summaryMaxHeight?: number;
+   filters: ReadonlyArray<AccountReportFilterDefinition>;
+   load: (filter: TFilter) => Observable<Result<TResponse>>;
+   buildFilter: (raw: AccountReportFilterRaw) => AccountReportBuildResult<TFilter>;
+
+FILE: src/app/modules/Accounts/shared/report-family/account-report-page.component.html
+diff --git "a/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\2-before.txt" "b/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\2-after.txt"
+index 7897624..887cf11 100644
+--- "a/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\2-before.txt"
++++ "b/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\2-after.txt"
+@@ -187,17 +187,33 @@
+ 
+     @if (summaryCards().length) {
+       <app-summary-cards
++        [class.accounts-report-summary--tabs]="config.sectionLayout === 'tabs'"
+         [ariaLabel]="'accountReports.summary' | translate"
+         [cards]="summaryCards()"
+-        density="dense"
++        [density]="config.summaryDensity || 'dense'"
+         layout="row"
+         [minCardWidth]="150"
++        [maxHeight]="config.summaryMaxHeight ?? null"
+       ></app-summary-cards>
+     }
+ 
++    @if (config.sectionLayout === 'tabs' && sections().length) {
++      <app-editor-tabs
++        class="accounts-report-tabs no-print"
++        [tabs]="sectionTabs()"
++        [activeTab]="activeSectionId()"
++        (activeTabChange)="selectSection($event)"
++        [ariaLabel]="config.titleKey | translate"
++        [idPrefix]="config.id"
++        appearance="workspace"
++        [disabled]="printing() || loadingReport() || loadingLookups()"
++      ></app-editor-tabs>
++    }
++
+     <div
+       class="accounts-report-results sigma-print-flow"
+       [class.accounts-report-results--document]="config.sectionLayout === 'document'"
++      [class.accounts-report-results--tabs]="config.sectionLayout === 'tabs'"
+       [class.sigma-report-table-frame]="config.sectionLayout === 'document'"
+       [attr.tabindex]="config.sectionLayout === 'document' ? 0 : null"
+       [attr.role]="config.sectionLayout === 'document' ? 'region' : null"
+@@ -212,9 +228,17 @@
+       } @else {
+         <div class="accounts-report-sections sigma-print-flow" [attr.data-count]="sections().length">
+           @for (section of sections(); track section.id) {
+-            <section class="accounts-report-section sigma-print-flow" [attr.aria-labelledby]="section.titleKey ? config.id + '-' + section.id + '-heading' : null" [attr.aria-label]="!section.titleKey ? (config.titleKey | translate) : null">
++            <section
++              class="accounts-report-section sigma-print-flow"
++              [class.accounts-report-section--inactive]="config.sectionLayout === 'tabs' && activeSectionId() !== section.id"
++              [id]="config.id + '-panel-' + section.id"
++              [attr.role]="config.sectionLayout === 'tabs' ? 'tabpanel' : null"
++              [attr.aria-labelledby]="config.sectionLayout === 'tabs' ? config.id + '-tab-' + section.id : (section.titleKey ? config.id + '-' + section.id + '-heading' : null)"
++              [attr.aria-label]="!section.titleKey && config.sectionLayout !== 'tabs' ? (config.titleKey | translate) : null"
++              [attr.aria-hidden]="config.sectionLayout === 'tabs' ? activeSectionId() !== section.id && !printing() : null"
++            >
+               @if (section.titleKey) {
+-                <h2 [id]="config.id + '-' + section.id + '-heading'">{{ section.titleKey | translate }}</h2>
++                <h2 [class.d-none]="config.sectionLayout === 'tabs'" [class.d-print-block]="config.sectionLayout === 'tabs'" [id]="config.id + '-' + section.id + '-heading'">{{ section.titleKey | translate }}</h2>
+               }
+               @if (config.sectionLayout === 'document' && !section.rows.length) {
+                 <app-state-message kind="empty" message="general.noData"></app-state-message>
+
+FILE: src/app/modules/Accounts/shared/report-family/account-report-page.component.scss
+diff --git "a/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\3-before.txt" "b/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\3-after.txt"
+index 008c869..6962fd3 100644
+--- "a/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\3-before.txt"
++++ "b/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\3-after.txt"
+@@ -15,6 +15,14 @@
+   font-size: 11px;
+ }
+ 
++.accounts-report-summary--tabs {
++  margin-block-end: 12px;
++}
++
++.accounts-report-tabs {
++  flex: 0 0 auto;
++}
++
+ .accounts-report-results,
+ .accounts-report-sections,
+ .accounts-report-section {
+@@ -75,6 +83,21 @@
+   }
+ }
+ 
++.accounts-report-results--tabs .accounts-report-sections {
++  display: flex;
++  flex-direction: column;
++
++  .accounts-report-section {
++    flex: 1 1 0;
++  }
++}
++
++@media screen {
++  .accounts-report-section--inactive {
++    display: none;
++  }
++}
++
+ @media (max-width: 760px) {
+   .accounts-report-sections {
+     grid-template-columns: 1fr;
+@@ -82,6 +105,10 @@
+ }
+ 
+ @media print {
++  .accounts-report-results--tabs .accounts-report-sections {
++    display: block;
++  }
++
+   .accounts-report-results.accounts-report-results--document {
+     overflow: visible;
+ 
+
+FILE: src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts
+diff --git "a/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\4-before.txt" "b/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\4-after.txt"
+index b5d9d6a..dd70ccd 100644
+--- "a/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\4-before.txt"
++++ "b/C:\\Users\\user\\AppData\\Local\\Temp\\sigma-cashflow-tabs-ARnQ2o\\4-after.txt"
+@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
+   selector: 'app-accounts', standalone: true,
+   imports: [AccountReportPageComponent],
+   templateUrl: './list.component.html', styleUrl: './list.component.scss',
+-  host: { class: 'sigma-route-host sigma-print-flow' },
++  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+ })
+ export class CashFlowStatementComponent {
+   private readonly service = inject(CashFlowStatementService);
+@@ -23,7 +23,9 @@ export class CashFlowStatementComponent {
+   private readonly router = inject(Router);
+   readonly config: AccountReportConfig<CashFlowDTO, CashFlowFilter, CashFlowLine> = {
+     id: 'cashFlowStatement', titleKey: 'cashFlowStatement.title', icon: 'bi bi-bar-chart', exportFileName: 'CashFlowStatement',
+-    sectionLayout: 'document',
++    sectionLayout: 'tabs',
++    summaryDensity: 'slim',
++    summaryMaxHeight: 80,
+     filters: [
+       { key: 'fiscalYearId', labelKey: 'cashFlowStatement.fiscalYear', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.fiscalYears.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
+       { key: 'asOfDate', labelKey: 'cashFlowStatement.asOfDate', kind: 'date', initialValue: null }
+@@ -34,15 +36,15 @@ export class CashFlowStatementComponent {
+       return { filter: { fiscalYearId: reportNumber(raw, 'fiscalYearId'), asOfDate: reportDate(raw, 'asOfDate') } };
+     },
+     sections: response => [
+-      { id: 'operatingActivities', titleKey: 'cashFlowStatement.operatingActivities', minWidth: '32rem', rows: response.operatingActivities ?? [], columns: [
++      { id: 'operatingActivities', titleKey: 'cashFlowStatement.operatingActivities', icon: 'bi bi-gear', minWidth: '32rem', rows: response.operatingActivities ?? [], columns: [
+           { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+           { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+         ] },
+-      { id: 'investingActivities', titleKey: 'cashFlowStatement.investingActivities', minWidth: '32rem', rows: response.investingActivities ?? [], columns: [
++      { id: 'investingActivities', titleKey: 'cashFlowStatement.investingActivities', icon: 'bi bi-graph-up-arrow', minWidth: '32rem', rows: response.investingActivities ?? [], columns: [
+           { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+           { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+         ] },
+-      { id: 'financingActivities', titleKey: 'cashFlowStatement.financingActivities', minWidth: '32rem', rows: response.financingActivities ?? [], columns: [
++      { id: 'financingActivities', titleKey: 'cashFlowStatement.financingActivities', icon: 'bi bi-bank', minWidth: '32rem', rows: response.financingActivities ?? [], columns: [
+           { field: 'name', header: 'cashFlowStatement.account', cellClass: 'sigma-data-table__cell--wrap', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—', link: { activate: row => this.openLedger(row.accountId), title: 'cashFlowStatement.openLedger' } },
+           { field: 'amount', header: 'cashFlowStatement.amount', type: 'money', headerClass: 'text-end', cellClass: 'text-end' }
+         ] }

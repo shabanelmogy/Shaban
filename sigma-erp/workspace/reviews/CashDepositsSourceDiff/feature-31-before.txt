@@ -1,0 +1,24 @@
+using SiGma.Helpers.ViewModelsBases.Update;
+using SiGma.ViewModels.ViewModels.CashDepositDetail;
+using System.ComponentModel.DataAnnotations;
+
+namespace SiGma.ViewModels.ViewModels.CashDeposit
+{
+    public class CashDepositUpdateVM : UpdateBaseVm
+    {
+        [Required] public DateTime Date { get; set; }
+
+        [Required] public int BankId { get; set; }
+
+        [MaxLength(100)] public string? RefNo { get; set; }
+
+        [MaxLength(500)] public string? Description { get; set; }
+
+        public int? PaymentMethodId { get; set; }
+
+        public int? BranchId { get; set; }
+
+        /// <summary>Detail lines — each must include their own Id for differential tracking.</summary>
+        public List<CashDepositDetailUpdateVM> CashDepositDetails { get; set; } = [];
+    }
+}

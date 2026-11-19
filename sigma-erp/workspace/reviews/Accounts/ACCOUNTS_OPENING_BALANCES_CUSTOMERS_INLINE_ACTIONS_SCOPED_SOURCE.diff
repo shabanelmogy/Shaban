@@ -1,0 +1,131 @@
+diff --git a/src/app/modules/Accounts/openingBalances/components/customers/customers.component.html b/src/app/modules/Accounts/openingBalances/components/customers/customers.component.html
+index 3e01743..fc1dcde 100644
+--- a/src/app/modules/Accounts/openingBalances/components/customers/customers.component.html
++++ b/src/app/modules/Accounts/openingBalances/components/customers/customers.component.html
+@@ -1,76 +1,79 @@
+-<form [formGroup]="openingBalanceForm" (ngSubmit)="onSave()">
+-  <div class="opening-balance-filters sigma-filter-form" [formGroup]="filterForm">
+-      <div class="opening-balance-filter-field">
+-        <label class="form-label">{{ 'openingBalancesCustomer.contact' | translate }}</label>
+-        <p-dropdown [options]="customers()" formControlName="customerId" optionLabel="value" optionValue="id" [showClear]="true" [filter]="true" />
+-      </div>
+-      <div class="opening-balance-filter-field">
+-        <label class="form-label">{{ 'openingBalancesCustomer.Details' | translate }}</label>
+-        <input pInputText formControlName="voucherDetail" />
+-      </div>
+-      <div class="opening-balance-filter-actions">
+-        <button pButton type="button" class="opening-balance-filter-search" icon="bi bi-search" [label]="'general.search' | translate" (click)="applyFilters()"></button>
+-        <button pButton type="button" class="opening-balance-filter-reset" icon="bi bi-arrow-clockwise" [label]="'general.reset' | translate" (click)="resetFilters()"></button>
+-      </div>
++<app-opening-balance-editor-state [loading]="loadingEditor()" [error]="editorError()" (retry)="reloadEditor()" />
++@if (editorReady()) {
++<form appFilterPanel [mainColumns]="2" [inlineActions]="true" [formGroup]="filterForm" (ngSubmit)="applyFilters()" (resetRequested)="resetFilters()" [stableLayout]="true" [busy]="saving() || loadingEditor()">
++  <div class="sigma-filter-field">
++        <label class="form-label" for="opening-customers-filter-customerId">{{ 'openingBalancesCustomer.contact' | translate }}</label>
++        <p-dropdown [options]="customers()" formControlName="customerId" optionLabel="value" optionValue="id" [showClear]="true" [filter]="true"  inputId="opening-customers-filter-customerId" />
++  </div>
++  <div class="sigma-filter-field">
++        <label class="form-label" for="opening-customers-filter-voucherDetail">{{ 'openingBalancesCustomer.Details' | translate }}</label>
++        <input pInputText formControlName="voucherDetail"  id="opening-customers-filter-voucherDetail" />
+   </div>
++  <ng-container appFilterActions>
++    <app-primary-action-button type="submit" icon="bi bi-search" [label]="'general.search' | translate" [disabled]="saving() || loadingEditor()" />
++  </ng-container>
++</form>
+ 
++<form [formGroup]="openingBalanceForm" (ngSubmit)="onSave()">
+   <app-editable-collection-table
+     title="AccountsOpeningBalancesTypeEnum.Customers"
+     [headingVisible]="false"
++    [fillHeight]="true"
++    [stickyHeader]="true"
++    tableMinWidth="1100px"
+     [columns]="columns"
+     emptyMessage="openingBalancesEditor.empty"
+-    [editable]="!saving() && !(aggregateState()?.isLocked ?? false)"
++    [editable]="canEdit(saving())"
+     addLabel="openingBalancesEditor.addRow"
+-    [addDisabled]="saving() || (aggregateState()?.isLocked ?? false)"
++    [addDisabled]="!canMutateRows(saving())"
++    [removeDisabled]="!canMutateRows(saving())"
+     [validationMessage]="hasMoneyScaleValidationError(balances.controls) ? 'openingBalancesEditor.moneyScale' : hasDebitCreditValidationError(balances.controls) ? 'openingBalancesEditor.debitCredit' : ''"
+     (addRequested)="addRow()"
+     (removeRequested)="removeRow($event)"
+   >
+-    <ng-template [appEditableCollectionRow]="visibleRows()" let-row>
+-      <td [formGroup]="row">
+-        <p-dropdown appendTo="body" formControlName="customerId" [options]="customers()" optionLabel="value" optionValue="id" [filter]="true" />
+-        @if (row.controls.customerId.invalid && row.controls.customerId.touched) { <small>{{ 'validationMessages.required' | translate }}</small> }
++    <ng-template [appEditableCollectionRow]="visibleRows()" let-row let-index="index">
++      <ng-container [formGroup]="row">
++      <td>
++        <p-dropdown appendTo="body" formControlName="customerId" [options]="customers()" optionLabel="value" optionValue="id" [filter]="true" [inputId]="'opening-customer-' + index + '-first'" [attr.aria-invalid]="row.controls.customerId.invalid && (row.controls.customerId.touched || row.controls.customerId.dirty)" />
++        <app-field-error [control]="row.controls.customerId" />
+       </td>
+-      <td [formGroup]="row">
+-        <p-calendar appendTo="body" formControlName="voucherDate" [showIcon]="true" dateFormat="dd/mm/yy" />
+-        @if (row.controls.voucherDate.invalid && row.controls.voucherDate.touched) { <small>{{ 'validationMessages.required' | translate }}</small> }
++      <td>
++        <p-calendar appDatePicker [dateInputMask]="true" appendTo="body" formControlName="voucherDate" [inputId]="'opening-customer-' + index + '-voucherDate'" [attr.aria-invalid]="row.controls.voucherDate.invalid && (row.controls.voucherDate.touched || row.controls.voucherDate.dirty)" />
++        <app-field-error [control]="row.controls.voucherDate" />
+       </td>
+-      <td [formGroup]="row">
+-        <input pInputText formControlName="voucherDetail" [maxlength]="1000" />
+-        @if (row.controls.voucherDetail.hasError('maxlength') && row.controls.voucherDetail.touched) { <small>{{ 'validationMessages.maxlength' | translate }}</small> }
++      <td>
++        <input pInputText formControlName="voucherDetail" [maxlength]="1000" [id]="'opening-customer-' + index + '-voucherDetail'" [attr.aria-invalid]="row.controls.voucherDetail.invalid && (row.controls.voucherDetail.touched || row.controls.voucherDetail.dirty)" />
++        <app-field-error [control]="row.controls.voucherDetail" />
+       </td>
+-      <td [formGroup]="row">
+-        <input pInputText formControlName="agreementNo" [maxlength]="100" />
+-        @if (row.controls.agreementNo.hasError('maxlength') && row.controls.agreementNo.touched) { <small>{{ 'validationMessages.maxlength' | translate }}</small> }
++      <td>
++        <input pInputText formControlName="agreementNo" [maxlength]="100" [id]="'opening-customer-' + index + '-agreementNo'" [attr.aria-invalid]="row.controls.agreementNo.invalid && (row.controls.agreementNo.touched || row.controls.agreementNo.dirty)" />
++        <app-field-error [control]="row.controls.agreementNo" />
+       </td>
+-      <td class="opening-balance-amount-cell" [formGroup]="row"><input pInputText type="number" formControlName="debit" min="0" [step]="moneyStep()" inputmode="decimal" /></td>
+-      <td class="opening-balance-amount-cell" [formGroup]="row">
+-        <input pInputText type="number" formControlName="credit" min="0" [step]="moneyStep()" inputmode="decimal" />
++      <td class="opening-balance-amount-cell"><p-inputNumber formControlName="debit" min="0" [step]="moneyStep()" [inputId]="'opening-customer-' + index + '-debit'" [attr.aria-invalid]="row.controls.debit.invalid && (row.controls.debit.touched || row.controls.debit.dirty)"  [minFractionDigits]="0" [maxFractionDigits]="moneyDecimalPlaces()" [useGrouping]="true" /><app-field-error [control]="row.controls.debit" [messages]="{ financialScale: 'openingBalancesEditor.moneyScale' }" /></td>
++      <td class="opening-balance-amount-cell">
++        <p-inputNumber formControlName="credit" min="0" [step]="moneyStep()" [inputId]="'opening-customer-' + index + '-credit'" [attr.aria-invalid]="row.controls.credit.invalid && (row.controls.credit.touched || row.controls.credit.dirty)"  [minFractionDigits]="0" [maxFractionDigits]="moneyDecimalPlaces()" [useGrouping]="true" /><app-field-error [control]="row.controls.credit" [messages]="{ financialScale: 'openingBalancesEditor.moneyScale' }" />
+       </td>
++      </ng-container>
+     </ng-template>
+   </app-editable-collection-table>
+ 
+   <div class="opening-balance-summary-bar">
+-    <div class="opening-balance-totals">
+-      <div class="opening-balance-total opening-balance-total--debit">
+-        <span class="opening-balance-total__label">{{ 'openingBalancesEditor.totalDebit' | translate }}</span>
+-        <strong class="opening-balance-total__value">{{ getTotalDebit() | number:moneyDigitsInfo() }}</strong>
+-      </div>
+-      <div class="opening-balance-total opening-balance-total--credit">
+-        <span class="opening-balance-total__label">{{ 'openingBalancesEditor.totalCredit' | translate }}</span>
+-        <strong class="opening-balance-total__value">{{ getTotalCredit() | number:moneyDigitsInfo() }}</strong>
+-      </div>
+-      <div class="opening-balance-total opening-balance-total--balance">
+-        <span class="opening-balance-total__label">{{ 'openingBalancesEditor.totalBalance' | translate }}</span>
+-        <strong class="opening-balance-total__value">{{ (getTotalDebit() - getTotalCredit()) | number:moneyDigitsInfo() }}</strong>
+-      </div>
+-    </div>
++    <app-summary-cards
++      [ariaLabel]="'openingBalancesEditor.summary' | translate"
++      [cards]="summaryCards(getTotalDebit(), getTotalCredit(), true)"
++      density="slim"
++      layout="row"
++      [minCardWidth]="140"
++      [maxHeight]="80"
++    />
+     <app-primary-action-button
+       type="submit"
+       icon="bi bi-floppy-fill"
+       [label]="'general.save' | translate"
+-      [disabled]="saving() || (aggregateState()?.isLocked ?? false)"
++      [disabled]="!canEdit(saving())"
+       [loading]="saving()"
+     />
+   </div>
+ </form>
++
++}

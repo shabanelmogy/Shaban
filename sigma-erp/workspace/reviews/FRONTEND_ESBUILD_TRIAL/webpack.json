@@ -1,0 +1,19 @@
+{
+  "label": "webpack",
+  "status": "compiled",
+  "elapsedSeconds": 293.198,
+  "exitCode": null,
+  "pid": 47508,
+  "nodeVersion": "v24.18.1",
+  "command": [
+    "C:\\Program Files\\nodejs\\node.exe",
+    "--max-old-space-size=6144",
+    "./node_modules/@angular/cli/bin/ng.js",
+    "serve",
+    "--configuration=development",
+    "--host=127.0.0.1",
+    "--port=4301",
+    "--open=false"
+  ],
+  "log": "F:\\My Work\\Sigma\\reviews\\FRONTEND_ESBUILD_TRIAL\\webpack.log"
+}

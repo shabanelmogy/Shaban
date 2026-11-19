@@ -1,0 +1,335 @@
+diff --git a/src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts b/src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts
+index 9eddf36..bffebd0 100644
+--- a/src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts
++++ b/src/app/modules/Accounts/CashFlowStatement/components/list/list.component.ts
+@@ -1,231 +1,121 @@
+-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+-import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+-import { CommonModule } from '@angular/common';
+-import { TranslateModule } from '@ngx-translate/core';
+-import { TableModule } from 'primeng/table';
+-import { CalendarModule } from 'primeng/calendar';
+-import { DropdownModule } from 'primeng/dropdown';
+-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+-import { finalize, forkJoin } from 'rxjs';
+-import { Result } from 'src/app/modules/shared/models/result';
+-import { Results } from 'src/app/modules/shared/models/results';
+-import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+-import { CashFlowStatementService } from '../../services/cash-flow-statement.service';
++import { Component, inject } from '@angular/core';
++import { TranslateService } from '@ngx-translate/core';
++
+ import { CashFlowDTO, CashFlowFilter, CashFlowLine } from '../../models/list';
++import { CashFlowStatementRow } from '../../models/cash-flow-statement-row';
++import { CashFlowStatementService } from '../../services/cash-flow-statement.service';
++import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
++import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
++import { reportNumber, reportDate } from '../../../shared/report-family/account-report-values';
++
++import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
++import { Results } from 'src/app/modules/shared/models/results';
+ import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
+-import { ButtonModel } from 'src/app/modules/shared/models/button-model';
+-import { ButtonsComponent } from 'src/app/modules/shared/components/buttons/buttons.component';
+-import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
++import { Router } from '@angular/router';
++import { DataTableColumn, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+ 
+ @Component({
+-  selector: 'app-accounts',
+-  standalone: true,
+-  imports: [
+-    TranslateModule,
+-    CommonModule,
+-    FormsModule,
+-    ReactiveFormsModule,
+-    TableModule,
+-    CalendarModule,
+-    DropdownModule,
+-    ButtonsComponent,
+-  ],
+-  templateUrl: './list.component.html',
+-  styleUrl: './list.component.scss',
++  selector: 'app-accounts', standalone: true,
++  imports: [AccountReportPageComponent],
++  templateUrl: './list.component.html', styleUrl: './list.component.scss',
++  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+ })
+-export class CashFlowStatementComponent extends BaseComponentService implements OnInit {
+-  private cashFlowStatementService = inject(CashFlowStatementService);
+-  private fiscalYearService        = inject(FiscalYearService);
+-  private destroyRef               = inject(DestroyRef);
+-  private fb                       = inject(FormBuilder);
+-
+-  //#region Properties
+-  operatingActivities = signal<CashFlowLine[]>([]);
+-  investingActivities = signal<CashFlowLine[]>([]);
+-  financingActivities = signal<CashFlowLine[]>([]);
+-  exportData          = signal<any[]>([]);
+-
+-  netIncome            = signal<number>(0);
+-  netCashFromOperating = signal<number>(0);
+-  netCashFromInvesting = signal<number>(0);
+-  netCashFromFinancing = signal<number>(0);
+-  netChangeInCash      = signal<number>(0);
+-
+-  fiscalYears = signal<DropDownSelect[]>([]);
+-  filterForm!: FormGroup;
+-  //#endregion
+-
+-  constructor() {
+-    super();
+-  }
+-
+-  //#region Lifecycle
+-  ngOnInit(): void {
+-    this.initForm();
+-    this.loadDropdowns();
+-  }
+-  //#endregion
+-
+-  //#region Init
+-  initForm(): void {
+-    this.filterForm = this.fb.group({
+-      fiscalYearId: [null],
+-      asOfDate:     [null],
+-    });
+-  }
+-
+-  loadDropdowns(): void {
+-    this.loading.startLoading();
+-    forkJoin({
+-      fiscalYears: this.fiscalYearService.getSelectList<Results<DropDownSelect>>(),
+-    }).pipe(
+-      takeUntilDestroyed(this.destroyRef),
+-      finalize(() => this.loading.endLoading())
+-    ).subscribe({
+-      next: (res) => {
+-        if (res.fiscalYears.isSuccess && res.fiscalYears.entities.length > 0)
+-          this.fiscalYears.set(res.fiscalYears.entities);
+-      }
+-    });
+-  }
+-  //#endregion
+-
+-  //#region Actions
+-  buttons: ButtonModel[] = [
++export class CashFlowStatementComponent {
++  private readonly service = inject(CashFlowStatementService);
++  private readonly fiscalYears = inject(FiscalYearService);
++  private readonly router = inject(Router);
++  private readonly translate = inject(TranslateService);
++  private readonly columns: ReadonlyArray<DataTableColumn<CashFlowStatementRow>> = [
+     {
+-      id: 'btn-search',
+-      text: 'general.search',
+-      type: 'primary',
+-      class: 'me-2',
+-      icon: 'bi bi-search'
++      field: 'name', header: 'cashFlowStatement.account', width: '78%',
++      cellClass: 'sigma-data-table__cell--wrap',
++      value: row => row.labelKey
++        ? this.translate.instant(row.labelKey)
++        : [row.code, row.name].filter(Boolean).join(' — ') || '—',
++      link: {
++        enabled: row => row.accountId > 0 && row.tone === null,
++        activate: row => this.openLedger(row.accountId),
++        title: 'cashFlowStatement.openLedger',
++      },
+     },
+     {
+-      id: 'btn-refresh',
+-      text: 'general.refresh',
+-      type: 'secondary',
+-      class: 'me-2',
+-      icon: 'bi bi-arrow-clockwise'
++      field: 'amount', header: 'cashFlowStatement.amount', width: '22%', type: 'money',
++      headerClass: 'text-end', cellClass: 'text-end sigma-data-table__cell--numeric',
+     },
+-    {
+-      id: 'btn-reset',
+-      text: 'general.reset',
+-      type: 'secondary',
+-      class: 'me-2',
+-      icon: 'bi bi-arrow-clockwise'
+-    },
+-    {
+-      id: 'btn-excel',
+-      text: 'general.exportExcel',
+-      type: 'secondary',
+-      class: 'me-2',
+-      icon: 'bi bi-file-earmark-excel'
+-    }
+   ];
+-
+-  onButtonClick(buttonId: string): void {
+-    switch (buttonId) {
+-      case 'btn-search':  this.onSearch();  break;
+-      case 'btn-refresh': this.onRefresh(); break;
+-      case 'btn-reset':   this.onReset();   break;
+-      case 'btn-excel':
+-        onExportToExcel(this.exportData, 'CashFlowStatement');
+-        break;
++  readonly config: AccountReportConfig<CashFlowDTO, CashFlowFilter, CashFlowStatementRow> = {
++    id: 'cashFlowStatement', titleKey: 'cashFlowStatement.title', icon: 'bi bi-file-earmark-spreadsheet', exportFileName: 'CashFlowStatement',
++    filters: [
++      { key: 'fiscalYearId', labelKey: 'cashFlowStatement.fiscalYear', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.fiscalYears.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
++      { key: 'asOfDate', labelKey: 'cashFlowStatement.asOfDate', kind: 'date', initialValue: null }
++    ],
++    load: filter => this.service.getReport(filter),
++    buildFilter: raw => {
++
++      return { filter: { fiscalYearId: reportNumber(raw, 'fiscalYearId'), asOfDate: reportDate(raw, 'asOfDate') } };
++    },
++    sections: response => [
++      {
++        id: 'statement', dataKey: 'id', minWidth: '32rem',
++        rows: this.statementRows(response), columns: this.columns, rowTone: row => row.tone,
++      },
++    ],
++    exportRows: (response, _sections, translate) => this.exportRows(response, translate),
++  };
++
++  private statementRows(response: CashFlowDTO): CashFlowStatementRow[] {
++    const rows: CashFlowStatementRow[] = [];
++    const activities = [
++      { key: 'operatingActivities', lines: response.operatingActivities ?? [], totalKey: 'netCashFromOperating', total: response.netCashFromOperating },
++      { key: 'investingActivities', lines: response.investingActivities ?? [], totalKey: 'netCashFromInvesting', total: response.netCashFromInvesting },
++      { key: 'financingActivities', lines: response.financingActivities ?? [], totalKey: 'netCashFromFinancing', total: response.netCashFromFinancing },
++    ];
++    for (const activity of activities) {
++      rows.push(this.statementLabel(activity.key, null, 'section'));
++      if (activity.key === 'operatingActivities' && !activity.lines.some(line => this.isNetIncomeLine(line))) {
++        rows.push(this.statementLabel('netIncome', response.netIncome, null));
++      }
++      activity.lines.forEach((line, index) => rows.push({
++        ...line, id: `${activity.key}-${index}`, tone: null,
++        labelKey: activity.key === 'operatingActivities' && this.isNetIncomeLine(line)
++          ? 'cashFlowStatement.netIncome' : undefined,
++      }));
++      rows.push(this.statementLabel(activity.totalKey, activity.total, 'subtotal'));
+     }
++    rows.push(this.statementLabel('netChangeInCash', response.netChangeInCash, 'total'));
++    return rows;
+   }
+ 
+-  onSearch(): void {
+-    this.getListItems();
+-  }
+-
+-  onRefresh(): void {
+-    this.filterForm.reset({ fiscalYearId: null, asOfDate: null });
+-    this.clearResults();
+-  }
+-
+-  onReset(): void {
+-    this.filterForm.reset({ fiscalYearId: null, asOfDate: null });
+-    this.getListItems();
++  private statementLabel(key: string, amount: number | null, tone: CashFlowStatementRow['tone']): CashFlowStatementRow {
++    return { id: key, accountId: 0, code: '', name: '', labelKey: `cashFlowStatement.${key}`, amount, tone };
+   }
+ 
+-  private clearResults(): void {
+-    this.operatingActivities.set([]);
+-    this.investingActivities.set([]);
+-    this.financingActivities.set([]);
+-    this.exportData.set([]);
+-    this.netIncome.set(0);
+-    this.netCashFromOperating.set(0);
+-    this.netCashFromInvesting.set(0);
+-    this.netCashFromFinancing.set(0);
+-    this.netChangeInCash.set(0);
++  private isNetIncomeLine(line: CashFlowLine): boolean {
++    return line.accountId === 0 && !line.code && line.name === 'Net Income';
+   }
+-  //#endregion
+ 
+-  //#region Data
+-  getListItems(): void {
+-    const filter = this.buildFilter();
+-    this.loading.startLoading();
+-    this.cashFlowStatementService.get<Result<CashFlowDTO>>(filter)
+-      .pipe(
+-        takeUntilDestroyed(this.destroyRef),
+-        finalize(() => this.loading.endLoading())
+-      )
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess && res.entity) {
+-            const e = res.entity;
+-            this.netIncome.set(e.netIncome);
+-            this.netCashFromOperating.set(e.netCashFromOperating);
+-            this.netCashFromInvesting.set(e.netCashFromInvesting);
+-            this.netCashFromFinancing.set(e.netCashFromFinancing);
+-            this.netChangeInCash.set(e.netChangeInCash);
+-            this.operatingActivities.set(e.operatingActivities);
+-            this.investingActivities.set(e.investingActivities);
+-            this.financingActivities.set(e.financingActivities);
+-            this.exportData.set([
+-              ...this.flattenLines(e.operatingActivities,  'cashFlowStatement.operatingActivities'),
+-              ...this.flattenLines(e.investingActivities,   'cashFlowStatement.investingActivities'),
+-              ...this.flattenLines(e.financingActivities,   'cashFlowStatement.financingActivities'),
+-            ]);
+-          }
+-        }
+-      });
+-  }
+-
+-  private buildFilter(): CashFlowFilter {
+-    const v = this.filterForm.value;
+-    const filter: CashFlowFilter = {};
+-    // Prefer fiscalYearId; fall back to asOfDate
+-    if (v.fiscalYearId != null) {
+-      filter.fiscalYearId = v.fiscalYearId;
+-    } else if (v.asOfDate instanceof Date) {
+-      filter.asOfDate = this.formatDate(v.asOfDate);
++  private exportRows(response: CashFlowDTO, translate: (key: string) => string): Array<Record<string, string | number>> {
++    const columns: ReadonlyArray<DataTableColumn<CashFlowLine>> = [
++      { field: 'name', header: 'cashFlowStatement.account', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—' },
++      { field: 'amount', header: 'cashFlowStatement.amount', type: 'money' },
++    ];
++    const activities = [
++      { key: 'operatingActivities', lines: response.operatingActivities ?? [] },
++      { key: 'investingActivities', lines: response.investingActivities ?? [] },
++      { key: 'financingActivities', lines: response.financingActivities ?? [] },
++    ];
++    const rows: Array<Record<string, string | number>> = [];
++    for (const activity of activities) {
++      for (const row of dataTableExportRows(activity.lines, columns, translate)) {
++        rows.push({
++          [translate('accountReports.section')]: translate(`cashFlowStatement.${activity.key}`), ...row,
++        });
++      }
+     }
+-    return filter;
+-  }
+-
+-  private formatDate(date: Date): string {
+-    return date.toISOString().split('T')[0];
++    return rows;
+   }
+ 
+-  /** Display label: skip code prefix when code is empty (e.g. "Net Income" summary row) */
+-  displayName(line: CashFlowLine): string {
+-    return line.code ? `${line.code} - ${line.name}` : line.name;
+-  }
+-
+-  private flattenLines(lines: CashFlowLine[], section: string): any[] {
+-    return lines.map(l => ({
+-      section,
+-      code:   l.code,
+-      name:   l.name,
+-      amount: l.amount,
+-    }));
+-  }
+-
+-  navigateToLedger(accountId: number): void {
+-    if (accountId > 0) {
+-      this.router.navigate(['/Ledger'], { queryParams: { accountId } });
+-    }
++  private openLedger(accountId: number): void {
++    if (accountId > 0) void this.router.navigate(['/Ledger'], { queryParams: { accountId } });
+   }
+-  //#endregion
+ }

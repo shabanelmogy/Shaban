@@ -1,0 +1,1051 @@
+
+Workshop\workshopVehicles\services\workshopVehicles.service.ts
+searchVehicles(query: WorkshopVehicleListQuery): Observable<Results<WorkshopVehicleGridRow>> {
+    // Compatibility POST read returns Results<T>, including authoritative paging/counts.
+    return this.http.post<Results<WorkshopVehicleGridRow>>(
+      `${environment.baseUrl}Workshop/vehicles`,
+      { ...query.filters, pageNo: query.pageNo, pageSize: query.pageSize },
+      { headers: this.featureHeaders },
+    );
+  }
+
+Workshop\WorkOrder\services\workorder.service.ts
+getList(query: ListQuery<WorkOrderFilters>): Observable<Results<WorkOrderListModel>> {
+    return this.http.get<Results<WorkOrderListModel>>(`${environment.baseUrl}WorkOrder`, {
+      params: toListParams(query), headers: this.inlineHeaders,
+    });
+  }
+search(request: WorkOrderSearchModel): Observable<Results<WorkOrderListModel>> {
+    const { pageNo, pageSize, ...filters } = request;
+    return this.getList({ filters, pageNo, pageSize });
+  }
+getAllList(filters: WorkOrderFilters): Observable<WorkOrderListModel[]> {
+    return fetchAllPages((pageNo) => this.getList({ filters, pageNo, pageSize: 100 }), 'workOrder.exportError');
+  }
+
+Workshop\LabourActivities\services\labouractivities.service.ts
+getList(query: LabourActivityListQuery): Observable<Results<LabourActivityListRow>> {
+    const params = toListParams({ ...query, filters: { search: query.search?.trim() } });
+    return this.http.get<Results<LabourActivityListRow>>(this.endpoint, { params, headers: this.headers });
+  }
+
+Workshop\JobCategory\services\jobcategory.service.ts
+getList(query: JobCategoryListQuery): Observable<Results<JobCategoryListRow>> {
+    const params = toListParams({ ...query, filters: { search: query.search?.trim() } });
+    return this.http.get<Results<JobCategoryListRow>>(this.endpoint, { params, headers: this.headers });
+  }
+
+Workshop\Job\services\job.service.ts
+getList(query: JobListQuery): Observable<Results<JobListRow>> {
+    const params = toListParams(query);
+    // The list shows its load error inline (UI block 22), so the interceptor stays silent.
+    return this.http.get<Results<JobListRow>>(`${this.baseUrl}Job/workshop-grid`, {
+      params,
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+getAllList(filters: JobFilters, sortField?: string, sortOrder?: 1 | -1): Observable<JobListRow[]> {
+    return fetchAllPages(
+      (pageNo) => this.getList({ pageNo, pageSize: 100, filters, sortField, sortOrder }),
+      'job.errors.export',
+    );
+  }
+
+Vouchers\PurchaseReturns\PurchaseReturn\services\purchasereturn.service.ts
+list(filters: Record<string, unknown>, pageNo: number, pageSize: number): Observable<Results<PurchaseReturnDTO>> {
+    const params = new URLSearchParams({ PageNo: String(pageNo), PageSize: String(pageSize) });
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') params.set(`Filters[${key}]`, String(value));
+    });
+    return this.http.get<Results<PurchaseReturnDTO>>(`${environment.baseUrl}PurchaseReturn?${params.toString()}`);
+  }
+
+Vouchers\PurchaseRequests\PurchaseRequest\services\purchaserequest.service.ts
+getList(query: PurchaseRequestListQuery): Observable<Results<PurchaseRequestDTO>> {
+    return this.http.get<Results<PurchaseRequestDTO>>(`${this.baseUrl}PurchaseRequest`, {
+      ...this.inlineOptions, params: toListParams(query),
+    });
+  }
+getAllList(filters: PurchaseRequestFilters, sortField: string, sortOrder: 1 | -1): Observable<PurchaseRequestDTO[]> {
+    return fetchAllPages(
+      (pageNo) => this.getList({ pageNo, pageSize: 100, filters, sortField, sortOrder }),
+      'purchaseRequest.errors.export',
+    );
+  }
+
+Vouchers\PurchaseOrders\PurchaseOrder\services\purchaseorder.service.ts
+getList(query: PurchaseOrderListQuery): Observable<Results<PurchaseOrderDTO>> {
+    return this.http.get<Results<PurchaseOrderDTO>>(`${this.baseUrl}PurchaseOrder`, {
+      ...this.inlineOptions, params: toListParams(query),
+    });
+  }
+getAllList(filters: PurchaseOrderFilters, sortField: string, sortOrder: 1 | -1): Observable<PurchaseOrderDTO[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters, sortField, sortOrder }), 'purchaseOrder.errors.export');
+  }
+
+Vouchers\Invoices\Invoice\services\invoice-actions.service.ts
+
+Vouchers\Invoices\Invoice\services\invoice.service.ts
+getList(query: InvoiceListQuery): Observable<Results<InvoiceDTO>> {
+    return this.http.get<Results<InvoiceDTO>>(`${this.baseUrl}Invoice`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Vouchers\GRNs\GoodsReceivedNote\services\goodsreceivednote.service.ts
+getList(query: GoodsReceivedNoteListQuery): Observable<Results<GoodsReceivedNoteDTO>> {
+    return this.http.get<Results<GoodsReceivedNoteDTO>>(`${this.baseUrl}GoodsReceivedNote`, { ...this.inlineOptions, params: toListParams(query) });
+  }
+getAllList(filters: GoodsReceivedNoteFilters, sortField: string, sortOrder: 1 | -1): Observable<GoodsReceivedNoteDTO[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters, sortField, sortOrder }), 'grn.errors.export');
+  }
+getAllTaxReport(filters: GoodsReceivedNoteFilters, sortField: string, sortOrder: 1 | -1): Observable<GoodsReceivedNoteTaxReportRow[]> {
+    return fetchAllPages(pageNo => this.getTaxReport({ pageNo, pageSize: 100, filters, sortField, sortOrder }), 'grn.errors.export');
+  }
+
+Vouchers\Bills\Bill\services\bill.service.ts
+getList(query: BillListQuery): Observable<Results<BillDTO>> {
+    return this.http.get<Results<BillDTO>>(`${this.baseUrl}Bill`, { ...this.listInlineOptions, params: toListParams(query) });
+  }
+getAllList(filters: BillFilters, sortField: string, sortOrder: 1 | -1): Observable<BillDTO[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters, sortField, sortOrder }), 'bill.listErrors.output');
+  }
+getAllTaxReport(filters: BillFilters, sortField: string, sortOrder: 1 | -1): Observable<BillTaxReportRow[]> {
+    return fetchAllPages(pageNo => this.getTaxReport({ pageNo, pageSize: 100, filters, sortField, sortOrder }), 'bill.listErrors.output');
+  }
+rememberListState(query: BillListQuery): void {
+    const owner = this.listStateOwner();
+    this.lastListState = owner ? { owner, query: { ...query, filters: { ...query.filters } } } : null;
+  }
+readListState(): BillListQuery | null {
+    if (!this.lastListState || this.lastListState.owner !== this.listStateOwner()) {
+      this.lastListState = null;
+      return null;
+    }
+    return { ...this.lastListState.query, filters: { ...this.lastListState.query.filters } };
+  }
+
+Transportation\TransportationAgreement\services\transportationagreement.service.ts
+getList(query: TransportationAgreementListQuery): Observable<Results<TransportationAgreementDTO>> {
+    // This producer ignores sort; consumers expose no sortable headers.
+    return this.http.get<Results<TransportationAgreementDTO>>(this.endpoint, {
+      params: toListParams({ pageNo: query.pageNo, pageSize: query.pageSize, filters: query.filters }),
+      headers: this.featureHeaders,
+    });
+  }
+
+Transportation\TripSheet\services\tripsheet.service.ts
+
+Transportation\Trips\services\trips.service.ts
+
+Transportation\TransportationInvoice\services\transportationinvoice.service.ts
+getList(query: TransportationInvoiceQuery): Observable<Results<TransportationInvoiceDTO>> { return this.http.get<Results<TransportationInvoiceDTO>>(this.endpoint, { params: toListParams(query), ...this.inline }); }
+
+Transportation\TransportationAgreementItem\services\transportationagreementitem.service.ts
+getList(query: TransportationAgreementItemQuery): Observable<Results<TransportationAgreementItemDTO>> { return this.http.get<Results<TransportationAgreementItemDTO>>(this.endpoint, { params: toListParams(query), ...this.inline }); }
+
+Transportation\TransactionItem\services\transactionitem.service.ts
+getList(query: TransactionItemListQuery): Observable<Results<TransactionItemListDTO>> {
+    return this.http.get<Results<TransactionItemListDTO>>(this.endpoint, { params: toListParams(query), headers: this.inlineHeaders });
+  }
+
+Transportation\Transaction\services\transaction.service.ts
+getList(query: TransactionListQuery): Observable<Results<TransactionListDTO>> {
+    return this.http.get<Results<TransactionListDTO>>(this.endpoint, { params: toListParams(query), headers: this.inlineHeaders });
+  }
+
+Support\SupportSlaAgreement\services\support-sla-agreement.service.ts
+getList(query: SupportSlaAgreementListQuery): Observable<Results<SupportSlaAgreementListRow>> {
+    return this.http.get<Results<SupportSlaAgreementListRow>>(`${this.baseUrl}SupportSlaAgreement`, {
+      ...this.inline, params: toListParams(query),
+    });
+  }
+getAllList(filters: SupportSlaAgreementFilters, sortField: string, sortOrder: 1 | -1): Observable<SupportSlaAgreementListRow[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters, sortField, sortOrder }), 'supportSlaAgreement.errors.export');
+  }
+
+Support\SupportRequest\services\supportrequest.service.ts
+getList(query: SupportRequestListQuery): Observable<Results<SupportRequestListRow>> {
+    return this.http.get<Results<SupportRequestListRow>>(`${this.baseUrl}SupportRequest`, {
+      ...this.inline, params: toListParams(query),
+    });
+  }
+getAllList(filters: SupportRequestFilters, sortField: string, sortOrder: 1 | -1): Observable<SupportRequestListRow[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters, sortField, sortOrder }), 'supportRequest.errors.export');
+  }
+
+Suppliers\Supplier\services\supplier.service.ts
+
+Stock\UnitsOfMeasures\services\units-of-measures.service.ts
+getList(query: UnitsOfMeasuresListQuery): Observable<Results<UnitsOfMeasuresDTO>> {
+    return this.http.get<Results<UnitsOfMeasuresDTO>>(`${this.baseUrl}UnitsOfMeasures`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Stock\StockTransfer\services\stocktransfer.service.ts
+getList(query: StockTransferListQuery): Observable<Results<StockTransferDTO>> {
+    return this.http.get<Results<StockTransferDTO>>(`${this.baseUrl}StockTransfer`, {
+      params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Stock\ItemType\services\item-types.service.ts
+getList(query: ItemTypesListQuery): Observable<Results<ItemTypesDTO>> {
+    return this.http.get<Results<ItemTypesDTO>>(`${this.baseUrl}ItemType`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Stock\ItemReturn\services\itemreturn.service.ts
+getList(query: ItemReturnListQuery): Observable<Results<ItemReturnDTO>> {
+    return this.http.get<Results<ItemReturnDTO>>(`${this.baseUrl}ItemReturn`, {
+      params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Stock\ItemRequisition\services\itemrequisition.service.ts
+getList(query: ItemRequisitionListQuery): Observable<Results<ItemRequisitionDTO>> {
+    return this.http.get<Results<ItemRequisitionDTO>>(`${this.baseUrl}ItemRequisition`, {
+      params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Stock\ItemIssue\services\itemissue.service.ts
+getList(query: ItemIssueListQuery): Observable<Results<ItemIssueDTO>> {
+    return this.http.get<Results<ItemIssueDTO>>(`${this.baseUrl}ItemIssue`, {
+      params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Stock\Item\services\item.service.ts
+getList(query: ItemListQuery): Observable<Results<ItemDTO>> {
+    return this.http.get<Results<ItemDTO>>(`${this.baseUrl}Item`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Staff\Staff\services\staff.service.ts
+getList(
+    query: StaffListQuery,
+    options: { skipErrorInterceptor?: boolean } = {},
+  ): Observable<Results<StaffDTO>> {
+    return this.http.get<Results<StaffDTO>>(this.endpoint, {
+      params: toListParams(query),
+      ...(options.skipErrorInterceptor
+        ? { headers: { 'X-Skip-Error-Interceptor': 'true' } }
+        : {}),
+    });
+  }
+getAllList(
+    filters: StaffListFilters = {},
+    options: { skipErrorInterceptor?: boolean } = {},
+  ): Observable<StaffDTO[]> {
+    return fetchAllPages(
+      (pageNo) => this.getList({ pageNo, pageSize: 100, filters }, options),
+      'staff.exportError',
+    );
+  }
+
+Sales\SalesQuotation\services\salesquotation.service.ts
+getList(query: SalesQuotationListQuery): Observable<Results<SalesQuotationListModel>> {
+    return this.http.get<Results<SalesQuotationListModel>>(this.controllerUrl, {
+      params: toListParams(query),
+      headers: SKIP_ERROR_INTERCEPTOR,
+    });
+  }
+
+Sales\SalesAgreement\services\salesagreement.service.ts
+getList(query: SalesAgreementListQuery): Observable<Results<SalesAgreementListModel>> {
+    return this.http.get<Results<SalesAgreementListModel>>(this.controllerUrl, {
+      params: toListParams(query),
+      headers: SKIP_ERROR_INTERCEPTOR,
+    });
+  }
+
+Sales\Fleet\services\fleet.service.ts
+getList(query: EquipmentListQuery = {}): Observable<Results<EquipmentDTO>> {
+    const params = toListParams({ pageNo: query.pageNo ?? 1, pageSize: query.pageSize ?? DEFAULT_PAGE_SIZE, filters: query.filters ?? {} });
+
+    return this.http.get<Results<EquipmentDTO>>(`${environment.baseUrl}Equipment`, {
+      params,
+      // The list shows its load failure inline (UI block 22).
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+getAllList(filters: EquipmentListFilters = {}): Observable<EquipmentDTO[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters }), 'fleet.errors.export');
+  }
+
+Sales\DueInstallments\services\due-installments.service.ts
+
+Rental\TariffCard\services\tariffcard.service.ts
+getList(query: TariffCardListQuery): Observable<Results<TariffCardListDTO>> {
+    const params = new HttpParams()
+      .set('pageNo', String(query.pageNo))
+      .set('pageSize', String(query.pageSize));
+
+    return this.http.get<Results<TariffCardListDTO>>(this.endpoint, { params, headers: this.headers });
+  }
+
+Rental\RentalQuotation\services\rentalquotation.service.ts
+getList(
+    query: RentalQuotationListQuery,
+  ): Observable<Results<RentalQuotationListDTO>> {
+    return this.http.get<Results<RentalQuotationListDTO>>(this.endpoint, {
+      params: toListParams(query),
+      headers: this.featureHeaders,
+    });
+  }
+getAllList(
+    filters: RentalQuotationListFilters,
+    sortField: RentalQuotationSortField = 'date',
+    sortOrder: 1 | -1 = -1,
+  ): Observable<RentalQuotationListDTO[]> {
+    return fetchAllPages(
+      (pageNo) => this.getList({ filters, pageNo, pageSize: 200, sortField, sortOrder }),
+      'rentalQuotation.errors.export',
+    );
+  }
+
+Rental\MasterAgreement\services\masteragreement.service.ts
+getList(
+    query: MasterAgreementListQuery,
+  ): Observable<Results<MasterAgreementListDTO>> {
+    return this.http.get<Results<MasterAgreementListDTO>>(this.endpoint, {
+      params: toListParams(query),
+      headers: this.featureHeaders,
+    });
+  }
+getAllList(
+    filters: MasterAgreementListFilters,
+    sortField: MasterAgreementSortField = 'date',
+    sortOrder: 1 | -1 = -1,
+  ): Observable<MasterAgreementListDTO[]> {
+    return fetchAllPages(
+      (pageNo) => this.getList({ filters, pageNo, pageSize: 200, sortField, sortOrder }),
+      'masterAgreement.errors.export',
+    );
+  }
+
+Rental\Booking\services\booking.service.ts
+private buildListParams(query: BookingListQuery): HttpParams {
+    return toListParams(query).delete('pageNo').delete('pageSize')
+      .set('PageNo', String(query.pageNo)).set('PageSize', String(query.pageSize));
+  }
+
+Rental\Agreement\services\agreement.service.ts
+private buildListParams(query: RentalAgreementListQuery): HttpParams {
+    return toListParams(query).delete('pageNo').delete('pageSize')
+      .set('PageNo', String(query.pageNo)).set('PageSize', String(query.pageSize));
+  }
+
+Movements\WorkshopMovement\services\workshopmovement.service.ts
+getList(query: WorkshopMovementListQuery): Observable<Results<WorkshopMovementGridRow>> {
+    return this.http.get<Results<WorkshopMovementGridRow>>(this.endpoint, { params: toListParams(query), headers: this.headers });
+  }
+getAllList(filters: WorkshopMovementListFilters): Observable<WorkshopMovementGridRow[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters }), 'workshopMovement.errors.export');
+  }
+
+Movements\Workshop\services\workshop.service.ts
+getList(query: ListQuery<WorkshopFilters>): Observable<Results<WorkshopDTO>> {
+    return this.http.get<Results<WorkshopDTO>>(this.endpoint, { params: toListParams(query), headers: this.headers });
+  }
+getAllList(query: ListQuery<WorkshopFilters>): Observable<WorkshopDTO[]> {
+    return fetchAllPages(pageNo => this.getList({ ...query, pageNo, pageSize: 100 }), 'workshopMaster.errors.export');
+  }
+
+Movements\NRM\services\nrm.service.ts
+getList(query: NRMListQuery): Observable<Results<NRMGridRow>> {
+    return this.http.get<Results<NRMGridRow>>(this.endpoint, { params: toListParams(query), headers: this.headers });
+  }
+getAllList(filters: NRMListFilters): Observable<NRMGridRow[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters }), 'nrm.errors.export');
+  }
+
+Movements\logsMovement\services\logs-movement.service.ts
+getList(pageNo: number, pageSize: number, filters: LogsMovementFilters): Observable<LogsMovementListResponse> {
+    return this.http.get<LogsMovementListResponse>(this.endpoint, {
+      params: toQueryParams({ ...filters, pageNo, pageSize }), headers: this.featureHeaders,
+    });
+  }
+getAllList(filters: LogsMovementFilters): Observable<LogsMovementListDTO[]> {
+    return fetchAllPages(page => this.getList(page, 100, filters), 'general.error');
+  }
+
+Movements\DeliveryMovement\services\deliverymovement.service.ts
+getList(query: DeliveryMovementListQuery): Observable<Results<DeliveryMovementGridRow>> {
+        return this.http.get<Results<DeliveryMovementGridRow>>(this.endpoint, { params: toListParams(query), headers: this.featureHeaders });
+    }
+getAllList(filters: DeliveryMovementListFilters): Observable<DeliveryMovementGridRow[]> {
+        return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters }), 'deliveryMovement.exportError');
+    }
+
+Movements\CustodyMovement\services\custodymovement.service.ts
+getList(query: CustodyMovementListQuery): Observable<Results<CustodyMovementGridRow>> {
+        return this.http.get<Results<CustodyMovementGridRow>>(this.endpoint, { params: toListParams(query), headers: this.featureHeaders });
+    }
+getAllList(filters: CustodyMovementListFilters): Observable<CustodyMovementGridRow[]> {
+        return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters }), 'custodymovement.exportError');
+    }
+
+Movements\collectionMovement\services\collection-movement.service.ts
+getList(query: CollectionMovementListQuery): Observable<Results<CollectionMovementGridRow>> {
+    return this.http.get<Results<CollectionMovementGridRow>>(this.endpoint, {
+      params: toListParams(query), ...this.inlineOptions,
+    });
+  }
+
+Limousine\TripTypes\services\trip-type.service.ts
+
+Limousine\TripGridCustomization\services\tripgridcustomization.service.ts
+
+Limousine\TripBooking\services\tripbooking.service.ts
+
+Limousine\Location\services\location.service.ts
+
+Limousine\LimousineInvoice\services\limousineinvoice.service.ts
+
+Limousine\LimoQuotation\services\limoquotation.service.ts
+
+Lease\LeaseQuotation\services\leasequotation.service.ts
+getList(query: LeaseQuotationListQuery): Observable<Results<LeaseQuotationListDTO>> {
+    const params = toListParams(query);
+
+    return this.http.get<Results<LeaseQuotationListDTO>>(this.endpoint, {
+      params,
+      headers: this.featureHeaders,
+    });
+  }
+getAllList(filters: LeaseQuotationListFilters): Observable<LeaseQuotationListDTO[]> {
+    const firstQuery: LeaseQuotationListQuery = {
+      filters,
+      pageNo: 1,
+      pageSize: 200,
+      sortField: 'date',
+      sortOrder: -1,
+    };
+
+    return fetchAllPages((pageNo) => this.getList({ ...firstQuery, pageNo }), 'leaseQuotation.errors.export');
+  }
+
+Lease\LeaseMasterAgreement\services\leasemasteragreement.service.ts
+getList(query: LeaseMasterAgreementListQuery): Observable<Results<LeaseMasterAgreementListDTO>> {
+    const params = toListParams(query);
+
+    return this.http.get<Results<LeaseMasterAgreementListDTO>>(this.endpoint, {
+      params,
+      headers: this.featureHeaders,
+    });
+  }
+getAllList(filters: LeaseMasterAgreementListFilters): Observable<LeaseMasterAgreementListDTO[]> {
+    const firstQuery: LeaseMasterAgreementListQuery = {
+      filters,
+      pageNo: 1,
+      pageSize: 200,
+      sortField: 'date',
+      sortOrder: -1,
+    };
+
+    return fetchAllPages((pageNo) => this.getList({ ...firstQuery, pageNo }), 'masterAgreement.errors.export');
+  }
+
+Lease\LeaseInquiry\services\leaseinquiry.service.ts
+getList(query: LeaseInquiryListQuery): Observable<Results<LeaseInquiryDTO>> {
+    const { pageNo, pageSize, sortField, sortOrder, ...filters } = query;
+    const params = toListParams({ pageNo, pageSize, sortField, sortOrder, filters });
+
+    return this.http.get<Results<LeaseInquiryDTO>>(this.endpoint, { params, headers: this.featureHeaders });
+  }
+
+Lease\LeaseCustomerSms\services\lease-customer-sms.service.ts
+getList(query: LeaseCustomerSmsQuery): Observable<Results<LeaseCustomerSmsDTO>> {
+    let params = new HttpParams()
+      .set('pageNo', String(query.pageNo))
+      .set('pageSize', String(query.pageSize))
+      .set('sortField', query.sortField)
+      .set('sortOrder', String(query.sortOrder));
+
+    const search = query.search?.trim();
+    if (search) params = params.set('search', search);
+
+    return this.http.get<Results<LeaseCustomerSmsDTO>>(
+      `${environment.baseUrl}LeaseCustomerSms`,
+      { params, headers: this.simulationHeaders },
+    );
+  }
+
+Lease\LeaseCostSetting\services\leasecostsetting.service.ts
+getList(query: LeaseCostSettingListQuery): Observable<Results<LeaseCostSettingDTO>> {
+    const params = toListParams({ ...query, filters: {} });
+    return this.http.get<Results<LeaseCostSettingDTO>>(this.endpoint, { ...this.inlineOptions, params });
+  }
+
+Lease\LeaseCostParameter\services\leasecostparameter.service.ts
+getList(query: LeaseCostParameterListQuery = {}): Observable<Results<LeaseCostParameterDTO>> {
+    const params = toListParams({
+      pageNo: query.pageNo ?? 1,
+      pageSize: query.pageSize ?? DEFAULT_PAGE_SIZE,
+      filters: query.filters ?? {},
+    });
+    return this.http.get<Results<LeaseCostParameterDTO>>(this.endpoint, { ...this.inlineOptions, params });
+  }
+
+Lease\LeaseClause\services\leaseclause.service.ts
+
+Lease\LeaseAgreement\services\leaseagreement.service.ts
+getList(query: LeaseAgreementListQuery): Observable<Results<LeaseAgreementDTO>> {
+    const params = toListParams({ ...query, filters: query.filters ?? {} });
+    return this.http.get<Results<LeaseAgreementDTO>>(this.endpoint, { params, headers: this.inlineErrorHeaders });
+  }
+
+HRM\Payroll\PaySlips\services\pay-slips.service.ts
+list(query: PaySlipQuery): Observable<Results<PaySlipListRow>> { return this.http.get<Results<PaySlipListRow>>(`${this.baseUrl}PaySlips`, { ...this.options, params: toListParams(query) }); }
+
+HRM\Payroll\Payrolls\services\payrolls.service.ts
+getList(query: PayrollListQuery): Observable<Results<PayrollRunListRow>> {
+    return this.http.get<Results<PayrollRunListRow>>(`${this.baseUrl}PayrollRuns`, {
+      ...this.inlineOptions,
+      params: toListParams(query),
+    });
+  }
+
+HRM\Overtimes\Overtime\services\overtime.service.ts
+getList(query: OvertimeListQuery): Observable<Results<OvertimeListRow>> {
+    return this.http.get<Results<OvertimeListRow>>(`${this.baseUrl}Overtime`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+HRM\Leaves\LeaveType\services\leavetype.service.ts
+getList(query: LeaveTypeListQuery): Observable<Results<LeaveTypeDTO>> {
+    return this.http.get<Results<LeaveTypeDTO>>(`${this.baseUrl}LeaveType`, { params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' } });
+  }
+
+HRM\Leaves\Leave\services\leave.service.ts
+getList(query: ListQuery<LeaveFilters>): Observable<Results<LeaveDTO>> {
+    return this.http.get<Results<LeaveDTO>>(this.endpoint, { params: toListParams(query), headers: this.inline });
+  }
+getAllList(query: ListQuery<LeaveFilters>): Observable<LeaveDTO[]> {
+    return fetchAllPages(pageNo => this.getList({ ...query, pageNo, pageSize: 100 }), 'leaveReview.errors.export');
+  }
+
+HRM\Holidays\Holiday\services\holiday.service.ts
+getList(query: HolidayListQuery): Observable<Results<HolidayDTO>> {
+    return this.http.get<Results<HolidayDTO>>(`${this.baseUrl}SettingsHolidayModel`, { params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' } });
+  }
+
+HRM\Deductions\Deduction\services\deduction.service.ts
+getList(query: DeductionListQuery): Observable<Results<DeductionDTO>> {
+    return this.http.get<Results<DeductionDTO>>(this.endpoint, {
+      params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+HRM\Attendances\StaffTimesheet\services\attendanceTimesheet.service.ts
+getList(query: StaffTimesheetListQuery): Observable<Results<StaffTimesheetDTO>> {
+    return this.http.get<Results<StaffTimesheetDTO>>(this.endpoint, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+HRM\Attendances\Shift\services\shift.service.ts
+getList(query: ShiftListQuery): Observable<Results<ShiftDTO>> {
+    return this.http.get<Results<ShiftDTO>>(this.endpoint, {
+      params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+HRM\Attendances\Attendance\services\attendance.service.ts
+getList(query: AttendanceListQuery): Observable<Results<AttendanceDTO>> {
+    return this.http.get<Results<AttendanceDTO>>(this.endpoint, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+HRM\Administration\Staff Roles\StaffRole\services\staffrole.service.ts
+getList(query: StaffRoleListQuery): Observable<Results<StaffRoleListRow>> {
+    const params = toListParams({
+      pageNo: query.pageNo,
+      pageSize: query.pageSize,
+      sortField: query.sortField,
+      sortOrder: query.sortOrder,
+      filters: { search: query.search?.trim() },
+    });
+    return this.http.get<Results<StaffRoleListRow>>(this.endpoint, { params, headers: this.headers });
+  }
+
+HRM\Administration\Leave Opening Balance\LeaveOpeningBalance\services\leave-opening-balance.service.ts
+getList(query: LeaveOpeningBalanceQuery): Observable<Results<LeaveOpeningBalanceRow>> {
+    return this.http.get<Results<LeaveOpeningBalanceRow>>(this.endpoint, {
+      params: toListParams(query), headers: this.inline,
+    });
+  }
+
+HRM\Administration\Departments\Department\services\department.service.ts
+getList(query: DepartmentListQuery): Observable<Results<DepartmentListRow>> {
+    const params = toListParams({
+      pageNo: query.pageNo,
+      pageSize: query.pageSize,
+      filters: { search: query.search?.trim() },
+    });
+    return this.http.get<Results<DepartmentListRow>>(this.endpoint, {
+      params,
+      headers: this.headers,
+    });
+  }
+
+Fleet\VehicleType\services\vehicle-type.service.ts
+getList(
+    query: VehicleTypeListQuery = {},
+  ): Observable<Results<VehicleTypeListDTO>> {
+    const params = toListParams({ pageNo: query.pageNo ?? 1, pageSize: query.pageSize ?? DEFAULT_PAGE_SIZE, filters: query.filters ?? {} });
+    return this.http.get<Results<VehicleTypeListDTO>>(this.endpoint, { params, headers: this.headers });
+  }
+
+Fleet\VehicleService\services\fleet-vehicle-service.service.ts
+getList(query: VehicleServiceListQuery): Observable<Results<VehicleServiceDTO>> {
+    const params = toListParams({ ...query, filters: {} });
+    return this.http.get<Results<VehicleServiceDTO>>(this.endpoint, { params, headers: this.headers });
+  }
+
+Fleet\Vehicle\services\vehicle.service.ts
+search(request: VehicleSearchModel, options?: { skipErrorInterceptor?: boolean }): Observable<Results<VehicleListModel>> {
+    let params = new HttpParams();
+    Object.entries(request).forEach(([key, value]) => {
+      if (value === undefined || value === '') return;
+      if (value === null) {
+        // Vehicle/Search treats an empty pageSize as the confirmed unpaged contract.
+        if (key === 'pageSize') params = params.set(key, '');
+        return;
+      }
+
+      params = params.set(key, String(value));
+    });
+    return this.http.get<Results<VehicleListModel>>(`${environment.baseUrl}Vehicle/Search`, {
+      params, ...(options?.skipErrorInterceptor ? { headers: { 'X-Skip-Error-Interceptor': 'true' } } : {}),
+    });
+  }
+
+Fleet\SourceCode\services\sourcecode.service.ts
+getList(query: SourceCodeListQuery = {}): Observable<Results<SourceCodeDTO>> {
+    const params = toListParams({ pageNo: query.pageNo ?? 1, pageSize: query.pageSize ?? DEFAULT_PAGE_SIZE, filters: query.filters ?? {} });
+    return this.http.get<Results<SourceCodeDTO>>(this.endpoint, { params, headers: this.headers });
+  }
+
+Fleet\ServiceLog\services\servicelogs.service.ts
+getList(query: FleetServiceLogListQuery): Observable<Results<FleetServiceLogListDTO>> {
+    let params = new HttpParams()
+      .set('PageNo', String(query.pageNo))
+      .set('PageSize', String(query.pageSize))
+      .set('SortField', query.sortField)
+      .set('SortOrder', String(query.sortOrder));
+
+    params = this.appendParam(params, 'PlateNo', query.plateNo);
+    params = this.appendParam(params, 'DateFrom', query.dateFrom);
+    params = this.appendParam(params, 'DateTo', query.dateTo);
+    params = this.appendParam(
+      params,
+      'InternalWorkshopId',
+      query.internalWorkshopId,
+    );
+    params = this.appendParam(params, 'ServiceItems', query.serviceItems);
+    params = this.appendParam(params, 'WorkType', query.workType);
+
+    return this.http.get<Results<FleetServiceLogListDTO>>(this.endpoint, { headers: { 'X-Skip-Error-Interceptor': 'true' },  params });
+  }
+
+Fleet\ServiceItem\services\serviceitem.service.ts
+getList(query: ServiceItemListQuery = {}): Observable<Results<ServiceItemDTO>> {
+    const params = toListParams({ pageNo: query.pageNo ?? 1, pageSize: query.pageSize ?? DEFAULT_PAGE_SIZE, filters: {} });
+    return this.http.get<Results<ServiceItemDTO>>(this.endpoint, { params, headers: this.headers });
+  }
+
+Fleet\ServiceBookings\services\vehicle-service-bookings.service.ts
+private buildListParams(query: VehicleServiceBookingListQuery): HttpParams {
+    return toListParams({ pageNo: query.pageNo, pageSize: query.pageSize ?? DEFAULT_PAGE_SIZE, sortField: query.sortField, sortOrder: query.sortOrder, filters: { plateNo: query.plateNo, customerId: query.customerId, dateFrom: query.dateFrom, dateTo: query.dateTo, statuses: query.statuses.length ? query.statuses.join(',') : null } });
+  }
+private buildExportParams(query: VehicleServiceBookingListQuery): HttpParams {
+    let params = new HttpParams()
+      .set('SortField', query.sortField)
+      .set('SortOrder', String(query.sortOrder));
+    params = this.append(params, 'PlateNo', query.plateNo);
+    params = this.append(params, 'CustomerId', query.customerId);
+    params = this.append(params, 'DateFrom', query.dateFrom);
+    params = this.append(params, 'DateTo', query.dateTo);
+    query.statuses.forEach((status) => {
+      params = params.append('Statuses', String(status));
+    });
+    return params;
+  }
+
+Fleet\Alerts\services\fleet-alerts.service.ts
+search(
+    type: FleetAlertType,
+    request: FleetAlertSearch,
+  ): Observable<Results<FleetAlertDTO>> {
+    let params = new HttpParams();
+    Object.entries(request).forEach(([key, value]) => {
+      if (value === undefined || value === '') return;
+      if (value === null) {
+        if (key === 'pageSize') params = params.set(key, '');
+        return;
+      }
+      params = params.set(key, String(value));
+    });
+
+    return this.http.get<Results<FleetAlertDTO>>(
+      `${environment.baseUrl}FleetAlerts/${type}`,
+      { headers: { 'X-Skip-Error-Interceptor': 'true' },  params });
+  }
+
+Fleet\Accidents\services\accidents.service.ts
+private buildListParams(query: AccidentListQuery): HttpParams {
+    return toListParams({ pageNo: query.pageNo, pageSize: query.pageSize ?? DEFAULT_PAGE_SIZE, sortField: query.sortField, sortOrder: query.sortOrder, filters: { dateFrom: query.dateFrom, dateTo: query.dateTo, vehicleId: query.vehicleId, movementType: query.movementType, invoicedStatus: query.invoicedStatus, driverId: query.driverId, driverAgeFrom: query.driverAgeFrom, driverAgeTo: query.driverAgeTo } });
+  }
+private buildReportParams(query: AccidentListQuery): HttpParams {
+    let params = new HttpParams()
+      .set('SortField', query.sortField)
+      .set('SortOrder', String(query.sortOrder));
+    params = this.append(params, 'DateFrom', query.dateFrom);
+    params = this.append(params, 'DateTo', query.dateTo);
+    params = this.append(params, 'VehicleId', query.vehicleId);
+    params = this.append(params, 'MovementType', query.movementType);
+    params = this.append(params, 'InvoicedStatus', query.invoicedStatus);
+    params = this.append(params, 'DriverId', query.driverId);
+    params = this.append(params, 'DriverAgeFrom', query.driverAgeFrom);
+    params = this.append(params, 'DriverAgeTo', query.driverAgeTo);
+    return params;
+  }
+
+Equipment Rental\TimeSheet\services\timesheet.service.ts
+getList(query: TimeSheetListQuery): Observable<Results<TimeSheetListDTO>> {
+    return this.http.get<Results<TimeSheetListDTO>>(this.endpoint, {
+      params: toListParams(query), headers: this.inlineHeaders,
+    });
+  }
+
+Equipment Rental\EquipmentRentalInvoice\services\equipmentrentalinvoice.service.ts
+getList(query: EquipmentRentalInvoiceListQuery): Observable<Results<EquipmentRentalInvoiceListDTO>> {
+    return this.http.get<Results<EquipmentRentalInvoiceListDTO>>(this.endpoint, {
+      params: toListParams(query), headers: this.inlineHeaders,
+    });
+  }
+
+Equipment Rental\EquipmentQuotation\services\equipmentrental.service.ts
+getList(query: EquipmentQuotationListQuery): Observable<Results<EquipmentQuotationListDTO>> {
+    const params = toListParams(query);
+    return this.http.get<Results<EquipmentQuotationListDTO>>(this.endpoint, { params, headers: this.featureHeaders });
+  }
+
+Equipment Rental\EquipmentMasterAgreement\services\equipmentmasteragreement.service.ts
+getList(query: EquipmentMasterAgreementListQuery): Observable<Results<EquipmentMasterAgreementListDTO>> {
+    const params = toListParams(query);
+    return this.http.get<Results<EquipmentMasterAgreementListDTO>>(this.endpoint, {
+      params,
+      headers: this.featureHeaders,
+    });
+  }
+
+Equipment Rental\DeliveryNote\services\deliverynote.service.ts
+getList(query: DeliveryNoteListQuery): Observable<Results<DeliveryNoteListDTO>> {
+    const params = toListParams(query);
+
+    return this.http.get<Results<DeliveryNoteListDTO>>(this.endpoint, {
+      params,
+      headers: this.featureHeaders,
+    });
+  }
+getAllList(filters: DeliveryNoteListFilters, sortField: DeliveryNoteListQuery['sortField'], sortOrder: 1 | -1): Observable<DeliveryNoteListDTO[]> {
+    const pageSize = 200;
+    const firstQuery: DeliveryNoteListQuery = {
+      filters,
+      pageNo: 1,
+      pageSize,
+      sortField,
+      sortOrder,
+    };
+
+    return fetchAllPages(pageNo => this.getList({ ...firstQuery, pageNo }), 'deliveryNotes.messages.exportError');
+  }
+
+Data Entry Corrections\DataEntryCorrection\services\dataentrycorrection.service.ts
+
+Data Entry Corrections\DataEntryCorrectionModel\services\dataentrycorrectionmodel.service.ts
+
+Customers\Individual\IndividualPartner\services\individualpartner.service.ts
+getList(query: IndividualPartnerListQuery): Observable<Results<IndividualPartnerListRow>> {
+    return this.http.get<Results<IndividualPartnerListRow>>(this.endpoint, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+getAllList(
+    filters: IndividualPartnerListFilters,
+    sortField: string | null,
+    sortOrder: 1 | -1 | null,
+  ): Observable<IndividualPartnerListRow[]> {
+    return fetchAllPages(
+      (pageNo) => this.getList({ pageNo, pageSize: 100, filters, sortField, sortOrder }),
+      'individualPartners.errors.export',
+    );
+  }
+
+Customers\Companies\CompanyPartner\services\companypartner.service.ts
+getList(query: CompanyPartnerListQuery): Observable<Results<CompanyPartnerDTO>> {
+    return this.http.get<Results<CompanyPartnerDTO>>(this.baseUrl + 'Company', {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Customers\StatementOfAccount\services\customer-statement-of-account.service.ts
+
+Customers\BalancesSummary\services\balances-summary.service.ts
+getAllBalancesSummary(filters: BalancesSummaryFilter): Observable<BalancesSummaryItem[]> {
+    return fetchAllPages(
+      (pageNumber) => this.getBalancesSummary(filters, pageNumber, 100).pipe(
+        map((response): Results<BalancesSummaryItem> => ({
+          isSuccess: response.isSuccess && !!response.entity,
+          isInfo: response.isInfo,
+          message: response.message,
+          id: response.id,
+          entities: response.entity?.items ?? [],
+          pageNo: response.entity?.pageNumber || pageNumber,
+          pageSize: response.entity?.pageSize || 100,
+          totalCount: response.entity?.totalCount ?? 0,
+          totalPages: response.entity?.totalPages ?? 0,
+        })),
+      ),
+      'balancesSummary.exportError',
+    );
+  }
+
+Banking\ChequesReceivables\services\pdc-receivable.service.ts
+getList(query: PDCReceivableQuery): Observable<Results<PDCReceivable>> {
+    return this.http.get<Results<PDCReceivable>>(this.endpoint, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+getAllList(filters: PDCReceivableFilters): Observable<PDCReceivable[]> {
+    return fetchAllPages(pageNo => this.getList({ pageNo, pageSize: 100, filters }), 'pdcReceivable.errors.load');
+  }
+
+Banking\ChequesPayables\services\pdc-payable.service.ts
+getList(query: PDCPayableListQuery): Observable<Results<PDCPayableDTO>> {
+    return this.http.get<Results<PDCPayableDTO>>(`${this.baseUrl}PDCPayable`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Banking\Cash Deposits\CashDeposit\services\cashdeposit.service.ts
+getList(query: CashDepositListQuery): Observable<Results<CashDepositListRow>> {
+    return this.http.get<Results<CashDepositListRow>>(`${this.baseUrl}CashDeposit`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Banking\Card Transactions Bank Transfers\CardTransactionBankTransfer\services\cardtransactionbanktransfer.service.ts
+getList(query: CardTransferListQuery): Observable<Results<CardTransferListRow>> {
+    return this.http.get<Results<CardTransferListRow>>(`${this.baseUrl}CardTransactionBankTransfer`, {
+      params: toListParams(query), headers: this.inlineHeaders,
+    });
+  }
+
+Banking\Bank\services\bank.service.ts
+getList(query: BankListQuery): Observable<Results<BankDTO>> {
+    return this.http.get<Results<BankDTO>>(`${this.baseUrl}Bank`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Assets\assetType\services\assettype.service.ts
+getList(query: AssetTypeListQuery): Observable<Results<AssetTypeDTO>> {
+    const params = toListParams({ ...query, filters: {} });
+    return this.http.get<Results<AssetTypeDTO>>(this.endpoint, {
+      params,
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Assets\asset\services\asset.service.ts
+getList(query: AssetListQuery): Observable<Results<AssetListRow>> {
+    // The current navigation-list endpoint supports filters/paging, but does not apply sorting.
+    const params = toListParams({ pageNo: query.pageNo, pageSize: query.pageSize, filters: query.filters });
+    return this.http.get<Results<AssetListRow>>(this.endpoint, {
+      params,
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+getAllList(filters: AssetFilters): Observable<AssetListRow[]> {
+    return fetchAllPages(
+      (pageNo) => this.getList({ pageNo, pageSize: 100, filters }),
+      'assets.exportError',
+    );
+  }
+
+Administration\VoucherReasons\services\voucherreason.service.ts
+getList(query: VoucherReasonListQuery): Observable<Results<VoucherReasonDTO>> {
+    return this.http.get<Results<VoucherReasonDTO>>(`${this.baseUrl}VoucherReason`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\VehicleNotReadyReasons\services\vehiclenotreadyreason.service.ts
+getList(query: VehicleNotReadyReasonListQuery): Observable<Results<VehicleNotReadyReasonDTO>> {
+    return this.http.get<Results<VehicleNotReadyReasonDTO>>(`${this.baseUrl}VehicleNotReadyReason`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\SponserShips\services\sponsership.service.ts
+getList(query: SponserShipListQuery): Observable<Results<SponserShipDTO>> {
+    return this.http.get<Results<SponserShipDTO>>(`${this.baseUrl}SponserShip`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\SaleOrigins\SaleOrigin\services\saleorigin.service.ts
+getList(query: SaleOriginListQuery): Observable<Results<SaleOriginDTO>> {
+    return this.http.get<Results<SaleOriginDTO>>(`${this.baseUrl}SaleOrigin`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\ReplacementReasons\services\replacementreason.service.ts
+getList(query: ReplacementReasonListQuery): Observable<Results<ReplacementReasonDTO>> {
+    return this.http.get<Results<ReplacementReasonDTO>>(`${this.baseUrl}ReplacementReason`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\PaymentMethods\services\paymentmethod.service.ts
+getList(query: PaymentMethodListQuery): Observable<Results<PaymentMethodDTO>> {
+    return this.http.get<Results<PaymentMethodDTO>>(`${this.baseUrl}PaymentMethod`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\Languages\services\language.service.ts
+getList(query: LanguageListQuery): Observable<Results<LanguageDTO>> {
+    return this.http.get<Results<LanguageDTO>>(`${this.baseUrl}Language`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\Industries\services\industry.service.ts
+getList(query: IndustryListQuery): Observable<Results<IndustryDTO>> {
+    return this.http.get<Results<IndustryDTO>>(`${this.baseUrl}Industry`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\CustomLookups\services\customlookup.service.ts
+getList(query: CustomLookupListQuery): Observable<Results<CustomLookupDTO>> {
+    return this.http.get<Results<CustomLookupDTO>>(`${this.baseUrl}CustomLookup`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\CustomerRequests\services\customerrequest.service.ts
+getList(query: CustomerRequestListQuery): Observable<Results<CustomerRequestDTO>> {
+    return this.http.get<Results<CustomerRequestDTO>>(`${this.baseUrl}CustomerRequest`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\CustomerProjects\CustomerProject\services\customerproject.service.ts
+getList(query: CustomerProjectListQuery): Observable<Results<CustomerProjectDTO>> {
+    return this.http.get<Results<CustomerProjectDTO>>(`${this.baseUrl}CustomerProject`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\Currency\services\currency.service.ts
+getList(query: CurrencyListQuery): Observable<Results<CurrencyDTO>> {
+    return this.http.get<Results<CurrencyDTO>>(`${this.baseUrl}Currency`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\Country\services\country.service.ts
+getList(query: CountryListQuery): Observable<Results<CountryDTO>> {
+    return this.http.get<Results<CountryDTO>>(`${this.baseUrl}Country`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\CostCenters\services\costcenter.service.ts
+getList(query: CostCenterListQuery): Observable<Results<CostCenterDTO>> {
+    return this.http.get<Results<CostCenterDTO>>(`${this.baseUrl}CostCenter`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\ContactGroups\services\contactgroup.service.ts
+getList(query: ContactGroupListQuery): Observable<Results<ContactGroupDTO>> {
+    return this.http.get<Results<ContactGroupDTO>>(`${this.baseUrl}ContactGroup`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\ChecklistItem\services\checklistitem.service.ts
+getList(query: ChecklistItemListQuery): Observable<Results<ChecklistItemDTO>> {
+    return this.http.get<Results<ChecklistItemDTO>>(`${this.baseUrl}ChecklistItem`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Administration\Branches\services\branch.service.ts
+getList(query: BranchListQuery): Observable<Results<BranchDTO>> {
+    return this.http.get<Results<BranchDTO>>(`${this.baseUrl}Branch`, {
+      params: toListParams(query),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Accounts\Journal\services\journal.service.ts
+
+Accounts\FiscalYears\services\fiscalYear.service.ts
+
+Accounts\AccountSetting\services\account-classification.service.ts
+getList(kind: ClassificationDefinitionKind, query: ClassificationListQuery): Observable<Results<AccountGroupDefinitionRow | AccountSubGroupDefinitionRow>> {
+    return this.http.get<Results<AccountGroupDefinitionRow | AccountSubGroupDefinitionRow>>(`${this.baseUrl}${this.controller(kind)}`, {
+      params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+Accounts\AccountSetting\services\account-type-definition.service.ts
+getList(query: AccountTypeListQuery): Observable<Results<AccountTypeDefinitionRow>> {
+    return this.http.get<Results<AccountTypeDefinitionRow>>(`${this.baseUrl}AccountTypeDefinition`, {
+      params: toListParams(query), headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }

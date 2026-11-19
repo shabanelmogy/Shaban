@@ -1,0 +1,115 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service.ts (current)
+index 5ee0a63..5ee7cac 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service.ts (current)	
+@@ -1,14 +1,107 @@
+-import { Injectable } from '@angular/core';
++import { Injectable, inject } from '@angular/core';
++import { Observable, forkJoin, map } from 'rxjs';
++import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
++import { PaymentMethodService } from 'src/app/modules/Administration/PaymentMethods/services/paymentmethod.service';
++import { BankService } from 'src/app/modules/Banking/Bank/services/bank.service';
++import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
++import { Result } from 'src/app/modules/shared/models/result';
++import { Results } from 'src/app/modules/shared/models/results';
+ import { BaseService } from 'src/app/modules/shared/service/base-service.service';
++import { fetchAllPages, toListParams } from 'src/app/modules/shared/utils/list-query';
+ import { environment } from 'src/environments/environment';
++import { CashDepositAddInput, CashDepositUpdateInput } from '../models/create';
++import { CashDepositDetails, CashDepositLookups, UndepositedVoucher } from '../models/details';
++import { CashDepositListQuery, CashDepositListRow } from '../models/list';
+ 
+ @Injectable({
+   providedIn: 'root',
+ })
+ export class CashDepositService extends BaseService {
++  private readonly banks = inject(BankService);
++  private readonly branches = inject(BranchService);
++  private readonly paymentMethods = inject(PaymentMethodService);
++
+   constructor() {
+     super('CashDeposit', environment.baseUrl);
+   }
++  getList(query: CashDepositListQuery): Observable<Results<CashDepositListRow>> {
++    return this.http.get<Results<CashDepositListRow>>(`${this.baseUrl}CashDeposit`, {
++      params: toListParams(query),
++      headers: { 'X-Skip-Error-Interceptor': 'true' },
++    });
++  }
++
++  getAllList(query: CashDepositListQuery, errorKey = 'cashDeposits.errors.export'): Observable<CashDepositListRow[]> {
++    return fetchAllPages(
++      (pageNo) => this.getList({ ...query, pageNo, pageSize: 100 }),
++      errorKey,
++    );
++  }
++
++  getDetails(id: number): Observable<Result<CashDepositDetails>> {
++    return this.http.get<Result<CashDepositDetails>>(`${this.baseUrl}CashDeposit/GetByWithNavigationsId/${id}`, {
++      headers: { 'X-Skip-Error-Interceptor': 'true' },
++    });
++  }
+ 
++  getVouchers(excludeCashDepositId?: number): Observable<Results<UndepositedVoucher>> {
++    return this.http.get<Results<UndepositedVoucher>>(`${this.baseUrl}CashDeposit/GetUndepositedVouchers`, {
++      params: excludeCashDepositId ? { excludeCashDepositId } : {},
++      headers: { 'X-Skip-Error-Interceptor': 'true' },
++    });
++  }
++
++  getLookups(): Observable<CashDepositLookups> {
++    const options = { skipErrorInterceptor: true };
++    return forkJoin({
++      banks: this.banks.getSelectList<Results<DropDownSelect>>(options),
++      branches: this.branches.getSelectList<Results<DropDownSelect>>(options),
++      paymentMethods: this.paymentMethods.getSelectList<Results<DropDownSelect>>(options),
++    }).pipe(map((results) => {
++      const failed = Object.values(results).find((result) => !result.isSuccess);
++      if (failed) {
++        throw { error: { message: failed.message || 'cashDeposits.errors.lookups' } };
++      }
++      return {
++        banks: results.banks.entities,
++        branches: results.branches.entities,
++        paymentMethods: results.paymentMethods.entities,
++      };
++    }));
++  }
++
++  getListLookups(): Observable<Pick<CashDepositLookups, 'banks' | 'branches'>> {
++    const options = { skipErrorInterceptor: true };
++    return forkJoin({
++      banks: this.banks.getSelectList<Results<DropDownSelect>>(options),
++      branches: this.branches.getSelectList<Results<DropDownSelect>>(options),
++    }).pipe(map((results) => {
++      const failed = Object.values(results).find((result) => !result.isSuccess);
++      if (failed) {
++        throw { error: { message: failed.message || 'cashDeposits.errors.lookups' } };
++      }
++      return { banks: results.banks.entities, branches: results.branches.entities };
++    }));
++  }
++
++  add(payload: CashDepositAddInput): Observable<Result<unknown>> {
++    return this.http.post<Result<unknown>>(`${this.baseUrl}CashDeposit`, payload);
++  }
++
++  update(payload: CashDepositUpdateInput): Observable<Result<unknown>> {
++    return this.http.put<Result<unknown>>(`${this.baseUrl}CashDeposit`, payload);
++  }
++
++  remove(id: number): Observable<Result<unknown>> {
++    return this.http.delete<Result<unknown>>(`${this.baseUrl}CashDeposit`, { params: { id } });
++  }
++
++  toggleApproval(id: number): Observable<Result<unknown>> {
++    return this.http.post<Result<unknown>>(`${this.baseUrl}CashDeposit/ToggleApproval/${id}`, {});
++  }
++
++  toggleVoid(id: number): Observable<Result<unknown>> {
++    return this.http.post<Result<unknown>>(`${this.baseUrl}CashDeposit/ToggleVoid/${id}`, {});
++  }
+ 
+-}
+\ No newline at end of file
++}

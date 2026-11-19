@@ -1,0 +1,292 @@
+{
+  "cleanedUnusedImports": 0,
+  "missingImports": [],
+  "syntax": [],
+  "risks": [
+    {
+      "file": "F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\Accounts\\Link Accounts\\LinkAccounts\\components\\workshop\\workshop.component.ts",
+      "concern": "untyped any"
+    }
+  ],
+  "repositories": [
+    {
+      "repository": "F:/My Work/Sigma/SiGmaAngularFrontEnd",
+      "scope": [
+        "src/app/modules/Accounts",
+        "src/app/modules/shared/components/data-table",
+        "src/app/modules/shared/utils/editable-rows.ts",
+        "src/app/modules/Administration/CostCenters/services/costcenter.service.ts",
+        "src/app/pages/routing.ts",
+        "src/app/_metronic/layout/components/toolbar/toolbar.component.ts",
+        "tsconfig.app.json",
+        "src/app/modules/i18n/vocabs/en.ts",
+        "src/app/modules/i18n/vocabs/ar.ts",
+        "src/app/app.module.ts",
+        "src/app/_metronic/layout/layout.module.ts"
+      ],
+      "diffArtifact": "C:/Users/user/AppData/Local/Temp/sigma-accounts-SiGmaAngularFrontEnd-review.diff",
+      "trackedFiles": 198,
+      "untrackedFiles": 8,
+      "hunks": 683,
+      "whitespace": "",
+      "diffSha256": "0e8db030aae88fe85492367e8b7433d39fdf738ca536412dad9650cf072476f4",
+      "added": [
+        {
+          "name": "src/app/modules/Accounts/openingBalances/services/opening-balance-collection.service.ts",
+          "bytes": 1147,
+          "sha256": "765c19666f001be48caed3317f31d89deb91123f4eb935fff118cd11be60854e"
+        },
+        {
+          "name": "src/app/modules/Accounts/openingBalances/shared/opening-balance-editor-state/opening-balance-editor-state.component.ts",
+          "bytes": 915,
+          "sha256": "2d4ca54c7ca61317bed1e459437702977e11577f4126388141713508a1d08a5c"
+        },
+        {
+          "name": "src/app/modules/Accounts/shared/report-family/account-report-endpoint.service.ts",
+          "bytes": 866,
+          "sha256": "95e44bd4afa90047b2029c8bef595b5ecd10d4c31329462b259e64e71244b742"
+        },
+        {
+          "name": "src/app/modules/Accounts/shared/report-family/account-report-page.component.html",
+          "bytes": 9619,
+          "sha256": "f058c81f990c170158362cff73c2d1d93cded094b593f3da1c05663a6371bc47"
+        },
+        {
+          "name": "src/app/modules/Accounts/shared/report-family/account-report-page.component.scss",
+          "bytes": 1408,
+          "sha256": "b43e4ebc2e65e96da91390fadc84ff14594301b4c7fa928d251c75f2d153fef3"
+        },
+        {
+          "name": "src/app/modules/Accounts/shared/report-family/account-report-page.component.ts",
+          "bytes": 16462,
+          "sha256": "665b95cc5378c2d6f4dc6e3f159c20ea223c73481dafffbeea70e8ebbaf01740"
+        },
+        {
+          "name": "src/app/modules/Accounts/shared/report-family/account-report-values.ts",
+          "bytes": 1346,
+          "sha256": "a98434acc8d09d3e2fc45a83eaee52f862daa85dec14b115768f92be482ae9d1"
+        },
+        {
+          "name": "src/app/modules/Accounts/shared/report-family/account-report.models.ts",
+          "bytes": 2666,
+          "sha256": "2121570a2944be10668e3a36be03fa2d09c1dc6152a7e0e47c27c76bc015990e"
+        }
+      ],
+      "reviewSnapshot": "F:/My Work/Sigma/reviews/Accounts/SiGmaAngularFrontEnd_SCOPED_SOURCE.diff",
+      "reviewSnapshotSha256": "e26435b7ea883f4a2edd8877c8678089c49ce169ee9e651862f6f289136c182d"
+    },
+    {
+      "repository": "F:/My Work/Sigma/SigmaBackend",
+      "scope": [
+        "SiGma.Business/Services/AccountServices/AccountReportsService.cs",
+        "SiGma.ViewModels/ViewModels/AccountReports"
+      ],
+      "diffArtifact": "C:/Users/user/AppData/Local/Temp/sigma-accounts-SigmaBackend-review.diff",
+      "trackedFiles": 18,
+      "untrackedFiles": 35,
+      "hunks": 34,
+      "whitespace": "",
+      "diffSha256": "d2b3af546a948f6bd10381a662052eab58ea214850950cd04bb1407bc4be6bf5",
+      "added": [
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetLineVm.cs",
+          "bytes": 389,
+          "sha256": "fba111a04313e34998734d28d9861ef1944dff358b80877a0c7760781ebce8d6"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseLineVm.cs",
+          "bytes": 769,
+          "sha256": "1ab8e9664361ef92980ea962bf4162ebca87bc51db7ec060eba85ab8fc7fedfb"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetMonthwiseRequestDto.cs",
+          "bytes": 655,
+          "sha256": "cdd027e9a85e376433031d52d398c920d7e8c967a7abdb747d6c35e9984fe0c3"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BalanceSheetRequestDto.cs",
+          "bytes": 258,
+          "sha256": "9080deaf805158deccdc604ce755885358b631676b0c03ca6b21dbdf33b29494"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BudgetAccountRowVm.cs",
+          "bytes": 351,
+          "sha256": "ee766c2760152c5b6a90629ecaf70b4fc3892e40bf314f6c1e7333d0059abcfa"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BudgetEntryDto.cs",
+          "bytes": 235,
+          "sha256": "7fa18128978c9597defbf2b1c19cadc902e6ce1d12f528f1c712e5569e6330d1"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BudgetMonthVm.cs",
+          "bytes": 209,
+          "sha256": "267a3f429c2a8cde92d5d58e800c521e22d1eab69ab6cb52f7add1b3f687fc0a"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BudgetRequestDto.cs",
+          "bytes": 257,
+          "sha256": "57de21111b163c0dfaa986123decc1c926c630d54dd20aa79140b8ecac2249a7"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceLineVm.cs",
+          "bytes": 712,
+          "sha256": "31fe8a6225133a9ff96932e2218dff47ae639a370022aebff6971935db76d097"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/BudgetVarianceRequestDto.cs",
+          "bytes": 460,
+          "sha256": "5d18085a4dd246d78ef9f97c9bc4f00b4477efbec9cb4e549d9e3d972a3e251a"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/CashFlowLineVm.cs",
+          "bytes": 258,
+          "sha256": "0d4a75feb279a427772259a679f0d75cd724f1b6574ad9da036dbca51c9d85ba"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/CashFlowRequestDto.cs",
+          "bytes": 254,
+          "sha256": "56d12f7a9dab1aa9fba1e1bd33546d807f30c5f8dcca8cb0ed917a522a0d323c"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonLineVm.cs",
+          "bytes": 617,
+          "sha256": "778d2b02c9388ebfee96f1188c7a4423eafc337c11523be5520b29ff890a2545"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeComparisonRequestDto.cs",
+          "bytes": 606,
+          "sha256": "d82ed050d0f17eda2a6c112baa676a10381f09074ec7877e54cb51072bf187af"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2LineVm.cs",
+          "bytes": 699,
+          "sha256": "0dd20f6cebd5735bd604fb9f7baaa7d27405e5b883ff431dc72c0ca0859640da"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2RequestDto.cs",
+          "bytes": 506,
+          "sha256": "9ed8c23d559563f9c7345a5905eceb8616b64d2bf2c365be920b447b80217c48"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatement2SubtotalVm.cs",
+          "bytes": 354,
+          "sha256": "623e64e227273d63540e1224eb46f45e7d7d054d3125a49ae42a9c8bea260522"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2LineVm.cs",
+          "bytes": 667,
+          "sha256": "08d0385e94596ff6310493a817036f2c7273ce8226839c09590cf8b59430a711"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFy2RequestDto.cs",
+          "bytes": 817,
+          "sha256": "fec8573ddbba259e938b6fdeef8b0466194e9bbb43aa2760c31457fd762f65b9"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyLineVm.cs",
+          "bytes": 879,
+          "sha256": "f15748bec7a367ab1feefa85493b2f532c2b6cc05620749c3c8cb01e2dfe13c0"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementFyRequestDto.cs",
+          "bytes": 670,
+          "sha256": "1f6103afc9100a717796e7a59cb2f6c876f0e8664413e68f246cf30492534acd"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementLineVm.cs",
+          "bytes": 687,
+          "sha256": "a6e3f2af3ceda3f5c0dcb6bbd4f68dd0199e9bd56bf0a978ec17656979b4df56"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementRequestDto.cs",
+          "bytes": 697,
+          "sha256": "890eb8c3080328b2ebe1f59b564370ee88722c137dd92d329b5076399427465d"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtd2RequestDto.cs",
+          "bytes": 598,
+          "sha256": "4a15d12674b32bb6773e68281433fd9a8fa25669e72a898012bae737be086729"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdLineVm.cs",
+          "bytes": 873,
+          "sha256": "ab4b330d68abf2412f113b706e623c0204cc9afb763f3f3a4d814e3bca1dc710"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdRequestDto.cs",
+          "bytes": 667,
+          "sha256": "5d52e4d3d7b856619769198be4360f0bca50a4bb2f9a1f328f1c368917204617"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/IncomeStatementYtdSubtotalVm.cs",
+          "bytes": 389,
+          "sha256": "068a108ea3cb23feeb4e41a53a1f31a3b3cf99f73a88a604f34e1431ef923658"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/JournalsLineVm.cs",
+          "bytes": 503,
+          "sha256": "43512da65a0c9a52ada4f56d6fd1f89e68e0e754724e54f698fe3127332ee69b"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/JournalsRequestDto.cs",
+          "bytes": 272,
+          "sha256": "f5c884ef1e2b8a040f865a3721ab9566066988703dbbd7a33e3de328ad610ff0"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/LedgerLineVm.cs",
+          "bytes": 855,
+          "sha256": "016e0c6ee4081867aaa32a4070ceb7448ad87ac40f2cb55d1dfafe3e5e8e233e"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/LedgerRequestDto.cs",
+          "bytes": 791,
+          "sha256": "cb938392527400c1afe693cb5f63f8160fe39861abd97f96a4f66bc4dc69551c"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/SaveBudgetRequestDto.cs",
+          "bytes": 195,
+          "sha256": "95433846d2daf6331aadc64c50743c3f2d73cecd86e59aef11c17becc4b78dfb"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceLineVm.cs",
+          "bytes": 764,
+          "sha256": "a2091e4c03bf29bac6e7b499074fd53977bcecd7ac24b794ebfd04eda3106f7b"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/TrialBalanceRequestDto.cs",
+          "bytes": 800,
+          "sha256": "62cb665e608fd939e757713e5e87c25e3a1515f934e3748b2f3b6f6bd3f42444"
+        },
+        {
+          "name": "SiGma.ViewModels/ViewModels/AccountReports/VehicleIncomeStatementRequestDto.cs",
+          "bytes": 712,
+          "sha256": "4c05369b48bf0e0be58906f746183c4a3b2f5c48b9403a5ad0d8ace294b5941e"
+        }
+      ],
+      "reviewSnapshot": "F:/My Work/Sigma/reviews/Accounts/SigmaBackend_SCOPED_SOURCE.diff",
+      "reviewSnapshotSha256": "1b889e7df6e8e9496bb0b28585f3d33d20751497d4896aabe66cdcafb7bd84cd"
+    },
+    {
+      "repository": "F:/My Work/Shaban Documents/Shaban",
+      "scope": [
+        "sigma-erp/recipe-system",
+        "sigma-erp/ui/06-grid-and-footer.md",
+        "sigma-erp/ui/14-editable-collection-table.md",
+        "sigma-erp/ui/20-report-page.md",
+        "sigma-erp/ui/00-preamble.md",
+        "sigma-erp/CHANGELOG.md"
+      ],
+      "diffArtifact": "C:/Users/user/AppData/Local/Temp/sigma-accounts-Shaban-review.diff",
+      "trackedFiles": 18,
+      "untrackedFiles": 0,
+      "hunks": 57,
+      "whitespace": "",
+      "diffSha256": "91d2612228d16994ae535bfb6986e34df4f7a555333ae35e17bcf8496554d8e7",
+      "added": [],
+      "reviewSnapshot": "F:/My Work/Sigma/reviews/Accounts/Shaban_SCOPED_SOURCE.diff",
+      "reviewSnapshotSha256": "91d2612228d16994ae535bfb6986e34df4f7a555333ae35e17bcf8496554d8e7"
+    }
+  ],
+  "falsePositiveDisposition": "The only untyped-any regex hit is a translation-key string; no any declaration was established."
+}

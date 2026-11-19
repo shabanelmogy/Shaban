@@ -1,0 +1,117 @@
+[
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\README.md",
+    "snapshot": "docs/README.md",
+    "sha256": "9e7e8d4465c11ab847b27f253713b1a486ee6ca326b387bdb4866e33b326807a"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\CHANGELOG.md",
+    "snapshot": "docs/CHANGELOG.md",
+    "sha256": "6cc7b3de2ac69df64a679fc225bfd6f84485f74cae9919b3c8a35df1ada301f3"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\master\\01-governance-and-review-principles.md",
+    "snapshot": "docs/master/01-governance-and-review-principles.md",
+    "sha256": "f0a4a00ae39c54a2a299844cd5d42e4cf418dbfce2e9395982ff29884662fb28"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\master\\02-screenshot-and-visual-evidence-policy.md",
+    "snapshot": "docs/master/02-screenshot-and-visual-evidence-policy.md",
+    "sha256": "c5bad9fcd4c5568e4762ff708183ecd4440ab0c178ba6e7d1533b943877c5cff"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\master\\04-required-decisions-artifacts-and-contract-invariants.md",
+    "snapshot": "docs/master/04-required-decisions-artifacts-and-contract-invariants.md",
+    "sha256": "ae610fa660647aa3be02b349484b93f141c84526260df7df643eb19c736d0858"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\master\\07-end-to-end-reconciliation-and-final-report.md",
+    "snapshot": "docs/master/07-end-to-end-reconciliation-and-final-report.md",
+    "sha256": "665b5a2892a88b7caccce0101bf4f218219766ba5e776b85e8a56378a03677da"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\templates\\PLAN-00-maintenance-evolution.template.md",
+    "snapshot": "docs/recipe-system/templates/PLAN-00-maintenance-evolution.template.md",
+    "sha256": "f8570156d7042b146cc703cfbbe8d484325a9908dee3969e85d469e3350b27fd"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\templates\\PHASE-00-discovery-evidence.template.md",
+    "snapshot": "docs/recipe-system/templates/PHASE-00-discovery-evidence.template.md",
+    "sha256": "04902cdf7e424c23c077f78e9c55d6ed252561bb1847a29cc17412f1df9a0d56"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\templates\\PHASE-06-final-reconciliation.template.md",
+    "snapshot": "docs/recipe-system/templates/PHASE-06-final-reconciliation.template.md",
+    "sha256": "3d468346851a1af94d73a90f31efa549fd107ff0156ef538b18fd69b535ee942"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\templates\\FEATURE-REVIEW-ARTIFACTS.template.md",
+    "snapshot": "docs/recipe-system/templates/FEATURE-REVIEW-ARTIFACTS.template.md",
+    "sha256": "6b983343f34f5cd5d32f35cb48b0d85f464759d6972c0ba4527c83a6be1096fa"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\templates\\MAINTENANCE-EVOLUTION-ARTIFACT.template.md",
+    "snapshot": "docs/recipe-system/templates/MAINTENANCE-EVOLUTION-ARTIFACT.template.md",
+    "sha256": "607e7bafb128fea7c3a4d3fbf5361a4c9c2f57e232fb1c6d06523e3236f6356a"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-00-discovery-evidence.md",
+    "snapshot": "docs/recipe-system/generated/PHASE-00-discovery-evidence.md",
+    "sha256": "799c56f8c49b304801002015bd22b520d8a4d419de806b620876edf5059daf21"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-01-domain-api.md",
+    "snapshot": "docs/recipe-system/generated/PHASE-01-domain-api.md",
+    "sha256": "21fae4ae8b6d53d8dc122a3c3eba9bac3c3a6d5a9532e08fdcffb5fc40847ea2"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-02-read-grid.md",
+    "snapshot": "docs/recipe-system/generated/PHASE-02-read-grid.md",
+    "sha256": "9efbf8c917bc04436e6ce8c9c6c380e0f425bf0fda987d057565228cba5c8fef"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-03-detail-write.md",
+    "snapshot": "docs/recipe-system/generated/PHASE-03-detail-write.md",
+    "sha256": "cbab7f9203d2e93a10e448ee3e835d36368a597641a12ed2db79ccf4c69954c5"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-04-domain-actions.md",
+    "snapshot": "docs/recipe-system/generated/PHASE-04-domain-actions.md",
+    "sha256": "8d207e881a6d5a0da11d199e0340b382632b5112611dcd17539108b327f36d5e"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-05-integration-runtime.md",
+    "snapshot": "docs/recipe-system/generated/PHASE-05-integration-runtime.md",
+    "sha256": "a47901905a1af42c388582a4a710a59dd741870fa43c903a01830befc1f21e78"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-06-final-reconciliation.md",
+    "snapshot": "docs/recipe-system/generated/PHASE-06-final-reconciliation.md",
+    "sha256": "0737bc61d0a35dabfb9c5067344e501ec7dea56cadb7a5f5e21f379220efcf5c"
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PLAN-00-maintenance-evolution.md",
+    "snapshot": "docs/recipe-system/generated/PLAN-00-maintenance-evolution.md",
+    "sha256": "783259c87aef96c6203d4fe356def654f412b1100d152e9d80a0c565202accc7"
+  },
+  {
+    "path": "F:\\My Work\\Sigma\\AGENTS.md",
+    "snapshot": "workspace/AGENTS.md",
+    "sha256": "84ec37ad88ab21f16aba7d16b428988411ea82a838fa8810039d98a48919e021"
+  },
+  {
+    "path": "F:\\My Work\\Sigma\\.agents\\skills\\sigma-screen-refactor\\SKILL.md",
+    "snapshot": "workspace/.agents/skills/sigma-screen-refactor/SKILL.md",
+    "sha256": "7a600be19cebdb8a1019eb8d0db16a54d1701444d6f045db83104cd6b61b89bc"
+  },
+  {
+    "path": "F:\\My Work\\Sigma\\reviews\\REFERENCE_SPEED_AUTO_SYSTEMS.md",
+    "snapshot": "workspace/reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md",
+    "sha256": "1882ed70e06748fa4400b724cb9f3173b28cb5a218f2af83e8c62d694abc925c"
+  },
+  {
+    "path": "F:\\My Work\\Sigma\\reviews\\SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md",
+    "snapshot": "workspace/reviews/SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md",
+    "sha256": "02ac827243a6bb97c247b2bb5685c46b21def80b8dd84ef41c49d0c327ae8486"
+  }
+]

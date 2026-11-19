@@ -1,0 +1,2002 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FailedToAdd" xml:space="preserve">
+    <value>Added Failed</value>
+  </data>
+  <data name="FailedToAddBranchToSubscription" xml:space="preserve">
+    <value>You reached the max Branches for this Subscription</value>
+  </data>
+  <data name="FailedToAddEquipmentToSubscription" xml:space="preserve">
+    <value>You reached the max Equipment to this Subscription</value>
+  </data>
+  <data name="FailedToChangePassword" xml:space="preserve">
+    <value>Change Password Failed</value>
+  </data>
+  <data name="FailedToFound" xml:space="preserve">
+    <value>Failed to find item</value>
+  </data>
+  <data name="InvalidDateRange" xml:space="preserve">
+    <value>End date must be on or after the start date.</value>
+  </data>
+  <data name="InvalidMovementLogFilters" xml:space="preserve">
+    <value>The movement log filters are invalid.</value>
+  </data>
+  <data name="FailedToRemove" xml:space="preserve">
+    <value>Removed Failed</value>
+  </data>
+  <data name="FailedToRenewalSubscription" xml:space="preserve">
+    <value>Branches or Equipments ar less than Actives</value>
+  </data>
+  <data name="FailedToUpdate" xml:space="preserve">
+    <value>Updated Failed</value>
+  </data>
+  <data name="FailToAuth" xml:space="preserve">
+    <value>Fail to authenticate</value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>Not Found</value>
+  </data>
+  <data name="SuccessedToAdd" xml:space="preserve">
+    <value>Added Successfully</value>
+  </data>
+  <data name="SuccessedToRemove" xml:space="preserve">
+    <value>Removed Successfully</value>
+  </data>
+  <data name="SuccessedToSave" xml:space="preserve">
+    <value>Successed To Save</value>
+  </data>
+  <data name="SuccessedToUpdate" xml:space="preserve">
+    <value>Updated Successfully</value>
+  </data>
+  <data name="LeaseMasterAgreementDatesRequired" xml:space="preserve">
+    <value>The master agreement start and end dates are required.</value>
+  </data>
+  <data name="LeaseMasterAgreementQuotationRequired" xml:space="preserve">
+    <value>A customer-approved lease quotation is required for a master agreement.</value>
+  </data>
+  <data name="LeaseMasterAgreementCustomerRequired" xml:space="preserve">
+    <value>A customer is required for a master agreement.</value>
+  </data>
+  <data name="LeaseMasterAgreementQuotationNotFound" xml:space="preserve">
+    <value>Lease quotation not found.</value>
+  </data>
+  <data name="LeaseMasterAgreementQuotationCustomerInvalid" xml:space="preserve">
+    <value>The lease quotation must reference an active customer.</value>
+  </data>
+  <data name="LeaseMasterAgreementQuotationApprovalRequired" xml:space="preserve">
+    <value>A master agreement requires a customer-approved lease quotation.</value>
+  </data>
+  <data name="LeaseMasterAgreementCustomerMismatch" xml:space="preserve">
+    <value>The master agreement customer must match the quotation customer.</value>
+  </data>
+  <data name="LeaseMasterAgreementDuplicateQuotation" xml:space="preserve">
+    <value>A master agreement already exists for this quotation.</value>
+  </data>
+  <data name="LeaseMasterAgreementCreateFailed" xml:space="preserve">
+    <value>The master agreement could not be created.</value>
+  </data>
+  <data name="LeaseMasterAgreementCreated" xml:space="preserve">
+    <value>The master agreement was created successfully.</value>
+  </data>
+  <data name="LeaseMasterAgreementNotFound" xml:space="preserve">
+    <value>Master agreement not found.</value>
+  </data>
+  <data name="LeaseMasterAgreementApprovedEditBlocked" xml:space="preserve">
+    <value>Approved master agreements cannot be edited.</value>
+  </data>
+  <data name="LeaseMasterAgreementUpdateFailed" xml:space="preserve">
+    <value>The master agreement could not be updated.</value>
+  </data>
+  <data name="LeaseMasterAgreementUpdated" xml:space="preserve">
+    <value>The master agreement was updated successfully.</value>
+  </data>
+  <data name="LeaseMasterAgreementApprovedDeleteBlocked" xml:space="preserve">
+    <value>Approved master agreements cannot be deleted.</value>
+  </data>
+  <data name="LeaseMasterAgreementLeaseReferencesBlockDelete" xml:space="preserve">
+    <value>This master agreement cannot be deleted because lease agreements already exist.</value>
+  </data>
+  <data name="LeaseMasterAgreementDeleted" xml:space="preserve">
+    <value>The master agreement was deleted successfully.</value>
+  </data>
+  <data name="LeaseMasterAgreementDeleteFailed" xml:space="preserve">
+    <value>The master agreement could not be deleted.</value>
+  </data>
+  <data name="LeaseMasterAgreementAlreadyApproved" xml:space="preserve">
+    <value>The master agreement is already approved.</value>
+  </data>
+  <data name="LeaseMasterAgreementApprovalStateInvalid" xml:space="preserve">
+    <value>Only not-approved master agreements can be approved.</value>
+  </data>
+  <data name="LeaseMasterAgreementApproved" xml:space="preserve">
+    <value>The master agreement was approved successfully.</value>
+  </data>
+  <data name="LeaseMasterAgreementApprovalFailed" xml:space="preserve">
+    <value>The master agreement could not be approved.</value>
+  </data>
+  <data name="LeaseAgreementNotFound" xml:space="preserve">
+    <value>Lease agreement not found.</value>
+  </data>
+  <data name="LeaseAgreementReadOnly" xml:space="preserve">
+    <value>Closed, voided, or invoiced lease agreements cannot be edited.</value>
+  </data>
+  <data name="LeaseAgreementVoidReasonRequired" xml:space="preserve">
+    <value>A void reason is required.</value>
+  </data>
+  <data name="LeaseAgreementVoidReasonTooLong" xml:space="preserve">
+    <value>The void reason must not exceed 500 characters.</value>
+  </data>
+  <data name="LeaseAgreementAlreadyVoided" xml:space="preserve">
+    <value>The lease agreement has already been voided.</value>
+  </data>
+  <data name="LeaseAgreementVoidReadOnly" xml:space="preserve">
+    <value>Closed or invoiced lease agreements cannot be voided.</value>
+  </data>
+  <data name="LeaseAgreementVoidPaymentBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it has an advance or deposit amount.</value>
+  </data>
+  <data name="LeaseAgreementVoidReceiptBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a receipt.</value>
+  </data>
+  <data name="LeaseAgreementVoidPdcBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a PDC receivable.</value>
+  </data>
+  <data name="LeaseAgreementVoidAccidentBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by an accident.</value>
+  </data>
+  <data name="LeaseAgreementVoidServiceBookingBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a vehicle service booking.</value>
+  </data>
+  <data name="LeaseAgreementVoidTrafficFineBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a traffic fine.</value>
+  </data>
+  <data name="LeaseAgreementVoidTransportationInvoiceBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a transportation invoice.</value>
+  </data>
+  <data name="LeaseAgreementVoidCollectionBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a collection movement.</value>
+  </data>
+  <data name="LeaseAgreementVoidCustodyBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a custody movement.</value>
+  </data>
+  <data name="LeaseAgreementVoidDeliveryBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a delivery movement.</value>
+  </data>
+  <data name="LeaseAgreementVoidDebitNoteBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a debit note.</value>
+  </data>
+  <data name="LeaseAgreementVoidCreditNoteBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by a credit note.</value>
+  </data>
+  <data name="LeaseAgreementVoidInvoiceBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by an invoice.</value>
+  </data>
+  <data name="LeaseAgreementVoidOpeningBalanceDepositBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by an opening-balance deposit.</value>
+  </data>
+  <data name="LeaseAgreementVoidOpeningBalanceCustomerBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it is referenced by an opening-balance customer entry.</value>
+  </data>
+  <data name="LeaseAgreementVoidVehicleReplacementBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it has a vehicle replacement record.</value>
+  </data>
+  <data name="LeaseAgreementVoidDriverReplacementBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be voided because it has a driver replacement record.</value>
+  </data>
+  <data name="LeaseAgreementVoidSaveFailed" xml:space="preserve">
+    <value>The lease agreement could not be voided.</value>
+  </data>
+  <data name="LeaseAgreementVoided" xml:space="preserve">
+    <value>The lease agreement was voided successfully.</value>
+  </data>
+  <data name="LeaseAgreementExtendAgreementInvalid" xml:space="preserve">
+    <value>The lease agreement identifier is invalid.</value>
+  </data>
+  <data name="LeaseAgreementExtendDetailsRequired" xml:space="preserve">
+    <value>Extension details are required.</value>
+  </data>
+  <data name="LeaseAgreementExtendMonthsInvalid" xml:space="preserve">
+    <value>The extension period must contain a positive number of months.</value>
+  </data>
+  <data name="LeaseAgreementExtendMonthsNotGreater" xml:space="preserve">
+    <value>The target number of months must be greater than the current agreement period.</value>
+  </data>
+  <data name="LeaseAgreementExtendEndDateInvalid" xml:space="preserve">
+    <value>The extension period results in an invalid end date.</value>
+  </data>
+  <data name="LeaseAgreementExtendStale" xml:space="preserve">
+    <value>The booking charges changed after this form was opened. Refresh and try again.</value>
+  </data>
+  <data name="LeaseAgreementExtendSaved" xml:space="preserve">
+    <value>The lease agreement was extended successfully.</value>
+  </data>
+  <data name="LeaseAgreementExtendSaveFailed" xml:space="preserve">
+    <value>The lease agreement extension could not be saved.</value>
+  </data>
+  <data name="LeaseAgreementDocumentNotFound" xml:space="preserve">
+    <value>The agreement document type was not found or is inactive.</value>
+  </data>
+  <data name="LeaseAgreementDocumentUploadBlocked" xml:space="preserve">
+    <value>Documents cannot be uploaded to a closed, voided, or invoiced lease agreement.</value>
+  </data>
+  <data name="LeaseAgreementDocumentPathInvalid" xml:space="preserve">
+    <value>The stored agreement document path is invalid.</value>
+  </data>
+  <data name="LeaseAgreementDocumentFileRequired" xml:space="preserve">
+    <value>Select a document to upload.</value>
+  </data>
+  <data name="LeaseAgreementDocumentFileTooLarge" xml:space="preserve">
+    <value>The document must not exceed 5 MB.</value>
+  </data>
+  <data name="LeaseAgreementDocumentFileInvalid" xml:space="preserve">
+    <value>Only valid JPG, PNG, and PDF documents are allowed.</value>
+  </data>
+  <data name="LeaseAgreementDocumentSaved" xml:space="preserve">
+    <value>The agreement document was uploaded successfully.</value>
+  </data>
+  <data name="LeaseAgreementDocumentSaveFailed" xml:space="preserve">
+    <value>The agreement document could not be saved.</value>
+  </data>
+  <data name="LeaseAgreementDiscountAgreementMismatch" xml:space="preserve">
+    <value>The discount request does not match the selected lease agreement.</value>
+  </data>
+  <data name="LeaseAgreementDiscountDatesRequired" xml:space="preserve">
+    <value>Every agreement discount requires a from date and a to date.</value>
+  </data>
+  <data name="LeaseAgreementDiscountDateRangeInvalid" xml:space="preserve">
+    <value>An agreement discount from date must be on or before its to date.</value>
+  </data>
+  <data name="LeaseAgreementDiscountValueInvalid" xml:space="preserve">
+    <value>An agreement discount cannot be negative.</value>
+  </data>
+  <data name="LeaseAgreementDiscountDuplicate" xml:space="preserve">
+    <value>Duplicate agreement discount date ranges are not allowed.</value>
+  </data>
+  <data name="LeaseAgreementDiscountsSaved" xml:space="preserve">
+    <value>Agreement discounts were saved successfully.</value>
+  </data>
+  <data name="LeaseAgreementDiscountsSaveFailed" xml:space="preserve">
+    <value>Agreement discounts could not be saved.</value>
+  </data>
+  <data name="LeaseAgreementDatesRequired" xml:space="preserve">
+    <value>The lease agreement start and end dates are required.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateAgreementInvalid" xml:space="preserve">
+    <value>The lease agreement identifier is invalid.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateRequired" xml:space="preserve">
+    <value>The delivery date is required.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateAfterEndDate" xml:space="preserve">
+    <value>The delivery date cannot be later than the agreement end date.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateSaved" xml:space="preserve">
+    <value>The agreement delivery date was saved successfully.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateSaveFailed" xml:space="preserve">
+    <value>The agreement delivery date could not be saved.</value>
+  </data>
+  <data name="LeaseAgreementDeleteReadOnly" xml:space="preserve">
+    <value>Closed, voided, or invoiced lease agreements cannot be deleted.</value>
+  </data>
+  <data name="LeaseAgreementDeleteReceiptBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a receipt.</value>
+  </data>
+  <data name="LeaseAgreementDeletePdcBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a PDC receivable.</value>
+  </data>
+  <data name="LeaseAgreementDeleteAccidentBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by an accident.</value>
+  </data>
+  <data name="LeaseAgreementDeleteServiceBookingBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a vehicle service booking.</value>
+  </data>
+  <data name="LeaseAgreementDeleteTrafficFineBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a traffic fine.</value>
+  </data>
+  <data name="LeaseAgreementDeleteTransportationInvoiceBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a transportation invoice.</value>
+  </data>
+  <data name="LeaseAgreementDeleteCollectionBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a collection movement.</value>
+  </data>
+  <data name="LeaseAgreementDeleteCustodyBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a custody movement.</value>
+  </data>
+  <data name="LeaseAgreementDeleteDeliveryBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a delivery movement.</value>
+  </data>
+  <data name="LeaseAgreementDeleteDebitNoteBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a debit note.</value>
+  </data>
+  <data name="LeaseAgreementDeleteCreditNoteBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by a credit note.</value>
+  </data>
+  <data name="LeaseAgreementDeleteInvoiceBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by an invoice.</value>
+  </data>
+  <data name="LeaseAgreementDeleteOpeningBalanceDepositBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by an opening-balance deposit.</value>
+  </data>
+  <data name="LeaseAgreementDeleteOpeningBalanceCustomerBlocked" xml:space="preserve">
+    <value>The lease agreement cannot be deleted because it is referenced by an opening-balance customer entry.</value>
+  </data>
+  <data name="LeaseAgreementFuelLevelInvalid" xml:space="preserve">
+    <value>The fuel level is invalid.</value>
+  </data>
+  <data name="LeaseAgreementCustomerTypeInvalid" xml:space="preserve">
+    <value>The customer type is invalid.</value>
+  </data>
+  <data name="LeaseAgreementAmountsInvalid" xml:space="preserve">
+    <value>Discount, advance, and deposit values cannot be negative.</value>
+  </data>
+  <data name="LeaseAgreementTaxPercentInvalid" xml:space="preserve">
+    <value>The tax percentage must be between zero and one hundred.</value>
+  </data>
+  <data name="LeaseAgreementVehicleNotFound" xml:space="preserve">
+    <value>Vehicle not found.</value>
+  </data>
+  <data name="LeaseAgreementCarModelNotFound" xml:space="preserve">
+    <value>Car model not found.</value>
+  </data>
+  <data name="LeaseAgreementCustomerNotFound" xml:space="preserve">
+    <value>Customer not found.</value>
+  </data>
+  <data name="LeaseAgreementDriverNotFound" xml:space="preserve">
+    <value>Driver not found.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalDriverNotFound" xml:space="preserve">
+    <value>Additional driver not found.</value>
+  </data>
+  <data name="LeaseAgreementSalesPersonNotFound" xml:space="preserve">
+    <value>Sales person not found.</value>
+  </data>
+  <data name="LeaseAgreementNotesInvalid" xml:space="preserve">
+    <value>Notes cannot be longer than 1000 characters.</value>
+  </data>
+  <data name="LeaseAgreementBookingChargeInvalid" xml:space="preserve">
+    <value>Booking charge rates cannot be negative.</value>
+  </data>
+  <data name="LeaseAgreementDuplicateChargeType" xml:space="preserve">
+    <value>Each lease agreement charge type can be submitted only once.</value>
+  </data>
+  <data name="LeaseAgreementRentChargeRequired" xml:space="preserve">
+    <value>The rent charge is required for a lease agreement.</value>
+  </data>
+  <data name="LeaseAgreementVehicleTypeNotFound" xml:space="preserve">
+    <value>The selected vehicle does not have a valid vehicle type.</value>
+  </data>
+  <data name="LeaseAgreementTariffNotFound" xml:space="preserve">
+    <value>No active lease tariff is configured for the selected vehicle and dates.</value>
+  </data>
+  <data name="LeaseAgreementChargeNotInTariff" xml:space="preserve">
+    <value>A selected charge is not available in the calculated lease tariff.</value>
+  </data>
+  <data name="LeaseAgreementChargeTypeInvalid" xml:space="preserve">
+    <value>One or more booking charge types are invalid.</value>
+  </data>
+  <data name="LeaseAgreementChildIdInvalid" xml:space="preserve">
+    <value>Child row identifiers cannot be negative.</value>
+  </data>
+  <data name="LeaseAgreementDuplicateChild" xml:space="preserve">
+    <value>Duplicate child rows are not allowed.</value>
+  </data>
+  <data name="LeaseAgreementChildOwnershipInvalid" xml:space="preserve">
+    <value>One or more child rows do not belong to this lease agreement.</value>
+  </data>
+  <data name="LeaseAgreementClauseTypeRequired" xml:space="preserve">
+    <value>A clause type is required for every clause.</value>
+  </data>
+  <data name="LeaseAgreementClauseTypeNotFound" xml:space="preserve">
+    <value>One or more clause types were not found.</value>
+  </data>
+  <data name="LeaseAgreementClauseDetailRequired" xml:space="preserve">
+    <value>Clause detail is required.</value>
+  </data>
+  <data name="LeaseAgreementProvisionTypeInvalid" xml:space="preserve">
+    <value>One or more provision types are invalid.</value>
+  </data>
+  <data name="LeaseAgreementProvisionTypeRequired" xml:space="preserve">
+    <value>A provision type is required for a new provision.</value>
+  </data>
+  <data name="LeaseAgreementProvisionRangeInvalid" xml:space="preserve">
+    <value>Provision months and day-of-month values must be valid.</value>
+  </data>
+  <data name="LeaseAgreementProvisionTitleInvalid" xml:space="preserve">
+    <value>A provision title cannot exceed 200 characters.</value>
+  </data>
+  <data name="LeaseAgreementProvisionCreationBlocked" xml:space="preserve">
+    <value>A new provision cannot be saved until the server rule for its required first and last dates is defined.</value>
+  </data>
+  <data name="LeaseAgreementProvisionRemovalBlocked" xml:space="preserve">
+    <value>A provision linked to a journal voucher or provision details cannot be removed.</value>
+  </data>
+  <data name="LeaseAgreementPreTerminationTypeInvalid" xml:space="preserve">
+    <value>One or more pre-termination types are invalid.</value>
+  </data>
+  <data name="LeaseAgreementPreTerminationRangeInvalid" xml:space="preserve">
+    <value>Pre-termination month ranges and values must be valid.</value>
+  </data>
+  <data name="LeaseAgreementTotalChargesOverflow" xml:space="preserve">
+    <value>The submitted booking charge total is too large.</value>
+  </data>
+  <data name="LeaseAgreementCloseAgreementInvalid" xml:space="preserve">
+    <value>The lease agreement identifier is invalid.</value>
+  </data>
+  <data name="LeaseAgreementCloseDetailsRequired" xml:space="preserve">
+    <value>Lease agreement closing details are required.</value>
+  </data>
+  <data name="LeaseAgreementCloseUnavailable" xml:space="preserve">
+    <value>The agreement can be closed only when it is open, non-invoiced, and has a current vehicle.</value>
+  </data>
+  <data name="LeaseAgreementCloseDateInvalid" xml:space="preserve">
+    <value>The return date and time must not be earlier than the agreement start date and time.</value>
+  </data>
+  <data name="LeaseAgreementCloseFuelLevelInvalid" xml:space="preserve">
+    <value>The return fuel level is invalid.</value>
+  </data>
+  <data name="LeaseAgreementCloseMileageInvalid" xml:space="preserve">
+    <value>The return mileage must be a valid value and cannot be lower than the recorded mileage.</value>
+  </data>
+  <data name="LeaseAgreementCloseBranchInvalid" xml:space="preserve">
+    <value>The selected return branch was not found or is inactive.</value>
+  </data>
+  <data name="LeaseAgreementCloseStale" xml:space="preserve">
+    <value>The agreement charges changed after this form was opened. Refresh and try again.</value>
+  </data>
+  <data name="LeaseAgreementClosed" xml:space="preserve">
+    <value>The lease agreement was closed successfully.</value>
+  </data>
+  <data name="LeaseAgreementCloseSaveFailed" xml:space="preserve">
+    <value>The lease agreement could not be closed.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementAgreementInvalid" xml:space="preserve">
+    <value>The lease agreement identifier is invalid.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementUnavailable" xml:space="preserve">
+    <value>The vehicle can be replaced only on an open, non-invoiced lease agreement with a current vehicle.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementDetailsRequired" xml:space="preserve">
+    <value>Vehicle replacement details are required.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementVehicleRequired" xml:space="preserve">
+    <value>Both incoming and outgoing vehicles are required.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementBranchInvalid" xml:space="preserve">
+    <value>One or more selected branches were not found or are inactive.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementReasonInvalid" xml:space="preserve">
+    <value>The selected replacement reason was not found or is inactive.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementDatesRequired" xml:space="preserve">
+    <value>Incoming and outgoing date and time values are required.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementFuelLevelInvalid" xml:space="preserve">
+    <value>One or more replacement fuel levels are invalid.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementMileageInvalid" xml:space="preserve">
+    <value>Incoming and outgoing mileage values must be valid non-negative numbers.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementNotesTooLong" xml:space="preserve">
+    <value>Vehicle replacement notes cannot exceed 1000 characters.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementCollectionCountryInvalid" xml:space="preserve">
+    <value>The selected collection country was not found or is inactive.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementCollectionAddressTooLong" xml:space="preserve">
+    <value>The collection address cannot exceed 250 characters.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementStale" xml:space="preserve">
+    <value>The agreement vehicle changed after this form was opened. Refresh and try again.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementSameVehicle" xml:space="preserve">
+    <value>The outgoing vehicle must be different from the incoming vehicle.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementOutgoingVehicleInvalid" xml:space="preserve">
+    <value>The selected outgoing vehicle was not found or is inactive.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementOutgoingVehicleUnavailable" xml:space="preserve">
+    <value>The selected outgoing vehicle is no longer available for replacement.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementIncomingDateInvalid" xml:space="preserve">
+    <value>The incoming date and time cannot be earlier than the vehicle's prior outgoing date and time.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementIncomingMileageInvalid" xml:space="preserve">
+    <value>The incoming mileage cannot be lower than the vehicle's prior outgoing mileage.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementOutgoingDateInvalid" xml:space="preserve">
+    <value>The outgoing date and time cannot be earlier than the incoming date and time.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementOutgoingMileageInvalid" xml:space="preserve">
+    <value>The outgoing mileage cannot be lower than the selected vehicle's current mileage.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementSaved" xml:space="preserve">
+    <value>The vehicle was replaced successfully.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementSaveFailed" xml:space="preserve">
+    <value>The vehicle replacement could not be saved.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementAgreementInvalid" xml:space="preserve">
+    <value>The lease agreement identifier is invalid.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementUnavailable" xml:space="preserve">
+    <value>The driver can be replaced only on an open, non-invoiced lease agreement with a current driver.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementDetailsRequired" xml:space="preserve">
+    <value>Driver replacement details are required.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementDriverRequired" xml:space="preserve">
+    <value>Both incoming and outgoing drivers are required.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementDateRequired" xml:space="preserve">
+    <value>The replacement date and time is required.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementStale" xml:space="preserve">
+    <value>The agreement driver changed after this form was opened. Refresh and try again.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementSameDriver" xml:space="preserve">
+    <value>The outgoing driver must be different from the incoming driver.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementOutgoingDriverInvalid" xml:space="preserve">
+    <value>The selected outgoing driver was not found or is inactive.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementDateInvalid" xml:space="preserve">
+    <value>The replacement date and time cannot be earlier than the incoming driver's prior outgoing date and time.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementSaved" xml:space="preserve">
+    <value>The driver was replaced successfully.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementSaveFailed" xml:space="preserve">
+    <value>The driver replacement could not be saved.</value>
+  </data>
+  <data name="ClauseDetailRequired" xml:space="preserve">
+    <value>Every clause must have a detail.</value>
+  </data>
+  <data name="ClauseDetailTooLong" xml:space="preserve">
+    <value>Clause detail cannot exceed 2,000 characters.</value>
+  </data>
+  <data name="ClauseIdInvalid" xml:space="preserve">
+    <value>One or more clause identifiers are invalid.</value>
+  </data>
+  <data name="ClauseDuplicateId" xml:space="preserve">
+    <value>The request contains a duplicate clause identifier.</value>
+  </data>
+  <data name="ClauseOwnershipInvalid" xml:space="preserve">
+    <value>One or more clauses do not belong to the selected clause type.</value>
+  </data>
+  <data name="ClauseDefaultCountInvalid" xml:space="preserve">
+    <value>A non-empty clause set must have exactly one default clause.</value>
+  </data>
+  <data name="ClauseTypeNameRequired" xml:space="preserve">
+    <value>Clause type name is required.</value>
+  </data>
+  <data name="ClauseTypeNameTooLong" xml:space="preserve">
+    <value>Clause type name cannot exceed 250 characters.</value>
+  </data>
+  <data name="ClauseTypeNameDuplicate" xml:space="preserve">
+    <value>A clause type with the same name already exists.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargesAgreementInvalid" xml:space="preserve">
+    <value>The lease agreement reference is invalid.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeDateRequired" xml:space="preserve">
+    <value>A date is required for every additional charge.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeTypeInvalid" xml:space="preserve">
+    <value>One or more additional charge types are invalid.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeRateTypeInvalid" xml:space="preserve">
+    <value>One or more additional charge rate types are invalid.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeAmountInvalid" xml:space="preserve">
+    <value>Every additional charge amount must be positive and contain no more than two decimal places.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeIdInvalid" xml:space="preserve">
+    <value>One or more additional charge identifiers are invalid.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeDuplicateId" xml:space="preserve">
+    <value>The request contains a duplicate additional charge identifier.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeOwnershipInvalid" xml:space="preserve">
+    <value>One or more additional charges do not belong to the selected lease agreement.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeSettingInvalid" xml:space="preserve">
+    <value>One or more charge and rate type combinations are not configured for Lease additional charges.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargesSaved" xml:space="preserve">
+    <value>The additional charges were saved successfully.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargesSaveFailed" xml:space="preserve">
+    <value>The additional charges could not be saved.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsAgreementInvalid" xml:space="preserve">
+    <value>The lease agreement reference is invalid.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsMethodInvalid" xml:space="preserve">
+    <value>The payment instruction method is invalid.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsTextTooLong" xml:space="preserve">
+    <value>One or more payment instruction values exceed the allowed length.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsDateInvalid" xml:space="preserve">
+    <value>The invoicing start date is invalid.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsDayInvalid" xml:space="preserve">
+    <value>The day of month must be between 1 and 31.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeIdInvalid" xml:space="preserve">
+    <value>One or more cheque identifiers are invalid.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeDuplicateId" xml:space="preserve">
+    <value>The request contains a duplicate cheque identifier.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequePaymentMethodRequired" xml:space="preserve">
+    <value>A payment method is required for every cheque row.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequePaymentMethodInvalid" xml:space="preserve">
+    <value>One or more cheque payment methods are invalid or inactive.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeNoRequired" xml:space="preserve">
+    <value>A cheque number is required for every cheque row.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeNoTooLong" xml:space="preserve">
+    <value>A cheque number cannot exceed 100 characters.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeDateRequired" xml:space="preserve">
+    <value>A cheque date is required for every cheque row.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeBankRequired" xml:space="preserve">
+    <value>A bank is required for every cheque row.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeBankTooLong" xml:space="preserve">
+    <value>A cheque bank cannot exceed 100 characters.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeAmountInvalid" xml:space="preserve">
+    <value>Every cheque amount must be positive and contain no more than two decimal places.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeOwnershipInvalid" xml:space="preserve">
+    <value>One or more cheque rows do not belong to the selected lease agreement.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsSaved" xml:space="preserve">
+    <value>The payment instructions were saved successfully.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsSaveFailed" xml:space="preserve">
+    <value>The payment instructions could not be saved.</value>
+  </data>
+  <data name="ChargeSettingsRequestInvalid" xml:space="preserve">
+    <value>The charge settings request is invalid.</value>
+  </data>
+  <data name="ChargeSettingsModuleTypeInvalid" xml:space="preserve">
+    <value>One or more charge settings contain an invalid module type.</value>
+  </data>
+  <data name="ChargeSettingsChargeTypeInvalid" xml:space="preserve">
+    <value>One or more charge settings contain an invalid charge type.</value>
+  </data>
+  <data name="RentalAgreementNotFound" xml:space="preserve">
+    <value>Rental agreement not found.</value>
+  </data>
+  <data name="RentalAgreementUncloseInvalid" xml:space="preserve">
+    <value>The rental agreement id is invalid.</value>
+  </data>
+  <data name="RentalAgreementUncloseStateInvalid" xml:space="preserve">
+    <value>Only closed, non-invoiced rental agreements can be unclosed.</value>
+  </data>
+  <data name="RentalAgreementUnclosed" xml:space="preserve">
+    <value>The rental agreement was unclosed successfully.</value>
+  </data>
+  <data name="RentalAgreementUncloseSaveFailed" xml:space="preserve">
+    <value>The rental agreement could not be unclosed.</value>
+  </data>
+  <data name="RentalAgreementReadOnly" xml:space="preserve">
+    <value>Closed or invoiced rental agreements cannot be changed.</value>
+  </data>
+  <data name="RentalAgreementVoidInvalid" xml:space="preserve">
+    <value>The rental agreement identifier is invalid.</value>
+  </data>
+  <data name="RentalAgreementVoidReasonRequired" xml:space="preserve">
+    <value>A reason is required to void the rental agreement.</value>
+  </data>
+  <data name="RentalAgreementVoidReasonTooLong" xml:space="preserve">
+    <value>The void reason must not exceed 500 characters.</value>
+  </data>
+  <data name="RentalAgreementAlreadyVoided" xml:space="preserve">
+    <value>The rental agreement has already been voided.</value>
+  </data>
+  <data name="RentalAgreementVoidReadOnly" xml:space="preserve">
+    <value>Only open, non-invoiced rental agreements can be voided.</value>
+  </data>
+  <data name="RentalAgreementVoidPaymentBlocked" xml:space="preserve">
+    <value>A rental agreement with an advance or deposit cannot be voided.</value>
+  </data>
+  <data name="RentalAgreementVoidReceiptBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has receipts.</value>
+  </data>
+  <data name="RentalAgreementVoidPdcBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has post-dated receivables.</value>
+  </data>
+  <data name="RentalAgreementVoidAccidentBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has accident records.</value>
+  </data>
+  <data name="RentalAgreementVoidServiceBookingBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has vehicle service records.</value>
+  </data>
+  <data name="RentalAgreementVoidTrafficFineBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has traffic fine records.</value>
+  </data>
+  <data name="RentalAgreementVoidTransportationInvoiceBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has transportation invoices.</value>
+  </data>
+  <data name="RentalAgreementVoidCollectionBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has collection movements.</value>
+  </data>
+  <data name="RentalAgreementVoidCustodyBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has custody movements.</value>
+  </data>
+  <data name="RentalAgreementVoidDeliveryBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has delivery movements.</value>
+  </data>
+  <data name="RentalAgreementVoidDebitNoteBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has debit notes.</value>
+  </data>
+  <data name="RentalAgreementVoidCreditNoteBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has credit notes.</value>
+  </data>
+  <data name="RentalAgreementVoidInvoiceBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has invoices.</value>
+  </data>
+  <data name="RentalAgreementVoidOpeningBalanceDepositBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has an opening deposit balance.</value>
+  </data>
+  <data name="RentalAgreementVoidOpeningBalanceCustomerBlocked" xml:space="preserve">
+    <value>The rental agreement cannot be voided because it has an opening customer balance.</value>
+  </data>
+  <data name="RentalAgreementVoided" xml:space="preserve">
+    <value>The rental agreement was voided successfully.</value>
+  </data>
+  <data name="RentalAgreementVoidSaveFailed" xml:space="preserve">
+    <value>The rental agreement could not be voided.</value>
+  </data>
+  <data name="RentalAgreementBillingHistoryAgreementInvalid" xml:space="preserve">
+    <value>The rental agreement identifier is invalid.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateAgreementInvalid" xml:space="preserve">
+    <value>The rental agreement identifier is invalid.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateRequired" xml:space="preserve">
+    <value>The delivery date is required.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateAfterEndDate" xml:space="preserve">
+    <value>The delivery date cannot be later than the agreement end date.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateSaved" xml:space="preserve">
+    <value>The rental agreement delivery date was saved successfully.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateSaveFailed" xml:space="preserve">
+    <value>The rental agreement delivery date could not be saved.</value>
+  </data>
+  <data name="RentalAgreementSalesPersonAgreementInvalid" xml:space="preserve">
+    <value>The rental agreement identifier is invalid.</value>
+  </data>
+  <data name="RentalAgreementSalesPersonInvalid" xml:space="preserve">
+    <value>The selected sales person is invalid or inactive.</value>
+  </data>
+  <data name="RentalAgreementSalesPersonSaved" xml:space="preserve">
+    <value>The rental agreement sales person was saved successfully.</value>
+  </data>
+  <data name="RentalAgreementSalesPersonSaveFailed" xml:space="preserve">
+    <value>The rental agreement sales person could not be saved.</value>
+  </data>
+  <data name="RentalAgreementDocumentNotFound" xml:space="preserve">
+    <value>The agreement document type was not found or is inactive.</value>
+  </data>
+  <data name="RentalAgreementDocumentUploadBlocked" xml:space="preserve">
+    <value>Documents cannot be uploaded to a closed or invoiced rental agreement.</value>
+  </data>
+  <data name="RentalAgreementDocumentPathInvalid" xml:space="preserve">
+    <value>The stored rental agreement document path is invalid.</value>
+  </data>
+  <data name="RentalAgreementDocumentFileRequired" xml:space="preserve">
+    <value>Select a document to upload.</value>
+  </data>
+  <data name="RentalAgreementDocumentFileTooLarge" xml:space="preserve">
+    <value>The document must not exceed 5 MB.</value>
+  </data>
+  <data name="RentalAgreementDocumentFileInvalid" xml:space="preserve">
+    <value>Only valid JPG, PNG, and PDF documents are allowed.</value>
+  </data>
+  <data name="RentalAgreementDocumentSaved" xml:space="preserve">
+    <value>The rental agreement document was uploaded successfully.</value>
+  </data>
+  <data name="RentalAgreementDocumentSaveFailed" xml:space="preserve">
+    <value>The rental agreement document could not be saved.</value>
+  </data>
+  <data name="ChargeSettingsRateTypeInvalid" xml:space="preserve">
+    <value>One or more charge settings contain an invalid rate type.</value>
+  </data>
+  <data name="LabourRateRequestInvalid" xml:space="preserve">
+    <value>The labour tariff request is invalid.</value>
+  </data>
+  <data name="LabourRateVehicleTypeInvalid" xml:space="preserve">
+    <value>The selected vehicle type was not found.</value>
+  </data>
+  <data name="LabourRateRowInvalid" xml:space="preserve">
+    <value>Every labour tariff row needs a staff profile, an activity, and a time and cost of zero or more.</value>
+  </data>
+  <data name="LabourRateDuplicateRow" xml:space="preserve">
+    <value>The same staff profile and activity appear in more than one row.</value>
+  </data>
+  <data name="LabourRateStaffProfileInvalid" xml:space="preserve">
+    <value>One or more selected staff profiles were not found.</value>
+  </data>
+  <data name="LabourRateActivityInvalid" xml:space="preserve">
+    <value>One or more selected activities were not found.</value>
+  </data>
+  <data name="LabourActivitiesReportDateRangeInvalid" xml:space="preserve">
+    <value>Select a valid date range; the start date cannot be after the end date.</value>
+  </data>
+  <data name="ActivationNoRecords" xml:space="preserve">
+    <value>Select at least one record.</value>
+  </data>
+  <data name="ActivationRecordsNotFound" xml:space="preserve">
+    <value>One or more selected records were not found. Nothing was changed.</value>
+  </data>
+  <data name="ActivationSucceeded" xml:space="preserve">
+    <value>Status updated successfully.</value>
+  </data>
+  <data name="ActivationFailed" xml:space="preserve">
+    <value>The status could not be updated.</value>
+  </data>
+  <data name="SettingsInvalidKey" xml:space="preserve">
+    <value>One or more settings rows have an invalid type. Nothing was saved.</value>
+  </data>
+  <data name="BranchNameExists" xml:space="preserve">
+    <value>A branch with this name already exists.</value>
+  </data>
+  <data name="BranchNotFound" xml:space="preserve">
+    <value>The branch was not found.</value>
+  </data>
+  <data name="BranchReferencedByPartners" xml:space="preserve">
+    <value>This branch cannot be deleted: customers or suppliers use it.</value>
+  </data>
+  <data name="BranchReferencedByInvoices" xml:space="preserve">
+    <value>This branch cannot be deleted: invoices use it.</value>
+  </data>
+  <data name="BranchReferencedByLimousineInvoices" xml:space="preserve">
+    <value>This branch cannot be deleted: limousine invoices use it.</value>
+  </data>
+  <data name="BranchReferencedByMiscellaneousInvoices" xml:space="preserve">
+    <value>This branch cannot be deleted: miscellaneous invoices use it.</value>
+  </data>
+  <data name="BranchReferencedByEquipmentRentalInvoices" xml:space="preserve">
+    <value>This branch cannot be deleted: equipment rental invoices use it.</value>
+  </data>
+  <data name="BranchReferencedByTransportationInvoices" xml:space="preserve">
+    <value>This branch cannot be deleted: transportation invoices use it.</value>
+  </data>
+  <data name="BranchReferencedByRentalQuotations" xml:space="preserve">
+    <value>This branch cannot be deleted: rental quotations use it.</value>
+  </data>
+  <data name="BranchReferencedByPurchaseOrders" xml:space="preserve">
+    <value>This branch cannot be deleted: purchase orders use it.</value>
+  </data>
+  <data name="InvoiceSaveFailed" xml:space="preserve">
+    <value>The invoice could not be saved. Nothing was changed.</value>
+  </data>
+  <data name="IndividualPartnerNotFound" xml:space="preserve">
+    <value>The individual customer was not found.</value>
+  </data>
+  <data name="IndividualPartnerMobileExists" xml:space="preserve">
+    <value>Another individual customer already uses this mobile number.</value>
+  </data>
+  <data name="IndividualPartnerEmailExists" xml:space="preserve">
+    <value>Another individual customer already uses this e-mail.</value>
+  </data>
+  <data name="CompanyNotFound" xml:space="preserve">
+    <value>Company not found.</value>
+  </data>
+  <data name="CompanyNameExists" xml:space="preserve">
+    <value>A company with this name already exists.</value>
+  </data>
+  <data name="CompanyVatExists" xml:space="preserve">
+    <value>A company with this VAT number already exists.</value>
+  </data>
+  <data name="CompanyContactPersonNotFound" xml:space="preserve">
+    <value>The contact person was not found.</value>
+  </data>
+  <data name="DriverNotFound" xml:space="preserve">
+    <value>Driver not found.</value>
+  </data>
+  <data name="ChildRowOwnershipInvalid" xml:space="preserve">
+    <value>A saved child row is duplicated or does not belong to this record. Reload the record and try again.</value>
+  </data>
+  <data name="CustomerDateInvalid" xml:space="preserve">
+    <value>One of the dates is invalid.</value>
+  </data>
+  <data name="CustomerDocumentExpiryNotAfterIssue" xml:space="preserve">
+    <value>A document must expire at least one day after its issue date.</value>
+  </data>
+  <data name="VehicleNotFound" xml:space="preserve">
+    <value>The selected vehicle no longer exists.</value>
+  </data>
+  <data name="RecordInUse" xml:space="preserve">
+    <value>This record cannot be deleted: it is used in {0}.</value>
+  </data>
+  <data name="EntityAgreement" xml:space="preserve">
+    <value>agreements</value>
+  </data>
+  <data name="EntityBooking" xml:space="preserve">
+    <value>bookings</value>
+  </data>
+  <data name="EntityRentalMasterAgreement" xml:space="preserve">
+    <value>rental master agreements</value>
+  </data>
+  <data name="EntityLeaseMasterAgreement" xml:space="preserve">
+    <value>lease master agreements</value>
+  </data>
+  <data name="EntityInvoice" xml:space="preserve">
+    <value>invoices</value>
+  </data>
+  <data name="EntityLimousineInvoice" xml:space="preserve">
+    <value>limousine invoices</value>
+  </data>
+  <data name="EntityMiscellaneousInvoice" xml:space="preserve">
+    <value>miscellaneous invoices</value>
+  </data>
+  <data name="EntityEquipmentRentalInvoice" xml:space="preserve">
+    <value>equipment rental invoices</value>
+  </data>
+  <data name="EntityTransportationInvoice" xml:space="preserve">
+    <value>transportation invoices</value>
+  </data>
+  <data name="EntityReceipt" xml:space="preserve">
+    <value>receipts</value>
+  </data>
+  <data name="EntityPayment" xml:space="preserve">
+    <value>payments</value>
+  </data>
+  <data name="EntityJournalVoucherDetail" xml:space="preserve">
+    <value>journal entries</value>
+  </data>
+  <data name="EntityOpeningBalanceCustomer" xml:space="preserve">
+    <value>opening balances</value>
+  </data>
+  <data name="EntityTransportationAgreement" xml:space="preserve">
+    <value>transportation agreements</value>
+  </data>
+  <data name="EntityLeaseAgreementDriverReplacement" xml:space="preserve">
+    <value>driver replacements</value>
+  </data>
+  <data name="EntityDriverTimeSheet" xml:space="preserve">
+    <value>driver timesheets</value>
+  </data>
+  <data name="EntityCollectionMovement" xml:space="preserve">
+    <value>collection movements</value>
+  </data>
+  <data name="EntityDeliveryMovement" xml:space="preserve">
+    <value>delivery movements</value>
+  </data>
+  <data name="EntityWorkshopMovement" xml:space="preserve">
+    <value>workshop movements</value>
+  </data>
+  <data name="EntityTripBooking" xml:space="preserve">
+    <value>trips</value>
+  </data>
+  <data name="EntityTripBookingHistory" xml:space="preserve">
+    <value>trip history</value>
+  </data>
+  <data name="EntityRentalQuotation" xml:space="preserve">
+    <value>rental quotations</value>
+  </data>
+  <data name="EntityLeaseQuotation" xml:space="preserve">
+    <value>lease quotations</value>
+  </data>
+  <data name="EntityLeaseInquiry" xml:space="preserve">
+    <value>lease inquiries</value>
+  </data>
+  <data name="EntityCreditNote" xml:space="preserve">
+    <value>credit notes</value>
+  </data>
+  <data name="EntityDebitNote" xml:space="preserve">
+    <value>debit notes</value>
+  </data>
+  <data name="EntityPDCReceivable" xml:space="preserve">
+    <value>cheques receivable</value>
+  </data>
+  <data name="EntityPDCPayable" xml:space="preserve">
+    <value>cheques payable</value>
+  </data>
+  <data name="EntityUser" xml:space="preserve">
+    <value>user accounts</value>
+  </data>
+  <data name="ReferenceNotFound" xml:space="preserve">
+    <value>A selected value from {0} no longer exists.</value>
+  </data>
+  <data name="EntityBranch" xml:space="preserve">
+    <value>branches</value>
+  </data>
+  <data name="EntityStaff" xml:space="preserve">
+    <value>staff</value>
+  </data>
+  <data name="EntityPartner" xml:space="preserve">
+    <value>partners</value>
+  </data>
+  <data name="EntityMemberPartner" xml:space="preserve">
+    <value>individual partners</value>
+  </data>
+  <data name="EntityCompany" xml:space="preserve">
+    <value>companies</value>
+  </data>
+  <data name="EntityIndividualPartner" xml:space="preserve">
+    <value>individual customers</value>
+  </data>
+  <data name="EntityCustomer" xml:space="preserve">
+    <value>customers</value>
+  </data>
+  <data name="EntitySupplier" xml:space="preserve">
+    <value>suppliers</value>
+  </data>
+  <data name="EntityDriver" xml:space="preserve">
+    <value>drivers</value>
+  </data>
+  <data name="EntityContact" xml:space="preserve">
+    <value>contact persons</value>
+  </data>
+  <data name="EntityContactGroup" xml:space="preserve">
+    <value>contact groups</value>
+  </data>
+  <data name="EntityTariffCard" xml:space="preserve">
+    <value>tariff cards</value>
+  </data>
+  <data name="EntityCurrency" xml:space="preserve">
+    <value>currencies</value>
+  </data>
+  <data name="EntityCountry" xml:space="preserve">
+    <value>countries</value>
+  </data>
+  <data name="RecordAlreadyExists" xml:space="preserve">
+    <value>This value is already used by another record. Refresh and try again.</value>
+  </data>
+  <data name="CustomerContactGroupInvalidType" xml:space="preserve">
+    <value>Select a customer contact group.</value>
+  </data>
+  <data name="ConcurrentWriteConflict" xml:space="preserve">
+    <value>Another request changed the data while saving. Reload the latest data and try again.</value>
+  </data>
+  <data name="CustomerImportFieldInvalid" xml:space="preserve"><value>Invalid value for field {0}.</value></data>
+  <data name="CustomerImportBirthDateRequired" xml:space="preserve"><value>Birth date is required.</value></data>
+  <data name="CustomerImportMappingFailed" xml:space="preserve"><value>Could not prepare row {0}.</value></data>
+  <data name="CustomerImportPersistenceFailed" xml:space="preserve"><value>Could not save row batch {0}. Please try again.</value></data>
+  <data name="CustomerStatementInvalidFilters" xml:space="preserve">
+    <value>Select a customer, a valid date range and a ledger or outstanding report.</value>
+  </data>
+  <data name="CustomerStatementCustomerNotFound" xml:space="preserve">
+    <value>Customer not found or excluded by the inactive-customer filter.</value>
+  </data>
+  <data name="CustomerStatementReceivableAccountsMissing" xml:space="preserve">
+    <value>Customer receivable accounts are not configured. Configure the contact-group account links and try again.</value>
+  </data>
+  <data name="FollowUpReportInvalidFilters" xml:space="preserve">
+    <value>Use valid dates in chronological order and a valid customer filter.</value>
+  </data>
+  <data name="SupplierVatExists" xml:space="preserve"><value>A live supplier already uses this VAT number.</value></data>
+  <data name="SupplierTrnExists" xml:space="preserve"><value>A live supplier already uses this TRN.</value></data>
+  <data name="SupplierNotFound" xml:space="preserve"><value>Supplier not found.</value></data>
+  <data name="SupplierContactGroupInvalidType" xml:space="preserve"><value>Select a live supplier contact group.</value></data>
+  <data name="SupplierReportInvalidFilter" xml:space="preserve"><value>One or more supplier report filters are invalid.</value></data>
+  <data name="SupplierReportSupplierRequired" xml:space="preserve"><value>Select a supplier.</value></data>
+  <data name="SupplierReportSupplierNotFound" xml:space="preserve"><value>Supplier not found or excluded by the inactive-supplier filter.</value></data>
+  <data name="SupplierReportBranchNotFound" xml:space="preserve"><value>The selected branch no longer exists.</value></data>
+  <data name="SupplierReportSalesPersonNotFound" xml:space="preserve"><value>The selected sales person no longer exists.</value></data>
+  <data name="SupplierReportContactGroupNotFound" xml:space="preserve"><value>The selected supplier contact group no longer exists.</value></data>
+  <data name="SupplierReportInvalidDateRange" xml:space="preserve"><value>Use valid dates in chronological order.</value></data>
+  <data name="SupplierReportInvalidAsOfDate" xml:space="preserve"><value>Use a valid as-of date.</value></data>
+  <data name="SupplierReportInvalidStatus" xml:space="preserve"><value>Select a valid supplier status.</value></data>
+  <data name="SupplierReportInvalidBalanceType" xml:space="preserve"><value>Select a valid balance type.</value></data>
+  <data name="SupplierBalancesSummaryInvalidRange" xml:space="preserve"><value>Enter valid balance From and To amounts, with From less than or equal to To.</value></data>
+  <data name="SupplierReportInvalidStatementType" xml:space="preserve"><value>Select ledger or outstanding statement type.</value></data>
+  <data name="SupplierReportInvalidPeriods" xml:space="preserve"><value>Custom aging periods must be six positive, strictly increasing whole numbers.</value></data>
+  <data name="SupplierReportMissingPayableAccounts" xml:space="preserve"><value>Supplier payable accounts are not configured. Configure the contact-group account links and try again.</value></data>
+  <data name="StaffDesignationNameExists" xml:space="preserve"><value>A live staff designation already uses this name.</value></data>
+  <data name="StaffTimesheetDateRequired" xml:space="preserve"><value>Select valid dates for the timesheet date and month.</value></data>
+  <data name="StaffEmailExists" xml:space="preserve"><value>A live staff member already uses this email.</value></data>
+  <data name="StaffMobileExists" xml:space="preserve"><value>A live staff member already uses this mobile number.</value></data>
+  <data name="StaffNotFound" xml:space="preserve"><value>Staff not found.</value></data>
+  <data name="StaffReportInvalidFilter" xml:space="preserve"><value>One or more staff report filters are invalid.</value></data>
+  <data name="StaffReportMissingAccounts" xml:space="preserve"><value>Staff control accounts are not configured. Configure the staff contact-group account links and try again.</value></data>
+  <data name="StaffImportBirthDateInvalid" xml:space="preserve"><value>A real date of birth on or before today is required.</value></data>
+  <data name="StaffImportJoiningDateInvalid" xml:space="preserve"><value>A real joining date on or after the date of birth is required.</value></data>
+  <data name="StaffImportGenderInvalid" xml:space="preserve"><value>Select a valid gender.</value></data>
+  <data name="StaffImportCountryInvalid" xml:space="preserve"><value>The address country was not found.</value></data>
+  <data name="JournalAllocationInvalidRequest" xml:space="preserve"><value>Every allocation must have valid identities, a defined source type and a positive amount.</value></data>
+  <data name="JournalAllocationDuplicateSource" xml:space="preserve"><value>Each allocation source or target can be selected only once.</value></data>
+  <data name="JournalAllocationInvalidSource" xml:space="preserve"><value>Select a live opposite-sign source for the same partner and control account.</value></data>
+  <data name="JournalAllocationInvalidTarget" xml:space="preserve"><value>The target must be a live posted, non-voided line for the same partner and control account.</value></data>
+  <data name="JournalAllocationSourceCapacityExceeded" xml:space="preserve"><value>Allocation exceeds the source ledger balance still available.</value></data>
+  <data name="JournalAllocationTargetCapacityExceeded" xml:space="preserve"><value>Allocation exceeds the target ledger balance still available.</value></data>
+  <data name="CustomerBalancesSummaryInvalidRange" xml:space="preserve"><value>Enter valid balance From and To amounts, with From less than or equal to To.</value></data>
+  <data name="SalesAgreementNotFound" xml:space="preserve"><value>The sales agreement was not found.</value></data>
+  <data name="SalesAgreementNotOpen" xml:space="preserve"><value>Only an open sales agreement can be changed this way.</value></data>
+  <data name="SalesAgreementCustomerInvalid" xml:space="preserve"><value>Select a valid individual or company customer.</value></data>
+  <data name="SalesAgreementDateRequired" xml:space="preserve"><value>The agreement date is required.</value></data>
+  <data name="SalesAgreementItemsRequired" xml:space="preserve"><value>Add at least one unit to the agreement.</value></data>
+  <data name="SalesAgreementDuplicateUnit" xml:space="preserve"><value>The same unit cannot be added twice.</value></data>
+  <data name="SalesAgreementUnitNotFound" xml:space="preserve"><value>One or more selected units were not found or are inactive.</value></data>
+  <data name="SalesAgreementUnitUnavailable" xml:space="preserve"><value>One or more selected units are already reserved, sold or delivered on another agreement.</value></data>
+  <data name="SalesAgreementUnitOnRental" xml:space="preserve"><value>One or more selected units are currently out on an equipment rental delivery that is not returned.</value></data>
+  <data name="SalesAgreementUnitIncomplete" xml:space="preserve"><value>Every unit must have a make and model and a chassis number before it can be sold.</value></data>
+  <data name="SalesAgreementPriceInvalid" xml:space="preserve"><value>Every unit price must be greater than zero.</value></data>
+  <data name="SalesAgreementQuotationNotFound" xml:space="preserve"><value>The sales quotation was not found.</value></data>
+  <data name="SalesAgreementQuotationNotApproved" xml:space="preserve"><value>A sales agreement requires a customer-approved quotation.</value></data>
+  <data name="SalesAgreementQuotationExpired" xml:space="preserve"><value>The quotation validity date has passed.</value></data>
+  <data name="SalesAgreementQuotationTaken" xml:space="preserve"><value>An active sales agreement already exists for this quotation.</value></data>
+  <data name="SalesAgreementQuotationChange" xml:space="preserve"><value>The source quotation of a sales agreement cannot be changed.</value></data>
+  <data name="SalesAgreementUnitsDifferFromQuotation" xml:space="preserve"><value>The units must match the quotation models and quantities.</value></data>
+  <data name="SalesAgreementBankNotFound" xml:space="preserve"><value>One or more selected banks were not found.</value></data>
+  <data name="SalesAgreementDuplicateSerial" xml:space="preserve"><value>Each schedule row can be sent only once.</value></data>
+  <data name="SalesAgreementDownPaymentExceedsTotal" xml:space="preserve"><value>The down payment cannot exceed the agreement total.</value></data>
+  <data name="SalesAgreementInstallmentsRequired" xml:space="preserve"><value>At least one installment is required when an amount remains outstanding.</value></data>
+  <data name="SalesAgreementNoInstallmentBalance" xml:space="preserve"><value>Nothing remains to be paid in installments; set the number of installments to zero.</value></data>
+  <data name="SalesAgreementFinancialLocked" xml:space="preserve"><value>Receipts exist for this agreement: the customer, units, prices and payment terms can no longer change.</value></data>
+  <data name="SalesAgreementHasReceipts" xml:space="preserve"><value>Receipts exist for this agreement; void or refund them first.</value></data>
+  <data name="SalesAgreementNotInvoiced" xml:space="preserve"><value>Only an invoiced sales agreement can be delivered.</value></data>
+  <data name="SalesAgreementNotDelivered" xml:space="preserve"><value>Only a delivered sales agreement can be closed.</value></data>
+  <data name="SalesAgreementOutstanding" xml:space="preserve"><value>The agreement still has an outstanding balance.</value></data>
+  <data name="SalesAgreementDeliveryDateInvalid" xml:space="preserve"><value>The delivery date cannot be before the invoice date.</value></data>
+  <data name="SalesAgreementInvoiceDateInvalid" xml:space="preserve"><value>The invoice date cannot be before the agreement date.</value></data>
+  <data name="SalesAgreementUnitCostMissing" xml:space="preserve"><value>Enter the purchase cost of every unit in the sales fleet before invoicing.</value></data>
+  <data name="SalesAgreementUnitCostLocked" xml:space="preserve"><value>This unit is sold and its purchase cost is already posted; the cost cannot be changed.</value></data>
+  <data name="SalesAgreementCustomerAccountMissing" xml:space="preserve"><value>No customer control account is configured in Link Accounts for this customer.</value></data>
+  <data name="SalesAgreementRevenueAccountMissing" xml:space="preserve"><value>Link the Sale Vehicle Sigma Account in Link Accounts &gt; General.</value></data>
+  <data name="SalesAgreementTaxAccountMissing" xml:space="preserve"><value>Link the Tax Collected account in Link Accounts &gt; General.</value></data>
+  <data name="SalesAgreementCostAccountMissing" xml:space="preserve"><value>Link the Sale Vehicle Cost Account and the Stock Account in Link Accounts &gt; General.</value></data>
+  <data name="SalesAgreementInvoiceLocked" xml:space="preserve"><value>This invoice belongs to a sales agreement and cannot be changed or deleted here.</value></data>
+  <data name="SalesAgreementInvoiceBasisInvalid" xml:space="preserve"><value>Choose either agreement units, a net amount, or the final balance for the invoice.</value></data>
+  <data name="SalesAgreementInvoiceItemUnavailable" xml:space="preserve"><value>One or more selected units were already included in an agreement invoice.</value></data>
+  <data name="SalesAgreementInvoiceAmountInvalid" xml:space="preserve"><value>The invoice net amount must be greater than zero.</value></data>
+  <data name="SalesAgreementInvoiceAmountExceedsOutstanding" xml:space="preserve"><value>The invoice amount cannot exceed the unbilled agreement balance.</value></data>
+  <data name="SalesAgreementPartialDeliveryRequiresUnits" xml:space="preserve"><value>Partial delivery requires an invoiced unit selection.</value></data>
+  <data name="SalesAgreementDeliveryItemsInvalid" xml:space="preserve"><value>Select valid agreement units for delivery.</value></data>
+  <data name="SalesAgreementAlreadyDelivered" xml:space="preserve"><value>One or more selected units have already been delivered.</value></data>
+  <data name="StaffConfirmationNotAfterJoining" xml:space="preserve"><value>Date of confirmation must be on or after date of joining.</value></data>
+  <data name="UniqueFieldNotSupported" xml:space="preserve"><value>This field does not support an availability check.</value></data>
+  <data name="InvalidId" xml:space="preserve"><value>The record ID must be positive.</value></data>
+  <data name="JobInvoiceJobNotFound" xml:space="preserve"><value>Job not found.</value></data>
+  <data name="JobInvoiceClosed" xml:space="preserve"><value>Only an open job can be invoiced.</value></data>
+  <data name="JobInvoiceAlreadyExists" xml:space="preserve"><value>This job already has an invoice. Reload the job before continuing.</value></data>
+  <data name="JobInvoiceNumberRequired" xml:space="preserve"><value>The job has no number to invoice.</value></data>
+  <data name="JobInvoiceCustomerRequired" xml:space="preserve"><value>The job needs an available customer before an invoice can be created.</value></data>
+  <data name="JobInvoiceDateRequired" xml:space="preserve"><value>The invoice date and time is required.</value></data>
+  <data name="JobInvoiceLinesRequired" xml:space="preserve"><value>Add at least one valid invoice line.</value></data>
+  <data name="JobInvoiceChargeInvalid" xml:space="preserve"><value>Select a workshop charge type for every invoice line.</value></data>
+  <data name="JobInvoiceAmountInvalid" xml:space="preserve"><value>Every invoice line needs an amount of at least 0.01.</value></data>
+  <data name="JobInvoiceTaxInvalid" xml:space="preserve"><value>The tax percentage must be between 0 and 100.</value></data>
+  <data name="JobInvoiceVehicleInvalid" xml:space="preserve"><value>One or more selected vehicles are not available.</value></data>
+  <data name="JobInvoiceTextTooLong" xml:space="preserve"><value>The invoice details or line description exceeds the allowed length.</value></data>
+  <data name="WorkOrderItemsRequired" xml:space="preserve"><value>Add at least one work order item.</value></data>
+  <data name="WorkOrderNotFound" xml:space="preserve"><value>Work order not found.</value></data>
+  <data name="WorkOrderEditLocked" xml:space="preserve"><value>Only pending work orders can be edited. Reload the work order before continuing.</value></data>
+  <data name="WorkOrderTransitionLocked" xml:space="preserve"><value>Only pending work orders can be accepted or rejected. Reload the list before continuing.</value></data>
+  <data name="WorkOrderUsedByJob" xml:space="preserve"><value>The work order is used by one or more jobs and cannot be deleted.</value></data>
+  <data name="JobGatePassUnavailable" xml:space="preserve"><value>A gate pass can only be printed for a closed job with an invoice. Reload the job before continuing.</value></data>
+  <data name="SalesAgreementQuotationTaxMismatch" xml:space="preserve"><value>This quotation has different tax rates across its lines. A sales agreement requires one tax rate; review the quotation before converting it.</value></data>
+  <data name="SalesAgreementScheduleInvalid" xml:space="preserve"><value>Select valid installment dates and schedule rows; the monthly schedule must fit within the supported date range.</value></data>
+  <data name="SalesAgreementTermsTooLong" xml:space="preserve"><value>Sales agreement terms cannot exceed 2000 characters. Review the quotation terms before converting it.</value></data>
+  <data name="ItemRequisitionAmountExceeded" xml:space="preserve"><value>The purchase request amount exceeds the supported monetary range.</value></data>
+  <data name="ItemRequisitionInvalidBranch" xml:space="preserve"><value>The selected branch is no longer available.</value></data>
+  <data name="ItemRequisitionInvalidInput" xml:space="preserve"><value>Enter a valid date, job and at least one distinct item with a positive quantity.</value></data>
+  <data name="ItemRequisitionInvalidItems" xml:space="preserve"><value>One or more selected items are no longer available.</value></data>
+  <data name="ItemRequisitionInvalidJob" xml:space="preserve"><value>The selected job is no longer available.</value></data>
+  <data name="ItemRequisitionInvalidLines" xml:space="preserve"><value>Select distinct source rows with positive quantities belonging to this requisition.</value></data>
+  <data name="ItemRequisitionInvalidSupplier" xml:space="preserve"><value>The selected supplier is no longer available.</value></data>
+  <data name="ItemRequisitionInvalidUom" xml:space="preserve"><value>Select an available unit of measure and a valid nonnegative unit price for every line.</value></data>
+  <data name="ItemRequisitionLinkedDocument" xml:space="preserve"><value>This requisition has a linked purchase request or item issue and cannot be edited or deleted.</value></data>
+  <data name="ItemRequisitionLinkedIssueEdit" xml:space="preserve"><value>A source-linked item issue is immutable. Delete the whole issue when allowed, then issue again from its requisition.</value></data>
+  <data name="ItemRequisitionLinkedPurchaseRequestEdit" xml:space="preserve"><value>A purchase request created from an item requisition is immutable. Delete it when allowed, then create it again from the requisition.</value></data>
+  <data name="ItemRequisitionNotFound" xml:space="preserve"><value>Item requisition not found.</value></data>
+  <data name="ItemRequisitionPurchaseRequestExists" xml:space="preserve"><value>A live purchase request already exists for this requisition.</value></data>
+  <data name="ItemRequisitionQuantityExceeded" xml:space="preserve"><value>The quantity exceeds the current remaining requisition quantity. Reload before continuing.</value></data>
+  <data name="ItemRequisitionUseAggregateEditor" xml:space="preserve"><value>Change owned requisition rows through the item requisition editor.</value></data>
+  <data name="ItemIssueInvalidInput" xml:space="preserve"><value>Enter a valid date, job and at least one distinct item with a positive quantity.</value></data>
+  <data name="ItemIssueInvalidItems" xml:space="preserve"><value>One or more selected items are no longer available.</value></data>
+  <data name="ItemIssueInvalidJob" xml:space="preserve"><value>The selected job is no longer available.</value></data>
+  <data name="ItemIssueInvalidLines" xml:space="preserve"><value>Saved item rows must belong to this item issue and cannot be repeated.</value></data>
+  <data name="ItemIssueNotFound" xml:space="preserve"><value>Item issue not found.</value></data>
+  <data name="ItemIssueUseAggregateEditor" xml:space="preserve"><value>Change owned issue rows through the item issue editor.</value></data>
+  <data name="ItemReturnInvalidInput" xml:space="preserve"><value>Enter a valid date, job and at least one distinct item with a positive quantity.</value></data>
+  <data name="ItemReturnInvalidItems" xml:space="preserve"><value>One or more selected items are no longer available.</value></data>
+  <data name="ItemReturnInvalidJob" xml:space="preserve"><value>The selected job is no longer available.</value></data>
+  <data name="ItemReturnInvalidLines" xml:space="preserve"><value>Saved item rows must belong to this item return and cannot be repeated.</value></data>
+  <data name="ItemReturnNotFound" xml:space="preserve"><value>Item return not found.</value></data>
+  <data name="ItemReturnUseAggregateEditor" xml:space="preserve"><value>Update each item return through its aggregate editor.</value></data>
+  <data name="StockTransferInvalidBranches" xml:space="preserve"><value>One or more selected branches are no longer available.</value></data>
+  <data name="StockTransferInvalidInput" xml:space="preserve"><value>Enter a valid date, destination and distinct item/source branch rows with positive quantities. Source and destination must differ.</value></data>
+  <data name="StockTransferInvalidItems" xml:space="preserve"><value>One or more selected items are no longer available.</value></data>
+  <data name="StockTransferInvalidLines" xml:space="preserve"><value>Saved item rows must belong to this stock transfer and cannot be repeated.</value></data>
+  <data name="StockTransferNotFound" xml:space="preserve"><value>Stock transfer not found.</value></data>
+  <data name="StockTransferUseAggregateEditor" xml:space="preserve"><value>Update each stock transfer through its aggregate editor.</value></data>
+  <data name="StockReportsInvalidDateRange" xml:space="preserve"><value>Enter a valid ordered From and To date range.</value></data>
+  <data name="StockReportsInvalidFilter" xml:space="preserve"><value>One or more stock report filters are invalid.</value></data>
+  <data name="MonthCloseCheckPassed" xml:space="preserve"><value>This check passed. You can proceed.</value></data>
+  <data name="MonthCloseBlocked" xml:space="preserve"><value>The month action cannot be completed. Review the reasons below.</value></data>
+  <data name="MonthCloseClosed" xml:space="preserve"><value>The month was closed successfully.</value></data>
+  <data name="MonthCloseReopened" xml:space="preserve"><value>The month was reopened successfully.</value></data>
+  <data name="MonthCloseAlreadyClosed" xml:space="preserve"><value>The month is already closed.</value></data>
+  <data name="MonthCloseAlreadyOpen" xml:space="preserve"><value>The month is already open.</value></data>
+  <data name="MonthCloseReason_monthNotFound" xml:space="preserve"><value>The month record was not found.</value></data>
+  <data name="MonthCloseReason_fiscalYearNotFound" xml:space="preserve"><value>The owning fiscal year was not found.</value></data>
+  <data name="MonthCloseReason_invalidPeriod" xml:space="preserve"><value>The month or its fiscal-year date range is invalid.</value></data>
+  <data name="MonthCloseReason_fiscalYearClosed" xml:space="preserve"><value>The fiscal year is not open.</value></data>
+  <data name="MonthCloseReason_monthAlreadyClosed" xml:space="preserve"><value>The month is already closed.</value></data>
+  <data name="MonthCloseReason_futureMonth" xml:space="preserve"><value>A future month cannot be closed.</value></data>
+  <data name="MonthCloseReason_previousMonthsOpen" xml:space="preserve"><value>{0} preceding month(s) in this fiscal year are open or missing.</value></data>
+  <data name="MonthCloseReason_vouchersNotApproved" xml:space="preserve"><value>{0} nonvoid journal voucher(s) in this month are not approved and posted.</value></data>
+  <data name="MonthCloseReason_invalidVouchers" xml:space="preserve"><value>{0} journal voucher(s) have incomplete or unbalanced lines, or an incorrect fiscal period.</value></data>
+  <data name="MonthCloseReason_periodImmutable" xml:space="preserve"><value>The fiscal year, year and month of an existing period cannot be changed.</value></data>
+  <data name="MonthCloseReason_useCloseAction" xml:space="preserve"><value>Create month records as open, then use the guarded month-close action.</value></data>
+  <data name="MonthCloseReason_invalidStatus" xml:space="preserve"><value>The month status is invalid.</value></data>
+  <data name="MonthCloseReason_closedRecordDelete" xml:space="preserve"><value>A closed month record cannot be deleted. Reopen it first.</value></data>
+  <data name="BankReconciliationInvalidHeader" xml:space="preserve"><value>Select a valid bank and payment method, enter a valid statement date and a signed balance with at most two decimal places within the supported money range.</value></data>
+  <data name="BankReconciliationInvalidBank" xml:space="preserve"><value>The selected bank is no longer available. Refresh the bank choices.</value></data>
+  <data name="BankReconciliationInvalidPaymentMethod" xml:space="preserve"><value>The selected payment method is no longer available. Refresh the payment method choices.</value></data>
+  <data name="BankReconciliationMissingAccount" xml:space="preserve"><value>No valid GL account is configured for this payment method. Review Link Accounts &gt; Payment Methods before continuing.</value></data>
+  <data name="BankReconciliationInvalidSelection" xml:space="preserve"><value>Selected transaction IDs must be positive and must not be repeated.</value></data>
+  <data name="BankReconciliationIneligibleSelection" xml:space="preserve"><value>One or more selected transactions are unavailable or no longer eligible for this payment method and statement date. Refresh the session and review the selection.</value></data>
+  <data name="BankReconciliationAlreadyReconciled" xml:space="preserve"><value>One or more selected transactions have already been reconciled. Refresh the session and review the selection.</value></data>
+  <data name="BankReconciliationDifferenceNotZero" xml:space="preserve"><value>The previously matched balance plus the selected debit minus credit must equal the bank statement closing balance.</value></data>
+  <data name="BankReconciliationCompleted" xml:space="preserve"><value>Bank reconciliation completed successfully.</value></data>
+  <data name="BankReconciliationSaveFailed" xml:space="preserve"><value>Bank reconciliation could not be saved. Review the session and try again.</value></data>
+  <data name="BankNameExists" xml:space="preserve"><value>A bank with this name already exists.</value></data>
+  <data name="BankTrnExists" xml:space="preserve"><value>A bank with this TRN already exists.</value></data>
+  <data name="BankNotFound" xml:space="preserve"><value>The bank account was not found. Refresh the list and try again.</value></data>
+  <data name="BankChequeSettingsInvalid" xml:space="preserve"><value>Enter measurements from 0 to 9999.99 and a font color in #RRGGBB format, or leave unconfigured fields empty.</value></data>
+  <data name="BankLegacyMappingBlocksDelete" xml:space="preserve"><value>This bank has a legacy Link Accounts mapping. Migrate Value to AccountId and clear Value before deleting the bank.</value></data>
+  <data name="BankLinkedAccountBlocksDelete" xml:space="preserve"><value>This bank has a linked GL account. Remove the account link before deleting the bank.</value></data>
+  <data name="CashDepositNotFound" xml:space="preserve"><value>The cash deposit was not found. Refresh the list and try again.</value></data>
+  <data name="CashDepositLinesRequired" xml:space="preserve"><value>Select at least one voucher with a nonzero deposit amount.</value></data>
+  <data name="CashDepositDateRequired" xml:space="preserve"><value>Cash deposit date is required.</value></data>
+  <data name="CashDepositInvalidSource" xml:space="preserve"><value>Each deposit line must reference exactly one valid cash receipt or payment.</value></data>
+  <data name="CashDepositDuplicateSource" xml:space="preserve"><value>A source voucher cannot be selected more than once in the same deposit.</value></data>
+  <data name="CashDepositInvalidAmount" xml:space="preserve"><value>Enter a nonzero amount within the currency precision and supported money range.</value></data>
+  <data name="CashDepositSourceUnavailable" xml:space="preserve"><value>A selected cash voucher is no longer available. Reload the vouchers and review the deposit.</value></data>
+  <data name="CashDepositAmountExceedsDue" xml:space="preserve"><value>The deposit amount must have the same sign as the remaining due and must not exceed it.</value></data>
+  <data name="CashDepositTotalMustBePositive" xml:space="preserve"><value>The deposit total must be positive and within the supported money range.</value></data>
+  <data name="CashDepositEditLocked" xml:space="preserve"><value>A posted, approved, or voided cash deposit cannot be edited.</value></data>
+  <data name="CashDepositDeleteLocked" xml:space="preserve"><value>A posted, approved, or voided cash deposit cannot be deleted.</value></data>
+  <data name="CashDepositAllocated" xml:space="preserve"><value>This deposit has active allocations. Remove the related allocations before editing, deleting, or removing approval.</value></data>
+  <data name="CashDepositVoidAllocated" xml:space="preserve"><value>This deposit has active allocations. Remove the related allocations before voiding.</value></data>
+  <data name="CashDepositBulkUnsupported" xml:space="preserve"><value>Cash deposits must be saved individually through the aggregate editor.</value></data>
+  <data name="CashDepositApprovalVoided" xml:space="preserve"><value>Approval cannot be changed while the cash deposit is voided.</value></data>
+  <data name="CashDepositJournalNotFound" xml:space="preserve"><value>The cash deposit journal voucher was not found. Review the document before changing it.</value></data>
+  <data name="CashDepositStateInvalid" xml:space="preserve"><value>The deposit and its journal have inconsistent states. Reload and review them before changing approval.</value></data>
+  <data name="CashDepositApprovalChanged" xml:space="preserve"><value>Cash deposit approval was updated successfully.</value></data>
+  <data name="CashDepositVoided" xml:space="preserve"><value>Cash deposit was voided successfully.</value></data>
+  <data name="CashDepositUnvoided" xml:space="preserve"><value>Cash deposit was restored successfully.</value></data>
+  <data name="CashDepositBankAccountMissing" xml:space="preserve"><value>Link a bank account to the selected payment method in Link Accounts before saving.</value></data>
+  <data name="CashDepositClearingAccountMissing" xml:space="preserve"><value>Configure Customer Cash Deposits Account under Link Accounts &gt; General before saving.</value></data>
+  <data name="PDCPayableNotFound" xml:space="preserve"><value>The payable cheque was not found. Refresh the list and try again.</value></data>
+  <data name="PDCPayableChequeDateRequired" xml:space="preserve"><value>Cheque date is required.</value></data>
+  <data name="PDCPayableMaturityDateRequired" xml:space="preserve"><value>Maturity date is required.</value></data>
+  <data name="PDCPayableInvalidSelection" xml:space="preserve"><value>Select one or more valid payable cheques.</value></data>
+  <data name="PDCPayableSelectionNotFound" xml:space="preserve"><value>One or more selected payable cheques no longer exist. Refresh the list and try again.</value></data>
+  <data name="PDCPayableEditRequiresPending" xml:space="preserve"><value>Only a pending payable cheque can be edited.</value></data>
+  <data name="PDCPayableDeleteCleared" xml:space="preserve"><value>A cleared payable cheque cannot be deleted.</value></data>
+  <data name="PDCPayableMatureRequiresPending" xml:space="preserve"><value>Only a pending payable cheque can be matured.</value></data>
+  <data name="PDCPayableBulkRequiresPending" xml:space="preserve"><value>Every selected payable cheque must still be pending. Refresh the list and try again.</value></data>
+  <data name="PDCPayableCancelRequiresPending" xml:space="preserve"><value>Only a pending payable cheque can be cancelled.</value></data>
+  <data name="PDCPayableBankAccountRequired" xml:space="preserve"><value>Select a valid bank account.</value></data>
+  <data name="PDCPayableBankAccountNotFound" xml:space="preserve"><value>The selected bank account was not found.</value></data>
+  <data name="PDCPayablePartnerRequired" xml:space="preserve"><value>Every payable cheque must have a supplier, customer, or contact.</value></data>
+  <data name="PDCPayableBankRequired" xml:space="preserve"><value>Every payable cheque must have a bank before it can be matured.</value></data>
+  <data name="PDCPayableBankAccountNotConfigured" xml:space="preserve"><value>Configure the linked bank account before maturing the payable cheque.</value></data>
+  <data name="PDCPayablePartnerAccountNotConfigured" xml:space="preserve"><value>Configure the partner control account before maturing the payable cheque.</value></data>
+  <data name="PDCPayableMatured" xml:space="preserve"><value>The payable cheque was matured successfully.</value></data>
+  <data name="PDCPayableBulkMatured" xml:space="preserve"><value>The selected payable cheques were matured successfully.</value></data>
+  <data name="PDCPayableCancelled" xml:space="preserve"><value>The payable cheque was cancelled successfully.</value></data>
+  <data name="PDCPayableActionFailed" xml:space="preserve"><value>The cheque action could not be saved. Refresh the record and try again.</value></data>
+  <data name="ReconciliationReportInvalidFilters" xml:space="preserve"><value>Enter valid report dates and select a valid bank, or leave the bank empty to show all banks.</value></data>
+  <data name="PDCReceivableAmountInvalid" xml:space="preserve"><value>Amount must be greater than zero, fit decimal(18,2), and have at most two decimal places.</value></data>
+  <data name="PDCReceivableAgreementRequired" xml:space="preserve"><value>Select an agreement when On Agreement is checked.</value></data>
+  <data name="PDCReceivableDateInvalid" xml:space="preserve"><value>Enter a valid complete calendar date.</value></data>
+  <data name="PDCReceivablePaymentInvalid" xml:space="preserve"><value>Select a valid cheque payment method.</value></data>
+  <data name="PDCReceivableChequeTextTooLong" xml:space="preserve"><value>Cheque and batch numbers must not exceed 100 characters.</value></data>
+  <data name="PDCReceivableBankNameTooLong" xml:space="preserve"><value>Bank name must not exceed 200 characters.</value></data>
+  <data name="PDCReceivableNotesTooLong" xml:space="preserve"><value>The complete saved notes, including cheque history, must not exceed 1000 characters.</value></data>
+  <data name="PDCReceivableNotFound" xml:space="preserve"><value>The receivable cheque was not found.</value></data>
+  <data name="PDCReceivableEditRequiresPending" xml:space="preserve"><value>Only a pending receivable cheque can be edited.</value></data>
+  <data name="PDCReceivableDeleteInvalidState" xml:space="preserve"><value>A cleared or bounced receivable cheque cannot be deleted.</value></data>
+  <data name="PDCReceivableInvalidSelection" xml:space="preserve"><value>Select one or more valid receivable cheques.</value></data>
+  <data name="PDCReceivableSelectionNotFound" xml:space="preserve"><value>One or more selected receivable cheques no longer exist. Refresh the list and try again.</value></data>
+  <data name="PDCReceivableBulkRequiresPending" xml:space="preserve"><value>Every selected receivable cheque must still be pending. Refresh the list and try again.</value></data>
+  <data name="PDCReceivableMatureRequiresPending" xml:space="preserve"><value>Only a pending receivable cheque can be matured.</value></data>
+  <data name="PDCReceivableReturnRequiresCleared" xml:space="preserve"><value>Only a cleared receivable cheque can be returned.</value></data>
+  <data name="PDCReceivableResubmitRequiresBounced" xml:space="preserve"><value>Only a bounced receivable cheque can be resubmitted.</value></data>
+  <data name="PDCReceivableBankRequired" xml:space="preserve"><value>Select a valid bank.</value></data>
+  <data name="PDCReceivableBranchNotFound" xml:space="preserve"><value>The selected branch was not found.</value></data>
+  <data name="PDCReceivableBankAccountNotConfigured" xml:space="preserve"><value>Configure the linked bank account before maturing the receivable cheque.</value></data>
+  <data name="PDCReceivablePartnerRequired" xml:space="preserve"><value>Every receivable cheque must have a customer or contact before it can be matured.</value></data>
+  <data name="PDCReceivablePartnerAccountNotConfigured" xml:space="preserve"><value>Configure the partner control account before posting the cheque event.</value></data>
+  <data name="PDCReceivableOriginalJournalNotFound" xml:space="preserve"><value>The original receipt journal was not found. The cheque cannot be returned.</value></data>
+  <data name="PDCReceivableOriginalBankNotFound" xml:space="preserve"><value>The bank account from the original receipt journal was not found.</value></data>
+  <data name="PDCReceivableMatured" xml:space="preserve"><value>The receivable cheque was matured successfully.</value></data>
+  <data name="PDCReceivableBulkMatured" xml:space="preserve"><value>The selected receivable cheques were matured successfully.</value></data>
+  <data name="PDCReceivableReturned" xml:space="preserve"><value>The receivable cheque was returned successfully.</value></data>
+  <data name="PDCReceivableResubmitted" xml:space="preserve"><value>The receivable cheque was resubmitted and is pending.</value></data>
+  <data name="PDCReceivableImportSizeInvalid" xml:space="preserve"><value>Import between 1 and 1000 rows in one batch.</value></data>
+  <data name="PDCReceivableImportRowInvalid" xml:space="preserve"><value>Each import row must be valid and have a positive unique row number.</value></data>
+  <data name="PDCReceivableImportContactRequired" xml:space="preserve"><value>Contact code is required.</value></data>
+  <data name="PDCReceivableImportPaymentRequired" xml:space="preserve"><value>Payment method is required.</value></data>
+  <data name="PDCReceivableImportChequeRequired" xml:space="preserve"><value>Cheque number is required.</value></data>
+  <data name="PDCReceivableImportContactNotFound" xml:space="preserve"><value>Contact code must exactly match one live contact in this subscription.</value></data>
+  <data name="PDCReceivableImportContactNameMismatch" xml:space="preserve"><value>Contact name does not match the saved contact for this code.</value></data>
+  <data name="PDCReceivableImportValidationFailed" xml:space="preserve"><value>Import validation failed. No rows were saved.</value></data>
+  <data name="PDCReceivableImportNotSaved" xml:space="preserve"><value>Not saved; the complete batch must pass validation.</value></data>
+  <data name="PDCReceivableActionFailed" xml:space="preserve"><value>The cheque action could not be saved. Refresh the record before trying again.</value></data>
+  <data name="PDCReceivableImportPersistenceFailed" xml:space="preserve"><value>The import could not be confirmed. Reconcile the receivable cheques before retrying this batch.</value></data>
+  <data name="BankReconciliationDateBeforeLatest" xml:space="preserve"><value>The statement date cannot be before a later active reconciliation for this GL account.</value></data>
+  <data name="BankReconciliationLedgerChanged" xml:space="preserve"><value>The ledger no longer agrees with previous matching snapshots, or a balance exceeds the supported precision or range. Review the account and earlier reconciliations.</value></data>
+  <data name="BankReconciliationPeriodClosed" xml:space="preserve"><value>The reconciliation requires an open fiscal year and month for its statement date.</value></data>
+  <data name="BankReconciliationVoidInvalid" xml:space="preserve"><value>Select a valid reconciliation and enter a cancellation reason of up to 500 characters.</value></data>
+  <data name="BankReconciliationNotFound" xml:space="preserve"><value>The completed reconciliation was not found. Refresh the report.</value></data>
+  <data name="BankReconciliationLegacyAccountMissing" xml:space="preserve"><value>The original GL account cannot be identified reliably for this historical reconciliation. Review its saved transaction lines.</value></data>
+  <data name="BankReconciliationVoidLatestOnly" xml:space="preserve"><value>Void the latest active reconciliation for this GL account first.</value></data>
+  <data name="BankReconciliationVoided" xml:space="preserve"><value>Reconciliation voided. Its transactions are available for matching again; the original journal entries are unchanged.</value></data>
+  <data name="BankReconciliationVoidFailed" xml:space="preserve"><value>Unable to void the reconciliation. Retry after refreshing the report.</value></data>
+  <data name="CardTransferNotFound" xml:space="preserve"><value>The card transaction bank transfer was not found. Refresh the list and try again.</value></data>
+  <data name="CardTransferEditLocked" xml:space="preserve"><value>Only an unapproved, unposted, non-void card transfer can be edited.</value></data>
+  <data name="CardTransferDeleteLocked" xml:space="preserve"><value>Only an unapproved, unposted, non-void card transfer can be deleted.</value></data>
+  <data name="CardTransferApprovalVoided" xml:space="preserve"><value>A voided card transfer cannot be approved or unapproved.</value></data>
+  <data name="CardTransferApprovalStateInvalid" xml:space="preserve"><value>The approval and posting states are inconsistent or do not permit this transition.</value></data>
+  <data name="CardTransferJournalNotFound" xml:space="preserve"><value>The journal voucher for this card transfer was not found.</value></data>
+  <data name="CardTransferActiveAllocations" xml:space="preserve"><value>This card transfer has active allocations. Remove them before editing, deleting, or unapproving it.</value></data>
+  <data name="CardTransferVoidActiveAllocations" xml:space="preserve"><value>This card transfer has active allocations. Remove them before voiding it.</value></data>
+  <data name="CardTransferBankNotFound" xml:space="preserve"><value>Select an available bank.</value></data>
+  <data name="CardTransferPaymentMethodNotFound" xml:space="preserve"><value>Select an available payment method.</value></data>
+  <data name="CardTransferBranchNotFound" xml:space="preserve"><value>The selected branch is not available.</value></data>
+  <data name="CardTransferDetailsRequired" xml:space="preserve"><value>Select at least one pending card transaction.</value></data>
+  <data name="CardTransferDuplicateReceipt" xml:space="preserve"><value>Each receipt can appear only once in a card transfer.</value></data>
+  <data name="CardTransferReceiptNotFound" xml:space="preserve"><value>One or more selected receipts are no longer available.</value></data>
+  <data name="CardTransferReceiptUnavailable" xml:space="preserve"><value>A deleted or voided receipt cannot be transferred.</value></data>
+  <data name="CardTransferReceiptNotCard" xml:space="preserve"><value>Only card-payment receipts can be transferred.</value></data>
+  <data name="CardTransferCommissionInvalid" xml:space="preserve"><value>The commission percentage must be between 0 and 100.</value></data>
+  <data name="CardTransferCommissionExceedsAmount" xml:space="preserve"><value>Commission and VAT cannot exceed the receipt amount.</value></data>
+  <data name="CardTransferReceiptAlreadySettled" xml:space="preserve"><value>One or more selected receipts have already been transferred in another live document.</value></data>
+  <data name="CardTransferPaymentMethodAccountMissing" xml:space="preserve"><value>The selected payment method has no linked bank account.</value></data>
+  <data name="CardTransferCommissionAccountMissing" xml:space="preserve"><value>The commission expense account is not configured.</value></data>
+  <data name="CardTransferTaxAccountMissing" xml:space="preserve"><value>The tax paid account is not configured.</value></data>
+  <data name="CardTransferClearingAccountMissing" xml:space="preserve"><value>The customer card deposits clearing account is not configured.</value></data>
+  <data name="CardTransferAddFailed" xml:space="preserve"><value>The card transfer could not be created. Refresh the pending transactions and try again.</value></data>
+  <data name="CardTransferUpdateFailed" xml:space="preserve"><value>The card transfer could not be updated. Refresh it and try again.</value></data>
+  <data name="CardTransferDeleteFailed" xml:space="preserve"><value>The card transfer could not be deleted. Refresh it and try again.</value></data>
+  <data name="CardTransferActionFailed" xml:space="preserve"><value>The card transfer action could not be saved. Refresh it and try again.</value></data>
+  <data name="CardTransferInvalidInput" xml:space="preserve"><value>Enter a valid date and card transaction selection.</value></data>
+  <data name="CardTransferApprovalChanged" xml:space="preserve"><value>The card transfer approval status was updated.</value></data>
+  <data name="CardTransferVoided" xml:space="preserve"><value>The card transfer was voided.</value></data>
+  <data name="CardTransferUnvoided" xml:space="preserve"><value>The card transfer was restored.</value></data>
+  <data name="LoanReportInvalidDateRange" xml:space="preserve"><value>Enter a valid ordered From and To date range.</value></data>
+  <data name="LoanReportInvalidFilter" xml:space="preserve"><value>One or more loan report filters are invalid.</value></data>
+  <data name="DepreciationEntryBatchOnly" xml:space="preserve"><value>Depreciation entries can only be created by saving a prepared depreciation batch.</value></data>
+  <data name="DepreciationInvalidMonth" xml:space="preserve"><value>Enter a valid month in yyyy-MM-01 format.</value></data>
+  <data name="DepreciationPreparationStale" xml:space="preserve"><value>The prepared depreciation data has changed. Prepare the batch again.</value></data>
+  <data name="DepreciationBatchCannotSave" xml:space="preserve"><value>This depreciation batch cannot be saved. Check asset data, straight-line methods, and expense and accumulated depreciation accounts on the asset type, then prepare it again.</value></data>
+  <data name="DepreciationBatchEmpty" xml:space="preserve"><value>There are no positive unsaved depreciation rows to post.</value></data>
+  <data name="DepreciationAlreadySaved" xml:space="preserve"><value>Depreciation for one or more assets in this month has already been saved.</value></data>
+  <data name="DepreciationSaveFailed" xml:space="preserve"><value>The depreciation batch could not be saved. Prepare it again and retry.</value></data>
+  <data name="DepreciationDuplicateSnapshots" xml:space="preserve"><value>Duplicate depreciation snapshots exist for an asset and month. Resolve them before preparing this batch.</value></data>
+  <data name="TripBookingNotFound" xml:space="preserve">
+    <value>Trip booking not found.</value>
+  </data>
+  <data name="TripBookingDriverRequiredAfterAssignment" xml:space="preserve">
+    <value>Driver is required after a trip booking has been assigned or dispatched.</value>
+  </data>
+  <data name="TripBookingConcurrentChange" xml:space="preserve">
+    <value>This trip booking was changed by another user. Refresh and try again.</value>
+  </data>
+  <data name="TripBookingAssignStateInvalid" xml:space="preserve">
+    <value>Only a new trip booking can be assigned.</value>
+  </data>
+  <data name="TripBookingVehicleRequiredToAssign" xml:space="preserve">
+    <value>Vehicle is required before assigning a trip.</value>
+  </data>
+  <data name="TripBookingDriverRequiredToAssign" xml:space="preserve">
+    <value>Driver is required before assigning a trip.</value>
+  </data>
+  <data name="TripBookingAssigned" xml:space="preserve">
+    <value>Trip assigned successfully.</value>
+  </data>
+  <data name="TripBookingDispatchStateInvalid" xml:space="preserve">
+    <value>Only a new or assigned trip booking can be dispatched.</value>
+  </data>
+  <data name="TripBookingAssignmentRequiredBeforeDispatch" xml:space="preserve">
+    <value>This company requires the trip to be assigned before dispatch.</value>
+  </data>
+  <data name="TripBookingVehicleRequiredToDispatch" xml:space="preserve">
+    <value>Vehicle is required before dispatching a trip.</value>
+  </data>
+  <data name="TripBookingDriverRequiredToDispatch" xml:space="preserve">
+    <value>Driver is required before dispatching a trip.</value>
+  </data>
+  <data name="TripBookingDriverNotFound" xml:space="preserve">
+    <value>Driver not found.</value>
+  </data>
+  <data name="TripBookingDispatched" xml:space="preserve">
+    <value>Trip dispatched successfully.</value>
+  </data>
+  <data name="TripBookingStartStateInvalid" xml:space="preserve">
+    <value>Only a dispatched trip can be started.</value>
+  </data>
+  <data name="TripBookingStartDateRequired" xml:space="preserve">
+    <value>Start date and time is required.</value>
+  </data>
+  <data name="TripBookingStarted" xml:space="preserve">
+    <value>Trip started successfully.</value>
+  </data>
+  <data name="TripBookingFinishStateInvalid" xml:space="preserve">
+    <value>Only a started trip can be finished.</value>
+  </data>
+  <data name="TripBookingDropOffDateRequired" xml:space="preserve">
+    <value>Drop-off date and time is required.</value>
+  </data>
+  <data name="TripBookingDropOffBeforeStart" xml:space="preserve">
+    <value>Drop-off date and time cannot be before the trip start time.</value>
+  </data>
+  <data name="TripBookingKmsNegative" xml:space="preserve">
+    <value>KMs cannot be negative.</value>
+  </data>
+  <data name="TripBookingTripChargesNegative" xml:space="preserve">
+    <value>Trip charges cannot be negative.</value>
+  </data>
+  <data name="TripBookingFinished" xml:space="preserve">
+    <value>Trip finished successfully.</value>
+  </data>
+  <data name="TripBookingNoShowStateInvalid" xml:space="preserve">
+    <value>Only a dispatched trip can be marked as no show.</value>
+  </data>
+  <data name="TripBookingMarkedNoShow" xml:space="preserve">
+    <value>Trip marked as no show.</value>
+  </data>
+  <data name="TripBookingInvoicedCannotCancel" xml:space="preserve">
+    <value>An invoiced trip cannot be cancelled. Reverse the invoice first.</value>
+  </data>
+  <data name="TripBookingCancellationReasonRequired" xml:space="preserve">
+    <value>Cancellation reason is required.</value>
+  </data>
+  <data name="TripBookingCancelled" xml:space="preserve">
+    <value>Trip cancelled successfully.</value>
+  </data>
+  <data name="TripBookingVehicleTypeRequired" xml:space="preserve">
+    <value>Vehicle Type is required.</value>
+  </data>
+  <data name="TripBookingInvoicedCannotDelete" xml:space="preserve">
+    <value>An invoiced trip cannot be deleted.</value>
+  </data>
+  <data name="TripBookingDeleteStateInvalid" xml:space="preserve">
+    <value>Only New or Cancelled trip bookings can be deleted.</value>
+  </data>
+  <data name="TripBookingDateRangeInvalid" xml:space="preserve">
+    <value>From Date must be less than or equal to To Date.</value>
+  </data>
+  <data name="TripBookingUtilizationBreakupInvalid" xml:space="preserve">
+    <value>Utilization Breakup must be Hourly or Daily.</value>
+  </data>
+  <data name="TripBookingBranchNotFound" xml:space="preserve">
+    <value>Branch not found.</value>
+  </data>
+  <data name="TripBookingCustomerNotFound" xml:space="preserve">
+    <value>Customer not found.</value>
+  </data>
+  <data name="TripBookingVehicleTypeNotFound" xml:space="preserve">
+    <value>Vehicle Type not found.</value>
+  </data>
+  <data name="TripBookingCustomerRequired" xml:space="preserve">
+    <value>Customer is required.</value>
+  </data>
+  <data name="TripBookingTripTypeRequired" xml:space="preserve">
+    <value>Trip Type is required.</value>
+  </data>
+  <data name="TripBookingPickupLocationRequired" xml:space="preserve">
+    <value>Pickup Location is required.</value>
+  </data>
+  <data name="TripBookingDropOffLocationRequired" xml:space="preserve">
+    <value>Drop-off Location is required.</value>
+  </data>
+  <data name="TripBookingPickupDateRequired" xml:space="preserve">
+    <value>Pickup Date &amp; Time is required.</value>
+  </data>
+  <data name="TripBookingDropOffDateOrder" xml:space="preserve">
+    <value>Drop-off Date &amp; Time must be greater than Pickup Date &amp; Time.</value>
+  </data>
+  <data name="TripBookingChargesNegative" xml:space="preserve">
+    <value>Charges cannot be negative.</value>
+  </data>
+  <data name="TripBookingTaxNegative" xml:space="preserve">
+    <value>Tax cannot be negative.</value>
+  </data>
+  <data name="TripBookingDiscountNegative" xml:space="preserve">
+    <value>Discount cannot be negative.</value>
+  </data>
+  <data name="TripBookingSupplierChargesNegative" xml:space="preserve">
+    <value>Supplier Charges cannot be negative.</value>
+  </data>
+  <data name="TripBookingTripTypeNotFound" xml:space="preserve">
+    <value>Trip Type not found.</value>
+  </data>
+  <data name="TripBookingPickupLocationNotFound" xml:space="preserve">
+    <value>Pickup Location not found.</value>
+  </data>
+  <data name="TripBookingDropOffLocationNotFound" xml:space="preserve">
+    <value>Drop-off Location not found.</value>
+  </data>
+  <data name="TripBookingVehicleNotFound" xml:space="preserve">
+    <value>Vehicle not found.</value>
+  </data>
+  <data name="TripBookingSupplierNotFound" xml:space="preserve">
+    <value>Supplier not found.</value>
+  </data>
+  <data name="TripBookingExternalRegistrationRequired" xml:space="preserve">
+    <value>Vehicle Registration No is required for external vehicle booking.</value>
+  </data>
+  <data name="TripBookingExternalMakeModelRequired" xml:space="preserve">
+    <value>Make &amp; Model is required for external vehicle booking.</value>
+  </data>
+  <data name="TripBookingExternalSupplierRequired" xml:space="preserve">
+    <value>Supplier is required for external vehicle booking.</value>
+  </data>
+  <data name="TripBookingExternalDriverRequired" xml:space="preserve">
+    <value>Driver Name is required for external vehicle booking.</value>
+  </data>
+  <data name="TripBookingVehicleSelectionRequired" xml:space="preserve">
+    <value>Vehicle is required when Search Vehicle By Any is disabled or no matching vehicle is available.</value>
+  </data>
+  <data name="TripBookingVehicleTypeMismatch" xml:space="preserve">
+    <value>Selected Vehicle does not match the selected Vehicle Type.</value>
+  </data>
+  <data name="TripBookingVehicleUnavailable" xml:space="preserve">
+    <value>Selected Vehicle is not available for the selected time.</value>
+  </data>
+  <data name="TripBookingDriverUnavailable" xml:space="preserve">
+    <value>Selected Driver is not available for the selected time.</value>
+  </data>
+  <data name="TripBookingEditStateInvalid" xml:space="preserve">
+    <value>This trip cannot be edited in its current status.</value>
+  </data>
+  <data name="TripBookingCancelStateInvalid" xml:space="preserve">
+    <value>This trip cannot be cancelled in its current status.</value>
+  </data>
+  <data name="TripBookingInvalidDocumentOwnership" xml:space="preserve">
+    <value>Every saved document must belong to this trip and may appear only once.</value>
+  </data>
+  <data name="LimoQuotationNotFound" xml:space="preserve">
+    <value>Limo quotation not found</value>
+  </data>
+  <data name="LimoQuotationEditStateInvalid" xml:space="preserve">
+    <value>Only Pending limo quotations can be edited.</value>
+  </data>
+  <data name="LimoQuotationDeleteStateInvalid" xml:space="preserve">
+    <value>Only Pending limo quotations can be deleted.</value>
+  </data>
+  <data name="LimoQuotationInternalApproveStateInvalid" xml:space="preserve">
+    <value>Only Pending limo quotations can be internally approved.</value>
+  </data>
+  <data name="LimoQuotationInternalRejectStateInvalid" xml:space="preserve">
+    <value>Only Pending limo quotations can be internally rejected.</value>
+  </data>
+  <data name="LimoQuotationCustomerApproveStateInvalid" xml:space="preserve">
+    <value>Only InternallyApproved limo quotations can be approved by customer.</value>
+  </data>
+  <data name="LimoQuotationCustomerRejectStateInvalid" xml:space="preserve">
+    <value>Only InternallyApproved limo quotations can be rejected by customer.</value>
+  </data>
+  <data name="LimoQuotationReviseStateInvalid" xml:space="preserve">
+    <value>Only InternallyApproved limo quotations can be revised.</value>
+  </data>
+  <data name="LimoQuotationChargesNegative" xml:space="preserve">
+    <value>Charges must not be negative.</value>
+  </data>
+  <data name="LimoQuotationTaxNegative" xml:space="preserve">
+    <value>Tax must not be negative.</value>
+  </data>
+  <data name="LimoQuotationCustomerInvalid" xml:space="preserve">
+    <value>Invalid Customer detected.</value>
+  </data>
+  <data name="LimoQuotationTripTypeInvalid" xml:space="preserve">
+    <value>Invalid Trip Type detected.</value>
+  </data>
+  <data name="LimoQuotationPickUpLocationInvalid" xml:space="preserve">
+    <value>Invalid Pick Up Location detected.</value>
+  </data>
+  <data name="LimoQuotationDropOffLocationInvalid" xml:space="preserve">
+    <value>Invalid Drop Off Location detected.</value>
+  </data>
+  <data name="LimoQuotationTariffGroupInvalid" xml:space="preserve">
+    <value>Invalid Tariff Group detected.</value>
+  </data>
+  <data name="LimoQuotationFuelChargeInvalid" xml:space="preserve">
+    <value>Invalid Fuel Charge detected.</value>
+  </data>
+  <data name="LimoQuotationCustomerRequired" xml:space="preserve">
+    <value>Customer is required before internal approval.</value>
+  </data>
+  <data name="LimoQuotationTripTypeRequired" xml:space="preserve">
+    <value>Trip Type is required before internal approval.</value>
+  </data>
+  <data name="LimoQuotationTariffGroupRequired" xml:space="preserve">
+    <value>Tariff Group is required before internal approval.</value>
+  </data>
+  <data name="LimoQuotationPickUpLocationRequired" xml:space="preserve">
+    <value>Pick Up Location is required before internal approval.</value>
+  </data>
+  <data name="LimoQuotationDropOffLocationRequired" xml:space="preserve">
+    <value>Drop Off Location is required before internal approval.</value>
+  </data>
+  <data name="LimoQuotationFuelChargeRequired" xml:space="preserve">
+    <value>Fuel Charge is required before internal approval.</value>
+  </data>
+  <data name="LimoQuotationInternallyApproved" xml:space="preserve">
+    <value>Limo quotation internally approved successfully.</value>
+  </data>
+  <data name="LimoQuotationInternallyRejected" xml:space="preserve">
+    <value>Limo quotation internally rejected successfully.</value>
+  </data>
+  <data name="LimoQuotationCustomerApproved" xml:space="preserve">
+    <value>Limo quotation approved by customer successfully.</value>
+  </data>
+  <data name="LimoQuotationCustomerRejected" xml:space="preserve">
+    <value>Limo quotation rejected by customer successfully.</value>
+  </data>
+  <data name="LimoQuotationRevised" xml:space="preserve">
+    <value>Limo quotation revised successfully.</value>
+  </data>
+  <data name="LimoQuotationStatusUpdateFailed" xml:space="preserve">
+    <value>Failed to update limo quotation status.</value>
+  </data>
+  <data name="LimousineBillingTripInvalid" xml:space="preserve">
+    <value>One or more selected trips are missing, duplicated or unavailable.</value>
+  </data>
+  <data name="LimousineBillingTripNotFinished" xml:space="preserve">
+    <value>Only finished trips can be invoiced.</value>
+  </data>
+  <data name="LimousineBillingBalanceInvalid" xml:space="preserve">
+    <value>The trip or its existing invoices have inconsistent amounts or tax. Review the saved records before billing.</value>
+  </data>
+  <data name="LimousineBillingAmountPositive" xml:space="preserve">
+    <value>The invoice portion must be greater than zero.</value>
+  </data>
+  <data name="LimousineBillingAmountExceedsRemaining" xml:space="preserve">
+    <value>The invoice portion exceeds the remaining trip amount. Refresh and review the balance.</value>
+  </data>
+  <data name="LimousineBillingMoneyScaleInvalid" xml:space="preserve">
+    <value>Use the configured base currency precision for the invoice portion.</value>
+  </data>
+  <data name="LimousineBillingCustomerInvalid" xml:space="preserve">
+    <value>The trip customer is missing or no longer available.</value>
+  </data>
+  <data name="LimousineBillingDriverInvalid" xml:space="preserve">
+    <value>The trip driver is no longer available.</value>
+  </data>
+  <data name="LimousineBillingDateRangeInvalid" xml:space="preserve">
+    <value>The start date must not be after the end date.</value>
+  </data>
+  <data name="LimousineBillingSelectionRequired" xml:space="preserve">
+    <value>Select at least one trip and enter a valid invoice date.</value>
+  </data>
+  <data name="LimousineBillingInvoiceNotFound" xml:space="preserve">
+    <value>The limousine invoice was not found.</value>
+  </data>
+  <data name="LimousineBillingTripTotalBelowBilled" xml:space="preserve">
+    <value>The new trip total or tax conflicts with amounts already invoiced. Review the invoices before changing the trip price.</value>
+  </data>
+  <data name="LimousineBillingTripHasInvoices" xml:space="preserve">
+    <value>A trip with existing invoices cannot be cancelled or deleted.</value>
+  </data>
+  <data name="LimousineInvoiceTripRequired" xml:space="preserve">
+    <value>A trip is required for every limousine invoice.</value>
+  </data>
+  <data name="LimousineInvoiceDateRequired" xml:space="preserve">
+    <value>A valid invoice date is required.</value>
+  </data>
+  <data name="LimousineInvoiceDuplicateTrip" xml:space="preserve">
+    <value>Select each trip only once within the same submission.</value>
+  </data>
+  <data name="LimousineInvoiceTripNotFound" xml:space="preserve">
+    <value>A selected trip was not found or is unavailable.</value>
+  </data>
+  <data name="LimousineInvoiceAccountingLocked" xml:space="preserve">
+    <value>This invoice has a posted, approved, voided, allocated or unavailable journal. Use the accounting correction workflow.</value>
+  </data>
+  <data name="LimousineInvoiceReferenceInvalid" xml:space="preserve">
+    <value>A required invoice reference is missing or unavailable.</value>
+  </data>
+  <data name="ReceiptSettlementSourceLocked" xml:space="preserve"><value>This receipt is approved or linked to settlement history and cannot be changed.</value></data>
+  <data name="ReceiptDepositSourceImmutable" xml:space="preserve"><value>The deposit receipt customer, contract and purpose must remain consistent with its source.</value></data>
+  <data name="ReceiptCreditAccountMissing" xml:space="preserve"><value>The receipt credit account is not configured in Link Accounts.</value></data>
+  <data name="ReceiptAccountsMustDiffer" xml:space="preserve"><value>The receipt debit and credit accounts must be different.</value></data>
+  <data name="ReceiptBatchInvalid" xml:space="preserve"><value>Supply a nonempty receipt batch with unique update identifiers.</value></data>
+  <data name="ReceiptAdvanceDepositAllocationInvalid" xml:space="preserve"><value>Advance and deposit collection receipts cannot contain credit-note allocations.</value></data>
+  <data name="ReceiptCreditNoteAllocationInvalid" xml:space="preserve"><value>Credit-note allocations must belong to this customer and stay within the source and receipt balances.</value></data>
+  <data name="ReceiptDepositExpectedExceeded" xml:space="preserve"><value>The receipt exceeds the remaining expected deposit.</value></data>
+  <data name="ReceiptDepositAgreementUnavailable" xml:space="preserve"><value>The contract cannot collect a deposit in its current state.</value></data>
+  <data name="ReceiptMoneyScaleInvalid" xml:space="preserve"><value>The receipt amount exceeds the base currency decimal precision.</value></data>
+  <data name="ReceiptCustomerRequired" xml:space="preserve"><value>A matching customer is required for an advance or deposit receipt.</value></data>
+  <data name="TaxAdvanceAlreadyGenerated" xml:space="preserve"><value>A tax advance invoice already exists for this receipt.</value></data>
+  <data name="TaxAdvanceLegacyReconciliationRequired" xml:space="preserve"><value>This historical tax advance has no verifiable source lineage and requires reconciliation.</value></data>
+  <data name="TaxAdvanceSourceCreditMismatch" xml:space="preserve"><value>The saved tax advance credit lines do not reconcile to the document total.</value></data>
+  <data name="CustomerDepositBulkEmpty" xml:space="preserve"><value>At least one customer deposit is required.</value></data>
+  <data name="CustomerDepositBulkDuplicateId" xml:space="preserve"><value>The customer deposit batch contains duplicate IDs.</value></data>
+  <data name="CustomerDepositExpiryDaysRequired" xml:space="preserve"><value>Expiry days must be at least 1.</value></data>
+  <data name="CustomerDepositReceiptSourceInvalid" xml:space="preserve"><value>A customer deposit can only wrap a live deposit receipt with a journal voucher.</value></data>
+  <data name="CustomerDepositUseDateRequired" xml:space="preserve"><value>Deposit use date is required.</value></data>
+  <data name="CustomerDepositUseAmountInvalid" xml:space="preserve"><value>The used amount must be positive and use the configured currency precision.</value></data>
+  <data name="CustomerDepositAllocationInvalid" xml:space="preserve"><value>Every invoice allocation must be unique, positive, and use the configured currency precision.</value></data>
+  <data name="CustomerDepositAllocationExceedsUse" xml:space="preserve"><value>Invoice allocations cannot exceed the amount being used.</value></data>
+  <data name="CustomerDepositUseExceedsAvailable" xml:space="preserve"><value>The used amount exceeds the deposit available balance.</value></data>
+  <data name="CustomerDepositBranchInvalid" xml:space="preserve"><value>The selected branch is invalid or inactive.</value></data>
+  <data name="CustomerDepositSourceBranchMismatch" xml:space="preserve"><value>The selected branch does not match the deposit source branch.</value></data>
+  <data name="CustomerDepositPaymentMethodInvalid" xml:space="preserve"><value>The selected payment method is invalid, inactive, or not receipt-compatible.</value></data>
+  <data name="CustomerDepositReceivableAccountMissing" xml:space="preserve"><value>The customer receivable account is not configured.</value></data>
+  <data name="CustomerDepositLiabilityMatchesReceivable" xml:space="preserve"><value>The original deposit liability account must differ from the customer receivable account.</value></data>
+  <data name="CustomerDepositAllocationInvoiceUnavailable" xml:space="preserve"><value>The selected invoice is missing, unposted, voided, or belongs to another customer.</value></data>
+  <data name="CustomerDepositAllocationInvoiceAmbiguous" xml:space="preserve"><value>The selected invoice identifier is ambiguous across invoice types.</value></data>
+  <data name="CustomerDepositAllocationBranchMismatch" xml:space="preserve"><value>The selected invoice belongs to a different branch.</value></data>
+  <data name="CustomerDepositAllocationReceivableAmbiguous" xml:space="preserve"><value>The selected invoice customer receivable line cannot be identified unambiguously.</value></data>
+  <data name="CustomerDepositAllocationExceedsInvoiceOutstanding" xml:space="preserve"><value>An invoice allocation exceeds its outstanding balance.</value></data>
+  <data name="CustomerDepositSourceCountInvalid" xml:space="preserve"><value>A customer deposit must have exactly one financial source.</value></data>
+  <data name="CustomerDepositSourceReceiptMissing" xml:space="preserve"><value>The deposit source receipt was not found.</value></data>
+  <data name="CustomerDepositSourceReceiptUnavailable" xml:space="preserve"><value>The deposit source receipt must be an approved, non-voided deposit receipt.</value></data>
+  <data name="CustomerDepositSourcePdcMissing" xml:space="preserve"><value>The deposit source cheque was not found.</value></data>
+  <data name="CustomerDepositSourcePdcUnavailable" xml:space="preserve"><value>The deposit source cheque must be cleared with a live approved receipt.</value></data>
+  <data name="CustomerDepositSourceOpeningMissing" xml:space="preserve"><value>The opening balance source for this deposit was not found.</value></data>
+  <data name="CustomerDepositSourceMissing" xml:space="preserve"><value>The deposit financial source is missing.</value></data>
+  <data name="CustomerDepositSourceIncomplete" xml:space="preserve"><value>The deposit financial source is incomplete.</value></data>
+  <data name="CustomerDepositSourceJournalUnavailable" xml:space="preserve"><value>The deposit source journal voucher must be posted and not voided.</value></data>
+  <data name="CustomerDepositLiabilityAccountAmbiguous" xml:space="preserve"><value>The original deposit liability account cannot be identified unambiguously.</value></data>
+  <data name="CustomerDepositRefundAmountInvalid" xml:space="preserve"><value>The refund amount must be positive and use the configured currency precision.</value></data>
+  <data name="CustomerDepositRefundExceedsAvailable" xml:space="preserve"><value>The refund amount exceeds the deposit available balance.</value></data>
+  <data name="CustomerDepositRefundPaymentMethodInvalid" xml:space="preserve"><value>The selected refund payment method is invalid, inactive, or not payment-compatible.</value></data>
+  <data name="CustomerDepositRefundPaymentMethodBranchMismatch" xml:space="preserve"><value>The selected refund payment method is not available for the deposit branch.</value></data>
+  <data name="CustomerDepositRefundBankRequired" xml:space="preserve"><value>Bank is required for a bank transfer refund.</value></data>
+  <data name="CustomerDepositRefundBankInvalid" xml:space="preserve"><value>The selected refund bank is invalid or inactive.</value></data>
+  <data name="CustomerDepositRefundBankNotAllowed" xml:space="preserve"><value>Bank can only be selected for a bank transfer refund.</value></data>
+  <data name="CustomerDepositRefundMethodRequiredForBank" xml:space="preserve"><value>Payment method is required when a refund bank is selected.</value></data>
+  <data name="CustomerDepositRefundAccountMissing" xml:space="preserve"><value>The refund payment account is not configured.</value></data>
+  <data name="CustomerDepositRefundAccountMatchesLiability" xml:space="preserve"><value>The refund payment account must differ from the original deposit liability account.</value></data>
+  <data name="InvoiceSettlementLocked" xml:space="preserve"><value>This invoice has posted or allocated financial history and cannot be deleted or changed through this action.</value></data>
+  <data name="CreditNoteSettlementSourceLocked" xml:space="preserve"><value>This credit note is reserved by a live receipt and cannot be changed through this action.</value></data>
+  <data name="ReceiptPaymentMethodUnavailable" xml:space="preserve"><value>The payment method must be active, receipt-compatible, and available for the receipt branch.</value></data>
+  <data name="ReceiptAllocationOwnerRequired" xml:space="preserve"><value>Save receipt allocations through the receipt document so its source balances and financial state are validated together.</value></data>
+  <data name="OpeningBalanceSettlementResetLocked" xml:space="preserve"><value>Opening balances with posted journals, deposit usage, refunds, or allocation history cannot be reset.</value></data>
+  <data name="EquipmentIdentifierInvalid" xml:space="preserve"><value>Invalid equipment identifier.</value></data>
+  <data name="EquipmentNotFound" xml:space="preserve"><value>Equipment not found.</value></data>
+  <data name="EquipmentPlateRequired" xml:space="preserve"><value>Plate number is required.</value></data>
+  <data name="EquipmentMakeInvalid" xml:space="preserve"><value>Select an active car make.</value></data>
+  <data name="EquipmentModelInvalid" xml:space="preserve"><value>Select an active car model belonging to the selected make.</value></data>
+  <data name="EquipmentBranchInvalid" xml:space="preserve"><value>Select an active branch.</value></data>
+  <data name="EquipmentTypeInvalid" xml:space="preserve"><value>Select an active vehicle type.</value></data>
+  <data name="EquipmentPlateExists" xml:space="preserve"><value>An equipment record with this plate number already exists.</value></data>
+  <data name="EquipmentSoldActivationLocked" xml:space="preserve"><value>A sold unit is out of service and cannot be activated.</value></data>
+  <data name="SalesAgreementDueDateRangeInvalid" xml:space="preserve"><value>Select a valid date range.</value></data>
+  <data name="SalesQuotationDownPaymentExceedsTotal" xml:space="preserve"><value>Down payment cannot exceed the quotation total.</value></data>
+  <data name="SalesQuotationCreateFailed" xml:space="preserve"><value>Sales quotation could not be created.</value></data>
+  <data name="SalesQuotationCreated" xml:space="preserve"><value>Sales quotation created successfully.</value></data>
+  <data name="SalesQuotationNotFound" xml:space="preserve"><value>Sales quotation not found.</value></data>
+  <data name="SalesQuotationEditStateInvalid" xml:space="preserve"><value>Only pending or rejected quotations can be edited.</value></data>
+  <data name="SalesQuotationDuplicateItemIds" xml:space="preserve"><value>Duplicate line item identifiers are not allowed.</value></data>
+  <data name="SalesQuotationItemOwnershipInvalid" xml:space="preserve"><value>One or more line items do not belong to this quotation.</value></data>
+  <data name="SalesQuotationUpdateFailed" xml:space="preserve"><value>Sales quotation could not be updated.</value></data>
+  <data name="SalesQuotationUpdated" xml:space="preserve"><value>Sales quotation updated successfully.</value></data>
+  <data name="SalesQuotationDeleteStateInvalid" xml:space="preserve"><value>Only pending or rejected quotations can be deleted.</value></data>
+  <data name="SalesQuotationDeleted" xml:space="preserve"><value>Sales quotation deleted successfully.</value></data>
+  <data name="SalesQuotationDeleteFailed" xml:space="preserve"><value>Sales quotation could not be deleted.</value></data>
+  <data name="SalesQuotationInternallyApproved" xml:space="preserve"><value>Sales quotation internally approved.</value></data>
+  <data name="SalesQuotationInternallyRejected" xml:space="preserve"><value>Sales quotation internally rejected.</value></data>
+  <data name="SalesQuotationExpired" xml:space="preserve"><value>The quotation validity date has passed; revise it before customer approval.</value></data>
+  <data name="SalesQuotationCustomerApproved" xml:space="preserve"><value>Sales quotation approved by the customer.</value></data>
+  <data name="SalesQuotationCustomerRejected" xml:space="preserve"><value>Sales quotation rejected by the customer.</value></data>
+  <data name="SalesQuotationRevised" xml:space="preserve"><value>Sales quotation returned to pending for revision.</value></data>
+  <data name="SalesQuotationUnapproveStateInvalid" xml:space="preserve"><value>Only customer-approved quotations can be unapproved.</value></data>
+  <data name="SalesQuotationUnapproveLinkedRecords" xml:space="preserve"><value>This quotation cannot be unapproved because a sales agreement or receipt already exists.</value></data>
+  <data name="SalesQuotationUnapproved" xml:space="preserve"><value>Sales quotation approval was reverted.</value></data>
+  <data name="SalesQuotationReceiptApprovalRequired" xml:space="preserve"><value>A down-payment receipt requires a customer-approved quotation.</value></data>
+  <data name="SalesQuotationReceiptNoDownPayment" xml:space="preserve"><value>This quotation has no down payment to receipt.</value></data>
+  <data name="SalesQuotationReceiptExists" xml:space="preserve"><value>A down-payment receipt already exists for this quotation.</value></data>
+  <data name="SalesQuotationReceiptReady" xml:space="preserve"><value>Quotation is eligible. Complete the branch and payment method in the receipt form.</value></data>
+  <data name="SalesQuotationRejectionReasonInvalid" xml:space="preserve"><value>Rejection reason must be between 5 and 500 characters.</value></data>
+  <data name="SalesQuotationTransitionInvalid" xml:space="preserve"><value>The current quotation status does not allow the requested action.</value></data>
+  <data name="SalesQuotationStatusUpdateFailed" xml:space="preserve"><value>Quotation status could not be updated.</value></data>
+  <data name="SalesQuotationDateRequired" xml:space="preserve"><value>Quotation date is required.</value></data>
+  <data name="SalesQuotationDateTooFar" xml:space="preserve"><value>Quotation date cannot be more than 30 days in the future.</value></data>
+  <data name="SalesQuotationValidityBeforeDate" xml:space="preserve"><value>The validity date cannot be before the quotation date.</value></data>
+  <data name="SalesQuotationCustomerNotFound" xml:space="preserve"><value>Customer not found.</value></data>
+  <data name="SalesQuotationTermsTooLong" xml:space="preserve"><value>Terms and conditions cannot exceed 10,000 characters.</value></data>
+  <data name="SalesQuotationDownPaymentNegative" xml:space="preserve"><value>Down payment cannot be negative.</value></data>
+  <data name="SalesQuotationInstallmentsRange" xml:space="preserve"><value>Number of installments must be between 1 and 120.</value></data>
+  <data name="SalesQuotationItemsRequired" xml:space="preserve"><value>At least one quotation item is required.</value></data>
+  <data name="SalesQuotationItemModelRequired" xml:space="preserve"><value>Make and model is required for every line item.</value></data>
+  <data name="SalesQuotationItemUnitRange" xml:space="preserve"><value>Item unit must be between 1 and 999,999.</value></data>
+  <data name="SalesQuotationItemPriceRange" xml:space="preserve"><value>Item unit price must be between 0.01 and 999,999,999.99.</value></data>
+  <data name="SalesQuotationItemTaxRange" xml:space="preserve"><value>Item tax percentage must be between 0 and 100.</value></data>
+  <data name="SalesQuotationItemModelsInvalid" xml:space="preserve"><value>One or more make and model references are invalid.</value></data>
+  <data name="ReceiptSalesLinkConflict" xml:space="preserve">
+    <value>A receipt can be linked to one sales agreement, quotation or rental agreement only.</value>
+  </data>
+  <data name="ReceiptSalesAgreementCollectionStateInvalid" xml:space="preserve">
+    <value>Receipts can be collected only for an open, invoiced or delivered sales agreement.</value>
+  </data>
+  <data name="ReceiptSalesAgreementCustomerMismatch" xml:space="preserve">
+    <value>The receipt customer does not match the selected sales agreement.</value>
+  </data>
+  <data name="ReceiptSalesAgreementAmountExceedsOutstanding" xml:space="preserve">
+    <value>The receipt amount exceeds the sales agreement outstanding balance.</value>
+  </data>
+  <data name="ReceiptSalesAgreementReopenFailed" xml:space="preserve">
+    <value>The sales agreement could not be reopened after the receipt reversal.</value>
+  </data>
+  <data name="ReceiptSalesQuotationDownPaymentMismatch" xml:space="preserve">
+    <value>Receipt amount must equal the quotation down payment.</value>
+  </data>
+  <data name="StaffRequestRequired" xml:space="preserve"><value>A staff request is required.</value></data>
+  <data name="StaffSalaryApplicableDateRequired" xml:space="preserve"><value>A real applicable-from date is required for the salary package.</value></data>
+  <data name="StaffSalaryApplicableDateOutOfRange" xml:space="preserve"><value>Applicable-from date is outside the supported range.</value></data>
+  <data name="StaffSelectionRequired" xml:space="preserve"><value>Select a valid staff member.</value></data>
+  <data name="StaffNotFoundOrInactive" xml:space="preserve"><value>Staff not found or is inactive.</value></data>
+  <data name="StaffAllocationSourcesUnavailable" xml:space="preserve"><value>Unable to load allocation sources. Try again.</value></data>
+  <data name="StaffMonthRequired" xml:space="preserve"><value>Month is required. Use yyyy-MM format.</value></data>
+  <data name="StaffMonthInvalid" xml:space="preserve"><value>Enter a valid month in yyyy-MM format.</value></data>
+  <data name="StaffReportBranchNotFound" xml:space="preserve"><value>The selected branch was not found.</value></data>
+  <data name="StaffReportSalesPersonNotFound" xml:space="preserve"><value>The selected sales person was not found.</value></data>
+  <data name="StaffMonthDayInvalid" xml:space="preserve"><value>Invalid day {0}. Day must be between 1 and {1}.</value></data>
+  <data name="StaffDutyDuplicateDay" xml:space="preserve"><value>Duplicate schedule row for day {0}.</value></data>
+  <data name="StaffOvertimeDuplicateDay" xml:space="preserve"><value>Duplicate overtime row for day {0}.</value></data>
+  <data name="StaffDutyBeforeJoining" xml:space="preserve"><value>Duty schedule cannot be recorded for {0} because it is before the staff joining date {1}.</value></data>
+  <data name="StaffOvertimeBeforeJoining" xml:space="preserve"><value>Overtime cannot be recorded for {0} because it is before the staff joining date {1}.</value></data>
+  <data name="StaffDutyTimeInvalid" xml:space="preserve"><value>Invalid time format in day {0}. Use HH:mm or HH:mm:ss.</value></data>
+  <data name="StaffDutyShiftNotFound" xml:space="preserve"><value>The selected shift was not found.</value></data>
+  <data name="StaffOvertimeMinutesInvalid" xml:space="preserve"><value>Overtime minutes cannot be negative for day {0}.</value></data>
+  <data name="StaffReportingSelfInvalid" xml:space="preserve"><value>A staff member cannot report to itself.</value></data>
+  <data name="StaffReportingCycleInvalid" xml:space="preserve"><value>Reporting-to assignment would create a cycle.</value></data>
+  <data name="StaffDocumentDatesRequired" xml:space="preserve"><value>Real document issue and expiry dates are required.</value></data>
+  <data name="PayrollCalculationChanged" xml:space="preserve"><value>Payroll inputs or the saved revision changed. Process the month again before saving.</value></data>
+  <data name="PayrollHistoryInvalid" xml:space="preserve"><value>Payroll history is incomplete. The current revision must exist before recalculation.</value></data>
+  <data name="PayrollNotFound" xml:space="preserve"><value>The payroll run or revision was not found.</value></data>
+  <data name="PayrollPaidRequiresSettlement" xml:space="preserve"><value>This payroll was paid. Keep the paid revision and record the difference through a separate settlement.</value></data>
+  <data name="PayrollPeriodInvalid" xml:space="preserve"><value>Enter a complete payroll month (yyyy-MM), from year 0001 to 9998.</value></data>
+  <data name="PayrollResolveIssues" xml:space="preserve"><value>Process payroll and resolve every employee issue before saving.</value></data>
+  <data name="PayrollSaved" xml:space="preserve"><value>Payroll revision saved successfully. Disbursement is a separate action.</value></data>
+  <data name="PayrollSettingsUnsupported" xml:space="preserve"><value>Payroll settings are duplicated or enable commission/business-unit processing without a supported source. Review HRM settings before processing.</value></data>
+  <data name="PayrollAmountOutOfRange" xml:space="preserve"><value>Calculated payroll totals exceed the supported monetary storage range.</value></data>
+  <data name="PayrollApproved" xml:space="preserve"><value>Payroll revision approved. Disbursement is a separate action.</value></data>
+  <data name="PayrollFiltersInvalid" xml:space="preserve"><value>Invalid payroll list filters or sorting.</value></data>
+  <data name="JobCancelled" xml:space="preserve"><value>This job is cancelled and cannot be closed or invoiced.</value></data>
+  <data name="JobCancelOpenOnly" xml:space="preserve"><value>Only an open job can be cancelled.</value></data>
+  <data name="JobCancelReferenced" xml:space="preserve"><value>This job is linked to purchase, stock, invoice or voucher documents and cannot be cancelled.</value></data>
+  <data name="JobQualityCheckRequired" xml:space="preserve"><value>Add a vehicle quality check report after the latest job edit before closing.</value></data>
+  <data name="JobQualityCheckOpenOnly" xml:space="preserve"><value>A quality check report can be added only to an open job.</value></data>
+  <data name="JobQualityCheckedByInvalid" xml:space="preserve"><value>Enter the quality checker name, up to 200 characters.</value></data>
+  <data name="JobLogDetailInvalid" xml:space="preserve"><value>Enter a log detail of 2,000 characters or fewer.</value></data>
+  <data name="JobLogAttachmentInvalid" xml:space="preserve"><value>One or more attachments are invalid or do not belong to this company.</value></data>
+  <data name="JobLogAttachmentDuplicate" xml:space="preserve"><value>Duplicate attachments are not allowed in one entry.</value></data>
+  <data name="JobLogSaveFailed" xml:space="preserve"><value>The job log entry could not be saved.</value></data>
+  <data name="PayrollScopeInvalid" xml:space="preserve"><value>Select a valid payroll type and employee scope for the requested month.</value></data>
+  <data name="PayrollStaffInvalid" xml:space="preserve"><value>The selected employee is not currently available for leave salary payroll.</value></data>
+  <data name="JobTimeLogOpenOnly" xml:space="preserve"><value>Labour time can be changed only for an open job.</value></data>
+  <data name="JobEditOpenOnly" xml:space="preserve"><value>Only an open job can be edited.</value></data>
+  <data name="JobDeleteOpenOnly" xml:space="preserve"><value>Only an open job can be deleted.</value></data>
+  <data name="JobWriteFailed" xml:space="preserve"><value>The job could not be saved. Reload it and try again.</value></data>
+  <data name="JobCloseOpenOnly" xml:space="preserve"><value>Only an open job can be closed.</value></data>
+</root>

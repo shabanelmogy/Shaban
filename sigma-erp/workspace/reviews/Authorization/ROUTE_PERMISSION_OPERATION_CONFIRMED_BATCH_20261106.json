@@ -1,0 +1,137 @@
+{
+  "status": "Draft",
+  "ownerVerificationPending": true,
+  "scope": "Source-only operation-confirmed route to permission evidence batch",
+  "catalogSource": "F:/My Work/Sigma/reviews/Authorization/PERMISSION_CATALOG_CURRENT_ACCESS_20261106.json",
+  "inventorySource": "F:/My Work/Sigma/reviews/Authorization/ROUTE_PERMISSION_ADOPTION_INVENTORY.json",
+  "verification": "Source-only; build/tests/lint/DB/browser not run; runtime pending",
+  "evidenceLevelDefinitions": {
+    "operation-confirmed": "The active route consumer and its actual frontend HTTP/workspace request are traced to the backend endpoint or generic controller operation and catalog key.",
+    "resource-only": "A BaseService super(resource) name identifies a catalog resource but does not prove the active route's list/read operation. Existing matched rows remain resource-only until promoted by this evidence.",
+    "context-only": "Navigation or recovery route with no feature-owned permission.",
+    "admin-only": "The endpoint is additionally protected by the server TenantAdmin policy; frontend visibility is not enforcement."
+  },
+  "rows": [
+    {
+      "route": "access",
+      "kind": "context-recovery",
+      "evidenceLevel": "context-only",
+      "permissionKeys": [],
+      "sourceEvidence": [
+        "SiGmaAngularFrontEnd/src/app/pages/routing.ts:6 route 'access'",
+        "SiGmaAngularFrontEnd/src/app/modules/shared/components/access-status/access-status.component.ts"
+      ],
+      "decision": "No feature permission; this is the access-denied/context-recovery host."
+    },
+    {
+      "route": "UserGuide",
+      "kind": "user-guide-context",
+      "evidenceLevel": "context-only",
+      "permissionKeys": [],
+      "sourceEvidence": [
+        "SiGmaAngularFrontEnd/src/app/pages/routing.ts:27 route 'UserGuide'",
+        "SiGmaAngularFrontEnd/src/app/modules/UserGuide/user-guide.routes.ts"
+      ],
+      "decision": "The linked feature owns access; the guide shell has no independent permission."
+    },
+    {
+      "route": "dashboard",
+      "kind": "dashboard-snapshot",
+      "evidenceLevel": "operation-confirmed",
+      "permissionKeys": ["Dashboard.Snapshot"],
+      "sourceEvidence": [
+        "SiGmaAngularFrontEnd/src/app/pages/routing.ts:32 route 'dashboard'",
+        "SiGmaAngularFrontEnd/src/app/layout/components/sidebar/sidebar-menu/sidebar-menu-data.ts:7 link '/dashboard'",
+        "SigmaBackend/SiGma.ServerAPI/Controller/DashboardController.cs:22 [HttpGet] Snapshot",
+        "SigmaBackend/SiGma.ServerAPI/Controller/DashboardController.cs:26 _service.GetSnapshotAsync",
+        "reviews/Authorization/PERMISSION_ENDPOINT_ENFORCEMENT_CONTRACT_FREEZE.md: Dashboard.Snapshot resolver mapping"
+      ],
+      "request": "GET /Dashboard/Snapshot",
+      "decision": "Dashboard view is the snapshot operation, not a generic Dashboard CRUD view."
+    },
+    {
+      "route": "Branch",
+      "kind": "feature",
+      "evidenceLevel": "operation-confirmed",
+      "permissionKeys": ["Branch.View", "Branch.Create", "Branch.Update", "Branch.Delete"],
+      "sourceEvidence": [
+        "SiGmaAngularFrontEnd/src/app/pages/routing.ts:1008 route 'Branch'",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Branches/branch.routes.ts:5 component BranchesComponent",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Branches/components/list/list.component.ts:121 this.service.getList(query)",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Branches/services/branch.service.ts:22 GET `${baseUrl}Branch`",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Branches/services/branch.service.ts:19 super('Branch')",
+        "SigmaBackend/SiGma.ServerAPI/Controller/BranchController.cs:6 BranchController",
+        "SigmaBackend/SiGma.ServerAPI/Controller/SiGmaControllerBase.cs:48 [HttpGet], :43 GetById, :26 POST, :35 PUT, :39 DELETE"
+      ],
+      "request": "GET /Branch (plus generic POST/PUT/DELETE operations)",
+      "decision": "The active Branch list consumer uses the generic Branch controller operations; action keys are confirmed from the rendered action list and request owner."
+    },
+    {
+      "route": "Country",
+      "kind": "feature",
+      "evidenceLevel": "operation-confirmed",
+      "permissionKeys": ["Country.View", "Country.Create", "Country.Update", "Country.Delete"],
+      "sourceEvidence": [
+        "SiGmaAngularFrontEnd/src/app/pages/routing.ts:1064 route 'Country'",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Countries/country.routes.ts:7 component CountriesComponent",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Countries/components/list/list.component.ts:293 this.service.getList(query)",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Country/services/country.service.ts:21 GET `${baseUrl}Country`",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Country/services/country.service.ts:18 super('Country')",
+        "SigmaBackend/SiGma.ServerAPI/Controller/CountryController.cs:6 CountryController",
+        "SigmaBackend/SiGma.ServerAPI/Controller/SiGmaControllerBase.cs:48 [HttpGet], :43 GetById, :26 POST, :35 PUT, :39 DELETE"
+      ],
+      "request": "GET /Country (plus generic POST/PUT/DELETE operations)",
+      "decision": "The active Country list consumer uses the generic Country controller operations."
+    },
+    {
+      "route": "Currency",
+      "kind": "feature",
+      "evidenceLevel": "operation-confirmed",
+      "permissionKeys": ["Currency.View", "Currency.Create", "Currency.Update", "Currency.Delete"],
+      "sourceEvidence": [
+        "SiGmaAngularFrontEnd/src/app/pages/routing.ts:1043 route 'Currency'",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Currencies/currency.routes.ts:7 component CurrenciesComponent",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Currencies/components/list/list.component.ts:140 this.service.getList(query)",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Currency/services/currency.service.ts:26 GET `${baseUrl}Currency`",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Currency/services/currency.service.ts:23 super('Currency')",
+        "SigmaBackend/SiGma.ServerAPI/Controller/CurrencyController.cs:6 CurrencyController",
+        "SigmaBackend/SiGma.ServerAPI/Controller/SiGmaControllerBase.cs:48 [HttpGet], :43 GetById, :26 POST, :35 PUT, :39 DELETE"
+      ],
+      "request": "GET /Currency (plus generic POST/PUT/DELETE operations); nested Rates/ConversionPreview remain separate operation evidence",
+      "decision": "The active Currency list consumer is confirmed for the generic Currency CRUD surface only; nested rate and conversion operations are not implicitly assigned to Currency CRUD keys."
+    },
+    {
+      "route": "Role",
+      "kind": "admin-only",
+      "evidenceLevel": "operation-confirmed",
+      "permissionKeys": [],
+      "unassignedOperations": ["Authorization.workspace", "Authorization.roles.create", "Authorization.roles.update", "Authorization.roles.delete"],
+      "sourceEvidence": [
+        "SiGmaAngularFrontEnd/src/app/pages/routing.ts:1127 route 'Role'",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Roles/role.routes.ts:10 RolesComponent workspace",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Roles/components/list/list.component.ts:67 this.service.workspace()",
+        "SiGmaAngularFrontEnd/src/app/modules/shared/service/authorization-configuration.service.ts:16 GET `${url}/workspace`, :20 POST `${url}/roles`, :24 PUT `${url}/roles/{id}`, :28 DELETE `${url}/roles/{id}`",
+        "SigmaBackend/SiGma.ServerAPI/Controller/RoleController.cs:6 [Authorize(Policy = \"TenantAdmin\")]",
+        "reviews/Authorization/PERMISSION_ENDPOINT_ENFORCEMENT_CONTRACT_FREEZE.md: Role workspace resolver mapping"
+      ],
+      "request": "GET /Authorization/workspace; POST/PUT/DELETE /Authorization/roles",
+      "decision": "The active route is owned by AuthorizationConfigurationService, not the adjacent legacy role.service.ts; server TenantAdmin policy is the enforcement boundary."
+    },
+    {
+      "route": "User",
+      "kind": "admin-only",
+      "evidenceLevel": "operation-confirmed",
+      "permissionKeys": ["User.View", "User.Create", "User.Update", "User.Delete"],
+      "sourceEvidence": [
+        "SiGmaAngularFrontEnd/src/app/pages/routing.ts:1141 route 'User'",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Users/user.routes.ts:8 UsersComponent, :12 UserDetailsComponent",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Users/components/list/list.component.ts:103 this.service.get<Results<UserListRow>>(filters)",
+        "SiGmaAngularFrontEnd/src/app/modules/Administration/Users/services/user.service.ts:14 super('User'), :18 POST User/{id}/provision-identity, :22 POST/PUT User",
+        "SigmaBackend/SiGma.ServerAPI/Controller/UserController.cs:6 [Authorize(Policy = \"TenantAdmin\")], :15 provision-identity",
+        "SigmaBackend/SiGma.ServerAPI/Controller/SiGmaControllerBase.cs:48 [HttpGet], :43 GetById, :26 POST, :35 PUT, :39 DELETE"
+      ],
+      "request": "GET /User (plus generic POST/PUT/DELETE and explicit POST /User/{id}/provision-identity)",
+      "decision": "The active User list consumer uses UserzService inherited generic GET; identity provisioning is a distinct operation and remains separately classified."
+    }
+  ]
+}

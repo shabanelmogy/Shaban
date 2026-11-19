@@ -1,0 +1,372 @@
+/*
+ * List filter strip — UI block 4 *Main row and More filters*. Unencapsulated so the classes
+ * reach the feature's projected fields; every selector is scoped under `.sigma-filter-panel`.
+ * Colours come only from the `--sigma-filter-*` tokens in src/styles.scss (light + dark).
+ */
+
+.sigma-filter-panel {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  margin: 0 8px 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--sigma-filter-panel-border);
+  border-inline-start: 3px solid var(--sigma-primary);
+  border-radius: 8px;
+  background: var(--sigma-filter-panel-background);
+  box-shadow: var(--sigma-filter-panel-shadow);
+}
+
+/* ---------- Grids ---------- */
+
+.sigma-filter-panel__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--sigma-filter-main-columns, 6), minmax(0, 1fr));
+  align-items: end;
+  gap: 7px 16px;
+}
+
+.sigma-filter-panel__grid--advanced {
+  grid-template-columns: repeat(var(--sigma-filter-advanced-columns, 5), minmax(0, 1fr));
+  padding: 10px 12px 12px;
+  border: 1px dashed color-mix(in srgb, var(--sigma-primary) 35%, var(--sigma-filter-panel-border));
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--sigma-primary) 5%, var(--sigma-filter-panel-surface));
+  animation: sigma-filter-advanced-in 160ms ease-out;
+}
+
+// Opt-in for filters with changing feedback: neighboring controls keep their top edge.
+.sigma-filter-panel--stable .sigma-filter-panel__grid {
+  align-items: start;
+}
+
+.sigma-filter-panel--stable .sigma-filter-field :is(p-dropdown, p-calendar, .p-dropdown, .p-calendar) {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sigma-filter-panel--stable .sigma-filter-field :is(p-dropdown, p-calendar) {
+  display: block;
+}
+
+.sigma-filter-panel--stable .sigma-filter-field .p-dropdown-label {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sigma-filter-panel--stable .sigma-filter-field .p-calendar .p-inputtext {
+  width: 100%;
+  min-width: 0;
+}
+
+@keyframes sigma-filter-advanced-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Fields ---------- */
+
+.sigma-filter-panel .sigma-filter-field {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+}
+
+.sigma-filter-panel .sigma-filter-field--wide { grid-column: span 2; }
+.sigma-filter-panel .sigma-filter-field--full { grid-column: 1 / -1; }
+
+// A checkbox filter: the box and its label sit on the control line, aligned with the inputs.
+.sigma-filter-panel .sigma-filter-field--check {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: end;
+  gap: 6px;
+  min-height: var(--sigma-filter-control-height);
+}
+
+.sigma-filter-panel .sigma-filter-field--check > label {
+  margin: 0;
+  cursor: pointer;
+}
+
+.sigma-filter-panel .sigma-filter-field--check > input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--sigma-primary);
+}
+
+// A radio group (legend + options on one line). Combine with --wide when it needs two columns.
+.sigma-filter-panel .sigma-filter-field--choice {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.sigma-filter-panel .sigma-filter-field--choice > legend {
+  float: none;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  color: var(--sigma-filter-panel-label);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.sigma-filter-panel .sigma-filter-field--choice .sigma-filter-choice-options {
+  display: flex;
+  min-height: var(--sigma-filter-control-height);
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.sigma-filter-panel .sigma-filter-field--choice .sigma-filter-choice-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  color: var(--sigma-filter-control-text);
+  cursor: pointer;
+}
+
+.sigma-filter-panel .sigma-filter-field--choice input[type='radio'] {
+  margin: 0;
+  accent-color: var(--sigma-primary);
+}
+
+.sigma-filter-panel .sigma-filter-field > label {
+  color: var(--sigma-filter-panel-label);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.sigma-filter-panel .sigma-filter-panel__action-caption {
+  color: var(--sigma-filter-panel-label);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.sigma-filter-panel .sigma-filter-field > input,
+.sigma-filter-panel .sigma-filter-field > .p-dropdown,
+.sigma-filter-panel .sigma-filter-field > p-dropdown,
+.sigma-filter-panel .sigma-filter-field > p-calendar,
+.sigma-filter-panel .sigma-filter-field .p-calendar {
+  width: 100%;
+  min-width: 0;
+}
+
+.sigma-filter-panel .sigma-filter-field > input,
+.sigma-filter-panel .sigma-filter-field .p-dropdown,
+.sigma-filter-panel .sigma-filter-field .p-calendar .p-inputtext {
+  box-sizing: border-box;
+  border: 1px solid var(--sigma-filter-control-border);
+  border-radius: 4px;
+  color: var(--sigma-filter-control-text);
+  background: var(--sigma-filter-control-surface);
+  font: inherit;
+  font-size: 12px;
+}
+
+.sigma-filter-panel .sigma-filter-field > input { padding: 5px 8px; }
+
+.sigma-filter-panel .sigma-filter-field > input:focus,
+.sigma-filter-panel .sigma-filter-field .p-dropdown.p-focus,
+.sigma-filter-panel .sigma-filter-field .p-calendar .p-inputtext:focus {
+  border-color: var(--sigma-filter-control-focus);
+  outline: 0;
+  box-shadow: var(--sigma-control-focus-ring);
+}
+
+.sigma-filter-panel .sigma-filter-field > input::placeholder,
+.sigma-filter-panel .sigma-filter-field .p-calendar .p-inputtext::placeholder,
+.sigma-filter-panel .sigma-filter-field .p-dropdown-label.p-placeholder {
+  color: var(--sigma-filter-control-placeholder);
+}
+
+.sigma-filter-panel .sigma-filter-field .p-dropdown-label { color: var(--sigma-filter-control-text); }
+
+.sigma-filter-panel .sigma-filter-field .p-dropdown-trigger,
+.sigma-filter-panel .sigma-filter-field .p-dropdown-clear-icon,
+.sigma-filter-panel .sigma-filter-field .p-datepicker-trigger,
+.sigma-filter-panel .sigma-filter-field .p-calendar-clear-icon {
+  color: var(--sigma-filter-muted);
+}
+
+/* ---------- Toolbar ---------- */
+
+.sigma-filter-panel__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sigma-filter-panel__toolbar-start { display: flex; align-items: center; min-height: 34px; }
+
+.sigma-filter-panel__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Reset and projected Export use the global `.sigma-secondary-button` (src/styles.scss). */
+
+.sigma-filter-toggle:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--sigma-primary) 60%, #fff);
+  outline-offset: 2px;
+}
+
+/* ---------- More filters toggle ---------- */
+
+.sigma-filter-toggle {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid var(--sigma-filter-control-border);
+  border-radius: 999px;
+  color: var(--sigma-filter-muted);
+  background: var(--sigma-surface);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 120ms ease, border-color 120ms ease, background-color 120ms ease;
+}
+
+.sigma-filter-toggle:hover:not(:disabled),
+.sigma-filter-toggle.is-open,
+.sigma-filter-toggle.has-active {
+  border-color: color-mix(in srgb, var(--sigma-primary) 55%, var(--sigma-filter-control-border));
+  color: var(--sigma-primary);
+  background: color-mix(in srgb, var(--sigma-primary) 7%, var(--sigma-surface));
+}
+
+.sigma-filter-toggle:disabled { cursor: not-allowed; opacity: 0.65; }
+
+.sigma-filter-toggle__icon {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  margin-inline-start: -6px;
+  border-radius: 50%;
+  color: var(--sigma-filter-toggle-icon-color);
+  background: var(--sigma-filter-toggle-icon-bg);
+  box-shadow: var(--sigma-filter-toggle-icon-ring);
+  font-size: 0.8rem;
+  transition: background-color 120ms ease;
+}
+
+.sigma-filter-toggle:hover:not(:disabled) .sigma-filter-toggle__icon,
+.sigma-filter-toggle.is-open .sigma-filter-toggle__icon,
+.sigma-filter-toggle.has-active .sigma-filter-toggle__icon {
+  background: var(--sigma-filter-toggle-icon-bg-active);
+}
+
+.sigma-filter-toggle__count {
+  display: inline-flex;
+  min-width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--sigma-primary);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.sigma-filter-toggle__chevron { font-size: 0.7rem; transition: transform 160ms ease; }
+.sigma-filter-toggle.is-open .sigma-filter-toggle__chevron { transform: rotate(180deg); }
+
+.sigma-filter-panel--stable .sigma-filter-toggle__count { min-width: calc(2ch + 10px); }
+.sigma-filter-toggle__count.is-empty { visibility: hidden; }
+
+/* ---------- Motion, responsive ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .sigma-filter-panel__grid--advanced { animation: none; }
+  .sigma-filter-toggle,
+  .sigma-filter-toggle__icon,
+  .sigma-filter-toggle__chevron { transition: none; }
+}
+
+@media (max-width: 1250px) {
+  .sigma-filter-panel__grid,
+  .sigma-filter-panel__grid--advanced { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .sigma-filter-panel__grid,
+  .sigma-filter-panel__grid--advanced { grid-template-columns: minmax(0, 1fr); }
+  .sigma-filter-panel .sigma-filter-field--wide { grid-column: auto; }
+  .sigma-filter-panel__toolbar { align-items: stretch; flex-direction: column; }
+  .sigma-filter-panel__actions > * { flex: 1 1 auto; }
+}
+
+/* Simple search strips can share the control line with Reset (UI block 4). */
+.sigma-filter-panel.sigma-filter-panel--inline-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+
+.sigma-filter-panel--inline-actions > .sigma-filter-panel__grid {
+  grid-template-columns: repeat(var(--sigma-filter-main-columns, 6), minmax(0, 1fr));
+}
+
+.sigma-filter-panel--inline-actions > .sigma-filter-panel__toolbar {
+  flex-direction: row;
+}
+
+.sigma-filter-panel--inline-actions .sigma-filter-panel__toolbar-start:empty {
+  display: none;
+}
+
+/* Labelled inline actions align to controls independently of validation feedback (UI4). */
+.sigma-filter-panel.sigma-filter-panel--inline-caption {
+  align-items: start;
+}
+
+.sigma-filter-panel--inline-caption > .sigma-filter-panel__toolbar {
+  display: grid;
+  gap: 4px;
+}
+
+.sigma-filter-panel--inline-caption .sigma-filter-field > label,
+.sigma-filter-panel--inline-caption .sigma-filter-panel__action-caption {
+  margin: 0;
+  line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .sigma-filter-panel--inline-actions > .sigma-filter-panel__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sigma-filter-panel.sigma-filter-panel--inline-caption {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sigma-filter-panel--inline-caption .sigma-filter-panel__action-caption {
+    display: none;
+  }
+}

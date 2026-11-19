@@ -1,0 +1,203 @@
+<div class="card card-custom">
+    <div class="card-body">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>{{ 'settings.eDarbModel.eDarbAccounts' | translate }}</h2>
+
+            <app-buttons [endButtons]="createButtons" (buttonsClick)="onButtonClick($event)">
+            </app-buttons>
+        </div>
+
+        <!-- Table -->
+        <p-table [value]="tollsAccountsList()" dataKey="id" responsiveLayout="scroll" min-width="100%">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>{{ 'general.actions' | translate }}</th>
+                    <th>{{ 'settings.eDarbModel.authority' | translate }}</th>
+                    <th>{{ 'settings.eDarbModel.userName' | translate }}</th>
+                    <th>{{ 'settings.eDarbModel.lastDownloadDate' | translate }}</th>
+                    <th>{{ 'settings.eDarbModel.active' | translate }}</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-account let-i="rowIndex">
+                <tr>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center"
+                                type="button" id="actionsDropdown{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear me-1" aria-hidden="true"></i>
+                                {{ 'general.actions' | translate }}
+                            </button>
+
+                            <ul class="dropdown-menu" [attr.aria-labelledby]="'actionsDropdown' + i">
+                                <li>
+                                    <button class="dropdown-item d-flex align-items-center" type="button"
+                                        (click)="openEdit(i)">
+                                        <i class="bi bi-pencil-square me-2" aria-hidden="true"></i>
+                                        {{ 'general.edit' | translate }}
+                                    </button>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <button class="dropdown-item d-flex align-items-center text-danger" type="button"
+                                        (click)="deleteAccount(i)">
+                                        <i class="bi bi-trash3 me-2" aria-hidden="true"></i>
+                                        {{ 'general.delete' | translate }}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+
+                    <td>{{ account.name }}</td>
+                    <td>{{ account.userName }}</td>
+                    <td>{{ account.lastDownloadDate | date:'yyyy-MM-dd' }}</td>
+                    <td>
+                        <p-tag [value]="account.active ? 'YES' : 'NO'"
+                            [severity]="account.active ? 'success' : 'danger'">
+                        </p-tag>
+                    </td>
+
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <p-divider></p-divider>
+
+        <!-- Master E-Darb Settings -->
+        <form appMockData *ngIf="form" [formGroup]="form">
+            <div class="mt-10">
+                <div class="row mb-10">
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <label class="form-label">
+                            {{ 'settings.eDarbModel.surchargeValue' | translate}}
+                        </label>
+                        <p-inputNumber formControlName="surcharge" [min]="0.0001" [maxFractionDigits]="4"
+                            [minFractionDigits]="4" [step]="0.0001" mode="decimal">
+                        </p-inputNumber>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <label class="form-label">
+                            {{ 'settings.eDarbModel.invoiceType' | translate}}
+                        </label>
+                        <p-dropdown formControlName="invoice" [options]="invoiceTypeList()" optionLabel="key"
+                            optionValue="id" [showClear]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                        <label class="form-label required">
+                            {{ 'settings.eDarbModel.invoicingCutoffDate' | translate}}
+                        </label>
+                        <p-calendar formControlName="cutOffDate"></p-calendar>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <p-checkbox formControlName="dontCreateReceivableOnWorkshop" [binary]="true"
+                            label="{{ 'settings.eDarbModel.dontCreateReceivableOnWorkshop' | translate}}" class="mb-4">
+                        </p-checkbox>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <p-checkbox formControlName="dateAsPostingDate" [binary]="true"
+                            label="{{ 'settings.eDarbModel.dateAsPostingDate' | translate}}" class="mb-4">
+                        </p-checkbox>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <p-checkbox formControlName="makeAllPostingGroupsOptional" [binary]="true"
+                            label="{{ 'settings.eDarbModel.makeAllPostingGroupsOptional' | translate}}" class="mb-4">
+                        </p-checkbox>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <p-checkbox formControlName="enableVehicleMappedApplicableDate" [binary]="true"
+                            label="{{ 'settings.eDarbModel.enableVehicleMappedApplicableDate' | translate}}"
+                            class="mb-4">
+                        </p-checkbox>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <p-checkbox formControlName="processDarbTollsInSpeedDataSharing" [binary]="true"
+                            label="{{ 'settings.eDarbModel.processDarbTollsInSpeedDataSharing' | translate}}"
+                            class="mb-4">
+                        </p-checkbox>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <p-checkbox formControlName="autoProcessAfterDownloading" [binary]="true"
+                            label="{{ 'settings.eDarbModel.autoProcessAfterDownloading' | translate}}" class="mb-4">
+                        </p-checkbox>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                        <p-checkbox formControlName="enableCompanyCodeInDarbAccount" [binary]="true"
+                            label="{{ 'settings.eDarbModel.enableCompanyCodeInDarbAccount' | translate}}" class="mb-4">
+                        </p-checkbox>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Account Add/Edit Dialog -->
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" [style]="{ width: '700px' }" [header]="
+    dialogMode === 'create'
+      ? ('settings.eDarbModel.createTollsAccount' | translate)
+      : ('settings.eDarbModel.editTollsAccount' | translate)
+  ">
+
+    <form appMockData *ngIf="accountForm" [formGroup]="accountForm" class="p-fluid">
+        <div class="field mb-8">
+            <label class="form-label required">
+                {{ 'settings.eDarbModel.authority' | translate}}
+            </label>
+            <p-dropdown formControlName="authority" [options]="authorityList()" optionLabel="key" optionValue="id"
+                [showClear]="true">
+            </p-dropdown>
+            <small class="p-error"
+                *ngIf="accountForm?.get('authority')?.invalid && accountForm?.get('authority')?.touched">
+                {{ 'settings.eDarbModel.fieldIsRequired' | translate }}
+            </small>
+        </div>
+        <div class="field mb-8">
+            <label for="userName" class="form-label required">{{ 'settings.eDarbModel.userName' | translate }} </label>
+            <input pInputText id="userName" formControlName="userName" />
+            <small class="p-error"
+                *ngIf="accountForm?.get('userName')?.invalid && accountForm?.get('userName')?.touched">
+                {{ 'settings.eDarbModel.fieldIsRequired' | translate }}
+            </small>
+        </div>
+
+        <div class="field mb-8">
+            <label for="password" class="form-label required">{{ 'settings.eDarbModel.password' | translate }} </label>
+            <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true"></p-password>
+            <small class="p-error"
+                *ngIf="accountForm?.get('password')?.invalid && accountForm?.get('password')?.touched">
+                {{ 'settings.eDarbModel.fieldIsRequired' | translate }}
+            </small>
+        </div>
+
+        <div class="field mb-8">
+            <label for="lastDownloadDate" class="form-label required">
+                {{ 'settings.eDarbModel.lastDownloadDate' | translate }}
+            </label>
+            <p-calendar id="lastDownloadDate" formControlName="lastDownloadDate" dateFormat="yy-mm-dd"
+                [appendTo]="'body'"></p-calendar>
+        </div>
+        <div class="field-checkbox mb-8">
+            <p-checkbox formControlName="active" [binary]="true" inputId="active"
+                label="{{ 'settings.eDarbModel.active' | translate}}" class="mb-4">
+            </p-checkbox>
+        </div>
+
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button pButton type="button" label="Cancel" icon="bi bi-x-lg" class="p-button-text" (click)="closeAccountDialog()"></button>
+        <button pButton type="button" label="Save" icon="bi bi-check2-circle" [disabled]="accountForm.invalid"
+            (click)="saveAccount()">
+        </button>
+    </ng-template>
+</p-dialog>

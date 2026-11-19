@@ -1,0 +1,416 @@
+[
+  {
+    "p": "src\\app\\modules\\Workshop\\LabourActivities\\components\\list\\list.component.ts",
+    "row": "LabourActivityListRow",
+    "field": "'jobType'",
+    "value": "(row) => this.jobTypeLabel(row.jobType)"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\create-purchase-order\\create-purchase-order.component.ts",
+    "row": "PurchaseRequestDTO",
+    "field": "'purchaseRequestType'",
+    "value": "row => this.translate.instant(enumKey(PurchaseRequestType, 'purchaseRequest.types', row.purchaseRequestType))"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\list\\list.component.ts",
+    "row": "PurchaseRequestGridRow",
+    "field": "'purchaseRequestType'",
+    "value": "row => this.translate.instant(enumKey(PurchaseRequestType, 'purchaseRequest.types', row.purchaseRequestType))"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\PurchaseRequests\\PurchaseRequest\\components\\list\\list.component.ts",
+    "row": "PurchaseRequestGridRow",
+    "field": "'consumptionPercent'",
+    "value": "row => row.consumptionPercent == null ? '—' : `${row.consumptionPercent.toFixed(2)}%`"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\list\\list.component.ts",
+    "row": "PurchaseOrderDTO",
+    "field": "'receiptPercent'",
+    "value": "row => row.receiptPercent == null ? '—' : `${row.receiptPercent.toFixed(2)}%`"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\PurchaseOrders\\PurchaseOrder\\components\\list\\list.component.ts",
+    "row": "PurchaseOrderDTO",
+    "field": "'poType'",
+    "value": "row => this.translate.instant(enumKey(POType, 'purchaseOrder.types', row.poType))"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\Invoices\\Invoice\\components\\list\\list.component.ts",
+    "row": "InvoiceDTO",
+    "field": "'invoiceType'",
+    "value": "row => row.sourceKind\r\n      ? this.translate.instant(`invoice.sourceKinds.${row.sourceKind}`) : row.invoiceType ?? ''"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\list\\list.component.ts",
+    "row": "GoodsReceivedNoteDTO",
+    "field": "'grnType'",
+    "value": "row => this.translate.instant(enumKey(GRNType, 'grn.types', row.grnType))"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\GRNs\\GoodsReceivedNote\\components\\list\\list.component.ts",
+    "row": "TaxRow",
+    "field": "'grnType'",
+    "value": "row => this.translate.instant(enumKey(GRNType, 'grn.types', row.grnType))"
+  },
+  {
+    "p": "src\\app\\modules\\Vouchers\\Bills\\Bill\\components\\list\\list.component.ts",
+    "row": "BillTaxReportRow",
+    "field": "'billType'",
+    "value": "row => this.typeLabel(row.billType)"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\Trips\\components\\list\\list.component.ts",
+    "row": "TransportationTripItem",
+    "field": "'isExtra'",
+    "value": "row => this.translate.instant(row.isExtra ? 'transportationTrip.yes' : 'transportationTrip.no')"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\Trips\\components\\list\\list.component.ts",
+    "row": "TransportationTripItem",
+    "field": "'invoiced'",
+    "value": "row => this.translate.instant(row.invoiced ? 'transportationTrip.yes' : 'transportationTrip.no')"
+  },
+  {
+    "p": "src\\app\\modules\\Transportation\\TransportationAgreementItem\\components\\list\\list.component.ts",
+    "row": "TransportationAgreementItemDTO",
+    "field": "'isExtra'",
+    "value": "row => this.translate.instant(row.isExtra ? 'general.yes' : 'general.no')"
+  },
+  {
+    "p": "src\\app\\modules\\Stock\\ItemType\\components\\list\\list.component.ts",
+    "row": "ItemTypesDTO",
+    "field": "'type'",
+    "value": "(row) => this.categoryText(row.type)"
+  },
+  {
+    "p": "src\\app\\modules\\Stock\\Item\\components\\list\\list.component.ts",
+    "row": "ItemDTO",
+    "field": "'type'",
+    "value": "(row) => this.typeText(row.type)"
+  },
+  {
+    "p": "src\\app\\modules\\Sales\\DueInstallments\\components\\list\\list.component.ts",
+    "row": "DueInstallmentRow",
+    "field": "'type'",
+    "value": "(row) => this.typeLabel(row.type)"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\TariffCard\\components\\list\\list.component.ts",
+    "row": "TariffCardListDTO",
+    "field": "'discountPercentage'",
+    "value": "(row) => this.formatDiscount(row.discountPercentage)"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\TariffCard\\components\\list\\list.component.ts",
+    "row": "TariffCardListDTO",
+    "field": "'fromDateTime'",
+    "value": "(row) => formatDisplayDate(row.fromDateTime, true)"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\TariffCard\\components\\list\\list.component.ts",
+    "row": "TariffCardListDTO",
+    "field": "'toDateTime'",
+    "value": "(row) => formatDisplayDate(row.toDateTime, true)"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\Agreement\\components\\list\\list.component.ts",
+    "row": "RentalAgreementListDTO",
+    "field": "'type'",
+    "value": "(row) => this.translate.instant(this.typeKey(row.type))"
+  },
+  {
+    "p": "src\\app\\modules\\Rental\\Agreement\\components\\list\\list.component.ts",
+    "row": "RentalAgreementListDTO",
+    "field": "'customerType'",
+    "value": "(row) => this.translate.instant(this.customerTypeKey(row.customerType))"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\NRM\\components\\list\\list.component.ts",
+    "row": "NRMGridRow",
+    "field": "'type'",
+    "value": "row => this.translate.instant(enumKey(NrmMovementTypeEnum, 'nrm.typeNames', typeof row.type === 'number' ? row.type : null))"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\logsMovement\\components\\list\\list.component.ts",
+    "row": "LogsMovementListDTO",
+    "field": "'movementType'",
+    "value": "row => this.movementTypeName(row.movementType)"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\DeliveryMovement\\components\\list\\list.component.ts",
+    "row": "DeliveryMovementGridRow",
+    "field": "'typeName'",
+    "value": "row => this.typeText(row.type, row.typeName)"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\DeliveryMovement\\components\\list\\list.component.ts",
+    "row": "DeliveryMovementGridRow",
+    "field": "'fuelLevelOutName'",
+    "value": "row => this.fuelText(row.fuelLevel, row.fuelLevelOutName)"
+  },
+  {
+    "p": "src\\app\\modules\\Movements\\CustodyMovement\\components\\list\\list.component.ts",
+    "row": "CustodyMovementGridRow",
+    "field": "'fuelLevelName'",
+    "value": "row => this.fuelText(row.fuelLevel, row.fuelLevelName)"
+  },
+  {
+    "p": "src\\app\\modules\\Limousine\\TripGridCustomization\\components\\list\\list.component.ts",
+    "row": "TripGridCustomizationDTO",
+    "field": "'column'",
+    "value": "row => this.translate.instant(enumKey(TripGridColumn, 'tripGridCustomization.columns', row.column))"
+  },
+  {
+    "p": "src\\app\\modules\\Limousine\\TripBooking\\components\\list\\list.component.ts",
+    "row": "TripBookingHistoryDTO",
+    "field": "'actionName'",
+    "value": "row => this.historyActionKeys[row.action] ? this.translate.instant(this.historyActionKeys[row.action]) : row.actionName"
+  },
+  {
+    "p": "src\\app\\modules\\Limousine\\TripBooking\\components\\list\\list.component.ts",
+    "row": "TripBookingHistoryDTO",
+    "field": "'fromStatus'",
+    "value": "row => this.statusKeys[row.fromStatus] ? this.translate.instant(this.statusKeys[row.fromStatus]) : String(row.fromStatus)"
+  },
+  {
+    "p": "src\\app\\modules\\Limousine\\TripBooking\\components\\list\\list.component.ts",
+    "row": "TripBookingHistoryDTO",
+    "field": "'toStatus'",
+    "value": "row => this.statusKeys[row.toStatus] ? this.translate.instant(this.statusKeys[row.toStatus]) : String(row.toStatus)"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseCustomerSms\\components\\list\\list.component.ts",
+    "row": "LeaseCustomerSmsGridRow",
+    "field": "'status'",
+    "value": "(row) => this.translate.instant(row.status)"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseAgreement\\components\\list\\list.component.ts",
+    "row": "LeaseAgreementDTO",
+    "field": "'permanentVehicle'",
+    "value": "(row) => (row.permanentVehicle ? this.translate.instant('general.yes') : this.translate.instant('general.no'))"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseAgreement\\components\\list\\list.component.ts",
+    "row": "LeaseAgreementDTO",
+    "field": "'dateAndTime'",
+    "value": "(row) => this.formatDate(row.dateAndTime)"
+  },
+  {
+    "p": "src\\app\\modules\\Lease\\LeaseAgreement\\components\\list\\list.component.ts",
+    "row": "LeaseAgreementDTO",
+    "field": "'endDate'",
+    "value": "(row) => this.formatDate(row.endDate)"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Payroll\\PaySlips\\components\\list\\pay-slips.component.ts",
+    "row": "PaySlipListRow",
+    "field": "'type'",
+    "value": "x => this.typeLabel(x.type)"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Payroll\\PaySlips\\components\\list\\pay-slips.component.ts",
+    "row": "{ label: string; amount: number }",
+    "field": "'label'",
+    "value": "row => this.translate.instant(row.label)"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts",
+    "row": "PayrollRunListRow",
+    "field": "'type'",
+    "value": "row => this.translate.instant(\r\n      row.type === 'LeaveSalary' ? 'payrolls.types.leaveSalary'\r\n        : row.type === 'FinalSettlement' ? 'payrolls.types.finalSettlement' : 'payrolls.types.payroll',\r\n    )"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts",
+    "row": "PayrollRunListRow",
+    "field": "'staffName'",
+    "value": "row => this.staffText(row)"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Overtimes\\Overtime\\components\\list\\list.component.ts",
+    "row": "OvertimeListRow",
+    "field": "'staff'",
+    "value": "row => row.staff?.name || '—'"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Overtimes\\Overtime\\components\\list\\list.component.ts",
+    "row": "OvertimeProcessRun",
+    "field": "'status'",
+    "value": "row => row.status === 'Processed'\r\n      ? this.translate.instant('overTime.process.processed') : '—'"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.ts",
+    "row": "LeaveTypeDTO",
+    "field": "'leaveCategory'",
+    "value": "row => this.translate.instant(enumKey(LeaveCategoryEnum, 'leavetype.enums.leaveCategory', row.leaveCategory))"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.ts",
+    "row": "LeaveTypeDTO",
+    "field": "'leaveQuotaType'",
+    "value": "row => this.translate.instant(enumKey(LeaveQuotaTypeEnum, 'leavetype.enums.leaveQuotaType', row.leaveQuotaType))"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.ts",
+    "row": "LeaveTypeDTO",
+    "field": "'accrualPeriod'",
+    "value": "row => this.translate.instant(enumKey(AccrualPeriodEnum, 'leavetype.enums.accrualPeriod', row.accrualPeriod))"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.ts",
+    "row": "LeaveTypeDTO",
+    "field": "'leaveQuotaRule'",
+    "value": "row => this.translate.instant(enumKey(LeaveQuotaRuleEnum, 'leavetype.enums.leaveQuotaRule', row.leaveQuotaRule))"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Leaves\\LeaveType\\components\\list\\list.component.ts",
+    "row": "LeaveTypeDTO",
+    "field": "'leaveStartFrom'",
+    "value": "row => this.translate.instant(enumKey(LeaveStartFromEnum, 'leavetype.enums.leaveStartFrom', row.leaveStartFrom))"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Deductions\\Deduction\\components\\list\\list.component.ts",
+    "row": "DeductionDTO",
+    "field": "'type'",
+    "value": "row => this.typeText(row.type)"
+  },
+  {
+    "p": "src\\app\\modules\\HRM\\Attendances\\Shift\\components\\list\\list.component.ts",
+    "row": "ShiftDTO",
+    "field": "'startTime'",
+    "value": "(row) => `${row.startTime || '—'} - ${row.endTime || '—'}`"
+  },
+  {
+    "p": "src\\app\\modules\\Fleet\\ServiceBookings\\components\\list\\list.component.ts",
+    "row": "VehicleServiceBookingListDTO",
+    "field": "'status'",
+    "value": "(row) => this.statusLabel(row.status)"
+  },
+  {
+    "p": "src\\app\\modules\\Banking\\ChequesReceivables\\components\\list\\list.component.ts",
+    "row": "PDCReceivable",
+    "field": "'paymentMethod'",
+    "value": "row => this.paymentText(row.paymentMethod)"
+  },
+  {
+    "p": "src\\app\\modules\\Banking\\ChequesPayables\\components\\list\\list.component.ts",
+    "row": "PDCPayableDTO",
+    "field": "'paymentMethod'",
+    "value": "(row) => row.paymentMethod === null ? '' : this.translate.instant(enumKey(PDCPayablePaymentMethod, 'pdcPayable.paymentMethods', row.paymentMethod))"
+  },
+  {
+    "p": "src\\app\\modules\\Assets\\assetType\\components\\list\\list.component.ts",
+    "row": "AssetTypeDTO",
+    "field": "'depreciationMethod'",
+    "value": "(row) => this.depreciationMethodLabel(row.depreciationMethod)"
+  },
+  {
+    "p": "src\\app\\modules\\Assets\\assetType\\components\\list\\list.component.ts",
+    "row": "AssetTypeDTO",
+    "field": "'category'",
+    "value": "(row) => this.categoryLabel(row.category)"
+  },
+  {
+    "p": "src\\app\\modules\\Assets\\asset\\components\\list\\list.component.ts",
+    "row": "AssetListRow",
+    "field": "'assetType'",
+    "value": "(row) => row.assetType?.name ?? '—'"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\PaymentMethods\\components\\list\\list.component.ts",
+    "row": "PaymentMethodDTO",
+    "field": "'category'",
+    "value": "(row) => this.translate.instant(enumKey(PaymentCategoryEnum, 'paymentMethod.categories', row.category))"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\PaymentMethods\\components\\list\\list.component.ts",
+    "row": "PaymentMethodDTO",
+    "field": "'type'",
+    "value": "(row) => this.translate.instant(enumKey(PaymentTypeEnum, 'paymentMethod.types', row.type))"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\messageLogs\\list\\list.component.ts",
+    "row": "MessageLogRow",
+    "field": "'type'",
+    "value": "(row) => this.enumText(MessageTypeEnum, 'messageLogs.types', row.type)"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\messageLogs\\list\\list.component.ts",
+    "row": "MessageLogRow",
+    "field": "'messageError'",
+    "value": "(row) => row.messageError ? this.translate.instant(row.messageError) : ''"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\auditTrail\\list\\list.component.ts",
+    "row": "AuditTrailRow",
+    "field": "'reason'",
+    "value": "row => row.reason || '—'"
+  },
+  {
+    "p": "src\\app\\modules\\Administration\\auditTrail\\list\\list.component.ts",
+    "row": "AuditTrailRow",
+    "field": "'changesJson'",
+    "value": "row => formatAuditChanges(row.changesJson)"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\Journal\\components\\journal\\journal.component.ts",
+    "row": "JournalLine",
+    "field": "'type'",
+    "value": "row => this.typeLabel(row.type)"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\classification-definitions\\classification-definitions.component.ts",
+    "row": "ClassificationRow",
+    "field": "'category'",
+    "value": "row => this.translate.instant(enumKey(AccountCategory, 'accountTypes.categories', row.category))"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\classification-definitions\\classification-definitions.component.ts",
+    "row": "AccountSubGroupDefinitionRow",
+    "field": "'groupName'",
+    "value": "row => this.localized(row.groupName, row.groupNameLocalized)"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\classification-definitions\\classification-definitions.component.ts",
+    "row": "AccountSubGroupDefinitionRow",
+    "field": "'category'",
+    "value": "row => this.translate.instant(enumKey(AccountCategory, 'accountTypes.categories', row.category))"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\classification-definitions\\classification-definitions.component.ts",
+    "row": "AccountSubGroupDefinitionRow",
+    "field": "'reportSubGroup'",
+    "value": "row => this.reportKeyLabel(row.reportSubGroup)"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\list\\list.component.ts",
+    "row": "AccountTypeDefinitionRow",
+    "field": "'kind'",
+    "value": "row => this.translate.instant(enumKey(AccountTypeKind, 'accountTypes.kinds', row.kind))"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\list\\list.component.ts",
+    "row": "AccountTypeDefinitionRow",
+    "field": "'groupName'",
+    "value": "row => this.localized(row.groupName, row.groupNameLocalized)"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\list\\list.component.ts",
+    "row": "AccountTypeDefinitionRow",
+    "field": "'subGroupName'",
+    "value": "row => this.localized(row.subGroupName, row.subGroupNameLocalized)"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\list\\list.component.ts",
+    "row": "AccountTypeDefinitionRow",
+    "field": "'category'",
+    "value": "row => row.category === null ? '—' : this.translate.instant(enumKey(AccountCategory, 'accountTypes.categories', row.category))"
+  },
+  {
+    "p": "src\\app\\modules\\Accounts\\AccountSetting\\components\\list\\list.component.ts",
+    "row": "AccountTypeDefinitionRow",
+    "field": "'reportSubGroup'",
+    "value": "row => row.reportSubGroup === null ? '—' : this.translate.instant(enumKey(StatementSubGroup, 'accountTypes.reportKeys', row.reportSubGroup))"
+  }
+]

@@ -1,0 +1,37 @@
+using SiGma.Helpers.Enum;
+using SiGma.Helpers.ViewModelsBases.Add;
+using System.ComponentModel.DataAnnotations;
+
+namespace SiGma.ViewModels.ViewModels.CashDepositDetail
+{
+    public class CashDepositDetailAddVM : AddBaseVm
+    {
+        [Required] public int CashDepositId { get; set; }
+
+        /// <summary>Whether this line comes from a Receipt or Payment entity.</summary>
+        [Required] public CashDepositSourceType SourceType { get; set; }
+
+        /// <summary>Set when SourceType == Receipt.</summary>
+        public int? SourceReceiptId { get; set; }
+
+        /// <summary>Set when SourceType == Payment.</summary>
+        public int? SourcePaymentId { get; set; }
+
+        // Snapshot / display fields
+        public DateTime Date { get; set; }
+        [MaxLength(100)] public string? VoucherLabel { get; set; }
+        [MaxLength(100)] public string? No { get; set; }
+        [MaxLength(1000)] public string? Description { get; set; }
+
+        /// <summary>Total source voucher amount (snapshot).</summary>
+        public decimal Amount { get; set; }
+
+        /// <summary>Already deposited in prior transactions (snapshot).</summary>
+        public decimal Deposited { get; set; }
+
+        // NOTE: DueAmount is server-calculated — do NOT send from client.
+
+        /// <summary>Amount being deposited in this transaction.</summary>
+        public decimal DepositedNow { get; set; }
+    }
+}

@@ -1,0 +1,25 @@
+diff --git a/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositUpdateVm.cs (initial) b/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositUpdateVm.cs (current)
+index ba600ed..f920a5f 100644
+--- a/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositUpdateVm.cs (initial)	
++++ b/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDeposit/CashDepositUpdateVm.cs (current)	
+@@ -8,17 +8,17 @@ namespace SiGma.ViewModels.ViewModels.CashDeposit
+     {
+         [Required] public DateTime Date { get; set; }
+ 
+-        [Required] public int BankId { get; set; }
++        [Required, Range(1, int.MaxValue)] public int BankId { get; set; }
+ 
+         [MaxLength(100)] public string? RefNo { get; set; }
+ 
+         [MaxLength(500)] public string? Description { get; set; }
+ 
+-        public int? PaymentMethodId { get; set; }
++        [Required, Range(1, int.MaxValue)] public int PaymentMethodId { get; set; }
+ 
+         public int? BranchId { get; set; }
+ 
+         /// <summary>Detail lines — each must include their own Id for differential tracking.</summary>
+-        public List<CashDepositDetailUpdateVM> CashDepositDetails { get; set; } = [];
++        [Required, MinLength(1)] public List<CashDepositDetailUpdateVM> CashDepositDetails { get; set; } = [];
+     }
+ }

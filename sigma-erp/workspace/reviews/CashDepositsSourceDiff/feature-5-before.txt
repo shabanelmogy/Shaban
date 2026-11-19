@@ -1,0 +1,10 @@
+<div class="card">
+  <table-list
+    [columns]="columns"
+    [list]="data()"
+    [hasCreate]="true"
+    [moreActions]="moreActions"
+    (openDialog)="goCreate($event)"
+    (clickSearch)="search($event)"
+  ></table-list>
+</div>

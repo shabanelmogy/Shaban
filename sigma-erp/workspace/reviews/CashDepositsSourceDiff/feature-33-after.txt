@@ -1,0 +1,21 @@
+using SiGma.Helpers.Enum;
+using SiGma.Helpers.ViewModelsBases.Add;
+using System.ComponentModel.DataAnnotations;
+
+namespace SiGma.ViewModels.ViewModels.CashDepositDetail
+{
+    public class CashDepositDetailAddVM : AddBaseVm
+    {
+        /// <summary>Whether this line comes from a Receipt or Payment entity.</summary>
+        [Required, EnumDataType(typeof(CashDepositSourceType))] public CashDepositSourceType SourceType { get; set; }
+
+        /// <summary>Set when SourceType == Receipt.</summary>
+        public int? SourceReceiptId { get; set; }
+
+        /// <summary>Set when SourceType == Payment.</summary>
+        public int? SourcePaymentId { get; set; }
+
+        /// <summary>Amount being deposited in this transaction.</summary>
+        public decimal DepositedNow { get; set; }
+    }
+}

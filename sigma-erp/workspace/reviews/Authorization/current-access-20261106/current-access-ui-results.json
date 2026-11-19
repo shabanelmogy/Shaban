@@ -1,0 +1,83 @@
+{
+  "checks": [
+    {
+      "name": "Login accepted for Role",
+      "passed": true
+    },
+    {
+      "name": "Linked owner sees role administration and is recognized as tenant admin",
+      "passed": true
+    },
+    {
+      "name": "Owner retains full navigation",
+      "passed": true
+    },
+    {
+      "name": "Owner browser has no page errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Login accepted for dashboard",
+      "passed": true
+    },
+    {
+      "name": "View-only user lands on allowed Branch route",
+      "passed": true
+    },
+    {
+      "name": "View-only user does not request dashboard or mock settings",
+      "passed": true,
+      "detail": [
+        "/auth/consolelogin",
+        "/Authorization/me",
+        "/CurrentBranch/Options",
+        "/CurrentBranch/Mine",
+        "/Language/Options",
+        "/Branch"
+      ]
+    },
+    {
+      "name": "View-only user does not see branch creation",
+      "passed": true
+    },
+    {
+      "name": "View-only user navigation omits dashboard, roles and unrelated accounting",
+      "passed": true
+    },
+    {
+      "name": "Ordinary user cannot open role administration by direct URL",
+      "passed": true
+    },
+    {
+      "name": "Ordinary workflow has no failed API reads or page errors",
+      "passed": true,
+      "detail": {
+        "failed": [],
+        "errors": []
+      }
+    },
+    {
+      "name": "Login accepted for dashboard",
+      "passed": true
+    },
+    {
+      "name": "Unlinked user receives one explicit setup state",
+      "passed": true,
+      "detail": "Recently visited\nQuick shortcuts\nSelect branch\nApplication display language\nEnglish\nS\nstring1005@string1005.com\nUser\nCtrl K\n\nNo results found\n\n\"\"\n\nWorkspace access\n\nYour current ERP session and available functions\n\nThis sign-in account is not linked to an ERP user. Ask the tenant administrator to complete the account link.\n\n© 2026 7STARSS ERP\nPowered by Systmatix\n\nSupport\n(opens in a new tab)"
+    },
+    {
+      "name": "Unlinked user triggers no branch, language, dashboard or mock requests",
+      "passed": true,
+      "detail": [
+        "/auth/consolelogin",
+        "/Authorization/me"
+      ]
+    },
+    {
+      "name": "Unlinked user has no browser exception",
+      "passed": true,
+      "detail": []
+    }
+  ]
+}

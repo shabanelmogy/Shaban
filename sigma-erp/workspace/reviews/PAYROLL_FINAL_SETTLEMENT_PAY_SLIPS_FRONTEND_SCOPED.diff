@@ -1,0 +1,1168 @@
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\_metronic\\layout\\components\\sidebar\\sidebar-menu\\sidebar-menu-data.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\_metronic\\layout\\components\\sidebar\\sidebar-menu\\sidebar-menu-data.ts"
+index 01c9053..b5ba1f7 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\_metronic\\layout\\components\\sidebar\\sidebar-menu\\sidebar-menu-data.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\_metronic\\layout\\components\\sidebar\\sidebar-menu\\sidebar-menu-data.ts"	
+@@ -762,7 +762,12 @@ export const SIDEBAR_MENU_ITEMS: MenuItem[] = [
+               icon: 'bi bi-clock-history',
+               link: '/ProcessedPayrolls',
+             },
+-            { title: 'sideMenu.payrolls.paySlips', icon: 'bi bi-receipt', link: '#' },
++            {
++              title: 'sideMenu.payrolls.finalSettlementProcess',
++              icon: 'bi bi-person-check',
++              link: '/FinalSettlementProcess',
++            },
++            { title: 'sideMenu.payrolls.paySlips', icon: 'bi bi-receipt', link: '/PaySlips' },
+           ],
+         },
+         {
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\_metronic\\layout\\components\\toolbar\\toolbar.component.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\_metronic\\layout\\components\\toolbar\\toolbar.component.ts"
+index 50b0abd..b3cb6af 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\_metronic\\layout\\components\\toolbar\\toolbar.component.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\_metronic\\layout\\components\\toolbar\\toolbar.component.ts"	
+@@ -150,7 +150,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
+     const isDepreciationDetail = routePath === '/depreciationDetail';
+     const isRental = /^\/(RentalAgreement|RentalBooking|RentalQuotation|MasterAgreement|RentalTariff|TariffCard|DriverTimeSheet|RentalPlanner)(\/|$)/.test(routePath);
+     const isUserGuide = /^\/UserGuide(\/|$)/.test(routePath);
+-    const isPayroll = /^\/(ProcessPayroll|ProcessLeaveSalary|ProcessedPayrolls)(\/|$)/.test(routePath);
++    const isPayroll = /^\/(ProcessPayroll|ProcessLeaveSalary|ProcessedPayrolls|FinalSettlementProcess|PaySlips)(\/|$)/.test(routePath);
+     return (
+       this.appPageTitleDisplay &&
+       !isLimousine &&
+
+NEW src\app\modules\HRM\Payroll\FinalSettlementProcess\components\process\final-settlement-process.component.html
+<section class="sigma-list-page">
+  <div class="sigma-list-panel sigma-editor-panel--workspace">
+    <header class="sigma-list-header">
+      <app-feature-title [title]="'finalSettlementProcess.title' | translate" [subtitle]="'finalSettlementProcess.subtitle' | translate" icon="bi bi-person-check">
+        @if (displayed(); as run) {
+          @if (run.revisionNumber > 0) { <span class="sigma-status-badge">{{ 'finalSettlementProcess.revision' | translate: { revision: run.revisionNumber } }}</span> }
+          <span class="sigma-status-badge">{{ (run.isPaid ? 'payrolls.statuses.paid' : !run.isSaved ? 'payrollProcess.preview' : !run.isCurrentRevision ? 'paySlips.statuses.superseded' : run.isApproved ? 'payrolls.statuses.approved' : 'payrolls.statuses.pendingApproval') | translate }}</span>
+        }
+      </app-feature-title>
+    </header>
+    <form class="final-settlement-filters" appFilterPanel [formGroup]="form" [stableLayout]="true" [mainColumns]="4"
+      [busy]="busy() || readOnly()" (ngSubmit)="process()" (resetRequested)="reset()">
+      <div class="sigma-filter-field">
+        <label class="required" for="settlement-staff">{{ 'finalSettlementProcess.staff' | translate }}</label>
+        <div class="d-flex gap-2">
+          <p-dropdown class="flex-grow-1" inputId="settlement-staff" formControlName="staffId" [options]="staffOptions()" optionValue="id" optionLabel="value"
+            [filter]="true" filterBy="no,value" appendTo="body" styleClass="w-100" [loading]="staffLoading()" [placeholder]="'finalSettlementProcess.selectStaff' | translate"
+            [emptyMessage]="'finalSettlementProcess.noStaff' | translate" (onChange)="selectStaff($event.value)">
+            <ng-template pTemplate="selectedItem" let-option>{{ option.no ? option.no + ' — ' : '' }}{{ option.value }}</ng-template>
+            <ng-template pTemplate="item" let-option>{{ option.no ? option.no + ' — ' : '' }}{{ option.value }}</ng-template>
+          </p-dropdown>
+          <button type="button" class="sigma-secondary-button sigma-icon-button text-danger" [disabled]="busy() || form.controls.staffId.disabled || !form.controls.staffId.value" (click)="clearStaff()" [attr.aria-label]="'finalSettlementProcess.clearStaff' | translate"><i class="bi bi-trash3-fill text-reset" aria-hidden="true"></i></button>
+        </div>
+        <app-field-error [control]="form.controls.staffId" reserveMessage="validationMessages.required" />
+      </div>
+      <div class="sigma-filter-field">
+        <label for="settlement-designation">{{ 'finalSettlementProcess.designation' | translate }}</label>
+        <input id="settlement-designation" class="form-control" [value]="displayed()?.finalSettlement?.designation ?? selectedStaff()?.designation ?? ''" readonly />
+        <app-field-error reserveMessage="validationMessages.required" />
+      </div>
+      <div class="sigma-filter-field">
+        <label class="required" for="settlement-last-day">{{ 'finalSettlementProcess.lastWorkingDay' | translate }}</label>
+        <p-calendar appDatePicker [dateInputMask]="true" inputId="settlement-last-day" formControlName="lastWorkingDay" dateFormat="dd/mm/yy" [keepInvalid]="true" [readonlyInput]="false" appendTo="body" styleClass="w-100" />
+        <app-field-error [control]="form.controls.lastWorkingDay" reserveMessage="validationMessages.date" />
+      </div>
+      @if (preview()?.id) {
+        <div class="sigma-filter-field">
+          <label for="settlement-revision">{{ 'finalSettlementProcess.history' | translate }}</label>
+          <p-dropdown inputId="settlement-revision" formControlName="revision" [options]="revisionOptions()" optionValue="id" optionLabel="value" appendTo="body" (onChange)="selectRevision($event.value)" />
+          <app-field-error reserveMessage="validationMessages.required" />
+        </div>
+      }
+      <ng-container appFilterActions>
+        @if (!readOnly()) {
+          <app-primary-action-button type="submit" icon="bi bi-gear" [label]="'payrollProcess.process' | translate" [disabled]="busy() || loadFailed() || !!historical() || !!preview()?.isPaid || staffLoading() || !!staffError()" [loading]="processing()" />
+          <app-primary-action-button type="button" icon="bi bi-floppy-fill" [label]="'general.save' | translate" [disabled]="busy() || inputsChanged() || !!historical() || !preview()?.canSave" [loading]="saving()" (pressed)="save()" />
+        }
+        <button type="button" class="sigma-secondary-button" [disabled]="busy() || !displayed()?.isSaved" (click)="exportExcel()"><i class="bi bi-file-earmark-excel"></i>{{ 'general.exportExcel' | translate }}</button>
+        @if (preview()?.id) { <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="openLogs()"><i class="bi bi-clock-history"></i>{{ 'payrollProcess.logs.title' | translate }}</button> }
+        @if (openedFromList()) { <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="back()">{{ 'finalSettlementProcess.back' | translate }}</button> }
+      </ng-container>
+    </form>
+    @if (staffError()) { <app-state-message kind="error" [message]="staffError()" /><button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="retryStaff()">{{ 'general.retry' | translate }}</button> }
+    @if (error()) { <app-state-message kind="error" [message]="error()" /> @if (loadFailed()) { <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="retryLoad()">{{ 'general.retry' | translate }}</button> } }
+    @if (revisionsError()) { <app-state-message kind="error" [message]="revisionsError()" /><button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="retryRevisions()">{{ 'general.retry' | translate }}</button> }
+    @for (row of displayed()?.rows ?? []; track row.staffId) { @for (issue of row.issues; track issue) { <div class="sigma-alert sigma-alert--warning" role="alert"><i class="bi bi-exclamation-circle"></i><span>{{ issue | translate }}</span></div> } }
+    <div class="sigma-alert" role="note"><i class="bi bi-info-circle"></i><span>{{ 'finalSettlementProcess.policyNotice' | translate }}</span></div>
+    <app-editor-tabs [tabs]="tabs" [activeTab]="activeTab()" (activeTabChange)="activeTab.set($event)" [ariaLabel]="'finalSettlementProcess.tabs.label' | translate" idPrefix="final-settlement" appearance="workspace" [disabled]="busy()" />
+    <div class="sigma-editor-scroll">
+      @if (activeTab() === 'normal') {
+        <div id="final-settlement-panel-normal" role="tabpanel" aria-labelledby="final-settlement-tab-normal">
+        <app-form-section title="finalSettlementProcess.tabs.normal" icon="bi bi-cash-stack">
+          <div class="sigma-editor-fields">
+            <div class="sigma-field"><label class="required" for="settlement-join">{{ 'finalSettlementProcess.joiningOrRejoiningDate' | translate }}</label><p-calendar appDatePicker [dateInputMask]="true" inputId="settlement-join" [formControl]="form.controls.joiningOrRejoiningDate" dateFormat="dd/mm/yy" [keepInvalid]="true" appendTo="body" /><app-field-error [control]="form.controls.joiningOrRejoiningDate" /></div>
+            <div class="sigma-field"><label class="required" for="settlement-proration">{{ 'finalSettlementProcess.salaryProrationBasis' | translate }}</label><p-dropdown inputId="settlement-proration" [formControl]="form.controls.salaryProrationBasis" [options]="prorationBases | translateOptions" optionValue="id" optionLabel="label" appendTo="body" /><app-field-error [control]="form.controls.salaryProrationBasis" /></div>
+            @if (displayed()?.finalSettlement; as s) {
+              <div class="sigma-field"><label>{{ 'finalSettlementProcess.normalSalaryFrom' | translate }}</label><span>{{ s.normalSalaryFrom | date: 'dd/MM/yyyy':'UTC' }}</span></div>
+              <div class="sigma-field"><label>{{ 'finalSettlementProcess.salaryDays' | translate }}</label><span>{{ s.salaryDays }}</span></div>
+              <div class="sigma-field"><label>{{ 'finalSettlementProcess.salaryDivisor' | translate }}</label><span>{{ s.salaryDivisor }}</span></div>
+              <div class="sigma-field"><label>{{ 'finalSettlementProcess.monthlyBasic' | translate }}</label><span>{{ s.monthlyBasic | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'finalSettlementProcess.monthlyGross' | translate }}</label><span>{{ s.monthlyGross | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'payrollProcess.basic' | translate }}</label><span>{{ s.basic | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'payrollProcess.allowances' | translate }}</label><span>{{ s.allowances | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'payrollProcess.gross' | translate }}</label><span>{{ s.gross | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'payrollProcess.overtime' | translate }}</label><span>{{ s.overtime | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'payrollProcess.salesCommission' | translate }}</label><span>{{ s.salesCommission | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'payrollProcess.additional' | translate }}</label><span>{{ s.additional | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'payrollProcess.deductions' | translate }}</label><span>{{ s.deductions | money }}</span></div>
+              <div class="sigma-field"><label>{{ 'finalSettlementProcess.normalSalary' | translate }}</label><span>{{ s.normalSalary | money }}</span></div>
+            }
+          </div>
+        </app-form-section>
+        </div>
+      }
+      @if (activeTab() === 'leave') {
+        <div id="final-settlement-panel-leave" role="tabpanel" aria-labelledby="final-settlement-tab-leave">
+        <app-form-section title="finalSettlementProcess.tabs.leave" icon="bi bi-calendar-check"><div class="sigma-editor-fields">
+          <div class="sigma-field"><label class="required" for="settlement-leave-days">{{ 'finalSettlementProcess.leaveDaysRemaining' | translate }}</label><p-inputNumber inputId="settlement-leave-days" [formControl]="form.controls.leaveDaysRemaining" [min]="0" [max]="1000000" [maxFractionDigits]="6" /><app-field-error [control]="form.controls.leaveDaysRemaining" /></div>
+          <div class="sigma-field"><label class="required" for="settlement-leave-basis">{{ 'finalSettlementProcess.leaveSalaryBasis' | translate }}</label><p-dropdown inputId="settlement-leave-basis" [formControl]="form.controls.leaveSalaryBasis" [options]="salaryBases | translateOptions" optionValue="id" optionLabel="label" appendTo="body" /><app-field-error [control]="form.controls.leaveSalaryBasis" /></div>
+          @if (displayed()?.finalSettlement; as s) { <div class="sigma-field"><label>{{ 'finalSettlementProcess.monthlyBasic' | translate }}</label><span>{{ s.monthlyBasic | money }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.monthlyGross' | translate }}</label><span>{{ s.monthlyGross | money }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.leaveDailyRate' | translate }}</label><span>{{ s.leaveDailyRate | money }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.leaveSalary' | translate }}</label><span>{{ s.leaveSalary | money }}</span></div> }
+        </div></app-form-section></div>
+      }
+      @if (activeTab() === 'ticket') {
+        <div id="final-settlement-panel-ticket" role="tabpanel" aria-labelledby="final-settlement-tab-ticket">
+        <app-form-section title="finalSettlementProcess.tabs.ticket" icon="bi bi-airplane"><div class="sigma-editor-fields">
+          <div class="sigma-field"><label class="required" for="settlement-ticket-quota">{{ 'finalSettlementProcess.ticketQuota' | translate }}</label><p-inputNumber inputId="settlement-ticket-quota" [formControl]="form.controls.ticketQuota" [min]="0" [max]="1000000" [maxFractionDigits]="6" /><app-field-error [control]="form.controls.ticketQuota" /></div>
+          <div class="sigma-field"><label class="required" for="settlement-ticket-period">{{ 'finalSettlementProcess.ticketQuotaPeriodYears' | translate }}</label><p-inputNumber inputId="settlement-ticket-period" [formControl]="form.controls.ticketQuotaPeriodYears" [min]="0.000001" [max]="1000000" [maxFractionDigits]="6" /><app-field-error [control]="form.controls.ticketQuotaPeriodYears" /></div>
+          <div class="sigma-field"><label class="required" for="settlement-ticket-price">{{ 'finalSettlementProcess.ticketPrice' | translate }}</label><p-inputNumber inputId="settlement-ticket-price" [formControl]="form.controls.ticketPrice" [min]="0" [max]="1000000000" [maxFractionDigits]="2" /><app-field-error [control]="form.controls.ticketPrice" /></div>
+          <div class="sigma-field"><label class="required" for="settlement-ticket-percent">{{ 'finalSettlementProcess.ticketEligibilityPercent' | translate }}</label><p-inputNumber inputId="settlement-ticket-percent" [formControl]="form.controls.ticketEligibilityPercent" [min]="0" [max]="100" [maxFractionDigits]="6" suffix="%" /><app-field-error [control]="form.controls.ticketEligibilityPercent" /></div>
+          @if (displayed()?.finalSettlement; as s) { <div class="sigma-field"><label>{{ 'finalSettlementProcess.ticketPayable' | translate }}</label><span>{{ s.ticketPayable | money }}</span></div> }
+        </div></app-form-section></div>
+      }
+      @if (activeTab() === 'gratuity') {
+        <div id="final-settlement-panel-gratuity" role="tabpanel" aria-labelledby="final-settlement-tab-gratuity">
+        <app-form-section title="finalSettlementProcess.tabs.gratuity" icon="bi bi-award"><div class="sigma-editor-fields">
+          <div class="sigma-field"><label class="required" for="settlement-gratuity-days">{{ 'finalSettlementProcess.gratuityDays' | translate }}</label><p-inputNumber inputId="settlement-gratuity-days" [formControl]="form.controls.gratuityDays" [min]="0" [max]="1000000" [maxFractionDigits]="6" /><app-field-error [control]="form.controls.gratuityDays" /></div>
+          <div class="sigma-field"><label class="required" for="settlement-gratuity-basis">{{ 'finalSettlementProcess.gratuitySalaryBasis' | translate }}</label><p-dropdown inputId="settlement-gratuity-basis" [formControl]="form.controls.gratuitySalaryBasis" [options]="salaryBases | translateOptions" optionValue="id" optionLabel="label" appendTo="body" /><app-field-error [control]="form.controls.gratuitySalaryBasis" /></div>
+          @if (displayed()?.finalSettlement; as s) { <div class="sigma-field"><label>{{ 'finalSettlementProcess.firstWorkingDay' | translate }}</label><span>{{ s.firstWorkingDay | date: 'dd/MM/yyyy':'UTC' }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.lastWorkingDay' | translate }}</label><span>{{ s.lastWorkingDay | date: 'dd/MM/yyyy':'UTC' }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.monthlyBasic' | translate }}</label><span>{{ s.monthlyBasic | money }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.monthlyGross' | translate }}</label><span>{{ s.monthlyGross | money }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.gratuityDailyRate' | translate }}</label><span>{{ s.gratuityDailyRate | money }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.serviceDays' | translate }}</label><span>{{ s.serviceDays }}</span></div><div class="sigma-field"><label>{{ 'finalSettlementProcess.gratuity' | translate }}</label><span>{{ s.gratuity | money }}</span></div> }
+        </div></app-form-section></div>
+      }
+      @if (activeTab() === 'summary') {
+        <div id="final-settlement-panel-summary" role="tabpanel" aria-labelledby="final-settlement-tab-summary">
+        @if (displayed()) { <app-summary-cards [cards]="summaryCards()" [ariaLabel]="'finalSettlementProcess.tabs.summary' | translate" density="slim" layout="row" [minCardWidth]="140" /> }
+        <div class="sigma-list-table"><app-data-table [value]="displayed()?.rows ?? []" [columns]="columns" dataKey="staffId" [lazy]="false" [paginator]="false" [fill]="true" emptyMessage="finalSettlementProcess.notProcessed" /></div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+<app-payroll-run-logs [visible]="logsVisible()" [runId]="preview()?.id ?? null" [period]="preview()?.period ?? ''" (closed)="closeLogs()" />
+
+
+NEW src\app\modules\HRM\Payroll\FinalSettlementProcess\components\process\final-settlement-process.component.ts
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { Observable, defer, finalize, map, of } from 'rxjs';
+
+import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
+import { DataTableColumn, DataTableComponent, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+import { EditorTab, EditorTabsComponent } from 'src/app/modules/shared/components/editor-tabs/editor-tabs.component';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
+import { FilterActionsDirective } from 'src/app/modules/shared/components/filter-panel/filter-panel.directives';
+import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+import { FormSectionComponent } from 'src/app/modules/shared/components/form-section/form-section.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
+import { SummaryCardsComponent } from 'src/app/modules/shared/components/summary-cards/summary-cards.component';
+import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { dateValueValidator, parseDateValue, toPickerDate } from 'src/app/modules/shared/utils/date-utils';
+import { focusField } from 'src/app/modules/shared/utils/focus-field';
+import { freezeFormState } from 'src/app/modules/shared/utils/form-state';
+import { TranslateOptionsPipe } from 'src/app/modules/shared/pipes/translate-options.pipe';
+import { MoneyPipe } from 'src/app/modules/shared/pipes/money.pipe';
+import {
+  FinalSettlementInputs, FinalSettlementStaffOption, PayrollCalculateRequest, PayrollRevisionSummary, PayrollRun, PayrollRunRow,
+  SalaryProrationBasis, SettlementSalaryBasis,
+} from '../../../PayrollProcess/models/payroll-run';
+import { PayrollRunLogsComponent } from '../../../PayrollProcess/components/logs/payroll-run-logs.component';
+import { FinalSettlementService } from '../../services/final-settlement.service';
+
+type SettlementTab = 'normal' | 'leave' | 'ticket' | 'gratuity' | 'summary';
+type SettlementCalculateRequest = PayrollCalculateRequest & { finalSettlement: FinalSettlementInputs };
+
+@Component({
+  selector: 'app-final-settlement-process', standalone: true, host: { class: 'sigma-route-host' },
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, CalendarModule, DropdownModule, InputNumberModule,
+    DatePickerDirective, DataTableComponent, EditorTabsComponent, FeatureTitleComponent, FieldErrorComponent,
+    FilterPanelComponent, FilterActionsDirective, FormSectionComponent, PrimaryActionButtonComponent,
+    StateMessageComponent, SummaryCardsComponent, PayrollRunLogsComponent, TranslateOptionsPipe, MoneyPipe],
+  templateUrl: './final-settlement-process.component.html',
+})
+export class FinalSettlementProcessComponent extends BaseComponentService implements OnInit {
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly service = inject(FinalSettlementService);
+  private readonly confirmation = inject(ConfirmationDialogService);
+  private readonly translate = inject(TranslateService);
+  private disposed = false;
+  private readonly acceptedStaffId = signal<number | null>(null);
+  private restoreLogForm: (() => void) | null = null;
+  private contextRejected = false;
+  private initialRunId: number | null = null;
+
+  readonly form = this.fb.group({
+    staffId: this.fb.control<number | null>(null, Validators.required),
+    lastWorkingDay: this.fb.control<Date | string | null>(null, [Validators.required, dateValueValidator]),
+    joiningOrRejoiningDate: this.fb.control<Date | string | null>(null, [Validators.required, dateValueValidator]),
+    salaryProrationBasis: this.fb.control<SalaryProrationBasis | null>(null, Validators.required),
+    leaveDaysRemaining: this.fb.control<number | null>(null, [Validators.required, Validators.min(0), Validators.max(1000000)]),
+    leaveSalaryBasis: this.fb.control<SettlementSalaryBasis | null>(null, Validators.required),
+    ticketQuota: this.fb.control<number | null>(null, [Validators.required, Validators.min(0), Validators.max(1000000)]),
+    ticketQuotaPeriodYears: this.fb.control<number | null>(null, [Validators.required, Validators.min(0.000001), Validators.max(1000000)]),
+    ticketPrice: this.fb.control<number | null>(null, [Validators.required, Validators.min(0), Validators.max(1000000000)]),
+    ticketEligibilityPercent: this.fb.control<number | null>(null, [Validators.required, Validators.min(0), Validators.max(100)]),
+    gratuityDays: this.fb.control<number | null>(null, [Validators.required, Validators.min(0), Validators.max(1000000)]),
+    gratuitySalaryBasis: this.fb.control<SettlementSalaryBasis | null>(null, Validators.required),
+    revision: this.fb.control<number | null>(null),
+  });
+  readonly preview = signal<PayrollRun | null>(null);
+  readonly historical = signal<PayrollRun | null>(null);
+  readonly staffOptions = signal<FinalSettlementStaffOption[]>([]);
+  readonly revisions = signal<PayrollRevisionSummary[]>([]);
+  readonly loadingRun = signal(false); readonly saving = signal(false); readonly processing = signal(false);
+  readonly staffLoading = signal(false); readonly historyLoading = signal(false); readonly discardPending = signal(false);
+  readonly error = signal(''); readonly staffError = signal(''); readonly logsVisible = signal(false);
+  readonly inputsChanged = signal(false);
+  readonly revisionsError = signal(''); readonly revisionsLoading = signal(false); readonly loadFailed = signal(false);
+  readonly readOnly = signal(false); readonly openedFromList = signal(false); readonly activeTab = signal<SettlementTab>('normal');
+  readonly tabs: ReadonlyArray<EditorTab<SettlementTab>> = [
+    { key: 'normal', label: 'finalSettlementProcess.tabs.normal', icon: 'bi bi-cash-stack' },
+    { key: 'leave', label: 'finalSettlementProcess.tabs.leave', icon: 'bi bi-calendar-check' },
+    { key: 'ticket', label: 'finalSettlementProcess.tabs.ticket', icon: 'bi bi-airplane' },
+    { key: 'gratuity', label: 'finalSettlementProcess.tabs.gratuity', icon: 'bi bi-award' },
+    { key: 'summary', label: 'finalSettlementProcess.tabs.summary', icon: 'bi bi-calculator' },
+  ];
+  readonly salaryBases = [{ id: 'Basic', key: 'finalSettlementProcess.bases.basic' }, { id: 'Gross', key: 'finalSettlementProcess.bases.gross' }];
+  readonly prorationBases = [{ id: 'CalendarDays', key: 'finalSettlementProcess.proration.calendarDays' }, { id: 'Fixed30', key: 'finalSettlementProcess.proration.fixed30' }];
+  readonly displayed = computed(() => this.historical() ?? this.preview());
+  readonly busy = computed(() => this.loadingRun() || this.saving() || this.processing() || this.historyLoading() || this.revisionsLoading() || this.discardPending() || this.logsVisible());
+  readonly selectedStaff = computed(() => this.staffOptions().find(x => x.id === this.acceptedStaffId()) ?? null);
+  revisionOptions(): Array<{ id: number | null; value: string }> { return [{ id: null, value: this.translate.instant('finalSettlementProcess.current') }, ...this.revisions().map(x => ({ id: x.revisionNumber, value: this.translate.instant('finalSettlementProcess.revision', { revision: x.revisionNumber }) }))]; }
+  readonly columns: ReadonlyArray<DataTableColumn<PayrollRunRow>> = [
+    { field: 'code', header: 'payrollProcess.code' }, { field: 'name', header: 'payrollProcess.name' },
+    { field: 'basic', header: 'payrollProcess.basic', type: 'money' }, { field: 'allowances', header: 'payrollProcess.allowances', type: 'money' },
+    { field: 'gross', header: 'payrollProcess.gross', type: 'money' }, { field: 'overtime', header: 'payrollProcess.overtime', type: 'money' },
+    { field: 'deductions', header: 'payrollProcess.deductions', type: 'money' }, { field: 'netPay', header: 'payrollProcess.netPay', type: 'money' },
+  ];
+  readonly summaryCards = computed<ReadonlyArray<SummaryCard>>(() => {
+    const value = this.displayed()?.finalSettlement;
+    return value ? [
+      { id: 'normal', labelKey: 'finalSettlementProcess.normalSalary', value: value.normalSalary, format: 'money', icon: 'bi bi-wallet2', accent: 'neutral' },
+      { id: 'leave', labelKey: 'finalSettlementProcess.leaveSalary', value: value.leaveSalary, format: 'money', icon: 'bi bi-calendar-check', accent: 'neutral' },
+      { id: 'ticket', labelKey: 'finalSettlementProcess.ticketPayable', value: value.ticketPayable, format: 'money', icon: 'bi bi-airplane', accent: 'neutral' },
+      { id: 'gratuity', labelKey: 'finalSettlementProcess.gratuity', value: value.gratuity, format: 'money', icon: 'bi bi-award', accent: 'neutral' },
+      { id: 'total', labelKey: 'finalSettlementProcess.totalPayable', value: value.totalPayable, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
+    ] : [];
+  });
+
+  ngOnInit(): void {
+    this.destroyRef.onDestroy(() => this.disposed = true);
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      if (this.preview() && this.policyDirty()) this.inputsChanged.set(true);
+    });
+    const params = this.activatedRoute.snapshot.queryParamMap;
+    this.readOnly.set(params.get('mode') === 'view');
+    if (!this.readOnly()) this.loadStaff();
+    const raw = params.get('runId');
+    if (raw !== null) {
+      this.openedFromList.set(true); const id = Number(raw);
+      if (Number.isInteger(id) && id > 0) { this.initialRunId = id; this.loadRun(id); }
+      else this.rejectContext('payrollProcess.invalidRun');
+    } else if (this.readOnly()) this.rejectContext('payrollProcess.invalidRun');
+  }
+
+  process(): void {
+    if (this.busy() || this.readOnly() || this.loadFailed() || this.historical() || this.preview()?.isPaid || this.staffLoading() || !!this.staffError()) return;
+    const request = this.request(); if (!request) return;
+    this.confirmPreviewDiscard().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ok => {
+      if (ok && !this.busy() && this.sameInputs(request)) this.calculate(request);
+    });
+  }
+  save(): void {
+    if (this.busy() || this.readOnly() || this.preview()?.isPaid) return;
+    const finalSettlement = this.inputs(); const run = this.preview();
+    if (!finalSettlement || !run || !this.matches(run, finalSettlement) || !run.canSave) { this.error.set('finalSettlementProcess.processFirst'); return; }
+    this.saving.set(true); this.error.set(''); const restore = freezeFormState(this.form, this.destroyRef); this.loadingService(true);
+    this.service.save({ period: run.period, type: 'FinalSettlement', staffId: run.staffId!, finalSettlement, expectedVersion: run.version }).pipe(
+      takeUntilDestroyed(this.destroyRef), finalize(() => { this.saving.set(false); this.loadingService(false); this.restore(restore); }),
+    ).subscribe({ next: r => r.isSuccess && r.entity && this.matches(r.entity, finalSettlement) ? this.apply(r.entity) : this.error.set(r.message || 'finalSettlementProcess.saveError'), error: e => this.error.set(apiErrorMessage(e, 'finalSettlementProcess.saveError')) });
+  }
+  reset(): void {
+    if (this.busy() || this.readOnly()) return;
+    this.confirmDiscard().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ok => { if (!ok) return; this.form.reset(); this.form.enable({ emitEvent: false }); this.acceptedStaffId.set(null); this.preview.set(null); this.historical.set(null); this.revisions.set([]); this.error.set(''); this.revisionsError.set(''); this.loadFailed.set(false); this.inputsChanged.set(false); this.initialRunId = null; void this.router.navigate(['/FinalSettlementProcess'], { queryParams: this.returnParams() }); });
+  }
+  canDeactivate(): boolean | Observable<boolean> { return this.busy() ? false : this.hasUnsaved() ? this.confirmDiscard() : true; }
+  selectStaff(value: number | null): void {
+    if (this.busy() || this.form.controls.staffId.disabled || value === this.acceptedStaffId()) return;
+    const old = this.acceptedStaffId(); this.form.controls.staffId.setValue(old, { emitEvent: false });
+    const decision = this.preview() || old !== null ? this.confirmDiscard() : of(true);
+    decision.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ok => { if (!ok) return; this.acceptedStaffId.set(value); this.form.controls.staffId.setValue(value, { emitEvent: false }); const option = this.staffOptions().find(x => x.id === value); this.form.controls.joiningOrRejoiningDate.setValue(option?.dateOfJoining ? toPickerDate(option.dateOfJoining) : null); this.clearRun(); });
+  }
+  clearStaff(): void { this.selectStaff(null); }
+  selectRevision(value: number | null): void {
+    if (this.busy()) return;
+    const previous = this.historical()?.revisionNumber ?? null;
+    this.form.controls.revision.setValue(previous, { emitEvent: false });
+    if (value === previous) return;
+    if (this.hasUnsaved()) {
+      this.confirmDiscard().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(ok => { if (ok) this.loadRevision(value); });
+      return;
+    }
+    this.loadRevision(value);
+  }
+  private loadRevision(value: number | null): void {
+    if (value === null) { const current = this.preview(); this.historical.set(null); if (current) { this.patchSnapshot(current); this.form.markAsPristine(); this.restore(() => this.form.enable({ emitEvent: false })); } return; }
+    const run = this.preview(); if (!run?.id || !this.revisions().some(x => x.revisionNumber === value)) return;
+    this.historyLoading.set(true); const restore = freezeFormState(this.form, this.destroyRef);
+    this.service.revision(run.id, value).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => { this.historyLoading.set(false); this.restore(restore); })).subscribe({
+      next: r => { if (r.isSuccess && r.entity && r.entity.id === run.id && r.entity.revisionNumber === value && r.entity.type === 'FinalSettlement' && r.entity.staffId === run.staffId && r.entity.period === run.period && r.entity.finalSettlement?.inputs.lastWorkingDay.slice(0, 7) === run.period) { this.historical.set(r.entity); this.patchSnapshot(r.entity); this.form.markAsPristine(); this.form.disable({ emitEvent: false }); this.form.controls.revision.enable({ emitEvent: false }); this.form.controls.revision.setValue(value, { emitEvent: false }); } else this.error.set(r.message || 'finalSettlementProcess.historyError'); },
+      error: e => this.error.set(apiErrorMessage(e, 'finalSettlementProcess.historyError')),
+    });
+  }
+  retryStaff(): void { if (!this.busy()) this.loadStaff(); }
+  retryLoad(): void { if (!this.busy() && this.initialRunId) this.loadRun(this.initialRunId); }
+  openLogs(): void { if (!this.busy() && this.preview()?.id) { this.restoreLogForm = freezeFormState(this.form, this.destroyRef); this.logsVisible.set(true); } }
+  closeLogs(): void { this.logsVisible.set(false); const restore = this.restoreLogForm; this.restoreLogForm = null; if (restore) this.restore(restore); }
+  exportExcel(): void { const run = this.displayed(); if (!run?.isSaved || !run.rows.length || this.busy()) return; onExportToExcel(signal(dataTableExportRows(run.rows, this.columns, k => this.translate.instant(k))), `FinalSettlement-${run.staffId}-${run.period}-R${run.revisionNumber}`); }
+  back(): void { if (!this.busy()) void this.router.navigate(['/ProcessedPayrolls'], { queryParams: this.returnParams() }); }
+
+  private request(): SettlementCalculateRequest | null { const finalSettlement = this.inputs(); if (!finalSettlement) return null; return { period: finalSettlement.lastWorkingDay.slice(0, 7), type: 'FinalSettlement', staffId: this.form.controls.staffId.getRawValue()!, finalSettlement }; }
+  private inputs(): FinalSettlementInputs | null {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched(); this.error.set('finalSettlementProcess.invalidInputs');
+      const fields: ReadonlyArray<[keyof typeof this.form.controls, SettlementTab, string]> = [
+        ['staffId', 'normal', 'settlement-staff'], ['lastWorkingDay', 'normal', 'settlement-last-day'],
+        ['joiningOrRejoiningDate', 'normal', 'settlement-join'], ['salaryProrationBasis', 'normal', 'settlement-proration'],
+        ['leaveDaysRemaining', 'leave', 'settlement-leave-days'], ['leaveSalaryBasis', 'leave', 'settlement-leave-basis'],
+        ['ticketQuota', 'ticket', 'settlement-ticket-quota'], ['ticketQuotaPeriodYears', 'ticket', 'settlement-ticket-period'],
+        ['ticketPrice', 'ticket', 'settlement-ticket-price'], ['ticketEligibilityPercent', 'ticket', 'settlement-ticket-percent'],
+        ['gratuityDays', 'gratuity', 'settlement-gratuity-days'], ['gratuitySalaryBasis', 'gratuity', 'settlement-gratuity-basis'],
+      ];
+      const invalid = fields.find(([key]) => this.form.controls[key].invalid);
+      if (invalid) { this.activeTab.set(invalid[1]); focusField(invalid[2]); }
+      return null;
+    }
+    const v = this.form.getRawValue(); const last = parseDateValue(v.lastWorkingDay); const join = parseDateValue(v.joiningOrRejoiningDate);
+    const quantities = [v.leaveDaysRemaining, v.ticketQuota, v.ticketQuotaPeriodYears, v.ticketPrice, v.ticketEligibilityPercent, v.gratuityDays];
+    if (!last || !join || !v.staffId || !v.salaryProrationBasis || !v.leaveSalaryBasis || !v.gratuitySalaryBasis || join > last || quantities.some(x => x === null || !Number.isFinite(x))) { this.error.set('finalSettlementProcess.invalidInputs'); return null; }
+    return { lastWorkingDay: last, joiningOrRejoiningDate: join, salaryProrationBasis: v.salaryProrationBasis,
+      leaveDaysRemaining: v.leaveDaysRemaining!, leaveSalaryBasis: v.leaveSalaryBasis, ticketQuota: v.ticketQuota!, ticketQuotaPeriodYears: v.ticketQuotaPeriodYears!,
+      ticketPrice: v.ticketPrice!, ticketEligibilityPercent: v.ticketEligibilityPercent!, gratuityDays: v.gratuityDays!, gratuitySalaryBasis: v.gratuitySalaryBasis };
+  }
+  private calculate(finalSettlement: SettlementCalculateRequest) {
+    this.processing.set(true); this.error.set(''); const restore = freezeFormState(this.form, this.destroyRef); this.loadingService(true);
+    this.service.calculate(finalSettlement).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => { this.processing.set(false); this.loadingService(false); this.restore(restore); })).subscribe({
+      next: r => r.isSuccess && r.entity && this.matches(r.entity, finalSettlement.finalSettlement) ? this.apply(r.entity) : this.error.set(r.message || 'finalSettlementProcess.processError'),
+      error: e => this.error.set(apiErrorMessage(e, 'finalSettlementProcess.processError')),
+    });
+  }
+  private loadRun(id: number): void {
+    if (this.loadFailed() && !this.readOnly()) this.form.enable({ emitEvent: false });
+    this.loadingRun.set(true); this.loadFailed.set(false); this.error.set('');
+    const restore = freezeFormState(this.form, this.destroyRef); this.loadingService(true);
+    this.service.getRun(id).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => { this.loadingRun.set(false); this.loadingService(false); this.restore(restore); })).subscribe({
+      next: r => {
+        if (!r.isSuccess) { this.loadFailed.set(true); this.error.set(r.message || 'finalSettlementProcess.loadError'); return; }
+        const run = r.entity;
+        if (!run || run.id !== id || run.type !== 'FinalSettlement' || !run.staffId || !run.finalSettlement ||
+            run.rows.length !== 1 || run.rows[0].staffId !== run.staffId || run.finalSettlement.inputs.lastWorkingDay.slice(0, 7) !== run.period) {
+          this.rejectContext('finalSettlementProcess.routeMismatch'); return;
+        }
+        this.apply(run);
+      },
+      error: e => { this.loadFailed.set(true); this.error.set(apiErrorMessage(e, 'finalSettlementProcess.loadError')); },
+    });
+  }
+  private apply(run: PayrollRun): void { this.loadFailed.set(false); this.inputsChanged.set(false); this.preview.set(run); this.historical.set(null); this.acceptedStaffId.set(run.staffId); this.ensureStaff(run); this.patchSnapshot(run); this.form.markAsPristine(); this.loadRevisions(run); }
+  private loadRevisions(run: PayrollRun): void { if (!run.id) { this.revisions.set([]); return; } this.revisionsLoading.set(true); this.revisionsError.set(''); this.service.revisions(run.id).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.revisionsLoading.set(false))).subscribe({ next: r => { if (this.preview() !== run) return; if (r.isSuccess) this.revisions.set(r.entity ?? []); else this.revisionsError.set(r.message || 'finalSettlementProcess.historyError'); }, error: e => this.revisionsError.set(apiErrorMessage(e, 'finalSettlementProcess.historyError')) }); }
+  private loadStaff(): void { if (this.staffLoading()) return; this.staffLoading.set(true); this.staffError.set(''); this.service.staff().pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.staffLoading.set(false))).subscribe({ next: r => { if (!r.isSuccess) { this.staffError.set(r.message || 'finalSettlementProcess.staffLoadError'); return; } const saved = this.staffOptions().find(x => x.id === this.preview()?.staffId); const rows = r.entities ?? []; this.staffOptions.set(saved && !rows.some(x => x.id === saved.id) ? [saved, ...rows] : rows); }, error: e => this.staffError.set(apiErrorMessage(e, 'finalSettlementProcess.staffLoadError')) }); }
+  private ensureStaff(run: PayrollRun): void { if (!run.staffId || this.staffOptions().some(x => x.id === run.staffId)) return; const row = run.rows[0]; this.staffOptions.update(x => [{ id: run.staffId!, no: row?.code ?? null, value: row?.name ?? '', designation: run.finalSettlement?.designation ?? null, dateOfJoining: run.finalSettlement?.firstWorkingDay ?? '' }, ...x]); }
+  private matches(run: PayrollRun, inputs: FinalSettlementInputs): boolean { return run.type === 'FinalSettlement' && run.staffId === this.form.controls.staffId.getRawValue() && run.period === inputs.lastWorkingDay.slice(0, 7) && JSON.stringify(run.finalSettlement?.inputs) === JSON.stringify(inputs); }
+  private sameInputs(request: SettlementCalculateRequest): boolean { const now = this.inputs(); return !!now && request.staffId === this.form.controls.staffId.getRawValue() && JSON.stringify(request.finalSettlement) === JSON.stringify(now); }
+  private hasUnsaved(): boolean {
+    const run = this.preview();
+    return !this.readOnly() && !run?.isPaid && (this.policyDirty() || !!run && !run.isSaved && run.rows.length > 0);
+  }
+  private policyDirty(): boolean {
+    return Object.keys(this.form.controls).filter(key => key !== 'revision').some(key => this.form.get(key)?.dirty);
+  }
+  private confirmDiscard(): Observable<boolean> { const candidate = this.preview(); return defer(() => { if (!this.hasUnsaved()) return of(true); this.discardPending.set(true); const restore = freezeFormState(this.form, this.destroyRef); return this.confirmation.confirmDiscard('finalSettlementProcess').pipe(map(ok => { this.discardPending.set(false); this.restore(restore); return ok && this.preview() === candidate; }), finalize(() => { this.discardPending.set(false); this.restore(restore); })); }); }
+  private confirmPreviewDiscard(): Observable<boolean> {
+    const candidate = this.preview();
+    if (!candidate || candidate.isSaved || !candidate.rows.length) return of(true);
+    return this.confirmDiscard();
+  }
+  private clearRun(): void { this.inputsChanged.set(false); this.preview.set(null); this.historical.set(null); this.revisions.set([]); this.error.set(''); }
+  private restore(restore: () => void): void { if (this.disposed) return; restore(); if (this.contextRejected || this.loadFailed()) this.form.disable({ emitEvent: false }); else if (this.readOnly() || this.historical() || this.preview()?.isPaid) { this.form.disable({ emitEvent: false }); if (this.preview()?.id) this.form.controls.revision.enable({ emitEvent: false }); } else if (this.preview()?.id) { this.form.controls.staffId.disable({ emitEvent: false }); this.form.controls.lastWorkingDay.disable({ emitEvent: false }); } }
+  retryRevisions(): void { const run = this.preview(); if (!this.busy() && run) this.loadRevisions(run); }
+  private patchSnapshot(run: PayrollRun): void { this.inputsChanged.set(false); const s = run.finalSettlement!; this.form.patchValue({ staffId: run.staffId, lastWorkingDay: toPickerDate(s.inputs.lastWorkingDay), joiningOrRejoiningDate: toPickerDate(s.inputs.joiningOrRejoiningDate), salaryProrationBasis: s.inputs.salaryProrationBasis, leaveDaysRemaining: s.inputs.leaveDaysRemaining, leaveSalaryBasis: s.inputs.leaveSalaryBasis, ticketQuota: s.inputs.ticketQuota, ticketQuotaPeriodYears: s.inputs.ticketQuotaPeriodYears, ticketPrice: s.inputs.ticketPrice, ticketEligibilityPercent: s.inputs.ticketEligibilityPercent, gratuityDays: s.inputs.gratuityDays, gratuitySalaryBasis: s.inputs.gratuitySalaryBasis, revision: null }, { emitEvent: false }); }
+  private rejectContext(message: string): void { this.contextRejected = true; this.readOnly.set(true); this.form.disable({ emitEvent: false }); this.error.set(message); }
+  private loadingService(start: boolean): void { start ? this.loading.startLoading() : this.loading.endLoading(); }
+  private returnParams(): Record<string, unknown> { const result: Record<string, unknown> = {}; for (const key of Object.keys(this.activatedRoute.snapshot.queryParams)) if (!['runId', 'mode', 'returnTo'].includes(key)) result[key] = this.activatedRoute.snapshot.queryParams[key]; return result; }
+}
+
+
+NEW src\app\modules\HRM\Payroll\FinalSettlementProcess\final-settlement-process.routes.ts
+import { CanDeactivateFn, Routes } from '@angular/router';
+import { FinalSettlementProcessComponent } from './components/process/final-settlement-process.component';
+
+const preventUnsavedExit: CanDeactivateFn<FinalSettlementProcessComponent> = component => component.canDeactivate();
+export const FinalSettlementProcess_Routes: Routes = [
+  { path: '', component: FinalSettlementProcessComponent, canDeactivate: [preventUnsavedExit] },
+];
+
+
+NEW src\app\modules\HRM\Payroll\FinalSettlementProcess\services\final-settlement.service.ts
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import { Result } from 'src/app/modules/shared/models/result';
+import { Results } from 'src/app/modules/shared/models/results';
+import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+import { environment } from 'src/environments/environment';
+import {
+  FinalSettlementStaffOption, PayrollCalculateRequest, PayrollRevisionSummary, PayrollRun,
+  PayrollRunLog, PayrollSaveRequest,
+} from '../../PayrollProcess/models/payroll-run';
+
+@Injectable({ providedIn: 'root' })
+export class FinalSettlementService extends BaseService {
+  private readonly options = { headers: { 'X-Skip-Error-Interceptor': 'true' } };
+  constructor() { super('PayrollRuns', environment.baseUrl); }
+  staff(): Observable<Results<FinalSettlementStaffOption>> {
+    return this.http.get<Results<FinalSettlementStaffOption>>(`${this.baseUrl}PayrollRuns/settlement-staff`, this.options);
+  }
+  calculate(request: PayrollCalculateRequest): Observable<Result<PayrollRun>> {
+    return this.http.post<Result<PayrollRun>>(`${this.baseUrl}PayrollRuns/calculate`, request,
+      { headers: { ...this.options.headers, 'X-Skip-Success-Toast': 'true' } });
+  }
+  save(request: PayrollSaveRequest): Observable<Result<PayrollRun>> {
+    return this.http.post<Result<PayrollRun>>(`${this.baseUrl}PayrollRuns`, request, this.options);
+  }
+  getRun(id: number): Observable<Result<PayrollRun>> {
+    return this.http.get<Result<PayrollRun>>(`${this.baseUrl}PayrollRuns/${id}`, this.options);
+  }
+  revisions(id: number): Observable<Result<PayrollRevisionSummary[]>> {
+    return this.http.get<Result<PayrollRevisionSummary[]>>(`${this.baseUrl}PayrollRuns/${id}/revisions`, this.options);
+  }
+  revision(id: number, revision: number): Observable<Result<PayrollRun>> {
+    return this.http.get<Result<PayrollRun>>(`${this.baseUrl}PayrollRuns/${id}/revisions/${revision}`, this.options);
+  }
+  logs(id: number): Observable<Result<PayrollRunLog[]>> {
+    return this.http.get<Result<PayrollRunLog[]>>(`${this.baseUrl}PayrollRuns/${id}/logs`, this.options);
+  }
+}
+
+
+NEW src\app\modules\HRM\Payroll\PaySlips\components\list\pay-slips.component.html
+<section class="sigma-list-page">
+  <div class="sigma-list-panel">
+    <header class="sigma-list-header"><app-feature-title [title]="'paySlips.title' | translate" [subtitle]="'paySlips.subtitle' | translate" icon="bi bi-receipt" /></header>
+    <form class="pay-slips-filters" appFilterPanel [formGroup]="form" [stableLayout]="true" [mainColumns]="4" [busy]="busy()" (ngSubmit)="search()" (resetRequested)="reset()">
+      <div class="sigma-filter-field"><label for="pay-slips-date">{{ 'paySlips.filters.dateRange' | translate }}</label><p-calendar appDatePicker inputId="pay-slips-date" formControlName="dateRange" selectionMode="range" [numberOfMonths]="2" [readonlyInput]="false" [keepInvalid]="true" [showButtonBar]="true" dateFormat="dd/mm/yy" appendTo="body" styleClass="w-100" /><app-field-error [control]="dateRange" reserveMessage="validationMessages.date" /></div>
+      <div class="sigma-filter-field"><label for="pay-slips-no">{{ 'paySlips.filters.no' | translate }}</label><input id="pay-slips-no" class="form-control" formControlName="no" /><app-field-error reserveMessage="validationMessages.required" /></div>
+      <div class="sigma-filter-field"><label for="pay-slips-type">{{ 'paySlips.filters.type' | translate }}</label><p-dropdown inputId="pay-slips-type" formControlName="type" [options]="typeOptions | translateOptions" optionValue="id" optionLabel="label" [showClear]="true" appendTo="body" styleClass="w-100" /><app-field-error reserveMessage="validationMessages.required" /></div>
+      <div class="sigma-filter-field"><label for="pay-slips-staff">{{ 'paySlips.filters.staff' | translate }}</label><p-dropdown inputId="pay-slips-staff" formControlName="staffId" [options]="staffOptions()" optionValue="id" optionLabel="value" [filter]="true" filterBy="no,value" [showClear]="true" [loading]="staffLoading()" appendTo="body" styleClass="w-100" /><app-field-error reserveMessage="validationMessages.required" /></div>
+      <ng-container appFilterActions>
+        <button type="button" class="sigma-secondary-button" [disabled]="busy() || loadingList()" (click)="openReport()"><i class="bi bi-printer"></i>{{ 'paySlips.actions.report' | translate }}</button>
+        <button type="button" class="sigma-secondary-button" [disabled]="busy() || loadingList()" (click)="exportExcel()"><i class="bi bi-file-earmark-excel"></i>{{ 'general.exportExcel' | translate }}</button>
+        <app-primary-action-button type="submit" [label]="'general.search' | translate" icon="bi bi-search" [loading]="loadingList()" [disabled]="actionLoading()" />
+      </ng-container>
+    </form>
+    @if (staffError()) { <app-state-message kind="error" [message]="staffError()" /><button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="retryStaff()">{{ 'general.retry' | translate }}</button> }
+    @if (error()) { <app-state-message kind="error" [message]="error()" /><button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="retry()">{{ 'general.retry' | translate }}</button> }
+    <div class="sigma-list-table"><app-data-table [value]="rows()" [columns]="columns" [actions]="actions" dataKey="id" [lazy]="true" [paginator]="true" [first]="(pageNo()-1)*pageSize()" [rows]="pageSize()" [totalRecords]="total()" [loading]="loadingList()" [showEmpty]="!error()" [fill]="true" [sortField]="sortField()" [sortOrder]="sortOrder()" currentPageReport="paySlips.showingEntries" emptyMessage="paySlips.empty" (lazyLoad)="page($event)" /></div>
+  </div>
+</section>
+
+<app-editor-dialog [visible]="detailVisible()" [title]="'paySlips.detail.title' | translate" [subtitle]="detail()?.no ?? ''" icon="bi bi-receipt" mode="view" dialogClass="sigma-report-print-dialog" [primaryActionVisible]="false" [contentPadded]="true" width="900px" height="650px" [closeDisabled]="printSession.printing()" [closeLabel]="'general.close' | translate" (closeRequested)="closeDetail()" (escapeRequested)="closeDetail()">
+  <div class="sigma-editor-body sigma-print-flow app-print-content">
+    <div class="sigma-editor-scroll sigma-print-flow">
+    @if (detail(); as slip) {
+      <h2>{{ 'paySlips.detail.title' | translate }}</h2>
+      <div class="sigma-alert" role="status"><span>{{ slip.name }} · {{ slip.code || '—' }} · {{ typeLabel(slip.type) }}</span></div>
+      <div class="sigma-editor-fields">
+        <div class="sigma-field"><label>{{ 'paySlips.columns.no' | translate }}</label><span>{{ slip.no }}</span></div>
+        <div class="sigma-field"><label>{{ 'paySlips.columns.date' | translate }}</label><span>{{ slip.date | date: 'dd/MM/yyyy':'UTC' }}</span></div>
+        <div class="sigma-field"><label>{{ 'paySlips.detail.revision' | translate }}</label><span>{{ slip.revisionNumber }}</span></div>
+        <div class="sigma-field"><label>{{ 'paySlips.detail.salaryPeriod' | translate }}</label><span>{{ slip.period }}</span></div>
+        <div class="sigma-field"><label>{{ 'paySlips.detail.overtimePeriod' | translate }}</label><span>{{ slip.overtimePeriod }}</span></div>
+        <div class="sigma-field"><label>{{ 'paySlips.detail.policyVersion' | translate }}</label><span>{{ slip.policyVersion }}</span></div>
+        <div class="sigma-field"><label>{{ 'paySlips.detail.currentState' | translate }}</label><span>{{ (slip.isCurrentRevision ? 'paySlips.statuses.current' : 'paySlips.statuses.superseded') | translate }}</span></div>
+        <div class="sigma-field"><label>{{ 'paySlips.detail.approvalState' | translate }}</label><span>{{ (slip.isApproved ? 'payrolls.statuses.approved' : 'payrolls.statuses.pendingApproval') | translate }}</span></div>
+        <div class="sigma-field"><label>{{ 'paySlips.detail.paymentState' | translate }}</label><span>{{ (slip.isPaid ? 'payrolls.statuses.paid' : 'paySlips.statuses.unpaid') | translate }}</span></div>
+      </div>
+      @if (slip.finalSettlement; as s) {
+        <app-form-section title="paySlips.detail.settlementPolicy" icon="bi bi-person-check"><div class="sigma-editor-fields">
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.lastWorkingDay' | translate }}</label><span>{{ s.inputs.lastWorkingDay | date: 'dd/MM/yyyy':'UTC' }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.joiningOrRejoiningDate' | translate }}</label><span>{{ s.inputs.joiningOrRejoiningDate | date: 'dd/MM/yyyy':'UTC' }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.salaryProrationBasis' | translate }}</label><span>{{ ('finalSettlementProcess.proration.' + (s.inputs.salaryProrationBasis === 'CalendarDays' ? 'calendarDays' : 'fixed30')) | translate }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.leaveDaysRemaining' | translate }}</label><span>{{ s.inputs.leaveDaysRemaining }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.leaveSalaryBasis' | translate }}</label><span>{{ ('finalSettlementProcess.bases.' + (s.inputs.leaveSalaryBasis === 'Basic' ? 'basic' : 'gross')) | translate }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.ticketQuota' | translate }}</label><span>{{ s.inputs.ticketQuota }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.ticketQuotaPeriodYears' | translate }}</label><span>{{ s.inputs.ticketQuotaPeriodYears }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.ticketPrice' | translate }}</label><span>{{ s.inputs.ticketPrice | money }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.ticketEligibilityPercent' | translate }}</label><span>{{ s.inputs.ticketEligibilityPercent }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.gratuityDays' | translate }}</label><span>{{ s.inputs.gratuityDays }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.gratuitySalaryBasis' | translate }}</label><span>{{ ('finalSettlementProcess.bases.' + (s.inputs.gratuitySalaryBasis === 'Basic' ? 'basic' : 'gross')) | translate }}</span></div>
+        </div></app-form-section>
+        <app-form-section title="paySlips.detail.settlementRates" icon="bi bi-calculator"><div class="sigma-editor-fields">
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.monthlyBasic' | translate }}</label><span>{{ s.monthlyBasic | money }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.monthlyGross' | translate }}</label><span>{{ s.monthlyGross | money }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.leaveDailyRate' | translate }}</label><span>{{ s.leaveDailyRate | money }}</span></div>
+          <div class="sigma-field"><label>{{ 'finalSettlementProcess.gratuityDailyRate' | translate }}</label><span>{{ s.gratuityDailyRate | money }}</span></div>
+        </div></app-form-section>
+      }
+      <div class="sigma-print-flow"><app-data-table class="sigma-print-flow" [value]="detailAmounts()" [columns]="detailColumns" dataKey="label" [lazy]="false" [paginator]="false" [scrollable]="false" /></div>
+    }
+    </div>
+  </div>
+  <button editorDialogHint type="button" class="sigma-secondary-button no-print" [disabled]="!detail() || printSession.printing()" (click)="printDetail()"><i class="bi bi-printer"></i>{{ 'general.print' | translate }}</button>
+</app-editor-dialog>
+
+<app-editor-dialog [visible]="reportVisible()" [title]="'paySlips.reportTitle' | translate" icon="bi bi-printer" mode="view" dialogClass="sigma-report-print-dialog" [primaryActionVisible]="false" [contentPadded]="true" width="1180px" height="720px" [closeDisabled]="printSession.printing()" [closeLabel]="'general.close' | translate" (closeRequested)="closeReport()" (escapeRequested)="closeReport()">
+  <div class="sigma-editor-body sigma-print-flow app-print-content">
+    <h2>{{ 'paySlips.reportTitle' | translate }}</h2>
+    @if (reportContext()) { <p>{{ reportContext() }}</p> }
+    <div class="sigma-list-table sigma-print-flow"><app-data-table class="sigma-print-flow" [value]="reportRows()" [columns]="columns" dataKey="id" [lazy]="false" [paginator]="false" [fill]="true" emptyMessage="paySlips.empty" /></div>
+  </div>
+  <button editorDialogHint type="button" class="sigma-secondary-button no-print" [disabled]="!reportRows().length || printSession.printing()" (click)="printReport()"><i class="bi bi-printer"></i>{{ 'general.print' | translate }}</button>
+</app-editor-dialog>
+
+
+NEW src\app\modules\HRM\Payroll\PaySlips\components\list\pay-slips.component.ts
+import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableLazyLoadEvent } from 'primeng/table';
+import { EMPTY, Subject, catchError, defer, finalize, switchMap } from 'rxjs';
+
+import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
+import { DataTableColumn, DataTableComponent, DataTableStatus, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+import { EditorDialogComponent } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
+import { FilterActionsDirective } from 'src/app/modules/shared/components/filter-panel/filter-panel.directives';
+import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import { FormSectionComponent } from 'src/app/modules/shared/components/form-section/form-section.component';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
+import { ActionList } from 'src/app/modules/shared/models/action-list';
+import { TranslateOptionsPipe } from 'src/app/modules/shared/pipes/translate-options.pipe';
+import { MoneyPipe } from 'src/app/modules/shared/pipes/money.pipe';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ReportPrintService } from 'src/app/modules/shared/service/report-print.service';
+import { apiErrorMessage, composedReadErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { currentMonthRange, dateRangeValidator, parseDateRange, toPickerDate } from 'src/app/modules/shared/utils/date-utils';
+import { focusField } from 'src/app/modules/shared/utils/focus-field';
+import { freezeFormState } from 'src/app/modules/shared/utils/form-state';
+import { DEFAULT_PAGE_SIZE, resolveListPaging } from 'src/app/modules/shared/utils/list-query';
+import { readListRoute, writeListRoute } from 'src/app/modules/shared/utils/list-route-state';
+import { PayrollType } from '../../../PayrollProcess/models/payroll-run';
+import { PaySlipDetail, PaySlipFilters, PaySlipListRow, PaySlipQuery, PaySlipSortField, PaySlipStaffOption } from '../../models/pay-slip';
+import { PaySlipsService } from '../../services/pay-slips.service';
+
+@Component({ selector: 'app-pay-slips', standalone: true, host: { class: 'sigma-route-host' },
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule, CalendarModule, DropdownModule, DatePickerDirective,
+    DataTableComponent, EditorDialogComponent, FeatureTitleComponent, FieldErrorComponent, FilterPanelComponent,
+    FilterActionsDirective, FormSectionComponent, PrimaryActionButtonComponent, StateMessageComponent, TranslateOptionsPipe, MoneyPipe],
+  templateUrl: './pay-slips.component.html' })
+export class PaySlipsComponent extends BaseComponentService implements OnInit {
+  private readonly fb = inject(FormBuilder); private readonly destroyRef = inject(DestroyRef);
+  private readonly service = inject(PaySlipsService); private readonly translate = inject(TranslateService);
+  private readonly reportPrint = inject(ReportPrintService); private readonly route = this.activatedRoute;
+  private readonly requests = new Subject<PaySlipQuery>(); private activeFilters: PaySlipFilters = {};
+  readonly rows = signal<PaySlipListRow[]>([]); readonly total = signal(0); readonly pageNo = signal(1); readonly pageSize = signal(DEFAULT_PAGE_SIZE);
+  readonly sortField = signal<PaySlipSortField>('date'); readonly sortOrder = signal<1 | -1>(-1); readonly loadingList = signal(false);
+  readonly actionLoading = signal(false); readonly staffLoading = signal(false); readonly error = signal(''); readonly staffError = signal('');
+  readonly staffOptions = signal<PaySlipStaffOption[]>([]); readonly detail = signal<PaySlipDetail | null>(null); readonly reportRows = signal<PaySlipListRow[]>([]);
+  readonly reportVisible = signal(false); readonly detailVisible = signal(false); readonly printSession = this.reportPrint.createSession(this.destroyRef);
+  readonly busy = computed(() => this.actionLoading() || this.detailVisible() || this.reportVisible() || this.printSession.printing());
+  readonly dateRange = this.fb.control<Date[] | string | null>(currentMonthRange(), dateRangeValidator);
+  readonly form = this.fb.group({ dateRange: this.dateRange, no: this.fb.nonNullable.control(''), type: this.fb.control<PayrollType | null>(null), staffId: this.fb.control<number | null>(null) });
+  readonly typeOptions = [{ id: 'Payroll', key: 'payrolls.types.payroll' }, { id: 'LeaveSalary', key: 'payrolls.types.leaveSalary' }, { id: 'FinalSettlement', key: 'payrolls.types.finalSettlement' }];
+  readonly columns: ReadonlyArray<DataTableColumn<PaySlipListRow>> = [
+    { field: 'no', header: 'paySlips.columns.no', sortable: true }, { field: 'name', header: 'paySlips.columns.name', sortable: true },
+    { field: 'code', header: 'paySlips.columns.code', sortable: true }, { field: 'date', header: 'paySlips.columns.date', type: 'date', sortable: true },
+    { field: 'type', header: 'paySlips.columns.type', value: x => this.typeLabel(x.type) }, { field: 'totalAmount', header: 'paySlips.columns.totalAmount', type: 'money', sortable: true },
+    { field: 'isApproved', header: 'paySlips.columns.status', type: 'status', status: x => this.status(x) },
+  ];
+  readonly actions: ActionList<PaySlipListRow>[] = [{ title: 'paySlips.actions.view', icon: 'bi bi-eye', disabled: () => this.busy() || this.loadingList(), action: row => { if (row) this.openDetail(row); } }];
+  readonly detailColumns: ReadonlyArray<DataTableColumn<{ label: string; amount: number }>> = [
+    { field: 'label', header: 'paySlips.detail.item', value: row => this.translate.instant(row.label) }, { field: 'amount', header: 'paySlips.detail.amount', type: 'money' },
+  ];
+  readonly detailAmounts = computed(() => { const d = this.detail(); return d ? [
+    { label: 'payrollProcess.basic', amount: d.basic }, { label: 'payrollProcess.allowances', amount: d.allowances },
+    { label: 'payrollProcess.gross', amount: d.gross }, { label: 'payrollProcess.overtime', amount: d.overtime },
+    { label: 'payrollProcess.additional', amount: d.additional }, { label: 'payrollProcess.deductions', amount: d.deductions },
+    { label: 'payrollProcess.netPay', amount: d.netPay },
+    ...(d.finalSettlement ? [
+      { label: 'finalSettlementProcess.normalSalary', amount: d.finalSettlement.normalSalary },
+      { label: 'finalSettlementProcess.leaveSalary', amount: d.finalSettlement.leaveSalary },
+      { label: 'finalSettlementProcess.ticketPayable', amount: d.finalSettlement.ticketPayable },
+      { label: 'finalSettlementProcess.gratuity', amount: d.finalSettlement.gratuity },
+      { label: 'finalSettlementProcess.totalPayable', amount: d.finalSettlement.totalPayable },
+    ] : []),
+  ] : []; });
+
+  ngOnInit(): void { this.bind(); this.restoreRoute(); this.search(false); this.loadStaff(); }
+  search(reset = true): void { if (this.busy()) return; if (this.form.invalid) { this.form.markAllAsTouched(); focusField('pay-slips-date'); return; } const v = this.form.getRawValue(); const [dateFrom, dateTo] = parseDateRange(v.dateRange); this.activeFilters = { dateFrom: dateFrom ?? undefined, dateTo: dateTo ?? undefined, no: v.no.trim() || undefined, type: v.type ?? undefined, staffId: v.staffId ?? undefined }; if (reset) this.pageNo.set(1); this.refresh(); }
+  reset(): void { if (this.busy()) return; this.form.reset({ dateRange: currentMonthRange(), no: '', type: null, staffId: null }); this.search(); }
+  retry(): void { if (!this.busy()) this.refresh(); }
+  retryStaff(): void { if (!this.busy()) this.loadStaff(); }
+  page(event: TableLazyLoadEvent): void { if (this.busy()) return; const p = resolveListPaging(event, { pageNo: this.pageNo(), pageSize: this.pageSize() }); const sf = this.isSort(event.sortField) ? event.sortField : this.sortField(); const so = event.sortOrder === 1 || event.sortOrder === -1 ? event.sortOrder : this.sortOrder(); if (!p.changed && sf === this.sortField() && so === this.sortOrder()) return; this.pageNo.set(p.pageNo); this.pageSize.set(p.pageSize); this.sortField.set(sf); this.sortOrder.set(so); this.refresh(); }
+  exportExcel(): void { this.loadAll(rows => onExportToExcel(signal(dataTableExportRows(rows, this.columns, k => this.translate.instant(k))), 'PaySlips')); }
+  openReport(): void { this.loadAll(rows => { this.reportRows.set(rows); this.reportVisible.set(true); }); }
+  closeReport(): void { if (!this.printSession.printing()) { this.reportVisible.set(false); this.reportRows.set([]); } }
+  printReport(): void { if (this.reportRows().length) this.printSession.print({ bodyClasses: ['sigma-dialog-print'] }); }
+  closeDetail(): void { if (!this.printSession.printing()) { this.detailVisible.set(false); this.detail.set(null); } }
+  printDetail(): void { if (this.detail()) this.printSession.print({ bodyClasses: ['sigma-dialog-print'] }); }
+  private openDetail(row: PaySlipListRow): void { if (this.busy() || this.loadingList()) return; this.actionLoading.set(true); this.error.set(''); const restore = freezeFormState(this.form, this.destroyRef); this.loading.startLoading(); this.service.detail(row.id).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => { this.actionLoading.set(false); this.loading.endLoading(); restore(); })).subscribe({ next: r => { if (!r.isSuccess || !r.entity || r.entity.id !== row.id || r.entity.runId !== row.runId || r.entity.revisionNumber !== row.revisionNumber || r.entity.staffId !== row.staffId || r.entity.type !== row.type || r.entity.no !== row.no) { this.error.set(r.message || 'paySlips.errors.detail'); return; } this.detail.set(r.entity); this.detailVisible.set(true); }, error: e => this.error.set(apiErrorMessage(e, 'paySlips.errors.detail')) }); }
+  private loadAll(done: (rows: PaySlipListRow[]) => void): void { if (this.busy() || this.loadingList()) return; this.actionLoading.set(true); this.error.set(''); const restore = freezeFormState(this.form, this.destroyRef); this.loading.startLoading(); this.service.all(this.query()).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => { this.actionLoading.set(false); this.loading.endLoading(); restore(); })).subscribe({ next: rows => rows.length ? done(rows) : this.error.set('paySlips.empty'), error: e => this.error.set(composedReadErrorMessage(e, 'paySlips.errors.export')) }); }
+  private loadStaff(): void { if (this.staffLoading()) return; this.staffLoading.set(true); this.staffError.set(''); this.service.staff().pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.staffLoading.set(false))).subscribe({ next: r => r.isSuccess ? this.staffOptions.set(r.entities ?? []) : this.staffError.set(r.message || 'paySlips.errors.staff'), error: e => this.staffError.set(apiErrorMessage(e, 'paySlips.errors.staff')) }); }
+  private bind(): void { this.requests.pipe(switchMap(q => defer(() => { this.loadingList.set(true); this.error.set(''); this.loading.startLoading(); return this.service.list(q).pipe(catchError(e => { this.rows.set([]); this.total.set(0); this.error.set(apiErrorMessage(e, 'paySlips.errors.load')); return EMPTY; }), finalize(() => { this.loadingList.set(false); this.loading.endLoading(); })); })), takeUntilDestroyed(this.destroyRef)).subscribe(r => { if (!r.isSuccess) { this.rows.set([]); this.total.set(0); this.error.set(r.message || 'paySlips.errors.load'); return; } this.rows.set(r.entities ?? []); this.total.set(Number(r.totalCount ?? 0)); this.pageNo.set(r.pageNo || 1); this.pageSize.set(r.pageSize || this.pageSize()); this.writeRoute(); }); }
+  private refresh(): void { this.writeRoute(); this.requests.next(this.query()); }
+  private query(): PaySlipQuery { return { pageNo: this.pageNo(), pageSize: this.pageSize(), filters: { ...this.activeFilters }, sortField: this.sortField(), sortOrder: this.sortOrder() }; }
+  private status(row: PaySlipListRow): DataTableStatus { if (!row.isCurrentRevision) return { label: 'paySlips.statuses.superseded', tone: 'neutral' }; if (row.isPaid) return { label: 'payrolls.statuses.paid', tone: 'info' }; return row.isApproved ? { label: 'payrolls.statuses.approved', tone: 'success' } : { label: 'payrolls.statuses.pendingApproval', tone: 'warning' }; }
+  typeLabel(type: PayrollType): string { return this.translate.instant(type === 'LeaveSalary' ? 'payrolls.types.leaveSalary' : type === 'FinalSettlement' ? 'payrolls.types.finalSettlement' : 'payrolls.types.payroll'); }
+  reportContext(): string {
+    const f = this.activeFilters;
+    const staff = f.staffId ? this.staffOptions().find(x => x.id === f.staffId) : null;
+    return [f.dateFrom && f.dateTo ? `${f.dateFrom} – ${f.dateTo}` : '', f.no ?? '', f.type ? this.typeLabel(f.type) : '', staff ? `${staff.no ? `${staff.no} — ` : ''}${staff.value}` : ''].filter(Boolean).join(' · ');
+  }
+  private isSort(v: unknown): v is PaySlipSortField { return v === 'date' || v === 'no' || v === 'name' || v === 'code' || v === 'totalAmount'; }
+  private restoreRoute(): void { const s = readListRoute(this.route); const from = s.text('dateFrom'); const to = s.text('dateTo'); const typeText = s.text('type'); const type = typeText === 'Payroll' || typeText === 'LeaveSalary' || typeText === 'FinalSettlement' ? typeText : null; const rawStaffId = s.number('staffId'); const staffId = Number.isInteger(rawStaffId) && Number(rawStaffId) > 0 ? rawStaffId : null; const fromDate = toPickerDate(from); const toDate = toPickerDate(to); const restoredRange = from || to ? fromDate && toDate ? [fromDate, toDate] : `${from ?? ''} - ${to ?? ''}` : currentMonthRange(); this.form.patchValue({ dateRange: restoredRange, no: s.text('no'), type, staffId }, { emitEvent: false }); const p = s.paging(); this.pageNo.set(p.pageNo); this.pageSize.set(p.pageSize); if (this.isSort(p.sortField)) this.sortField.set(p.sortField); if (p.sortOrder) this.sortOrder.set(p.sortOrder); }
+  private writeRoute(): void { writeListRoute(this.router, this.route, { ...this.activeFilters, pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortField(), sortOrder: this.sortOrder() }); }
+}
+
+
+NEW src\app\modules\HRM\Payroll\PaySlips\models\pay-slip.ts
+import { FinalSettlementSnapshot, PayrollType } from '../../PayrollProcess/models/payroll-run';
+import { ListQuery } from 'src/app/modules/shared/utils/list-query';
+
+export interface PaySlipListRow { id: number; runId: number; revisionNumber: number; staffId: number; no: string; name: string; code: string | null; date: string; type: PayrollType; totalAmount: number; isApproved: boolean; isPaid: boolean; isCurrentRevision: boolean; }
+export interface PaySlipDetail extends PaySlipListRow { period: string; overtimePeriod: string; policyVersion: string; decimalPlaces: number; basic: number; allowances: number; gross: number; overtime: number; additional: number; deductions: number; netPay: number; finalSettlement: FinalSettlementSnapshot | null; }
+export interface PaySlipStaffOption { id: number; no: string | null; value: string; }
+export interface PaySlipFilters { dateFrom?: string; dateTo?: string; no?: string; type?: PayrollType; staffId?: number; }
+export type PaySlipSortField = 'date' | 'no' | 'name' | 'code' | 'totalAmount';
+export type PaySlipQuery = ListQuery<PaySlipFilters>;
+
+
+NEW src\app\modules\HRM\Payroll\PaySlips\pay-slips.routes.ts
+import { Routes } from '@angular/router';
+import { PaySlipsComponent } from './components/list/pay-slips.component';
+export const PaySlips_Routes: Routes = [{ path: '', component: PaySlipsComponent }];
+
+
+NEW src\app\modules\HRM\Payroll\PaySlips\services\pay-slips.service.ts
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Result } from 'src/app/modules/shared/models/result';
+import { Results } from 'src/app/modules/shared/models/results';
+import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+import { fetchAllPages, toListParams } from 'src/app/modules/shared/utils/list-query';
+import { environment } from 'src/environments/environment';
+import { PaySlipDetail, PaySlipListRow, PaySlipQuery, PaySlipStaffOption } from '../models/pay-slip';
+
+@Injectable({ providedIn: 'root' })
+export class PaySlipsService extends BaseService {
+  private readonly options = { headers: { 'X-Skip-Error-Interceptor': 'true' } };
+  constructor() { super('PaySlips', environment.baseUrl); }
+  list(query: PaySlipQuery): Observable<Results<PaySlipListRow>> { return this.http.get<Results<PaySlipListRow>>(`${this.baseUrl}PaySlips`, { ...this.options, params: toListParams(query) }); }
+  all(query: PaySlipQuery): Observable<PaySlipListRow[]> { return fetchAllPages(pageNo => this.list({ ...query, pageNo, pageSize: 100 }), 'paySlips.errors.export'); }
+  detail(id: number): Observable<Result<PaySlipDetail>> { return this.http.get<Result<PaySlipDetail>>(`${this.baseUrl}PaySlips/${id}`, this.options); }
+  staff(): Observable<Results<PaySlipStaffOption>> { return this.http.get<Results<PaySlipStaffOption>>(`${this.baseUrl}PaySlips/staff`, this.options); }
+}
+
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\models\\payroll-run.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\models\\payroll-run.ts"
+index f3814aa..56f799f 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\models\\payroll-run.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\PayrollProcess\\models\\payroll-run.ts"	
+@@ -1,9 +1,54 @@
+-export type PayrollType = 'Payroll' | 'LeaveSalary';
++export type PayrollType = 'Payroll' | 'LeaveSalary' | 'FinalSettlement';
++
++export type SettlementSalaryBasis = 'Basic' | 'Gross';
++export type SalaryProrationBasis = 'CalendarDays' | 'Fixed30';
++
++export interface FinalSettlementInputs {
++  lastWorkingDay: string;
++  joiningOrRejoiningDate: string;
++  salaryProrationBasis: SalaryProrationBasis;
++  leaveDaysRemaining: number;
++  leaveSalaryBasis: SettlementSalaryBasis;
++  ticketQuota: number;
++  ticketQuotaPeriodYears: number;
++  ticketPrice: number;
++  ticketEligibilityPercent: number;
++  gratuityDays: number;
++  gratuitySalaryBasis: SettlementSalaryBasis;
++}
++
++export interface FinalSettlementSnapshot {
++  inputs: FinalSettlementInputs;
++  designation: string | null;
++  firstWorkingDay: string;
++  normalSalaryFrom: string;
++  lastWorkingDay: string;
++  serviceDays: number;
++  salaryDays: number;
++  salaryDivisor: number;
++  monthlyBasic: number;
++  monthlyGross: number;
++  leaveDailyRate: number;
++  gratuityDailyRate: number;
++  basic: number;
++  allowances: number;
++  gross: number;
++  overtime: number;
++  salesCommission: number;
++  additional: number;
++  deductions: number;
++  normalSalary: number;
++  leaveSalary: number;
++  ticketPayable: number;
++  gratuity: number;
++  totalPayable: number;
++}
+ 
+ export interface PayrollCalculateRequest {
+   period: string;
+   type: PayrollType;
+   staffId?: number;
++  finalSettlement?: FinalSettlementInputs;
+ }
+ 
+ export interface PayrollSaveRequest extends PayrollCalculateRequest {
+@@ -30,6 +75,7 @@ export interface PayrollRun {
+   period: string;
+   type: PayrollType;
+   staffId: number | null;
++  finalSettlement: FinalSettlementSnapshot | null;
+   version: string;
+   revisionNumber: number;
+   isSaved: boolean;
+@@ -60,6 +106,11 @@ export interface PayrollStaffOption {
+   value: string;
+ }
+ 
++export interface FinalSettlementStaffOption extends PayrollStaffOption {
++  designation: string | null;
++  dateOfJoining: string;
++}
++
+ export interface PayrollRevisionSummary {
+   revisionNumber: number;
+   savedAt: string | null;
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts"
+index c8f0c0a..c818656 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\HRM\\Payroll\\Payrolls\\components\\list\\list.component.ts"	
+@@ -91,12 +91,14 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+   readonly typeOptions: Array<{ id: PayrollListFilters['type']; key: string }> = [
+     { id: 'Payroll', key: 'payrolls.types.payroll' },
+     { id: 'LeaveSalary', key: 'payrolls.types.leaveSalary' },
++    { id: 'FinalSettlement', key: 'payrolls.types.finalSettlement' },
+   ];
+ 
+   readonly columns: ReadonlyArray<DataTableColumn<PayrollRunListRow>> = [
+     { field: 'date', header: 'payrolls.columns.date', type: 'date', sortable: true },
+     { field: 'type', header: 'payrolls.columns.type', value: row => this.translate.instant(
+-      row.type === 'LeaveSalary' ? 'payrolls.types.leaveSalary' : 'payrolls.types.payroll',
++      row.type === 'LeaveSalary' ? 'payrolls.types.leaveSalary'
++        : row.type === 'FinalSettlement' ? 'payrolls.types.finalSettlement' : 'payrolls.types.payroll',
+     ) },
+     { field: 'staffName', header: 'payrolls.columns.staff', value: row => this.staffText(row), cellClass: 'sigma-data-table__cell--wrap' },
+     { field: 'amount', header: 'payrolls.columns.amount', type: 'money', sortable: true },
+@@ -191,7 +193,7 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+ 
+   openNewProcess(): void {
+     if (this.busy()) return;
+-    void this.router.navigate([this.activeFilters.type === 'LeaveSalary' ? '/ProcessLeaveSalary' : '/ProcessPayroll'], {
++    void this.router.navigate([this.processRoute(this.activeFilters.type)], {
+       queryParams: { ...this.returnQueryParams(), returnTo: '/ProcessedPayrolls' },
+     });
+   }
+@@ -200,7 +202,7 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+     if (this.busy()) return;
+     const current = this.currentRow(row);
+     if (!current || (mode === 'edit' && current.isPaid)) return;
+-    void this.router.navigate([current.type === 'LeaveSalary' ? '/ProcessLeaveSalary' : '/ProcessPayroll'], {
++    void this.router.navigate([this.processRoute(current.type)], {
+       queryParams: { ...this.returnQueryParams(), runId: current.id, mode, returnTo: '/ProcessedPayrolls' },
+     });
+   }
+@@ -329,9 +331,9 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+           return;
+         }
+         const exportRows = dataTableExportRows(run.rows, this.savedRunColumns, key => this.translate.instant(key));
+-        const filename = run.type === 'LeaveSalary'
+-          ? `LeaveSalary-${run.staffId}-${run.period}-R${run.revisionNumber}`
+-          : `Payroll-${run.period}-R${run.revisionNumber}`;
++        const filename = run.type === 'Payroll'
++          ? `Payroll-${run.period}-R${run.revisionNumber}`
++          : `${run.type}-${run.staffId}-${run.period}-R${run.revisionNumber}`;
+         onExportToExcel(signal(exportRows), filename);
+       },
+       error: error => this.operationError.set(apiErrorMessage(error, 'payrolls.errors.exportRun')),
+@@ -445,7 +447,9 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+     const dateRange = fromText || toText
+       ? (from && to ? [from, to] : `${fromText} - ${toText}`)
+       : state.text('dateRange') === 'all' ? null : currentMonthRange();
+-    const type = state.text('type') === 'LeaveSalary' ? 'LeaveSalary' : 'Payroll';
++    const typeText = state.text('type');
++    const type: PayrollListFilters['type'] = typeText === 'LeaveSalary' || typeText === 'FinalSettlement'
++      ? typeText : 'Payroll';
+     this.filterForm.patchValue({ dateRange, type, pendingApproval: state.flag('pendingApproval') }, { emitEvent: false });
+     this.activeFilters = {
+       type,
+@@ -479,9 +483,17 @@ export class PayrollsComponent extends BaseComponentService implements OnInit {
+   processActionLabel(): string {
+     return this.activeFilters.type === 'LeaveSalary'
+       ? 'payrolls.actions.processLeaveSalary'
++      : this.activeFilters.type === 'FinalSettlement'
++        ? 'payrolls.actions.processFinalSettlement'
+       : 'payrolls.actions.processPayroll';
+   }
+ 
++  private processRoute(type: PayrollListFilters['type']): string {
++    if (type === 'LeaveSalary') return '/ProcessLeaveSalary';
++    if (type === 'FinalSettlement') return '/FinalSettlementProcess';
++    return '/ProcessPayroll';
++  }
++
+   private staffText(row: PayrollRunListRow): string {
+     if (!row.staffName && !row.staffCode) return '';
+     return row.staffCode ? `${row.staffCode} — ${row.staffName ?? ''}` : row.staffName ?? '';
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\UserGuide\\content\\hrm-guide.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\UserGuide\\content\\hrm-guide.ts"
+index 3860f70..967fa00 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\UserGuide\\content\\hrm-guide.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\UserGuide\\content\\hrm-guide.ts"	
+@@ -3,8 +3,8 @@ import type { GuideSection } from '../models/user-guide.model';
+ export const HRM_GUIDE: GuideSection = {
+   id: 'hrm', titleKey: 'sideMenu.hrm', title: { en: 'Human Resources and Payroll', ar: 'الموارد البشرية والرواتب' },
+   overview: {
+-    en: 'Prepare effective-dated salaries, overtime and deductions, calculate the payroll month, save a revision and approve that exact revision. General payroll covers continuing employees; Leave Salary prepares one inactive employee using the same monthly calculation. Disbursement is separate. Saved history and operation logs preserve successful payroll changes.',
+-    ar: 'جهّز الرواتب بتواريخ سريانها والعمل الإضافي والخصومات، ثم احسب الشهر واحفظ نسخة واعتمد النسخة نفسها. تشمل الرواتب العامة الموظفين المستمرين، وتعالج شاشة راتب الموظف غير النشط موظفًا واحدًا بنفس الحساب الشهري. الصرف مستقل. تحفظ النسخ وسجل العمليات التغييرات الناجحة على المسير.',
++    en: 'Prepare effective-dated salaries, overtime and deductions, calculate the payroll month, save a revision and approve that exact revision. General payroll covers continuing employees; Leave Salary prepares one inactive employee using the same monthly calculation. Final Settlement combines partial-month salary and reviewed exit entitlements. Pay Slips reads saved employee snapshots. Disbursement is separate. Saved history and operation logs preserve successful payroll changes.',
++    ar: 'جهّز الرواتب بتواريخ سريانها والعمل الإضافي والخصومات، ثم احسب الشهر واحفظ نسخة واعتمد النسخة نفسها. تشمل الرواتب العامة الموظفين المستمرين، وتعالج شاشة راتب الموظف غير النشط موظفًا واحدًا بنفس الحساب الشهري. تجمع التسوية النهائية الراتب النسبي ومستحقات الخروج المراجعة. تعرض قسائم الرواتب لقطات الموظفين المحفوظة. الصرف مستقل. تحفظ النسخ وسجل العمليات التغييرات الناجحة على المسير.',
+   },
+   steps: [
+     { title: { en: 'Prepare staff inputs', ar: 'جهّز بيانات الموظفين' }, description: { en: 'Use dated salary revisions, recorded overtime and complete deduction schedules.', ar: 'استخدم تعديلات الراتب المؤرخة والعمل الإضافي المسجل وجداول الخصومات المكتملة.' }, icon: 'bi bi-people' },
+@@ -34,7 +34,7 @@ export const HRM_GUIDE: GuideSection = {
+     {
+       titleKey: 'sideMenu.payrolls.processLeaveSalary', title: { en: 'Leave Salary Payroll Process', ar: 'معالجة راتب الموظف غير النشط' },
+       route: '/ProcessLeaveSalary', icon: 'bi bi-person-dash',
+-      purpose: { en: 'Prepare one inactive employee’s complete monthly salary with the same save, revision and approval cycle as general payroll. This first-review scope is shown on the screen.', ar: 'إعداد راتب شهر كامل لموظف غير نشط بنفس دورة الحفظ والنسخ والاعتماد المتبعة في الرواتب العامة. يظهر نطاق المراجعة الأولى هذا داخل الشاشة.' },
++      purpose: { en: 'Prepare one inactive employee’s complete monthly salary with the same save, revision and approval cycle as general payroll. Final Settlement separately calculates salary through the last working day and reviewed exit entitlements.', ar: 'إعداد راتب شهر كامل لموظف غير نشط بنفس دورة الحفظ والنسخ والاعتماد المتبعة في الرواتب العامة. تحسب التسوية النهائية بصورة مستقلة الراتب حتى آخر يوم عمل ومستحقات الخروج المراجعة.' },
+       steps: [
+         { en: 'Prepare a complete salary effective in the chosen month, recorded overtime and deduction schedules. The employee must be currently inactive and available in Staff; this current status does not specify a historical leaving date.', ar: 'جهّز راتبًا كاملًا ساريًا في الشهر المحدد والعمل الإضافي وجداول الخصومات. يجب أن يكون الموظف غير نشط حاليًا ومتاحًا في بيانات الموظفين؛ ولا تحدد هذه الحالة الحالية تاريخ خروج سابقًا.' },
+         { en: 'Choose Month and Staff. Search the employee options by name or code. If loading fails, use Retry before calculating. A saved employee remains visible in historical runs even when no longer available for a new calculation.', ar: 'اختر الشهر والموظف. ابحث في الخيارات بالاسم أو الكود. إذا فشل التحميل فاستخدم إعادة المحاولة قبل الحساب. يظل الموظف المحفوظ ظاهرًا في المسيرات السابقة حتى لو لم يعد متاحًا لحساب جديد.' },
+@@ -52,9 +52,9 @@ export const HRM_GUIDE: GuideSection = {
+     {
+       titleKey: 'sideMenu.payrolls.processedPayrolls', title: { en: 'Payrolls and approvals', ar: 'مسيرات الرواتب والموافقات' },
+       route: '/ProcessedPayrolls', icon: 'bi bi-check2-square',
+-      purpose: { en: 'Review saved Payroll or Leave Salary monthly runs and approve the current revision for the separate disbursement workflow.', ar: 'مراجعة مسيرات الرواتب العامة أو راتب الموظف غير النشط المحفوظة واعتماد النسخة الحالية لدورة الصرف المستقلة.' },
++      purpose: { en: 'Review saved Payroll, Leave Salary or Final Settlement runs and approve the current revision for the separate disbursement workflow.', ar: 'مراجعة مسيرات الرواتب العامة أو راتب الموظف غير النشط أو التسوية النهائية المحفوظة واعتماد النسخة الحالية لدورة الصرف المستقلة.' },
+       steps: [
+-        { en: 'Set Date Range and Type Payroll or Leave Salary; choose Pending Approval when needed, then Search. Leave Salary rows also show the saved employee code and name. Date refers to the final day of the month. Excel above the list includes every matching run, not only the visible page.', ar: 'حدد نطاق التاريخ ونوع الرواتب العامة أو راتب الموظف غير النشط، واختر بانتظار الموافقة عند الحاجة ثم ابحث. تعرض صفوف راتب الموظف غير النشط كود الموظف واسمه المحفوظين أيضًا. يشير التاريخ إلى آخر يوم من الشهر. يشمل Excel أعلى القائمة كل المسيرات المطابقة، وليس الصفحة الظاهرة فقط.' },
++        { en: 'Set Date Range and Type Payroll, Leave Salary or Final Settlement; choose Pending Approval when needed, then Search. Leave Salary rows also show the saved employee code and name. Date refers to month end for monthly payroll and the last working day for Final Settlement. Excel above the list includes every matching run, not only the visible page.', ar: 'حدد نطاق التاريخ ونوع الرواتب العامة أو راتب الموظف غير النشط أو التسوية النهائية، واختر بانتظار الموافقة عند الحاجة ثم ابحث. تعرض صفوف راتب الموظف غير النشط كود الموظف واسمه المحفوظين أيضًا. يشير التاريخ إلى آخر يوم من الشهر للرواتب الشهرية وآخر يوم عمل للتسوية النهائية. يشمل Excel أعلى القائمة كل المسيرات المطابقة، وليس الصفحة الظاهرة فقط.' },
+         { en: 'The process button follows the type you applied with Search. View and Edit open each saved run in its own process screen.', ar: 'يتبع زر المعالجة النوع الذي طبقته بزر البحث. يفتح العرض والتعديل كل مسير محفوظ في شاشة معالجته.' },
+         { en: 'View opens the stored rows read-only. Edit opens the current unpaid run: Process again and Save changed figures as a new revision. Approve requires confirmation and rechecks the current saved version.', ar: 'يفتح «عرض» الصفوف المخزنة للقراءة فقط. يفتح «تعديل» المسير الحالي غير المصروف: أعد المعالجة واحفظ القيم المتغيرة كنسخة جديدة. يحتاج «اعتماد» تأكيدًا ويتحقق مجددًا من النسخة الحالية المحفوظة.' },
+         { en: 'Export to Excel in a row exports that saved payroll’s employee lines. Operations log shows creation, recalculation/replacement and approval with the user, UTC-derived display time, revision and amounts.', ar: 'يصدر Excel الخاص بالصف بنود الموظفين في المسير المحفوظ. يعرض سجل العمليات الإنشاء وإعادة الحساب والاستبدال والاعتماد مع المستخدم والتوقيت ورقم النسخة والمبالغ.' },
+@@ -64,9 +64,37 @@ export const HRM_GUIDE: GuideSection = {
+         { en: 'Approve does not disburse or post a journal. Disbursement and monetary settlements require their separate payment workflow. Cancelled is reserved for cancelling a complete run and is not used for replacing revisions.', ar: 'لا يصرف «اعتماد» الراتب ولا يرحّل قيدًا. يحتاج الصرف والتسويات المالية دورة دفع مستقلة. تُحجز حالة «ملغى» لإلغاء المسير كاملًا، ولا تستخدم لاستبدال النسخ.' },
+       ],
+     },
++    {
++      titleKey: 'sideMenu.payrolls.finalSettlementProcess', title: { en: 'Final Settlement Process', ar: 'معالجة التسوية النهائية' },
++      route: '/FinalSettlementProcess', icon: 'bi bi-person-check',
++      purpose: { en: 'Calculate salary through the last working day and reviewed exit entitlements, then save a revision for approval.', ar: 'حساب الراتب حتى آخر يوم عمل ومستحقات الخروج المراجعة، ثم حفظ نسخة للاعتماد.' },
++      steps: [
++        { en: 'Select Staff and Last Working Day. Designation comes from Staff. Check Joining / Last Rejoining Date; it supplies leave context and does not replace the first working day.', ar: 'اختر الموظف وآخر يوم عمل. يأتي المسمى من بيانات الموظف. راجع تاريخ الالتحاق أو آخر عودة للعمل؛ فهو يحدد سياق الإجازة ولا يستبدل أول يوم عمل.' },
++        { en: 'Choose Actual Calendar Days or Fixed 30 Days. Enter reviewed leave days, Basic/Gross bases, ticket quota, quota period, price, eligibility percentage and earned gratuity days. Enter an explicit zero for an entitlement that does not apply.', ar: 'اختر أيام الشهر الفعلية أو ثلاثين يومًا ثابتة. أدخل أيام الإجازة المراجعة وأساس الأساسي أو الإجمالي وحصة التذاكر وفترتها وسعر التذكرة ونسبة الاستحقاق وأيام المكافأة المكتسبة. أدخل صفرًا صريحًا للمستحق الذي لا ينطبق.' },
++        { en: 'Process and review Normal Salary, Leave Salary, Air Ticket, Gratuity and Summary. Salary covers month start or joining, whichever is later, through the last day inclusive. Package earnings and deductions are prorated; recorded overtime and due installments retain their actual amounts.', ar: 'اضغط معالجة وراجع الراتب العادي وراتب الإجازة وتذكرة الطيران والمكافأة والملخص. يغطي الراتب بداية الشهر أو تاريخ الالتحاق، أيهما أحدث، حتى آخر يوم عمل شاملًا. تحتسب مستحقات الحزمة وخصوماتها نسبيًا، ويحتفظ الإضافي المسجل والأقساط المستحقة بمبالغها الفعلية.' },
++        { en: 'Review monthly bases and rounded daily rates. Leave and gratuity equal their reviewed days multiplied by the respective daily rate. Ticket = quota × price × eligibility / 100. Quota period is recorded context; eligibility is reviewed separately.', ar: 'راجع الأساسين الشهريين والمعدلات اليومية المقربة. يساوي راتب الإجازة والمكافأة الأيام المراجعة مضروبة في معدل كل منهما. التذكرة = الحصة × السعر × نسبة الاستحقاق ÷ ١٠٠. تُحفظ فترة الحصة كسياق؛ وتراجع نسبة الاستحقاق بصورة مستقلة.' },
++        { en: 'Resolve every note before Save. Employee, month and last working day are fixed after Save. Change policy inputs, Process and Save to create a new unpaid revision. Browse saved revisions and the operation log; approve the current revision in Payrolls.', ar: 'عالج جميع الملاحظات قبل الحفظ. يثبت الموظف والشهر وآخر يوم عمل بعد الحفظ. غيّر مدخلات السياسة ثم عالج واحفظ لإنشاء نسخة جديدة قبل الصرف. اعرض النسخ المحفوظة وسجل العمليات، واعتمد النسخة الحالية من قائمة المسيرات.' },
++      ],
++      notes: [
++        { en: 'Only one Final Settlement run is allowed per employee. A current saved salary for that employee in another payroll type for the same month blocks duplicate salary.', ar: 'يسمح بتسوية نهائية واحدة لكل موظف. يمنع الراتب المحفوظ الحالي للموظف في نوع رواتب آخر للشهر نفسه تكرار الراتب.' },
++        { en: 'Leave counters and service tenure do not automatically establish entitlement. Salary changes inside the covered period, absences and package leave-encashment/end-of-service components require resolving the displayed policy note before Save.', ar: 'لا تحدد عدادات الإجازة ومدة الخدمة الاستحقاق تلقائيًا. تحتاج تغييرات الراتب داخل الفترة والغياب ومكونات تعويض الإجازة أو نهاية الخدمة داخل الحزمة معالجة ملاحظة السياسة المعروضة قبل الحفظ.' },
++        { en: 'Save and approval do not pay money, post journals or change employment status. Paid snapshots are locked.', ar: 'لا يصرف الحفظ والاعتماد مبالغ ولا يرحلان قيودًا ولا يغيران حالة عمل الموظف. تقفل اللقطات المصروفة.' },
++      ],
++    },
++    {
++      titleKey: 'sideMenu.payrolls.paySlips', title: { en: 'Pay Slips', ar: 'قسائم الرواتب' }, route: '/PaySlips', icon: 'bi bi-receipt',
++      purpose: { en: 'Search saved employee salary snapshots and view, print or export their figures and actual status.', ar: 'البحث في لقطات رواتب الموظفين المحفوظة وعرضها أو طباعتها أو تصدير مبالغها وحالتها الفعلية.' },
++      steps: [
++        { en: 'Set Date Range, complete Pay Slip No, Type or Staff, then Search. Numbers use run-revision-employee, for example 12-2-269. The list shows current saved revisions, including pending approval.', ar: 'حدد نطاق التاريخ أو رقم القسيمة كاملًا أو النوع أو الموظف ثم ابحث. يتكون الرقم من المسير والنسخة والموظف، مثل 12-2-269. تعرض القائمة النسخ الحالية المحفوظة بما فيها النسخ بانتظار الاعتماد.' },
++        { en: 'Review No, Name, Code, Date, Type, Total Amount and Status. Staff options come from saved snapshots, so earlier employee identities remain searchable.', ar: 'راجع الرقم والاسم والكود والتاريخ والنوع وإجمالي المبلغ والحالة. تأتي خيارات الموظفين من اللقطات المحفوظة لتظل هويات الموظفين السابقة قابلة للبحث.' },
++        { en: 'View / Print opens the exact employee revision with its amounts, salary/overtime month, calculation policy and final-settlement breakdown when applicable. Historical superseded details retain their saved figures.', ar: 'يفتح عرض أو طباعة نسخة الموظف بعينها مع مبالغها وشهر الراتب والإضافي وسياسة الحساب وتفاصيل التسوية النهائية عند انطباقها. تحتفظ تفاصيل النسخ التاريخية المستبدلة بأرقامها المحفوظة.' },
++        { en: 'Report and Excel include every matching page using applied filters. Retry failed reads; incomplete output is not produced. Print the open slip or report from its dialog.', ar: 'يشمل التقرير وExcel كل الصفحات المطابقة وفق المرشحات المطبقة. أعد محاولة القراءات الفاشلة؛ فلا ينتج ملف ناقص. اطبع القسيمة أو التقرير المفتوح من نافذته.' },
++      ],
++      notes: [{ en: 'A pay slip is a saved calculation, not proof of payment. Salary changes belong to the originating payroll process and create a revision.', ar: 'قسيمة الراتب حساب محفوظ وليست إثباتًا للصرف. تنفذ تغييرات الراتب في شاشة المسير الأصلية وتنشئ نسخة.' }],
++    },
+   ],
+   questions: [
+-    { question: { en: 'Does Leave Salary mean a leave-days payout?', ar: 'هل راتب الموظف غير النشط يعني تعويض أيام الإجازة؟' }, answer: { en: 'For the first review, it means a complete monthly salary for one inactive employee. Leave-days payout and termination calculations need a separately agreed policy.', ar: 'في المراجعة الأولى يعني راتب شهر كامل لموظف غير نشط واحد. يحتاج تعويض أيام الإجازة وحساب نهاية الخدمة سياسة مستقلة متفقًا عليها.' } },
++    { question: { en: 'Does Leave Salary mean a leave-days payout?', ar: 'هل راتب الموظف غير النشط يعني تعويض أيام الإجازة؟' }, answer: { en: 'Leave Salary prepares a complete monthly salary for one inactive employee. Final Settlement separately uses reviewed remaining leave days, ticket entitlement and earned gratuity days.', ar: 'يحسب راتب الموظف غير النشط راتب شهر كامل لموظف واحد. تستخدم التسوية النهائية بصورة مستقلة أيام الإجازة المتبقية واستحقاق التذكرة وأيام المكافأة المكتسبة بعد مراجعتها.' } },
+     { question: { en: 'Which salary is used for an older month?', ar: 'أي راتب يُستخدم لشهر سابق؟' }, answer: { en: 'The latest salary effective in that payroll period, not a future salary revision. Saved payroll revisions retain their original figures.', ar: 'آخر راتب سارٍ في فترة الرواتب، وليس تعديل راتب مستقبليًا. تحتفظ النسخ المحفوظة بأرقامها الأصلية.' } },
+     { question: { en: 'Does recalculation cancel the whole run?', ar: 'هل إعادة الحساب تلغي المسير كاملًا؟' }, answer: { en: 'No. Changed unpaid payroll creates a new revision and supersedes the old revision. The new revision needs approval.', ar: 'لا. تنشئ تغييرات المسير غير المصروف نسخة جديدة تستبدل السابقة. تحتاج النسخة الجديدة موافقة.' } },
+     { question: { en: 'Does Save or Approve mean the salary was paid?', ar: 'هل الحفظ أو الموافقة يعني أن الراتب صُرف؟' }, answer: { en: 'No. Payment is separate; it must use the current approved revision and keep that paid snapshot immutable.', ar: 'لا. الصرف مستقل، ويجب أن يستخدم النسخة الحالية المعتمدة ويحافظ على ثبات اللقطة المصروفة.' } },
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\i18n\\vocabs\\ar.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\i18n\\vocabs\\ar.ts"
+index 3e5660c..9bfb472 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\i18n\\vocabs\\ar.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\i18n\\vocabs\\ar.ts"	
+@@ -3,6 +3,44 @@ export const locale = {
+   lang: 'ar',
+ 
+   data: {
++    finalSettlementProcess: {
++      title: 'معالجة التسوية النهائية', subtitle: 'حساب ومراجعة المستحقات النهائية للموظف',
++      staff: 'الموظف', designation: 'المسمى الوظيفي', lastWorkingDay: 'آخر يوم عمل',
++      selectStaff: 'اختر الموظف', clearStaff: 'مسح الموظف', noStaff: 'لا يوجد موظفون متاحون.',
++      joiningOrRejoiningDate: 'تاريخ الالتحاق / آخر عودة للعمل', firstWorkingDay: 'أول يوم عمل',
++      salaryProrationBasis: 'أساس أيام الراتب', leaveDaysRemaining: 'أيام راتب الإجازة المتبقية',
++      leaveSalaryBasis: 'أساس راتب الإجازة', ticketQuota: 'حصة التذاكر', ticketQuotaPeriodYears: 'فترة الحصة (سنوات)',
++      ticketPrice: 'سعر التذكرة الواحدة', ticketEligibilityPercent: 'نسبة الاستحقاق المراجعة (%)',
++      gratuityDays: 'أيام مكافأة نهاية الخدمة المراجعة', gratuitySalaryBasis: 'أساس راتب مكافأة نهاية الخدمة',
++      normalSalary: 'الراتب العادي', leaveSalary: 'راتب الإجازة', ticketPayable: 'مستحق التذكرة',
++      gratuity: 'مكافأة نهاية الخدمة', totalPayable: 'إجمالي المستحق', salesCommission: 'عمولة المبيعات',
++      serviceDays: 'مدة الخدمة (أيام)', salaryDays: 'أيام الراتب', salaryDivisor: 'مقسوم المعدل اليومي',
++      monthlyBasic: 'الأساسي الشهري', monthlyGross: 'الإجمالي الشهري', leaveDailyRate: 'المعدل اليومي للإجازة', gratuityDailyRate: 'المعدل اليومي للمكافأة',
++      normalSalaryFrom: 'بداية فترة الراتب', current: 'الحساب الحالي', history: 'النسخ المحفوظة', revision: 'النسخة {{revision}}', back: 'العودة إلى مسيرات الرواتب',
++      notProcessed: 'أكمل مدخلات الحساب ثم اضغط معالجة.',
++      policyNotice: 'راجع أساس الراتب ومدخلات الاستحقاق قبل الحساب. الحفظ والاعتماد لا يصرفان التسوية.',
++      processFirst: 'عالج المدخلات الحالية قبل الحفظ.', invalidInputs: 'راجع المدخلات المطلوبة وترتيب التواريخ.',
++      staffLoadError: 'تعذر تحميل الموظفين. أعد المحاولة قبل الحساب.', processError: 'تعذر حساب التسوية النهائية.',
++      saveError: 'تعذر حفظ التسوية النهائية.', loadError: 'تعذر تحميل التسوية النهائية المحفوظة.',
++      historyError: 'تعذر تحميل النسخ المحفوظة.', routeMismatch: 'افتح هذا السجل في شاشة معالجة الرواتب المطابقة لنوعه.',
++      discardTitle: 'تجاهل تغييرات التسوية غير المحفوظة؟', discardMessage: 'سيتم تجاهل الحساب والتغييرات التي لم تحفظ.', discard: 'تجاهل التغييرات',
++      tabs: { label: 'أقسام التسوية', normal: 'الراتب العادي', leave: 'راتب الإجازة', ticket: 'تذكرة الطيران', gratuity: 'مكافأة نهاية الخدمة', summary: 'الملخص' },
++      bases: { basic: 'الراتب الأساسي', gross: 'إجمالي الراتب' },
++      proration: { calendarDays: 'أيام الشهر الفعلية', fixed30: 'ثلاثون يومًا ثابتة' },
++    },
++    paySlips: {
++      title: 'قسائم الرواتب', subtitle: 'مراجعة لقطات رواتب الموظفين المحفوظة', empty: 'لا توجد قسائم رواتب مطابقة للمرشحات المطبقة.',
++      dateRange: 'نطاق التاريخ', no: 'رقم قسيمة الراتب', type: 'نوع قسيمة الراتب', staff: 'الموظف', report: 'التقرير', reportTitle: 'تقرير قسائم الرواتب', print: 'طباعة',
++      showingEntries: 'عرض {first} إلى {last} من {totalRecords} قسيمة راتب',
++      columns: { no: 'الرقم', name: 'الاسم', code: 'الكود', date: 'التاريخ', type: 'النوع', totalAmount: 'إجمالي المبلغ', status: 'الحالة' },
++      filters: { dateRange: 'نطاق التاريخ', no: 'رقم قسيمة الراتب', type: 'نوع قسيمة الراتب', staff: 'الموظف' },
++      actions: { view: 'عرض / طباعة', report: 'التقرير', print: 'طباعة' },
++      detail: { title: 'قسيمة الراتب', item: 'البند', amount: 'المبلغ', period: 'شهر الراتب', overtimePeriod: 'شهر العمل الإضافي', revision: 'النسخة',
++        policy: 'سياسة الحساب', policyVersion: 'سياسة الحساب', salaryPeriod: 'شهر الراتب', currentState: 'حالة النسخة', approvalState: 'الاعتماد', paymentState: 'الصرف',
++        settlementPolicy: 'مدخلات التسوية', settlementRates: 'أسس التسوية والمعدلات اليومية', notice: 'هذه قسيمة لحساب راتب محفوظ، وليست إثباتًا للصرف.' },
++      statuses: { superseded: 'نسخة سابقة', current: 'النسخة الحالية', unpaid: 'غير مصروف' },
++      errors: { load: 'تعذر تحميل قسائم الرواتب.', detail: 'تعذر تحميل قسيمة الراتب المحفوظة.', staff: 'تعذر تحميل مرشحات الموظفين.', export: 'تعذر تحميل قسائم الرواتب المطابقة كاملة.' },
++    },
+     leaveSalaryPayrollProcess: {
+       title: 'معالجة راتب الموظف غير النشط',
+       subtitle: 'احتساب راتب شهر لموظف غير نشط مع نفس دورة نسخ الرواتب',
+@@ -12,7 +50,7 @@ export const locale = {
+       loadingStaff: 'جارٍ تحميل الموظفين المتاحين…',
+       staffLoadError: 'تعذر تحميل الموظفين المتاحين. أعد المحاولة قبل الحساب.',
+       noEligibleStaff: 'لا يوجد موظفون غير نشطين متاحون للاختيار.',
+-      policyNotice: 'نطاق المراجعة الأولى: راتب شهر كامل لموظف غير نشط باستخدام حساب الرواتب الشهرية. يحتاج تعويض الإجازات ومستحقات نهاية الخدمة والحساب النسبي لتاريخ الخروج سياسة مستقلة. الحفظ والاعتماد لا يصرفان الراتب ولا يرحّلان قيدًا.',
++      policyNotice: 'يُحسب راتب الشهر كاملًا وفق إعدادات الرواتب. الحفظ والاعتماد لا ينفّذان الصرف.',
+       routeMismatch: 'يتبع هذا المسير نوع معالجة آخر. افتحه من قائمة مسيرات الرواتب.',
+     },
+     payrolls: {
+@@ -26,6 +64,7 @@ export const locale = {
+       types: {
+         payroll: 'الرواتب',
+         leaveSalary: 'راتب الموظف غير النشط',
++        finalSettlement: 'التسوية النهائية',
+       },
+       columns: {
+         date: 'التاريخ',
+@@ -47,6 +86,8 @@ export const locale = {
+         exportRun: 'تصدير إلى Excel',
+         processPayroll: 'معالجة الرواتب',
+         processLeaveSalary: 'معالجة راتب الموظف غير النشط',
++        finalSettlement: 'معالجة التسوية النهائية',
++        processFinalSettlement: 'معالجة التسوية النهائية',
+       },
+       approval: {
+         title: 'اعتماد نسخة الرواتب؟',
+@@ -76,6 +117,7 @@ export const locale = {
+       allowances: 'البدلات',
+       gross: 'الإجمالي',
+       overtime: 'العمل الإضافي',
++      salesCommission: 'عمولة المبيعات',
+       additional: 'الإضافات',
+       deductions: 'الاستقطاعات',
+       netPay: 'صافي الراتب',
+@@ -135,6 +177,8 @@ export const locale = {
+         loadError: 'تعذر تحميل سجل عمليات الرواتب.',
+       },
+       issues: {
++        invalidSettlementDates: 'راجع تاريخ الالتحاق وآخر يوم عمل قبل حساب التسوية النهائية.',
++        dedicatedSettlementComponent: 'تحتوي حزمة الراتب بالفعل على تعويض إجازات أو مستحقات نهاية خدمة. راجع هذه المكونات المصدرية قبل إضافة مستحقات التسوية المنفصلة.',
+         duplicatePayrollScope: 'يوجد راتب محفوظ لهذا الموظف في نوع المسير الآخر للشهر نفسه. يلزم تحديد سياسة تسوية مستقلة قبل إعداد راتب آخر.',
+         missingSalary: 'لا توجد حزمة راتب كاملة سارية لهذا الشهر.',
+         invalidSalary: 'بنود الراتب غير صالحة أو لا تساوي الإجمالي المحفوظ.',
+@@ -1267,6 +1311,7 @@ export const locale = {
+         processPayroll: 'معالجة الرواتب',
+         processLeaveSalary: 'معالجة راتب الموظف غير النشط',
+         processedPayrolls: 'مسيرات الرواتب المحفوظة',
++          finalSettlementProcess: 'معالجة التسوية النهائية',
+         paySlips: 'قسائم الرواتب',
+       },
+       stock: 'المخزون',
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\i18n\\vocabs\\en.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\i18n\\vocabs\\en.ts"
+index 00d1fc9..9c53564 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\modules\\i18n\\vocabs\\en.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\modules\\i18n\\vocabs\\en.ts"	
+@@ -4,6 +4,44 @@ import { tollsInvoice } from "src/app/_metronic/shared/enums/tollsInvoice";
+ export const locale = {
+   lang: 'en',
+   data: {
++    finalSettlementProcess: {
++      title: 'Final Settlement Process', subtitle: 'Calculate and review the employee’s final dues',
++      staff: 'Staff', designation: 'Designation', lastWorkingDay: 'Last Working Day',
++      selectStaff: 'Select an employee', clearStaff: 'Clear employee', noStaff: 'No available employees.',
++      joiningOrRejoiningDate: 'Joining / Last Rejoining Date', firstWorkingDay: 'First Working Day',
++      salaryProrationBasis: 'Salary Day Basis', leaveDaysRemaining: 'Remaining Leave Salary Days',
++      leaveSalaryBasis: 'Leave Salary Basis', ticketQuota: 'Ticket Quota', ticketQuotaPeriodYears: 'Quota Period (Years)',
++      ticketPrice: 'One Ticket Price', ticketEligibilityPercent: 'Reviewed Eligibility (%)',
++      gratuityDays: 'Reviewed Gratuity Days', gratuitySalaryBasis: 'Gratuity Salary Basis',
++      normalSalary: 'Normal Salary', leaveSalary: 'Leave Salary', ticketPayable: 'Ticket Payable',
++      gratuity: 'Gratuity', totalPayable: 'Total Payable', salesCommission: 'Sales Commission',
++      serviceDays: 'Service Tenure (Days)', salaryDays: 'Salary Days', salaryDivisor: 'Daily Rate Divisor',
++      monthlyBasic: 'Monthly Basic', monthlyGross: 'Monthly Gross', leaveDailyRate: 'Leave Daily Rate', gratuityDailyRate: 'Gratuity Daily Rate',
++      normalSalaryFrom: 'Salary From', current: 'Current calculation', history: 'Saved Revisions', revision: 'Revision {{revision}}', back: 'Back to Payrolls',
++      notProcessed: 'Complete the calculation inputs, then Process.',
++      policyNotice: 'Review the salary basis and entitlement inputs before calculating. Save and approval do not pay the settlement.',
++      processFirst: 'Process the current inputs before saving.', invalidInputs: 'Review the required inputs and date order.',
++      staffLoadError: 'Employees could not be loaded. Retry before calculating.', processError: 'Final settlement could not be calculated.',
++      saveError: 'Final settlement could not be saved.', loadError: 'The saved final settlement could not be loaded.',
++      historyError: 'Saved revisions could not be loaded.', routeMismatch: 'Open this record in its matching payroll process.',
++      discardTitle: 'Discard unsaved settlement changes?', discardMessage: 'The calculation and changes that have not been saved will be discarded.', discard: 'Discard changes',
++      tabs: { label: 'Settlement sections', normal: 'Normal Salary', leave: 'Leave Salary', ticket: 'Air Ticket', gratuity: 'Gratuity', summary: 'Summary' },
++      bases: { basic: 'Basic Salary', gross: 'Gross Salary' },
++      proration: { calendarDays: 'Actual Calendar Days', fixed30: 'Fixed 30 Days' },
++    },
++    paySlips: {
++      title: 'Pay Slips', subtitle: 'Review saved employee salary snapshots', empty: 'No pay slips match the applied filters.',
++      dateRange: 'Date Range', no: 'Pay Slip No', type: 'Pay Slip Type', staff: 'Staff', report: 'Report', reportTitle: 'Pay Slips Report', print: 'Print',
++      showingEntries: 'Showing {first} to {last} of {totalRecords} pay slips',
++      columns: { no: 'No', name: 'Name', code: 'Code', date: 'Date', type: 'Type', totalAmount: 'Total Amount', status: 'Status' },
++      filters: { dateRange: 'Date Range', no: 'Pay Slip No', type: 'Pay Slip Type', staff: 'Staff' },
++      actions: { view: 'View / Print', report: 'Report', print: 'Print' },
++      detail: { title: 'Pay Slip', item: 'Item', amount: 'Amount', period: 'Salary Month', overtimePeriod: 'Overtime Month', revision: 'Revision',
++        policy: 'Calculation Policy', policyVersion: 'Calculation Policy', salaryPeriod: 'Salary Month', currentState: 'Revision State', approvalState: 'Approval', paymentState: 'Payment',
++        settlementPolicy: 'Settlement Inputs', settlementRates: 'Settlement Bases and Daily Rates', notice: 'This is a saved salary calculation. It is not proof of payment.' },
++      statuses: { superseded: 'Superseded Revision', current: 'Current Revision', unpaid: 'Unpaid' },
++      errors: { load: 'Pay slips could not be loaded.', detail: 'The saved pay slip could not be loaded.', staff: 'Employee filters could not be loaded.', export: 'The complete pay slip output could not be loaded.' },
++    },
+     leaveSalaryPayrollProcess: {
+       title: 'Leave Salary Payroll Process',
+       subtitle: 'Calculate monthly salary for one inactive employee with payroll revision history',
+@@ -13,7 +51,7 @@ export const locale = {
+       loadingStaff: 'Loading eligible employees…',
+       staffLoadError: 'Eligible employees could not be loaded. Retry before calculating.',
+       noEligibleStaff: 'No available inactive employees were found.',
+-      policyNotice: 'First-review scope: a complete month of salary for an inactive employee, using the monthly payroll calculation. Leave encashment, termination benefits and exit-date proration require a separate policy. Save and approval do not pay salary or post a journal.',
++      policyNotice: 'A complete month of salary is calculated using payroll settings. Save and approval do not pay the salary.',
+       routeMismatch: 'This payroll belongs to another process type. Open it from the payrolls list.',
+     },
+     payrolls: {
+@@ -27,6 +65,7 @@ export const locale = {
+       types: {
+         payroll: 'Payroll',
+         leaveSalary: 'Leave Salary',
++        finalSettlement: 'Final Settlement',
+       },
+       columns: {
+         date: 'Date',
+@@ -48,6 +87,8 @@ export const locale = {
+         exportRun: 'Export to Excel',
+         processPayroll: 'Process Payroll',
+         processLeaveSalary: 'Process Leave Salary',
++        finalSettlement: 'Process Final Settlement',
++        processFinalSettlement: 'Process Final Settlement',
+       },
+       approval: {
+         title: 'Approve payroll revision?',
+@@ -77,6 +118,7 @@ export const locale = {
+       allowances: 'Allowances',
+       gross: 'Gross',
+       overtime: 'Overtime',
++      salesCommission: 'Sales Commission',
+       additional: 'Additional',
+       deductions: 'Deductions',
+       netPay: 'Net Pay',
+@@ -136,6 +178,8 @@ export const locale = {
+         loadError: 'The payroll operation log could not be loaded.',
+       },
+       issues: {
++        invalidSettlementDates: 'Review the joining date and last working day before calculating the final settlement.',
++        dedicatedSettlementComponent: 'The salary package already contains leave encashment or end-of-service benefits. Review those source components before adding the separate settlement dues.',
+         duplicatePayrollScope: 'This employee already has a saved salary in the other payroll type for this month. A separate settlement policy is required before preparing another salary.',
+         missingSalary: 'No complete salary package is effective for this month.',
+         invalidSalary: 'Salary components are invalid or do not equal the stored gross.',
+@@ -1251,6 +1295,7 @@ export const locale = {
+         processPayroll: 'Process Payroll',
+         processLeaveSalary: 'Process Leave Salary',
+         processedPayrolls: 'Processed Payrolls',
++        finalSettlementProcess: 'Final Settlement Process',
+         paySlips: 'Pay Slips',
+       },
+       leavess: {
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\pages\\routing.ts" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\pages\\routing.ts"
+index e4c9a8a..ed2b018 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\src\\app\\pages\\routing.ts"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\src\\app\\pages\\routing.ts"	
+@@ -1230,6 +1230,17 @@ export const Routing: Routes = [
+       import('../modules/HRM/Payroll/leaveSalaryPayrollProcess/leave-salary-payroll-process.routes')
+         .then(m => m.LeaveSalaryPayrollProcess_Routes),
+   },
++  {
++    path: 'FinalSettlementProcess',
++    loadChildren: () =>
++      import('../modules/HRM/Payroll/FinalSettlementProcess/final-settlement-process.routes')
++        .then(m => m.FinalSettlementProcess_Routes),
++  },
++  {
++    path: 'PaySlips',
++    loadChildren: () =>
++      import('../modules/HRM/Payroll/PaySlips/pay-slips.routes').then(m => m.PaySlips_Routes),
++  },
+   {
+     path: 'Attendance',
+     loadChildren: () =>
+diff --git "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\tsconfig.app.json" "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\tsconfig.app.json"
+index 899a418..3c01c86 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\PAYROLL_FINAL_SETTLEMENT_PAY_SLIPS_BASELINE\\frontend\\tsconfig.app.json"	
++++ "b/F:\\My Work\\Sigma\\SiGmaAngularFrontEnd\\tsconfig.app.json"	
+@@ -24,6 +24,10 @@
+     "src/app/modules/Accounts/shared/report-family/account-report-endpoint.service.ts",
+     "src/app/modules/Accounts/shared/report-family/account-report-page.component.ts",
+     "src/app/modules/Accounts/shared/report-family/account-report-values.ts",
++    "src/app/modules/HRM/Payroll/FinalSettlementProcess/final-settlement-process.routes.ts",
++    "src/app/modules/HRM/Payroll/FinalSettlementProcess/components/process/final-settlement-process.component.ts",
++    "src/app/modules/HRM/Payroll/PaySlips/pay-slips.routes.ts",
++    "src/app/modules/HRM/Payroll/PaySlips/components/list/pay-slips.component.ts",
+     "src/main.ts",
+     "src/polyfills.ts",
+     "src/app/modules/shared/components/summary-cards/summary-cards.component.ts",

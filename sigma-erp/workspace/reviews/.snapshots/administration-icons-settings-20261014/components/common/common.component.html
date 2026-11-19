@@ -1,0 +1,1605 @@
+<div class="card card-custom">
+    <div class="card-body">
+        <form appMockData *ngIf="commonForm" [formGroup]="commonForm">
+            <div class="row mb-12">
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.timeZone' | translate }}</label>
+                    <p-dropdown formControlName="timeZone" [options]="timeZoneList()" optionLabel="key" optionValue="id"
+                        placeholder="{{ 'settings.commonModel.timeZone' | translate }}"></p-dropdown>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.dateFormat' | translate }}</label>
+                    <p-dropdown formControlName="dateFormat" [options]="dateFormatList()" optionLabel="key"
+                        optionValue="id" placeholder="{{ 'settings.commonModel.dateFormat' | translate }}"></p-dropdown>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.tenantLoginTimeout' | translate
+                        }}</label>
+                    <p-inputNumber formControlName="tenantLoginTimeout"
+                        placeholder="{{ 'settings.commonModel.tenantLoginTimeout' | translate }}"></p-inputNumber>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.currencyCode' | translate }}</label>
+                    <input type="text" pInputText formControlName="currencyCode" class="form-control"
+                        [placeholder]="'settings.commonModel.currencyCode' | translate" />
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.currencyName' | translate }}</label>
+                    <input type="text" pInputText formControlName="currencyName" class="form-control"
+                        [placeholder]="'settings.commonModel.currencyName' | translate" />
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.decimalCurrencyName' | translate
+                        }}</label>
+                    <input type="text" pInputText formControlName="decimalCurrencyName" class="form-control"
+                        [placeholder]="'settings.commonModel.decimalCurrencyName' | translate" />
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="autoCalculateAmountInWords" [binary]="true"
+                        label="{{ 'settings.commonModel.autoCalculateAmountInWords' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.currencyDecimals' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="currencyDecimals"
+                        placeholder="{{ 'settings.commonModel.currencyDecimals' | translate }}"></p-inputNumber>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.taxPercentage' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="taxPercentage"
+                        placeholder="{{ 'settings.commonModel.taxPercentage' | translate }}"></p-inputNumber>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-8">
+                    <p-checkbox formControlName="allPricesWithoutTax" [binary]="true"
+                        label="{{ 'settings.commonModel.allPricesWithoutTax' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-8">
+                    <p-checkbox formControlName="taxInclusion" [binary]="true"
+                        label="{{ 'settings.commonModel.taxInclusion' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 mb-8">
+                    <p-checkbox formControlName="isTaxOptional" [binary]="true"
+                        label="{{ 'settings.commonModel.isTaxOptional' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.autoSplitChargesForBroker' | translate}}
+                    </label>
+                    <p-chips formControlName="autoSplitChargesForBroker" separator=","
+                        placeholder="{{ 'settings.commonModel.addValueAndPressEnter' | translate}}"
+                        styleClass="w-100 d-block" inputStyleClass="chips-inner-padding">
+                    </p-chips>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="enableWeeklyMonthlyRental" [binary]="true"
+                        label="{{ 'settings.commonModel.enableWeeklyMonthlyRental' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.rentalGracePeriodIndividualMinutes' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="rentalGracePeriodIndividualMinutes"
+                        placeholder="{{ 'settings.commonModel.rentalGracePeriodIndividualMinutes' | translate }}"></p-inputNumber>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.rentalGracePeriodCompanyMinutes' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="rentalGracePeriodCompanyMinutes"
+                        placeholder="{{ 'settings.commonModel.rentalGracePeriodCompanyMinutes' | translate }}"></p-inputNumber>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="enableHourlyRental" [binary]="true"
+                        label="{{ 'settings.commonModel.enableHourlyRental' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="generateDailyInvoiceForDailyAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.generateDailyInvoiceForDailyAgreement' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="applyTaxOnTollFineParkingSurchargeForTaxExemptedCustomers"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.applyTaxOnTollFineParkingSurchargeForTaxExemptedCustomers' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="allowInvoiceMergingOnToDate" [binary]="true"
+                        label="{{ 'settings.commonModel.allowInvoiceMergingOnToDate' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.monthlyRentalCalculationAndAutoCutShort' | translate}}</h4>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.dailyRateFromDays' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="dailyRateFromDays"
+                        placeholder="{{ 'settings.commonModel.dailyRateFromDays' | translate }}"></p-inputNumber>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.dailyRateToDays' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="dailyRateToDays"
+                        placeholder="{{ 'settings.commonModel.dailyRateToDays' | translate }}"></p-inputNumber>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.weeklyRateFromDays' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="weeklyRateFromDays"
+                        placeholder="{{ 'settings.commonModel.weeklyRateFromDays' | translate }}"></p-inputNumber>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.weeklyRateToDays' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="weeklyRateToDays"
+                        placeholder="{{ 'settings.commonModel.weeklyRateToDays' | translate }}"></p-inputNumber>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.youngNewDriver' | translate}}</h4>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.youngDriverExperienceYears' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="youngDriverExperienceYears"
+                        placeholder="{{ 'settings.commonModel.youngDriverExperienceYears' | translate }}">
+                    </p-inputNumber>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.ageLessThanYears' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="ageLessThanYears"
+                        placeholder="{{ 'settings.commonModel.ageLessThanYears' | translate }}">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.halfDayTimes' | translate}}</h4>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.halfDaySlab1Fom' | translate}}
+                    </label>
+                    <p-dropdown formControlName="halfDaySlab1Fom"
+                        placeholder="{{ 'settings.commonModel.halfDaySlab1Fom' | translate }}"
+                        [options]="halfDaySlabList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.halfDaySlab1To' | translate}}
+                    </label>
+                    <p-dropdown formControlName="halfDaySlab1To"
+                        placeholder="{{ 'settings.commonModel.halfDaySlab1To' | translate }}"
+                        [options]="halfDaySlabList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.halfDaySlab2Fom' | translate}}
+                    </label>
+                    <p-dropdown formControlName="halfDaySlab2Fom"
+                        placeholder="{{ 'settings.commonModel.halfDaySlab2Fom' | translate }}"
+                        [options]="halfDaySlabList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.halfDaySlab2To' | translate}}
+                    </label>
+                    <p-dropdown formControlName="halfDaySlab2To"
+                        placeholder="{{ 'settings.commonModel.halfDaySlab2To' | translate }}"
+                        [options]="halfDaySlabList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <h4 class="mb-6">{{ 'settings.commonModel.weekEnds' | translate}}</h4>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.weekEndDay1' | translate}}
+                    </label>
+                    <p-dropdown formControlName="weekEndDay1"
+                        placeholder="{{ 'settings.commonModel.weekEndDay1' | translate }}" [options]="weekEndList()"
+                        optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.weekEndDay2' | translate}}
+                    </label>
+                    <p-dropdown formControlName="weekEndDay2"
+                        placeholder="{{ 'settings.commonModel.weekEndDay2' | translate }}" [options]="weekEndList()"
+                        optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="mixWeekEnds" [binary]="true"
+                        label="{{ 'settings.commonModel.mixWeekEnds' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.weekEndKMsLimit' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="weekEndKMsLimit"
+                        placeholder="{{ 'settings.commonModel.weekEndKMsLimit' | translate }}">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.monthlyInvoicing' | translate}}</h4>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.monthlyInvoicesIndividualsRule' | translate}}
+                    </label>
+                    <p-dropdown formControlName="monthlyInvoicesIndividualsRule"
+                        placeholder="{{ 'settings.commonModel.monthlyInvoicesIndividualsRule' | translate }}"
+                        [options]="invoicingRuleList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.monthlyInvoicesCompaniesRule' | translate}}
+                    </label>
+                    <p-dropdown formControlName="monthlyInvoicesCompaniesRule"
+                        placeholder="{{ 'settings.commonModel.monthlyInvoicesCompaniesRule' | translate }}"
+                        [options]="invoicingRuleList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.monthlyInvoicesIndividualsType' | translate}}
+                    </label>
+                    <p-dropdown formControlName="monthlyInvoicesIndividualsType"
+                        placeholder="{{ 'settings.commonModel.monthlyInvoicesIndividualsType' | translate }}"
+                        [options]="invoicingTypeList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.monthlyInvoicesCompaniesType' | translate}}
+                    </label>
+                    <p-dropdown formControlName="monthlyInvoicesCompaniesType"
+                        placeholder="{{ 'settings.commonModel.monthlyInvoicesCompaniesType' | translate }}"
+                        [options]="invoicingTypeList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.leaseInvoicing' | translate}}</h4>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.leaseInvoicesIndividualsRule' | translate}}
+                    </label>
+                    <p-dropdown formControlName="leaseInvoicesIndividualsRule"
+                        placeholder="{{ 'settings.commonModel.leaseInvoicesIndividualsRule' | translate }}"
+                        [options]="invoicingRuleList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.leaseInvoicesCompaniesRule' | translate}}
+                    </label>
+                    <p-dropdown formControlName="leaseInvoicesCompaniesRule"
+                        placeholder="{{ 'settings.commonModel.leaseInvoicesCompaniesRule' | translate }}"
+                        [options]="invoicingRuleList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.leaseInvoicesIndividualsType' | translate}}
+                    </label>
+                    <p-dropdown formControlName="leaseInvoicesIndividualsType"
+                        placeholder="{{ 'settings.commonModel.leaseInvoicesIndividualsType' | translate }}"
+                        [options]="invoicingTypeList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.leaseInvoicesCompaniesType' | translate}}
+                    </label>
+                    <p-dropdown formControlName="leaseInvoicesCompaniesType"
+                        placeholder="{{ 'settings.commonModel.leaseInvoicesCompaniesType' | translate }}"
+                        [options]="invoicingTypeList()" optionLabel="key" optionValue="id">
+                    </p-dropdown>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.weeklyInvoicing' | translate}}</h4>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="generateWeeklyInvoicesForWeeklyAgreementsIndividuals" [binary]="true"
+                        label="{{ 'settings.commonModel.generateWeeklyInvoicesForWeeklyAgreementsIndividuals' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="generateWeeklyInvoicesForWeeklyAgreementsCompanies" [binary]="true"
+                        label="{{ 'settings.commonModel.generateWeeklyInvoicesForWeeklyAgreementsCompanies' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.defaultInvoicingRuleForWeeklyInvoicesIndividuals' | translate}}
+                    </label>
+                    <p-dropdown formControlName="defaultInvoicingRuleForWeeklyInvoicesIndividuals"
+                        [options]="invoicingRuleList()" optionLabel="key" optionValue="id"
+                        placeholder="{{ 'settings.commonModel.defaultInvoicingRuleForWeeklyInvoicesIndividuals' | translate }}"></p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.defaultInvoicingRuleForWeeklyInvoicesCompanies' | translate}}
+                    </label>
+                    <p-dropdown formControlName="defaultInvoicingRuleForWeeklyInvoicesCompanies"
+                        [options]="invoicingRuleList()" optionLabel="key" optionValue="id"
+                        placeholder="{{ 'settings.commonModel.defaultInvoicingRuleForWeeklyInvoicesCompanies' | translate }}"></p-dropdown>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableCustomerWiseSettingForMonthlyInvoicing" [binary]="true"
+                        label="{{ 'settings.commonModel.enableCustomerWiseSettingForMonthlyInvoicing' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="receiptOnScreenAllocationWithTypesOfCharges" [binary]="true"
+                        label="{{ 'settings.commonModel.receiptOnScreenAllocationWithTypesOfCharges' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="receiptOnScreenAllocationWithReceivables" [binary]="true"
+                        label="{{ 'settings.commonModel.receiptOnScreenAllocationWithReceivables' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="useRentalInvoicingRuleForWeeklyInvoicesIndividuals" [binary]="true"
+                        label="{{ 'settings.commonModel.useRentalInvoicingRuleForWeeklyInvoicesIndividuals' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="useRentalInvoicingRuleForWeeklyInvoicesCompanies" [binary]="true"
+                        label="{{ 'settings.commonModel.useRentalInvoicingRuleForWeeklyInvoicesCompanies' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.invoicingCutoffDate' | translate}}
+                    </label>
+                    <p-calendar formControlName="invoicingCutoffDate" [showIcon]="true"
+                        placeholder="{{ 'settings.commonModel.invoicingCutoffDate' | translate }}"></p-calendar>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.paymentMethod' | translate}}</h4>
+                <div class="col-lg-8 col-sm-12 mb-8">
+                    <p-multiSelect formControlName="ddaReceiptsPaymentMethods" styleClass="w-100"
+                        [options]="ddaReceiptsPaymentMethodsList()" optionLabel="value" optionValue="id" display="chip"
+                        placeholder="{{ 'settings.commonModel.paymentMethod' | translate }}">
+                    </p-multiSelect>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.rentalQuotation' | translate}}</h4>
+                <div class="col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.rentalQuotationsValidityDays' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="rentalQuotationsValidityDays" [min]="0" [max]="365"
+                        placeholder="{{ 'settings.commonModel.rentalQuotationsValidityDays' | translate }}"></p-inputNumber>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="linkCrsVehicleWithWorkshopVehicleOnChassisNo" [binary]="true"
+                        label="{{ 'settings.commonModel.linkCrsVehicleWithWorkshopVehicleOnChassisNo' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="mergeEnglishAndArabicDescriptionAndLocationInDownloadingTamm"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.mergeEnglishAndArabicDescriptionAndLocationInDownloadingTamm' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableManualAgreementNoField" [binary]="true"
+                        label="{{ 'settings.commonModel.enableManualAgreementNoField' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="vehicleTypeOptionalInBooking" [binary]="true"
+                        label="{{ 'settings.commonModel.vehicleTypeOptionalInBooking' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="setVehicleOptionalInBookingConfirmation" [binary]="true"
+                        label="{{ 'settings.commonModel.setVehicleOptionalInBookingConfirmation' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowDepositInBookingWithoutReceivingAmount" [binary]="true"
+                        label="{{ 'settings.commonModel.allowDepositInBookingWithoutReceivingAmount' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="warningOnChangingBranch" [binary]="true"
+                        label="{{ 'settings.commonModel.warningOnChangingBranch' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="hideSpecificColumnsInTripReportGlobalWings" [binary]="true"
+                        label="{{ 'settings.commonModel.hideSpecificColumnsInTripReportGlobalWings' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableTotalLossInAssets" [binary]="true"
+                        label="{{ 'settings.commonModel.enableTotalLossInAssets' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="makeReceiptDepositOptionalInAdvanceTaxInvoice" [binary]="true"
+                        label="{{ 'settings.commonModel.makeReceiptDepositOptionalInAdvanceTaxInvoice' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showDescriptionForAtiAllocationInInvoice" [binary]="true"
+                        label="{{ 'settings.commonModel.showDescriptionForAtiAllocationInInvoice' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="addDamageChargesAndInvoiceableCheckboxOnAccidentModule" [binary]="true"
+                        label="{{ 'settings.commonModel.addDamageChargesAndInvoiceableCheckboxOnAccidentModule' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="generateAdvanceTaxInvoiceFromAdvanceTaxReceipt" [binary]="true"
+                        label="{{ 'settings.commonModel.generateAdvanceTaxInvoiceFromAdvanceTaxReceipt' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="generateAdvanceAsAtrAndGenerateAtiBookingAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.generateAdvanceAsAtrAndGenerateAtiBookingAgreement' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="claimChargesInTotalLoss" [binary]="true"
+                        label="{{ 'settings.commonModel.claimChargesInTotalLoss' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="salesPersonMandatoryInCustomerWhileOpeningRentalAgreement"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.salesPersonMandatoryInCustomerWhileOpeningRentalAgreement' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="salesPersonSelectionInsteadOfSearching" [binary]="true"
+                        label="{{ 'settings.commonModel.salesPersonSelectionInsteadOfSearching' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotShowUnapprovedPdc" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotShowUnapprovedPdc' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowAssetSaleInvoiceCreationDateAsAssetDisposalDate" [binary]="true"
+                        label="{{ 'settings.commonModel.allowAssetSaleInvoiceCreationDateAsAssetDisposalDate' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowResubmitOnChequeReceivables" [binary]="true"
+                        label="{{ 'settings.commonModel.allowResubmitOnChequeReceivables' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="createMultipleBillsOnPurchaseOrder" [binary]="true"
+                        label="{{ 'settings.commonModel.createMultipleBillsOnPurchaseOrder' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotGenerateInvoiceOnAgreementClosing" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotGenerateInvoiceOnAgreementClosing' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotAddDashInVoucherNo" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotAddDashInVoucherNo' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="generateDailyInvoiceForAnyPeriod" [binary]="true"
+                        label="{{ 'settings.commonModel.generateDailyInvoiceForAnyPeriod' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="agreementReceiptAllocateOnlyWithAgreementInvoices" [binary]="true"
+                        label="{{ 'settings.commonModel.agreementReceiptAllocateOnlyWithAgreementInvoices' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="autoApproveAllBillsExceptFineBills" [binary]="true"
+                        label="{{ 'settings.commonModel.autoApproveAllBillsExceptFineBills' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showAllTypeOfPaymentsInCashDeposits" [binary]="true"
+                        label="{{ 'settings.commonModel.showAllTypeOfPaymentsInCashDeposits' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="autoFetchUnitPriceInPoFromLastSupplierPurchaseBasedOnGrn"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.autoFetchUnitPriceInPoFromLastSupplierPurchaseBasedOnGrn' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="purchaseAndSalesHistoryInPurchaseOrder" [binary]="true"
+                        label="{{ 'settings.commonModel.purchaseAndSalesHistoryInPurchaseOrder' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="autoIssueOfItemsInJcFromGrn" [binary]="true"
+                        label="{{ 'settings.commonModel.autoIssueOfItemsInJcFromGrn' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowPartialRefund" [binary]="true"
+                        label="{{ 'settings.commonModel.allowPartialRefund' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="addPaymentInCreditCardBankTransfer" [binary]="true"
+                        label="{{ 'settings.commonModel.addPaymentInCreditCardBankTransfer' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableManualBookingNoField" [binary]="true"
+                        label="{{ 'settings.commonModel.enableManualBookingNoField' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enablePickAndDropLocationInAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.enablePickAndDropLocationInAgreement' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="takeSignatureOnAgreementOpeningInMobileApp" [binary]="true"
+                        label="{{ 'settings.commonModel.takeSignatureOnAgreementOpeningInMobileApp' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="takeSignatureOnAgreementOpenedWebCreated" [binary]="true"
+                        label="{{ 'settings.commonModel.takeSignatureOnAgreementOpenedWebCreated' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="poMandatoryForWorkshopMovement" [binary]="true"
+                        label="{{ 'settings.commonModel.poMandatoryForWorkshopMovement' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="notesMandatoryForWorkshopMovement" [binary]="true"
+                        label="{{ 'settings.commonModel.notesMandatoryForWorkshopMovement' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableFutureInvoicing" [binary]="true"
+                        label="{{ 'settings.commonModel.enableFutureInvoicing' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableLocationDetailsInMovements" [binary]="true"
+                        label="{{ 'settings.commonModel.enableLocationDetailsInMovements' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="invoiceFuelChargesOnReplacement" [binary]="true"
+                        label="{{ 'settings.commonModel.invoiceFuelChargesOnReplacement' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowPrintingOfVoidedVouchers" [binary]="true"
+                        label="{{ 'settings.commonModel.allowPrintingOfVoidedVouchers' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="estimatedRevenueReportsGenerateBasedOnActualClosingCharges"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.estimatedRevenueReportsGenerateBasedOnActualClosingCharges' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableFutureAgreementCheckOut" [binary]="true"
+                        label="{{ 'settings.commonModel.enableFutureAgreementCheckOut' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableAdditionalNotesField" [binary]="true"
+                        label="{{ 'settings.commonModel.enableAdditionalNotesField' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableCurrentPreviousDatedChequeDirectlyToBank" [binary]="true"
+                        label="{{ 'settings.commonModel.enableCurrentPreviousDatedChequeDirectlyToBank' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="taxPercentageInBillAndJvImport" [binary]="true"
+                        label="{{ 'settings.commonModel.taxPercentageInBillAndJvImport' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="importVoucherLinesWithTax" [binary]="true"
+                        label="{{ 'settings.commonModel.importVoucherLinesWithTax' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableCurrentPreviousDatedChequePayableDirectlyToBank" [binary]="true"
+                        label="{{ 'settings.commonModel.enableCurrentPreviousDatedChequePayableDirectlyToBank' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="setBillDateAsCurrentDate" [binary]="true"
+                        label="{{ 'settings.commonModel.setBillDateAsCurrentDate' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="manuallyDateChangeInFineBillGeneration" [binary]="true"
+                        label="{{ 'settings.commonModel.manuallyDateChangeInFineBillGeneration' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="dontAllowToSaveCustomerWithExpiryDocument" [binary]="true"
+                        label="{{ 'settings.commonModel.dontAllowToSaveCustomerWithExpiryDocument' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="vehicleRegistrationExpiryAndServiceDuePopupOnAgreementMovementsSaving"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.vehicleRegistrationExpiryAndServiceDuePopupOnAgreementMovementsSaving' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="depreciationTillOfSaleDateInsteadOfDisposalDate" [binary]="true"
+                        label="{{ 'settings.commonModel.depreciationTillOfSaleDateInsteadOfDisposalDate' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotRentMultipleVehiclesOnSameDriverCheck" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotRentMultipleVehiclesOnSameDriverCheck' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="weeklyAgreementChargedMinimumOneWeek" [binary]="true"
+                        label="{{ 'settings.commonModel.weeklyAgreementChargedMinimumOneWeek' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotAllowAgreementCreationIfDocumentsAreExpired" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotAllowAgreementCreationIfDocumentsAreExpired' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotAllowRentalAgreementCreationIfNoDocumentsAttached" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotAllowRentalAgreementCreationIfNoDocumentsAttached' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="includeFuelChargesInRevenueAnalysisReport" [binary]="true"
+                        label="{{ 'settings.commonModel.includeFuelChargesInRevenueAnalysisReport' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="calculateAndShowAgreementChargesTillNow" [binary]="true"
+                        label="{{ 'settings.commonModel.calculateAndShowAgreementChargesTillNow' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="customizeRevenueLinkingForContactGroups" [binary]="true"
+                        label="{{ 'settings.commonModel.customizeRevenueLinkingForContactGroups' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="alertsForExternalVehicle" [binary]="true"
+                        label="{{ 'settings.commonModel.alertsForExternalVehicle' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="alertsForMortgageVehicle" [binary]="true"
+                        label="{{ 'settings.commonModel.alertsForMortgageVehicle' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="creditCardLast4Digits" [binary]="true"
+                        label="{{ 'settings.commonModel.creditCardLast4Digits' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="manuallyConfirmBooking" [binary]="true"
+                        label="{{ 'settings.commonModel.manuallyConfirmBooking' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableTermsAndConditionsOnAgreementCheckOut" [binary]="true"
+                        label="{{ 'settings.commonModel.enableTermsAndConditionsOnAgreementCheckOut' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotIncludeReplacementVehicles" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotIncludeReplacementVehicles' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotAllowReceiptCreationWithoutAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotAllowReceiptCreationWithoutAgreement' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowReceiptOnScreenAllocationPartially" [binary]="true"
+                        label="{{ 'settings.commonModel.allowReceiptOnScreenAllocationPartially' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowSupplierPaymentOnScreenAllocationPartially" [binary]="true"
+                        label="{{ 'settings.commonModel.allowSupplierPaymentOnScreenAllocationPartially' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="useCustomerBranchForVouchers" [binary]="true"
+                        label="{{ 'settings.commonModel.useCustomerBranchForVouchers' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="isPoNoMandatoryForComapnyIn" [binary]="true"
+                        label="{{ 'settings.commonModel.isPoNoMandatoryForComapnyIn' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="vehicleSearchByChassisNoBesidesPlateNo" [binary]="true"
+                        label="{{ 'settings.commonModel.vehicleSearchByChassisNoBesidesPlateNo' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showBookedVehiclesInDashboard" [binary]="true"
+                        label="{{ 'settings.commonModel.showBookedVehiclesInDashboard' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showLimoVehiclesInDashboard" [binary]="true"
+                        label="{{ 'settings.commonModel.showLimoVehiclesInDashboard' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showReplacementTodayVehiclesInDashboard" [binary]="true"
+                        label="{{ 'settings.commonModel.showReplacementTodayVehiclesInDashboard' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showLimitedFieldsForAgreementViewInAgreementDashboard" [binary]="true"
+                        label="{{ 'settings.commonModel.showLimitedFieldsForAgreementViewInAgreementDashboard' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableCostCenterGroup2" [binary]="true"
+                        label="{{ 'settings.commonModel.enableCostCenterGroup2' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="enableVoucherPrintingAfterApproval" [binary]="true"
+                        label="{{ 'settings.commonModel.enableVoucherPrintingAfterApproval' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="kmsConfirmationPopupOnCheckIn" [binary]="true"
+                        label="{{ 'settings.commonModel.kmsConfirmationPopupOnCheckIn' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="createLeaseAgreementByWizard" [binary]="true"
+                        label="{{ 'settings.commonModel.createLeaseAgreementByWizard' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="dontAllowCheckInWithZeroKms" [binary]="true"
+                        label="{{ 'settings.commonModel.dontAllowCheckInWithZeroKms' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowOverAllocationForCreditNotesReceipts" [binary]="true"
+                        label="{{ 'settings.commonModel.allowOverAllocationForCreditNotesReceipts' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="selectChargesTypeInMiscInvoice" [binary]="true"
+                        label="{{ 'settings.commonModel.selectChargesTypeInMiscInvoice' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="deleteFineBills" [binary]="true"
+                        label="{{ 'settings.commonModel.deleteFineBills' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowWorkshopMovementForExternalVehicleInCrs" [binary]="true"
+                        label="{{ 'settings.commonModel.allowWorkshopMovementForExternalVehicleInCrs' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="dontAllowWorkshopMovementWhenAlreadyVehicleStatusIsWorkshop"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.dontAllowWorkshopMovementWhenAlreadyVehicleStatusIsWorkshop' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="disableTollsAndFinesDownloading" [binary]="true"
+                        label="{{ 'settings.commonModel.disableTollsAndFinesDownloading' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="disableKmInOutAndDriversInAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.disableKmInOutAndDriversInAgreement' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showAllDueVouchersStatementOfAccounts" [binary]="true"
+                        label="{{ 'settings.commonModel.showAllDueVouchersStatementOfAccounts' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showAllocationsInStatementOfAccount" [binary]="true"
+                        label="{{ 'settings.commonModel.showAllocationsInStatementOfAccount' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showAllocationsInCreditNote" [binary]="true"
+                        label="{{ 'settings.commonModel.showAllocationsInCreditNote' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotAllowAssetCreationIfVehicleDoesNotExist" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotAllowAssetCreationIfVehicleDoesNotExist' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showLastJobDetailOnJobPrint" [binary]="true"
+                        label="{{ 'settings.commonModel.showLastJobDetailOnJobPrint' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="importAndAttachPoInBill" [binary]="true"
+                        label="{{ 'settings.commonModel.importAndAttachPoInBill' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="dontAllowPrintForUnApprovedJobEstimation" [binary]="true"
+                        label="{{ 'settings.commonModel.dontAllowPrintForUnApprovedJobEstimation' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showLogoInAppReportPrint" [binary]="true"
+                        label="{{ 'settings.commonModel.showLogoInAppReportPrint' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowGatePassPrintWithoutReceipt" [binary]="true"
+                        label="{{ 'settings.commonModel.allowGatePassPrintWithoutReceipt' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowZeroChargesInMisc" [binary]="true"
+                        label="{{ 'settings.commonModel.allowZeroChargesInMisc' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="grnAsFinancialVoucher" [binary]="true"
+                        label="{{ 'settings.commonModel.grnAsFinancialVoucher' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="getSoaOfCurrentBranchCustomersOnly" [binary]="true"
+                        label="{{ 'settings.commonModel.getSoaOfCurrentBranchCustomersOnly' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="quotationIsMandatoryForAllIndividualCustomersForWeeklyAndMonthly"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.quotationIsMandatoryForAllIndividualCustomersForWeeklyAndMonthly' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="agreementAutoEndDate" [binary]="true"
+                        label="{{ 'settings.commonModel.agreementAutoEndDate' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="branchWiseInvoicing" [binary]="true"
+                        label="{{ 'settings.commonModel.branchWiseInvoicing' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showFuelPercentageInsteadOfFraction" [binary]="true"
+                        label="{{ 'settings.commonModel.showFuelPercentageInsteadOfFraction' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="calculateAmortizationForLastPeriodInsteadOfPassingPendingAmount"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.calculateAmortizationForLastPeriodInsteadOfPassingPendingAmount' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotGenerateJobClosingInvoiceForInternalCustomer" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotGenerateJobClosingInvoiceForInternalCustomer' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showBookingReferenceNoInStatementOfAccountAndReceiptAllocation"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.showBookingReferenceNoInStatementOfAccountAndReceiptAllocation' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showVoucherDetailedDescriptionInSoa" [binary]="true"
+                        label="{{ 'settings.commonModel.showVoucherDetailedDescriptionInSoa' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showVoucherDescriptionInSupplierOutstandingSoa" [binary]="true"
+                        label="{{ 'settings.commonModel.showVoucherDescriptionInSupplierOutstandingSoa' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showPlateNoForWorkshopInvoiceInSoa" [binary]="true"
+                        label="{{ 'settings.commonModel.showPlateNoForWorkshopInvoiceInSoa' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showDescriptionForLimousineInvoiceInSoa" [binary]="true"
+                        label="{{ 'settings.commonModel.showDescriptionForLimousineInvoiceInSoa' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowComplimentaryAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.allowComplimentaryAgreement' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="considerExtraFuelInWhileFuelChargesCalculation" [binary]="true"
+                        label="{{ 'settings.commonModel.considerExtraFuelInWhileFuelChargesCalculation' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showFirstVehicleInBillSoa" [binary]="true"
+                        label="{{ 'settings.commonModel.showFirstVehicleInBillSoa' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showUnallocatedAmountInReceivableAgeAnalysis" [binary]="true"
+                        label="{{ 'settings.commonModel.showUnallocatedAmountInReceivableAgeAnalysis' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showOnlyStaffForUserContact" [binary]="true"
+                        label="{{ 'settings.commonModel.showOnlyStaffForUserContact' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showAdvancePhoneNumberInputInContacts" [binary]="true"
+                        label="{{ 'settings.commonModel.showAdvancePhoneNumberInputInContacts' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowOnlyNumericNumberInMobilePhoneOnCustomer" [binary]="true"
+                        label="{{ 'settings.commonModel.allowOnlyNumericNumberInMobilePhoneOnCustomer' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="separateMakeAndModelInFleet" [binary]="true"
+                        label="{{ 'settings.commonModel.separateMakeAndModelInFleet' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="agreementStartDateAsAdvanceReceiptAndDepositDate" [binary]="true"
+                        label="{{ 'settings.commonModel.agreementStartDateAsAdvanceReceiptAndDepositDate' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox
+                        formControlName="onBookingConfirmationVehicleSubstatusToBeChangedToPendingCustomerDelivery"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.onBookingConfirmationVehicleSubstatusToBeChangedToPendingCustomerDelivery' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="editEmiInterest" [binary]="true"
+                        label="{{ 'settings.commonModel.editEmiInterest' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotAllowDuplicateChequeNumberInReceiptsAndPayments" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotAllowDuplicateChequeNumberInReceiptsAndPayments' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotAllowDiscountInPo" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotAllowDiscountInPo' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowGeneralBillOnCustomer" [binary]="true"
+                        label="{{ 'settings.commonModel.allowGeneralBillOnCustomer' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showBlackListedCustomerInAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.showBlackListedCustomerInAgreement' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowPdcPrintingBeforeClearance" [binary]="true"
+                        label="{{ 'settings.commonModel.allowPdcPrintingBeforeClearance' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="replacementOfMakeAndModelInGridForVehicles" [binary]="true"
+                        label="{{ 'settings.commonModel.replacementOfMakeAndModelInGridForVehicles' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showCustomFieldForCheckOutAndCheckInMovement" [binary]="true"
+                        label="{{ 'settings.commonModel.showCustomFieldForCheckOutAndCheckInMovement' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showCustomField3InMovement" [binary]="true"
+                        label="{{ 'settings.commonModel.showCustomField3InMovement' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="autoFixedDecimalRounding" [binary]="true"
+                        label="{{ 'settings.commonModel.autoFixedDecimalRounding' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowDuplicateCustomerNameWhileCreatingNewCustomer" [binary]="true"
+                        label="{{ 'settings.commonModel.allowDuplicateCustomerNameWhileCreatingNewCustomer' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowQuantityAndRateColumnInMiscInvoice" [binary]="true"
+                        label="{{ 'settings.commonModel.allowQuantityAndRateColumnInMiscInvoice' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="selectToBranchInNrtMovement" [binary]="true"
+                        label="{{ 'settings.commonModel.selectToBranchInNrtMovement' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showAllWorkshopMovementsInServiceLog" [binary]="true"
+                        label="{{ 'settings.commonModel.showAllWorkshopMovementsInServiceLog' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showFineInvoiceDetailInCustomerSoa" [binary]="true"
+                        label="{{ 'settings.commonModel.showFineInvoiceDetailInCustomerSoa' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showAgreementInReceipt" [binary]="true"
+                        label="{{ 'settings.commonModel.showAgreementInReceipt' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showYearFilterInDateRange" [binary]="true"
+                        label="{{ 'settings.commonModel.showYearFilterInDateRange' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showOnlyDueVouchersBasedOnCreditPeriod" [binary]="true"
+                        label="{{ 'settings.commonModel.showOnlyDueVouchersBasedOnCreditPeriod' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="generalBillQuantityPriceBasedOnPo" [binary]="true"
+                        label="{{ 'settings.commonModel.generalBillQuantityPriceBasedOnPo' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="agreementAndCustomerBalanceInRentalAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.agreementAndCustomerBalanceInRentalAgreement' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="showExpiryDetailsForWarrantyOfVehicles" [binary]="true"
+                        label="{{ 'settings.commonModel.showExpiryDetailsForWarrantyOfVehicles' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="allowMovementsForSaleVehicle" [binary]="true"
+                        label="{{ 'settings.commonModel.allowMovementsForSaleVehicle' | translate }}" class="mb-4">
+                    </p-checkbox>
+                </div>
+
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <p-checkbox formControlName="displayExtendedAgreementDetailsInLogAndExportRentalLease"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.displayExtendedAgreementDetailsInLogAndExportRentalLease' | translate }}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-8 col-sm-12 mb-8">
+                    <p-checkbox formControlName="doNotShowAgreementNoInSOAEmail" [binary]="true"
+                        label="{{ 'settings.commonModel.doNotShowAgreementNoInSOAEmail' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.salesPersonDesignation' | translate
+                        }}</label>
+                    <p-dropdown formControlName="salesPersonDesignation" [options]="salesPersonDesignationList()"
+                        optionLabel="key" optionValue="id"
+                        [placeholder]="'settings.commonModel.salesPersonDesignation' | translate" />
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.vehicleProfitLossExcludedAccounts' |
+                        translate
+                        }}</label>
+                    <p-chips formControlName="vehicleProfitLossExcludedAccounts" separator=","
+                        placeholder="{{ 'settings.commonModel.addValueAndPressEnter' | translate}}"
+                        styleClass="w-100 d-block" inputStyleClass="chips-inner-padding">
+                    </p-chips>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.custodyMovementDueAmountLimit' |
+                        translate
+                        }}</label>
+                    <input type="text" pInputText formControlName="custodyMovementDueAmountLimit" class="form-control"
+                        [placeholder]="'settings.commonModel.custodyMovementDueAmountLimit' | translate" />
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.Mcc' | translate}}</h4>
+
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="isLeftHandDriving" [binary]="true"
+                        label="{{ 'settings.commonModel.isLeftHandDriving' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="showDamagesPicturesOnCheckCard" [binary]="true"
+                        label="{{ 'settings.commonModel.showDamagesPicturesOnCheckCard' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.customers' | translate}}</h4>
+                <div class="col-lg-12 mb-8">
+                    <p-checkbox formControlName="selectCustomerFromList" [binary]="true"
+                        label="{{ 'settings.commonModel.selectCustomerFromList' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+            </div>
+            <div class="row">
+                <h4 class="mb-6">{{ 'settings.commonModel.service' | translate}}</h4>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.serviceAlertsPriorKms' | translate
+                        }}</label>
+                    <input type="text" pInputText formControlName="serviceAlertsPriorKms" class="form-control"
+                        [placeholder]="'settings.commonModel.serviceAlertsPriorKms' | translate" />
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">{{ 'settings.commonModel.serviceAlertsPriorDays' | translate
+                        }}</label>
+                    <input type="text" pInputText formControlName="serviceAlertsPriorDays" class="form-control"
+                        [placeholder]="'settings.commonModel.serviceAlertsPriorDays' | translate" />
+                </div>
+            </div>
+            <div class="row align-items-center">
+                <h4 class="mb-6">{{ 'settings.commonModel.webBooking' | translate}}</h4>
+                <div class="col-lg-8 col-md-8 col-sm-12 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.webBookingApiKey' | translate}}
+                    </label>
+                    <input type="text" pInputText formControlName="webBookingApiKey" class="form-control"
+                        [placeholder]="'settings.commonModel.webBookingApiKey' | translate" />
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <div>
+                        <app-buttons [endButtons]="keyButtons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.rateCardForWebBookingPlugin' | translate}}
+                    </label>
+                    <p-dropdown formControlName="rateCardForWebBookingPlugin" [options]="rateCardList()"
+                        optionLabel="key" optionValue="id"
+                        placeholder="{{ 'settings.commonModel.rateCardForWebBookingPlugin' | translate }}">
+                    </p-dropdown>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <p-checkbox formControlName="showGroupWithAvailableVehicle" [binary]="true"
+                        label="{{ 'settings.commonModel.showGroupWithAvailableVehicle' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.googleApiKey' | translate}}
+                    </label>
+                    <input type="text" pInputText formControlName="googleApiKey" class="form-control"
+                        [placeholder]="'settings.commonModel.googleApiKey' | translate" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.mileageUpdateAlertAfterMonths' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="mileageUpdateAlertAfterMonths"
+                        placeholder="{{ 'settings.commonModel.mileageUpdateAlertAfterMonths' | translate }}">
+                    </p-inputNumber>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="invoiceDateAsGenerationDate" [binary]="true"
+                        label="{{ 'settings.commonModel.invoiceDateAsGenerationDate' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="invoiceDateAsGenerationDateForAllInvoices" [binary]="true"
+                        label="{{ 'settings.commonModel.invoiceDateAsGenerationDateForAllInvoices' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="dontCheckDepreciationAndAmortizationInFiscalMonthClosing"
+                        [binary]="true"
+                        label="{{ 'settings.commonModel.dontCheckDepreciationAndAmortizationInFiscalMonthClosing' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="tariffCardExplicitSelectionInBookingAgreement" [binary]="true"
+                        label="{{ 'settings.commonModel.tariffCardExplicitSelectionInBookingAgreement' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="createNewBookingAlwaysAsConfirmed" [binary]="true"
+                        label="{{ 'settings.commonModel.createNewBookingAlwaysAsConfirmed' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+            </div>
+            <div class="row mb-8">
+                <div class="col-12 col-md-4 mb-4" *ngFor="let option of assetDisposalPostingOptionList()">
+                    <div class="d-flex align-items-center">
+                        <p-radioButton formControlName="assetDisposalPostingOption" [id]="option.id"
+                            [value]="option.id">
+                        </p-radioButton>
+
+                        <label class="ms-2" [for]="option.id">
+                            {{ 'settings.commonModel.' + option.key | translate }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="estimateOrSetAssetSalePrice" [binary]="true"
+                        label="{{ 'settings.commonModel.estimateOrSetAssetSalePrice' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <p-checkbox formControlName="decliningDepreciationOnAssetLifeBookValue" [binary]="true"
+                        label="{{ 'settings.commonModel.decliningDepreciationOnAssetLifeBookValue' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.profitMarginPercentageOnAssetCostPrice' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="profitMarginPercentageOnAssetCostPrice"
+                        placeholder="{{ 'settings.commonModel.profitMarginPercentageOnAssetCostPrice' | translate }}">
+                    </p-inputNumber>
+                </div>
+
+            </div>
+            <div class="row align-items-center mb-8">
+                <h4 class="mb-6">{{ 'settings.commonModel.dueForSale' | translate}}</h4>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.KMsThreshold' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="dueForSaleKMsThreshold"
+                        placeholder="{{ 'settings.commonModel.KMsThreshold' | translate }}">
+                    </p-inputNumber>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 mb-8">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.dueForSalePeriodYears' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="dueForSalePeriodYears"
+                        placeholder="{{ 'settings.commonModel.dueForSalePeriodYears' | translate }}">
+                    </p-inputNumber>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <p-checkbox formControlName="includeBuyBack" [binary]="true"
+                        label="{{ 'settings.commonModel.includeBuyBack' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+            </div>
+            <div class="row align-items-center mb-8">
+                <h4 class="mb-6">{{ 'settings.commonModel.timeOfDay' | translate}}</h4>
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.detailedUtilizationReportTime' | translate}}
+                    </label>
+                    <input type="text" pInputText formControlName="detailedUtilizationReportTime" class="form-control"
+                        [placeholder]="'settings.commonModel.detailedUtilizationReportTime' | translate" />
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <p-checkbox formControlName="makeCreditCardInfoRequiredInReceipt" [binary]="true"
+                        label="{{ 'settings.commonModel.makeCreditCardInfoRequiredInReceipt' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <p-checkbox formControlName="getCloseAgreementsForDriverTimeSheet" [binary]="true"
+                        label="{{ 'settings.commonModel.getCloseAgreementsForDriverTimeSheet' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+            </div>
+            <div class="row align-items-center mb-8">
+                <h4 class="mb-6">{{ 'settings.commonModel.fuel' | translate}}</h4>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <p-checkbox formControlName="fuelSurchargeInvoiceClubWithFuelInvoice" [binary]="true"
+                        label="{{ 'settings.commonModel.fuelSurchargeInvoiceClubWithFuelInvoice' | translate}}"
+                        class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <p-checkbox formControlName="fuelAverageUsingPettyCashPayment" [binary]="true"
+                        label="{{ 'settings.commonModel.fuelAverageUsingPettyCashPayment' | translate}}" class="mb-4">
+                    </p-checkbox>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.percentageFuelSurchargeInvoice' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="percentageFuelSurchargeInvoice"
+                        placeholder="{{ 'settings.commonModel.percentageFuelSurchargeInvoice' | translate }}">
+                    </p-inputNumber>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <label class="form-label required">
+                        {{ 'settings.commonModel.currentFuelPrice' | translate}}
+                    </label>
+                    <p-inputNumber formControlName="currentFuelPrice"
+                        placeholder="{{ 'settings.commonModel.currentFuelPrice' | translate }}">
+                    </p-inputNumber>
+                </div>
+            </div>
+            <div>
+                <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+            </div>
+        </form>
+    </div>
+</div>

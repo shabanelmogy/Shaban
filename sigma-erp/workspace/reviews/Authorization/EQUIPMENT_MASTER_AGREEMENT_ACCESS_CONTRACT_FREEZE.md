@@ -1,0 +1,9 @@
+# تجميد عقد صلاحيات EquipmentMasterAgreement — 12 نوفمبر 2026
+
+**الحد:** شاشة EquipmentMasterAgreement وحدها، resource `EquipmentMasterAgreement`. جميع المنح من كتالوج backend؛ لا يوجد اعتماد ضمني على `Quotation.GetSelect` غير المدعوم أو على `SaleOrder` المتقاعد. `/create` مستقل عن `/` وView، و`/edit/:id` يتطلب View+Update والمراجع اللازمة، و`/view/:id` يتطلب View وحده. `Customer.Lookup` و`Equipment.Lookup` اختيارات إنشاء/تعديل؛ `Quotation.View` مشروط باختيار/إرسال `QuotationId` ومرجع quotation detail. القائمة/Excel تتطلب View؛ customer filter/grids تتطلب Customer.Lookup، وquotationRefNo يتطلب Quotation.View فقط عند الاستهلاك. رابط الفرع من CurrentBranch/Options actor-bound.
+
+كل `Approve`, `Delete`, `FinancialStatus`, `Close`, `Reopen`, `GetSaleOrders`, `UpdateSaleOrders` مستقل، ويحتاج View؛ `Close/Reopen` يتطلبان FinancialStatus، و`UpdateSaleOrders` يتطلب GetSaleOrders. لا ترفع `SaleOrder.CreateEquipmentRentalOrder` المتقاعد أو `Quotation.GetSelect` إلى assignable. رابط `/DeliveryNote` للعرض يحتاج `DeliveryNote.View`، ولإنشاء تسليم يحتاج `DeliveryNote.Create` وشروطه الخاصة.
+
+قاعدة الأمان: scope الاتفاقية يتبع edge متعدد الفروع في BranchScopeRegistry. لا يجوز نقل اتفاقية أو إنشاء/تعديل rates أو SalesOrders في فرع غير قابل للكتابة للفاعل، أو تسريب عميل/عرض/معدة فرع آخر في EF projections. أي مستند live أو charge/invoice يمنع التغيير غير المتوافق عبر قواعد الخدمة الحالية؛ لا تضعفها. نتيجتا 404 (غير مرئي أو مفقود) و405 (generic unsupported) موثقتان ومقبولتان مصدرّيًا فقط.
+
+حراس Angular: لا تبدأ GET عند فقد المنحة؛ ألغِ reads/export/print وامسح الصفوف المحمية عند تغيير الحساب/الفرع أو سحب access؛ افصل View-only عن Create-only، ولا ترسل تغييرًا بعد سحب grant أو تأكيد قديم. POST/PUT/DELETE المرسلة لا تتوقف بسبب DestroyRef، لكن لا تعرض نجاحها في جلسة أخرى (`CAN_PRESENT_API_OUTCOME`). `UI22` مرة واحدة للتعامل مع حمل الصفحة. Specs جديدة source-only وغير منفذة، ولا ترقية للجرد إلى 149 قبل إتمام المطابقة والفحص.

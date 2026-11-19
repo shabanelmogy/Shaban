@@ -1,0 +1,59 @@
+{
+  "equipmentRentalInvoice": {
+    "title": ["Equipment Rental Invoices", "فواتير تأجير المعدات"],
+    "subtitle": ["Manage equipment rental invoice information", "إدارة بيانات فواتير تأجير المعدات"],
+    "createTitle": ["Create Equipment Rental Invoice", "إنشاء فاتورة تأجير معدات"],
+    "editTitle": ["Edit Equipment Rental Invoice", "تعديل فاتورة تأجير معدات"],
+    "viewTitle": ["Equipment Rental Invoice Details", "تفاصيل فاتورة تأجير المعدات"],
+    "editorSubtitle": ["Enter invoice information", "أدخل بيانات الفاتورة"],
+    "recordSubtitle": ["Invoice #{{id}}", "الفاتورة رقم {{id}}"],
+    "createButton": ["Create Invoice", "إنشاء فاتورة"],
+    "id": ["ID", "المعرّف"],
+    "masterAgreementNo": ["Master Agreement No", "رقم الاتفاقية الرئيسية"],
+    "deliveryNoteNo": ["Delivery Note No", "رقم مذكرة التسليم"],
+    "equipmentDetail": ["Equipment Detail", "تفاصيل المعدات"],
+    "startDate": ["Start Date", "تاريخ البدء"],
+    "exactStartDate": ["Start Date (exact)", "تاريخ البدء (مطابق)"],
+    "invoicingRule": ["Invoicing Rule", "قاعدة الفوترة"],
+    "period": ["Period", "الفترة"],
+    "empty": ["No equipment rental invoices found", "لا توجد فواتير تأجير معدات"],
+    "pageReport": ["Showing {first} to {last} of {totalRecords} entries", "عرض {first} إلى {last} من {totalRecords} إدخال"],
+    "detailsSection": ["Invoice Information", "بيانات الفاتورة"],
+    "requiredFieldsHint": ["Fields marked with * are required", "الحقول المميزة بعلامة * مطلوبة"],
+    "deleteConfirmTitle": ["Delete Equipment Rental Invoice", "حذف فاتورة تأجير المعدات"],
+    "deleteConfirmSubtitle": ["Review the selected invoice before deleting", "راجع الفاتورة المحددة قبل الحذف"],
+    "deleteConfirmMessage": ["Delete this equipment rental invoice?", "هل تريد حذف فاتورة تأجير المعدات هذه؟"],
+    "deleteConfirmWarning": ["This action cannot be undone", "لا يمكن التراجع عن هذا الإجراء"],
+    "discardTitle": ["Discard Changes", "تجاهل التغييرات"],
+    "discardMessage": ["Discard your unsaved changes?", "هل تريد تجاهل التغييرات غير المحفوظة؟"],
+    "discard": ["Discard", "تجاهل"],
+    "errors": {
+      "load": ["Failed to load invoice information.", "تعذر تحميل بيانات الفاتورة."],
+      "save": ["Failed to save invoice information.", "تعذر حفظ بيانات الفاتورة."],
+      "delete": ["Failed to delete the invoice.", "تعذر حذف الفاتورة."],
+      "export": ["Failed to export the invoices.", "تعذر تصدير الفواتير."]
+    }
+  },
+  "timeSheet": {
+    "id": ["ID", "المعرّف"],
+    "dateRangeStart": ["Period Start Date", "تاريخ بداية الفترة"],
+    "dateRangeEnd": ["Period End Date", "تاريخ نهاية الفترة"],
+    "exactDate": ["Date (exact)", "التاريخ (مطابق)"],
+    "exactDateRangeStart": ["Period Start Date (exact)", "تاريخ بداية الفترة (مطابق)"],
+    "exactDateRangeEnd": ["Period End Date (exact)", "تاريخ نهاية الفترة (مطابق)"],
+    "deliveryId": ["Delivery ID", "معرّف التسليم"],
+    "customerId": ["Customer ID", "معرّف العميل"],
+    "masterAgreementId": ["Master Agreement ID", "معرّف الاتفاقية الرئيسية"],
+    "breakHours": ["Break Hours", "ساعات الاستراحة"],
+    "recordSubtitle": ["Time Sheet #{{id}}", "كشف الوقت رقم {{id}}"],
+    "detailsSection": ["Time Sheet Information", "بيانات كشف الوقت"],
+    "requiredFieldsHint": ["Fields marked with * are required", "الحقول المميزة بعلامة * مطلوبة"],
+    "deleteConfirmSubtitle": ["Review the selected timesheet before deleting", "راجع كشف الوقت المحدد قبل الحذف"],
+    "deleteConfirmWarning": ["This action cannot be undone", "لا يمكن التراجع عن هذا الإجراء"],
+    "errors": {
+      "lookups": ["Failed to load reference options.", "تعذر تحميل خيارات المراجع."],
+      "export": ["Failed to export timesheets.", "تعذر تصدير كشوف الوقت."],
+      "print": ["Failed to prepare the timesheet report.", "تعذر تجهيز تقرير كشوف الوقت."]
+    }
+  }
+}

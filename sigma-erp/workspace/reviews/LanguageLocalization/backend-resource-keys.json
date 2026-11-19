@@ -1,0 +1,67 @@
+[
+  {
+    "key": "LanguageNotFound",
+    "en": "The language was not found.",
+    "ar": "لم يتم العثور على اللغة."
+  },
+  {
+    "key": "LanguageBuiltInLocked",
+    "en": "Built-in language definitions cannot be changed or deleted.",
+    "ar": "لا يمكن تعديل أو حذف تعريفات اللغات المدمجة."
+  },
+  {
+    "key": "LanguageInvalidCulture",
+    "en": "Select an active language with a valid culture code.",
+    "ar": "اختر لغة نشطة ذات رمز ثقافة صالح."
+  },
+  {
+    "key": "LanguageCultureExists",
+    "en": "This culture code already belongs to a language.",
+    "ar": "رمز الثقافة هذا مستخدم بالفعل للغة أخرى."
+  },
+  {
+    "key": "LanguageInUse",
+    "en": "This language is the default or has translations and cannot be deleted or change its culture code.",
+    "ar": "هذه اللغة افتراضية أو لها ترجمات ولا يمكن حذفها أو تغيير رمز ثقافتها."
+  },
+  {
+    "key": "LanguageBulkNotSupported",
+    "en": "Use the language editor to change one language at a time.",
+    "ar": "استخدم محرر اللغة لتعديل لغة واحدة في كل مرة."
+  },
+  {
+    "key": "LocalizationConflict",
+    "en": "This value changed after you opened it. Reload before saving.",
+    "ar": "تغيرت هذه القيمة بعد فتحها. أعد تحميلها قبل الحفظ."
+  },
+  {
+    "key": "LocalizationInvalidQuery",
+    "en": "Select valid languages and a translation source, then search again.",
+    "ar": "اختر لغات صالحة ومصدر ترجمة ثم ابحث مرة أخرى."
+  },
+  {
+    "key": "LocalizationSnapshotTooLarge",
+    "en": "This selection exceeds 50,000 keys. Narrow the search before opening the editor.",
+    "ar": "يتجاوز هذا التحديد ٥٠٬٠٠٠ مفتاح. ضيق نطاق البحث قبل فتح المحرر."
+  },
+  {
+    "key": "LocalizationKeyNotFound",
+    "en": "This translation key is no longer available. Refresh the list.",
+    "ar": "لم يعد مفتاح الترجمة هذا متاحاً. حدّث القائمة."
+  },
+  {
+    "key": "LocalizationInvalidValue",
+    "en": "Enter plain text within 4,000 characters and preserve the required placeholders, or leave the value empty.",
+    "ar": "أدخل نصاً عادياً لا يتجاوز ٤٠٠٠ حرف مع الحفاظ على العناصر النائبة المطلوبة أو اترك القيمة فارغة."
+  },
+  {
+    "key": "LocalizationCatalogUnavailable",
+    "en": "The translation catalog is not initialized. Ask the administrator to apply the localization migration and import the source catalog.",
+    "ar": "كتالوج الترجمات غير مهيأ. اطلب من المسؤول تطبيق ترحيل قاعدة بيانات اللغات واستيراد كتالوج المصدر."
+  },
+  {
+    "key": "LocalizationCatalogInvalid",
+    "en": "The source catalog is invalid or incomplete. Regenerate the complete catalog and retry.",
+    "ar": "كتالوج المصدر غير صالح أو غير مكتمل. أعد إنشاء الكتالوج الكامل ثم حاول مرة أخرى."
+  }
+]

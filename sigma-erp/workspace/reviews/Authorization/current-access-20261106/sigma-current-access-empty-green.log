@@ -1,0 +1,33 @@
+> Building...
+√ Building...
+Initial chunk files                                                | Names                                                           |  Raw size
+chunk-GOE6PAFT.js                                                  | -                                                               |   2.78 MB | 
+polyfills.js                                                       | polyfills                                                       |   1.02 MB | 
+test_main.js                                                       | test_main                                                       | 833.39 kB | 
+styles.css                                                         | styles                                                          | 386.22 kB | 
+spec-app-modules-shared-authorization-current-access.guard.spec.js | spec-app-modules-shared-authorization-current-access.guard.spec |  25.37 kB | 
+jasmine-cleanup-0.js                                               | jasmine-cleanup-0                                               | 397 bytes | 
+
+                                                                   | Initial total                                                   |   5.05 MB
+
+Application bundle generation complete. [9.599 seconds] - 2026-11-06T05:21:54.134Z
+
+06 11 2026 07:21:56.281:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9876/
+06 11 2026 07:21:56.283:INFO [launcher]: Launching browsers ChromeHeadless with concurrency unlimited
+06 11 2026 07:21:56.293:INFO [launcher]: Starting browser ChromeHeadless
+06 11 2026 07:22:56.298:WARN [launcher]: ChromeHeadless has not captured in 60000 ms, killing.
+06 11 2026 07:22:56.721:INFO [launcher]: Trying to start ChromeHeadless again (1/2).
+06 11 2026 07:23:56.737:WARN [launcher]: ChromeHeadless has not captured in 60000 ms, killing.
+06 11 2026 07:23:57.017:INFO [launcher]: Trying to start ChromeHeadless again (2/2).
+06 11 2026 07:23:59.312:INFO [Chrome Headless 153.0.0.0 (Windows 10)]: Connected on socket vz4HCMVLNJXo6_BfAAAA with id 17342992
+(node:50376) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Chrome Headless 153.0.0.0 (Windows 10): Executed 0 of 6[32m SUCCESS[39m (0 secs / 0 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 1 of 6[32m SUCCESS[39m (0 secs / 0.035 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 2 of 6[32m SUCCESS[39m (0 secs / 0.042 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 3 of 6[32m SUCCESS[39m (0 secs / 0.047 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 4 of 6[32m SUCCESS[39m (0 secs / 0.054 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 5 of 6[32m SUCCESS[39m (0 secs / 0.059 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 6 of 6[32m SUCCESS[39m (0 secs / 0.063 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 6 of 6[32m SUCCESS[39m (0.088 secs / 0.063 secs)
+[32mTOTAL: 6 SUCCESS[39m

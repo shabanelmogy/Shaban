@@ -1,0 +1,24 @@
+import { CashDepositSourceType } from './list';
+
+export interface CashDepositLineInput {
+  id?: number;
+  sourceType: CashDepositSourceType;
+  sourceReceiptId: number | null;
+  sourcePaymentId: number | null;
+  depositedNow: number;
+}
+
+export interface CashDepositAddInput {
+  date: string;
+  bankId: number;
+  paymentMethodId: number;
+  branchId: number | null;
+  refNo: string | null;
+  description: string | null;
+  cashDepositDetails: CashDepositLineInput[];
+}
+
+export interface CashDepositUpdateInput extends CashDepositAddInput {
+  id: number;
+}
+

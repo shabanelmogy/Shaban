@@ -1,0 +1,66 @@
+[
+  {
+    "Endpoint": "CurrentAccess",
+    "Sample": 1,
+    "Status": 200,
+    "ElapsedMs": 2579,
+    "LoggedSqlCommands": 7,
+    "ReturnedRows": 1
+  },
+  {
+    "Endpoint": "CurrentAccess",
+    "Sample": 2,
+    "Status": 200,
+    "ElapsedMs": 2321,
+    "LoggedSqlCommands": 7,
+    "ReturnedRows": 1
+  },
+  {
+    "Endpoint": "BranchOptions",
+    "Sample": 1,
+    "Status": 200,
+    "ElapsedMs": 1614,
+    "LoggedSqlCommands": 5,
+    "ReturnedRows": 1
+  },
+  {
+    "Endpoint": "BranchOptions",
+    "Sample": 2,
+    "Status": 200,
+    "ElapsedMs": 1986,
+    "LoggedSqlCommands": 5,
+    "ReturnedRows": 1
+  },
+  {
+    "Endpoint": "BranchUsers20",
+    "Sample": 1,
+    "Status": 200,
+    "ElapsedMs": 3087,
+    "LoggedSqlCommands": 10,
+    "ReturnedRows": 4
+  },
+  {
+    "Endpoint": "BranchUsers20",
+    "Sample": 2,
+    "Status": 200,
+    "ElapsedMs": 3001,
+    "LoggedSqlCommands": 10,
+    "ReturnedRows": 4
+  },
+  {
+    "Endpoint": "BranchUsers100",
+    "Sample": 1,
+    "Status": 200,
+    "ElapsedMs": 3189,
+    "LoggedSqlCommands": 10,
+    "ReturnedRows": 4
+  },
+  {
+    "Endpoint": "BranchUsers100",
+    "Sample": 2,
+    "Status": 200,
+    "ElapsedMs": 2898,
+    "LoggedSqlCommands": 10,
+    "ReturnedRows": 4
+  }
+]

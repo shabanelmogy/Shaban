@@ -1,0 +1,47 @@
+@if(!isCreateMode){
+<app-buttons [endButtons]="headerButtons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+}
+<form [formGroup]="cashDepositForm" class="row">
+  <!-- <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="date">{{
+      "mangeDetails.date" | translate
+      }}</label>
+    <input class="form-control" type="date" formControlName="date" />
+  </div> -->
+
+  <!-- date -->
+  <div class="form-group col-6 p-4">
+    <label class="form-label col-12" for="date">{{
+      "mangeDetails.date" | translate
+      }}</label>
+    <p-calendar class="col-12" inputId="calendar-12h" formControlName="date" [showTime]="true" [hourFormat]="'12'"
+      [readonlyInput]="true" [disabled]="!isCreateMode" />
+  </div>
+  <!-- bankId -->
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="bankId">{{
+      "mangeDetails.bank" | translate
+      }}</label>
+    <p-dropdown formControlName="bankId" [options]="banks()" optionLabel="name" optionValue="id"
+      placeholder="{{ 'pdcReceivable.selectBank' | translate }}" [disabled]="!isCreateMode" />
+  </div>
+  <!-- refNo -->
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="refNo">{{
+      "mangeDetails.refNo" | translate
+      }}</label>
+    <input class="form-control" type="text" formControlName="refNo" />
+  </div>
+
+  <!-- buttons -->
+  <div>
+    <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+  </div>
+
+  <!-- Cash Deposit Detail child component -->
+  <div class="mt-3 w-100">
+    <ng-container *ngComponentOutlet="cashDepositDetailComponent"></ng-container>
+  </div>
+
+
+</form>

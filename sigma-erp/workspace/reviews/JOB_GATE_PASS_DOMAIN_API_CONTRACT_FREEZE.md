@@ -1,0 +1,21 @@
+# Job Gate Pass — frozen read contract
+
+| Item | Value |
+|---|---|
+| Status | Frozen |
+| Owner verification pending | yes |
+| Authority | User instruction 2026-10-04 + PrintGatePass.PNG + Master2 standing reviewer decision |
+
+Purpose: a read-only printable gate pass for a normal Job that is Closed and has a live linked Invoice or MiscellaneousInvoice under the existing HasInvoiceAsync definition. No new transition, invoice writer, exit writer, gate-pass persistence or numbering. Reprints allowed.
+
+API: GET Job/gate-pass/{jobId:int}, returning Result<JobGatePassDto>. IJobService.GetGatePassAsync(int jobId, CancellationToken cancellationToken = default). Existing authenticated Job controller and tenant/live query owners remain; no permission mechanism invented. Invalid/nonpositive ID returns localized InvalidId (400), absent/foreign/deleted Job returns JobInvoiceJobNotFound (404), not Closed or no invoice returns new localized JobGatePassUnavailable (409). Revalidate on GET; list visibility is not authorization. Use owning normal Query for state/ownership validation and QueryReport for printable reads, with state predicate retained. _subscriptionId <=0 fails closed. Never trust list values for print data.
+
+DTO and frontend interface JobGatePass: jobId:int, jobNo:string?, jobDate:DateTime/string, closedAt:DateTime?/string|null, customerName:string?, contactNo:string?, model:string?, vehiclePlateNo:string?, vehicleChassisNo:string?, remarks:string?, logoPath:string?. One named DTO per file under existing Job/Dtos. No total/line/status/invoice writer additions to list/detail payloads.
+
+Field decisions: Job No=Job.No; Date and Date Out=ClosedAt (date-only/full time respectively), Date In=Job.DateAndTime, missing historical ClosedAt stays blank (never now/estimated completion/Invalid date). Model=vehicle.Model.Name; Plate/VIN=both available existing values; remarks=Job.Notes. Closest source-supported reviewer choice: screenshot's Name of Visitor uses linked Customer.Name (no separate visitor entity/field exists); contact is linked individual MobileNo or company Phone1 then Phone2, blank otherwise. No invented company representative, signature image or external CFAO logo. Logo=tenant SettingsProfileModel.LogoPath, if configured, ordered deterministically. Missing logo omitted. Signatures are blank labeled lines for Service Advisor and Accountant. The Repair Vehicle / Non-Repair Vehicle caption is preserved as a heading, with no unsupported repair classification.
+
+UI: normal Job recordType only, status Closed and hasInvoice===true in More Actions, title job.actions.printGatePass, printer icon. Opens shared EditorDialog view preview, no Save/Edit; fixed footer Print/Close, translated loading/error/retry, cancel stale GET on close/change/destroy. Read-only single-document report exception uses UI21 dialog report pattern (approved Movement Check Card), not CRUD or a filter report route. Shared ReportPrintService createSession + sigma-report-print-dialog / sigma-dialog-print / sigma-print-flow isolate only the preview. Disable Print while loading/error/printing or required logo image is loading; broken logo has safe omission/fallback with no endless print lock. Use existing same-origin static-file URL guard as FileLink and formatDisplayDate. Shared shell owns scrolling/focus/RTL/theme/print cleanup; document field/signature content follows the inspected Check Card print reference. All fields/actions added in en/ar job block. Direct standalone imports only; existing tsconfig explicit-files pattern preserved.
+
+Accounting/EF/migration effect: none. No stored exit permission, signature capture or payment-completion requirement is introduced by this print action. Source-only execution; runtime, browser, database, build, tests and migrations remain prohibited unless separately authorized.
+
+Implementation evidence (2026-10-04): completed source-only by root after delegation stopped before edits. Endpoint/controller/service/11-field DTO and frontend list/preview/translation consumers reconciled in WORKSHOP_FEATURE_REVIEW.md, Gate Pass final reconciliation. Frozen business/API decisions above retained. Build, EF execution, visual/print and owner acceptance pending; no schema migration required.

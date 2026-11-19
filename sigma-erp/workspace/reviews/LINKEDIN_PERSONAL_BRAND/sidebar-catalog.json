@@ -1,0 +1,3411 @@
+{
+  "date": "2026-10-15",
+  "source": "src/app/_metronic/layout/components/sidebar/sidebar-menu/sidebar-menu-data.ts",
+  "groups": [
+    {
+      "index": 1,
+      "key": "sideMenu.dashboard",
+      "titleAr": "لوحة القيادة",
+      "titleEn": "Dashboard",
+      "leaves": [
+        {
+          "key": "sideMenu.dashboard",
+          "titleAr": "لوحة القيادة",
+          "titleEn": "Dashboard",
+          "route": "/dashboard",
+          "breadcrumb": [
+            "sideMenu.dashboard"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "key": "sideMenu.agreementsDashboard",
+      "titleAr": "لوحة قيادة العقود",
+      "titleEn": "Agreements Dashboard",
+      "leaves": [
+        {
+          "key": "sideMenu.agreementsDashboard",
+          "titleAr": "لوحة قيادة العقود",
+          "titleEn": "Agreements Dashboard",
+          "route": "/agreementsDashboard",
+          "breadcrumb": [
+            "sideMenu.agreementsDashboard"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 3,
+      "key": "sideMenu.customers",
+      "titleAr": "العملاء",
+      "titleEn": "Customers",
+      "leaves": [
+        {
+          "key": "sideMenu.individuals",
+          "titleAr": "الأفراد",
+          "titleEn": "Individuals",
+          "route": "/IndividualPartner",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "sideMenu.individuals"
+          ]
+        },
+        {
+          "key": "sideMenu.companies",
+          "titleAr": "الشركات",
+          "titleEn": "Companies",
+          "route": "/CompanyPartner",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "sideMenu.companies"
+          ]
+        },
+        {
+          "key": "sideMenu.customerstatementOfAccount",
+          "titleAr": "كشف حساب العملاء",
+          "titleEn": "Statement of Account",
+          "route": "/StatementOfAccount",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "sideMenu.customerstatementOfAccount"
+          ]
+        },
+        {
+          "key": "sideMenu.balancesSummary",
+          "titleAr": "ملخص الأرصدة",
+          "titleEn": "Balances Summary",
+          "route": "/BalancesSummary",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "sideMenu.balancesSummary"
+          ]
+        },
+        {
+          "key": "sideMenu.receivableAgeAnalysis",
+          "titleAr": "تحليل أعمار الحسابات المستحقة",
+          "titleEn": "Receivable Age Analysis",
+          "route": "/ReceivableAgeAnalysis",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "sideMenu.receivableAgeAnalysis"
+          ]
+        },
+        {
+          "key": "sideMenu.alerts",
+          "titleAr": "التنبيهات",
+          "titleEn": "Alerts",
+          "route": "/Alerts",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "sideMenu.alerts"
+          ]
+        },
+        {
+          "key": "sideMenu.debtCollection",
+          "titleAr": "تحصيل الديون",
+          "titleEn": "Debt Collection",
+          "route": "/DebtCollection",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "sideMenu.debtCollection"
+          ]
+        },
+        {
+          "key": "sideMenu.followUpReport",
+          "titleAr": "تقرير المتابعة",
+          "titleEn": "Follow Up Report",
+          "route": "/followUpReport",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "sideMenu.followUpReport"
+          ]
+        },
+        {
+          "key": "userGuide.customersMenuEntry",
+          "titleAr": "دليل العملاء",
+          "titleEn": "Customers Guide",
+          "route": "/UserGuide/customers",
+          "breadcrumb": [
+            "sideMenu.customers",
+            "userGuide.customersMenuEntry"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 4,
+      "key": "sideMenu.suppliers",
+      "titleAr": "الموردين",
+      "titleEn": "Suppliers",
+      "leaves": [
+        {
+          "key": "sideMenu.suppliers",
+          "titleAr": "الموردين",
+          "titleEn": "Suppliers",
+          "route": "/Supplier",
+          "breadcrumb": [
+            "sideMenu.suppliers",
+            "sideMenu.suppliers"
+          ]
+        },
+        {
+          "key": "sideMenu.supplierStatementOfAccount",
+          "titleAr": "كشف حساب المورد",
+          "titleEn": "Supplier Statement of Account",
+          "route": "/SupplierStatement",
+          "breadcrumb": [
+            "sideMenu.suppliers",
+            "sideMenu.supplierStatementOfAccount"
+          ]
+        },
+        {
+          "key": "sideMenu.suppliersBalancesSummary",
+          "titleAr": "ملخص أرصدة الموردين",
+          "titleEn": "Suppliers Balances Summary",
+          "route": "/SupplierBalancesSummary",
+          "breadcrumb": [
+            "sideMenu.suppliers",
+            "sideMenu.suppliersBalancesSummary"
+          ]
+        },
+        {
+          "key": "sideMenu.payableAgeAnalysis",
+          "titleAr": "تحليل أعمار الذمم الدائنة",
+          "titleEn": "Payable Age Analysis",
+          "route": "/PayableAgeAnalysis",
+          "breadcrumb": [
+            "sideMenu.suppliers",
+            "sideMenu.payableAgeAnalysis"
+          ]
+        },
+        {
+          "key": "userGuide.suppliersMenuEntry",
+          "titleAr": "دليل الموردين",
+          "titleEn": "Suppliers Guide",
+          "route": "/UserGuide/suppliers",
+          "breadcrumb": [
+            "sideMenu.suppliers",
+            "userGuide.suppliersMenuEntry"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 5,
+      "key": "sideMenu.staff",
+      "titleAr": "موظف",
+      "titleEn": "Staff",
+      "leaves": [
+        {
+          "key": "sideMenu.staffs.staff",
+          "titleAr": "الموظف",
+          "titleEn": "Staff",
+          "route": "/Staff",
+          "breadcrumb": [
+            "sideMenu.staff",
+            "sideMenu.staffs.staff"
+          ]
+        },
+        {
+          "key": "sideMenu.staffs.staffStatementOfAccount",
+          "titleAr": "بيان حساب الموظف",
+          "titleEn": "Staff Statement of Account",
+          "route": "/StaffStatement",
+          "breadcrumb": [
+            "sideMenu.staff",
+            "sideMenu.staffs.staffStatementOfAccount"
+          ]
+        },
+        {
+          "key": "sideMenu.staffs.staffBalancesSummary",
+          "titleAr": "ملخص أرصدة الموظفين",
+          "titleEn": "Staff Balances Summary",
+          "route": "/StaffBalancesSummary",
+          "breadcrumb": [
+            "sideMenu.staff",
+            "sideMenu.staffs.staffBalancesSummary"
+          ]
+        },
+        {
+          "key": "sideMenu.staffs.staffOvertime",
+          "titleAr": "الوقت الإضافي للموظفين",
+          "titleEn": "Staff Overtime",
+          "route": "/StaffOverTime",
+          "breadcrumb": [
+            "sideMenu.staff",
+            "sideMenu.staffs.staffOvertime"
+          ]
+        },
+        {
+          "key": "sideMenu.staffs.staffDutySchedule",
+          "titleAr": "جدول عمل الموظفين",
+          "titleEn": "Staff Duty Schedule",
+          "route": "/StaffDutySchedule",
+          "breadcrumb": [
+            "sideMenu.staff",
+            "sideMenu.staffs.staffDutySchedule"
+          ]
+        },
+        {
+          "key": "sideMenu.staffs.designations",
+          "titleAr": "التسميات",
+          "titleEn": "Designations",
+          "route": "/Designations",
+          "breadcrumb": [
+            "sideMenu.staff",
+            "sideMenu.staffs.designations"
+          ]
+        },
+        {
+          "key": "sideMenu.staffs.alerts",
+          "titleAr": "التنبيهات",
+          "titleEn": "Alerts",
+          "route": "/staffAlerts",
+          "breadcrumb": [
+            "sideMenu.staff",
+            "sideMenu.staffs.alerts"
+          ]
+        },
+        {
+          "key": "userGuide.staffMenuEntry",
+          "titleAr": "دليل الموظفين",
+          "titleEn": "Staff Guide",
+          "route": "/UserGuide/staff",
+          "breadcrumb": [
+            "sideMenu.staff",
+            "userGuide.staffMenuEntry"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 6,
+      "key": "sideMenu.sales",
+      "titleAr": "المبيعات",
+      "titleEn": "Sales",
+      "leaves": [
+        {
+          "key": "sideMenu.saless.fleet",
+          "titleAr": "الأسطول",
+          "titleEn": "Fleet",
+          "route": "/Fleet",
+          "breadcrumb": [
+            "sideMenu.sales",
+            "sideMenu.saless.fleet"
+          ]
+        },
+        {
+          "key": "sideMenu.saless.salesQuotation",
+          "titleAr": "عرض أسعار المبيعات",
+          "titleEn": "Sales Quotation",
+          "route": "/SalesQuotation",
+          "breadcrumb": [
+            "sideMenu.sales",
+            "sideMenu.saless.salesQuotation"
+          ]
+        },
+        {
+          "key": "sideMenu.saless.saleAgreements",
+          "titleAr": "اتفاقيات المبيعات",
+          "titleEn": "Sales Agreements",
+          "route": "/SalesAgreement",
+          "breadcrumb": [
+            "sideMenu.sales",
+            "sideMenu.saless.saleAgreements"
+          ]
+        },
+        {
+          "key": "sideMenu.saless.dueInstallments",
+          "titleAr": "الأقساط المستحقة",
+          "titleEn": "Due Installments",
+          "route": "/DueInstallments",
+          "breadcrumb": [
+            "sideMenu.sales",
+            "sideMenu.saless.dueInstallments"
+          ]
+        },
+        {
+          "key": "userGuide.salesMenuEntry",
+          "titleAr": "دليل المبيعات",
+          "titleEn": "Sales Guide",
+          "route": "/UserGuide/sales",
+          "breadcrumb": [
+            "sideMenu.sales",
+            "userGuide.salesMenuEntry"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 7,
+      "key": "sideMenu.fleet",
+      "titleAr": "الأسطول",
+      "titleEn": "Fleet",
+      "leaves": [
+        {
+          "key": "sideMenu.fleets.vehicles",
+          "titleAr": null,
+          "titleEn": "Vehicles",
+          "route": "/FleetVehicle",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.vehicles"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.vehicleTypes",
+          "titleAr": null,
+          "titleEn": "Vehicle Types",
+          "route": "/FleetVehicleType",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.vehicleTypes"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.sourceCodes",
+          "titleAr": null,
+          "titleEn": "Source Codes",
+          "route": "/SourceCode",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.sourceCodes"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.vehicleQRLabels",
+          "titleAr": null,
+          "titleEn": "Vehicle QR labels",
+          "route": "/VehicleQRLabel",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.vehicleQRLabels"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.repairVehicleDamages",
+          "titleAr": null,
+          "titleEn": "Repair Vehicle Damages",
+          "route": "/RepairVehicleDamages",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.repairVehicleDamages"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.repairedDamagesHistory",
+          "titleAr": "سجل الأضرار التي تم إصلاحها",
+          "titleEn": "Repaired Damages History",
+          "route": "/RepairedDamagesHistory",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.repairedDamagesHistory"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.serviceItems",
+          "titleAr": "عناصر الخدمة",
+          "titleEn": "Service Items",
+          "route": "/ServiceItem",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.serviceItems"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.services",
+          "titleAr": null,
+          "titleEn": "Services",
+          "route": "/FleetVehicleService",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.services"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.alerts",
+          "titleAr": null,
+          "titleEn": "Alerts",
+          "route": "/FleetAlerts",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.alerts"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.serviceLog",
+          "titleAr": null,
+          "titleEn": "Service Log",
+          "route": "/FleetServiceLog",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.serviceLog"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.serviceBookings",
+          "titleAr": "حجوزات خدمة المركبات",
+          "titleEn": "Service Bookings",
+          "route": "/FleetServiceBookings",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.serviceBookings"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.accidents",
+          "titleAr": "الحوادث",
+          "titleEn": "Accidents",
+          "route": "/FleetAccidents",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.accidents"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.dailyServiceLogs",
+          "titleAr": "سجلات الخدمة اليومية",
+          "titleEn": "Daily Service Logs",
+          "route": "/FleetDailyServiceLogs",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.dailyServiceLogs"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.downloadProcessFines",
+          "titleAr": "تنزيل/معالجة المخالفات",
+          "titleEn": "Download/Process Fines",
+          "route": "/FleetDownloadProcessFines",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.downloadProcessFines"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.downloadProcessTolls",
+          "titleAr": "تنزيل/معالجة رسوم الطرق",
+          "titleEn": "Download/Process Tolls",
+          "route": "/FleetDownloadProcessTolls",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.downloadProcessTolls"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.downloadProcessDarbTolls",
+          "titleAr": "تنزيل/معالجة رسوم درب",
+          "titleEn": "Download/Process Darb Tolls",
+          "route": "/FleetDownloadProcessDarbTolls",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.downloadProcessDarbTolls"
+          ]
+        },
+        {
+          "key": "sideMenu.fleets.vehiclesTracker",
+          "titleAr": "تتبع المركبات",
+          "titleEn": "Vehicles Tracker",
+          "route": "/FleetVehicleTracker",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleets.vehiclesTracker"
+          ]
+        },
+        {
+          "key": "sideMenu.fleetGuide",
+          "titleAr": "دليل الأسطول",
+          "titleEn": "Fleet guide",
+          "route": "/UserGuide/fleet",
+          "breadcrumb": [
+            "sideMenu.fleet",
+            "sideMenu.fleetGuide"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 8,
+      "key": "sideMenu.rental",
+      "titleAr": "التأجير",
+      "titleEn": "Rental",
+      "leaves": [
+        {
+          "key": "sideMenu.rentals.rentalTariff",
+          "titleAr": "تعريفات التأجير",
+          "titleEn": "Tariff",
+          "route": "/RentalTariff",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentals.rentalTariff"
+          ]
+        },
+        {
+          "key": "sideMenu.rentals.tariffCards",
+          "titleAr": "بطاقات التعريفة",
+          "titleEn": "Tariff Cards",
+          "route": "/TariffCard",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentals.tariffCards"
+          ]
+        },
+        {
+          "key": "sideMenu.rentals.rentalQuotation",
+          "titleAr": "عروض أسعار التأجير",
+          "titleEn": "Rental Quotation",
+          "route": "/RentalQuotation",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentals.rentalQuotation"
+          ]
+        },
+        {
+          "key": "sideMenu.rentals.masterAgreement",
+          "titleAr": "الاتفاقيات الرئيسية",
+          "titleEn": "Master Agreement",
+          "route": "/MasterAgreement",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentals.masterAgreement"
+          ]
+        },
+        {
+          "key": "sideMenu.rentals.bookings",
+          "titleAr": "الحجوزات",
+          "titleEn": "Bookings",
+          "route": "/RentalBooking",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentals.bookings"
+          ]
+        },
+        {
+          "key": "sideMenu.rentals.rentalPlanner",
+          "titleAr": "مخطط التأجير",
+          "titleEn": "Rental Planner",
+          "route": "/RentalPlanner",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentals.rentalPlanner"
+          ]
+        },
+        {
+          "key": "sideMenu.rentals.agreements",
+          "titleAr": "اتفاقيات التأجير",
+          "titleEn": "Agreements",
+          "route": "/RentalAgreement",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentals.agreements"
+          ]
+        },
+        {
+          "key": "sideMenu.rentals.driverTimeSheet",
+          "titleAr": "سجل ساعات السائقين",
+          "titleEn": "Driver Time Sheet",
+          "route": "/DriverTimeSheet",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentals.driverTimeSheet"
+          ]
+        },
+        {
+          "key": "sideMenu.rentalGuide",
+          "titleAr": "دليل التأجير",
+          "titleEn": "Rental guide",
+          "route": "/UserGuide/rental",
+          "breadcrumb": [
+            "sideMenu.rental",
+            "sideMenu.rentalGuide"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 9,
+      "key": "sideMenu.lease",
+      "titleAr": "الإيجار",
+      "titleEn": "Lease",
+      "leaves": [
+        {
+          "key": "sideMenu.leases.leaseTariff",
+          "titleAr": "التعريفة",
+          "titleEn": "Tariff",
+          "route": "/LeaseTariff",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.leaseTariff"
+          ]
+        },
+        {
+          "key": "sideMenu.leases.leaseCostParameters",
+          "titleAr": "معلمات التكلفة",
+          "titleEn": "Cost Parameters",
+          "route": "/LeaseCostParameter",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.leaseCostParameters"
+          ]
+        },
+        {
+          "key": "sideMenu.leases.leaseCostSetting",
+          "titleAr": "إعدادات التكلفة",
+          "titleEn": "Cost Settings",
+          "route": "/LeaseCostSetting",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.leaseCostSetting"
+          ]
+        },
+        {
+          "key": "sideMenu.leases.leaseInquiry",
+          "titleAr": "استفسار",
+          "titleEn": "Inquiry",
+          "route": "/LeaseInquiry",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.leaseInquiry"
+          ]
+        },
+        {
+          "key": "sideMenu.leases.leaseQuotation",
+          "titleAr": "عرض سعر",
+          "titleEn": "Quotation",
+          "route": "/LeaseQuotation",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.leaseQuotation"
+          ]
+        },
+        {
+          "key": "sideMenu.leases.masterAgreement",
+          "titleAr": "الاتفاقية الرئيسية",
+          "titleEn": "Master Agreement",
+          "route": "/LeaseMasterAgreement",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.masterAgreement"
+          ]
+        },
+        {
+          "key": "sideMenu.leases.leaseagreements",
+          "titleAr": "الاتفاقيات",
+          "titleEn": "Agreements",
+          "route": "/LeaseAgreement",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.leaseagreements"
+          ]
+        },
+        {
+          "key": "sideMenu.leases.ClauseAndClauseTypes",
+          "titleAr": "البنود",
+          "titleEn": "Clauses",
+          "route": "/LeaseClause",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.ClauseAndClauseTypes"
+          ]
+        },
+        {
+          "key": "sideMenu.leases.sendSmsToLeaseCustomer",
+          "titleAr": "إرسال رسالة نصية لعميل التأجير",
+          "titleEn": "Send SMS to Lease Customer",
+          "route": "/LeaseCustomerSms",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "sideMenu.leases.sendSmsToLeaseCustomer"
+          ]
+        },
+        {
+          "key": "userGuide.leaseMenuEntry",
+          "titleAr": "دليل التأجير طويل الأجل",
+          "titleEn": "Lease Guide",
+          "route": "/UserGuide/lease",
+          "breadcrumb": [
+            "sideMenu.lease",
+            "userGuide.leaseMenuEntry"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 10,
+      "key": "sideMenu.equipmentRental",
+      "titleAr": null,
+      "titleEn": "Equipment Rental",
+      "leaves": [
+        {
+          "key": "sideMenu.equipmentRentals.quotations",
+          "titleAr": null,
+          "titleEn": "Quotations",
+          "route": "/EquipmentQuotation",
+          "breadcrumb": [
+            "sideMenu.equipmentRental",
+            "sideMenu.equipmentRentals.quotations"
+          ]
+        },
+        {
+          "key": "sideMenu.equipmentRentals.masterAgreement",
+          "titleAr": null,
+          "titleEn": "Master Agreement",
+          "route": "/EquipmentMasterAgreement",
+          "breadcrumb": [
+            "sideMenu.equipmentRental",
+            "sideMenu.equipmentRentals.masterAgreement"
+          ]
+        },
+        {
+          "key": "sideMenu.equipmentRentals.deliveryNotes",
+          "titleAr": null,
+          "titleEn": "Delivery Notes",
+          "route": "/DeliveryNote",
+          "breadcrumb": [
+            "sideMenu.equipmentRental",
+            "sideMenu.equipmentRentals.deliveryNotes"
+          ]
+        },
+        {
+          "key": "sideMenu.equipmentRentals.timeSheet",
+          "titleAr": null,
+          "titleEn": "Time Sheet",
+          "route": "/TimeSheet",
+          "breadcrumb": [
+            "sideMenu.equipmentRental",
+            "sideMenu.equipmentRentals.timeSheet"
+          ]
+        },
+        {
+          "key": "sideMenu.equipmentRentalGuide",
+          "titleAr": "دليل تأجير المعدات",
+          "titleEn": "Equipment Rental Guide",
+          "route": "/UserGuide/equipment-rental",
+          "breadcrumb": [
+            "sideMenu.equipmentRental",
+            "sideMenu.equipmentRentalGuide"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 11,
+      "key": "sideMenu.transportation",
+      "titleAr": "النقل",
+      "titleEn": "Transportation",
+      "leaves": [
+        {
+          "key": "sideMenu.transportations.transportationAgreements",
+          "titleAr": "اتفاقيات النقل",
+          "titleEn": "Agreements",
+          "route": "/TransportationAgreements",
+          "breadcrumb": [
+            "sideMenu.transportation",
+            "sideMenu.transportations.transportationAgreements"
+          ]
+        },
+        {
+          "key": "sideMenu.transportations.tripSheet",
+          "titleAr": "كشف الرحلات",
+          "titleEn": "Trip Sheet",
+          "route": "/TransportationTripSheets",
+          "breadcrumb": [
+            "sideMenu.transportation",
+            "sideMenu.transportations.tripSheet"
+          ]
+        },
+        {
+          "key": "sideMenu.transportations.transportationTrips",
+          "titleAr": "رحلات النقل",
+          "titleEn": "Trips",
+          "route": "/TransportationTrips",
+          "breadcrumb": [
+            "sideMenu.transportation",
+            "sideMenu.transportations.transportationTrips"
+          ]
+        },
+        {
+          "key": "userGuide.transportationMenuEntry",
+          "titleAr": "دليل النقل",
+          "titleEn": "Transportation Guide",
+          "route": "/UserGuide/transportation",
+          "breadcrumb": [
+            "sideMenu.transportation",
+            "userGuide.transportationMenuEntry"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 12,
+      "key": "sideMenu.movements",
+      "titleAr": "الحركات",
+      "titleEn": "Movements",
+      "leaves": [
+        {
+          "key": "sideMenu.movementss.nrms",
+          "titleAr": "حركات NRM",
+          "titleEn": "NRMs",
+          "route": "/NRM",
+          "breadcrumb": [
+            "sideMenu.movements",
+            "sideMenu.movementss.nrms"
+          ]
+        },
+        {
+          "key": "sideMenu.movementss.workshopMovements",
+          "titleAr": "حركات الورشة",
+          "titleEn": "Workshop Movements",
+          "route": "/WorkshopMovement",
+          "breadcrumb": [
+            "sideMenu.movements",
+            "sideMenu.movementss.workshopMovements"
+          ]
+        },
+        {
+          "key": "sideMenu.movementss.custodyMovements",
+          "titleAr": "حركات العهدة",
+          "titleEn": "Custody Movements",
+          "route": "/CustodyMovement",
+          "breadcrumb": [
+            "sideMenu.movements",
+            "sideMenu.movementss.custodyMovements"
+          ]
+        },
+        {
+          "key": "sideMenu.movementss.deliveryMovements",
+          "titleAr": "حركات التسليم",
+          "titleEn": "Delivery Movements",
+          "route": "/DeliveryMovement",
+          "breadcrumb": [
+            "sideMenu.movements",
+            "sideMenu.movementss.deliveryMovements"
+          ]
+        },
+        {
+          "key": "sideMenu.movementss.collectionMovements",
+          "titleAr": "حركات الاستلام",
+          "titleEn": "Collection Movements",
+          "route": "/collectionMovement",
+          "breadcrumb": [
+            "sideMenu.movements",
+            "sideMenu.movementss.collectionMovements"
+          ]
+        },
+        {
+          "key": "sideMenu.movementss.movementLog",
+          "titleAr": "سجل الحركات",
+          "titleEn": "Movement Log",
+          "route": "/logsMovement",
+          "breadcrumb": [
+            "sideMenu.movements",
+            "sideMenu.movementss.movementLog"
+          ]
+        },
+        {
+          "key": "userGuide.title",
+          "titleAr": "دليل الاستخدام",
+          "titleEn": "User Guide",
+          "route": "/UserGuide/movements",
+          "breadcrumb": [
+            "sideMenu.movements",
+            "userGuide.title"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 13,
+      "key": "sideMenu.workshop",
+      "titleAr": "الورشة",
+      "titleEn": "Workshop",
+      "leaves": [
+        {
+          "key": "sideMenu.workshops.workshopVehicles",
+          "titleAr": "المركبات",
+          "titleEn": "Vehicles",
+          "route": "/workshopVehicles",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "sideMenu.workshops.workshopVehicles"
+          ]
+        },
+        {
+          "key": "sideMenu.workshops.workOrders",
+          "titleAr": "أوامر العمل",
+          "titleEn": "Work Orders",
+          "route": "/WorkOrder",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "sideMenu.workshops.workOrders"
+          ]
+        },
+        {
+          "key": "sideMenu.workshops.jobEstimations",
+          "titleAr": "تقديرات الأعمال",
+          "titleEn": "Job Estimations",
+          "route": "/JobEstimation",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "sideMenu.workshops.jobEstimations"
+          ]
+        },
+        {
+          "key": "sideMenu.workshops.jobs",
+          "titleAr": "الأعمال",
+          "titleEn": "Jobs",
+          "route": "/Job",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "sideMenu.workshops.jobs"
+          ]
+        },
+        {
+          "key": "sideMenu.workshops.labourActivities",
+          "titleAr": "أنشطة العمالة",
+          "titleEn": "Labour Activities",
+          "route": "/LabourActivities",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "sideMenu.workshops.labourActivities"
+          ]
+        },
+        {
+          "key": "sideMenu.workshops.jobCategory",
+          "titleAr": "فئة العمل",
+          "titleEn": "Job Category",
+          "route": "/JobCategory",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "sideMenu.workshops.jobCategory"
+          ]
+        },
+        {
+          "key": "sideMenu.workshops.labourTariff",
+          "titleAr": "تعريفة العمالة",
+          "titleEn": "Labour Tariff",
+          "route": "/LabourTariff",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "sideMenu.workshops.labourTariff"
+          ]
+        },
+        {
+          "key": "sideMenu.workshops.labourActivitiesReport",
+          "titleAr": "تقرير أنشطة العمالة",
+          "titleEn": "Labour Activities Report",
+          "route": "/LabourActivitiesReport",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "sideMenu.workshops.labourActivitiesReport"
+          ]
+        },
+        {
+          "key": "userGuide.workshopMenuEntry",
+          "titleAr": "دليل الورشة",
+          "titleEn": "Workshop Guide",
+          "route": "/UserGuide/workshop",
+          "breadcrumb": [
+            "sideMenu.workshop",
+            "userGuide.workshopMenuEntry"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 14,
+      "key": "sideMenu.stock",
+      "titleAr": "المخزون",
+      "titleEn": "Stock",
+      "leaves": [
+        {
+          "key": "sideMenu.stocks.unitsOfMeasures",
+          "titleAr": "وحدات القياس",
+          "titleEn": "Units of Measures",
+          "route": "/UnitsOfMeasures",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stocks.unitsOfMeasures"
+          ]
+        },
+        {
+          "key": "sideMenu.stocks.itemTypes",
+          "titleAr": "أنواع الأصناف",
+          "titleEn": "Item Types",
+          "route": "/ItemTypes",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stocks.itemTypes"
+          ]
+        },
+        {
+          "key": "sideMenu.stocks.items",
+          "titleAr": "الأصناف",
+          "titleEn": "Items",
+          "route": "/Item",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stocks.items"
+          ]
+        },
+        {
+          "key": "sideMenu.stocks.itemRequisitions",
+          "titleAr": "طلبات الأصناف",
+          "titleEn": "Item Requisitions",
+          "route": "/ItemRequisition",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stocks.itemRequisitions"
+          ]
+        },
+        {
+          "key": "sideMenu.stocks.itemIssues",
+          "titleAr": "صرف الأصناف",
+          "titleEn": "Item Issues",
+          "route": "/ItemIssue",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stocks.itemIssues"
+          ]
+        },
+        {
+          "key": "sideMenu.stocks.itemReturns",
+          "titleAr": "إرجاع الأصناف",
+          "titleEn": "Item Returns",
+          "route": "/ItemReturn",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stocks.itemReturns"
+          ]
+        },
+        {
+          "key": "sideMenu.stocks.stockTransfer",
+          "titleAr": "تحويل المخزون",
+          "titleEn": "Stock Transfer",
+          "route": "/StockTransfer",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stocks.stockTransfer"
+          ]
+        },
+        {
+          "key": "sideMenu.stockReportss.stockSummaryReport",
+          "titleAr": "ملخص المخزون",
+          "titleEn": "Stock Summary Report",
+          "route": "/StockSummary",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockReports",
+            "sideMenu.stockReportss.stockSummaryReport"
+          ]
+        },
+        {
+          "key": "sideMenu.stockReportss.detailedStockReport",
+          "titleAr": "تفاصيل المخزون",
+          "titleEn": "Detailed Stock Report",
+          "route": "/DetailedStockReport",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockReports",
+            "sideMenu.stockReportss.detailedStockReport"
+          ]
+        },
+        {
+          "key": "sideMenu.stockReportss.purchaseOrdersDetailReport",
+          "titleAr": "تفاصيل أوامر الشراء",
+          "titleEn": "Purchase Orders Detail Report",
+          "route": "/PurchaseOrdersDetailReport",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockReports",
+            "sideMenu.stockReportss.purchaseOrdersDetailReport"
+          ]
+        },
+        {
+          "key": "sideMenu.stockReportss.purchasesDetailReport",
+          "titleAr": "تفاصيل المشتريات",
+          "titleEn": "Purchase Details Report",
+          "route": "/PurchaseDetailsReport",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockReports",
+            "sideMenu.stockReportss.purchasesDetailReport"
+          ]
+        },
+        {
+          "key": "sideMenu.stockReportss.itemsIssueReport",
+          "titleAr": "تقرير صرف الأصناف",
+          "titleEn": "Items Issue Report",
+          "route": "/ItemIssueReport",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockReports",
+            "sideMenu.stockReportss.itemsIssueReport"
+          ]
+        },
+        {
+          "key": "sideMenu.stockReportss.itemsReturnReport",
+          "titleAr": "تقرير إرجاع الأصناف",
+          "titleEn": "Items Return Report",
+          "route": "/ItemsReturnReport",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockReports",
+            "sideMenu.stockReportss.itemsReturnReport"
+          ]
+        },
+        {
+          "key": "sideMenu.stockReportss.grnPendingReport",
+          "titleAr": "تقرير استلامات البضائع المعلقة",
+          "titleEn": "GRN Pending Report",
+          "route": "/GrnPendingReport",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockReports",
+            "sideMenu.stockReportss.grnPendingReport"
+          ]
+        },
+        {
+          "key": "sideMenu.stockReportss.partsMovingLessMovingAndNotMovingReport",
+          "titleAr": "تقرير حركة قطع الغيار",
+          "titleEn": "Parts Moving Less Moving And Not Moving Report",
+          "route": "/PartsMovingReport",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockReports",
+            "sideMenu.stockReportss.partsMovingLessMovingAndNotMovingReport"
+          ]
+        },
+        {
+          "key": "sideMenu.stockGuide",
+          "titleAr": "دليل المخزون",
+          "titleEn": "Stock Guide",
+          "route": "/UserGuide/stock",
+          "breadcrumb": [
+            "sideMenu.stock",
+            "sideMenu.stockGuide"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 15,
+      "key": "sideMenu.limousine",
+      "titleAr": null,
+      "titleEn": "Limousine",
+      "leaves": [
+        {
+          "key": "sideMenu.limousines.locations",
+          "titleAr": "المواقع",
+          "titleEn": "Locations",
+          "route": "/Location",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousines.locations"
+          ]
+        },
+        {
+          "key": "sideMenu.limousines.tripTypes",
+          "titleAr": "أنواع الرحلات",
+          "titleEn": "Trip Types",
+          "route": "/TripType",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousines.tripTypes"
+          ]
+        },
+        {
+          "key": "sideMenu.limousines.limousineTariff",
+          "titleAr": "تعريفة الليموزين",
+          "titleEn": "Limousine Tariff",
+          "route": "/LimousineTariff",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousines.limousineTariff"
+          ]
+        },
+        {
+          "key": "sideMenu.limousines.tariffReport",
+          "titleAr": "تقرير التعريفة",
+          "titleEn": "Tariff Report",
+          "route": "/LimousineTariffReport",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousines.tariffReport"
+          ]
+        },
+        {
+          "key": "sideMenu.limousines.limoQuotation",
+          "titleAr": "عرض سعر ليموزين",
+          "titleEn": "Limo Quotation",
+          "route": "/LimoQuotation",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousines.limoQuotation"
+          ]
+        },
+        {
+          "key": "sideMenu.limousines.trips",
+          "titleAr": "الرحلات",
+          "titleEn": "Trips",
+          "route": "/TripBooking",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousines.trips"
+          ]
+        },
+        {
+          "key": "sideMenu.limousines.driversTracker",
+          "titleAr": "تتبع السائقين",
+          "titleEn": "Drivers Tracker",
+          "route": "/DriversTracker",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousines.driversTracker"
+          ]
+        },
+        {
+          "key": "sideMenu.limousineReportss.utilizationReport",
+          "titleAr": null,
+          "titleEn": "Utilization Report",
+          "route": "/LimousineUtilizationReport",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousineReports",
+            "sideMenu.limousineReportss.utilizationReport"
+          ]
+        },
+        {
+          "key": "sideMenu.limousineReportss.chauffeurForcedAllocationsReport",
+          "titleAr": null,
+          "titleEn": "Chauffeur Forced Allocations Report",
+          "route": "/ChauffeurForcedAllocationsReport",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousineReports",
+            "sideMenu.limousineReportss.chauffeurForcedAllocationsReport"
+          ]
+        },
+        {
+          "key": "sideMenu.limousineGuide",
+          "titleAr": null,
+          "titleEn": "Limousine Guide",
+          "route": "/UserGuide/limousine",
+          "breadcrumb": [
+            "sideMenu.limousine",
+            "sideMenu.limousineGuide"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 16,
+      "key": "sideMenu.hrm",
+      "titleAr": "الموارد البشرية",
+      "titleEn": "HRM",
+      "leaves": [
+        {
+          "key": "sideMenu.payrolls.processPayroll",
+          "titleAr": "معالجة الرواتب",
+          "titleEn": "Process Payroll",
+          "route": "/ProcessPayroll",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.payroll",
+            "sideMenu.payrolls.processPayroll"
+          ]
+        },
+        {
+          "key": "sideMenu.payrolls.processLeaveSalary",
+          "titleAr": "معالجة راتب الموظف خارج العمل",
+          "titleEn": "Process Leave Salary",
+          "route": "/ProcessLeaveSalary",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.payroll",
+            "sideMenu.payrolls.processLeaveSalary"
+          ]
+        },
+        {
+          "key": "sideMenu.payrolls.processedPayrolls",
+          "titleAr": "مسيرات الرواتب المحفوظة",
+          "titleEn": "Processed Payrolls",
+          "route": "/ProcessedPayrolls",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.payroll",
+            "sideMenu.payrolls.processedPayrolls"
+          ]
+        },
+        {
+          "key": "sideMenu.payrolls.finalSettlementProcess",
+          "titleAr": "معالجة التسوية النهائية",
+          "titleEn": "Final Settlement Process",
+          "route": "/FinalSettlementProcess",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.payroll",
+            "sideMenu.payrolls.finalSettlementProcess"
+          ]
+        },
+        {
+          "key": "sideMenu.payrolls.paySlips",
+          "titleAr": "قسائم الرواتب",
+          "titleEn": "Pay Slips",
+          "route": "/PaySlips",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.payroll",
+            "sideMenu.payrolls.paySlips"
+          ]
+        },
+        {
+          "key": "leaveReview.dashboard",
+          "titleAr": "لوحة الإجازات",
+          "titleEn": "Leave Dashboard",
+          "route": "/Leave/dashboard",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.leaves",
+            "leaveReview.dashboard"
+          ]
+        },
+        {
+          "key": "sideMenu.leavess.leaves",
+          "titleAr": null,
+          "titleEn": "Leaves",
+          "route": "/Leave",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.leaves",
+            "sideMenu.leavess.leaves"
+          ]
+        },
+        {
+          "key": "sideMenu.leavess.leaveTypes",
+          "titleAr": null,
+          "titleEn": "Leave Types",
+          "route": "/LeaveType",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.leaves",
+            "sideMenu.leavess.leaveTypes"
+          ]
+        },
+        {
+          "key": "sideMenu.leavess.holidaysCalendar",
+          "titleAr": null,
+          "titleEn": "Holidays Calendar",
+          "route": "/Holiday",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.leaves",
+            "sideMenu.leavess.holidaysCalendar"
+          ]
+        },
+        {
+          "key": "sideMenu.attendances.shifts",
+          "titleAr": null,
+          "titleEn": "Shifts",
+          "route": "/Shift",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.attendance",
+            "sideMenu.attendances.shifts"
+          ]
+        },
+        {
+          "key": "sideMenu.attendances.attendance",
+          "titleAr": null,
+          "titleEn": "Attendance",
+          "route": "/Attendance",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.attendance",
+            "sideMenu.attendances.attendance"
+          ]
+        },
+        {
+          "key": "sideMenu.attendances.timeSheet",
+          "titleAr": "سجل ساعات الموظفين",
+          "titleEn": "Time Sheet",
+          "route": "/StaffTimesheet",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.attendance",
+            "sideMenu.attendances.timeSheet"
+          ]
+        },
+        {
+          "key": "sideMenu.overtimes.processOvertime",
+          "titleAr": "معالجة العمل الإضافي",
+          "titleEn": "Process Overtime",
+          "route": "/Overtime",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.overtime",
+            "sideMenu.overtimes.processOvertime"
+          ]
+        },
+        {
+          "key": "sideMenu.deductionss.deductions",
+          "titleAr": null,
+          "titleEn": "Deductions",
+          "route": "/Deduction",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.deductions",
+            "sideMenu.deductionss.deductions"
+          ]
+        },
+        {
+          "key": "general.report",
+          "titleAr": "تقرير",
+          "titleEn": "Report",
+          "route": "/HRM/Reports",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.hrmreports",
+            "general.report"
+          ]
+        },
+        {
+          "key": "driverTimeSheetReport.title",
+          "titleAr": "تقرير ساعات السائقين",
+          "titleEn": "Driver Time Sheet Report",
+          "route": "/HRM/Reports/DriverTimeSheet",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.hrmreports",
+            "driverTimeSheetReport.title"
+          ]
+        },
+        {
+          "key": "sideMenu.hrmadministrations.staffRoles",
+          "titleAr": "أدوار الموظفين",
+          "titleEn": "Staff Roles",
+          "route": "/StaffRole",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.hrmadministration",
+            "sideMenu.hrmadministrations.staffRoles"
+          ]
+        },
+        {
+          "key": "sideMenu.hrmadministrations.departments",
+          "titleAr": "الأقسام",
+          "titleEn": "Departments",
+          "route": "/Department",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.hrmadministration",
+            "sideMenu.hrmadministrations.departments"
+          ]
+        },
+        {
+          "key": "sideMenu.hrmadministrations.leaveOpeningBalance",
+          "titleAr": "الرصيد الافتتاحي للإجازات",
+          "titleEn": "Leave Opening Balance",
+          "route": "/LeaveOpeningBalance",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.hrmadministration",
+            "sideMenu.hrmadministrations.leaveOpeningBalance"
+          ]
+        },
+        {
+          "key": "sideMenu.hrmadministrations.accountLinking",
+          "titleAr": "ربط الحسابات",
+          "titleEn": "Account Linking",
+          "route": "/AccountLinking",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.hrmadministration",
+            "sideMenu.hrmadministrations.accountLinking"
+          ]
+        },
+        {
+          "key": "sideMenu.hrmadministrations.settings",
+          "titleAr": "الإعدادات",
+          "titleEn": "Settings",
+          "route": "/HrmSetting",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "sideMenu.hrms.hrmadministration",
+            "sideMenu.hrmadministrations.settings"
+          ]
+        },
+        {
+          "key": "userGuide.hrmMenuEntry",
+          "titleAr": "دليل الموارد البشرية",
+          "titleEn": "HRM Guide",
+          "route": "/UserGuide/hrm",
+          "breadcrumb": [
+            "sideMenu.hrm",
+            "userGuide.hrmMenuEntry"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 17,
+      "key": "sideMenu.vouchers",
+      "titleAr": "السندات",
+      "titleEn": "Vouchers",
+      "leaves": [
+        {
+          "key": "sideMenu.voucherss.invoices",
+          "titleAr": "الفواتير",
+          "titleEn": "Invoices",
+          "route": "/Invoice",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.invoices"
+          ]
+        },
+        {
+          "key": "invoice.guideTitle",
+          "titleAr": "دليل الفواتير",
+          "titleEn": "Invoice Guide",
+          "route": "/UserGuide/invoice",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "invoice.guideTitle"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.creditNotes",
+          "titleAr": "إشعارات الدائن",
+          "titleEn": "Credit Notes",
+          "route": "/CreditNote",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.creditNotes"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.debitNotes",
+          "titleAr": "إشعارات المدين",
+          "titleEn": "Debit Notes",
+          "route": "/DebitNote",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.debitNotes"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.receipts",
+          "titleAr": "المقبوضات",
+          "titleEn": "Receipts",
+          "route": "/Receipt",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.receipts"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.deposits",
+          "titleAr": null,
+          "titleEn": "Deposits",
+          "route": "/CashDeposit",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.deposits"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.purchaseRequests",
+          "titleAr": "طلبات الشراء",
+          "titleEn": "Purchase Requests",
+          "route": "/PurchaseRequest",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.purchaseRequests"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.purchaseOrders",
+          "titleAr": "أوامر الشراء",
+          "titleEn": "Purchase Orders",
+          "route": "/PurchaseOrder",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.purchaseOrders"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.grns",
+          "titleAr": "أذونات استلام البضائع",
+          "titleEn": "GRNs",
+          "route": "/GoodsReceivedNote",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.grns"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.bills",
+          "titleAr": "فواتير الموردين",
+          "titleEn": "Bills",
+          "route": "/Bill",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.bills"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.purchaseReturns",
+          "titleAr": "مرتجعات الشراء",
+          "titleEn": "Purchase Returns",
+          "route": "/PurchaseReturn",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.purchaseReturns"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.payments",
+          "titleAr": "المدفوعات",
+          "titleEn": "Payments",
+          "route": "/Payment",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.payments"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.jvs",
+          "titleAr": "قيود اليومية",
+          "titleEn": "JVs",
+          "route": "/JournalVoucher",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.jvs"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.salaryVouchers",
+          "titleAr": "سندات الرواتب",
+          "titleEn": "Salary Vouchers",
+          "route": "/SalaryVoucher",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.salaryVouchers"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.amortization",
+          "titleAr": null,
+          "titleEn": "Amortization",
+          "route": "/Amortization",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.amortization"
+          ]
+        },
+        {
+          "key": "sideMenu.provisionss.provisions",
+          "titleAr": null,
+          "titleEn": "Provisions",
+          "route": "/Provision",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.provisions",
+            "sideMenu.provisionss.provisions"
+          ]
+        },
+        {
+          "key": "sideMenu.provisionss.monthlyPosting",
+          "titleAr": null,
+          "titleEn": "Monthly Posting",
+          "route": "/MonthlyPosting",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.provisions",
+            "sideMenu.provisionss.monthlyPosting"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.accruals",
+          "titleAr": null,
+          "titleEn": "Accruals",
+          "route": "/Bill",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.accruals"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.tollsMonthEndPosting",
+          "titleAr": null,
+          "titleEn": "Tolls Month End Posting",
+          "route": "/Bill",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.tollsMonthEndPosting"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.darbMonthEndPosting",
+          "titleAr": null,
+          "titleEn": "Darb Month End Posting",
+          "route": "/Bill",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.darbMonthEndPosting"
+          ]
+        },
+        {
+          "key": "sideMenu.voucherss.trafficFines",
+          "titleAr": "المخالفات المرورية",
+          "titleEn": "Traffic Fines",
+          "route": "/TrafficFine",
+          "breadcrumb": [
+            "sideMenu.vouchers",
+            "sideMenu.voucherss.trafficFines"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 18,
+      "key": "sideMenu.bankcomponent",
+      "titleAr": "الخدمات المصرفية",
+      "titleEn": "Banking",
+      "leaves": [
+        {
+          "key": "sideMenu.banking.bankAccounts",
+          "titleAr": "حسابات البنك",
+          "titleEn": "Bank Accounts",
+          "route": "/Bank",
+          "breadcrumb": [
+            "sideMenu.bankcomponent",
+            "sideMenu.banking.bankAccounts"
+          ]
+        },
+        {
+          "key": "sideMenu.banking.chequesReceivables",
+          "titleAr": "الشيك المستحقة",
+          "titleEn": "Cheques Receivables",
+          "route": "/PDCReceivable",
+          "breadcrumb": [
+            "sideMenu.bankcomponent",
+            "sideMenu.banking.chequesReceivables"
+          ]
+        },
+        {
+          "key": "sideMenu.banking.chequesPayables",
+          "titleAr": "الشيك الدائنة",
+          "titleEn": "Cheques Payables",
+          "route": "/PDCPayable",
+          "breadcrumb": [
+            "sideMenu.bankcomponent",
+            "sideMenu.banking.chequesPayables"
+          ]
+        },
+        {
+          "key": "sideMenu.banking.bankReconciliation",
+          "titleAr": "التسوية البنكية",
+          "titleEn": "Bank Reconciliation",
+          "route": "/BankReconciliation",
+          "breadcrumb": [
+            "sideMenu.bankcomponent",
+            "sideMenu.banking.bankReconciliation"
+          ]
+        },
+        {
+          "key": "sideMenu.banking.reconciliationReport",
+          "titleAr": "تقرير التسوية",
+          "titleEn": "Reconciliation Report",
+          "route": "/reconciliationReport",
+          "breadcrumb": [
+            "sideMenu.bankcomponent",
+            "sideMenu.banking.reconciliationReport"
+          ]
+        },
+        {
+          "key": "sideMenu.banking.cashDeposits",
+          "titleAr": "إيداعات النقد",
+          "titleEn": "Cash Deposits",
+          "route": "/CashDeposit",
+          "breadcrumb": [
+            "sideMenu.bankcomponent",
+            "sideMenu.banking.cashDeposits"
+          ]
+        },
+        {
+          "key": "sideMenu.banking.cardTransactionsBankTransfers",
+          "titleAr": "تحويلات بطاقات البنك",
+          "titleEn": "Card Transactions Bank Transfers",
+          "route": "/CardTransactionBankTransfer",
+          "breadcrumb": [
+            "sideMenu.bankcomponent",
+            "sideMenu.banking.cardTransactionsBankTransfers"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 19,
+      "key": "sideMenu.loan",
+      "titleAr": "القروض",
+      "titleEn": "Loan",
+      "leaves": [
+        {
+          "key": "sideMenu.loans.loans",
+          "titleAr": "القروض",
+          "titleEn": "Loans",
+          "route": "/Loans",
+          "breadcrumb": [
+            "sideMenu.loan",
+            "sideMenu.loans.loans"
+          ]
+        },
+        {
+          "key": "sideMenu.loans.loanEmis",
+          "titleAr": "أقساط القروض",
+          "titleEn": "Loan EMIs",
+          "route": "/LoanEMI",
+          "breadcrumb": [
+            "sideMenu.loan",
+            "sideMenu.loans.loanEmis"
+          ]
+        },
+        {
+          "key": "sideMenu.loans.loanDetails",
+          "titleAr": "تفاصيل القروض",
+          "titleEn": "Loan Details",
+          "route": "/LoanDetails",
+          "breadcrumb": [
+            "sideMenu.loan",
+            "sideMenu.loans.loanDetails"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 20,
+      "key": "sideMenu.accounts",
+      "titleAr": "الحسابات",
+      "titleEn": "Accounts",
+      "leaves": [
+        {
+          "key": "sideMenu.accountss.chartOfAccounts",
+          "titleAr": "دليل الحسابات",
+          "titleEn": "Chart of Accounts",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.chartOfAccounts"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.linkAccounts",
+          "titleAr": "ربط الحسابات",
+          "titleEn": "Link Accounts",
+          "route": "/LinkAccounts",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.linkAccounts"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.fiscalYears",
+          "titleAr": "السنوات المالية",
+          "titleEn": "Fiscal Years",
+          "route": "/FiscalYear",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.fiscalYears"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.openingBalances",
+          "titleAr": "الأرصدة الافتتاحية",
+          "titleEn": "Opening Balances",
+          "route": "/openingBalances",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.openingBalances"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.trialBalance",
+          "titleAr": "ميزان المراجعة",
+          "titleEn": "Trial Balance",
+          "route": "/Reports/TrialBalance",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.trialBalance"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.cashFlowStatement",
+          "titleAr": "قائمة التدفق النقدي",
+          "titleEn": "Cash Flow Statement",
+          "route": "/CashFlowStatement",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.cashFlowStatement"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.balanceSheet",
+          "titleAr": "الميزانية العمومية",
+          "titleEn": "Balance Sheet",
+          "route": "/BalanceSheet",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.balanceSheet"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.balanceSheetMonthWise",
+          "titleAr": "الميزانية العمومية حسب الشهر",
+          "titleEn": "Balance Sheet Month Wise",
+          "route": "/BalanceSheetMonthWise",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.balanceSheetMonthWise"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.incomeStatement",
+          "titleAr": "بيان الدخل",
+          "titleEn": "Income Statement",
+          "route": "/IncomeStatement",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.incomeStatement"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.vehicleIncomeStatement",
+          "titleAr": "بيان دخل المركبة",
+          "titleEn": "Vehicle Income Statement",
+          "route": "/VehicleIncomeStatement",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.vehicleIncomeStatement"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.incomeComparisonReport",
+          "titleAr": "تقرير مقارنة الدخل",
+          "titleEn": "Income Comparison Report",
+          "route": "/IncomeComparison",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.incomeComparisonReport"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.incomeStatement2",
+          "titleAr": "بيان الدخل 2",
+          "titleEn": "Income Statement 2",
+          "route": "/IncomeStatement2",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.incomeStatement2"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.incomeStatementYtd",
+          "titleAr": "بيان الدخل حتى تاريخه",
+          "titleEn": "Income Statement YTD",
+          "route": "/IncomeStatementYtd",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.incomeStatementYtd"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.incomeStatementYtd2",
+          "titleAr": "بيان الدخل حتى تاريخه 2",
+          "titleEn": "Income Statement YTD 2",
+          "route": "/IncomeStatementYtd2",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.incomeStatementYtd2"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.incomeStatementFy",
+          "titleAr": "بيان الدخل السنة المالية",
+          "titleEn": "Income Statement FY",
+          "route": "/IncomeStatementFy",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.incomeStatementFy"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.incomeStatementFy2",
+          "titleAr": "بيان الدخل السنة المالية 2",
+          "titleEn": "Income Statement FY 2",
+          "route": "/IncomeStatementFy2",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.incomeStatementFy2"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.monthClosing",
+          "titleAr": "إقفال الشهر",
+          "titleEn": "Month Closing",
+          "route": "/MonthClose",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.monthClosing"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.ledger",
+          "titleAr": "دفتر الأستاذ",
+          "titleEn": "Ledger",
+          "route": "/Ledger",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.ledger"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.journal",
+          "titleAr": "اليومية",
+          "titleEn": "Journal",
+          "route": "/Journal",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.journal"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.budget",
+          "titleAr": "الميزانية",
+          "titleEn": "Budget",
+          "route": "/Budget",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.budget"
+          ]
+        },
+        {
+          "key": "sideMenu.accountss.budgetVariance",
+          "titleAr": "تباين الميزانية",
+          "titleEn": "Budget Variance",
+          "route": "/BudgetVariance",
+          "breadcrumb": [
+            "sideMenu.accounts",
+            "sideMenu.accountss.budgetVariance"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 21,
+      "key": "sideMenu.assets",
+      "titleAr": null,
+      "titleEn": "Assets",
+      "leaves": [
+        {
+          "key": "sideMenu.assetss.assetTypes",
+          "titleAr": null,
+          "titleEn": "Asset Types",
+          "route": "/assetType",
+          "breadcrumb": [
+            "sideMenu.assets",
+            "sideMenu.assetss.assetTypes"
+          ]
+        },
+        {
+          "key": "sideMenu.assetss.assets",
+          "titleAr": null,
+          "titleEn": "Assets",
+          "route": "/asset",
+          "breadcrumb": [
+            "sideMenu.assets",
+            "sideMenu.assetss.assets"
+          ]
+        },
+        {
+          "key": "sideMenu.assetss.depreciation",
+          "titleAr": null,
+          "titleEn": "Depreciation",
+          "route": "/depreciation",
+          "breadcrumb": [
+            "sideMenu.assets",
+            "sideMenu.assetss.depreciation"
+          ]
+        },
+        {
+          "key": "sideMenu.assetss.depreciationSummary",
+          "titleAr": null,
+          "titleEn": "Depreciation Summary",
+          "route": "/depreciationSummary",
+          "breadcrumb": [
+            "sideMenu.assets",
+            "sideMenu.assetss.depreciationSummary"
+          ]
+        },
+        {
+          "key": "sideMenu.assetss.depreciationDetail",
+          "titleAr": null,
+          "titleEn": "Depreciation Detail",
+          "route": "/depreciationDetail",
+          "breadcrumb": [
+            "sideMenu.assets",
+            "sideMenu.assetss.depreciationDetail"
+          ]
+        },
+        {
+          "key": "sideMenu.assetss.depreciationReportFy",
+          "titleAr": null,
+          "titleEn": "Depreciation Report FY",
+          "route": "/depreciationReportFy",
+          "breadcrumb": [
+            "sideMenu.assets",
+            "sideMenu.assetss.depreciationReportFy"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 22,
+      "key": "sideMenu.reportsss",
+      "titleAr": null,
+      "titleEn": "Reports",
+      "leaves": [
+        {
+          "key": "sideMenu.accountss.trialBalance",
+          "titleAr": "ميزان المراجعة",
+          "titleEn": "Trial Balance",
+          "route": "/Reports/TrialBalance",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.accountss.trialBalance"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehiclePriceBasedOnTariffGroup",
+          "titleAr": null,
+          "titleEn": "Vehicle Price Based On Tariff Group",
+          "route": "/Reports/VehiclePriceBasedOnTariffGroup",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehiclePriceBasedOnTariffGroup"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehiclesRevenueReport",
+          "titleAr": null,
+          "titleEn": "Vehicles Revenue Report",
+          "route": "/Reports/VehiclesRevenue",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehiclesRevenueReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleRentalDetailsReport",
+          "titleAr": null,
+          "titleEn": "Vehicle Rental Details Report",
+          "route": "/Reports/VehicleRentalDetails",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleRentalDetailsReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.rentalSalesForSixtBahrain",
+          "titleAr": null,
+          "titleEn": "Rental Sales For Sixt Bahrain",
+          "route": "/Reports/RentalSalesForSixtBahrain",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.rentalSalesForSixtBahrain"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehiclesProfitLossByChassisNo",
+          "titleAr": null,
+          "titleEn": "Vehicles Profit Loss By Chassis No",
+          "route": "/Reports/VehicleProfitAndLossByChasisNo",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehiclesProfitLossByChassisNo"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.profitLoss",
+          "titleAr": null,
+          "titleEn": "Profit Loss",
+          "route": "/Reports/ProfitAndLoss",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.profitLoss"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.collection",
+          "titleAr": null,
+          "titleEn": "Collection",
+          "route": "/Reports/Collection",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.collection"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.collectionAndRefunds",
+          "titleAr": null,
+          "titleEn": "Collection And Refunds",
+          "route": "/Reports/CollectionAndRefunds",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.collectionAndRefunds"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.collectionAndRefunds2",
+          "titleAr": null,
+          "titleEn": "Collection And Refunds 2",
+          "route": "/Reports/CollectionAndRefunds2",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.collectionAndRefunds2"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.customerWiseCollectionReport",
+          "titleAr": null,
+          "titleEn": "Customer Wise Collection Report",
+          "route": "/Reports/CustomerWiseCollection",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.customerWiseCollectionReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.dailyBusinessReport",
+          "titleAr": null,
+          "titleEn": "Daily Business Report",
+          "route": "/Reports/DailyBusiness",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.dailyBusinessReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.saleReport",
+          "titleAr": null,
+          "titleEn": "Sale Report",
+          "route": "/Reports/Sale",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.saleReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.saleReportBaseOnInvoice",
+          "titleAr": null,
+          "titleEn": "Sale Report Base On Invoice",
+          "route": "/Reports/SaleReportBaseOnInvoice",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.saleReportBaseOnInvoice"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.salesPersonInvoicesReport",
+          "titleAr": null,
+          "titleEn": "Sales Person Invoices Report",
+          "route": "/Reports/SalesPersonInvoices",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.salesPersonInvoicesReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehiclesPurchaseReport",
+          "titleAr": null,
+          "titleEn": "Vehicles Purchase Report",
+          "route": "/Reports/VehiclesPurchase",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehiclesPurchaseReport"
+          ]
+        },
+        {
+          "key": "sideMenu.salepersonReports.salespersonDiscountReport",
+          "titleAr": null,
+          "titleEn": "Salesperson Discount Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.salepersonReport",
+            "sideMenu.salepersonReports.salespersonDiscountReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.taxCollection",
+          "titleAr": null,
+          "titleEn": "Tax Collection",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.taxCollection"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.taxReturn",
+          "titleAr": null,
+          "titleEn": "Tax Return",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.taxReturn"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.expenses",
+          "titleAr": null,
+          "titleEn": "Expenses",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.expenses"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleExpenseType",
+          "titleAr": null,
+          "titleEn": "Vehicle Expense Type",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleExpenseType"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.agreementsReport",
+          "titleAr": null,
+          "titleEn": "Agreements Report",
+          "route": "/Agreement",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.agreementsReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.staffPerformanceReport",
+          "titleAr": null,
+          "titleEn": "Staff Performance Report",
+          "route": "#",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.staffPerformanceReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.cidReport",
+          "titleAr": null,
+          "titleEn": "CID Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.cidReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.outstandingAgreements",
+          "titleAr": null,
+          "titleEn": "Outstanding Agreements",
+          "route": "/Agreement",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.outstandingAgreements"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.overdueAgreements",
+          "titleAr": null,
+          "titleEn": "Overdue Agreements",
+          "route": "/Agreement",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.overdueAgreements"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.agreementOutstandingInvoicesReport",
+          "titleAr": null,
+          "titleEn": "Agreement Outstanding Invoices Report",
+          "route": "/Agreement",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.agreementOutstandingInvoicesReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.dailyReport",
+          "titleAr": null,
+          "titleEn": "Daily Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.dailyReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.dailyRevenueReport",
+          "titleAr": null,
+          "titleEn": "Daily Revenue Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.dailyRevenueReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleStatusReport",
+          "titleAr": null,
+          "titleEn": "Vehicle Status Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleStatusReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleStatusReport2",
+          "titleAr": null,
+          "titleEn": "Vehicle Status Report 2",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleStatusReport2"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleUtilizationAndRevenueReport",
+          "titleAr": null,
+          "titleEn": "Vehicle Utilization And Revenue Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleUtilizationAndRevenueReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleUtilizationReport",
+          "titleAr": null,
+          "titleEn": "Vehicle Utilization Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleUtilizationReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleUtilizationCommercialNonCommercial",
+          "titleAr": null,
+          "titleEn": "Vehicle Utilization Commercial Non Commercial",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleUtilizationCommercialNonCommercial"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.detailedVehicleUtilizationReport",
+          "titleAr": null,
+          "titleEn": "Detailed Vehicle Utilization Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.detailedVehicleUtilizationReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.tollsReport",
+          "titleAr": null,
+          "titleEn": "Tolls Report",
+          "route": "/TrafficFine",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.tollsReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.darbTollsReport",
+          "titleAr": null,
+          "titleEn": "Darb Tolls Report",
+          "route": "/TrafficFine",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.darbTollsReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.downloadDescription",
+          "titleAr": null,
+          "titleEn": "Download Description",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.downloadDescription"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.updateFineTimeAuh",
+          "titleAr": null,
+          "titleEn": "Update Fine Time AUH",
+          "route": "/TrafficFine",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.updateFineTimeAuh"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.finesReport",
+          "titleAr": null,
+          "titleEn": "Fines Report",
+          "route": "/TrafficFine",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.finesReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.surchargeVarianceReport",
+          "titleAr": null,
+          "titleEn": "Surcharge Variance Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.surchargeVarianceReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.reconcileTolls",
+          "titleAr": null,
+          "titleEn": "Reconcile Tolls",
+          "route": "/TrafficFine",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.reconcileTolls"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.reconcileDarbTolls",
+          "titleAr": null,
+          "titleEn": "Reconcile Darb Tolls",
+          "route": "/TrafficFine",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.reconcileDarbTolls"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.tripsWithOvertime",
+          "titleAr": null,
+          "titleEn": "Trips With Overtime",
+          "route": "/TimeSheet",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.tripsWithOvertime"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.idleVehicleReport",
+          "titleAr": null,
+          "titleEn": "Idle Vehicle Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.idleVehicleReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleAgeingReport",
+          "titleAr": null,
+          "titleEn": "Vehicle Ageing Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleAgeingReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.rentalVehiclesOnServiceReplacements",
+          "titleAr": null,
+          "titleEn": "Rental Vehicles On Service Replacements",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.rentalVehiclesOnServiceReplacements"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.dueForSaleVehicles",
+          "titleAr": null,
+          "titleEn": "Due For Sale Vehicles",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.dueForSaleVehicles"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.vehicleChargedVsDriven",
+          "titleAr": null,
+          "titleEn": "Vehicle Charged Vs Driven",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.vehicleChargedVsDriven"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.nonRevenueKmsReport",
+          "titleAr": null,
+          "titleEn": "Non Revenue Kms Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.nonRevenueKmsReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.revenueByVehicleType",
+          "titleAr": null,
+          "titleEn": "Revenue By Vehicle Type",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.revenueByVehicleType"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.limoDailyRevenueReport",
+          "titleAr": null,
+          "titleEn": "Limo Daily Revenue Report",
+          "route": "/Location",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.limoDailyRevenueReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.revenueByTariffCard",
+          "titleAr": null,
+          "titleEn": "Revenue By Tariff Card",
+          "route": "/TariffCard",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.revenueByTariffCard"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.revenueByBranch",
+          "titleAr": null,
+          "titleEn": "Revenue By Branch",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.revenueByBranch"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.revenueAnalysis",
+          "titleAr": null,
+          "titleEn": "Revenue Analysis",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.revenueAnalysis"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.incrementalSales",
+          "titleAr": null,
+          "titleEn": "Incremental Sales",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.incrementalSales"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.amortization",
+          "titleAr": null,
+          "titleEn": "Amortization",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.amortization"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.amortizationFy",
+          "titleAr": null,
+          "titleEn": "Amortization FY",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.amortizationFy"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.outstandingsClearedInNextFyReport",
+          "titleAr": null,
+          "titleEn": "Outstandings Cleared In Next FY Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.outstandingsClearedInNextFyReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.mileageExceptionReport",
+          "titleAr": null,
+          "titleEn": "Mileage Exception Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.mileageExceptionReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.salesPerformanceReport",
+          "titleAr": null,
+          "titleEn": "Sales Performance Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.salesPerformanceReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.pointInTimeSalesPerformanceReport",
+          "titleAr": null,
+          "titleEn": "Point In Time Sales Performance Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.pointInTimeSalesPerformanceReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.debitorReconciliationReport",
+          "titleAr": null,
+          "titleEn": "Debitor Reconciliation Report",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.debitorReconciliationReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.monthEndLeaseAgreementOutstandingReport",
+          "titleAr": null,
+          "titleEn": "Month End Lease Agreement Outstanding Report",
+          "route": "/LeaseAgreement",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.monthEndLeaseAgreementOutstandingReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.expenseReportByAccount",
+          "titleAr": null,
+          "titleEn": "Expense Report By Account",
+          "route": "/Account",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.expenseReportByAccount"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.monthlyInvoicingReport",
+          "titleAr": null,
+          "titleEn": "Monthly Invoicing Report",
+          "route": "/Bill",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.monthlyInvoicingReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.permanentVehiclesReadyToGoReport",
+          "titleAr": null,
+          "titleEn": "Permanent Vehicles Ready To Go Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.permanentVehiclesReadyToGoReport"
+          ]
+        },
+        {
+          "key": "sideMenu.reportss.higherCategoryVehicleReplacementHistoryReport",
+          "titleAr": null,
+          "titleEn": "Higher Category Vehicle Replacement History Report",
+          "route": "/Vehicle",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "sideMenu.reportss.higherCategoryVehicleReplacementHistoryReport"
+          ]
+        },
+        {
+          "key": "driverTimeSheetReport.title",
+          "titleAr": "تقرير ساعات السائقين",
+          "titleEn": "Driver Time Sheet Report",
+          "route": "/HRM/Reports/DriverTimeSheet",
+          "breadcrumb": [
+            "sideMenu.reportsss",
+            "driverTimeSheetReport.title"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 23,
+      "key": "sideMenu.administration",
+      "titleAr": "الإدارة",
+      "titleEn": "Administration",
+      "leaves": [
+        {
+          "key": "sideMenu.administrations.customerRequests",
+          "titleAr": "طلبات العملاء",
+          "titleEn": "Customer Requests",
+          "route": "/CustomerRequest",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.customerRequests"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.vehicles",
+          "titleAr": "المركبات",
+          "titleEn": "Vehicles",
+          "route": "/ImportVehicles",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.vehicles"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.salik",
+          "titleAr": "سالك",
+          "titleEn": "Salik",
+          "route": "/ImportSalikTolls",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.salik"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.darb",
+          "titleAr": "درب",
+          "titleEn": "Darb",
+          "route": "/ImportDarbTolls",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.darb"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.fines",
+          "titleAr": "المخالفات",
+          "titleEn": "Fines",
+          "route": "/ImportFines",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.fines"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.staff",
+          "titleAr": "الموظفين",
+          "titleEn": "Staff",
+          "route": "/ImportStaff",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.staff"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.suppliers",
+          "titleAr": "الموردين",
+          "titleEn": "Suppliers",
+          "route": "/ImportSuppliers",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.suppliers"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.individualPartner",
+          "titleAr": "شريك فردي",
+          "titleEn": "Individual Partner",
+          "route": "/ImportIndividualPartner",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.individualPartner"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.companies",
+          "titleAr": "الشركات",
+          "titleEn": "Companies",
+          "route": "/ImportCompanies",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.companies"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.customers",
+          "titleAr": "العملاء",
+          "titleEn": "Customers",
+          "route": "/ImportCustomers",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.customers"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.assets",
+          "titleAr": "الأصول",
+          "titleEn": "Assets",
+          "route": "/ImportAssets",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.assets"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.items",
+          "titleAr": "العناصر",
+          "titleEn": "Items",
+          "route": "/ImportItems",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.items"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.rentalAgreements",
+          "titleAr": "اتفاقيات التأجير",
+          "titleEn": "Rental Agreements",
+          "route": "/ImportRentalAgreements",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.rentalAgreements"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.closedRentalAgreements",
+          "titleAr": "اتفاقيات التأجير المغلقة",
+          "titleEn": "Closed Rental Agreements",
+          "route": "/ImportClosedRentalAgreements",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.closedRentalAgreements"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.leaseAgreements",
+          "titleAr": "اتفاقيات التأجير التمويلي",
+          "titleEn": "Lease Agreements",
+          "route": "/ImportLeaseAgreements",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.leaseAgreements"
+          ]
+        },
+        {
+          "key": "sideMenu.dataImports.closedLeaseAgreements",
+          "titleAr": "اتفاقيات التأجير التمويلي المغلقة",
+          "titleEn": "Closed Lease Agreements",
+          "route": "/ImportClosedLeaseAgreements",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.dataImport",
+            "sideMenu.dataImports.closedLeaseAgreements"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.branches",
+          "titleAr": "الفروع",
+          "titleEn": "Branches",
+          "route": "/Branch",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.branches"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.currencies",
+          "titleAr": "العملات",
+          "titleEn": "Currencies",
+          "route": "/Currency",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.currencies"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.countries",
+          "titleAr": "الدول",
+          "titleEn": "Countries",
+          "route": "/Country",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.countries"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.sponserShips",
+          "titleAr": "الرعايات",
+          "titleEn": "Sponsorships",
+          "route": "/SponserShip",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.sponserShips"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.industries",
+          "titleAr": "الصناعات",
+          "titleEn": "Industries",
+          "route": "/Industry",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.industries"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.contactGroups",
+          "titleAr": "مجموعات الاتصال",
+          "titleEn": "Contact Groups",
+          "route": "/ContactGroup",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.contactGroups"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.paymentMethods",
+          "titleAr": "طرق الدفع",
+          "titleEn": "Payment Methods",
+          "route": "/PaymentMethod",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.paymentMethods"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.costCenters",
+          "titleAr": "مراكز التكلفة",
+          "titleEn": "Cost Centers",
+          "route": "/CostCenter",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.costCenters"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.emailTemplates",
+          "titleAr": "قوالب البريد الإلكتروني",
+          "titleEn": "Email Templates",
+          "route": "/EmailTemplates",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.emailTemplates"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.checklist",
+          "titleAr": "قائمة التحقق",
+          "titleEn": "Checklist",
+          "route": "/ChecklistItem",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.checklist"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.customLookups",
+          "titleAr": "عمليات البحث المخصصة",
+          "titleEn": "Custom Lookups",
+          "route": "/CustomLookup",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.customLookups"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.vehicleNotReadyReasons",
+          "titleAr": "أسباب عدم جاهزية المركبة",
+          "titleEn": "Vehicle Not Ready Reasons",
+          "route": "/VehicleNotReadyReason",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.vehicleNotReadyReasons"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.replacementReasons",
+          "titleAr": "أسباب الاستبدال",
+          "titleEn": "Replacement Reasons",
+          "route": "/ReplacementReason",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.replacementReasons"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.voucherReasons",
+          "titleAr": "أسباب القسيمة",
+          "titleEn": "Voucher Reasons",
+          "route": "/VoucherReason",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.voucherReasons"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.correctVehicleStatus",
+          "titleAr": "تصحيح حالة المركبة",
+          "titleEn": "Correct Vehicle Status",
+          "route": "/CorrectVehicleStatus",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.correctVehicleStatus"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.roles",
+          "titleAr": "الأدوار",
+          "titleEn": "Roles",
+          "route": "/Role",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.roles"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.users",
+          "titleAr": "المستخدمين",
+          "titleEn": "Users",
+          "route": "/User",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.users"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.languages",
+          "titleAr": "اللغات",
+          "titleEn": "Languages",
+          "route": "/Language",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.languages"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.auditTrail",
+          "titleAr": "سجل التدقيق",
+          "titleEn": "Audit Trail",
+          "route": "/auditTrail",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.auditTrail"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.messageLogs",
+          "titleAr": "سجلات الرسائل",
+          "titleEn": "Message Logs",
+          "route": "/messageLogs",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.messageLogs"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.errorLogs",
+          "titleAr": "سجلات الأخطاء",
+          "titleEn": "Error Logs",
+          "route": "/errorLogs",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.errorLogs"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.saleOrigins",
+          "titleAr": "أصول المبيعات",
+          "titleEn": "Sale Origins",
+          "route": "/SaleOrigin",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.saleOrigins"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.settings",
+          "titleAr": "الإعدادات",
+          "titleEn": "Settings",
+          "route": "/Settings",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.settings"
+          ]
+        },
+        {
+          "key": "userGuide.title",
+          "titleAr": "دليل الاستخدام",
+          "titleEn": "User Guide",
+          "route": "/UserGuide/administration",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "userGuide.title"
+          ]
+        },
+        {
+          "key": "sideMenu.administrations.customerProjects",
+          "titleAr": "مشاريع العملاء",
+          "titleEn": "Customer Projects",
+          "route": "/CustomerProject",
+          "breadcrumb": [
+            "sideMenu.administration",
+            "sideMenu.administrations.customerProjects"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 24,
+      "key": "sideMenu.support",
+      "titleAr": "الدعم الفني",
+      "titleEn": "Support",
+      "leaves": [
+        {
+          "key": "supportRequest.title",
+          "titleAr": "طلبات الدعم",
+          "titleEn": "Support requests",
+          "route": "/SupportRequest",
+          "breadcrumb": [
+            "sideMenu.support",
+            "supportRequest.title"
+          ]
+        },
+        {
+          "key": "supportSlaAgreement.title",
+          "titleAr": "اتفاقيات مستوى خدمة الدعم",
+          "titleEn": "Support service level agreements",
+          "route": "/SupportSlaAgreement",
+          "breadcrumb": [
+            "sideMenu.support",
+            "supportSlaAgreement.title"
+          ]
+        },
+        {
+          "key": "userGuide.title",
+          "titleAr": "دليل الاستخدام",
+          "titleEn": "User Guide",
+          "route": "/UserGuide/support",
+          "breadcrumb": [
+            "sideMenu.support",
+            "userGuide.title"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 25,
+      "key": "sideMenu.dataEntryCorrections",
+      "titleAr": "تصحيحات إدخال البيانات",
+      "titleEn": "Data Entry Corrections",
+      "leaves": [
+        {
+          "key": "dataCorrections.title",
+          "titleAr": "تصحيحات إدخال البيانات",
+          "titleEn": "Data Entry Corrections",
+          "route": "/DataEntryCorrection",
+          "breadcrumb": [
+            "sideMenu.dataEntryCorrections",
+            "dataCorrections.title"
+          ]
+        },
+        {
+          "key": "dataCorrections.modelsTitle",
+          "titleAr": "نماذج التصحيح",
+          "titleEn": "Correction Models",
+          "route": "/DataEntryCorrectionModel",
+          "breadcrumb": [
+            "sideMenu.dataEntryCorrections",
+            "dataCorrections.modelsTitle"
+          ]
+        },
+        {
+          "key": "userGuide.title",
+          "titleAr": "دليل الاستخدام",
+          "titleEn": "User Guide",
+          "route": "/UserGuide/data-entry-corrections",
+          "breadcrumb": [
+            "sideMenu.dataEntryCorrections",
+            "userGuide.title"
+          ]
+        }
+      ]
+    },
+    {
+      "index": 26,
+      "key": "sideMenu.billing",
+      "titleAr": "الفوترة",
+      "titleEn": "Billing",
+      "leaves": [
+        {
+          "key": "billingWorkspace.invoices",
+          "titleAr": "الفواتير",
+          "titleEn": "Invoices",
+          "route": "/BillingInvoice",
+          "breadcrumb": [
+            "sideMenu.billing",
+            "billingWorkspace.invoices"
+          ]
+        },
+        {
+          "key": "billingWorkspace.guide",
+          "titleAr": "دليل الفوترة",
+          "titleEn": "Billing guide",
+          "route": "/UserGuide/billing",
+          "breadcrumb": [
+            "sideMenu.billing",
+            "billingWorkspace.guide"
+          ]
+        }
+      ]
+    }
+  ]
+}

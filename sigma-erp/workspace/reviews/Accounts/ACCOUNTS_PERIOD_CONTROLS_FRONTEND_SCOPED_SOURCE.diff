@@ -1,0 +1,1088 @@
+diff --git a/src/app/modules/Accounts/FiscalYears/components/details/details.component.ts b/src/app/modules/Accounts/FiscalYears/components/details/details.component.ts
+index 873ed85..f8db399 100644
+--- a/src/app/modules/Accounts/FiscalYears/components/details/details.component.ts
++++ b/src/app/modules/Accounts/FiscalYears/components/details/details.component.ts
+@@ -1,3 +1,9 @@
++import { focusField } from 'src/app/modules/shared/utils/focus-field';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { dateValueValidator, parseDateValue, toApiDateTime } from 'src/app/modules/shared/utils/date-utils';
++import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
++import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
++import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+ import { CommonModule, DOCUMENT } from '@angular/common';
+ import { HttpErrorResponse } from '@angular/common/http';
+ import {
+@@ -8,6 +14,7 @@ import {
+   OnInit,
+   Output,
+   inject,
++  effect,
+   signal,
+ } from '@angular/core';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+@@ -34,8 +41,8 @@ import { FiscalYearService } from '../../services/fiscalYear.service';
+ 
+ export type FiscalYearEditorMode = EditorDialogMode;
+ type FiscalYearForm = FormGroup<{
+-  startDate: FormControl<Date | null>;
+-  endDate: FormControl<Date | null>;
++  startDate: FormControl<Date | string | null>;
++  endDate: FormControl<Date | string | null>;
+ }>;
+ 
+ @Component({
+@@ -43,6 +50,9 @@ type FiscalYearForm = FormGroup<{
+   standalone: true,
+   imports: [
+     CalendarModule,
++    StateMessageComponent,
++    FieldErrorComponent,
++    DatePickerDirective,
+     CommonModule,
+     EditorDialogComponent,
+     ReactiveFormsModule,
+@@ -65,8 +75,8 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+ 
+   readonly fiscalYearForm: FiscalYearForm = this.fb.group(
+     {
+-      startDate: this.fb.control<Date | null>(null, Validators.required),
+-      endDate: this.fb.control<Date | null>(null, Validators.required),
++      startDate: this.fb.control<Date | string | null>(null, [Validators.required, dateValueValidator]),
++      endDate: this.fb.control<Date | string | null>(null, [Validators.required, dateValueValidator]),
+     },
+     { validators: this.dateRangeValidator() },
+   );
+@@ -78,9 +88,18 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+   readonly closeConfirmationPending = signal(false);
+   readonly editorDialogVisible = signal(true);
+ 
++  constructor() {
++    super();
++    effect(() => {
++      this.saving(); this.loadingDetails(); this.closeConfirmationPending(); this.loadError();
++      this.applyMode();
++    });
++  }
++
+   ngOnInit(): void {
+     this.applyMode();
+     if (this.mode === 'create') {
++      this.loadSuggestedDates();
+       return;
+     }
+ 
+@@ -102,7 +121,7 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+   }
+ 
+   save(): void {
+-    if (this.mode === 'view' || this.saving() || this.loadError()) return;
++    if (this.mode === 'view' || this.saving() || this.loadingDetails() || this.closeConfirmationPending() || this.loadError() || this.mode === 'edit' && this.fiscalYear()?.status !== 1) return;
+ 
+     this.fiscalYearForm.markAllAsTouched();
+     if (this.fiscalYearForm.invalid) {
+@@ -114,8 +133,8 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+     if (!value.startDate || !value.endDate) return;
+ 
+     const data: FiscalYearCreateDTO = {
+-      startDate: this.toApiDate(value.startDate),
+-      endDate: this.toApiDate(value.endDate),
++      startDate: toApiDateTime(value.startDate)!,
++      endDate: toApiDateTime(value.endDate)!,
+     };
+     const request$ = this.mode === 'create'
+       ? this.fiscalYearService.createFiscalYear(data)
+@@ -148,12 +167,12 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+           this.finish(true);
+         },
+         error: (error: HttpErrorResponse) =>
+-          this.errorMessage.set(this.errorMessageFrom(error, 'FISCAL_YEAR.SAVE_ERROR')),
++          this.errorMessage.set(apiErrorMessage(error, 'FISCAL_YEAR.SAVE_ERROR')),
+       });
+   }
+ 
+   enableEditing(): void {
+-    if (this.mode !== 'view' || this.loadError()) return;
++    if (this.mode !== 'view' || this.loadingDetails() || this.saving() || this.closeConfirmationPending() || this.loadError() || this.fiscalYear()?.status !== 1) return;
+     this.mode = 'edit';
+     this.applyMode();
+   }
+@@ -165,6 +184,7 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+       return;
+     }
+ 
++    const id = this.recordId;
+     this.closeConfirmationPending.set(true);
+     this.confirmationDialog
+       .confirm({
+@@ -180,7 +200,7 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+         finalize(() => this.closeConfirmationPending.set(false)),
+       )
+       .subscribe((confirmed) => {
+-        if (confirmed) this.finish(false);
++        if (confirmed && this.editorDialogVisible() && this.recordId === id && !this.saving() && !this.loadingDetails()) this.finish(false);
+       });
+   }
+ 
+@@ -197,7 +217,8 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+   }
+ 
+   startDateValue(): Date | undefined {
+-    return this.fiscalYearForm.controls.startDate.value ?? undefined;
++    const value = this.fiscalYearForm.controls.startDate.value;
++    return value instanceof Date ? value : undefined;
+   }
+ 
+   private loadDetails(id: number): void {
+@@ -216,15 +237,17 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+       )
+       .subscribe({
+         next: (response) => {
++          if (!this.editorDialogVisible() || this.recordId !== id) return;
+           if (!response.isSuccess || !response.entity) {
+             this.loadError.set(response.message || 'FISCAL_YEAR.DETAIL_ERROR');
+             this.fiscalYearForm.disable({ emitEvent: false });
+             return;
+           }
+           this.fiscalYear.set(response.entity);
++          if (this.mode === 'edit' && response.entity.status !== 1) this.mode = 'view';
+           this.fiscalYearForm.patchValue({
+-            startDate: this.toLocalDate(response.entity.startDate),
+-            endDate: this.toLocalDate(response.entity.endDate),
++            startDate: new Date(response.entity.startDate.slice(0, 10) + 'T00:00:00'),
++            endDate: new Date(response.entity.endDate.slice(0, 10) + 'T00:00:00'),
+           });
+           this.fiscalYearForm.markAsPristine();
+           this.applyMode();
+@@ -233,14 +256,78 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+           }
+         },
+         error: (error: HttpErrorResponse) => {
+-          this.loadError.set(this.errorMessageFrom(error, 'FISCAL_YEAR.DETAIL_ERROR'));
++          this.loadError.set(apiErrorMessage(error, 'FISCAL_YEAR.DETAIL_ERROR'));
+           this.fiscalYearForm.disable({ emitEvent: false });
+         },
+       });
+   }
+ 
++  private loadSuggestedDates(): void {
++    if (this.loadingDetails() || this.saving() || this.mode !== 'create') return;
++    this.loadingDetails.set(true);
++    this.loadError.set('');
++    this.applyMode();
++    this.loading.startLoading();
++    this.fiscalYearService
++      .getFiscalYears({ pageNo: 1, pageSize: 1, sortField: 'endDate', sortOrder: -1 })
++      .pipe(
++        takeUntilDestroyed(this.destroyRef),
++        finalize(() => {
++          this.loadingDetails.set(false);
++          this.applyMode();
++          this.loading.endLoading();
++        }),
++      )
++      .subscribe({
++        next: response => {
++          if (!this.editorDialogVisible() || this.mode !== 'create') return;
++          if (!response.isSuccess || !Array.isArray(response.entities)) {
++            this.loadError.set(response.message || 'FISCAL_YEAR.DETAIL_ERROR');
++            return;
++          }
++
++          let startDate: Date;
++          let endDate: Date;
++          const latest = response.entities[0];
++          if (latest) {
++            const latestEnd = typeof latest.endDate === 'string'
++              ? parseDateValue(latest.endDate.slice(0, 10)) : null;
++            const latestStart = typeof latest.startDate === 'string'
++              ? parseDateValue(latest.startDate.slice(0, 10)) : null;
++            if (!latestEnd || !latestStart || latestEnd < latestStart) {
++              this.loadError.set('FISCAL_YEAR.DETAIL_ERROR');
++              return;
++            }
++            startDate = new Date(latestEnd + 'T00:00:00');
++            startDate.setDate(startDate.getDate() + 1);
++            endDate = new Date(startDate);
++            endDate.setFullYear(endDate.getFullYear() + 1);
++            endDate.setDate(endDate.getDate() - 1);
++            if (endDate.getFullYear() > 9999) {
++              this.loadError.set('FISCAL_YEAR.DETAIL_ERROR');
++              return;
++            }
++          } else {
++            // Empty only counts as the first year when the server confirms zero records.
++            if (response.totalCount !== 0) {
++              this.loadError.set('FISCAL_YEAR.DETAIL_ERROR');
++              return;
++            }
++            const currentYear = new Date().getFullYear();
++            startDate = new Date(currentYear, 0, 1);
++            endDate = new Date(currentYear, 11, 31);
++          }
++          this.fiscalYearForm.patchValue({ startDate, endDate }, { emitEvent: false });
++          this.fiscalYearForm.markAsPristine();
++        },
++        error: (error: HttpErrorResponse) => {
++          if (this.editorDialogVisible()) this.loadError.set(apiErrorMessage(error, 'FISCAL_YEAR.DETAIL_ERROR'));
++        },
++      });
++  }
++
+   private applyMode(): void {
+-    if (this.mode === 'view' || this.loadingDetails() || this.loadError()) {
++    if (this.mode === 'view' || this.saving() || this.closeConfirmationPending() || this.loadingDetails() || this.loadError()) {
+       this.fiscalYearForm.disable({ emitEvent: false });
+     } else {
+       this.fiscalYearForm.enable({ emitEvent: false });
+@@ -249,36 +336,28 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+ 
+   private dateRangeValidator(): ValidatorFn {
+     return (control: AbstractControl): ValidationErrors | null => {
+-      const startDate = control.get('startDate')?.value as Date | null;
+-      const endDate = control.get('endDate')?.value as Date | null;
++      const startDate = toApiDateTime(control.get('startDate')?.value);
++      const endDate = toApiDateTime(control.get('endDate')?.value);
+       if (!startDate || !endDate) return null;
+-      return endDate.getTime() < startDate.getTime()
++      return endDate < startDate
+         ? { invalidDateRange: true }
+         : null;
+     };
+   }
+ 
+-  private toLocalDate(value: string): Date | null {
+-    const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+-    const date = match
+-      ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+-      : new Date(value);
+-    return Number.isNaN(date.getTime()) ? null : date;
+-  }
+-
+-  private toApiDate(value: Date): string {
+-    return `${value.getFullYear()}-${String(value.getMonth() + 1).padStart(2, '0')}-${String(value.getDate()).padStart(2, '0')}T00:00:00`;
+-  }
+-
+   private focusInitialControl(): void {
+     if (this.mode !== 'view') return;
+     this.document.querySelector<HTMLElement>('.fiscal-year-editor-dialog .app-editor-dialog-close')?.focus();
+   }
+ 
++  retry(): void {
++    if (this.loadingDetails() || this.saving() || this.closeConfirmationPending()) return;
++    if (this.mode === 'create') this.loadSuggestedDates();
++    else if (this.recordId) this.loadDetails(this.recordId);
++  }
++
+   private focusFirstInvalidControl(): void {
+-    this.document
+-      .querySelector<HTMLElement>('.fiscal-year-editor-dialog .ng-invalid:not(form)')
+-      ?.focus();
++    focusField(this.fiscalYearForm.controls.startDate.invalid ? 'fiscal-year-start-date' : 'fiscal-year-end-date');
+   }
+ 
+   private finish(changed: boolean): void {
+@@ -286,15 +365,4 @@ export class DetailsComponent extends BaseComponentService implements OnInit {
+     this.closed.emit(changed);
+   }
+ 
+-  private errorMessageFrom(error: unknown, fallback: string): string {
+-    if (error instanceof HttpErrorResponse) {
+-      const body = error.error as { message?: unknown; title?: unknown } | string | null;
+-      if (typeof body === 'string' && body.trim()) return body;
+-      if (body && typeof body === 'object') {
+-        if (typeof body.message === 'string' && body.message.trim()) return body.message;
+-        if (typeof body.title === 'string' && body.title.trim()) return body.title;
+-      }
+-    }
+-    return error instanceof Error && error.message.trim() ? error.message : fallback;
+-  }
+ }
+diff --git a/src/app/modules/Accounts/MonthClose/components/list/list.component.html b/src/app/modules/Accounts/MonthClose/components/list/list.component.html
+index b112e4b..1ab4fdc 100644
+--- a/src/app/modules/Accounts/MonthClose/components/list/list.component.html
++++ b/src/app/modules/Accounts/MonthClose/components/list/list.component.html
+@@ -1,19 +1,21 @@
+-<section class="month-close-page">
+-  <div class="month-close-panel">
++<section class="sigma-list-page">
++  <div class="sigma-list-panel">
++    <header class="sigma-list-header">
+     <app-feature-title
+       [title]="'monthClose.title' | translate"
+       [subtitle]="'monthClose.subtitle' | translate"
+       icon="bi bi-calendar2-check"
+     />
++    </header>
+ 
+     @if (errorMessage()) {
+-      <div class="month-close-alert" role="alert">
+-        <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+-        {{ errorMessage().startsWith('monthClose.') ? (errorMessage() | translate) : errorMessage() }}
+-      </div>
++      <app-state-message kind="error" [message]="errorMessage()" />
++      <button type="button" class="sigma-secondary-button" (click)="retry()">{{ 'general.retry' | translate }}</button>
+     }
+ 
+-    <div class="month-close-selector">
++    <form class="month-close-filters" appFilterPanel [mainColumns]="1" [stableLayout]="true" [formGroup]="filterForm"
++      [busy]="loadingFiscalYears() || loadingMonths() || updatingId() !== null || confirmationPending() || dialogOpen()" (resetRequested)="reset()">
++    <div class="sigma-filter-field">
+       <label for="month-close-fiscal-year" class="form-label">
+         {{ 'monthClose.fiscalYear' | translate }}
+       </label>
+@@ -22,25 +24,23 @@
+         [options]="fiscalYearOptions()"
+         optionLabel="label"
+         optionValue="id"
+-        [ngModel]="selectedFiscalYearId()"
+-        (ngModelChange)="onFiscalYearChange($event)"
++        formControlName="fiscalYearId"
+         [placeholder]="'monthClose.selectFiscalYear' | translate"
+         [loading]="loadingFiscalYears()"
+-        [disabled]="loadingFiscalYears() || loadingMonths() || updatingId() !== null"
+         [showClear]="true"
+         appendTo="body"
+       />
+ 
+       @if (!loadingFiscalYears() && !errorMessage() && fiscalYearOptions().length === 0) {
+-        <div class="month-close-hint" role="status">
+-          {{ 'monthClose.emptyFiscalYears' | translate }}
+-        </div>
++        <app-state-message kind="empty" message="monthClose.emptyFiscalYears" />
+       }
+     </div>
++    </form>
+ 
+     @if (selectedFiscalYearId() !== null) {
++      <div class="sigma-list-table">
+       <app-data-table
+-        class="month-close-grid"
++        [fill]="true"
+         [value]="months()"
+         [columns]="columns()"
+         [actions]="actions()"
+@@ -51,17 +51,23 @@
+         [showEmpty]="!errorMessage()"
+         emptyMessage="monthClose.emptyMonths"
+       />
+-    } @else {
+-      <div class="month-close-selection-prompt" role="status">
+-        <i class="bi bi-calendar2" aria-hidden="true"></i>
+-        {{ 'monthClose.selectFiscalYearPrompt' | translate }}
+       </div>
++    } @else {
++      <app-state-message kind="empty" message="monthClose.selectFiscalYearPrompt" icon="bi bi-calendar2" />
+     }
+   </div>
+ </section>
+ 
+-<ng-template #statusTemplate let-row>
+-  <span class="month-close-status" [class]="statusClass(row.status)">
+-    {{ statusKey(row.status) | translate }}
+-  </span>
+-</ng-template>
++@if (closeTarget(); as target) {
++  <app-month-close [record]="target.record" [monthLabel]="monthName(target.record.month)"
++    (cancelled)="closeTarget.set(null)" (completed)="closeCompleted($event)" />
++}
++
++@if (reopenFailure(); as failure) {
++  <app-editor-dialog [visible]="true" [title]="'monthClose.checks.reopenDenied' | translate"
++    [subtitle]="'monthClose.confirm.recordLabel' | translate: { month: monthName(failure.record.month), year: failure.record.year }"
++    icon="bi bi-unlock" mode="view" width="900px" [contentPadded]="true" [primaryActionVisible]="false"
++    [closeLabel]="'general.close' | translate" (closeRequested)="closeReasonDialog()" (escapeRequested)="closeReasonDialog($event)">
++    <app-month-close-check-result [result]="failure.result" />
++  </app-editor-dialog>
++}
+diff --git a/src/app/modules/Accounts/MonthClose/components/list/list.component.scss b/src/app/modules/Accounts/MonthClose/components/list/list.component.scss
+index b8ea6e0..e69de29 100644
+--- a/src/app/modules/Accounts/MonthClose/components/list/list.component.scss
++++ b/src/app/modules/Accounts/MonthClose/components/list/list.component.scss
+@@ -1,124 +0,0 @@
+-:host {
+-  display: block;
+-}
+-
+-.month-close-page {
+-  min-height: 100%;
+-  padding: 1rem;
+-  color: var(--month-close-text, #41576a);
+-  background: var(--bs-tertiary-bg, #f1f3f7);
+-}
+-
+-.month-close-panel {
+-  padding: 1rem;
+-  border: 1px solid var(--month-close-panel-border, #e1e8ee);
+-  border-radius: 4px;
+-  background: var(--month-close-surface, #fff);
+-  box-shadow: 0 2px 8px rgb(28 48 64 / 7%);
+-}
+-
+-.month-close-selector {
+-  display: grid;
+-  grid-template-columns: minmax(260px, 420px);
+-  gap: .35rem;
+-  margin: .75rem 8px 1rem;
+-}
+-
+-.month-close-selector .form-label {
+-  margin: 0;
+-  color: var(--month-close-muted, #728596);
+-  font-size: .72rem;
+-  font-weight: 600;
+-}
+-
+-.month-close-alert {
+-  display: flex;
+-  align-items: flex-start;
+-  gap: 7px;
+-  margin: .75rem 0;
+-  padding: .65rem .75rem;
+-  border: 1px solid var(--month-close-alert-border, #f3b6bd);
+-  border-radius: 5px;
+-  color: var(--bs-danger-text-emphasis, #842029);
+-  background: var(--month-close-alert-background, #fff5f6);
+-  font-size: .75rem;
+-}
+-
+-.month-close-hint,
+-.month-close-selection-prompt {
+-  color: var(--month-close-muted, #728596);
+-  font-size: .75rem;
+-}
+-
+-.month-close-grid {
+-  --sigma-data-table-min-width: 520px;
+-  --sigma-data-table-empty-height: 180px;
+-  --sigma-data-table-row-background: var(--month-close-surface, #fff);
+-  --sigma-data-table-row-alt-background: var(--month-close-row-alt, #f7f9fb);
+-  --sigma-data-table-row-hover-background: var(--month-close-row-hover, #eef7fc);
+-  --sigma-data-table-text: var(--month-close-text, #41576a);
+-  --sigma-data-table-muted: var(--month-close-muted, #728596);
+-  display: block;
+-}
+-
+-.month-close-status {
+-  display: inline-flex;
+-  min-width: 68px;
+-  align-items: center;
+-  justify-content: center;
+-  padding: .2rem .5rem;
+-  border: 1px solid transparent;
+-  border-radius: 999px;
+-  font-size: .68rem;
+-  font-weight: 700;
+-  line-height: 1;
+-}
+-
+-.month-close-status.is-open {
+-  border-color: var(--bs-success-border-subtle, #a3cfbb);
+-  color: var(--bs-success-text-emphasis, #0a3622);
+-  background: var(--bs-success-bg-subtle, #d1e7dd);
+-}
+-
+-.month-close-status.is-closed {
+-  border-color: var(--bs-danger-border-subtle, #f1aeb5);
+-  color: var(--bs-danger-text-emphasis, #842029);
+-  background: var(--bs-danger-bg-subtle, #f8d7da);
+-}
+-
+-.month-close-selection-prompt {
+-  display: flex;
+-  min-height: 180px;
+-  align-items: center;
+-  justify-content: center;
+-  gap: .5rem;
+-  margin-top: .5rem;
+-  border: 1px dashed var(--month-close-panel-border, #e1e8ee);
+-  border-radius: 4px;
+-}
+-
+-:host-context([data-bs-theme='dark']) {
+-  --month-close-surface: #182630;
+-  --month-close-text: #dce7ee;
+-  --month-close-muted: #a9bdca;
+-  --month-close-panel-border: #405364;
+-  --month-close-row-alt: #1d2b36;
+-  --month-close-row-hover: #243746;
+-  --month-close-alert-border: #7f3540;
+-  --month-close-alert-background: #351f24;
+-}
+-
+-@media (max-width: 640px) {
+-  .month-close-page {
+-    padding: .5rem;
+-  }
+-
+-  .month-close-panel {
+-    padding: .65rem;
+-  }
+-
+-  .month-close-selector {
+-    grid-template-columns: minmax(0, 1fr);
+-    margin-inline: 0;
+-  }
+-}
+diff --git a/src/app/modules/Accounts/MonthClose/components/list/list.component.ts b/src/app/modules/Accounts/MonthClose/components/list/list.component.ts
+index d9dd6a1..b353dda 100644
+--- a/src/app/modules/Accounts/MonthClose/components/list/list.component.ts
++++ b/src/app/modules/Accounts/MonthClose/components/list/list.component.ts
+@@ -1,24 +1,29 @@
++import { MessageService } from 'primeng/api';
++import { formatDisplayDate } from 'src/app/modules/shared/utils/date-utils';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+ import { CommonModule } from '@angular/common';
+ import { HttpErrorResponse } from '@angular/common/http';
+ import {
+   Component,
++  computed,
+   DestroyRef,
+   OnInit,
+-  TemplateRef,
+-  ViewChild,
+   inject,
++  effect,
+   signal,
+ } from '@angular/core';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+-import { FormsModule } from '@angular/forms';
++import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
++import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+ import { TranslateModule, TranslateService } from '@ngx-translate/core';
+ import { DropdownModule } from 'primeng/dropdown';
+-import { Observable, catchError, finalize, map, of, switchMap } from 'rxjs';
++import { Subject, EMPTY, catchError, defer, finalize, switchMap } from 'rxjs';
+ 
+ import { FiscalYearDTO } from 'src/app/modules/Accounts/FiscalYears/models/list';
+ import { FiscalYearService } from 'src/app/modules/Accounts/FiscalYears/services/fiscalYear.service';
++import { fetchAllPages } from 'src/app/modules/shared/utils/list-query';
+ import {
+-  DataTableCellContext,
+   DataTableColumn,
+   DataTableComponent,
+ } from 'src/app/modules/shared/components/data-table/data-table.component';
+@@ -27,30 +32,34 @@ import { ActionList } from 'src/app/modules/shared/models/action-list';
+ import { Result } from 'src/app/modules/shared/models/result';
+ import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+ import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
++import { EditorDialogComponent } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
+ 
+-import { MonthCloseDTO, MonthCloseStatus } from '../../models/month-close';
++import { MonthCloseCheckDTO, MonthCloseDTO, MonthCloseStatus } from '../../models/month-close';
+ import { MonthCloseService } from '../../services/month-close.service';
++import { MonthCloseComponent } from '../close/close.component';
++import { MonthCloseCheckResultComponent } from '../check-result/check-result.component';
+ 
+ interface FiscalYearOption {
+   id: number;
+   label: string;
+ }
+ 
+-type ToggleFlowResult =
+-  | { kind: 'toggle-failure'; message: string }
+-  | { kind: 'refresh-failure'; message: string }
+-  | { kind: 'refreshed'; result: Result<MonthCloseDTO[]> };
+-
+ @Component({
+   selector: 'app-month-close-list',
++  host: { class: 'sigma-route-host' },
+   standalone: true,
+   imports: [
+     CommonModule,
++    StateMessageComponent,
+     DataTableComponent,
+     DropdownModule,
+     FeatureTitleComponent,
+-    FormsModule,
++    ReactiveFormsModule,
++    FilterPanelComponent,
+     TranslateModule,
++    EditorDialogComponent,
++    MonthCloseComponent,
++    MonthCloseCheckResultComponent,
+   ],
+   templateUrl: './list.component.html',
+   styleUrl: './list.component.scss',
+@@ -62,36 +71,62 @@ export class MonthCloseListComponent extends BaseComponentService implements OnI
+   private readonly destroyRef = inject(DestroyRef);
+   private readonly translate = inject(TranslateService);
+ 
++  private readonly messages = inject(MessageService);
++  private readonly monthQueries = new Subject<number | null>();
++  private pendingSuccessMessage = '';
++  private pendingSuccessYearId: number | null = null;
++  private destroyed = false;
++  readonly confirmationPending = signal(false);
++  readonly closeTarget = signal<{ record: MonthCloseDTO; fiscalYearId: number } | null>(null);
++  readonly reopenFailure = signal<{ record: MonthCloseDTO; result: MonthCloseCheckDTO } | null>(null);
++  readonly dialogOpen = computed(() => this.closeTarget() !== null || this.reopenFailure() !== null);
++
+   readonly fiscalYearOptions = signal<FiscalYearOption[]>([]);
+   readonly months = signal<MonthCloseDTO[]>([]);
+   readonly columns = signal<ReadonlyArray<DataTableColumn<MonthCloseDTO>>>([]);
+-  readonly actions = signal<ActionList[]>([]);
++  readonly actions = signal<ActionList<MonthCloseDTO>[]>([]);
+   readonly loadingFiscalYears = signal(false);
+   readonly loadingMonths = signal(false);
+   readonly updatingId = signal<number | null>(null);
+   readonly selectedFiscalYearId = signal<number | null>(null);
+   readonly errorMessage = signal('');
+-
+-  @ViewChild('statusTemplate', { static: true })
+-  private statusTemplate!: TemplateRef<DataTableCellContext<MonthCloseDTO>>;
++  readonly filterForm = new FormGroup({ fiscalYearId: new FormControl<number | null>(null) });
+ 
+   constructor() {
+     super();
+     this.initActions();
++    this.destroyRef.onDestroy(() => { this.destroyed = true; this.clearPendingSuccess(); });
++    effect(() => {
++      if (this.loadingFiscalYears() || this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) this.filterForm.disable({ emitEvent: false });
++      else this.filterForm.enable({ emitEvent: false });
++    });
+   }
+ 
+   ngOnInit(): void {
++    this.filterForm.controls.fiscalYearId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => this.onFiscalYearChange(id));
++    this.monthQueries.pipe(
++      switchMap(id => id === null ? EMPTY : defer(() => {
++        this.loadingMonths.set(true);
++        this.errorMessage.set('');
++        this.loading.startLoading();
++        return this.monthCloseService.getByFiscalYear(id).pipe(
++          catchError(error => { this.handleRefreshFailure(apiErrorMessage(error, 'monthClose.errors.months')); return EMPTY; }),
++          finalize(() => { this.loadingMonths.set(false); this.loading.endLoading(); this.completeRefreshFeedback(); }),
++        );
++      })),
++      takeUntilDestroyed(this.destroyRef),
++    ).subscribe(result => this.applyMonthsResult(result));
+     this.initColumns();
+     this.loadFiscalYears();
+   }
+ 
+   onFiscalYearChange(fiscalYearId: number | null): void {
+-    this.selectedFiscalYearId.set(fiscalYearId && fiscalYearId > 0 ? fiscalYearId : null);
++    if (this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) return;
++    this.selectedFiscalYearId.set(this.fiscalYearOptions().some(year => year.id === fiscalYearId) ? fiscalYearId : null);
+     this.months.set([]);
+     this.errorMessage.set('');
+ 
+-    if (this.selectedFiscalYearId() === null) return;
+-    this.loadMonths(this.selectedFiscalYearId()!);
++    this.monthQueries.next(this.selectedFiscalYearId());
+   }
+ 
+   monthName(month: number): string {
+@@ -106,25 +141,42 @@ export class MonthCloseListComponent extends BaseComponentService implements OnI
+       : 'monthClose.status.open';
+   }
+ 
+-  statusClass(status: MonthCloseStatus): string {
+-    return status === MonthCloseStatus.Closed ? 'is-closed' : 'is-open';
++  openClose(row: MonthCloseDTO): void {
++    const fiscalYearId = this.selectedFiscalYearId();
++    const current = this.months().find(month => month.id === row.id);
++    if (!fiscalYearId || !current || current.status !== MonthCloseStatus.Open || this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) return;
++    this.closeTarget.set({ record: { ...current }, fiscalYearId });
++  }
++
++  closeCompleted(message: string): void {
++    const target = this.closeTarget();
++    if (!target || this.selectedFiscalYearId() !== target.fiscalYearId) return;
++    this.closeTarget.set(null);
++    this.refreshAfterMutation(target.fiscalYearId, message);
++  }
++
++  closeReasonDialog(event?: Event): void {
++    event?.preventDefault();
++    event?.stopPropagation();
++    this.reopenFailure.set(null);
+   }
+ 
+-  confirmToggle(row: MonthCloseDTO): void {
++  confirmReopen(row: MonthCloseDTO): void {
+     const fiscalYearId = this.selectedFiscalYearId();
+-    if (!fiscalYearId || row.id < 1 || this.loadingMonths() || this.updatingId() !== null) return;
++    if (!fiscalYearId || row.id < 1 || row.status !== MonthCloseStatus.Closed || this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) return;
+ 
+-    const closing = row.status === MonthCloseStatus.Open;
+-    const actionKey = closing ? 'monthClose.actions.close' : 'monthClose.actions.reopen';
++    const id = row.id;
++    const status = row.status;
++    this.confirmationPending.set(true);
+     this.confirmationDialog
+       .confirm({
+         severity: 'warning',
+-        title: { key: closing ? 'monthClose.confirm.closeTitle' : 'monthClose.confirm.reopenTitle' },
++        title: { key: 'monthClose.confirm.reopenTitle' },
+         message: {
+-          key: closing ? 'monthClose.confirm.closeMessage' : 'monthClose.confirm.reopenMessage',
++          key: 'monthClose.confirm.reopenMessage',
+           params: { record: `${this.monthName(row.month)} ${row.year}` },
+         },
+-        icon: closing ? 'bi bi-lock' : 'bi bi-unlock',
++        icon: 'bi bi-unlock',
+         record: {
+           label: {
+             key: 'monthClose.confirm.recordLabel',
+@@ -133,13 +185,14 @@ export class MonthCloseListComponent extends BaseComponentService implements OnI
+           title: `${this.monthName(row.month)} ${row.year}`,
+           icon: 'bi bi-calendar-month',
+         },
+-        confirmLabel: { key: actionKey },
++        confirmLabel: { key: 'monthClose.actions.reopen' },
+         cancelLabel: { key: 'general.cancel' },
+-        confirmIcon: closing ? 'bi bi-lock' : 'bi bi-unlock',
++        confirmIcon: 'bi bi-unlock',
+       })
+-      .pipe(takeUntilDestroyed(this.destroyRef))
++      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false)))
+       .subscribe((confirmed) => {
+-        if (confirmed) this.toggleStatus(row, fiscalYearId);
++        const current = this.months().find(month => month.id === id);
++        if (confirmed && current?.status === status && this.selectedFiscalYearId() === fiscalYearId && !this.loadingMonths() && this.updatingId() === null && !this.dialogOpen()) this.reopenMonth(current, fiscalYearId);
+       });
+   }
+ 
+@@ -150,11 +203,12 @@ export class MonthCloseListComponent extends BaseComponentService implements OnI
+         header: 'monthClose.columns.month',
+         value: (row) => this.monthName(row.month),
+       },
+-      { field: 'year', header: 'monthClose.columns.year' },
++      { field: 'year', header: 'monthClose.columns.year', type: 'number' },
+       {
+         field: 'status',
+         header: 'monthClose.columns.status',
+-        cellTemplate: this.statusTemplate,
++        type: 'status',
++        status: row => ({ label: this.statusKey(row.status), tone: row.status === MonthCloseStatus.Open ? 'success' : 'neutral' }),
+       },
+     ]);
+   }
+@@ -165,15 +219,15 @@ export class MonthCloseListComponent extends BaseComponentService implements OnI
+         title: 'monthClose.actions.close',
+         icon: 'bi bi-lock',
+         visible: (row: MonthCloseDTO) => row.status === MonthCloseStatus.Open,
+-        disabled: () => this.loadingMonths() || this.updatingId() !== null,
+-        action: (row: MonthCloseDTO) => this.confirmToggle(row),
++        disabled: () => this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen(),
++        action: (row: MonthCloseDTO) => this.openClose(row),
+       },
+       {
+         title: 'monthClose.actions.reopen',
+         icon: 'bi bi-unlock',
+         visible: (row: MonthCloseDTO) => row.status === MonthCloseStatus.Closed,
+-        disabled: () => this.loadingMonths() || this.updatingId() !== null,
+-        action: (row: MonthCloseDTO) => this.confirmToggle(row),
++        disabled: () => this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen(),
++        action: (row: MonthCloseDTO) => this.confirmReopen(row),
+       },
+     ]);
+   }
+@@ -183,8 +237,7 @@ export class MonthCloseListComponent extends BaseComponentService implements OnI
+     this.errorMessage.set('');
+     this.loading.startLoading();
+ 
+-    this.fiscalYearService
+-      .getFiscalYears({ pageNo: 1, pageSize: 200, sortField: 'startDate', sortOrder: -1 })
++    fetchAllPages(pageNo => this.fiscalYearService.getFiscalYears({ pageNo, pageSize: 100, sortField: 'startDate', sortOrder: -1 }), 'monthClose.errors.fiscalYears')
+       .pipe(
+         takeUntilDestroyed(this.destroyRef),
+         finalize(() => {
+@@ -194,17 +247,11 @@ export class MonthCloseListComponent extends BaseComponentService implements OnI
+       )
+       .subscribe({
+         next: (result) => {
+-          if (!result.isSuccess) {
+-            this.fiscalYearOptions.set([]);
+-            this.errorMessage.set(result.message || 'monthClose.errors.fiscalYears');
+-            return;
+-          }
+-
+-          this.fiscalYearOptions.set((result.entities ?? []).map((year) => this.toFiscalYearOption(year)));
++          this.fiscalYearOptions.set(result.map(year => this.toFiscalYearOption(year)));
+         },
+-        error: (error: HttpErrorResponse) => {
++        error: (error: unknown) => {
+           this.fiscalYearOptions.set([]);
+-          this.errorMessage.set(this.errorMessageFrom(error, 'monthClose.errors.fiscalYears'));
++          this.errorMessage.set(error instanceof Error && !(error instanceof HttpErrorResponse) ? error.message : apiErrorMessage(error, 'monthClose.errors.fiscalYears'));
+         },
+       });
+   }
+@@ -212,119 +259,91 @@ export class MonthCloseListComponent extends BaseComponentService implements OnI
+   private toFiscalYearOption(year: FiscalYearDTO): FiscalYearOption {
+     return {
+       id: year.id,
+-      label: `${this.formatDate(year.startDate)} – ${this.formatDate(year.endDate)}`,
++      label: `${formatDisplayDate(year.startDate)} – ${formatDisplayDate(year.endDate)}`,
+     };
+   }
+ 
+-  private formatDate(value: string): string {
+-    const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+-    const date = match
+-      ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+-      : new Date(value);
+-    if (Number.isNaN(date.getTime())) return value;
+-
+-    const locale = this.translate.currentLang || this.translate.defaultLang || 'en';
+-    return new Intl.DateTimeFormat(locale, {
+-      day: '2-digit',
+-      month: '2-digit',
+-      year: 'numeric',
+-    }).format(date);
++  retry(): void {
++    if (this.loadingFiscalYears() || this.loadingMonths() || this.updatingId() !== null || this.confirmationPending() || this.dialogOpen()) return;
++    const id = this.selectedFiscalYearId();
++    if (id === null) this.loadFiscalYears();
++    else this.monthQueries.next(id);
+   }
+ 
+-  private loadMonths(fiscalYearId: number): void {
+-    this.loadingMonths.set(true);
+-    this.errorMessage.set('');
+-    this.loading.startLoading();
+-
+-    this.monthCloseService
+-      .getByFiscalYear(fiscalYearId)
+-      .pipe(
+-        takeUntilDestroyed(this.destroyRef),
+-        finalize(() => {
+-          this.loadingMonths.set(false);
+-          this.loading.endLoading();
+-        }),
+-      )
+-      .subscribe({
+-        next: (result) => this.applyMonthsResult(result),
+-        error: (error: HttpErrorResponse) => {
+-          this.months.set([]);
+-          this.errorMessage.set(this.errorMessageFrom(error, 'monthClose.errors.months'));
+-        },
+-      });
++  reset(): void {
++    if (this.updatingId() !== null || this.confirmationPending() || this.loadingMonths() || this.loadingFiscalYears() || this.dialogOpen()) return;
++    this.filterForm.reset({ fiscalYearId: null });
+   }
+ 
+-  private toggleStatus(row: MonthCloseDTO, fiscalYearId: number): void {
+-    if (this.updatingId() !== null || this.selectedFiscalYearId() !== fiscalYearId) return;
++  private reopenMonth(row: MonthCloseDTO, fiscalYearId: number): void {
++    if (this.updatingId() !== null || this.selectedFiscalYearId() !== fiscalYearId || this.dialogOpen()) return;
+ 
+     this.updatingId.set(row.id);
+-    this.loadingMonths.set(true);
+     this.errorMessage.set('');
+     this.loading.startLoading();
+ 
+     this.monthCloseService
+-      .toggleStatus(row.id)
++      .reopenMonth(row.id)
+       .pipe(
+-        switchMap((result): Observable<ToggleFlowResult> => {
+-          if (!result.isSuccess) {
+-            return of<ToggleFlowResult>({
+-              kind: 'toggle-failure',
+-              message: result.message || 'monthClose.errors.update',
+-            });
+-          }
+-
+-          return this.monthCloseService.getByFiscalYear(fiscalYearId).pipe(
+-            map((refreshResult): ToggleFlowResult => ({ kind: 'refreshed', result: refreshResult })),
+-            catchError((error: HttpErrorResponse) =>
+-              of<ToggleFlowResult>({
+-                kind: 'refresh-failure',
+-                message: this.errorMessageFrom(error, 'monthClose.errors.months'),
+-              }),
+-            ),
+-          );
+-        }),
+         takeUntilDestroyed(this.destroyRef),
+         finalize(() => {
+           this.updatingId.set(null);
+-          this.loadingMonths.set(false);
+           this.loading.endLoading();
+         }),
+       )
+       .subscribe({
+-        next: (flowResult) => {
+-          if (flowResult.kind === 'toggle-failure') {
+-            this.errorMessage.set(flowResult.message);
++        next: result => {
++          if (!result.isSuccess || result.entity?.isValid !== true) {
++            this.reopenFailure.set({ record: { ...row }, result: {
++              isValid: false,
++              message: result.entity?.message || result.message || 'monthClose.errors.update',
++              issueCount: result.entity?.issueCount ?? 0,
++              issues: result.entity?.issues ?? [],
++            } });
+             return;
+           }
+-          if (flowResult.kind === 'refresh-failure') {
+-            this.months.set([]);
+-            this.errorMessage.set(flowResult.message);
+-            return;
+-          }
+-          this.applyMonthsResult(flowResult.result);
++          this.refreshAfterMutation(fiscalYearId, result.message || result.entity.message || 'general.success');
+         },
+-        error: (error: HttpErrorResponse) => {
+-          this.errorMessage.set(this.errorMessageFrom(error, 'monthClose.errors.update'));
++        error: (error: unknown) => {
++          this.reopenFailure.set({ record: { ...row }, result: {
++            isValid: false, message: apiErrorMessage(error, 'monthClose.errors.update'), issueCount: 0, issues: [],
++          } });
+         },
+       });
+   }
+ 
+   private applyMonthsResult(result: Result<MonthCloseDTO[]>): void {
+     if (!result.isSuccess) {
+-      this.months.set([]);
+-      this.errorMessage.set(result.message || 'monthClose.errors.months');
++      this.handleRefreshFailure(result.message || 'monthClose.errors.months');
+       return;
+     }
+     this.months.set(result.entity ?? []);
+   }
+ 
+-  private errorMessageFrom(error: HttpErrorResponse, fallback: string): string {
+-    const body = error.error as { message?: unknown; title?: unknown } | string | null;
+-    if (typeof body === 'string' && body.trim()) return body;
+-    if (body && typeof body === 'object') {
+-      if (typeof body.message === 'string' && body.message.trim()) return body.message;
+-      if (typeof body.title === 'string' && body.title.trim()) return body.title;
++  private completeRefreshFeedback(): void {
++    if (!this.destroyed && this.pendingSuccessMessage && this.pendingSuccessYearId === this.selectedFiscalYearId() && !this.errorMessage()) {
++      this.messages.add({ key: 'global', severity: 'success', summary: this.translate.instant('general.success'), detail: this.translate.instant(this.pendingSuccessMessage) });
++      this.clearPendingSuccess();
+     }
+-    return fallback;
+   }
++
++  private refreshAfterMutation(fiscalYearId: number, message: string): void {
++    this.pendingSuccessMessage = message;
++    this.pendingSuccessYearId = fiscalYearId;
++    this.monthQueries.next(fiscalYearId);
++  }
++
++  private handleRefreshFailure(message: string): void {
++    this.months.set([]);
++    this.errorMessage.set(this.pendingSuccessMessage
++      ? this.translate.instant('monthClose.errors.refreshAfterUpdate', { message: this.translate.instant(message) })
++      : message);
++    this.clearPendingSuccess();
++  }
++
++  private clearPendingSuccess(): void {
++    this.pendingSuccessMessage = '';
++    this.pendingSuccessYearId = null;
++  }
++
+ }
+diff --git a/src/app/modules/Accounts/MonthClose/models/month-close.ts b/src/app/modules/Accounts/MonthClose/models/month-close.ts
+index 2668146..ca6df2e 100644
+--- a/src/app/modules/Accounts/MonthClose/models/month-close.ts
++++ b/src/app/modules/Accounts/MonthClose/models/month-close.ts
+@@ -9,3 +9,15 @@ export interface MonthCloseDTO {
+   year: number;
+   status: MonthCloseStatus;
+ }
++
++export interface MonthCloseIssueDTO {
++  code: string;
++  count: number;
++}
++
++export interface MonthCloseCheckDTO {
++  isValid: boolean;
++  message: string;
++  issueCount: number;
++  issues: MonthCloseIssueDTO[];
++}
+diff --git a/src/app/modules/Accounts/MonthClose/services/month-close.service.ts b/src/app/modules/Accounts/MonthClose/services/month-close.service.ts
+index af6e7a5..8d5f25c 100644
+--- a/src/app/modules/Accounts/MonthClose/services/month-close.service.ts
++++ b/src/app/modules/Accounts/MonthClose/services/month-close.service.ts
+@@ -5,7 +5,7 @@ import { Result } from 'src/app/modules/shared/models/result';
+ import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+ import { environment } from 'src/environments/environment';
+ 
+-import { MonthCloseDTO } from '../models/month-close';
++import { MonthCloseCheckDTO, MonthCloseDTO } from '../models/month-close';
+ 
+ @Injectable({ providedIn: 'root' })
+ export class MonthCloseService extends BaseService {
+@@ -16,13 +16,42 @@ export class MonthCloseService extends BaseService {
+   getByFiscalYear(fiscalYearId: number): Observable<Result<MonthCloseDTO[]>> {
+     return this.http.get<Result<MonthCloseDTO[]>>(
+       `${this.baseUrl}MonthClose/GetByFiscalYear/${fiscalYearId}`,
++      { headers: { 'X-Skip-Error-Interceptor': 'true' } },
+     );
+   }
+ 
+-  toggleStatus(id: number): Observable<Result<null>> {
+-    return this.http.post<Result<null>>(
+-      `${this.baseUrl}MonthClose/ToggleStatus/${id}`,
++  verifyValidMonth(id: number): Observable<Result<MonthCloseCheckDTO>> {
++    return this.getCheck('VerifyValidMonth', id);
++  }
++
++  verifyVoucherApprovals(id: number): Observable<Result<MonthCloseCheckDTO>> {
++    return this.getCheck('VerifyVoucherApprovals', id);
++  }
++
++  verifyDataInconsistency(id: number): Observable<Result<MonthCloseCheckDTO>> {
++    return this.getCheck('VerifyDataInconsistency', id);
++  }
++
++  closeMonth(id: number): Observable<Result<MonthCloseCheckDTO>> {
++    return this.changeStatus('CloseMonth', id);
++  }
++
++  reopenMonth(id: number): Observable<Result<MonthCloseCheckDTO>> {
++    return this.changeStatus('ReopenMonth', id);
++  }
++
++  private getCheck(endpoint: string, id: number): Observable<Result<MonthCloseCheckDTO>> {
++    return this.http.get<Result<MonthCloseCheckDTO>>(
++      `${this.baseUrl}MonthClose/${endpoint}/${id}`,
++      { headers: { 'X-Skip-Error-Interceptor': 'true', 'X-Skip-Success-Toast': 'true' } },
++    );
++  }
++
++  private changeStatus(endpoint: string, id: number): Observable<Result<MonthCloseCheckDTO>> {
++    return this.http.post<Result<MonthCloseCheckDTO>>(
++      `${this.baseUrl}MonthClose/${endpoint}/${id}`,
+       null,
++      { headers: { 'X-Skip-Error-Interceptor': 'true', 'X-Skip-Success-Toast': 'true' } },
+     );
+   }
+ }
+diff --git a/tsconfig.app.json b/tsconfig.app.json
+index ec7f221..7d6dd25 100644
+--- a/tsconfig.app.json
++++ b/tsconfig.app.json
+@@ -6,6 +6,12 @@
+     "types": []
+   },
+   "files": [
++    "src/app/modules/Accounts/openingBalances/services/opening-balance-collection.service.ts",
++    "src/app/modules/Accounts/openingBalances/shared/opening-balance-editor-state/opening-balance-editor-state.component.ts",
++    "src/app/modules/Accounts/shared/report-family/account-report.models.ts",
++    "src/app/modules/Accounts/shared/report-family/account-report-endpoint.service.ts",
++    "src/app/modules/Accounts/shared/report-family/account-report-page.component.ts",
++    "src/app/modules/Accounts/shared/report-family/account-report-values.ts",
+     "src/main.ts",
+     "src/polyfills.ts",
+     "src/app/modules/shared/components/summary-cards/summary-cards.component.ts",
+@@ -17,6 +23,8 @@
+     "src/app/modules/Accounts/FiscalYears/components/list/list.component.ts",
+     "src/app/modules/Accounts/MonthClose/month-close.routes.ts",
+     "src/app/modules/Accounts/MonthClose/components/list/list.component.ts",
++    "src/app/modules/Accounts/MonthClose/components/close/close.component.ts",
++    "src/app/modules/Accounts/MonthClose/components/check-result/check-result.component.ts",
+     "src/app/modules/Lease/LeaseQuotation/components/master-agreement-dialog/master-agreement-dialog.component.ts",
+     "src/app/modules/Lease/LeaseQuotation/components/rejection-dialog/rejection-dialog.component.ts",
+     "src/app/modules/Lease/LeaseAgreement/components/deposit/deposit.component.ts",

@@ -1,0 +1,1073 @@
+{
+  "date": "2026-11-02",
+  "groups": [
+    {
+      "prefix": "settings-common-general-groups",
+      "label": "settings.layoutSections.general",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.contentGroups.systemAndCurrency",
+          "controls": [
+            "timeZone",
+            "dateFormat",
+            "tenantLoginTimeout",
+            "currencyCode",
+            "currencyName",
+            "decimalCurrencyName",
+            "currencyDecimals",
+            "autoCalculateAmountInWords"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.contentGroups.options",
+          "controls": [
+            "mergeEnglishAndArabicDescriptionAndLocationInDownloadingTamm",
+            "warningOnChangingBranch",
+            "doNotAddDashInVoucherNo",
+            "enableAdditionalNotesField",
+            "importVoucherLinesWithTax",
+            "creditCardLast4Digits",
+            "isPoNoMandatoryForComapnyIn",
+            "enableCostCenterGroup2",
+            "disableTollsAndFinesDownloading",
+            "allowZeroChargesInMisc",
+            "showUnallocatedAmountInReceivableAgeAnalysis",
+            "editEmiInterest",
+            "doNotAllowDiscountInPo",
+            "autoFixedDecimalRounding",
+            "showYearFilterInDateRange",
+            "showOnlyDueVouchersBasedOnCreditPeriod"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-rental-groups",
+      "label": "settings.layoutSections.rental",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.commonModel.monthlyRentalCalculationAndAutoCutShort",
+          "controls": [
+            "dailyRateFromDays",
+            "dailyRateToDays",
+            "weeklyRateFromDays",
+            "weeklyRateToDays"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.commonModel.youngNewDriver",
+          "controls": [
+            "youngDriverExperienceYears",
+            "ageLessThanYears"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.commonModel.halfDayTimes",
+          "controls": [
+            "halfDaySlab1Fom",
+            "halfDaySlab1To",
+            "halfDaySlab2Fom",
+            "halfDaySlab2To"
+          ]
+        },
+        {
+          "key": "group-4",
+          "label": "settings.commonModel.weekEnds",
+          "controls": [
+            "weekEndDay1",
+            "weekEndDay2",
+            "weekEndKMsLimit",
+            "mixWeekEnds"
+          ]
+        },
+        {
+          "key": "group-5",
+          "label": "settings.commonModel.Mcc",
+          "controls": [
+            "isLeftHandDriving",
+            "showDamagesPicturesOnCheckCard"
+          ]
+        },
+        {
+          "key": "group-6",
+          "label": "settings.contentGroups.agreementOptions",
+          "controls": [
+            "custodyMovementDueAmountLimit",
+            "enableManualAgreementNoField",
+            "enablePickAndDropLocationInAgreement",
+            "takeSignatureOnAgreementOpenedWebCreated",
+            "enableLocationDetailsInMovements",
+            "enableFutureAgreementCheckOut",
+            "weeklyAgreementChargedMinimumOneWeek",
+            "doNotAllowAgreementCreationIfDocumentsAreExpired",
+            "doNotAllowRentalAgreementCreationIfNoDocumentsAttached",
+            "calculateAndShowAgreementChargesTillNow",
+            "enableTermsAndConditionsOnAgreementCheckOut",
+            "kmsConfirmationPopupOnCheckIn",
+            "createLeaseAgreementByWizard",
+            "dontAllowCheckInWithZeroKms",
+            "disableKmInOutAndDriversInAgreement",
+            "agreementAutoEndDate",
+            "allowComplimentaryAgreement",
+            "showCustomFieldForCheckOutAndCheckInMovement",
+            "showCustomField3InMovement",
+            "selectToBranchInNrtMovement",
+            "displayExtendedAgreementDetailsInLogAndExportRentalLease"
+          ]
+        },
+        {
+          "key": "group-7",
+          "label": "settings.contentGroups.rentalRatesAndGrace",
+          "controls": [
+            "rentalGracePeriodIndividualMinutes",
+            "rentalGracePeriodCompanyMinutes",
+            "enableWeeklyMonthlyRental",
+            "enableHourlyRental",
+            "generateDailyInvoiceForDailyAgreement",
+            "applyTaxOnTollFineParkingSurchargeForTaxExemptedCustomers",
+            "allowInvoiceMergingOnToDate"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-invoicing-groups",
+      "label": "settings.layoutSections.invoicing",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.commonModel.monthlyInvoicing",
+          "controls": [
+            "monthlyInvoicesIndividualsRule",
+            "monthlyInvoicesCompaniesRule",
+            "monthlyInvoicesIndividualsType",
+            "monthlyInvoicesCompaniesType"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.commonModel.leaseInvoicing",
+          "controls": [
+            "leaseInvoicesIndividualsRule",
+            "leaseInvoicesCompaniesRule",
+            "leaseInvoicesIndividualsType",
+            "leaseInvoicesCompaniesType"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.commonModel.weeklyInvoicing",
+          "controls": [
+            "defaultInvoicingRuleForWeeklyInvoicesIndividuals",
+            "defaultInvoicingRuleForWeeklyInvoicesCompanies",
+            "invoicingCutoffDate",
+            "generateWeeklyInvoicesForWeeklyAgreementsIndividuals",
+            "generateWeeklyInvoicesForWeeklyAgreementsCompanies",
+            "enableCustomerWiseSettingForMonthlyInvoicing",
+            "receiptOnScreenAllocationWithTypesOfCharges",
+            "receiptOnScreenAllocationWithReceivables",
+            "useRentalInvoicingRuleForWeeklyInvoicesIndividuals",
+            "useRentalInvoicingRuleForWeeklyInvoicesCompanies"
+          ]
+        },
+        {
+          "key": "group-4",
+          "label": "settings.commonModel.paymentMethod",
+          "controls": [
+            "ddaReceiptsPaymentMethods"
+          ]
+        },
+        {
+          "key": "group-5",
+          "label": "settings.contentGroups.options",
+          "controls": [
+            "makeReceiptDepositOptionalInAdvanceTaxInvoice",
+            "showDescriptionForAtiAllocationInInvoice",
+            "addDamageChargesAndInvoiceableCheckboxOnAccidentModule",
+            "generateAdvanceTaxInvoiceFromAdvanceTaxReceipt",
+            "allowAssetSaleInvoiceCreationDateAsAssetDisposalDate",
+            "createMultipleBillsOnPurchaseOrder",
+            "doNotGenerateInvoiceOnAgreementClosing",
+            "generateDailyInvoiceForAnyPeriod",
+            "agreementReceiptAllocateOnlyWithAgreementInvoices",
+            "autoApproveAllBillsExceptFineBills",
+            "autoFetchUnitPriceInPoFromLastSupplierPurchaseBasedOnGrn",
+            "purchaseAndSalesHistoryInPurchaseOrder",
+            "enableFutureInvoicing",
+            "taxPercentageInBillAndJvImport",
+            "setBillDateAsCurrentDate",
+            "manuallyDateChangeInFineBillGeneration",
+            "selectChargesTypeInMiscInvoice",
+            "deleteFineBills",
+            "importAndAttachPoInBill",
+            "grnAsFinancialVoucher",
+            "branchWiseInvoicing",
+            "allowQuantityAndRateColumnInMiscInvoice",
+            "generalBillQuantityPriceBasedOnPo"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-payments-groups",
+      "label": "settings.layoutSections.payments",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.layoutSections.payments",
+          "controls": [
+            "doNotShowUnapprovedPdc",
+            "allowResubmitOnChequeReceivables",
+            "showAllTypeOfPaymentsInCashDeposits",
+            "allowPartialRefund",
+            "addPaymentInCreditCardBankTransfer",
+            "enableCurrentPreviousDatedChequeDirectlyToBank",
+            "enableCurrentPreviousDatedChequePayableDirectlyToBank",
+            "doNotAllowReceiptCreationWithoutAgreement",
+            "allowReceiptOnScreenAllocationPartially",
+            "allowSupplierPaymentOnScreenAllocationPartially",
+            "allowOverAllocationForCreditNotesReceipts",
+            "showAllocationsInCreditNote",
+            "agreementStartDateAsAdvanceReceiptAndDepositDate",
+            "doNotAllowDuplicateChequeNumberInReceiptsAndPayments",
+            "showAgreementInReceipt"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.contentGroups.options",
+          "controls": [
+            "autoSplitChargesForBroker"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-customers-groups",
+      "label": "settings.layoutSections.customers",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.commonModel.customers",
+          "controls": [
+            "selectCustomerFromList"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.contentGroups.options",
+          "controls": [
+            "salesPersonDesignation",
+            "salesPersonMandatoryInCustomerWhileOpeningRentalAgreement",
+            "salesPersonSelectionInsteadOfSearching",
+            "takeSignatureOnAgreementOpeningInMobileApp",
+            "dontAllowToSaveCustomerWithExpiryDocument",
+            "customizeRevenueLinkingForContactGroups",
+            "useCustomerBranchForVouchers",
+            "showOnlyStaffForUserContact",
+            "showAdvancePhoneNumberInputInContacts",
+            "allowOnlyNumericNumberInMobilePhoneOnCustomer",
+            "allowGeneralBillOnCustomer",
+            "showBlackListedCustomerInAgreement",
+            "allowDuplicateCustomerNameWhileCreatingNewCustomer",
+            "agreementAndCustomerBalanceInRentalAgreement"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-fleet-groups",
+      "label": "settings.layoutSections.fleet",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.contentGroups.alertsAndDefaults",
+          "controls": [
+            "mileageUpdateAlertAfterMonths",
+            "invoiceDateAsGenerationDate",
+            "invoiceDateAsGenerationDateForAllInvoices",
+            "dontCheckDepreciationAndAmortizationInFiscalMonthClosing",
+            "tariffCardExplicitSelectionInBookingAgreement",
+            "createNewBookingAlwaysAsConfirmed"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.commonModel.AssetDisposal",
+          "controls": [
+            "assetDisposalPostingOption"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.contentGroups.assetValuation",
+          "controls": [
+            "profitMarginPercentageOnAssetCostPrice",
+            "estimateOrSetAssetSalePrice",
+            "decliningDepreciationOnAssetLifeBookValue"
+          ]
+        },
+        {
+          "key": "group-4",
+          "label": "settings.commonModel.dueForSale",
+          "controls": [
+            "dueForSaleKMsThreshold",
+            "dueForSalePeriodYears",
+            "includeBuyBack"
+          ]
+        },
+        {
+          "key": "group-5",
+          "label": "settings.contentGroups.vehicleOptions",
+          "controls": [
+            "enableTotalLossInAssets",
+            "claimChargesInTotalLoss",
+            "vehicleRegistrationExpiryAndServiceDuePopupOnAgreementMovementsSaving",
+            "depreciationTillOfSaleDateInsteadOfDisposalDate",
+            "doNotRentMultipleVehiclesOnSameDriverCheck",
+            "alertsForExternalVehicle",
+            "alertsForMortgageVehicle",
+            "doNotIncludeReplacementVehicles",
+            "vehicleSearchByChassisNoBesidesPlateNo",
+            "doNotAllowAssetCreationIfVehicleDoesNotExist",
+            "calculateAmortizationForLastPeriodInsteadOfPassingPendingAmount",
+            "separateMakeAndModelInFleet",
+            "replacementOfMakeAndModelInGridForVehicles",
+            "showExpiryDetailsForWarrantyOfVehicles",
+            "allowMovementsForSaleVehicle",
+            "vehicleProfitLossExcludedAccounts"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-workshop-groups",
+      "label": "settings.layoutSections.workshop",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.commonModel.service",
+          "controls": [
+            "serviceAlertsPriorKms",
+            "serviceAlertsPriorDays"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.contentGroups.options",
+          "controls": [
+            "linkCrsVehicleWithWorkshopVehicleOnChassisNo",
+            "autoIssueOfItemsInJcFromGrn",
+            "poMandatoryForWorkshopMovement",
+            "notesMandatoryForWorkshopMovement",
+            "allowWorkshopMovementForExternalVehicleInCrs",
+            "dontAllowWorkshopMovementWhenAlreadyVehicleStatusIsWorkshop",
+            "doNotGenerateJobClosingInvoiceForInternalCustomer",
+            "showAllWorkshopMovementsInServiceLog"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-reports-groups",
+      "label": "settings.layoutSections.reports",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.commonModel.timeOfDay",
+          "controls": [
+            "detailedUtilizationReportTime",
+            "makeCreditCardInfoRequiredInReceipt",
+            "getCloseAgreementsForDriverTimeSheet"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.contentGroups.options",
+          "controls": [
+            "hideSpecificColumnsInTripReportGlobalWings",
+            "allowPrintingOfVoidedVouchers",
+            "estimatedRevenueReportsGenerateBasedOnActualClosingCharges",
+            "includeFuelChargesInRevenueAnalysisReport",
+            "showBookedVehiclesInDashboard",
+            "showLimoVehiclesInDashboard",
+            "showReplacementTodayVehiclesInDashboard",
+            "showLimitedFieldsForAgreementViewInAgreementDashboard",
+            "enableVoucherPrintingAfterApproval",
+            "showAllDueVouchersStatementOfAccounts",
+            "showAllocationsInStatementOfAccount",
+            "showLastJobDetailOnJobPrint",
+            "dontAllowPrintForUnApprovedJobEstimation",
+            "showLogoInAppReportPrint",
+            "allowGatePassPrintWithoutReceipt",
+            "getSoaOfCurrentBranchCustomersOnly",
+            "showBookingReferenceNoInStatementOfAccountAndReceiptAllocation",
+            "showVoucherDetailedDescriptionInSoa",
+            "showVoucherDescriptionInSupplierOutstandingSoa",
+            "showPlateNoForWorkshopInvoiceInSoa",
+            "showDescriptionForLimousineInvoiceInSoa",
+            "showFirstVehicleInBillSoa",
+            "allowPdcPrintingBeforeClearance",
+            "showFineInvoiceDetailInCustomerSoa",
+            "doNotShowAgreementNoInSOAEmail"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-booking-groups",
+      "label": "settings.layoutSections.booking",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.commonModel.webBooking",
+          "controls": [
+            "webBookingApiKey",
+            "rateCardForWebBookingPlugin",
+            "showGroupWithAvailableVehicle",
+            "googleApiKey"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.contentGroups.options",
+          "controls": [
+            "rentalQuotationsValidityDays",
+            "vehicleTypeOptionalInBooking",
+            "setVehicleOptionalInBookingConfirmation",
+            "allowDepositInBookingWithoutReceivingAmount",
+            "generateAdvanceAsAtrAndGenerateAtiBookingAgreement",
+            "enableManualBookingNoField",
+            "manuallyConfirmBooking",
+            "quotationIsMandatoryForAllIndividualCustomersForWeeklyAndMonthly",
+            "onBookingConfirmationVehicleSubstatusToBeChangedToPendingCustomerDelivery"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-common-fuel-groups",
+      "label": "settings.layoutSections.fuel",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.commonModel.fuel",
+          "controls": [
+            "percentageFuelSurchargeInvoice",
+            "currentFuelPrice",
+            "fuelSurchargeInvoiceClubWithFuelInvoice",
+            "fuelAverageUsingPettyCashPayment"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.contentGroups.options",
+          "controls": [
+            "invoiceFuelChargesOnReplacement",
+            "showFuelPercentageInsteadOfFraction",
+            "considerExtraFuelInWhileFuelChargesCalculation"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-document-number-agreements-groups",
+      "label": "settings.layoutSections.agreements",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.documentNumberModel.agreementNo",
+          "controls": [
+            "agreementNoIsManual",
+            "agreementNoIncludeSaleOriginCode",
+            "agreementNoIncludeBranchCode",
+            "agreementNoIncludeBranchCode2",
+            "agreementNoIncludeAgreementTypeCode",
+            "agreementNoIncludeYearMonth",
+            "agreementNoNumericPartLength",
+            "agreementNoExcludeBranchPrefixForLease",
+            "agreementTypeHourlyCode",
+            "agreementTypeDailyCode",
+            "agreementTypeWeeklyCode",
+            "agreementTypeMonthlyCode",
+            "agreementTypeLeaseCode"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.documentNumberModel.salesAgreement",
+          "controls": [
+            "salesAgreementCodePrefix",
+            "salesAgreementNumericPartLength",
+            "salesAgreementIncludeBranchCode",
+            "salesAgreementIncludeBranchCode2",
+            "salesAgreementIncludeYear",
+            "salesAgreementIncludeMonth"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.documentNumberModel.equipmentRentalMasterAgreementNo",
+          "controls": [
+            "equipmentRentalMasterAgreementPrefix",
+            "equipmentRentalMasterAgreementNumericPartLength",
+            "equipmentRentalMasterAgreementUseYearMonth"
+          ]
+        },
+        {
+          "key": "group-4",
+          "label": "settings.documentNumberModel.leaseMasterAgreementNo",
+          "controls": [
+            "leaseMasterAgreementPrefix",
+            "leaseMasterAgreementNumericPartLength",
+            "leaseMasterAgreementIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-5",
+          "label": "settings.documentNumberModel.rentalMasterAgreementNo",
+          "controls": [
+            "rentalMasterAgreementPrefix",
+            "rentalMasterAgreementNumericPartLength",
+            "rentalMasterAgreementIncludeYear",
+            "rentalMasterAgreementIncludeMonth"
+          ]
+        },
+        {
+          "key": "group-6",
+          "label": "settings.documentNumberModel.deliveryNo",
+          "controls": [
+            "deliveryNoPrefix",
+            "deliveryNoNumericPartLength",
+            "deliveryNoIncludeMasterAgreementNo"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-document-number-quotations-groups",
+      "label": "settings.layoutSections.quotations",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.documentNumberModel.salesQuotation",
+          "controls": [
+            "salesQuotationCodePrefix",
+            "salesQuotationNumericPartLength",
+            "salesQuotationIncludeBranchCode",
+            "salesQuotationIncludeBranchCode2",
+            "salesQuotationIncludeYear",
+            "salesQuotationIncludeMonth"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.documentNumberModel.rentalQuotation",
+          "controls": [
+            "rentalQuotationCodePrefix",
+            "rentalQuotationNumericPartLength",
+            "rentalQuotationIncludeBranchCode",
+            "rentalQuotationIncludeYear",
+            "rentalQuotationIncludeMonth"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.documentNumberModel.equipmentRentalQuotationNo",
+          "controls": [
+            "equipmentRentalQuotationCodePrefix",
+            "equipmentRentalQuotationNumericPartLength",
+            "equipmentRentalQuotationIncludeBranchCode",
+            "equipmentRentalQuotationIncludeBranchCode2",
+            "equipmentRentalQuotationIncludeYear",
+            "equipmentRentalQuotationIncludeMonth"
+          ]
+        },
+        {
+          "key": "group-4",
+          "label": "settings.documentNumberModel.leaseQuotation",
+          "controls": [
+            "leaseQuotationCodePrefix",
+            "leaseQuotationNumericPartLength",
+            "leaseQuotationIncludeBranchCode",
+            "leaseQuotationIncludeBranchCode2",
+            "leaseQuotationIncludeYear",
+            "leaseQuotationIncludeMonth"
+          ]
+        },
+        {
+          "key": "group-5",
+          "label": "settings.documentNumberModel.leaseInquiry",
+          "controls": [
+            "leaseInquiryCodePrefix",
+            "leaseInquiryNumericPartLength"
+          ]
+        },
+        {
+          "key": "group-6",
+          "label": "settings.documentNumberModel.limoQuotation",
+          "controls": [
+            "limoQuotationCodePrefix",
+            "limoQuotationNumericPartLength",
+            "limoQuotationIncludeBranchCode"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-document-number-invoices-groups",
+      "label": "settings.layoutSections.invoices",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.documentNumberModel.invoiceNo",
+          "controls": [
+            "invoiceNoIncludeBranchCode",
+            "invoiceNoIncludeInvoiceTypeCode",
+            "invoiceNoIncludeYearMonth",
+            "invoiceNoNumericPartLength",
+            "settingsDocumentNumberInvoiceTypes",
+            "code"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.documentNumberModel.creditNoteNo",
+          "controls": [
+            "creditNoteNoVoucherTypePrefix",
+            "creditNoteNoNumericPartLength",
+            "creditNoteNoIsManual",
+            "creditNoteNoIncludeBranchCode",
+            "creditNoteNoIncludeBranchCode2",
+            "creditNoteNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.documentNumberModel.debitNoteNo",
+          "controls": [
+            "debitNoteNoVoucherTypePrefix",
+            "debitNoteNoNumericPartLength",
+            "debitNoteNoIncludeBranchCode",
+            "debitNoteNoIncludeYearMonth"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-document-number-cheques-groups",
+      "label": "settings.layoutSections.cheques",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.documentNumberModel.matureChequePayableNo",
+          "controls": [
+            "matureChequePayableNoVoucherTypePrefix",
+            "matureChequePayableNoNumericPartLength",
+            "matureChequePayableNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.documentNumberModel.cancelChequePayableNo",
+          "controls": [
+            "cancelChequePayableNoVoucherTypePrefix",
+            "cancelChequePayableNoNumericPartLength",
+            "cancelChequePayableNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.documentNumberModel.matureChequeReceivableNo",
+          "controls": [
+            "matureChequeReceivableNoVoucherTypePrefix",
+            "matureChequeReceivableNoNumericPartLength",
+            "matureChequeReceivableNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-4",
+          "label": "settings.documentNumberModel.returnChequeReceivableNo",
+          "controls": [
+            "returnChequeReceivableNoVoucherTypePrefix",
+            "returnChequeReceivableNoNumericPartLength",
+            "returnChequeReceivableNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-5",
+          "label": "settings.documentNumberModel.cardTransactionsBankTransferNo",
+          "controls": [
+            "cardTransactionsBankTransferNoVoucherTypePrefix",
+            "cardTransactionsBankTransferNoNumericPartLength",
+            "cardTransactionsBankTransferNoIncludeYearMonth"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-document-number-vouchers-groups",
+      "label": "settings.layoutSections.vouchers",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.documentNumberModel.receiptNo",
+          "controls": [
+            "receiptNoVoucherTypePrefix",
+            "receiptNoNumericPartLength",
+            "receiptNoIsManual",
+            "receiptNoIncludeBranchCode",
+            "receiptNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.documentNumberModel.billNo",
+          "controls": [
+            "billNoVoucherTypePrefix",
+            "billNoNumericPartLength",
+            "billNoIsManual",
+            "billNoIncludeBranchCode",
+            "billNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.documentNumberModel.purchaseOrderNo",
+          "controls": [
+            "purchaseOrderNoVoucherTypePrefix",
+            "purchaseOrderNoNumericPartLength",
+            "purchaseOrderNoIncludeBranchCode",
+            "purchaseOrderNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-4",
+          "label": "settings.documentNumberModel.purchaseRequestNo",
+          "controls": [
+            "purchaseRequestNoVoucherTypePrefix",
+            "purchaseRequestNoNumericPartLength",
+            "purchaseRequestNoIncludeBranchCode",
+            "purchaseRequestNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-5",
+          "label": "settings.documentNumberModel.provisionNo",
+          "controls": [
+            "provisionNoVoucherTypePrefix",
+            "provisionNoNumericPartLength",
+            "provisionNoIncludeBranchCode",
+            "provisionNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-6",
+          "label": "settings.documentNumberModel.paymentNo",
+          "controls": [
+            "paymentNoNumericPartLength",
+            "paymentNoIncludeBranchCode",
+            "paymentNoIncludeYearMonth",
+            "paymentNoIncludeTypeCode",
+            "paymentNoIncludeMethodCode",
+            "paymentTypeCustomerCode",
+            "paymentTypeSupplierCode",
+            "paymentTypeStaffCode",
+            "paymentTypePettyCashExpenseCode",
+            "paymentTypeDepositRefundCode",
+            "paymentTypeGeneralCode"
+          ]
+        },
+        {
+          "key": "group-7",
+          "label": "settings.documentNumberModel.JVNo",
+          "controls": [
+            "jvNoVoucherTypePrefix",
+            "jvNoNumericPartLength",
+            "jvNoIncludeBranchCode",
+            "jvNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-8",
+          "label": "settings.documentNumberModel.amortizationNo",
+          "controls": [
+            "amortizationNoVoucherTypePrefix",
+            "amortizationNoNumericPartLength"
+          ]
+        },
+        {
+          "key": "group-9",
+          "label": "settings.documentNumberModel.customerDepositNo",
+          "controls": [
+            "customerDepositNoVoucherTypePrefix",
+            "customerDepositNoNumericPartLength",
+            "customerDepositNoIncludeBranchCode",
+            "customerDepositNoIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-10",
+          "label": "settings.documentNumberModel.depreciationNo",
+          "controls": [
+            "depreciationNoVoucherTypePrefix",
+            "depreciationNoNumericPartLength"
+          ]
+        },
+        {
+          "key": "group-11",
+          "label": "settings.documentNumberModel.depositUsed",
+          "controls": [
+            "depositUsedPrefix",
+            "depositUsedNumericPartLength"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-document-number-workshop-groups",
+      "label": "settings.layoutSections.workshop",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.documentNumberModel.jobs",
+          "controls": [
+            "jobsPrefix",
+            "jobsNumericPartLength",
+            "jobsIncludeYearMonth"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.documentNumberModel.jobEstimations",
+          "controls": [
+            "jobEstimationsPrefix",
+            "jobEstimationsNumericPartLength",
+            "jobEstimationsIncludeYearMonth"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-document-number-catalogs-groups",
+      "label": "settings.layoutSections.catalogs",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.documentNumberModel.chartOfAccountsSubAccountLength",
+          "controls": [
+            "chartOfAccountsSubAccountLength"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.documentNumberModel.customers",
+          "controls": [
+            "customersIndividualCodePrefix",
+            "customersCompanyCodePrefix",
+            "customersNumericPartLength",
+            "customersIncludeBranchCode",
+            "customersIncludeBranchCode2"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.documentNumberModel.suppliers",
+          "controls": [
+            "suppliersCodePrefix",
+            "suppliersNumericPartLength",
+            "suppliersIsManual"
+          ]
+        },
+        {
+          "key": "group-4",
+          "label": "settings.documentNumberModel.staff",
+          "controls": [
+            "staffCodePrefix",
+            "staffNumericPartLength",
+            "staffIsManual"
+          ]
+        },
+        {
+          "key": "group-5",
+          "label": "settings.documentNumberModel.item",
+          "controls": [
+            "itemIsManual"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-fields-individualCustomerSettings-groups",
+      "label": "settings.Fields.individualCustomerSettings",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.Fields.mandatoryFields",
+          "controls": []
+        },
+        {
+          "key": "group-2",
+          "label": "settings.Fields.additionalFields",
+          "controls": []
+        }
+      ]
+    },
+    {
+      "prefix": "settings-fields-companyCustomerSettings-groups",
+      "label": "settings.Fields.companyCustomerSettings",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.Fields.mandatoryFields",
+          "controls": []
+        },
+        {
+          "key": "group-2",
+          "label": "settings.Fields.additionalFields",
+          "controls": []
+        }
+      ]
+    },
+    {
+      "prefix": "settings-fields-vehicleSettings-groups",
+      "label": "settings.Fields.vehicleSettings",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.Fields.mandatoryFields",
+          "controls": []
+        },
+        {
+          "key": "group-2",
+          "label": "settings.Fields.additionalFields",
+          "controls": []
+        }
+      ]
+    },
+    {
+      "prefix": "settings-fields-agreementSettings-groups",
+      "label": "settings.Fields.agreementSettings",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.Fields.mandatoryFields",
+          "controls": []
+        },
+        {
+          "key": "group-2",
+          "label": "settings.Fields.additionalFields",
+          "controls": []
+        }
+      ]
+    },
+    {
+      "prefix": "settings-fields-jobSettings-groups",
+      "label": "settings.Fields.jobSettings",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.Fields.mandatoryFields",
+          "controls": []
+        },
+        {
+          "key": "group-2",
+          "label": "settings.Fields.additionalFields",
+          "controls": []
+        }
+      ]
+    },
+    {
+      "prefix": "settings-fields-itemReturnSettings-groups",
+      "label": "settings.Fields.itemReturnSettings",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.Fields.mandatoryFields",
+          "controls": []
+        },
+        {
+          "key": "group-2",
+          "label": "settings.Fields.additionalFields",
+          "controls": []
+        }
+      ]
+    },
+    {
+      "prefix": "settings-notifications-groups",
+      "label": "settings.notifications",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.notificationsModel.checkCardSettings",
+          "controls": [
+            "emailOnAgreementOpening",
+            "emailOnAgreementClosing",
+            "emailCheckCard",
+            "emailAlerts"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.notificationsModel.whatsAppSettings",
+          "controls": [
+            "whatsAppUtilityTemplates"
+          ]
+        },
+        {
+          "key": "group-3",
+          "label": "settings.notificationsModel.rentalBookingNotifications",
+          "controls": [
+            "rentalBookingNotifications",
+            "emailNotification",
+            "sendToCustomer",
+            "sendToAdmin"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-user-management-groups",
+      "label": "settings.userManagement",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.userManagementModel.formBasedRegistration",
+          "controls": [
+            "allowUserRegistration",
+            "newUsersActiveByDefault",
+            "useSecurityImageQuestion"
+          ]
+        },
+        {
+          "key": "group-2",
+          "label": "settings.userManagementModel.otherSettings",
+          "controls": [
+            "emailConfirmationRequiredForLogin"
+          ]
+        }
+      ]
+    },
+    {
+      "prefix": "settings-forms-and-fields-groups",
+      "label": "settings.formsAndFields",
+      "groups": [
+        {
+          "key": "group-1",
+          "label": "settings.formsAndFieldsModel.mandatoryFields",
+          "controls": []
+        },
+        {
+          "key": "group-2",
+          "label": "settings.formsAndFieldsModel.additionalFields",
+          "controls": []
+        }
+      ]
+    }
+  ]
+}

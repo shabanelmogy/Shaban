@@ -1,0 +1,8 @@
+{
+  "scope": "source syntax, exact local import exports and feature translation presence only",
+  "typescriptFiles": 22,
+  "templates": 5,
+  "localImports": 129,
+  "translationKeys": 213,
+  "errors": []
+}

@@ -1,0 +1,184 @@
+<section class="sigma-editor-page sigma-print-flow" [class.no-print]="mode !== 'view'">
+  <div class="sigma-editor-panel sigma-print-flow">
+    <app-feature-title [title]="titleKey | translate" [subtitle]="details()?.no ?? ''" icon="bi bi-bank">
+      <button feature-title-leading type="button" class="sigma-secondary-button sigma-icon-button no-print"
+        [attr.aria-label]="'general.back' | translate"
+        [disabled]="saving() || rows.confirmationPending() || closeConfirmationPending()" (click)="requestClose()">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+      </button>
+    </app-feature-title>
+    @if (errorMessage()) {
+      <app-state-message class="no-print" kind="error" [message]="errorMessage()" />
+      @if (!details()) {
+        <button type="button" class="sigma-secondary-button no-print" [disabled]="loadingData()" (click)="retryDetails()">{{ 'general.retry' | translate }}</button>
+      }
+    }
+    @if (lookupError()) {
+      <app-state-message class="no-print" kind="error" [message]="lookupError()" />
+      <button type="button" class="sigma-secondary-button no-print" [disabled]="lookupsLoading()" (click)="refreshLookups()">{{ 'general.retry' | translate }}</button>
+    }
+    @if (voucherError()) {
+      <app-state-message class="no-print" kind="error" [message]="voucherError()" />
+      <button type="button" class="sigma-secondary-button no-print" [disabled]="vouchersLoading() || saving()" (click)="retryVouchers()">{{ 'general.retry' | translate }}</button>
+    }
+    @if (saveFailed()) { <app-state-message class="no-print" kind="error" message="cashDeposits.errors.saveRetry" /> }
+    @if (loadingData() || vouchersLoading() || lookupsLoading()) { <app-state-message class="no-print" kind="loading" /> }
+
+    <form class="sigma-editor-form sigma-print-flow" [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <div class="sigma-editor-body sigma-print-flow">
+        <app-form-section class="cash-deposit-header sigma-print-flow" title="cashDeposits.editor.header"
+          description="cashDeposits.editor.headerHint" icon="bi bi-card-list" density="compact" [fill]="true">
+          <div class="sigma-editor-scroll sigma-print-flow">
+            <div class="sigma-editor-grid">
+              <div class="sigma-field">
+                <label for="cash-deposit-date" class="required">{{ 'cashDeposits.columns.date' | translate }}</label>
+                @if (isReadOnly) { <div class="sigma-field__read">{{ details()?.date | date: 'dd/MM/yyyy' }}</div> }
+                @else {
+                  <p-calendar appDatePicker inputId="cash-deposit-date" formControlName="date"
+                    [dateInputMask]="true" placeholder="dd/mm/yyyy" styleClass="w-100" appendTo="body" />
+                }
+                <app-field-error class="no-print" [control]="form.controls.date" />
+              </div>
+              <div class="sigma-field">
+                <label for="cash-deposit-bankId" class="required">{{ 'cashDeposits.columns.bank' | translate }}</label>
+                @if (isReadOnly) { <div class="sigma-field__read">{{ details()?.bankName || '—' }}</div> }
+                @else {
+                  <p-dropdown inputId="cash-deposit-bankId" formControlName="bankId" [options]="lookups().banks"
+                    optionLabel="value" optionValue="id" [filter]="true" filterBy="value" [showClear]="true"
+                    [placeholder]="'cashDeposits.columns.bank' | translate" styleClass="w-100" appendTo="body" />
+                }
+                <app-field-error class="no-print" [control]="form.controls.bankId" />
+              </div>
+              <div class="sigma-field">
+                <label for="cash-deposit-refNo">{{ 'cashDeposits.columns.refNo' | translate }}</label>
+                @if (isReadOnly) { <div class="sigma-field__read">{{ details()?.refNo || '—' }}</div> }
+                @else { <input id="cash-deposit-refNo" type="text" formControlName="refNo" maxlength="100" /> }
+                <app-field-error class="no-print" [control]="form.controls.refNo" />
+              </div>
+              <div class="sigma-field">
+                <label for="cash-deposit-paymentMethodId" class="required">{{ 'cashDeposits.editor.paymentMethod' | translate }}</label>
+                @if (isReadOnly) { <div class="sigma-field__read">{{ details()?.paymentMethodName || '—' }}</div> }
+                @else {
+                  <div class="d-flex align-items-center gap-2">
+                    <p-dropdown class="flex-grow-1" inputId="cash-deposit-paymentMethodId" formControlName="paymentMethodId"
+                      [options]="lookups().paymentMethods" optionLabel="value" optionValue="id" [filter]="true" filterBy="value"
+                      [showClear]="true" [placeholder]="'cashDeposits.editor.paymentMethod' | translate" styleClass="w-100" appendTo="body" />
+                    <button type="button" class="sigma-secondary-button sigma-icon-button no-print"
+                      [attr.aria-label]="'cashDeposits.editor.refreshPaymentMethods' | translate"
+                      [disabled]="lookupsLoading() || saving() || rows.confirmationPending()" (click)="refreshLookups()">
+                      <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                }
+                <app-field-error class="no-print" [control]="form.controls.paymentMethodId" />
+              </div>
+              <div class="sigma-field">
+                <label for="cash-deposit-branchId">{{ 'cashDeposits.filters.branch' | translate }}</label>
+                @if (isReadOnly) { <div class="sigma-field__read">{{ details()?.branchName || '—' }}</div> }
+                @else {
+                  <p-dropdown inputId="cash-deposit-branchId" formControlName="branchId" [options]="lookups().branches"
+                    optionLabel="value" optionValue="id" [filter]="true" filterBy="value" [showClear]="true"
+                    [placeholder]="'cashDeposits.filters.branch' | translate" styleClass="w-100" appendTo="body" />
+                }
+                <app-field-error class="no-print" [control]="form.controls.branchId" />
+              </div>
+              @if (details(); as item) {
+                <div class="sigma-field">
+                  <label>{{ 'cashDeposits.columns.status' | translate }}</label>
+                  <div class="sigma-field__read">{{ approvalKey | translate }}</div>
+                </div>
+                <div class="sigma-field">
+                  <label>{{ 'cashDeposits.editor.posted' | translate }}</label>
+                  <div class="sigma-field__read">{{ (item.isPosted ? 'general.yes' : 'general.no') | translate }}</div>
+                </div>
+                <div class="sigma-field">
+                  <label>{{ 'cashDeposits.editor.voided' | translate }}</label>
+                  <div class="sigma-field__read">{{ (item.isVoided ? 'general.yes' : 'general.no') | translate }}</div>
+                </div>
+              }
+              <div class="sigma-field sigma-field--full">
+                <label for="cash-deposit-description">{{ 'cashDeposits.columns.description' | translate }}</label>
+                @if (isReadOnly) { <div class="sigma-field__read">{{ details()?.description || '—' }}</div> }
+                @else { <textarea id="cash-deposit-description" rows="2" formControlName="description" maxlength="500"></textarea> }
+                <app-field-error class="no-print" [control]="form.controls.description" />
+              </div>
+            </div>
+          </div>
+        </app-form-section>
+
+        <app-form-section class="cash-deposit-lines sigma-print-flow" title="cashDeposits.editor.sources"
+          description="cashDeposits.editor.sourcesHint" icon="bi bi-list-check" density="compact" [fill]="true">
+          @if (!isReadOnly) {
+            <button form-section-actions id="cash-deposit-select-all" type="button" class="sigma-secondary-button no-print"
+              [disabled]="!canMutate" (click)="selectAll()">{{ 'cashDeposits.editor.selectAll' | translate }}</button>
+          }
+          <div class="cash-deposit-table-area no-print">
+            <app-editable-collection-table title="cashDeposits.editor.sources" [headingVisible]="false" [columns]="columns"
+              emptyMessage="cashDeposits.editor.empty" [editable]="false" [fillHeight]="true" [stickyHeader]="true"
+              [validationMessage]="collectionError" tableMinWidth="1195px">
+              <ng-template [appEditableCollectionRow]="lines.controls" let-row>
+                <ng-container [formGroup]="row">
+                  <td class="text-center">
+                    @if (isReadOnly) { <i class="bi bi-check2" aria-hidden="true"></i> }
+                    @else {
+                      <input type="checkbox" [checked]="row.controls.selected.value"
+                        [disabled]="!canMutate || (!row.controls.available.value && !row.controls.selected.value)"
+                        [attr.aria-label]="'cashDeposits.editor.selectSource' | translate: { no: row.controls.source.value.no ?? sourceKey(row.controls.source.value) }"
+                        (click)="$event.preventDefault(); toggleSelection(row)" />
+                    }
+                  </td>
+                  <td>{{ row.controls.source.value.date | date: 'dd/MM/yyyy' }}</td>
+                  <td>{{ voucherText(row.controls.source.value.voucherLabel) }}</td>
+                  <td>{{ row.controls.source.value.no || '—' }}</td>
+                  <td>{{ row.controls.source.value.description || '—' }}</td>
+                  <td><span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ row.controls.source.value.amount | money }}</span></td>
+                  <td><span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ row.controls.source.value.deposited | money }}</span></td>
+                  <td><span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ row.controls.source.value.dueAmount | money }}</span></td>
+                  <td>
+                    @if (isReadOnly) { <span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ row.controls.depositedNow.value | money }}</span> }
+                    @else {
+                      <input [id]="'cash-deposit-amount-' + sourceKey(row.controls.source.value)" type="number" appNumericFocus
+                        formControlName="depositedNow" step="0.01" [readOnly]="!canMutate"
+                        [attr.aria-label]="('cashDeposits.editor.depositedNow' | translate) + ' ' + (row.controls.source.value.no ?? sourceKey(row.controls.source.value))"
+                        [attr.aria-invalid]="row.controls.depositedNow.invalid && (row.controls.depositedNow.touched || row.controls.depositedNow.dirty)" />
+                      <app-field-error [control]="row.controls.depositedNow" [messages]="rowMessages" />
+                    }
+                  </td>
+                </ng-container>
+              </ng-template>
+            </app-editable-collection-table>
+          </div>
+          @if (details(); as item) {
+            <div class="d-none d-print-block sigma-print-flow">
+              <app-data-table class="sigma-print-flow" [value]="item.cashDepositDetails" [columns]="printColumns" dataKey="id"
+                [lazy]="false" [paginator]="false" [scrollable]="false" [rowInteractive]="false" emptyMessage="cashDeposits.editor.empty" />
+            </div>
+          }
+        </app-form-section>
+      </div>
+      <div class="no-print" role="note">{{ 'cashDeposits.editor.roundOff' | translate }}: {{ 'cashDeposits.editor.roundOffPending' | translate }}</div>
+      <app-summary-cards [cards]="summaryCards" [ariaLabel]="'cashDeposits.editor.total' | translate"
+        density="slim" layout="row" [minCardWidth]="140" [maxHeight]="80" />
+    </form>
+
+    <footer class="sigma-editor-footer no-print">
+      <button type="button" class="sigma-secondary-button"
+        [disabled]="saving() || rows.confirmationPending() || closeConfirmationPending()" (click)="requestClose()">
+        {{ (isReadOnly ? 'general.close' : 'general.cancel') | translate }}
+      </button>
+      @if (mode === 'view' && details()) {
+        <app-primary-action-button [label]="'cashDeposits.actions.print' | translate" icon="bi bi-printer"
+          [disabled]="loadingData() || printSession.printing()" (pressed)="print()" />
+        @if (canEditFromView) {
+          <app-primary-action-button [label]="'cashDeposits.actions.edit' | translate" icon="bi bi-pencil-square"
+            [disabled]="printSession.printing()" (pressed)="switchToEdit()" />
+        }
+      } @else if (!isReadOnly) {
+        <app-primary-action-button [label]="'general.save' | translate" icon="bi bi-floppy"
+          [loading]="saving()" [disabled]="!canMutate" (pressed)="save()" />
+        <app-primary-action-button [label]="'cashDeposits.editor.saveAndPrint' | translate" icon="bi bi-printer"
+          [loading]="saving()" [disabled]="!canMutate" (pressed)="save(true)" />
+      }
+    </footer>
+  </div>
+</section>

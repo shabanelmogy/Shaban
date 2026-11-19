@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-02",
+  "kind": "source syntax, complete binding multiplicity, persistent template count, unique IDs and group/control mapping; runtime pending",
+  "pages": [
+    {
+      "page": "common",
+      "controlDeclarations": 232,
+      "groups": 31
+    },
+    {
+      "page": "document-number",
+      "controlDeclarations": 164,
+      "groups": 38
+    },
+    {
+      "page": "fields",
+      "controlDeclarations": 28,
+      "groups": 12
+    },
+    {
+      "page": "notifications",
+      "controlDeclarations": 8,
+      "groups": 3
+    },
+    {
+      "page": "user-management",
+      "controlDeclarations": 4,
+      "groups": 2
+    },
+    {
+      "page": "forms-and-fields",
+      "controlDeclarations": 3,
+      "groups": 2
+    }
+  ],
+  "tabSets": 26,
+  "issues": []
+}

@@ -1,0 +1,18 @@
+diff --git a/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDepositDetail/CashDepositDetailDetailVm.cs (initial) b/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDepositDetail/CashDepositDetailDetailVm.cs (current)
+index 92cc607..b1c8d8c 100644
+--- a/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDepositDetail/CashDepositDetailDetailVm.cs (initial)	
++++ b/F:/My Work/Sigma/SigmaBackend/SiGma.ViewModels/ViewModels/CashDepositDetail/CashDepositDetailDetailVm.cs (current)	
+@@ -1,11 +1,10 @@
+ using SiGma.Helpers.Enum;
+-using SiGma.Helpers.ViewModelsBases.Detail;
+ 
+ namespace SiGma.ViewModels.ViewModels.CashDepositDetail
+ {
+-    public class CashDepositDetailDetailVM : DetailBaseVm
++    public class CashDepositDetailDetailVM
+     {
+-        public int CashDepositId { get; set; }
++        public int Id { get; set; }
+         public CashDepositSourceType SourceType { get; set; }
+         public int? SourceReceiptId { get; set; }
+         public int? SourcePaymentId { get; set; }

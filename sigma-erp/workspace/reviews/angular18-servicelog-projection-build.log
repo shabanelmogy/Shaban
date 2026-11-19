@@ -1,0 +1,58 @@
+> Building...
+√ Building...
+Initial chunk files                      | Names                        |  Raw size
+main.js                                  | main                         |   3.22 MB | 
+styles.css                               | styles                       |   2.74 MB | 
+chunk-PHGEDLZC.js                        | -                            | 824.25 kB | 
+chunk-5LUTEUD3.js                        | -                            | 533.39 kB | 
+chunk-GBHHJD5W.js                        | -                            | 498.88 kB | 
+chunk-ODL6EQM4.js                        | -                            | 210.10 kB | 
+scripts.js                               | scripts                      | 107.51 kB | 
+polyfills.js                             | polyfills                    |  93.35 kB | 
+chunk-27TDQVFL.js                        | -                            |  68.38 kB | 
+chunk-Z56MKUKA.js                        | -                            |  56.05 kB | 
+chunk-4Z5K2TCE.js                        | -                            |  55.02 kB | 
+chunk-DUTFVIAI.js                        | -                            |  34.76 kB | 
+chunk-CZSKDKLV.js                        | -                            |  26.18 kB | 
+chunk-T3QNJUE2.js                        | -                            |  22.56 kB | 
+chunk-DQSVGZAY.js                        | -                            |  20.61 kB | 
+chunk-DPLSCTMT.js                        | -                            |  15.69 kB | 
+chunk-W3P6K4OK.js                        | -                            |  13.53 kB | 
+chunk-OLBGQSN3.js                        | -                            |  12.87 kB | 
+chunk-HRSVT2EU.js                        | -                            |   9.25 kB | 
+chunk-TM37PKEK.js                        | -                            |   7.28 kB | 
+chunk-KBUIKKCC.js                        | -                            |   3.56 kB | 
+chunk-7JGDBIY2.js                        | -                            |   3.42 kB | 
+chunk-MJDK4MZ4.js                        | -                            |   3.32 kB | 
+chunk-UAGBOMI2.js                        | -                            |   2.90 kB | 
+chunk-KHPLY5LY.js                        | -                            |   2.41 kB | 
+chunk-OJURF2YP.js                        | -                            |   1.18 kB | 
+chunk-5WEF2IE7.js                        | -                            |   1.08 kB | 
+chunk-W4G6JIYY.js                        | -                            | 796 bytes | 
+chunk-VGTYDIGP.js                        | -                            | 735 bytes | 
+chunk-XT6KCI6A.js                        | -                            |  43 bytes | 
+
+                                         | Initial total                |   8.59 MB
+
+Lazy chunk files                         | Names                        |  Raw size
+layout.module-ZTKDPKRU.js                | layout-module                |   2.16 MB | 
+user-guide.routes-34S7TYYY.js            | user-guide-routes            |   1.67 MB | 
+chunk-7YZM4GBI.js                        | -                            | 868.15 kB | 
+chunk-PDUX6N4Y.js                        | -                            | 859.06 kB | 
+emailTemplates.routes-JHOVMFOE.js        | emailTemplates-routes        | 693.50 kB | 
+chunk-UAIEE7HU.js                        | -                            | 602.37 kB | 
+leave.routes-TKWNH5OF.js                 | leave-routes                 | 555.38 kB | 
+bill.routes-EVRGLIRT.js                  | bill-routes                  | 446.26 kB | 
+chunk-RDF7WDHT.js                        | -                            | 395.87 kB | 
+agreement.routes-4KFCIY3G.js             | agreement-routes             | 355.50 kB | 
+reports.routes-D5EW562B.js               | reports-routes               | 338.20 kB | 
+job.routes-KJ7ZYKFI.js                   | job-routes                   | 329.90 kB | 
+agreement-document.component-KCNJNICX.js | agreement-document-component | 315.05 kB | 
+account.routes-NR4EPGNQ.js               | account-routes               | 284.97 kB | 
+invoice.routes-LWFJ2YPU.js               | invoice-routes               | 244.31 kB | 
+...and 566 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [119.246 seconds]
+
+Output location: F:\My Work\Sigma\SiGmaAngularFrontEnd\dist\sigma
+

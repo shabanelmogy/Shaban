@@ -1,0 +1,18 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/pages/routing.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/pages/routing.ts (current)
+index 007cca7..727b252 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/pages/routing.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/pages/routing.ts (current)	
+@@ -1187,13 +1187,6 @@ export const Routing: Routes = [
+         './../modules/Banking/Cash Deposits/CashDeposit/cashdeposit.routes'
+       ).then((m) => m.CashDeposit_Routes),
+   },
+-  {
+-    path: 'CashDepositDetail',
+-    loadChildren: () =>
+-      import(
+-        './../modules/Banking/Cash Deposits/CashDepositDetail/cashdepositdetail.routes'
+-      ).then((m) => m.CashDepositDetail_Routes),
+-  },
+   {
+     path: 'CompanyPartner',
+     loadChildren: () =>

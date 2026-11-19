@@ -1,0 +1,27 @@
+diff --git a/F:/My Work/Sigma/SigmaBackend/SiGma.Business/MapperConfig/CashDepositProfiler.cs (initial) b/F:/My Work/Sigma/SigmaBackend/SiGma.Business/MapperConfig/CashDepositProfiler.cs (current)
+index 777846c..e6d5caa 100644
+--- a/F:/My Work/Sigma/SigmaBackend/SiGma.Business/MapperConfig/CashDepositProfiler.cs (initial)	
++++ b/F:/My Work/Sigma/SigmaBackend/SiGma.Business/MapperConfig/CashDepositProfiler.cs (current)	
+@@ -11,7 +11,8 @@ namespace SiGma.Business.MapperConfig
+                 .ForMember(dest => dest.CashDepositDetails, opt => opt.MapFrom(src => src.CashDepositDetails));
+ 
+             CreateMap<CashDepositUpdateVM, CashDeposit>()
+-                .ForMember(dest => dest.CashDepositDetails, opt => opt.MapFrom(src => src.CashDepositDetails));
++                // The tracked service reconciles this full snapshot and supplies source-owned values.
++                .ForMember(dest => dest.CashDepositDetails, opt => opt.Ignore());
+ 
+             // Read maps (Entity → DetailVM/ListVM) — ForMember for navigation name strings
+             CreateMap<CashDeposit, CashDepositDetailVM>()
+@@ -26,11 +27,7 @@ namespace SiGma.Business.MapperConfig
+ 
+             CreateMap<CashDeposit, CashDepositListVM>()
+                 .ForMember(dest => dest.BankName,
+-                    opt => opt.MapFrom(src => src.Bank != null ? src.Bank.Name : string.Empty))
+-                .ForMember(dest => dest.PaymentMethodName,
+-                    opt => opt.MapFrom(src => src.PaymentMethod != null ? src.PaymentMethod.Name : string.Empty))
+-                .ForMember(dest => dest.BranchName,
+-                    opt => opt.MapFrom(src => src.Branch != null ? src.Branch.Name : string.Empty));
++                    opt => opt.MapFrom(src => src.Bank != null ? src.Bank.Name : string.Empty));
+         }
+     }
+ }

@@ -1,0 +1,184 @@
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Workshop\workshopVehicles\services\workshopVehicles.service.ts
+getRecentMovements(plateNo: string): Observable<Results<WorkshopRecentMovement>> {
+    const params = new HttpParams().set('pageNo', '1').set('pageSize', '10').set('plateNo', plateNo.trim());
+    return this.http.get<Results<WorkshopRecentMovement>>(
+      `${environment.baseUrl}CollectionMovement/GetMovements`,
+      { params, headers: this.featureHeaders },
+    );
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Vouchers\PurchaseReturns\PurchaseReturn\services\purchasereturn.service.ts
+list(filters: Record<string, unknown>, pageNo: number, pageSize: number): Observable<Results<PurchaseReturnDTO>> {
+    const params = new URLSearchParams({ PageNo: String(pageNo), PageSize: String(pageSize) });
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== '') params.set(`Filters[${key}]`, String(value));
+    });
+    return this.http.get<Results<PurchaseReturnDTO>>(`${environment.baseUrl}PurchaseReturn?${params.toString()}`);
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Vouchers\Invoices\Invoice\services\invoice-actions.service.ts
+deleteInvoice(row: InvoiceDTO): Observable<Result<unknown>> {
+    const owner = row.sourceKind === 'workshop' || row.sourceKind === 'miscellaneous' ? 'MiscellaneousInvoice' : 'Invoice';
+    return this.http.delete<Result<unknown>>(`${environment.baseUrl}${owner}`, { ...this.inlineOptions, params: { id: row.id } });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Transportation\TripSheet\services\tripsheet.service.ts
+getTrips(tab: TripSheetTab, query: TripSheetQuery): Observable<Results<TripSheetItem>> {
+    return this.http.get<Results<TripSheetItem>>(this.endpoint + (tab === 'scheduled' ? '/TripSheetScheduled' : '/TripSheetExtra'), { params: toQueryParams(query), ...this.inline });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Transportation\Trips\services\trips.service.ts
+getTrips(query: TransportationTripQuery = {}): Observable<Results<TransportationTripItem>> {
+    return this.http.get<Results<TransportationTripItem>>(this.endpoint, { params: toQueryParams(query), headers: this.headers });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Sales\DueInstallments\services\due-installments.service.ts
+getDueInstallments(query: DueInstallmentQuery): Observable<Result<DueInstallmentReportResult>> {
+    let params = new HttpParams()
+      .set('fromDate', query.fromDate)
+      .set('toDate', query.toDate)
+      .set('includePaid', String(query.includePaid))
+      .set('pageNo', String(query.pageNo))
+      .set('pageSize', String(query.pageSize))
+      .set('sortField', query.sortField)
+      .set('sortOrder', String(query.sortOrder));
+    if (query.customerId) params = params.set('customerId', String(query.customerId));
+    if (query.agreementNo) params = params.set('agreementNo', query.agreementNo);
+
+    return this.http.get<Result<DueInstallmentReportResult>>(this.endpoint, {
+      params,
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Rental\TariffCard\services\tariffcard.service.ts
+getList(query: TariffCardListQuery): Observable<Results<TariffCardListDTO>> {
+    const params = new HttpParams()
+      .set('pageNo', String(query.pageNo))
+      .set('pageSize', String(query.pageSize));
+
+    return this.http.get<Results<TariffCardListDTO>>(this.endpoint, { params, headers: this.headers });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Movements\logsMovement\services\logs-movement.service.ts
+getList(pageNo: number, pageSize: number, filters: LogsMovementFilters): Observable<LogsMovementListResponse> {
+    return this.http.get<LogsMovementListResponse>(this.endpoint, {
+      params: toQueryParams({ ...filters, pageNo, pageSize }), headers: this.featureHeaders,
+    });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Lease\LeaseCustomerSms\services\lease-customer-sms.service.ts
+getList(query: LeaseCustomerSmsQuery): Observable<Results<LeaseCustomerSmsDTO>> {
+    let params = new HttpParams()
+      .set('pageNo', String(query.pageNo))
+      .set('pageSize', String(query.pageSize))
+      .set('sortField', query.sortField)
+      .set('sortOrder', String(query.sortOrder));
+
+    const search = query.search?.trim();
+    if (search) params = params.set('search', search);
+
+    return this.http.get<Results<LeaseCustomerSmsDTO>>(
+      `${environment.baseUrl}LeaseCustomerSms`,
+      { params, headers: this.simulationHeaders },
+    );
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Fleet\Vehicle\services\vehicle.service.ts
+search(request: VehicleSearchModel, options?: { skipErrorInterceptor?: boolean }): Observable<Results<VehicleListModel>> {
+    let params = new HttpParams();
+    Object.entries(request).forEach(([key, value]) => {
+      if (value === undefined || value === '') return;
+      if (value === null) {
+        // Vehicle/Search treats an empty pageSize as the confirmed unpaged contract.
+        if (key === 'pageSize') params = params.set(key, '');
+        return;
+      }
+
+      params = params.set(key, String(value));
+    });
+    return this.http.get<Results<VehicleListModel>>(`${environment.baseUrl}Vehicle/Search`, {
+      params, ...(options?.skipErrorInterceptor ? { headers: { 'X-Skip-Error-Interceptor': 'true' } } : {}),
+    });
+  }
+deleteVehicle(id: number): Observable<Result<unknown>> {
+    return this.http.delete<Result<unknown>>(`${environment.baseUrl}Vehicle`, {
+      params: { id }, headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Fleet\ServiceLog\services\servicelogs.service.ts
+getList(query: FleetServiceLogListQuery): Observable<Results<FleetServiceLogListDTO>> {
+    let params = new HttpParams()
+      .set('PageNo', String(query.pageNo))
+      .set('PageSize', String(query.pageSize))
+      .set('SortField', query.sortField)
+      .set('SortOrder', String(query.sortOrder));
+
+    params = this.appendParam(params, 'PlateNo', query.plateNo);
+    params = this.appendParam(params, 'DateFrom', query.dateFrom);
+    params = this.appendParam(params, 'DateTo', query.dateTo);
+    params = this.appendParam(
+      params,
+      'InternalWorkshopId',
+      query.internalWorkshopId,
+    );
+    params = this.appendParam(params, 'ServiceItems', query.serviceItems);
+    params = this.appendParam(params, 'WorkType', query.workType);
+
+    return this.http.get<Results<FleetServiceLogListDTO>>(this.endpoint, { headers: { 'X-Skip-Error-Interceptor': 'true' },  params });
+  }
+private appendParam(
+    params: HttpParams,
+    key: string,
+    value: string | number | null,
+  ): HttpParams {
+    return value === null || value === ''
+      ? params
+      : params.set(key, String(value));
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Fleet\Alerts\services\fleet-alerts.service.ts
+search(
+    type: FleetAlertType,
+    request: FleetAlertSearch,
+  ): Observable<Results<FleetAlertDTO>> {
+    let params = new HttpParams();
+    Object.entries(request).forEach(([key, value]) => {
+      if (value === undefined || value === '') return;
+      if (value === null) {
+        if (key === 'pageSize') params = params.set(key, '');
+        return;
+      }
+      params = params.set(key, String(value));
+    });
+
+    return this.http.get<Results<FleetAlertDTO>>(
+      `${environment.baseUrl}FleetAlerts/${type}`,
+      { headers: { 'X-Skip-Error-Interceptor': 'true' },  params });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Data Entry Corrections\DataEntryCorrection\services\dataentrycorrection.service.ts
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Data Entry Corrections\DataEntryCorrectionModel\services\dataentrycorrectionmodel.service.ts
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Customers\StatementOfAccount\services\customer-statement-of-account.service.ts
+getStatement(
+    filter: CustomerStatementFilter,
+  ): Observable<Result<CustomerStatement>> {
+    return this.http.get<Result<CustomerStatement>>(this.endpoint, {
+      params: toFilterParams(filter),
+      headers: new HttpHeaders({ 'X-Skip-Error-Interceptor': 'true' }),
+    });
+  }
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Customers\BalancesSummary\services\balances-summary.service.ts
+
+F:\My Work\Sigma\SiGmaAngularFrontEnd\src\app\modules\Accounts\Journal\services\journal.service.ts
+getJournal(filters: JournalFilter, pageNo: number, pageSize: number): Observable<Results<JournalLine>> {
+    return this.http.get<Results<JournalLine>>(`${this.baseUrl}AccountReports/Journals`, {
+      params: toFilterParams(filters).set('PageNumber', pageNo).set('PageSize', pageSize),
+      headers: { 'X-Skip-Error-Interceptor': 'true' },
+    });
+  }

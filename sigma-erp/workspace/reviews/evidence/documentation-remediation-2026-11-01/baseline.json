@@ -1,0 +1,110 @@
+[
+  {
+    "path": "F:\\My Work\\Sigma\\AGENTS.md",
+    "snapshot": "00-AGENTS.md.before",
+    "sha256": "f41238a3bea80f1c7a6216d1806f8c3fed6d65c0dde6bc5acc71adc93a8edafb",
+    "bytes": 49834
+  },
+  {
+    "path": "F:\\My Work\\Sigma\\.agents\\skills\\sigma-screen-refactor\\SKILL.md",
+    "snapshot": "01-SKILL.md.before",
+    "sha256": "9450d053539e72f9cf82f8e7d844e73bba1c3f29ffd24bc5832fce66b9c49f95",
+    "bytes": 97474
+  },
+  {
+    "path": "F:\\My Work\\Sigma\\reviews\\INDEX.md",
+    "snapshot": "02-INDEX.md.before",
+    "sha256": "0d14c5a7567ee8b0f1becf30ee924aeea727e949f581fb53eb8aab378a7d4a13",
+    "bytes": 106972
+  },
+  {
+    "path": "F:\\My Work\\Sigma\\reviews\\SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md",
+    "snapshot": "03-SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md.before",
+    "sha256": "ad028d310f81a6f61bc4c4fb6e95fa94c2abe9bce94e8531afa86bd232deb6e1",
+    "bytes": 117591
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\README.md",
+    "snapshot": "04-README.md.before",
+    "sha256": "1b82636cc34c49f729599da5ad9e002afc882e6ebaae75941b3946e8710efcc3",
+    "bytes": 12815
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\master\\08-packet-generation-and-governance.md",
+    "snapshot": "05-08-packet-generation-and-governance.md.before",
+    "sha256": "a775b2d3f2ca0289c0de2f614e25703ed0f000bf7040f88c9ca6b4449f5e0491",
+    "bytes": 4608
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\ui\\screens\\00-catalog.md",
+    "snapshot": "06-00-catalog.md.before",
+    "sha256": "a2dde4998a46fbe11548d7f6ecf1e61ab444b815382ea53e26617b07e4076944",
+    "bytes": 6443
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\CHANGELOG.md",
+    "snapshot": "07-CHANGELOG.md.before",
+    "sha256": "19a1643675502c946b3d6baf26a2e7d3aa590682e65c71ae00522243cc0c60ff",
+    "bytes": 20287
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\archive\\README.md",
+    "snapshot": "08-README.md.before",
+    "sha256": "cacc8f1599e51142c44eb81bf534aa49b16f854f79d38b6d3b4ceb8d55d8fac7",
+    "bytes": 888
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-00-discovery-evidence.md",
+    "snapshot": "09-PHASE-00-discovery-evidence.md.before",
+    "sha256": "13a87012f966ae09d18e1af36ddae940804b772c5435d3624ba330a8bd00c86d",
+    "bytes": 12710
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-01-domain-api.md",
+    "snapshot": "10-PHASE-01-domain-api.md.before",
+    "sha256": "97448147dba8acbb5cfd9646f6cf8370a35f2fb16d6c6d2abc62f028acc19010",
+    "bytes": 10002
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-02-read-grid.md",
+    "snapshot": "11-PHASE-02-read-grid.md.before",
+    "sha256": "165f196327ea2f807eea4b24b3dfda17289d88de77b242329d623aa794054353",
+    "bytes": 21821
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-03-detail-write.md",
+    "snapshot": "12-PHASE-03-detail-write.md.before",
+    "sha256": "02b23220492900e8aa458887c74586758c711b73454d3bd4c603e9d98edbe56a",
+    "bytes": 23267
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-04-domain-actions.md",
+    "snapshot": "13-PHASE-04-domain-actions.md.before",
+    "sha256": "402448ea9e7a60d287a18afcedaa262a74e9deadc1b4f2f43337a5882bc963b5",
+    "bytes": 10449
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-05-integration-runtime.md",
+    "snapshot": "14-PHASE-05-integration-runtime.md.before",
+    "sha256": "de714932f55bb4227e9be4585c88c2d1e4a9d25aa6544bfb4ab5d26b7591c902",
+    "bytes": 11590
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PHASE-06-final-reconciliation.md",
+    "snapshot": "15-PHASE-06-final-reconciliation.md.before",
+    "sha256": "b0f1248517f225ff9d067c93d3ef56e78908a43a33d8b2d96e449a916cf214f6",
+    "bytes": 14531
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\recipe-system\\generated\\PLAN-00-maintenance-evolution.md",
+    "snapshot": "16-PLAN-00-maintenance-evolution.md.before",
+    "sha256": "7c3561f6c4e9b528a3b7fe9e8b0ebcda18f55bb089719c529c4877dc0fde56b2",
+    "bytes": 12858
+  },
+  {
+    "path": "F:\\My Work\\Shaban Documents\\Shaban\\sigma-erp\\master\\00-preamble.md",
+    "snapshot": "17-00-preamble.md.before",
+    "sha256": "2fe0acf01b412739d2297565dd978100bcac7c8274d55fe743fd7e43926e0041",
+    "bytes": 3974
+  }
+]

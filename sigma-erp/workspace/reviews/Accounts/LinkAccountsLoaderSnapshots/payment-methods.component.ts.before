@@ -1,0 +1,126 @@
+import { EditableCollectionRowDirective, EditableCollectionTableColumn, EditableCollectionTableComponent } from 'src/app/modules/shared/components/editable-collection-table/editable-collection-table.component';
+import { Component, DestroyRef, OnInit, inject, input, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateModule } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { Subscription, finalize, forkJoin } from 'rxjs';
+import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { LinkAccountsListVM, LinkAccountsUpsertDTO, filterLinkAccountRows, toLinkAccountsUpsert } from '../../models/list';
+import { LinkAccountsService } from '../../services/linkaccounts.service';
+import { LinkAccountTabStateComponent } from '../tab-state/tab-state.component';
+
+@Component({
+  selector: 'app-payment-methods',
+  standalone: true,
+  imports: [EditableCollectionRowDirective, EditableCollectionTableComponent, FormsModule, DropdownModule, TranslateModule, LinkAccountTabStateComponent],
+  templateUrl: './payment-methods.component.html',
+  styleUrl: './payment-methods.component.scss',
+})
+export class PaymentMethodsComponent extends BaseComponentService implements OnInit {
+  private readonly linkAccountsService = inject(LinkAccountsService);
+  private readonly branchService = inject(BranchService);
+  private readonly destroyRef = inject(DestroyRef);
+  private loadRequest?: Subscription;
+  readonly loaded = output<void>();
+  readonly busy = input(false);
+  readonly refreshing = input(false);
+  readonly confirmationPending = signal(false);
+  readonly accounts = input<DropDownSelect[]>([]);
+  readonly searchTerm = input('');
+  readonly typeId = input.required<number>();
+  readonly defaultLinkSectionId = input.required<number>();
+  readonly rows = signal<LinkAccountsListVM[]>([]);
+  readonly columns: ReadonlyArray<EditableCollectionTableColumn> = [
+    { header: 'linkAccounts.paymentCategory', width: '280px' },
+    { header: 'linkAccounts.paymentMethod', width: '280px' },
+    { header: 'linkAccounts.accounts', width: '280px' },
+  ];
+  readonly branches = signal<DropDownSelect[]>([]);
+  readonly selectedBranchId = signal<number | null>(null);
+  readonly ready = signal(false);
+  readonly dirty = signal(false);
+  readonly tabLoading = signal(true);
+  readonly loadFailed = signal(false);
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+    if (this.busy() && !this.refreshing()) return;
+    this.loadRequest?.unsubscribe();
+    this.ready.set(false);
+    this.tabLoading.set(true);
+    this.loadFailed.set(false);
+    this.loadRequest = forkJoin({
+      linkAccounts: this.linkAccountsService.getLinkAccountsByType(this.typeId()),
+      branches: this.branchService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }),
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.tabLoading.set(false))
+      )
+      .subscribe({
+        next: ({ linkAccounts, branches }) => {
+          if (!linkAccounts.isSuccess || !branches.isSuccess) {
+            this.loadFailed.set(true);
+            return;
+          }
+
+          this.rows.set(linkAccounts.entities);
+          this.dirty.set(false);
+
+          this.branches.set(branches.entities);
+          const currentBranchId = this.selectedBranchId();
+          const branchStillExists = branches.entities.some(
+            (branch) => Number(branch.id) === currentBranchId
+          );
+          const firstBranchId = branches.entities[0]?.id;
+          const selectedBranchId = branchStillExists
+            ? currentBranchId
+            : firstBranchId === undefined
+              ? null
+              : Number(firstBranchId);
+          this.selectedBranchId.set(selectedBranchId);
+
+          this.ready.set(true);
+          this.loaded.emit();
+        },
+        error: () => this.loadFailed.set(true),
+      });
+  }
+
+  onBranchChange(branchId: number | string | null): void {
+    this.selectedBranchId.set(branchId === null ? null : Number(branchId));
+  }
+
+  onAccountChange(target: LinkAccountsListVM, accountId: number | null): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => rows.map((row) =>
+      row === target ? { ...row, accountId: accountId ?? undefined } : row
+    ));
+    this.dirty.set(true);
+  }
+
+  visibleRows(): LinkAccountsListVM[] {
+    const branchId = this.selectedBranchId();
+    return filterLinkAccountRows(this.rows(), this.searchTerm(), this.accounts())
+      .filter((row) => branchId === null || row.subType === branchId);
+  }
+
+  getPayload(): LinkAccountsUpsertDTO[] {
+    return toLinkAccountsUpsert(
+      this.rows(),
+      this.defaultLinkSectionId()
+    );
+  }
+
+  markSaved(): void {
+    this.dirty.set(false);
+  }
+
+}

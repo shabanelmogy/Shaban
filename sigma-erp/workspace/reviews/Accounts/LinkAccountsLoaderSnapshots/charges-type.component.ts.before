@@ -1,0 +1,129 @@
+import { EditableCollectionRowDirective, EditableCollectionTableColumn, EditableCollectionTableComponent } from 'src/app/modules/shared/components/editable-collection-table/editable-collection-table.component';
+import { Component, DestroyRef, OnInit, inject, input, output, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subscription, finalize } from 'rxjs';
+import { TranslateModule } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import {
+  LinkAccountsListVM,
+  LinkAccountsEnumOptionVM,
+  LinkAccountsUpsertDTO,
+  filterLinkAccountRows,
+  toLinkAccountsUpsert,
+} from '../../models/list';
+import { LinkAccountsService } from '../../services/linkaccounts.service';
+import { LinkAccountTabStateComponent } from '../tab-state/tab-state.component';
+
+@Component({
+  selector: 'app-charges-type',
+  standalone: true,
+  imports: [EditableCollectionRowDirective, EditableCollectionTableComponent, FormsModule, DropdownModule, TranslateModule, LinkAccountTabStateComponent],
+  templateUrl: './charges-type.component.html',
+  styleUrl: './charges-type.component.scss',
+})
+export class ChargesTypeComponent extends BaseComponentService implements OnInit {
+  private readonly linkAccountsService = inject(LinkAccountsService);
+  private readonly destroyRef = inject(DestroyRef);
+
+  private loadRequest?: Subscription;
+  readonly loaded = output<void>();
+  readonly busy = input(false);
+  readonly refreshing = input(false);
+  readonly confirmationPending = signal(false);
+  readonly accounts = input<DropDownSelect[]>([]);
+  readonly searchTerm = input('');
+  readonly typeId = input.required<number>();
+  readonly defaultLinkSectionId = input.required<number>();
+  readonly chargeModules = input<LinkAccountsEnumOptionVM[]>([]);
+  readonly rows = signal<LinkAccountsListVM[]>([]);
+  readonly columns: ReadonlyArray<EditableCollectionTableColumn> = [
+    { header: 'linkAccounts.chargesType', width: '280px' },
+    { header: 'linkAccounts.accounts', width: '280px' },
+  ];
+  readonly ready = signal(false);
+  readonly dirty = signal(false);
+  readonly tabLoading = signal(true);
+  readonly loadFailed = signal(false);
+  readonly selectedModule = signal<number | null>(null);
+
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+    if (this.busy() && !this.refreshing()) return;
+    this.loadRequest?.unsubscribe();
+    this.ready.set(false);
+    this.tabLoading.set(true);
+    this.loadFailed.set(false);
+    const modules = this.chargeModules();
+    if (!modules.length) {
+      this.loadFailed.set(true);
+      this.tabLoading.set(false);
+      return;
+    }
+
+    const currentModule = this.selectedModule();
+    this.selectedModule.set(
+      modules.some((module) => module.id === currentModule)
+        ? currentModule
+        : modules[0].id
+    );
+
+    this.loadRequest = this.linkAccountsService
+      .getLinkAccountsByType(this.typeId())
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.tabLoading.set(false))
+      )
+      .subscribe({
+        next: (response) => {
+          if (!response.isSuccess) {
+            this.loadFailed.set(true);
+            return;
+          }
+          this.rows.set(response.entities);
+          this.dirty.set(false);
+          this.ready.set(true);
+          this.loaded.emit();
+        },
+        error: () => this.loadFailed.set(true),
+      });
+  }
+
+  visibleRows(): LinkAccountsListVM[] {
+    return filterLinkAccountRows(
+      this.rows().filter((row) => row.subType === this.selectedModule()),
+      this.searchTerm(),
+      this.accounts()
+    );
+  }
+
+  onModuleChange(moduleId: number | string | null): void {
+    this.selectedModule.set(moduleId === null ? null : Number(moduleId));
+  }
+
+  onAccountChange(row: LinkAccountsListVM, accountId: number | null): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) =>
+      rows.map((item) =>
+        item === row ? { ...item, accountId: accountId ?? undefined } : item
+      )
+    );
+    this.dirty.set(true);
+  }
+
+  getPayload(): LinkAccountsUpsertDTO[] {
+    return toLinkAccountsUpsert(
+      this.rows(),
+      this.defaultLinkSectionId()
+    );
+  }
+
+  markSaved(): void {
+    this.dirty.set(false);
+  }
+}

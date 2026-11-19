@@ -1,0 +1,491 @@
+diff --git a/SiGma.Business/IServices/IMonthCloseService.cs b/SiGma.Business/IServices/IMonthCloseService.cs
+index 8be19d62..b33ea9c3 100644
+--- a/SiGma.Business/IServices/IMonthCloseService.cs
++++ b/SiGma.Business/IServices/IMonthCloseService.cs
+@@ -7,13 +7,19 @@ public interface IMonthCloseService : IService<MonthCloseAddVM, MonthCloseUpdate
+ {
+     /// <summary>
+     /// Returns all months within the fiscal year's date range.
+-    /// Months with no DB record are returned as virtual Open entries (Id = 0).
++    /// Missing month records are materialized as Open; existing records are retained.
+     /// </summary>
+     Task<Result<List<MonthCloseListVM>>> GetByFiscalYearAsync(int fiscalYearId, CancellationToken cancellationToken = default);
+ 
+     /// <summary>
+     /// Toggles the status of a month between Open and Closed.
+-    /// When closing: ClosedAt = EntityBase.CreatedAt, ClosedBy = EntityBase.CreatedBy (both set by repository).
++    /// Applies the same server checks as the explicit close/reopen actions.
+     /// </summary>
+     Task<Result> ToggleStatusAsync(int id, CancellationToken cancellationToken = default);
++
++    Task<Result<MonthCloseCheckVM>> VerifyValidMonthAsync(int id, CancellationToken cancellationToken = default);
++    Task<Result<MonthCloseCheckVM>> VerifyVoucherApprovalsAsync(int id, CancellationToken cancellationToken = default);
++    Task<Result<MonthCloseCheckVM>> VerifyDataInconsistencyAsync(int id, CancellationToken cancellationToken = default);
++    Task<Result<MonthCloseCheckVM>> CloseMonthAsync(int id, CancellationToken cancellationToken = default);
++    Task<Result<MonthCloseCheckVM>> ReopenMonthAsync(int id, CancellationToken cancellationToken = default);
+ }
+diff --git a/SiGma.Business/Services/AccountServices/MonthCloseService.cs b/SiGma.Business/Services/AccountServices/MonthCloseService.cs
+index 8d25cde2..9addd61b 100644
+--- a/SiGma.Business/Services/AccountServices/MonthCloseService.cs
++++ b/SiGma.Business/Services/AccountServices/MonthCloseService.cs
+@@ -1,3 +1,4 @@
++using System.Data;
+ using SiGma.ViewModels.ViewModels.MonthClose;
+ 
+ namespace SiGma.Business.Services.AccountServices;
+@@ -111,6 +112,21 @@ public class MonthCloseService :
+ 
+     public override async Task<Result> AddAsync(MonthCloseAddVM vm, CancellationToken cancellationToken)
+     {
++        if (vm.Status != MonthCloseStatus.Open)
++            return LegacyResult(WrapCheck(Check([Issue("useCloseAction")])));
++
++        if (vm.Month is < 1 or > 12 || vm.Year is < 1900 or > 2100)
++            return LegacyResult(WrapCheck(Check([Issue("invalidPeriod")])));
++
++        var invalidInput = await InvalidInputAsync(vm, id: null, cancellationToken: cancellationToken);
++        if (invalidInput is not null) return invalidInput;
++
++        var periodIssues = await EligibilityIssuesAsync(new MonthClose
++        {
++            FiscalYearId = vm.FiscalYearId, Month = vm.Month, Year = vm.Year, Status = vm.Status
++        }, closing: false, cancellationToken);
++        if (periodIssues.Count > 0) return LegacyResult(WrapCheck(Check(periodIssues)));
++
+         // Validate fiscal year exists
+         if (!await UnitOfWork.Repository.ExistsAsync<FiscalYear>(x => x.Id == vm.FiscalYearId, cancellationToken: cancellationToken))
+             return new Result { IsSuccess = false, Message = "Fiscal year not found." };
+@@ -135,47 +151,204 @@ public class MonthCloseService :
+ 
+     public override async Task<Result> UpdateAsync(MonthCloseUpdateVM vm)
+     {
+-        // Validate fiscal year exists
+-        if (!await UnitOfWork.Repository.ExistsAsync<FiscalYear>(x => x.Id == vm.FiscalYearId))
+-            return new Result { IsSuccess = false, Message = "Fiscal year not found." };
++        // Period identity is immutable; status writes use the same close/reopen guards.
++        var result = await ChangeStatusAsync(vm.Id, vm.Status, CancellationToken.None, vm);
++        return LegacyResult(result);
++    }
+ 
+-        // Prevent duplicate month within the same fiscal year (excluding current record)
+-        var exists = await UnitOfWork.Repository.ExistsAsync<MonthClose>(x =>
+-            x.FiscalYearId == vm.FiscalYearId &&
+-            x.Year == vm.Year &&
+-            x.Month == vm.Month &&
+-            x.Id != vm.Id);
++    public override async Task<Result> RemoveAsync(int id)
++    {
++        await using var transaction = await UnitOfWork.Context.Database.BeginTransactionAsync(IsolationLevel.Serializable);
++        var entity = await UnitOfWork.Repository.Query<MonthClose>(x => x.Id == id).FirstOrDefaultAsync();
++        if (entity is null) return LegacyResult(WrapCheck(Check([Issue("monthNotFound")])));
++        if (entity.Status != MonthCloseStatus.Open)
++            return LegacyResult(WrapCheck(Check([Issue("closedRecordDelete")])));
++
++        var result = await base.RemoveAsync(id);
++        if (result.IsSuccess) await transaction.CommitAsync();
++        return result;
++    }
+ 
+-        if (exists)
+-            return new Result { IsSuccess = false, Message = "A month close record already exists for this month and fiscal year." };
++    public async Task<Result> ToggleStatusAsync(int id, CancellationToken cancellationToken = default)
++        => LegacyResult(await ChangeStatusAsync(id, null, cancellationToken));
+ 
+-        var entity = await UnitOfWork.Repository.FindFirstByAsync<MonthClose>(x => x.Id == vm.Id);
++    public Task<Result<MonthCloseCheckVM>> CloseMonthAsync(int id, CancellationToken cancellationToken = default)
++        => ChangeStatusAsync(id, MonthCloseStatus.Closed, cancellationToken);
+ 
+-        if (entity is null)
+-            return new Result { IsSuccess = false, Message = "Month close record not found." };
++    public Task<Result<MonthCloseCheckVM>> ReopenMonthAsync(int id, CancellationToken cancellationToken = default)
++        => ChangeStatusAsync(id, MonthCloseStatus.Open, cancellationToken);
+ 
+-        Mapper.Map(vm, entity);
++    public Task<Result<MonthCloseCheckVM>> VerifyValidMonthAsync(int id, CancellationToken cancellationToken = default)
++        => ReadCheckAsync(id, 1, cancellationToken);
+ 
+-        UnitOfWork.Repository.Update(entity);
+-        await UnitOfWork.SaveChangesAsync();
++    public Task<Result<MonthCloseCheckVM>> VerifyVoucherApprovalsAsync(int id, CancellationToken cancellationToken = default)
++        => ReadCheckAsync(id, 2, cancellationToken);
++
++    public Task<Result<MonthCloseCheckVM>> VerifyDataInconsistencyAsync(int id, CancellationToken cancellationToken = default)
++        => ReadCheckAsync(id, 3, cancellationToken);
+ 
+-        return new Result { IsSuccess = true, Id = entity.Id, Message = "Month close record updated successfully." };
++    private async Task<Result<MonthCloseCheckVM>> ReadCheckAsync(int id, int step, CancellationToken cancellationToken)
++    {
++        var entity = await UnitOfWork.Repository.Query<MonthClose>(x => x.Id == id)
++            .AsNoTracking().FirstOrDefaultAsync(cancellationToken);
++        if (entity is null) return WrapCheck(Check([Issue("monthNotFound")]));
++
++        // Every read stage requires a still-eligible period. Final close repeats all checks atomically.
++        var issues = await EligibilityIssuesAsync(entity, closing: true, cancellationToken);
++        if (issues.Count == 0 && step == 2)
++            issues.AddRange(await VoucherApprovalIssuesAsync(entity, cancellationToken));
++        if (issues.Count == 0 && step == 3)
++            issues.AddRange(await VoucherIntegrityIssuesAsync(entity, cancellationToken));
++        return WrapCheck(Check(issues));
+     }
+ 
+-    public async Task<Result> ToggleStatusAsync(int id, CancellationToken cancellationToken = default)
++    private async Task<Result<MonthCloseCheckVM>> ChangeStatusAsync(
++        int id, MonthCloseStatus? desiredStatus, CancellationToken cancellationToken, MonthCloseUpdateVM? update = null)
+     {
+-        var entity = await UnitOfWork.Repository.FindFirstByAsync<MonthClose>(x => x.Id == id);
++        // Mirrors FiscalYear close: eligibility reads and the state write commit together.
++        await using var transaction = await UnitOfWork.Context.Database.BeginTransactionAsync(
++            IsolationLevel.Serializable, cancellationToken);
++        var entity = await UnitOfWork.Repository.Query<MonthClose>(x => x.Id == id)
++            .FirstOrDefaultAsync(cancellationToken);
++        if (entity is null) return WrapCheck(Check([Issue("monthNotFound")]));
++        if (entity.Status is not (MonthCloseStatus.Open or MonthCloseStatus.Closed))
++            return WrapCheck(Check([Issue("invalidStatus")]));
++        if (update is not null && (update.FiscalYearId != entity.FiscalYearId ||
++            update.Month != entity.Month || update.Year != entity.Year))
++            return WrapCheck(Check([Issue("periodImmutable")]));
++
++        var target = desiredStatus ?? (entity.Status == MonthCloseStatus.Open
++            ? MonthCloseStatus.Closed : MonthCloseStatus.Open);
++        if (target is not (MonthCloseStatus.Open or MonthCloseStatus.Closed))
++            return WrapCheck(Check([Issue("invalidStatus")]));
++        if (entity.Status == target)
++            return WrapCheck(Check([], target == MonthCloseStatus.Closed ? "MonthCloseAlreadyClosed" : "MonthCloseAlreadyOpen"), id);
++
++        var closing = target == MonthCloseStatus.Closed;
++        var issues = await EligibilityIssuesAsync(entity, closing, cancellationToken);
++        if (closing && IsCalendarPeriodValid(entity))
++        {
++            // Gather every financial blocker even when a separate eligibility check fails.
++            issues.AddRange(await VoucherApprovalIssuesAsync(entity, cancellationToken));
++            issues.AddRange(await VoucherIntegrityIssuesAsync(entity, cancellationToken));
++        }
++        if (issues.Count > 0) return WrapCheck(Check(issues));
+ 
+-        if (entity is null)
+-            return new Result { IsSuccess = false, Message = "Month close record not found." };
++        if (update is not null)
++        {
++            var invalidInput = await InvalidInputAsync(update, id);
++            if (invalidInput is not null)
++                return new Result<MonthCloseCheckVM> { IsSuccess = false, Message = invalidInput.Message };
++            Mapper.Map(update, entity);
++        }
++        entity.Status = target;
++        UnitOfWork.Repository.Update(entity);
++        await UnitOfWork.SaveChangesAsync(cancellationToken);
++        await transaction.CommitAsync(cancellationToken);
++        return WrapCheck(Check([], closing ? "MonthCloseClosed" : "MonthCloseReopened"), id);
++    }
+ 
+-        entity.Status = entity.Status == MonthCloseStatus.Open
+-         ? MonthCloseStatus.Closed
+-         : MonthCloseStatus.Open;
++    private async Task<List<MonthCloseIssueVM>> EligibilityIssuesAsync(
++        MonthClose entity, bool closing, CancellationToken cancellationToken)
++    {
++        var issues = new List<MonthCloseIssueVM>();
++        if (!IsCalendarPeriodValid(entity)) return [Issue("invalidPeriod")];
++        if (entity.Status is not (MonthCloseStatus.Open or MonthCloseStatus.Closed))
++            return [Issue("invalidStatus")];
++
++        var fiscal = await UnitOfWork.Repository.Query<FiscalYear>(x => x.Id == entity.FiscalYearId)
++            .AsNoTracking().FirstOrDefaultAsync(cancellationToken);
++        if (fiscal is null) return [Issue("fiscalYearNotFound")];
++        var start = new DateTime(entity.Year, entity.Month, 1);
++        var end = start.AddMonths(1);
++        if (fiscal.StartDate > fiscal.EndDate || fiscal.StartDate.Date >= end || fiscal.EndDate.Date < start)
++            return [Issue("invalidPeriod")];
++        if (fiscal.Status != FiscalYearStatus.Open) issues.Add(Issue("fiscalYearClosed"));
++        if (!closing) return issues;
++        if (entity.Status != MonthCloseStatus.Open) issues.Add(Issue("monthAlreadyClosed"));
++
++        var currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
++        if (start > currentMonth) issues.Add(Issue("futureMonth"));
++        var fiscalStartMonth = new DateTime(fiscal.StartDate.Year, fiscal.StartDate.Month, 1);
++        var expectedPrevious = (start.Year - fiscalStartMonth.Year) * 12 + start.Month - fiscalStartMonth.Month;
++        if (expectedPrevious > 0)
++        {
++            var startKey = fiscalStartMonth.Year * 100 + fiscalStartMonth.Month;
++            var targetKey = entity.Year * 100 + entity.Month;
++            var closedPrevious = await UnitOfWork.Repository.Query<MonthClose>(x =>
++                    x.FiscalYearId == entity.FiscalYearId && x.Status == MonthCloseStatus.Closed &&
++                    x.Month >= 1 && x.Month <= 12 &&
++                    x.Year * 100 + x.Month >= startKey && x.Year * 100 + x.Month < targetKey)
++                .AsNoTracking().CountAsync(cancellationToken);
++            if (closedPrevious < expectedPrevious)
++                issues.Add(Issue("previousMonthsOpen", expectedPrevious - closedPrevious));
++        }
++        return issues;
++    }
+ 
+-        UnitOfWork.Repository.Update(entity);
+-        await UnitOfWork.SaveChangesAsync();
++    private async Task<List<MonthCloseIssueVM>> VoucherApprovalIssuesAsync(MonthClose entity, CancellationToken cancellationToken)
++    {
++        var start = new DateTime(entity.Year, entity.Month, 1);
++        var end = start.AddMonths(1);
++        var count = await UnitOfWork.Repository.Query<JournalVoucher>(x =>
++                x.Date >= start && x.Date < end && !x.IsVoided &&
++                (x.ApprovalStatus != ApprovalStatus.Approved || !x.IsPosted))
++            .AsNoTracking().CountAsync(cancellationToken);
++        return count > 0 ? [Issue("vouchersNotApproved", count)] : [];
++    }
+ 
+-        return new Result { IsSuccess = true, Id = entity.Id, Message = $"Month status changed to {entity.Status}." };
++    private async Task<List<MonthCloseIssueVM>> VoucherIntegrityIssuesAsync(MonthClose entity, CancellationToken cancellationToken)
++    {
++        var start = new DateTime(entity.Year, entity.Month, 1);
++        var end = start.AddMonths(1);
++        var fiscal = await UnitOfWork.Repository.Query<FiscalYear>(x => x.Id == entity.FiscalYearId)
++            .AsNoTracking().FirstOrDefaultAsync(cancellationToken);
++        if (fiscal is null) return [];
++        var firstDate = fiscal.StartDate.Date;
++        var lastDate = fiscal.EndDate.Date.AddDays(1);
++        var count = await UnitOfWork.Repository.Query<JournalVoucher>(x =>
++                x.Date >= start && x.Date < end && !x.IsVoided)
++            .AsNoTracking()
++            .Select(x => new
++            {
++                WrongPeriod = x.FiscalYearId != entity.FiscalYearId || x.Date < firstDate || x.Date >= lastDate,
++                HasDetails = x.JournalVoucherDetails.Any(),
++                HasInvalidLine = x.JournalVoucherDetails.Any(detail =>
++                    !detail.AccountId.HasValue ||
++                    (detail.Debit ?? 0m) < 0m || (detail.Credit ?? 0m) < 0m ||
++                    ((detail.Debit ?? 0m) > 0m && (detail.Credit ?? 0m) > 0m) ||
++                    ((detail.Debit ?? 0m) == 0m && (detail.Credit ?? 0m) == 0m)),
++                TotalDebit = x.JournalVoucherDetails.Sum(detail => detail.Debit ?? 0m),
++                TotalCredit = x.JournalVoucherDetails.Sum(detail => detail.Credit ?? 0m)
++            })
++            .CountAsync(x => x.WrongPeriod || !x.HasDetails || x.HasInvalidLine || x.TotalDebit != x.TotalCredit, cancellationToken);
++        return count > 0 ? [Issue("invalidVouchers", count)] : [];
+     }
++
++    private static bool IsCalendarPeriodValid(MonthClose entity)
++        => entity.Month is >= 1 and <= 12 && entity.Year is >= 1900 and <= 2100;
++
++    private static MonthCloseIssueVM Issue(string code, int count = 1) => new() { Code = code, Count = count };
++
++    private MonthCloseCheckVM Check(List<MonthCloseIssueVM> issues, string successKey = "MonthCloseCheckPassed")
++        => new()
++        {
++            IsValid = issues.Count == 0,
++            Message = Localization.GetString(issues.Count == 0 ? successKey : "MonthCloseBlocked"),
++            IssueCount = issues.Sum(x => x.Count),
++            Issues = issues
++        };
++
++    private static Result<MonthCloseCheckVM> WrapCheck(MonthCloseCheckVM check, int? id = null)
++        => new() { IsSuccess = true, Entity = check, Id = id, Message = check.Message };
++
++    private Result LegacyResult(Result<MonthCloseCheckVM> result)
++        => new()
++        {
++            IsSuccess = result.IsSuccess && result.Entity?.IsValid == true,
++            Message = result.Message,
++            Id = result.Id,
++            Errors = result.Entity?.Issues.Select(issue =>
++                Localization.GetString("MonthCloseReason_" + issue.Code, issue.Count).Value).ToList() ?? []
++        };
+ }
+diff --git a/SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx b/SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx
+index b16ebe39..d3922d29 100644
+--- a/SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx
++++ b/SiGma.Helpers/Localization/Shared/GeneralMessage.ar-SA.resx
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <root>
+   <!-- 
+     Microsoft ResX Schema 
+@@ -1261,6 +1261,7 @@
+   <data name="SalesAgreementDeliveryDateInvalid" xml:space="preserve"><value>لا يمكن أن يسبق تاريخ التسليم تاريخ الفاتورة.</value></data>
+   <data name="SalesAgreementInvoiceDateInvalid" xml:space="preserve"><value>لا يمكن أن يسبق تاريخ الفاتورة تاريخ العقد.</value></data>
+   <data name="SalesAgreementUnitCostMissing" xml:space="preserve"><value>أدخل تكلفة شراء كل وحدة في أسطول البيع قبل الفوترة.</value></data>
++  <data name="SalesAgreementUnitCostLocked" xml:space="preserve"><value>هذه الوحدة مباعة وتكلفة شرائها مرحّلة، لا يمكن تغييرها.</value></data>
+   <data name="SalesAgreementCustomerAccountMissing" xml:space="preserve"><value>لم يتم ربط حساب مراقبة العملاء لهذا العميل في ربط الحسابات.</value></data>
+   <data name="SalesAgreementRevenueAccountMissing" xml:space="preserve"><value>اربط حساب إيراد بيع المركبات في ربط الحسابات &gt; عام.</value></data>
+   <data name="SalesAgreementTaxAccountMissing" xml:space="preserve"><value>اربط حساب الضريبة المحصلة في ربط الحسابات &gt; عام.</value></data>
+@@ -1281,4 +1282,67 @@
+   <data name="JobInvoiceTaxInvalid" xml:space="preserve"><value>يجب أن تكون نسبة الضريبة بين 0 و100.</value></data>
+   <data name="JobInvoiceVehicleInvalid" xml:space="preserve"><value>واحدة أو أكثر من المركبات المختارة غير متاحة.</value></data>
+   <data name="JobInvoiceTextTooLong" xml:space="preserve"><value>تجاوزت تفاصيل الفاتورة أو وصف البند الطول المسموح.</value></data>
++  <data name="WorkOrderItemsRequired" xml:space="preserve"><value>أضف بنداً واحداً على الأقل إلى أمر العمل.</value></data>
++  <data name="WorkOrderNotFound" xml:space="preserve"><value>أمر العمل غير موجود.</value></data>
++  <data name="WorkOrderEditLocked" xml:space="preserve"><value>يمكن تعديل أوامر العمل المعلقة فقط. أعد تحميل أمر العمل قبل المتابعة.</value></data>
++  <data name="WorkOrderTransitionLocked" xml:space="preserve"><value>يمكن قبول أو رفض أوامر العمل المعلقة فقط. أعد تحميل القائمة قبل المتابعة.</value></data>
++  <data name="WorkOrderUsedByJob" xml:space="preserve"><value>أمر العمل مستخدم في مهمة أو أكثر ولا يمكن حذفه.</value></data>
++  <data name="JobGatePassUnavailable" xml:space="preserve"><value>يمكن طباعة تصريح الخروج للعمل المغلق الذي صدرت له فاتورة فقط. أعد تحميل العمل قبل المتابعة.</value></data>
++  <data name="SalesAgreementQuotationTaxMismatch" xml:space="preserve"><value>بنود عرض السعر لها نسب ضريبة مختلفة. اتفاقية البيع تتطلب نسبة ضريبة واحدة؛ راجع عرض السعر قبل تحويله.</value></data>
++  <data name="SalesAgreementScheduleInvalid" xml:space="preserve"><value>اختر تواريخ وصفوف أقساط صحيحة؛ يجب أن يكون جدول الأقساط الشهري ضمن نطاق التواريخ المدعوم.</value></data>
++  <data name="SalesAgreementTermsTooLong" xml:space="preserve"><value>شروط اتفاقية البيع لا يمكن أن تتجاوز 2000 حرف. راجع شروط عرض السعر قبل تحويله.</value></data>
++  <data name="ItemRequisitionAmountExceeded" xml:space="preserve"><value>مبلغ طلب الشراء يتجاوز النطاق المالي المدعوم.</value></data>
++  <data name="ItemRequisitionInvalidBranch" xml:space="preserve"><value>الفرع المحدد لم يعد متاحًا.</value></data>
++  <data name="ItemRequisitionInvalidInput" xml:space="preserve"><value>أدخل تاريخًا وعملًا صحيحين وصنفًا واحدًا على الأقل دون تكرار وبكمية موجبة.</value></data>
++  <data name="ItemRequisitionInvalidItems" xml:space="preserve"><value>صنف واحد أو أكثر من الأصناف المحددة لم يعد متاحًا.</value></data>
++  <data name="ItemRequisitionInvalidJob" xml:space="preserve"><value>العمل المحدد لم يعد متاحًا.</value></data>
++  <data name="ItemRequisitionInvalidLines" xml:space="preserve"><value>اختر صفوفًا مختلفة من هذا الطلب بكميات موجبة.</value></data>
++  <data name="ItemRequisitionInvalidSupplier" xml:space="preserve"><value>المورد المحدد لم يعد متاحًا.</value></data>
++  <data name="ItemRequisitionInvalidUom" xml:space="preserve"><value>اختر وحدة قياس متاحة وسعر وحدة صحيحًا غير سالب لكل صف.</value></data>
++  <data name="ItemRequisitionLinkedDocument" xml:space="preserve"><value>هذا الطلب مرتبط بطلب شراء أو إذن صرف ولا يمكن تعديله أو حذفه.</value></data>
++  <data name="ItemRequisitionLinkedIssueEdit" xml:space="preserve"><value>إذن الصرف المرتبط بطلب أصناف لا يقبل التعديل. احذف الإذن كاملًا عندما يكون ذلك مسموحًا ثم أصدر إذنًا جديدًا من الطلب.</value></data>
++  <data name="ItemRequisitionLinkedPurchaseRequestEdit" xml:space="preserve"><value>طلب الشراء المنشأ من طلب أصناف لا يقبل التعديل. احذفه عندما يكون ذلك مسموحًا ثم أنشئه مجددًا من طلب الأصناف.</value></data>
++  <data name="ItemRequisitionNotFound" xml:space="preserve"><value>طلب الأصناف غير موجود.</value></data>
++  <data name="ItemRequisitionPurchaseRequestExists" xml:space="preserve"><value>يوجد بالفعل طلب شراء فعال مرتبط بهذا الطلب.</value></data>
++  <data name="ItemRequisitionQuantityExceeded" xml:space="preserve"><value>الكمية تتجاوز الكمية المتبقية الحالية في الطلب. أعد التحميل قبل المتابعة.</value></data>
++  <data name="ItemRequisitionUseAggregateEditor" xml:space="preserve"><value>عدّل صفوف الطلب من شاشة طلب الأصناف.</value></data>
++  <data name="ItemIssueInvalidInput" xml:space="preserve"><value>أدخل تاريخًا وأمر عمل صحيحين وصنفًا واحدًا على الأقل دون تكرار وبكمية موجبة.</value></data>
++  <data name="ItemIssueInvalidItems" xml:space="preserve"><value>صنف واحد أو أكثر من الأصناف المحددة لم يعد متاحًا.</value></data>
++  <data name="ItemIssueInvalidJob" xml:space="preserve"><value>أمر العمل المحدد لم يعد متاحًا.</value></data>
++  <data name="ItemIssueInvalidLines" xml:space="preserve"><value>يجب أن تكون الصفوف المحفوظة تابعة لهذا الإذن دون تكرار.</value></data>
++  <data name="ItemIssueNotFound" xml:space="preserve"><value>إذن الصرف غير موجود.</value></data>
++  <data name="ItemIssueUseAggregateEditor" xml:space="preserve"><value>عدّل صفوف إذن الصرف من شاشة إذن الصرف.</value></data>
++  <data name="ItemReturnInvalidInput" xml:space="preserve"><value>أدخل تاريخًا وأمر عمل صحيحين وصنفًا واحدًا على الأقل دون تكرار وبكمية موجبة.</value></data>
++  <data name="ItemReturnInvalidItems" xml:space="preserve"><value>صنف واحد أو أكثر من الأصناف المحددة لم يعد متاحًا.</value></data>
++  <data name="ItemReturnInvalidJob" xml:space="preserve"><value>أمر العمل المحدد لم يعد متاحًا.</value></data>
++  <data name="ItemReturnInvalidLines" xml:space="preserve"><value>يجب أن تتبع البنود المحفوظة إذن المرتجع الحالي وألا تتكرر.</value></data>
++  <data name="ItemReturnNotFound" xml:space="preserve"><value>إذن المرتجع غير موجود.</value></data>
++  <data name="ItemReturnUseAggregateEditor" xml:space="preserve"><value>عدّل كل إذن مرتجع من خلال نموذج الإذن وبنوده.</value></data>
++  <data name="StockTransferInvalidBranches" xml:space="preserve"><value>فرع واحد أو أكثر من الفروع المحددة لم يعد متاحًا.</value></data>
++  <data name="StockTransferInvalidInput" xml:space="preserve"><value>أدخل تاريخًا وفرعًا مستلمًا صحيحين وبنود أصناف وفروع مصدر دون تكرار وبكميات موجبة. يجب أن يختلف المصدر عن المستلم.</value></data>
++  <data name="StockTransferInvalidItems" xml:space="preserve"><value>صنف واحد أو أكثر من الأصناف المحددة لم يعد متاحًا.</value></data>
++  <data name="StockTransferInvalidLines" xml:space="preserve"><value>يجب أن تتبع البنود المحفوظة تحويل المخزون الحالي وألا تتكرر.</value></data>
++  <data name="StockTransferNotFound" xml:space="preserve"><value>تحويل المخزون غير موجود.</value></data>
++  <data name="StockTransferUseAggregateEditor" xml:space="preserve"><value>عدّل كل تحويل مخزون من خلال نموذج التحويل وبنوده.</value></data>
++  <data name="StockReportsInvalidDateRange" xml:space="preserve"><value>أدخل نطاق تاريخ صحيحًا ومرتبًا من وإلى.</value></data>
++  <data name="StockReportsInvalidFilter" xml:space="preserve"><value>عامل تصفية واحد أو أكثر في تقرير المخزون غير صحيح.</value></data>
++  <data name="MonthCloseCheckPassed" xml:space="preserve"><value>تم اجتياز الفحص. يمكنك المتابعة.</value></data>
++  <data name="MonthCloseBlocked" xml:space="preserve"><value>تعذر تنفيذ إجراء الشهر. راجع الأسباب الموضحة.</value></data>
++  <data name="MonthCloseClosed" xml:space="preserve"><value>تم إقفال الشهر بنجاح.</value></data>
++  <data name="MonthCloseReopened" xml:space="preserve"><value>تمت إعادة فتح الشهر بنجاح.</value></data>
++  <data name="MonthCloseAlreadyClosed" xml:space="preserve"><value>الشهر مغلق بالفعل.</value></data>
++  <data name="MonthCloseAlreadyOpen" xml:space="preserve"><value>الشهر مفتوح بالفعل.</value></data>
++  <data name="MonthCloseReason_monthNotFound" xml:space="preserve"><value>سجل الشهر غير موجود.</value></data>
++  <data name="MonthCloseReason_fiscalYearNotFound" xml:space="preserve"><value>السنة المالية التابعة للشهر غير موجودة.</value></data>
++  <data name="MonthCloseReason_invalidPeriod" xml:space="preserve"><value>الشهر أو نطاق تواريخ السنة المالية غير صحيح.</value></data>
++  <data name="MonthCloseReason_fiscalYearClosed" xml:space="preserve"><value>السنة المالية ليست مفتوحة.</value></data>
++  <data name="MonthCloseReason_monthAlreadyClosed" xml:space="preserve"><value>الشهر مغلق بالفعل.</value></data>
++  <data name="MonthCloseReason_futureMonth" xml:space="preserve"><value>لا يمكن إقفال شهر مستقبلي.</value></data>
++  <data name="MonthCloseReason_previousMonthsOpen" xml:space="preserve"><value>يوجد {0} شهر سابق في هذه السنة المالية مفتوح أو دون سجل.</value></data>
++  <data name="MonthCloseReason_vouchersNotApproved" xml:space="preserve"><value>يوجد {0} قيد غير ملغى في الشهر لم يكتمل اعتماده وترحيله.</value></data>
++  <data name="MonthCloseReason_invalidVouchers" xml:space="preserve"><value>يوجد {0} قيد ببنود ناقصة أو غير متوازنة أو فترة مالية غير صحيحة.</value></data>
++  <data name="MonthCloseReason_periodImmutable" xml:space="preserve"><value>لا يمكن تغيير السنة المالية أو السنة أو الشهر لسجل فترة محفوظ.</value></data>
++  <data name="MonthCloseReason_useCloseAction" xml:space="preserve"><value>أنشئ سجل الشهر بحالة مفتوح ثم استخدم إجراء إقفال الشهر الذي يفحص الشروط.</value></data>
++  <data name="MonthCloseReason_invalidStatus" xml:space="preserve"><value>حالة الشهر غير صحيحة.</value></data>
++  <data name="MonthCloseReason_closedRecordDelete" xml:space="preserve"><value>لا يمكن حذف سجل شهر مغلق. أعد فتحه أولًا.</value></data>
+ </root>
+diff --git a/SiGma.Helpers/Localization/Shared/GeneralMessage.resx b/SiGma.Helpers/Localization/Shared/GeneralMessage.resx
+index 50ee0cfb..c230abcb 100644
+--- a/SiGma.Helpers/Localization/Shared/GeneralMessage.resx
++++ b/SiGma.Helpers/Localization/Shared/GeneralMessage.resx
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <root>
+   <!-- 
+     Microsoft ResX Schema 
+@@ -1261,6 +1261,7 @@
+   <data name="SalesAgreementDeliveryDateInvalid" xml:space="preserve"><value>The delivery date cannot be before the invoice date.</value></data>
+   <data name="SalesAgreementInvoiceDateInvalid" xml:space="preserve"><value>The invoice date cannot be before the agreement date.</value></data>
+   <data name="SalesAgreementUnitCostMissing" xml:space="preserve"><value>Enter the purchase cost of every unit in the sales fleet before invoicing.</value></data>
++  <data name="SalesAgreementUnitCostLocked" xml:space="preserve"><value>This unit is sold and its purchase cost is already posted; the cost cannot be changed.</value></data>
+   <data name="SalesAgreementCustomerAccountMissing" xml:space="preserve"><value>No customer control account is configured in Link Accounts for this customer.</value></data>
+   <data name="SalesAgreementRevenueAccountMissing" xml:space="preserve"><value>Link the Sale Vehicle Sigma Account in Link Accounts &gt; General.</value></data>
+   <data name="SalesAgreementTaxAccountMissing" xml:space="preserve"><value>Link the Tax Collected account in Link Accounts &gt; General.</value></data>
+@@ -1281,4 +1282,67 @@
+   <data name="JobInvoiceTaxInvalid" xml:space="preserve"><value>The tax percentage must be between 0 and 100.</value></data>
+   <data name="JobInvoiceVehicleInvalid" xml:space="preserve"><value>One or more selected vehicles are not available.</value></data>
+   <data name="JobInvoiceTextTooLong" xml:space="preserve"><value>The invoice details or line description exceeds the allowed length.</value></data>
++  <data name="WorkOrderItemsRequired" xml:space="preserve"><value>Add at least one work order item.</value></data>
++  <data name="WorkOrderNotFound" xml:space="preserve"><value>Work order not found.</value></data>
++  <data name="WorkOrderEditLocked" xml:space="preserve"><value>Only pending work orders can be edited. Reload the work order before continuing.</value></data>
++  <data name="WorkOrderTransitionLocked" xml:space="preserve"><value>Only pending work orders can be accepted or rejected. Reload the list before continuing.</value></data>
++  <data name="WorkOrderUsedByJob" xml:space="preserve"><value>The work order is used by one or more jobs and cannot be deleted.</value></data>
++  <data name="JobGatePassUnavailable" xml:space="preserve"><value>A gate pass can only be printed for a closed job with an invoice. Reload the job before continuing.</value></data>
++  <data name="SalesAgreementQuotationTaxMismatch" xml:space="preserve"><value>This quotation has different tax rates across its lines. A sales agreement requires one tax rate; review the quotation before converting it.</value></data>
++  <data name="SalesAgreementScheduleInvalid" xml:space="preserve"><value>Select valid installment dates and schedule rows; the monthly schedule must fit within the supported date range.</value></data>
++  <data name="SalesAgreementTermsTooLong" xml:space="preserve"><value>Sales agreement terms cannot exceed 2000 characters. Review the quotation terms before converting it.</value></data>
++  <data name="ItemRequisitionAmountExceeded" xml:space="preserve"><value>The purchase request amount exceeds the supported monetary range.</value></data>
++  <data name="ItemRequisitionInvalidBranch" xml:space="preserve"><value>The selected branch is no longer available.</value></data>
++  <data name="ItemRequisitionInvalidInput" xml:space="preserve"><value>Enter a valid date, job and at least one distinct item with a positive quantity.</value></data>
++  <data name="ItemRequisitionInvalidItems" xml:space="preserve"><value>One or more selected items are no longer available.</value></data>
++  <data name="ItemRequisitionInvalidJob" xml:space="preserve"><value>The selected job is no longer available.</value></data>
++  <data name="ItemRequisitionInvalidLines" xml:space="preserve"><value>Select distinct source rows with positive quantities belonging to this requisition.</value></data>
++  <data name="ItemRequisitionInvalidSupplier" xml:space="preserve"><value>The selected supplier is no longer available.</value></data>
++  <data name="ItemRequisitionInvalidUom" xml:space="preserve"><value>Select an available unit of measure and a valid nonnegative unit price for every line.</value></data>
++  <data name="ItemRequisitionLinkedDocument" xml:space="preserve"><value>This requisition has a linked purchase request or item issue and cannot be edited or deleted.</value></data>
++  <data name="ItemRequisitionLinkedIssueEdit" xml:space="preserve"><value>A source-linked item issue is immutable. Delete the whole issue when allowed, then issue again from its requisition.</value></data>
++  <data name="ItemRequisitionLinkedPurchaseRequestEdit" xml:space="preserve"><value>A purchase request created from an item requisition is immutable. Delete it when allowed, then create it again from the requisition.</value></data>
++  <data name="ItemRequisitionNotFound" xml:space="preserve"><value>Item requisition not found.</value></data>
++  <data name="ItemRequisitionPurchaseRequestExists" xml:space="preserve"><value>A live purchase request already exists for this requisition.</value></data>
++  <data name="ItemRequisitionQuantityExceeded" xml:space="preserve"><value>The quantity exceeds the current remaining requisition quantity. Reload before continuing.</value></data>
++  <data name="ItemRequisitionUseAggregateEditor" xml:space="preserve"><value>Change owned requisition rows through the item requisition editor.</value></data>
++  <data name="ItemIssueInvalidInput" xml:space="preserve"><value>Enter a valid date, job and at least one distinct item with a positive quantity.</value></data>
++  <data name="ItemIssueInvalidItems" xml:space="preserve"><value>One or more selected items are no longer available.</value></data>
++  <data name="ItemIssueInvalidJob" xml:space="preserve"><value>The selected job is no longer available.</value></data>
++  <data name="ItemIssueInvalidLines" xml:space="preserve"><value>Saved item rows must belong to this item issue and cannot be repeated.</value></data>
++  <data name="ItemIssueNotFound" xml:space="preserve"><value>Item issue not found.</value></data>
++  <data name="ItemIssueUseAggregateEditor" xml:space="preserve"><value>Change owned issue rows through the item issue editor.</value></data>
++  <data name="ItemReturnInvalidInput" xml:space="preserve"><value>Enter a valid date, job and at least one distinct item with a positive quantity.</value></data>
++  <data name="ItemReturnInvalidItems" xml:space="preserve"><value>One or more selected items are no longer available.</value></data>
++  <data name="ItemReturnInvalidJob" xml:space="preserve"><value>The selected job is no longer available.</value></data>
++  <data name="ItemReturnInvalidLines" xml:space="preserve"><value>Saved item rows must belong to this item return and cannot be repeated.</value></data>
++  <data name="ItemReturnNotFound" xml:space="preserve"><value>Item return not found.</value></data>
++  <data name="ItemReturnUseAggregateEditor" xml:space="preserve"><value>Update each item return through its aggregate editor.</value></data>
++  <data name="StockTransferInvalidBranches" xml:space="preserve"><value>One or more selected branches are no longer available.</value></data>
++  <data name="StockTransferInvalidInput" xml:space="preserve"><value>Enter a valid date, destination and distinct item/source branch rows with positive quantities. Source and destination must differ.</value></data>
++  <data name="StockTransferInvalidItems" xml:space="preserve"><value>One or more selected items are no longer available.</value></data>
++  <data name="StockTransferInvalidLines" xml:space="preserve"><value>Saved item rows must belong to this stock transfer and cannot be repeated.</value></data>
++  <data name="StockTransferNotFound" xml:space="preserve"><value>Stock transfer not found.</value></data>
++  <data name="StockTransferUseAggregateEditor" xml:space="preserve"><value>Update each stock transfer through its aggregate editor.</value></data>
++  <data name="StockReportsInvalidDateRange" xml:space="preserve"><value>Enter a valid ordered From and To date range.</value></data>
++  <data name="StockReportsInvalidFilter" xml:space="preserve"><value>One or more stock report filters are invalid.</value></data>
++  <data name="MonthCloseCheckPassed" xml:space="preserve"><value>This check passed. You can proceed.</value></data>
++  <data name="MonthCloseBlocked" xml:space="preserve"><value>The month action cannot be completed. Review the reasons below.</value></data>
++  <data name="MonthCloseClosed" xml:space="preserve"><value>The month was closed successfully.</value></data>
++  <data name="MonthCloseReopened" xml:space="preserve"><value>The month was reopened successfully.</value></data>
++  <data name="MonthCloseAlreadyClosed" xml:space="preserve"><value>The month is already closed.</value></data>
++  <data name="MonthCloseAlreadyOpen" xml:space="preserve"><value>The month is already open.</value></data>
++  <data name="MonthCloseReason_monthNotFound" xml:space="preserve"><value>The month record was not found.</value></data>
++  <data name="MonthCloseReason_fiscalYearNotFound" xml:space="preserve"><value>The owning fiscal year was not found.</value></data>
++  <data name="MonthCloseReason_invalidPeriod" xml:space="preserve"><value>The month or its fiscal-year date range is invalid.</value></data>
++  <data name="MonthCloseReason_fiscalYearClosed" xml:space="preserve"><value>The fiscal year is not open.</value></data>
++  <data name="MonthCloseReason_monthAlreadyClosed" xml:space="preserve"><value>The month is already closed.</value></data>
++  <data name="MonthCloseReason_futureMonth" xml:space="preserve"><value>A future month cannot be closed.</value></data>
++  <data name="MonthCloseReason_previousMonthsOpen" xml:space="preserve"><value>{0} preceding month(s) in this fiscal year are open or missing.</value></data>
++  <data name="MonthCloseReason_vouchersNotApproved" xml:space="preserve"><value>{0} nonvoid journal voucher(s) in this month are not approved and posted.</value></data>
++  <data name="MonthCloseReason_invalidVouchers" xml:space="preserve"><value>{0} journal voucher(s) have incomplete or unbalanced lines, or an incorrect fiscal period.</value></data>
++  <data name="MonthCloseReason_periodImmutable" xml:space="preserve"><value>The fiscal year, year and month of an existing period cannot be changed.</value></data>
++  <data name="MonthCloseReason_useCloseAction" xml:space="preserve"><value>Create month records as open, then use the guarded month-close action.</value></data>
++  <data name="MonthCloseReason_invalidStatus" xml:space="preserve"><value>The month status is invalid.</value></data>
++  <data name="MonthCloseReason_closedRecordDelete" xml:space="preserve"><value>A closed month record cannot be deleted. Reopen it first.</value></data>
+ </root>
+diff --git a/SiGma.ServerAPI/Controller/MonthCloseController.cs b/SiGma.ServerAPI/Controller/MonthCloseController.cs
+index 4fffb0f0..1ca72a38 100644
+--- a/SiGma.ServerAPI/Controller/MonthCloseController.cs
++++ b/SiGma.ServerAPI/Controller/MonthCloseController.cs
+@@ -30,4 +30,24 @@ public class MonthCloseController : SiGmaControllerBase<MonthCloseAddVM, MonthCl
+         var result = await Service.ToggleStatusAsync(id, cancellationToken);
+         return result.IsSuccess ? Ok(result) : BadRequest(result);
+     }
++
++    [HttpGet("VerifyValidMonth/{id}")]
++    public async Task<IActionResult> VerifyValidMonthAsync(int id, CancellationToken cancellationToken)
++        => ToActionResult(await Service.VerifyValidMonthAsync(id, cancellationToken));
++
++    [HttpGet("VerifyVoucherApprovals/{id}")]
++    public async Task<IActionResult> VerifyVoucherApprovalsAsync(int id, CancellationToken cancellationToken)
++        => ToActionResult(await Service.VerifyVoucherApprovalsAsync(id, cancellationToken));
++
++    [HttpGet("VerifyDataInconsistency/{id}")]
++    public async Task<IActionResult> VerifyDataInconsistencyAsync(int id, CancellationToken cancellationToken)
++        => ToActionResult(await Service.VerifyDataInconsistencyAsync(id, cancellationToken));
++
++    [HttpPost("CloseMonth/{id}")]
++    public async Task<IActionResult> CloseMonthAsync(int id, CancellationToken cancellationToken)
++        => ToActionResult(await Service.CloseMonthAsync(id, cancellationToken));
++
++    [HttpPost("ReopenMonth/{id}")]
++    public async Task<IActionResult> ReopenMonthAsync(int id, CancellationToken cancellationToken)
++        => ToActionResult(await Service.ReopenMonthAsync(id, cancellationToken));
+ }

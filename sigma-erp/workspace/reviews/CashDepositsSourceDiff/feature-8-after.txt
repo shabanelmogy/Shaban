@@ -1,0 +1,561 @@
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CalendarModule } from 'primeng/calendar';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableLazyLoadEvent } from 'primeng/table';
+import { EMPTY, Observable, Subject, catchError, defer, finalize, of, switchMap } from 'rxjs';
+import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
+import { DataTableColumn, DataTableComponent, DataTableStatus, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+import { EditorDialogComponent } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
+import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
+import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
+import { FilterActionsDirective } from 'src/app/modules/shared/components/filter-panel/filter-panel.directives';
+import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
+import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
+import { ReportActionsComponent } from 'src/app/modules/shared/components/report-actions/report-actions.component';
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
+import { ActionList } from 'src/app/modules/shared/models/action-list';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Result } from 'src/app/modules/shared/models/result';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import { ReportPrintService } from 'src/app/modules/shared/service/report-print.service';
+import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
+import { currentMonthRange, dateRangeValidator, formatDisplayDate, parseDateRange, parseDateValue } from 'src/app/modules/shared/utils/date-utils';
+import { DEFAULT_PAGE_SIZE, resolveListPaging } from 'src/app/modules/shared/utils/list-query';
+import { readListRoute, writeListRoute } from 'src/app/modules/shared/utils/list-route-state';
+import { CashDepositApprovalStatus, CashDepositFilters, CashDepositListQuery, CashDepositListRow } from '../../models/list';
+import { CashDepositService } from '../../services/cashdeposit.service';
+@Component({
+  selector: 'app-cash-deposits', standalone: true,
+  imports: [CalendarModule, CommonModule, DataTableComponent, DatePickerDirective, DropdownModule,
+    EditorDialogComponent, FeatureTitleComponent, FieldErrorComponent, FilterActionsDirective,
+    FilterPanelComponent, PrimaryActionButtonComponent, ReactiveFormsModule, ReportActionsComponent,
+    StateMessageComponent, TranslateModule],
+  templateUrl: './list.component.html', host: {
+    class: 'sigma-route-host'
+  },
+})
+export class CashDepositsComponent extends BaseComponentService implements OnInit {
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly service = inject(CashDepositService);
+  private readonly confirmation = inject(ConfirmationDialogService);
+  private readonly translate = inject(TranslateService);
+  private readonly printSession = inject(ReportPrintService).createSession(this.destroyRef);
+  private readonly listQuery$ = new Subject<CashDepositListQuery>();
+  private readonly reportQuery$ = new Subject<CashDepositListQuery | null>();
+  private appliedReportQuery: CashDepositListQuery | null = null;
+  private lastQueryKey = '';
+  private activeFilters: CashDepositFilters = {
+    no: null, dateFrom: null, dateTo: null, bankId: null, branchId: null
+  };
+  readonly data = signal<CashDepositListRow[]>([]);
+  readonly reportRows = signal<CashDepositListRow[]>([]);
+  readonly loadingList = signal(false);
+  readonly lookupsLoading = signal(false);
+  readonly exporting = signal(false);
+  readonly loadingReport = signal(false);
+  readonly actionBusy = signal(false);
+  readonly confirmationPending = signal(false);
+  readonly lookupError = signal('');
+  readonly errorMessage = signal('');
+  readonly reportError = signal('');
+  readonly reportVisible = signal(false);
+  readonly printing = this.printSession.printing;
+  readonly totalRecords = signal(0);
+  readonly pageNo = signal(1);
+  readonly pageSize = signal(DEFAULT_PAGE_SIZE);
+  readonly sortField = signal('date');
+  readonly sortOrder = signal<1 | -1>(-1);
+  readonly rowsPerPageOptions = [10, 15, 20, 50, 100];
+  readonly banks = signal<DropDownSelect[]>([]);
+  readonly branches = signal<DropDownSelect[]>([]);
+  readonly dateRange = this.fb.control<Date[] | string | null>(currentMonthRange(), dateRangeValidator);
+  readonly filterForm = this.fb.group({
+    no: this.fb.nonNullable.control(''), dateRange: this.dateRange,
+    bankId: this.fb.control<number | null>(null), branchId: this.fb.control<number | null>(null)
+  });
+  readonly columns: ReadonlyArray<DataTableColumn<CashDepositListRow>> = [
+    {
+      field: 'no', header: 'cashDeposits.columns.no', sortable: true, link: {
+        activate: row => this.openEditor('view', row), ariaLabel: row => this.translate.instant('cashDeposits.actions.viewRecord', {
+          no: row.no || row.id
+        })
+      }
+    },
+    {
+      field: 'date', header: 'cashDeposits.columns.date', sortable: true, type: 'date'
+    },
+    {
+      field: 'refNo', header: 'cashDeposits.columns.refNo', sortable: true
+    },
+    {
+      field: 'description', header: 'cashDeposits.columns.description', sortable: true
+    },
+    {
+      field: 'amount', header: 'cashDeposits.columns.amount', sortable: true, type: 'money'
+    },
+    {
+      field: 'bankName', header: 'cashDeposits.columns.bank'
+    },
+    {
+      field: 'createdBy', header: 'cashDeposits.columns.createdBy', sortable: true
+    },
+    {
+      field: 'createdAt', header: 'cashDeposits.columns.createdAt', sortable: true, type: 'dateTime'
+    },
+    {
+      field: 'approvalStatus', header: 'cashDeposits.columns.status', sortable: true, type: 'status', status: row => this.statusOf(row)
+    },
+  ];
+  // Reports retain applied server order; sorting remains owned by the list request.
+  readonly reportColumns: ReadonlyArray<DataTableColumn<CashDepositListRow>> = this.columns.map(column => ({
+    ...column, sortable: false, link: undefined
+  }));
+  readonly actions: ActionList<CashDepositListRow>[] = [
+    {
+      title: 'cashDeposits.actions.view', icon: 'bi bi-eye', action: row => {
+        if (row)
+          this.openEditor('view', row);
+      }
+    },
+    {
+      title: 'cashDeposits.actions.edit', icon: 'bi bi-pencil-square', visible: row => !!row && this.canEdit(row), disabled: () => this.mutationBlocked(), action: row => {
+        if (row && !this.mutationBlocked())
+          this.openEditor('edit', row);
+      }
+    },
+    {
+      title: 'cashDeposits.actions.print', icon: 'bi bi-printer', action: row => {
+        if (row)
+          this.openPrint(row);
+      }
+    },
+    {
+      title: 'cashDeposits.actions.approve', icon: 'bi bi-check2-circle', visible: row => !!row && this.canApprove(row), disabled: () => this.mutationBlocked(), action: row => {
+        if (row)
+          this.confirmApproval(row, true);
+      }
+    },
+    {
+      title: 'cashDeposits.actions.unapprove', icon: 'bi bi-arrow-counterclockwise', visible: row => !!row && this.canUnapprove(row), disabled: () => this.mutationBlocked(), action: row => {
+        if (row)
+          this.confirmApproval(row, false);
+      }
+    },
+    {
+      title: 'cashDeposits.actions.void', icon: 'bi bi-slash-circle', visible: row => !!row && !row.isVoided, disabled: () => this.mutationBlocked(), action: row => {
+        if (row)
+          this.confirmVoid(row, true);
+      }
+    },
+    {
+      title: 'cashDeposits.actions.unvoid', icon: 'bi bi-arrow-repeat', visible: row => !!row && row.isVoided, disabled: () => this.mutationBlocked(), action: row => {
+        if (row)
+          this.confirmVoid(row, false);
+      }
+    },
+    {
+      title: 'cashDeposits.actions.delete', icon: 'bi bi-trash3', visible: row => !!row && this.canEdit(row), disabled: () => this.mutationBlocked(), action: row => {
+        if (row)
+          this.confirmDelete(row);
+      }
+    },
+  ];
+  constructor() {
+    super();
+  }
+  ngOnInit(): void {
+    this.bindListQueries();
+    this.bindReportQueries();
+    this.restoreStateFromRoute();
+    this.loadLookups();
+    this.search(true, false);
+  }
+  private bindListQueries(): void {
+    this.listQuery$.pipe(switchMap(query => defer(() => {
+      this.loadingList.set(true);
+      this.loading.startLoading();
+      this.errorMessage.set('');
+      return this.service.getList(query).pipe(catchError((error: unknown) => {
+        this.errorMessage.set(apiErrorMessage(error, 'cashDeposits.errors.load'));
+        this.data.set([]);
+        this.totalRecords.set(0);
+        return EMPTY;
+      }), finalize(() => {
+        this.loadingList.set(false);
+        this.loading.endLoading();
+      }));
+    })), takeUntilDestroyed(this.destroyRef)).subscribe(response => {
+      if (!response.isSuccess) {
+        this.errorMessage.set(response.message || 'cashDeposits.errors.load');
+        this.data.set([]);
+        this.totalRecords.set(0);
+        return;
+      }
+      this.data.set(response.entities ?? []);
+      this.totalRecords.set(Number(response.totalCount ?? 0));
+    });
+  }
+  loadLookups(): void {
+    if (this.lookupsLoading())
+      return;
+    this.lookupsLoading.set(true);
+    this.lookupError.set('');
+    this.service.getListLookups().pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.lookupsLoading.set(false))).subscribe({
+      next: lookups => {
+        this.banks.set(lookups.banks ?? []);
+        this.branches.set(lookups.branches ?? []);
+      },
+      error: (error: unknown) => this.lookupError.set(this.readError(error, 'cashDeposits.errors.lookups')),
+    });
+  }
+  search(force = true, resetPage = true): void {
+    if (this.filterForm.invalid) {
+      this.filterForm.markAllAsTouched();
+      return;
+    }
+    const raw = this.filterForm.getRawValue();
+    const [dateFrom, dateTo] = parseDateRange(raw.dateRange);
+    if (raw.dateRange && ((!dateFrom || !dateTo) || dateFrom > dateTo)) {
+      this.errorMessage.set('validationMessages.date');
+      return;
+    }
+    this.activeFilters = {
+      no: raw.no.trim() || null,
+      dateFrom: dateFrom ?? null,
+      dateTo: dateTo ?? null,
+      bankId: this.positiveLookupId(raw.bankId),
+      branchId: this.positiveLookupId(raw.branchId),
+    };
+    if (resetPage)
+      this.pageNo.set(1);
+    this.writeStateToRoute();
+    this.requestList(this.currentQuery(), force);
+  }
+  resetFilters(): void {
+    this.filterForm.reset({
+      no: '', dateRange: currentMonthRange(), bankId: null, branchId: null
+    });
+    this.search(true, true);
+  }
+  onLazyLoad(event: TableLazyLoadEvent): void {
+    const rawSort = typeof event.sortField === 'string' ? event.sortField : undefined;
+    const sortable = new Set(this.columns.filter(column => column.sortable).map(column => String(column.field)));
+    const sortField = rawSort && sortable.has(rawSort) ? rawSort : this.sortField();
+    const sortOrder = event.sortOrder === 1 || event.sortOrder === -1 ? event.sortOrder : this.sortOrder();
+    const paging = resolveListPaging({
+      ...event, rows: Math.min(100, event.rows ?? this.pageSize())
+    }, {
+      pageNo: this.pageNo(), pageSize: this.pageSize()
+    });
+    this.pageNo.set(paging.pageNo);
+    this.pageSize.set(paging.pageSize);
+    this.sortField.set(sortField);
+    this.sortOrder.set(sortOrder);
+    this.writeStateToRoute();
+    this.requestList(this.currentQuery());
+  }
+  openCreate(): void {
+    void this.router.navigate(['/CashDeposit/create'], {
+      queryParams: this.returnQueryParams()
+    });
+  }
+  retryList(): void {
+    this.refreshAppliedList();
+  }
+  exportExcel(): void {
+    this.loadCompleteRows();
+  }
+  openReport(): void {
+    if (this.loadingList() || this.reportVisible())
+      return;
+    this.appliedReportQuery = this.currentQuery();
+    this.reportVisible.set(true);
+    this.retryReport();
+  }
+  retryReport(): void {
+    if (this.appliedReportQuery && !this.loadingReport() && !this.printing())
+      this.reportQuery$.next(this.appliedReportQuery);
+  }
+  reportContext(): string {
+    const filters = this.appliedReportQuery?.filters;
+    if (!filters)
+      return '';
+    const values: string[] = [];
+    if (filters.no)
+      values.push(`${this.translate.instant('cashDeposits.filters.no')}: ${filters.no}`);
+    if (filters.dateFrom && filters.dateTo)
+      values.push(`${this.translate.instant('cashDeposits.filters.dateRange')}: ${formatDisplayDate(filters.dateFrom)} – ${formatDisplayDate(filters.dateTo)}`);
+    if (filters.bankId)
+      values.push(`${this.translate.instant('cashDeposits.filters.bank')}: ${this.banks().find(option => Number(option.id) === filters.bankId)?.value ?? filters.bankId}`);
+    if (filters.branchId)
+      values.push(`${this.translate.instant('cashDeposits.filters.branch')}: ${this.branches().find(option => Number(option.id) === filters.branchId)?.value ?? filters.branchId}`);
+    return values.join(' · ');
+  }
+  closeReport(): void {
+    if (this.printing())
+      return;
+    this.reportQuery$.next(null);
+    this.reportVisible.set(false);
+    this.reportRows.set([]);
+    this.reportError.set('');
+    this.appliedReportQuery = null;
+  }
+  printReport(): void {
+    if (this.reportRows().length && !this.reportError() && !this.loadingReport() && !this.printing()) {
+      this.printSession.print({
+        bodyClasses: ['sigma-dialog-print']
+      });
+    }
+  }
+  private bindReportQueries(): void {
+    this.reportQuery$.pipe(switchMap(query => query ? defer(() => {
+      this.loadingReport.set(true);
+      this.reportRows.set([]);
+      this.reportError.set('');
+      this.loading.startLoading();
+      return this.service.getAllList(query, 'cashDeposits.errors.report').pipe(catchError((error: unknown) => {
+        this.reportError.set(this.readError(error, 'cashDeposits.errors.report'));
+        return EMPTY;
+      }), finalize(() => {
+        this.loadingReport.set(false);
+        this.loading.endLoading();
+      }));
+    }) : EMPTY), takeUntilDestroyed(this.destroyRef)).subscribe(rows => this.reportRows.set(rows));
+  }
+  private loadCompleteRows(): void {
+    if (this.exporting() || this.loadingList())
+      return;
+    this.exporting.set(true);
+    this.errorMessage.set('');
+    const expectedCount = this.totalRecords();
+    this.loading.startLoading();
+    this.service.getAllList(this.currentQuery()).pipe(takeUntilDestroyed(this.destroyRef), catchError((error: unknown) => {
+      this.errorMessage.set(this.readError(error, 'cashDeposits.errors.export'));
+      return of(null);
+    }), finalize(() => {
+      this.exporting.set(false);
+      this.loading.endLoading();
+    })).subscribe(rows => {
+      if (!rows)
+        return;
+      if (!rows.length) {
+        if (expectedCount > 0)
+          this.errorMessage.set('cashDeposits.errors.export');
+        return;
+      }
+      onExportToExcel(signal(dataTableExportRows(rows, this.columns, key => this.translate.instant(key))), 'CashDeposits');
+    });
+  }
+  private openEditor(mode: 'view' | 'edit', row: CashDepositListRow): void {
+    void this.router.navigate(['/CashDeposit', mode, row.id], {
+      queryParams: this.returnQueryParams()
+    });
+  }
+  private openPrint(row: CashDepositListRow): void {
+    void this.router.navigate(['/CashDeposit/view', row.id], {
+      queryParams: {
+        ...this.returnQueryParams(), print: true
+      }
+    });
+  }
+  private canEdit(row: CashDepositListRow): boolean {
+    return Number(row.approvalStatus) !== CashDepositApprovalStatus.Approved && !row.isPosted && !row.isVoided;
+  }
+  private readError(error: unknown, fallback: string): string {
+    return error instanceof Error && !(error instanceof HttpErrorResponse) && error.message
+      ? error.message : apiErrorMessage(error, fallback);
+  }
+  private positiveLookupId(value: number | null): number | null {
+    const id = Number(value);
+    return Number.isInteger(id) && id > 0 ? id : null;
+  }
+  private confirmDelete(row: CashDepositListRow): void {
+    if (this.mutationBlocked() || !this.canEdit(row))
+      return;
+    this.confirmationPending.set(true);
+    this.confirmation.confirmDelete({
+      title: {
+        key: 'cashDeposits.confirm.deleteTitle'
+      }, message: {
+        key: 'cashDeposits.confirm.deleteMessage', params: {
+          no: row.no || row.id
+        }
+      },
+      subtitle: {
+        key: 'cashDeposits.confirm.recordSubtitle', params: {
+          no: row.no || row.id
+        }
+      },
+      record: {
+        label: {
+          key: 'cashDeposits.columns.no'
+        }, title: row.no || String(row.id), icon: 'bi bi-cash-stack'
+      }
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false))).subscribe(confirmed => {
+      this.confirmationPending.set(false);
+      if (confirmed && this.data().some(current => current === row) && this.canEdit(row))
+        this.runAction(() => this.service.remove(row.id), true);
+    });
+  }
+  private confirmApproval(row: CashDepositListRow, approve: boolean): void {
+    this.confirmTransition(row, approve ? {
+      title: 'cashDeposits.confirm.approveTitle', message: 'cashDeposits.confirm.approveMessage', label: 'cashDeposits.actions.approve', severity: 'warning',
+    } : {
+      title: 'cashDeposits.confirm.unapproveTitle', message: 'cashDeposits.confirm.unapproveMessage', label: 'cashDeposits.actions.unapprove', severity: 'warning',
+    }, () => approve ? this.canApprove(row) : this.canUnapprove(row), () => this.service.toggleApproval(row.id));
+  }
+  private confirmVoid(row: CashDepositListRow, voidRecord: boolean): void {
+    this.confirmTransition(row, voidRecord ? {
+      title: 'cashDeposits.confirm.voidTitle', message: 'cashDeposits.confirm.voidMessage', label: 'cashDeposits.actions.void', severity: 'danger',
+    } : {
+      title: 'cashDeposits.confirm.unvoidTitle', message: 'cashDeposits.confirm.unvoidMessage', label: 'cashDeposits.actions.unvoid', severity: 'warning',
+    }, () => row.isVoided !== voidRecord, () => this.service.toggleVoid(row.id));
+  }
+  private confirmTransition(row: CashDepositListRow, options: {
+    title: string;
+    message: string;
+    label: string;
+    severity: 'danger' | 'warning';
+  }, canRun: () => boolean, request: () => Observable<Result<unknown>>): void {
+    if (this.mutationBlocked() || !canRun())
+      return;
+    this.confirmationPending.set(true);
+    this.confirmation.confirm({
+      severity: options.severity, title: {
+        key: options.title
+      }, message: {
+        key: options.message, params: {
+          no: row.no || row.id
+        }
+      },
+      subtitle: {
+        key: 'cashDeposits.confirm.recordSubtitle', params: {
+          no: row.no || row.id
+        }
+      }, confirmLabel: {
+        key: options.label
+      },
+      record: {
+        label: {
+          key: 'cashDeposits.columns.no'
+        }, title: row.no || String(row.id), icon: 'bi bi-cash-stack'
+      }
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false))).subscribe(confirmed => {
+      this.confirmationPending.set(false);
+      if (confirmed && this.data().some(current => current === row) && canRun())
+        this.runAction(request);
+    });
+  }
+  private mutationBlocked(): boolean {
+    return this.actionBusy() || this.confirmationPending() || this.loadingList();
+  }
+  private canApprove(row: CashDepositListRow): boolean {
+    return Number(row.approvalStatus) === CashDepositApprovalStatus.NotApproved && !row.isPosted && !row.isVoided;
+  }
+  private canUnapprove(row: CashDepositListRow): boolean {
+    return Number(row.approvalStatus) === CashDepositApprovalStatus.Approved && row.isPosted && !row.isVoided;
+  }
+  private runAction(request: () => Observable<Result<unknown>>, deleting = false): void {
+    if (this.actionBusy())
+      return;
+    this.actionBusy.set(true);
+    this.errorMessage.set('');
+    this.loading.startLoading();
+    request().pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
+      this.actionBusy.set(false);
+      this.loading.endLoading();
+    })).subscribe({
+      next: response => {
+        if (!response.isSuccess) {
+          this.actionBusy.set(false);
+          return;
+        }
+        if (deleting && this.data().length === 1 && this.pageNo() > 1)
+          this.pageNo.update(page => page - 1);
+        this.refreshAppliedList();
+      },
+      // The mutation interceptor owns both failure channels; retain rows/applied query for retry.
+      error: () => this.actionBusy.set(false),
+    });
+  }
+  private statusOf(row: CashDepositListRow): DataTableStatus {
+    if (row.isVoided)
+      return {
+        label: 'cashDeposits.statuses.voided', tone: 'danger'
+      };
+    if (Number(row.approvalStatus) === CashDepositApprovalStatus.Approved)
+      return {
+        label: 'cashDeposits.statuses.approved', tone: 'success'
+      };
+    if (Number(row.approvalStatus) === CashDepositApprovalStatus.Rejected)
+      return {
+        label: 'cashDeposits.statuses.rejected', tone: 'danger'
+      };
+    return {
+      label: 'cashDeposits.statuses.notApproved', tone: 'warning'
+    };
+  }
+  private currentQuery(): CashDepositListQuery {
+    return {
+      pageNo: this.pageNo(), pageSize: this.pageSize(), filters: {
+        ...this.activeFilters
+      }, sortField: this.sortField(), sortOrder: this.sortOrder()
+    };
+  }
+  private refreshAppliedList(): void {
+    this.writeStateToRoute();
+    this.requestList(this.currentQuery(), true);
+  }
+  private requestList(query: CashDepositListQuery, force = false): void {
+    const key = JSON.stringify(query);
+    if (!force && key === this.lastQueryKey)
+      return;
+    this.lastQueryKey = key;
+    this.listQuery$.next(query);
+  }
+  private restoreStateFromRoute(): void {
+    const state = readListRoute(this.route);
+    const number = state.number;
+    const text = state.text;
+    const dateFrom = parseDateValue(text('dateFrom'));
+    const dateTo = parseDateValue(text('dateTo'));
+    this.filterForm.patchValue({
+      no: text('no'), bankId: this.positiveLookupId(number('bankId')), branchId: this.positiveLookupId(number('branchId')), dateRange: dateFrom || dateTo
+        ? [dateFrom ? new Date(`${dateFrom}T00:00:00`) : null, dateTo ? new Date(`${dateTo}T00:00:00`) : null] as Date[]
+        : (text('dateRange') === 'all' ? null : currentMonthRange())
+    }, {
+      emitEvent: false
+    });
+    this.pageNo.set(Math.max(1, Math.floor(number('pageNo') ?? 1)));
+    this.pageSize.set(Math.min(100, Math.max(10, Math.floor(number('pageSize') ?? DEFAULT_PAGE_SIZE))));
+    const requestedSort = text('sortField');
+    if (this.columns.some(column => column.sortable && column.field === requestedSort))
+      this.sortField.set(requestedSort);
+    const order = number('sortOrder');
+    if (order === 1 || order === -1)
+      this.sortOrder.set(order);
+  }
+  private writeStateToRoute(): void {
+    writeListRoute(this.router, this.route, this.returnQueryParams());
+  }
+  private returnQueryParams(): Record<string, string | number | null> {
+    return {
+      no: this.activeFilters.no || null,
+      dateRange: this.activeFilters.dateFrom || this.activeFilters.dateTo ? null : 'all', dateFrom: this.activeFilters.dateFrom,
+      dateTo: this.activeFilters.dateTo, bankId: this.activeFilters.bankId, branchId: this.activeFilters.branchId,
+      pageNo: this.pageNo(), pageSize: this.pageSize(), sortField: this.sortField(), sortOrder: this.sortOrder()
+    };
+  }
+}

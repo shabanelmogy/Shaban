@@ -1,0 +1,103 @@
+<div class="card card-custom">
+    <div class="card-body">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>{{ 'settings.fines' | translate }}</h2>
+
+            <app-buttons [endButtons]="createButtons" (buttonsClick)="onButtonClick($event)">
+            </app-buttons>
+        </div>
+        <!-- Table -->
+        <p-table [value]="finesData()" dataKey="id" responsiveLayout="scroll" min-width="100%">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>{{ 'general.actions' | translate }}</th>
+                    <th>{{ 'settings.finesModel.fileID' | translate }}</th>
+                    <th>{{ 'settings.finesModel.state' | translate }}</th>
+                    <th>{{ 'settings.finesModel.rtaUserName' | translate }}</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-fines let-i="rowIndex">
+                <tr>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-sm dropdown-toggle d-flex align-items-center"
+                                type="button" id="actionsDropdown{{i}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-gear me-1" aria-hidden="true"></i>
+                                {{ 'general.actions' | translate }}
+                            </button>
+
+                            <ul class="dropdown-menu" [attr.aria-labelledby]="'actionsDropdown' + i">
+                                <li>
+                                    <button class="dropdown-item d-flex align-items-center" type="button"
+                                        (click)="openEdit(fines)">
+                                        <i class="bi bi-pencil-square me-2" aria-hidden="true"></i>
+                                        {{ 'general.edit' | translate }}
+                                    </button>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <button class="dropdown-item d-flex align-items-center text-danger" type="button"
+                                        (click)="deletefines(fines.id)">
+                                        <i class="bi bi-trash3 me-2" aria-hidden="true"></i>
+                                        {{ 'general.delete' | translate }}
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+
+                    <td>{{ fines.fileID }}</td>
+                    <td>{{ fines.state }}</td>
+                    <td>{{ fines.rtaUserName }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+
+<!--  Add/Edit Dialog -->
+<p-dialog [(visible)]="dialogVisible" [modal]="true" [closable]="false" [style]="{ width: '700px' }" [header]="
+    dialogMode() === 'create'
+      ? ('settings.finesModel.createNewTrafficFile' | translate)
+      : ('settings.finesModel.editNewTrafficFile' | translate)
+  ">
+
+    <form appMockData class="p-fluid" [formGroup]="trafficFileForm">
+        <div class=" form-group col-md-12 col-lg-8 p-4 mb-8 field ">
+            <label class="form-label required">
+                {{ 'settings.finesModel.fileID' | translate}}
+            </label>
+            <input class="form-control" pInputText id="fileID" formControlName="fileID" />
+            @if ( trafficFileForm?.get('fileID')?.invalid &&
+            trafficFileForm?.get('fileID')?.touched &&
+            trafficFileForm?.get('fileID')?.errors?.['required']) {
+            <small class="p-error">
+                {{ 'validationMessages.required' | translate }}
+            </small>
+            }
+        </div>
+        <div class="form-group col-md-12 col-lg-8 p-4  field mb-8">
+            <label for="state" class="form-label required">{{ 'settings.finesModel.state' | translate }} </label>
+            <input class="form-control" pInputText id="state" formControlName="state" />
+            @if (trafficFileForm?.get('state')?.invalid && trafficFileForm?.get('state')?.touched &&
+            trafficFileForm?.get('state')?.errors?.['required']) {
+            <small class="p-error">
+                {{ 'validationMessages.required' | translate }}
+            </small>
+            }
+        </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+        <button pButton type="button" label="Cancel" icon="bi bi-x-lg" class="p-button-text btn btn-danger m-2"
+            (click)="closeAccountDialog()"> {{ 'general.cancel' | translate }}</button>
+        <button pButton type="button" label="Save" icon="bi bi-check2-circle" class="p-button-text btn btn-primary m-2"
+            (click)="saveTrafficFile()"> {{ 'general.save' | translate }}
+        </button>
+    </ng-template>
+</p-dialog>

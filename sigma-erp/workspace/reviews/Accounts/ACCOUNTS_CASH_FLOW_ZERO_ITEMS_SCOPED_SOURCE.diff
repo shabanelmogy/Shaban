@@ -1,0 +1,192 @@
+diff --git a/SiGma.Business/Services/AccountServices/AccountReportsService.cs b/SiGma.Business/Services/AccountServices/AccountReportsService.cs
+index ceabaf48..6418b453 100644
+--- a/SiGma.Business/Services/AccountServices/AccountReportsService.cs
++++ b/SiGma.Business/Services/AccountServices/AccountReportsService.cs
+@@ -362,7 +362,7 @@ public class AccountReportsService : IAccountReportsService
+         foreach (var acc in CashFlowAccountCodes.IS_NonCashExpenses)
+         {
+             var amount = SumMovements(acc);
+-            if (amount == 0 || !metaById.ContainsKey(acc)) continue;
++            if (!metaById.ContainsKey(acc)) continue;
+             operating += amount;
+             operatingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = amount });
+         }
+@@ -370,7 +370,7 @@ public class AccountReportsService : IAccountReportsService
+         foreach (var acc in CashFlowAccountCodes.IS_NonCashRevenues)
+         {
+             var amount = SumMovements(acc);
+-            if (amount == 0 || !metaById.ContainsKey(acc)) continue;
++            if (!metaById.ContainsKey(acc)) continue;
+             operating -= amount;
+             operatingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = -amount });
+         }
+@@ -378,7 +378,7 @@ public class AccountReportsService : IAccountReportsService
+         foreach (var acc in CashFlowAccountCodes.BS_CurrentAssets)
+         {
+             var delta = GetDelta(acc);
+-            if (delta == 0 || !metaById.ContainsKey(acc)) continue;
++            if (!metaById.ContainsKey(acc)) continue;
+             operating -= delta;
+             operatingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = -delta });
+         }
+@@ -386,7 +386,7 @@ public class AccountReportsService : IAccountReportsService
+         foreach (var acc in CashFlowAccountCodes.BS_CurrentLiabilities)
+         {
+             var delta = GetDelta(acc);
+-            if (delta == 0 || !metaById.ContainsKey(acc)) continue;
++            if (!metaById.ContainsKey(acc)) continue;
+             operating += delta;
+             operatingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = delta });
+         }
+@@ -398,7 +398,7 @@ public class AccountReportsService : IAccountReportsService
+         foreach (var acc in CashFlowAccountCodes.BS_NonCurrentAssets)
+         {
+             var delta = GetDelta(acc);
+-            if (delta == 0 || !metaById.ContainsKey(acc)) continue;
++            if (!metaById.ContainsKey(acc)) continue;
+             investing -= delta;
+             investingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = -delta });
+         }
+@@ -410,7 +410,7 @@ public class AccountReportsService : IAccountReportsService
+         foreach (var acc in CashFlowAccountCodes.BS_FinancingAccounts)
+         {
+             var delta = GetDelta(acc);
+-            if (delta == 0 || !metaById.ContainsKey(acc)) continue;
++            if (!metaById.ContainsKey(acc)) continue;
+             financing += delta;
+             financingLines.Add(new() { AccountId = acc, Code = metaById[acc].AccountCode, Name = metaById[acc].Name, Amount = delta });
+         }
+@@ -2375,6 +2375,8 @@ public class AccountReportsService : IAccountReportsService
+         JournalsRequestDto request,
+         CancellationToken cancellationToken = default)
+     {
++        var pageNo = Math.Max(1, request.PageNumber);
++        var pageSize = Math.Clamp(request.PageSize, 1, 100);
+         // ── 1. Parse filters ──────────────────────────────────────────────
+         var filters          = request.Filters ?? [];
+         var voucherNo        = FilterHelper.GetString(filters, "voucherNo");
+@@ -2390,8 +2392,9 @@ public class AccountReportsService : IAccountReportsService
+                 IsSuccess = false,
+                 Message   = "fromDate cannot be later than toDate.",
+                 Entities  = [],
+-                PageNo    = request.PageNumber,
+-                PageSize  = request.PageSize,
++                PageNo    = pageNo,
++                PageSize  = pageSize,
++                TotalCount = 0,
+                 TotalPages = 0
+             };
+ 
+@@ -2458,19 +2461,20 @@ public class AccountReportsService : IAccountReportsService
+ 
+         // ── 6. Paginate ───────────────────────────────────────────────────
+         var totalCount = allLines.Count;
+-        var totalPages = (int)Math.Ceiling(totalCount / (double)request.PageSize);
++        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+ 
+         var paged = allLines
+-            .Skip((request.PageNumber - 1) * request.PageSize)
+-            .Take(request.PageSize)
++            .Skip((int)Math.Min((long)(pageNo - 1) * pageSize, totalCount))
++            .Take(pageSize)
+             .ToList();
+ 
+         return new Results<JournalsLineVm>
+         {
+             IsSuccess  = true,
+             Entities   = paged,
+-            PageNo     = request.PageNumber,
+-            PageSize   = request.PageSize,
++            PageNo     = pageNo,
++            PageSize   = pageSize,
++            TotalCount = totalCount,
+             TotalPages = totalPages
+         };
+     }
+@@ -2508,11 +2512,18 @@ public class AccountReportsService : IAccountReportsService
+         var end     = new DateTime(fiscalYear.EndDate.Year,   fiscalYear.EndDate.Month,   1);
+         while (current <= end)
+         {
+-            months.Add((current.Year, current.Month, current.ToString("MMM-yy").ToUpper()));
++            months.Add((current.Year, current.Month, current.ToString("MMM-yy", System.Globalization.CultureInfo.InvariantCulture).ToUpperInvariant()));
+             current = current.AddMonths(1);
+         }
+         var monthLabels = months.Select(m => m.Label).ToList();
+ 
++        var budgetPeriods = months.Select(m => new BudgetMonthVm
++        {
++            Label = m.Label,
++            Year = m.Year,
++            Month = m.Month
++        }).ToList();
++
+         // ── 4. Load leaf accounts filtered by category ────────────────────
+ 
+         var accountQuery = _unitOfWork.Repository
+@@ -2539,7 +2550,7 @@ public class AccountReportsService : IAccountReportsService
+             .ToList();
+ 
+         if (accounts.Count == 0)
+-            return AccountReportHelper.Ok(new BudgetVm { Months = monthLabels, Rows = [] });
++            return AccountReportHelper.Ok(new BudgetVm { Months = monthLabels, Periods = budgetPeriods, Rows = [] });
+ 
+         var accountIds = accounts.Select(a => a.Id).ToList();
+ 
+@@ -2573,7 +2584,7 @@ public class AccountReportsService : IAccountReportsService
+             };
+         }).ToList();
+ 
+-        return AccountReportHelper.Ok(new BudgetVm { Months = monthLabels, Rows = rows });
++        return AccountReportHelper.Ok(new BudgetVm { Months = monthLabels, Periods = budgetPeriods, Rows = rows });
+     }
+ 
+     public async Task<Result> SaveBudgetAsync(
+@@ -2583,13 +2594,45 @@ public class AccountReportsService : IAccountReportsService
+         if (request.Entries is null || request.Entries.Count == 0)
+             return new Result { IsSuccess = false, Message = "No entries provided." };
+ 
+-        // Validate fiscal year
+-        if (!await _unitOfWork.Repository.ExistsAsync<FiscalYear>(
+-                x => x.Id == request.FiscalYearId, cancellationToken: cancellationToken))
++        var fiscalYear = await _unitOfWork.Repository.Query<FiscalYear>(
++                x => x.Id == request.FiscalYearId && x.IsDeleted != true)
++            .AsNoTracking()
++            .FirstOrDefaultAsync(cancellationToken);
++        if (fiscalYear is null)
+             return new Result { IsSuccess = false, Message = "Fiscal year not found." };
+ 
++        // Validate the entire changed-cell set before tracking any mutation.
++        var keys = new HashSet<(int AccountId, int Year, int Month)>();
++        var firstMonth = new DateTime(fiscalYear.StartDate.Year, fiscalYear.StartDate.Month, 1);
++        var lastMonth = new DateTime(fiscalYear.EndDate.Year, fiscalYear.EndDate.Month, 1);
++        foreach (var entry in request.Entries)
++        {
++            if (entry is null || entry.AccountId <= 0 || entry.Year is < 1 or > 9999 || entry.Month is < 1 or > 12)
++                return new Result { IsSuccess = false, Message = "Invalid budget account or calendar month." };
++            var month = new DateTime(entry.Year, entry.Month, 1);
++            if (month < firstMonth || month > lastMonth)
++                return new Result { IsSuccess = false, Message = "Budget month must belong to the fiscal year." };
++            if (!keys.Add((entry.AccountId, entry.Year, entry.Month)))
++                return new Result { IsSuccess = false, Message = "Duplicate budget account and month." };
++        }
++
+         // Load all existing budget records for this fiscal year in one query
+         var accountIds = request.Entries.Select(e => e.AccountId).Distinct().ToList();
++        var validAccounts = await _unitOfWork.Repository.Query<Account>(
++                a => accountIds.Contains(a.Id) && a.IsDeleted != true)
++            .AsNoTracking()
++            .Select(a => new { a.Id, a.AccountLevel })
++            .ToListAsync(cancellationToken);
++        var parentAccountIds = await _unitOfWork.Repository.Query<Account>(
++                a => a.IsDeleted != true && a.ParentId.HasValue && accountIds.Contains(a.ParentId.Value))
++            .AsNoTracking()
++            .Select(a => a.ParentId!.Value)
++            .Distinct()
++            .ToListAsync(cancellationToken);
++        // Match GetBudgetAsync's existing leaf rule, including childless level 1-4 accounts.
++        if (validAccounts.Count != accountIds.Count ||
++            validAccounts.Any(a => a.AccountLevel != 5 && parentAccountIds.Contains(a.Id)))
++            return new Result { IsSuccess = false, Message = "Budget accounts must be active leaf accounts." };
+ 
+         var existing = await _unitOfWork.Repository
+             .Query<AccountBudget>(b =>

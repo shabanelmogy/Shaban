@@ -1,0 +1,215 @@
+<section class="charge-settings" [attr.aria-busy]="loading() || saving()">
+  <header class="charge-settings__header">
+    <div>
+      <h2>{{ 'settings.chargesModel.title' | translate }}</h2>
+      <p>{{ 'settings.chargesModel.subtitle' | translate }}</p>
+    </div>
+  </header>
+
+  @if (errorMessage()) {
+    <div class="charge-settings__message charge-settings__message--error" role="alert">
+      <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+      <span>{{ errorMessage().startsWith('settings.') ? (errorMessage() | translate) : errorMessage() }}</span>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="charge-settings__state" role="status">
+      <i class="bi bi-arrow-repeat charge-settings__spinner" aria-hidden="true"></i>
+      {{ 'settings.chargesModel.loading' | translate }}
+    </div>
+  } @else {
+    <form appMockData [formGroup]="chargesForm" novalidate (ngSubmit)="save()">
+      <div class="charge-settings__module">
+        <label for="charge-settings-module">
+          {{ 'settings.chargesModel.moduleType' | translate }}
+          <span class="charge-settings__required" aria-hidden="true">*</span>
+        </label>
+        <p-dropdown
+          inputId="charge-settings-module"
+          formControlName="moduleType"
+          [options]="moduleTypeOptions"
+          optionLabel="labelKey"
+          optionValue="id"
+          [filter]="true"
+          appendTo="body"
+          [disabled]="editorLocked()"
+          [placeholder]="'settings.chargesModel.selectModuleType' | translate"
+          [class.ng-invalid]="fieldInvalid(chargesForm.controls.moduleType)"
+          [attr.aria-invalid]="fieldInvalid(chargesForm.controls.moduleType)"
+        >
+          <ng-template pTemplate="selectedItem" let-option>
+            @if (option) { {{ option.labelKey | translate }} }
+          </ng-template>
+          <ng-template pTemplate="item" let-option>
+            {{ option.labelKey | translate }}
+          </ng-template>
+        </p-dropdown>
+        @if (fieldInvalid(chargesForm.controls.moduleType)) {
+          <small class="charge-settings__field-error">
+            <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+            {{ 'validationMessages.required' | translate }}
+          </small>
+        }
+      </div>
+
+      <app-editable-collection-table
+        title="settings.chargesModel.rowsTitle"
+        description="settings.chargesModel.rowsDescription"
+        headingIcon="bi bi-cash-coin"
+        [columns]="chargeSettingColumns"
+        [editable]="!editorLocked()"
+        [addLabel]="'settings.chargesModel.addRow'"
+        [addDisabled]="editorLocked()"
+        tableMinWidth="72rem"
+        maxHeight="min(54dvh, 520px)"
+        emptyMessage="settings.chargesModel.empty"
+        emptyIcon="bi bi-cash-stack"
+        (addRequested)="addChargeSetting()"
+        (removeRequested)="requestRemoveChargeSetting($event)"
+      >
+        <ng-template
+          [appEditableCollectionRow]="chargeSettings.controls"
+          let-row
+          let-index="index"
+        >
+          <ng-container [formGroup]="row">
+            <td>
+              <div class="charge-settings__field">
+                <p-dropdown
+                  [inputId]="'charge-setting-type-' + index"
+                  formControlName="chargeType"
+                  [options]="chargeTypeOptions"
+                  optionLabel="labelKey"
+                  optionValue="id"
+                  [filter]="true"
+                  appendTo="body"
+                  [disabled]="editorLocked()"
+                  [placeholder]="'settings.chargesModel.selectChargeType' | translate"
+                  [class.ng-invalid]="fieldInvalid(row.controls.chargeType)"
+                  [attr.aria-invalid]="fieldInvalid(row.controls.chargeType)"
+                >
+                  <ng-template pTemplate="selectedItem" let-option>
+                    @if (option) { {{ option.labelKey | translate }} }
+                  </ng-template>
+                  <ng-template pTemplate="item" let-option>
+                    {{ option.labelKey | translate }}
+                  </ng-template>
+                </p-dropdown>
+                @if (fieldInvalid(row.controls.chargeType)) {
+                  <small class="charge-settings__field-error">
+                    <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+                    {{ 'validationMessages.required' | translate }}
+                  </small>
+                }
+              </div>
+            </td>
+            <td>
+              <div class="charge-settings__field">
+                <p-dropdown
+                  [inputId]="'charge-setting-rate-' + index"
+                  formControlName="rateType"
+                  [options]="rateTypeOptions"
+                  optionLabel="labelKey"
+                  optionValue="id"
+                  [filter]="true"
+                  appendTo="body"
+                  [disabled]="editorLocked()"
+                  [placeholder]="'settings.chargesModel.selectRateType' | translate"
+                  [class.ng-invalid]="fieldInvalid(row.controls.rateType)"
+                  [attr.aria-invalid]="fieldInvalid(row.controls.rateType)"
+                >
+                  <ng-template pTemplate="selectedItem" let-option>
+                    @if (option) { {{ option.labelKey | translate }} }
+                  </ng-template>
+                  <ng-template pTemplate="item" let-option>
+                    {{ option.labelKey | translate }}
+                  </ng-template>
+                </p-dropdown>
+                @if (fieldInvalid(row.controls.rateType)) {
+                  <small class="charge-settings__field-error">
+                    <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+                    {{ 'validationMessages.required' | translate }}
+                  </small>
+                }
+              </div>
+            </td>
+            <td>
+              <div class="charge-settings__checkbox">
+                <p-checkbox
+                  [inputId]="'charge-setting-closing-' + index"
+                  formControlName="onlyForClosing"
+                  [binary]="true"
+                  [disabled]="editorLocked()"
+                ></p-checkbox>
+                <label class="visually-hidden" [for]="'charge-setting-closing-' + index">
+                  {{ 'settings.chargesModel.onlyForClosing' | translate }}
+                </label>
+              </div>
+            </td>
+            <td>
+              <div class="charge-settings__checkbox">
+                <p-checkbox
+                  [inputId]="'charge-setting-mandatory-' + index"
+                  formControlName="mandatory"
+                  [binary]="true"
+                  [disabled]="editorLocked()"
+                ></p-checkbox>
+                <label class="visually-hidden" [for]="'charge-setting-mandatory-' + index">
+                  {{ 'settings.chargesModel.mandatory' | translate }}
+                </label>
+              </div>
+            </td>
+            <td>
+              <div class="charge-settings__checkbox">
+                <p-checkbox
+                  [inputId]="'charge-setting-taxable-' + index"
+                  formControlName="taxable"
+                  [binary]="true"
+                  [disabled]="editorLocked()"
+                ></p-checkbox>
+                <label class="visually-hidden" [for]="'charge-setting-taxable-' + index">
+                  {{ 'settings.chargesModel.taxable' | translate }}
+                </label>
+              </div>
+            </td>
+            <td>
+              <div class="charge-settings__checkbox">
+                <p-checkbox
+                  [inputId]="'charge-setting-active-' + index"
+                  formControlName="isActive"
+                  [binary]="true"
+                  [disabled]="editorLocked()"
+                ></p-checkbox>
+                <label class="visually-hidden" [for]="'charge-setting-active-' + index">
+                  {{ 'settings.chargesModel.active' | translate }}
+                </label>
+              </div>
+            </td>
+          </ng-container>
+        </ng-template>
+      </app-editable-collection-table>
+
+      @if (chargeSettings.hasError('duplicatePair') && validationAttempted()) {
+        <p class="charge-settings__collection-error" role="alert">
+          <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+          {{ 'settings.chargesModel.validation.duplicatePair' | translate }}
+        </p>
+      }
+
+      <footer class="charge-settings__footer">
+        <p class="charge-settings__hint">
+          <i class="bi bi-info-circle" aria-hidden="true"></i>
+          {{ 'settings.chargesModel.saveHint' | translate }}
+        </p>
+        <app-primary-action-button
+          type="submit"
+          icon="bi bi-save"
+          [label]="'general.save' | translate"
+          [disabled]="editorLocked() || !hasPendingChanges()"
+          [loading]="saving()"
+        ></app-primary-action-button>
+      </footer>
+    </form>
+  }
+</section>

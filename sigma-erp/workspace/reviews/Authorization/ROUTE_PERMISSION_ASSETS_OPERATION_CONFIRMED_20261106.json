@@ -1,0 +1,143 @@
+{
+  "rows": [
+    {
+      "keys": [
+        "Asset.View",
+        "Asset.Create",
+        "Asset.Update",
+        "Asset.Delete",
+        "AssetType.Lookup",
+        "CostCenter.Lookup"
+      ],
+      "update": [
+        "Asset.View",
+        "Asset.Update",
+        "AssetType.Lookup",
+        "CostCenter.Lookup"
+      ],
+      "create": [
+        "Asset.Create",
+        "AssetType.Lookup",
+        "CostCenter.Lookup"
+      ],
+      "route": "asset",
+      "resource": [
+        "Asset"
+      ],
+      "view": [
+        "Asset.View"
+      ],
+      "evidence": [
+        "Assets/asset/asset.routes.ts: list/create/view/edit and details alias",
+        "Assets/asset/services/asset.service.ts: actual GET/POST/PUT/DELETE",
+        "AssetController + SiGmaControllerBase + PermissionEndpointResolver generic operations"
+      ]
+    },
+    {
+      "keys": [
+        "Depreciation.Prepare",
+        "Depreciation.Save"
+      ],
+      "update": [],
+      "create": [],
+      "route": "depreciation",
+      "resource": [
+        "Depreciation"
+      ],
+      "view": [
+        "Depreciation.Prepare"
+      ],
+      "evidence": [
+        "Assets/depreciation service: GET prepare / POST save",
+        "DepreciationController.Prepare/Save and reviewed operation keys",
+        "Save requires Prepare+Save after confirmation; read/output uses Prepare"
+      ]
+    },
+    {
+      "keys": [
+        "DepreciationSummary.Get",
+        "Asset.Lookup",
+        "AssetType.Lookup"
+      ],
+      "update": [],
+      "create": [],
+      "route": "depreciationSummary",
+      "resource": [
+        "DepreciationSummary"
+      ],
+      "view": [
+        "DepreciationSummary.Get",
+        "Asset.Lookup",
+        "AssetType.Lookup"
+      ],
+      "evidence": [
+        "Assets/depreciationSummary service GET DepreciationSummary and bootstrap Asset/AssetType selects",
+        "New frozen DepreciationSummaryController.Get with PermissionCatalogAction Get",
+        "Adapter delegates the existing Asset calculation; exact rows and server totals"
+      ]
+    },
+    {
+      "keys": [
+        "Asset.GetDepreciationDetailReport",
+        "Asset.Lookup",
+        "AssetType.Lookup"
+      ],
+      "update": [],
+      "create": [],
+      "route": "depreciationDetail",
+      "resource": [
+        "Asset"
+      ],
+      "view": [
+        "Asset.GetDepreciationDetailReport",
+        "Asset.Lookup",
+        "AssetType.Lookup"
+      ],
+      "evidence": [
+        "Assets/depreciationDetail service GET Asset/detail-report and Asset/AssetType bootstrap selects",
+        "AssetController.GetDepreciationDetailReport"
+      ]
+    },
+    {
+      "keys": [
+        "DepreciationReportFy.Get"
+      ],
+      "update": [],
+      "create": [],
+      "route": "depreciationReportFy",
+      "resource": [
+        "DepreciationReportFy"
+      ],
+      "view": [
+        "DepreciationReportFy.Get"
+      ],
+      "evidence": [
+        "Assets/depreciationReportFy service GET DepreciationReportFy",
+        "DepreciationReportFyController.GetAsync"
+      ]
+    },
+    {
+      "keys": [
+        "ImportData.AssetsImportData"
+      ],
+      "update": [],
+      "create": [],
+      "route": "ImportAssets",
+      "resource": [
+        "ImportData"
+      ],
+      "view": [
+        "ImportData.AssetsImportData"
+      ],
+      "evidence": [
+        "ImportAssets submit -> ImportAssetService -> CsvImportService POST ImportData/Assets",
+        "ImportDataController.AssetsImportData",
+        "CsvImportWorkspace permission keeps draft and sent outcome while hidden"
+      ]
+    }
+  ],
+  "ownerVerificationPending": true,
+  "status": "Draft",
+  "scope": "Confirmed Assets route, handler and endpoint adoption, 2026-11-06",
+  "verification": "Source and targeted automated checks; application visual/runtime acceptance and new schema application remain pending"
+}

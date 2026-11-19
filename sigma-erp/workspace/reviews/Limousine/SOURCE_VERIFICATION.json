@@ -1,0 +1,6 @@
+{
+  "verification": "Syntax parsing and local import resolution only; no typecheck/build/test/runtime",
+  "typescript": 70,
+  "templates": 18,
+  "errors": []
+}

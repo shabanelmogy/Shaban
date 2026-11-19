@@ -1,0 +1,91 @@
+| Field | Value |
+|---|---|
+| Status | Implemented — source-only |
+| Owner verification pending | yes |
+
+# Item Return editor tabs and translations — 2026-11-01
+
+Tier S: bounded editor presentation fix requested by the owner: split Add Item Return into tabs and repair the raw branch label/placeholder. This is not an end-to-end stock/approval/cache review. Existing user changes in vocabularies, Stock guide and other screens were preserved. No subagents: one small, sequential presentation workstream with overlapping template/state ownership.
+
+## Decision and source evidence
+
+- Actual route: `src/app/pages/routing.ts:641` → `Stock/ItemReturn/itemreturn.routes.ts` → `ItemReturnsComponent` → `app-item-return-details`. Create and legacy detail routes redirect into the same list/editor. The existing small modal exception is explicitly frozen in `STOCK_BRANCH_BALANCE_CONTRACT_FREEZE.md`; retain it. UI13 owns EditorDialog/EditorTabs composition; BE14 owns the existing header/lines aggregate with operational stock effect and no journal. No API, payload, quantity, approval or schema decision changes.
+- Approved presentation references read: shared `editor-dialog` TS/HTML/SCSS, shared `editor-tabs` TS/HTML, shared `focus-field.ts`, and UI13 controlled composition/height contract. Do not copy another feature's layout. The existing DatePicker/Select controls retain their public bindings; UI17/23 own translated placeholders.
+- Consumed guide blocks: Master1 proportional process, Master2 analysis entry, Master4 scoped reference comparison, Master5 source conformance/performance, Master7 guide/handoff; UI13/17/23 and relevant UI2/22/29 gates; BE14 and BE2/7 performance entry. Recipe `-Check` passed all eight packets; Phase03 is the implementation packet. No derivative refresh needed.
+
+| Concern | Owner/reference | Final scoped conformance |
+|---|---|---|
+| Tab strip | UI13; `EditorTabsComponent.tabs/activeTabChange` | Basic Information and Items in Create/Edit/View; Approvals only with a saved ID; matching panel IDs and labelled-by linkage |
+| Draft and validation | UI13/27; existing parent FormGroup and `focusField` | One persistent typed form; basic/items panels use native hidden and shared `_sigma-base.scss:41`; Save opens the owning panel before focusing invalid input, duplicates or an empty collection |
+| Busy and exit | Existing `closeBlocked/canDeactivate/canMutate` | Both content tabs can Save; pending operations lock tab changes; dirty-exit/row confirmations and write pipeline retained |
+| Height and scrolling | UI13 shared height input | Exact documented `min(720px, calc(100dvh - 24px))`; existing form/body/scroll chain, fixed dialog header/footer; no local styles or extra scroll host |
+| Translation | UI23; `itemReturn` vocab block | Added branch/selectBranch in both languages as Receiving Branch; date placeholder uses translated date/time label |
+| Guide | Master7; existing Stock topic | Updated bilingual steps for both tabs, retained entries, Save and invalid-tab navigation; existing `/UserGuide/stock` reader/topic `/ItemReturn`, no duplicate guide |
+
+## Reference-analysis gate and coverage
+
+Sources actually read: analysis README; 2026-10-27 guide section “الموارد البشرية وعلاقات العملاء والورش”; catalog S113 and original local `library/pages/90c6e368ce903381.html` (general workshop inventory/parts description, no return-editor grouping contract). No specific Item Return explanation found in that catalog. Code snapshot 2026-10-28: sidebar `15-stock/screens/06-item-returns.md`, route R0569 (`tenant.CRS_Returns`), controller C1681 (`tenant.views.stock.itemReturns.createOrEditModal`, original `raw/application.js:465090–465274`), and relevant workshop/stock cycle entry.
+
+| Reference evidence | Sigma source/guide | Accepted difference or gap |
+|---|---|---|
+| Frontend declaration: C1681 header/reason and voucherLines; `jobSelected` loads `getItemReturnRows`; reason-mandatory setting declared | Current typed header/branch/reason and item rows; Stock guide | Header/line grouping accepted as functional evidence. Sigma shared owners determine tab appearance. Existing fields retained. Reference job-row loading and configurable mandatory reason are broader target gaps, outside this presentation request; no server/API or permission rule inferred |
+| Snapshot screen filters, report/export and list/service declarations | Existing ItemReturn list/report and guide | Not changed by this slice. No full functional-equivalence claim |
+| No reference proof of required tab design or destination-branch policy | Owner explicitly requests tabs; frozen branch contract defines Return branch as destination | Use owner instruction plus UI13; translate branch as receiving branch. No external access or collection ran |
+
+## Proportional loading/cache/performance inventory
+
+This slice introduces no requests, subscriptions, query shapes or new cache source; switching Basic/Items keeps both rendered control trees mounted and performs no reads. Existing network behavior is recorded, not certified as a fully conformant screen.
+
+| Actual source/URL | Existing classification and ownership | Source evidence / remaining boundary |
+|---|---|---|
+| `JobService.getSelectList` → `Job/GetSelect` (Results) | Approved reference, source `cacheSelect=true`, inherited BaseService cache/invalidation | Existing finite parallel `loadLookups` bootstrap; both failure channels and Retry retained. Existing consumer has no separate watch/context-reset/retained-label binding; broader cache adoption remains outside this presentation fix |
+| `BranchService.getSelectList` → `Branch/GetSelect` (Results) | Approved reference, source `cacheSelect=true`, inherited BaseService cache/invalidation | Same existing finite bootstrap; CurrentBranch default retained. No new watch/invalidation claim; full writer/topic/import reconciliation requires its own scoped review |
+| `ItemService.getSelectList` → `Item/GetSelect` (Results) | Approved reference, source `cacheSelect=true`, inherited BaseService cache/invalidation | Same existing finite bootstrap, errors and Retry; no per-tab read introduced. Existing live-watch/context coverage not complete |
+| `ItemReturnService.getDetails` → `ItemReturn/GetByWithNavigationsId/{id}` | Direct operational read | Existing local StateMessage within body-appended dialog; loading start/finalize/destroy cancellation and error/Retry retained. Backend `DetailWithNavigationsAsync` filters ID through repository tenant/live query, no tracking, ProjectTo detail, FirstOrDefault; not recursive deep loading |
+| `ItemReturnService.create/update` → POST/PUT `ItemReturn` | Independent operational write | Existing loading counter, EditorDialog saving overlay, form freeze, failed-draft retention, finalize and completed-close event retained |
+| `ItemReturnService.getApproval` → `ItemReturn/{id}/approval` | Direct operational read, existing adapter | Existing saved-only approval component behavior retained; no new approval source contract |
+
+Lookup bootstrap remains finite forkJoin after detail for Edit, parallel on Create, with its existing local loading/error/Retry and teardown. No claim of completed active-watch or shared lookup-status adoption. Runtime overlay visibility and global/local overlap remain owner acceptance; no loader changes made in this presentation slice.
+
+Performance/index disposition: no new query or predicate justifies another index. Existing detail ID lookup/projection and configured `(SubscriptionId, BranchId)` / `(SubscriptionId, ApprovalStatus, IsVoided, ApprovedAt)` indexes remain unchanged; proposing another would need real SQL plan evidence and would add write/storage overlap. No schema/migration needed. Before/after timing is unmeasured. Owner can compare Create and Edit on the same build/environment, tenant/data volume and device/network, cold/warm cache, recording request count/payload and time to usable/settled content; switching Basic/Items should add zero requests. Existing historical latency report is not new measurement evidence.
+
+## Reconciliation and owner checks
+
+Changed application files: ItemReturn details HTML/TS; `i18n/vocabs/ar.ts`, `en.ts` (only two ItemReturn keys added); `UserGuide/content/stock-guide.ts` (only ItemReturn step changed). Review artifact/index also updated. Reviewed complete scoped repository diff, including existing user edits in the shared vocab/guide files; no unrelated edits reverted. No new imports, API/DTO/AutoMapper/domain calculations or backend changes. No reusable rule discovered, so no book/skill rule change.
+
+Phases: proportional discovery and frozen existing-contract comparison, Phase03 presentation, final source reconciliation. No backend/read-grid/domain-action/integration implementation required; list columns/ListVM/routes/contracts unchanged. No screenshot supplied. No unresolved decision blocks these presentation changes.
+
+Verification: translation parity reports 82 English/82 Arabic keys, zero missing keys and zero case-only differences. Repository `git diff --check` passes. Read-only TypeScript source parsing passed for all four touched TS files; Angular `parseTemplate` passed for the editor HTML, with no compilation or emit. Final recipe check passed all eight packets. Existing Stock guide sidebar entry confirmed at `layout/components/sidebar/sidebar-menu/sidebar-menu-data.ts:685`. Owner acceptance: open Create in both languages; switch tabs with entered values; Save with an invalid header from Items and an invalid/missing/duplicate row from Basic; check retained values, row Add/Remove, pending-tab lock, dirty close, saved View/Edit and saved-only Approvals. Check long labels, keyboard arrows/Home/End, RTL, light/dark, narrow and short windows, stable footer and internal scrolling. Build/runtime/browser/network/SQL timing remain pending. No builds, tests, lint, browser, database commands, migrations, commits, pushes or deployment ran.
+
+Suggested frontend commit: `fix(stock): split item return editor tabs and translate receiving branch`.
+
+## Issued-item prerequisite — owner correction, 2026-11-01
+
+Tier S, one save-validation rule. Contract frozen before implementation: the owner requires creation to fail if any selected item has not been issued to the chosen job. Use the current approval reader's same Job/Branch/effective-issue scope (approved or historical null approval, nonvoided, tenant/live header and tenant/live line); require a positive issued quantity for every distinct selected item. Apply the same invariant to Add, AddList and editable draft Update through their existing validation owner, so editing cannot bypass creation. Approval still owns net quantity capacity after earlier effective returns and remains serialized. Saving remains nonconsuming; no reservation, quantity, money, branch-transfer, schema, DTO, mapping or permission change.
+
+Selected shapes: BE14 operational header/owned lines, approved `PurchaseOrderService` validation-before-tracking reference; existing UI type01 modal exception in `STOCK_BRANCH_BALANCE_CONTRACT_FREEZE.md`, shared EditorDialog. No independent workstreams justify subagents. Applicable packets: Phase01/03 and proportional final reconciliation; initial generator check passed all eight, no drift. No screenshot supplied or missing decision blocking this rule.
+
+### Source comparison and implementation reconciliation
+
+| Concern | Evidence actually read | Decision / final match |
+|---|---|---|
+| Reference guide | `references/speed-analysis/README.md`; 2026-10-27 `Speed_Analysis_Guide.md:277–283`, library `catalog.csv` item/stock/return search | Workshop coverage is general; no original Item Returns explanation was found in that catalog. Missing original explanation is an evidence gap, not a claimed server rule or a blocker to the explicit owner correction |
+| Reference cycle | 2026-10-28 `sidebar/15-stock/screens/06-item-returns.md`; `workflows/02-workshop-stock-and-finance.md`; C1681 `createOrEditModal.js:36–52` jobSelected and `:135–155` save, inert extraction from raw/application.js:465090–465274 | Frontend declares Job.GetItemReturnRows and CreateOrUpdateItemReturn. Sigma currently selects catalog items and lacks that job-row population. Partial reference parity; source picker population is deferred outside this one-validator task. Frontend evidence does not prove the reference server's quantity, branch or permission rules |
+| Save prerequisite | `ItemReturnService.ValidateAsync`, called by AddAsync/AddListAsync/UpdateCoreAsync and approval; `Repository.Query:33–56` | All selected unique items must have a live positive issue for the same Job/Branch. One count-distinct query checks the full set; duplicate issue lines cannot stand in for another missing item. Tenant/live header scope comes from Repository; child tenant/live scope remains explicit |
+| Effective issue owner | `ItemReturnService.EffectiveIssuedLines:308`, used by save validation and existing approval capacity aggregation | Extracted the existing approval predicate without changing it: historical null or Approved, nonvoided, same job/branch, same-tenant live matching children. Pending/rejected/voided/deleted/foreign issues do not qualify |
+| Quantity and writes | Existing ReturnCapacityErrorAsync and stock write boundary; ItemReturnItemService blocks standalone writes | Presence prerequisite applies before persistence; it does not reserve quantities or guarantee later approval. Net return quantity after earlier effective returns is still checked at approval. Approval validation also performs the new batched presence check before its existing capacity reads; no per-item query introduced |
+| Errors and retry | GeneralMessage.resx / GeneralMessage.ar-SA.resx; ItemReturnService.create/update; shared error.interceptor; details.save | New localized `ItemReturnItemsNotIssued` uses existing business-failure envelope. Shared interceptor presents rejection; editor keeps entered values, restores its frozen form in finalize, sets saveFailed and remains open for correction/retry |
+| Guide | `UserGuide/content/stock-guide.ts:189`; reader imports STOCK_GUIDE, existing `:sectionId` route and sidebar link `/UserGuide/stock` | Added one bilingual step explaining issue prerequisite, excluded issue states and correction/retry; topic `/ItemReturn` and existing reader/menu retained |
+
+Loading/cache gates: the URL inventory in the earlier section remains accurate for this bounded change. No new HTTP source, reference cache, subscription, watch, route or visible progress host is introduced. Added validation is a fresh operational database read inside the existing POST/PUT write, never cached. The existing save path's loading start/finalize, EditorDialog saving overlay and busy/close guards remain. Broader previously recorded lookup watch/context and loading acceptance gaps are not certified as fixed by this validator; no whole-screen conformance claim is made.
+
+Performance/index review: one extra bounded scalar count-distinct query per validated document, with JobId/BranchId/effective-state predicates and selected-item IN scope; AddList retains its existing per-document validation loop and completes preflight before base batch persistence. No row materialization, per-item query or parallel use of DbContext. The approval issued aggregation now consumes the same query owner; existing returned-quantity queries are unchanged. Source declarations already include ItemIssue `(SubscriptionId, BranchId)` and approval-state indexes; the current snapshot declares JobId and ItemIssueItem.ItemIssueId FK indexes. Deployed coverage/plans are unknown. No additional index is justified by this bounded fix without measured IO/cardinality evidence; another overlapping index would add write/storage cost. No EF, snapshot or migration edits. Owner timing: compare the same tenant/job/branch, issue volume and selected items before/after on the same environment, cold/warm runs; capture save duration, SQL count/IO/plan and payload. No measured speed improvement is claimed.
+
+Changed files for this slice: backend ItemReturnService.cs and the two GeneralMessage resources; frontend stock-guide.ts adds only the new prerequisite step, preserving all pre-existing guide/editor/report changes. Review artifact extended in place. No entity/DTO/API/mapping/number/calculation/quantity-precision change; no migration required. No reusable cross-screen rule established, so no book/skill or generated-packet update.
+
+Source verification: reviewed scoped backend diff and the full shared guide diff separately in the two confirmed Git roots; unrelated changes preserved. Scoped `git diff --check` passes in both repositories (backend line-ending warning only). Both resources parse as XML and each contains exactly one nonempty new key. The existing stock-model global import, EF import, implicit System/Linq usings, Helpers project reference and SDK source inclusion cover the extracted IQueryable<ItemIssueItem> method. Final recipe check passes all eight packets. Source inspection is not proof of compilation, SQL translation or runtime behavior.
+
+Owner acceptance pending: (1) job with no effective issues rejects; (2) issue of A with return of B rejects; (3) A+B return with only A issued rejects; (4) positive effective A and B in the same job/branch allows a draft; (5) pending/rejected/voided/deleted, foreign-tenant or other-job/branch issues reject; (6) multiple issue rows of A never satisfy missing B; (7) changing a draft job/branch/item and AddList cannot bypass validation, failed batch persists nothing; (8) EN/AR feedback appears and entries remain available to correct/retry; (9) approval still rejects excess net quantities and applies stock only after successful approval. Issue cancellation after draft save can invalidate later approval; drafts remain nonconsuming under the frozen lifecycle. Build/runtime/SQL-plan/timing/browser verification remain pending. No builds, tests, lint, database commands, browser automation, migrations, commits, pushes or deployment ran.
+
+Suggested backend commit: `fix(stock): require issued job items before saving returns`.
+Suggested frontend commit for this slice: `docs(stock): explain item return issue prerequisite`.

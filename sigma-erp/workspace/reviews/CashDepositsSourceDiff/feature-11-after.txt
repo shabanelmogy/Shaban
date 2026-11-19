@@ -1,0 +1,38 @@
+import { ListQuery } from 'src/app/modules/shared/utils/list-query';
+
+export enum CashDepositApprovalStatus {
+  Approved = 0,
+  NotApproved = 1,
+  Rejected = 2,
+}
+
+export enum CashDepositSourceType {
+  Receipt = 1,
+  Payment = 2,
+}
+
+export interface CashDepositListRow {
+  id: number;
+  no: string | null;
+  date: string;
+  refNo: string | null;
+  description: string | null;
+  amount: number;
+  bankName: string | null;
+  createdBy: string | null;
+  createdAt: string | null;
+  approvalStatus: CashDepositApprovalStatus;
+  isPosted: boolean;
+  isVoided: boolean;
+}
+
+export interface CashDepositFilters {
+  no: string | null;
+  dateFrom: string | null;
+  dateTo: string | null;
+  bankId: number | null;
+  branchId: number | null;
+}
+
+export type CashDepositListQuery = ListQuery<CashDepositFilters>;
+

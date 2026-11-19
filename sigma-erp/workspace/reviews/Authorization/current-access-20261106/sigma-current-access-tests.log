@@ -1,0 +1,96 @@
+> Building...
+√ Building...
+Initial chunk files                                                                              | Names                                                                                         |  Raw size
+chunk-DC4T72NI.js                                                                                | -                                                                                             |   1.12 MB | 
+chunk-RHYLIVXH.js                                                                                | -                                                                                             |   1.09 MB | 
+polyfills.js                                                                                     | polyfills                                                                                     |   1.02 MB | 
+spec-app-layout-layout.component.spec.js                                                         | spec-app-layout-layout.component.spec                                                         | 948.41 kB | 
+chunk-R7YQJDMW.js                                                                                | -                                                                                             | 392.17 kB | 
+styles.css                                                                                       | styles                                                                                        | 386.22 kB | 
+test_main.js                                                                                     | test_main                                                                                     | 376.59 kB | 
+chunk-UNX3CMEO.js                                                                                | -                                                                                             | 310.98 kB | 
+chunk-UHKUNOLN.js                                                                                | -                                                                                             | 214.68 kB | 
+chunk-3WEPAJHA.js                                                                                | -                                                                                             | 192.90 kB | 
+chunk-ETBYOL22.js                                                                                | -                                                                                             | 112.72 kB | 
+chunk-WHTE644K.js                                                                                | -                                                                                             |  69.54 kB | 
+spec-app-modules-shared-components-action-button-action-button-access.spec.js                    | spec-app-modules-shared-components-action-button-action-button-access.spec                    |  68.58 kB | 
+chunk-A5WPIV6U.js                                                                                | -                                                                                             |  58.31 kB | 
+chunk-TH5DBDV5.js                                                                                | -                                                                                             |  38.33 kB | 
+chunk-KYW5YNXW.js                                                                                | -                                                                                             |  16.73 kB | 
+chunk-OILKHA37.js                                                                                | -                                                                                             |  12.58 kB | 
+spec-app-modules-shared-components-buttons-buttons.component.spec.js                             | spec-app-modules-shared-components-buttons-buttons.component.spec                             |  11.90 kB | 
+chunk-U5IKVTPZ.js                                                                                | -                                                                                             |   9.80 kB | 
+chunk-U3KW6QMU.js                                                                                | -                                                                                             |   7.61 kB | 
+spec-app-modules-shared-service-mock-data-access.spec.js                                         | spec-app-modules-shared-service-mock-data-access.spec                                         |   7.35 kB | 
+spec-app-modules-shared-service-current-access.service.spec.js                                   | spec-app-modules-shared-service-current-access.service.spec                                   |   6.31 kB | 
+spec-app-modules-shared-interceptores-forbidden-access-refresh.spec.js                           | spec-app-modules-shared-interceptores-forbidden-access-refresh.spec                           |   5.97 kB | 
+spec-app-modules-shared-authorization-current-access.guard.spec.js                               | spec-app-modules-shared-authorization-current-access.guard.spec                               |   5.32 kB | 
+spec-app-modules-shared-components-primary-action-button-primary-action-button.component.spec.js | spec-app-modules-shared-components-primary-action-button-primary-action-button.component.spec |   4.19 kB | 
+chunk-X7Q2L2WZ.js                                                                                | -                                                                                             |   3.70 kB | 
+chunk-UQBQQPW3.js                                                                                | -                                                                                             |   2.47 kB | 
+chunk-M2ZIU7SK.js                                                                                | -                                                                                             |   2.42 kB | 
+chunk-IP4A4GPA.js                                                                                | -                                                                                             |   2.22 kB | 
+spec-app-modules-shared-authorization-route-access-policy.spec.js                                | spec-app-modules-shared-authorization-route-access-policy.spec                                |   2.01 kB | 
+spec-app-layout-components-sidebar-sidebar-menu-menu-catalog-access.spec.js                      | spec-app-layout-components-sidebar-sidebar-menu-menu-catalog-access.spec                      |   1.75 kB | 
+chunk-EP3HF5JD.js                                                                                | -                                                                                             |   1.33 kB | 
+chunk-SNEITJUG.js                                                                                | -                                                                                             |   1.21 kB | 
+spec-app-modules-shared-authorization-access-view-policy.service.spec.js                         | spec-app-modules-shared-authorization-access-view-policy.service.spec                         |   1.06 kB | 
+chunk-YO26LK66.js                                                                                | -                                                                                             |   1.02 kB | 
+chunk-7DPRJ6T6.js                                                                                | -                                                                                             | 506 bytes | 
+jasmine-cleanup-0.js                                                                             | jasmine-cleanup-0                                                                             | 397 bytes | 
+
+                                                                                                 | Initial total                                                                                 |   6.50 MB
+
+Application bundle generation complete. [9.983 seconds] - 2026-11-06T04:56:28.816Z
+
+06 11 2026 06:56:30.911:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9876/
+06 11 2026 06:56:30.912:INFO [launcher]: Launching browsers ChromeHeadless with concurrency unlimited
+06 11 2026 06:56:30.922:INFO [launcher]: Starting browser ChromeHeadless
+06 11 2026 06:57:30.938:WARN [launcher]: ChromeHeadless has not captured in 60000 ms, killing.
+06 11 2026 06:57:31.254:INFO [launcher]: Trying to start ChromeHeadless again (1/2).
+06 11 2026 06:57:32.046:INFO [Chrome Headless 153.0.0.0 (Windows 10)]: Connected on socket P84LFhfq-GsddbN9AAAA with id 47046235
+(node:32460) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Chrome Headless 153.0.0.0 (Windows 10): Executed 0 of 40[32m SUCCESS[39m (0 secs / 0 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 1 of 40[32m SUCCESS[39m (0 secs / 0.107 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 2 of 40[32m SUCCESS[39m (0 secs / 0.142 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 3 of 40[32m SUCCESS[39m (0 secs / 0.184 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 4 of 40[32m SUCCESS[39m (0 secs / 0.207 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 5 of 40[32m SUCCESS[39m (0 secs / 0.227 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 6 of 40[32m SUCCESS[39m (0 secs / 0.24 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 7 of 40[32m SUCCESS[39m (0 secs / 0.255 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 8 of 40[32m SUCCESS[39m (0 secs / 0.266 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 9 of 40[32m SUCCESS[39m (0 secs / 0.279 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 10 of 40[32m SUCCESS[39m (0 secs / 0.289 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 11 of 40[32m SUCCESS[39m (0 secs / 0.301 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 12 of 40[32m SUCCESS[39m (0 secs / 0.306 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 13 of 40[32m SUCCESS[39m (0 secs / 0.566 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 14 of 40[32m SUCCESS[39m (0 secs / 0.607 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 15 of 40[32m SUCCESS[39m (0 secs / 0.64 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 16 of 40[32m SUCCESS[39m (0 secs / 0.751 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 17 of 40[32m SUCCESS[39m (0 secs / 0.786 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 18 of 40[32m SUCCESS[39m (0 secs / 0.823 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 19 of 40[32m SUCCESS[39m (0 secs / 0.87 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 20 of 40[32m SUCCESS[39m (0 secs / 0.896 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 21 of 40[32m SUCCESS[39m (0 secs / 0.927 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 22 of 40[32m SUCCESS[39m (0 secs / 0.966 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 23 of 40[32m SUCCESS[39m (0 secs / 0.968 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 24 of 40[32m SUCCESS[39m (0 secs / 0.972 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 25 of 40[32m SUCCESS[39m (0 secs / 0.973 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 26 of 40[32m SUCCESS[39m (0 secs / 0.975 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 27 of 40[32m SUCCESS[39m (0 secs / 0.977 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 28 of 40[32m SUCCESS[39m (0 secs / 0.979 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 29 of 40[32m SUCCESS[39m (0 secs / 0.984 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 30 of 40[32m SUCCESS[39m (0 secs / 0.986 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 31 of 40[32m SUCCESS[39m (0 secs / 0.988 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 32 of 40[32m SUCCESS[39m (0 secs / 0.991 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 33 of 40[32m SUCCESS[39m (0 secs / 0.993 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 34 of 40[32m SUCCESS[39m (0 secs / 0.993 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 35 of 40[32m SUCCESS[39m (0 secs / 0.993 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 36 of 40[32m SUCCESS[39m (0 secs / 0.993 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 37 of 40[32m SUCCESS[39m (0 secs / 0.993 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 38 of 40[32m SUCCESS[39m (0 secs / 0.993 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 39 of 40[32m SUCCESS[39m (0 secs / 0.996 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 40 of 40[32m SUCCESS[39m (0 secs / 1.003 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 40 of 40[32m SUCCESS[39m (1.075 secs / 1.003 secs)
+[32mTOTAL: 40 SUCCESS[39m

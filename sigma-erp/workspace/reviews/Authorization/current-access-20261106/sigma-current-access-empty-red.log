@@ -1,0 +1,36 @@
+> Building...
+√ Building...
+Initial chunk files                                                | Names                                                           |  Raw size
+chunk-GOE6PAFT.js                                                  | -                                                               |   2.78 MB | 
+polyfills.js                                                       | polyfills                                                       |   1.02 MB | 
+test_main.js                                                       | test_main                                                       | 833.39 kB | 
+styles.css                                                         | styles                                                          | 386.22 kB | 
+spec-app-modules-shared-authorization-current-access.guard.spec.js | spec-app-modules-shared-authorization-current-access.guard.spec |  25.41 kB | 
+jasmine-cleanup-0.js                                               | jasmine-cleanup-0                                               | 397 bytes | 
+
+                                                                   | Initial total                                                   |   5.05 MB
+
+Application bundle generation complete. [15.340 seconds] - 2026-11-06T05:20:38.358Z
+
+06 11 2026 07:20:41.659:INFO [karma-server]: Karma v6.4.4 server started at http://localhost:9876/
+06 11 2026 07:20:41.661:INFO [launcher]: Launching browsers ChromeHeadless with concurrency unlimited
+06 11 2026 07:20:41.673:INFO [launcher]: Starting browser ChromeHeadless
+06 11 2026 07:20:48.954:INFO [Chrome Headless 153.0.0.0 (Windows 10)]: Connected on socket yjN6tf8YCxuWHQZCAAAA with id 95538074
+(node:42852) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Chrome Headless 153.0.0.0 (Windows 10): Executed 0 of 6[32m SUCCESS[39m (0 secs / 0 secs)
+[1A[2K[31mChrome Headless 153.0.0.0 (Windows 10) currentAccessGuard uses the empty-functions recovery state when dashboard has no allowed landing FAILED[39m
+	Expected '/access?reason=denied&returnUrl=%2Fdashboard' to be '/access'.
+	    at <Jasmine>
+	    at src/app/modules/shared/authorization/current-access.guard.spec.ts:69:41
+	    at Generator.next (<anonymous>)
+	    at fulfilled (chunk-GOE6PAFT.js:56:24)
+	    at _ZoneDelegate.invoke (node_modules/zone.js/fesm2015/zone.js:398:28)
+Chrome Headless 153.0.0.0 (Windows 10): Executed 1 of 6[31m (1 FAILED)[39m (0 secs / 0.042 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 2 of 6[31m (1 FAILED)[39m (0 secs / 0.047 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 3 of 6[31m (1 FAILED)[39m (0 secs / 0.051 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 4 of 6[31m (1 FAILED)[39m (0 secs / 0.055 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 5 of 6[31m (1 FAILED)[39m (0 secs / 0.059 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 6 of 6[31m (1 FAILED)[39m (0 secs / 0.063 secs)
+[1A[2KChrome Headless 153.0.0.0 (Windows 10): Executed 6 of 6[31m (1 FAILED)[39m (0.102 secs / 0.063 secs)
+[31mTOTAL: 1 FAILED, 5 SUCCESS[39m

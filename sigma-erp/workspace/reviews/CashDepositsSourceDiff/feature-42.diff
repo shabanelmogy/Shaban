@@ -1,0 +1,53 @@
+diff --git a/F:/My Work/Sigma/SigmaBackend/SiGma.ServerAPI/Controller/CashDepositController.cs (initial) b/F:/My Work/Sigma/SigmaBackend/SiGma.ServerAPI/Controller/CashDepositController.cs (current)
+index b33b9d8..808d463 100644
+--- a/F:/My Work/Sigma/SigmaBackend/SiGma.ServerAPI/Controller/CashDepositController.cs (initial)	
++++ b/F:/My Work/Sigma/SigmaBackend/SiGma.ServerAPI/Controller/CashDepositController.cs (current)	
+@@ -1,6 +1,5 @@
+ using Microsoft.AspNetCore.Mvc;
+ using SiGma.Business.IServices;
+-using SiGma.Helpers.Request;
+ using SiGma.ViewModels.ViewModels.CashDeposit;
+ 
+ namespace SiGma.ServerAPI.Controller
+@@ -13,11 +12,6 @@ namespace SiGma.ServerAPI.Controller
+         {
+         }
+ 
+-        /// <summary>Returns the cash deposit list with navigation names (Bank, Branch, PaymentMethod).</summary>
+-        [HttpGet]
+-        public override async Task<IActionResult> GetListAsync([FromQuery] ListSmBase searchModel)
+-            => Ok(await Service.GetManyWithNavigationsAsync(searchModel));
+-
+         /// <summary>
+         /// Returns all payment vouchers that are not yet fully deposited.
+         /// Used to populate the "Create New Cash Deposit" modal grid.
+@@ -25,8 +19,9 @@ namespace SiGma.ServerAPI.Controller
+         /// The client fills in "Deposited Now" per row before submitting.
+         /// </summary>
+         [HttpGet("GetUndepositedVouchers")]
+-        public async Task<IActionResult> GetUndepositedVouchersAsync(CancellationToken cancellationToken)
+-            => Ok(await Service.GetUndepositedVouchersAsync(cancellationToken));
++        public async Task<IActionResult> GetUndepositedVouchersAsync(
++            [FromQuery] int? excludeCashDepositId, CancellationToken cancellationToken)
++            => ToActionResult(await Service.GetUndepositedVouchersAsync(excludeCashDepositId, cancellationToken));
+ 
+         /// <summary>
+         /// Toggles the approval status of a cash deposit.
+@@ -37,7 +32,7 @@ namespace SiGma.ServerAPI.Controller
+         public async Task<IActionResult> ToggleApprovalAsync(int id, CancellationToken cancellationToken)
+         {
+             var result = await Service.ToggleApprovalStatusAsync(id, cancellationToken);
+-            return result.IsSuccess ? Ok(result) : BadRequest(result);
++            return ToActionResult(result);
+         }
+ 
+         /// <summary>
+@@ -48,7 +43,7 @@ namespace SiGma.ServerAPI.Controller
+         public async Task<IActionResult> ToggleVoidAsync(int id, CancellationToken cancellationToken)
+         {
+             var result = await Service.ToggleVoidStatusAsync(id, cancellationToken);
+-            return result.IsSuccess ? Ok(result) : BadRequest(result);
++            return ToActionResult(result);
+         }
+     }
+ }

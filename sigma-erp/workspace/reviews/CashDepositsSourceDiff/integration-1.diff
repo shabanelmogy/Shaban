@@ -1,0 +1,31 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/layout.module.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/layout.module.ts (current)
+index 7046017..fb7fd2b 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/layout.module.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/_metronic/layout/layout.module.ts (current)	
+@@ -57,8 +57,6 @@ import { PreTerminationRuleService } from 'src/app/modules/Agreements Dashboard
+ import { ProvisionDetailService } from 'src/app/modules/Agreements Dashboard 2/ProvisionDetail/services/provisiondetail.service';
+ import { CardTransactionBankTransferService } from 'src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransfer/services/cardtransactionbanktransfer.service';
+ import { CardTransactionBankTransferDetailService } from 'src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransferDetail/services/cardtransactionbanktransferdetail.service';
+-import { CashDepositService } from 'src/app/modules/Banking/Cash Deposits/CashDeposit/services/cashdeposit.service';
+-import { CashDepositDetailService } from 'src/app/modules/Banking/Cash Deposits/CashDepositDetail/services/cashdepositdetail.service';
+ import { CompanyPartnerService } from 'src/app/modules/Customers/Companies/CompanyPartner/services/companypartner.service';
+ import { IndividualPartnerService } from 'src/app/modules/Customers/Individual/IndividualPartner/services/individualpartner.service';
+ import { DataEntryCorrectionService } from 'src/app/modules/Data Entry Corrections/DataEntryCorrection/services/dataentrycorrection.service';
+@@ -370,8 +368,6 @@ export const routes: Routes = [
+     BranchService,
+     CardTransactionBankTransferDetailService,
+     CardTransactionBankTransferService,
+-    CashDepositDetailService,
+-    CashDepositService,
+     ChecklistItemService,
+     ClauseService,
+     CompanyPartnerService,
+@@ -525,8 +521,6 @@ export const routes: Routes = [
+     BranchService,
+     CardTransactionBankTransferDetailService,
+     CardTransactionBankTransferService,
+-    CashDepositDetailService,
+-    CashDepositService,
+     ClauseService,
+     CompanyPartnerService,
+     ContactGroupService,

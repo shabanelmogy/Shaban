@@ -1,0 +1,503 @@
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Business\\IServices\\IPayrollRunService.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Business\\IServices\\IPayrollRunService.cs"
+index dc0db62..9f99498 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Business\\IServices\\IPayrollRunService.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Business\\IServices\\IPayrollRunService.cs"	
+@@ -5,6 +5,7 @@ namespace SiGma.Business.IServices;
+ public interface IPayrollRunService
+ {
+     Task<Result<PayrollRunVm>> CalculateAsync(PayrollCalculateVm request, CancellationToken cancellationToken = default);
++    Task<Results<PayrollStaffOptionVm>> LeaveSalaryStaffAsync(CancellationToken cancellationToken = default);
+     Task<Result<PayrollRunVm>> SaveAsync(PayrollSaveVm request, CancellationToken cancellationToken = default);
+     Task<Result<PayrollRunVm>> GetAsync(int id, int? revisionNumber = null, CancellationToken cancellationToken = default);
+     Task<Result<List<PayrollRevisionSummaryVm>>> RevisionsAsync(int id, CancellationToken cancellationToken = default);
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Business\\Services\\Payrolls\\PayrollRunService.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Business\\Services\\Payrolls\\PayrollRunService.cs"
+index b5f64d7..7e3fb23 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Business\\Services\\Payrolls\\PayrollRunService.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Business\\Services\\Payrolls\\PayrollRunService.cs"	
+@@ -15,6 +15,8 @@ namespace SiGma.Business.Services.Payrolls;
+ public sealed class PayrollRunService : IPayrollRunService
+ {
+     private const string PolicyVersion = "MonthlySalarySnapshot-v1";
++    private const string PayrollType = "Payroll";
++    private const string LeaveSalaryType = "LeaveSalary";
+     private readonly IUnitOfWork<SiGmaDbContext> _unitOfWork;
+     private readonly FinancialNumberPolicyResolver _moneyPolicy;
+     private readonly IStringLocalizer<GeneralMessage> _localization;
+@@ -35,12 +37,15 @@ public sealed class PayrollRunService : IPayrollRunService
+     {
+         if (!TryPeriod(request.Period, out var start))
+             return new() { Message = _localization["PayrollPeriodInvalid"] };
++        if (!TryScope(request.Type, request.StaffId, out var type, out var staffId))
++            return new() { Message = _localization["PayrollScopeInvalid"] };
+         // One consistent read across mutable salary/time/deduction inputs.
+         await using var transaction = await _unitOfWork.Context.Database
+             .BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
+-        var run = await _unitOfWork.Repository.Query<PayrollRun>(x => x.PeriodStart == start)
++        var run = await _unitOfWork.Repository.Query<PayrollRun>(x => x.PeriodStart == start &&
++                x.Type == type && x.StaffId == staffId)
+             .AsNoTracking().SingleOrDefaultAsync(cancellationToken);
+-        var calculated = await CalculateCoreAsync(start, run, cancellationToken);
++        var calculated = await CalculateCoreAsync(start, type, staffId, run, cancellationToken);
+         await transaction.CommitAsync(cancellationToken);
+         return calculated.Result;
+     }
+@@ -50,6 +55,8 @@ public sealed class PayrollRunService : IPayrollRunService
+     {
+         if (!TryPeriod(request.Period, out var start) || string.IsNullOrWhiteSpace(request.ExpectedVersion))
+             return new() { Message = _localization["PayrollPeriodInvalid"] };
++        if (!TryScope(request.Type, request.StaffId, out var type, out var staffId))
++            return new() { Message = _localization["PayrollScopeInvalid"] };
+ 
+         Result<PayrollRunVm>? response = null;
+         try
+@@ -60,24 +67,28 @@ public sealed class PayrollRunService : IPayrollRunService
+                 .BeginTransactionAsync(IsolationLevel.Serializable, cancellationToken);
+             var guarded = await _unitOfWork.ExecuteUniqueWriteAsync<PayrollRun>(async () =>
+             {
+-                var run = await _unitOfWork.Repository.Query<PayrollRun>(x => x.PeriodStart == start)
++                var run = await _unitOfWork.Repository.Query<PayrollRun>(x => x.PeriodStart == start &&
++                        x.Type == type && x.StaffId == staffId)
+                     .SingleOrDefaultAsync(cancellationToken);
+                 var current = run is null ? null : await LoadRevisionAsync(run, run.CurrentRevision, cancellationToken);
+-                if (current is not null && current.RequestVersion == request.ExpectedVersion)
+-                {
+-                    response = new() { IsSuccess = true, Entity = ToVm(run!, current) };
+-                    return response;
+-                }
+                 if (run?.IsPaid == true)
+                 {
++                    // A replay of the request that already produced this paid snapshot is a
++                    // read-only idempotent success. Every different Save remains locked.
++                    if (current is not null && current.RequestVersion == request.ExpectedVersion)
++                        return response = new() { IsSuccess = true, Entity = ToVm(run, current) };
+                     response = new() { Message = _localization["PayrollPaidRequiresSettlement"], ErrorStatusCode = 409 };
+                     return response;
+                 }
+ 
+-                var calculated = await CalculateCoreAsync(start, run, cancellationToken);
++                var calculated = await CalculateCoreAsync(start, type, staffId, run, cancellationToken);
+                 var preview = calculated.Result.Entity;
+                 if (!calculated.Result.IsSuccess || preview is null)
+                     return response = calculated.Result;
++                // Preserve idempotent request replay only after current eligibility and
++                // cross-scope duplicate guards have been re-evaluated under this transaction.
++                if (current is not null && current.RequestVersion == request.ExpectedVersion && preview.IsSaved)
++                    return response = new() { IsSuccess = true, Entity = ToVm(run!, current) };
+                 if (!string.Equals(preview.Version, request.ExpectedVersion, StringComparison.Ordinal))
+                 {
+                     response = new() { Message = _localization["PayrollCalculationChanged"], ErrorStatusCode = 409 };
+@@ -96,7 +107,10 @@ public sealed class PayrollRunService : IPayrollRunService
+ 
+                 if (run is null)
+                 {
+-                    run = new PayrollRun { PeriodStart = start, PeriodEnd = start.AddMonths(1) };
++                    run = new PayrollRun
++                    {
++                        PeriodStart = start, PeriodEnd = start.AddMonths(1), Type = type, StaffId = staffId
++                    };
+                     await _unitOfWork.Repository.AddAsync(run, cancellationToken);
+                 }
+                 var revision = new PayrollRunRevision
+@@ -165,6 +179,23 @@ public sealed class PayrollRunService : IPayrollRunService
+             : new() { IsSuccess = true, Entity = ToVm(run, revision) };
+     }
+ 
++    public async Task<Results<PayrollStaffOptionVm>> LeaveSalaryStaffAsync(
++        CancellationToken cancellationToken = default)
++    {
++        var rows = await _unitOfWork.Repository.Query<Staff>(x => x.IsInactive && x.IsActive != false)
++            .AsNoTracking().OrderBy(x => x.No).ThenBy(x => x.Id)
++            .Select(x => new PayrollStaffOptionVm
++            {
++                Id = x.Id,
++                No = x.No,
++                Value = !string.IsNullOrWhiteSpace(x.Name)
++                    ? x.Name
++                    : ((x.FirstName ?? string.Empty) + " " + (x.MiddleName ?? string.Empty) + " " +
++                        (x.LastName ?? string.Empty)).Trim()
++            }).ToListAsync(cancellationToken);
++        return new() { IsSuccess = true, Entities = rows };
++    }
++
+     public async Task<Result<List<PayrollRevisionSummaryVm>>> RevisionsAsync(int id,
+         CancellationToken cancellationToken = default)
+     {
+@@ -266,7 +297,7 @@ public sealed class PayrollRunService : IPayrollRunService
+         var sort = FilterHelper.GetString(filters, "sortField") ?? "date";
+         var order = FilterHelper.GetInt(filters, "sortOrder") ?? -1;
+         if (filters.ContainsKey("dateFrom") && !dateFrom.HasValue || filters.ContainsKey("dateTo") && !dateTo.HasValue ||
+-            dateFrom > dateTo || type is not (null or "Payroll") ||
++            dateFrom > dateTo || type is not (null or PayrollType or LeaveSalaryType) ||
+             filters.ContainsKey("pendingApproval") && !pending.HasValue ||
+             sort is not ("date" or "amount" or "isApproved" or "revisionNumber") || order is not (1 or -1))
+             return new() { Message = _localization["PayrollFiltersInvalid"], Entities = [] };
+@@ -276,13 +307,22 @@ public sealed class PayrollRunService : IPayrollRunService
+                         equals new { RunId = revision.PayrollRunId, Number = revision.RevisionNumber }
+                     select new
+                     {
+-                        run.Id, Date = run.PeriodEnd.AddDays(-1), run.CurrentRevision,
++                        run.Id, Date = run.PeriodEnd.AddDays(-1), run.Type, run.StaffId, run.CurrentRevision,
+                         run.IsPaid, run.ApprovedRevisionNumber,
+                         IsApproved = run.ApprovedRevisionNumber == run.CurrentRevision,
+-                        Amount = revision.TotalNet, revision.SourceVersion
++                        Amount = revision.TotalNet, revision.SourceVersion,
++                        StaffCode = revision.Lines.Where(line => run.StaffId.HasValue &&
++                                line.StaffId == run.StaffId && line.SubscriptionId == run.SubscriptionId &&
++                                line.IsDeleted != true)
++                            .OrderBy(line => line.Id).Select(line => line.Code).FirstOrDefault(),
++                        StaffName = revision.Lines.Where(line => run.StaffId.HasValue &&
++                                line.StaffId == run.StaffId && line.SubscriptionId == run.SubscriptionId &&
++                                line.IsDeleted != true)
++                            .OrderBy(line => line.Id).Select(line => line.Name).FirstOrDefault()
+                     };
+         if (dateFrom.HasValue) query = query.Where(x => x.Date >= dateFrom.Value);
+         if (dateTo.HasValue) query = query.Where(x => x.Date <= dateTo.Value);
++        if (type is not null) query = query.Where(x => x.Type == type);
+         if (pending == true) query = query.Where(x => !x.IsApproved);
+         var total = await query.CountAsync(cancellationToken);
+         var size = Math.Clamp(request.PageSize ?? 10, 1, 100);
+@@ -305,7 +345,8 @@ public sealed class PayrollRunService : IPayrollRunService
+             IsSuccess = true, PageNo = page, PageSize = size, TotalCount = total, TotalPages = pages,
+             Entities = rows.Select(x => new PayrollRunListVm
+             {
+-                Id = x.Id, Date = x.Date, Amount = x.Amount, IsApproved = x.IsApproved,
++                Id = x.Id, Date = x.Date, Type = x.Type, StaffCode = x.StaffCode,
++                StaffName = x.StaffName, Amount = x.Amount, IsApproved = x.IsApproved,
+                 IsPaid = x.IsPaid, RevisionNumber = x.CurrentRevision,
+                 Version = StateVersion(x.SourceVersion, x.Id, x.CurrentRevision, x.IsPaid, x.ApprovedRevisionNumber)
+             }).ToList()
+@@ -318,7 +359,7 @@ public sealed class PayrollRunService : IPayrollRunService
+                 line.SubscriptionId == run.SubscriptionId)).SingleOrDefaultAsync(ct);
+ 
+     private async Task<(Result<PayrollRunVm> Result, string SourceVersion, DateTime OvertimePeriod, List<PayrollLine> Lines)>
+-        CalculateCoreAsync(DateTime start, PayrollRun? run, CancellationToken ct)
++        CalculateCoreAsync(DateTime start, string type, int? staffId, PayrollRun? run, CancellationToken ct)
+     {
+         var settings = await _unitOfWork.Repository.Query<HrmSetting>().AsNoTracking().Take(2).ToListAsync(ct);
+         if (settings.Count > 1 || settings.Any(x => x.IsPreviousMonthSalesCommissionForPayrollProcess || x.IsBusinessUnitsWisePayrollProcess))
+@@ -334,10 +375,14 @@ public sealed class PayrollRunService : IPayrollRunService
+             return (new() { Message = precision.Error.Message, ErrorStatusCode = precision.Error.ErrorStatusCode }, string.Empty, start, []);
+         var decimalPlaces = precision.DecimalPlaces;
+         var tenant = _unitOfWork.Repository.SubscriptionId;
+-        var staff = await _unitOfWork.Repository.Query<Staff>(x => x.IsInactive != true &&
+-                x.IsActive != false && x.DateOfJoining < end)
++        var staff = await _unitOfWork.Repository.Query<Staff>(x => x.IsActive != false &&
++                x.DateOfJoining < end && (type == PayrollType
++                    ? x.IsInactive != true
++                    : x.IsInactive && x.Id == staffId))
+             .AsNoTracking().Include(x => x.SalaryPackages!.Where(p => p.IsDeleted != true && p.SubscriptionId == tenant))
+             .OrderBy(x => x.Id).ToListAsync(ct);
++        if (type == LeaveSalaryType && staff.Count != 1)
++            return (new() { Message = _localization["PayrollStaffInvalid"] }, string.Empty, start, []);
+         var ids = staff.Select(x => x.Id).ToList();
+         var overtime = await _unitOfWork.Repository.Query<Overtime>(x => x.IsActive != false && x.StaffId.HasValue && ids.Contains(x.StaffId.Value) &&
+                 x.Month >= overtimeStart && x.Month < overtimeEnd).AsNoTracking().OrderBy(x => x.Id).ToListAsync(ct);
+@@ -349,6 +394,16 @@ public sealed class PayrollRunService : IPayrollRunService
+         var overtimeByStaff = overtime.ToLookup(x => x.StaffId!.Value);
+         var deductionsByStaff = deductions.ToLookup(x => x.StaffId!.Value);
+         var absentByStaff = absent.ToLookup(x => x.StaffId!.Value);
++        var opposingType = type == PayrollType ? LeaveSalaryType : PayrollType;
++        var duplicateStaffIds = await (from otherRun in _unitOfWork.Repository.Query<PayrollRun>(x =>
++                    x.PeriodStart == start && x.Type == opposingType && x.CurrentRevision > 0)
++                join revision in _unitOfWork.Repository.Query<PayrollRunRevision>()
++                    on new { RunId = otherRun.Id, Number = otherRun.CurrentRevision }
++                    equals new { RunId = revision.PayrollRunId, Number = revision.RevisionNumber }
++                join line in _unitOfWork.Repository.Query<PayrollLine>() on revision.Id equals line.PayrollRunRevisionId
++                where ids.Contains(line.StaffId)
++                select line.StaffId).Distinct().ToListAsync(ct);
++        var duplicateStaff = duplicateStaffIds.ToHashSet();
+         var rows = new List<PayrollLineVm>();
+         var lines = new List<PayrollLine>();
+         foreach (var employee in staff)
+@@ -371,6 +426,8 @@ public sealed class PayrollRunService : IPayrollRunService
+             if (employee.DateOfJoining.Date > start || effective?.Date > start)
+                 row.Issues.Add("payrollProcess.issues.prorationRequired");
+             if (attendance.Count > 0) row.Issues.Add("payrollProcess.issues.absencePolicyRequired");
++            if (duplicateStaff.Contains(employee.Id))
++                row.Issues.Add("payrollProcess.issues.duplicatePayrollScope");
+             if (ot.Any(x => x.OvertimeAmount < 0m || x.TotalOTHours < 0m || x.NormalOTHours < 0m || x.HolidayOTHours < 0m ||
+                 !x.OvertimeAmount.HasValue && (x.TotalOTHours != 0m || x.NormalOTHours != 0m || x.HolidayOTHours != 0m) || x.Month.Date < employee.DateOfJoining.Date))
+                 row.Issues.Add("payrollProcess.issues.invalidOvertime");
+@@ -418,9 +475,15 @@ public sealed class PayrollRunService : IPayrollRunService
+                 })
+             });
+         }
+-        var sourceVersion = Hash(JsonSerializer.Serialize(new
+-        { PolicyVersion, Period = start, OvertimePeriod = overtimeStart, DecimalPlaces = decimalPlaces,
+-            Sources = lines.Select(x => x.SourceSnapshot) }));
++        var sourceVersion = type == PayrollType && duplicateStaff.Count == 0
++            ? Hash(JsonSerializer.Serialize(new
++            { PolicyVersion, Period = start, OvertimePeriod = overtimeStart, DecimalPlaces = decimalPlaces,
++                Sources = lines.Select(x => x.SourceSnapshot) }))
++            : Hash(JsonSerializer.Serialize(new
++            { PolicyVersion, Period = start, Type = type, StaffId = staffId,
++                Eligibility = staff.Select(x => new { x.Id, x.IsInactive, x.IsActive, x.DateOfJoining }),
++                OvertimePeriod = overtimeStart, DecimalPlaces = decimalPlaces,
++                Sources = lines.Select(x => x.SourceSnapshot) }));
+         var saved = run is null ? null : await LoadRevisionAsync(run, run.CurrentRevision, ct);
+         if (run is not null && saved is null)
+             return (new() { Message = _localization["PayrollHistoryInvalid"], ErrorStatusCode = 409 }, string.Empty, start, []);
+@@ -438,7 +501,8 @@ public sealed class PayrollRunService : IPayrollRunService
+         }
+         var vm = new PayrollRunVm
+         {
+-            Id = run?.Id, Period = Period(start), Version = Version(sourceVersion, run),
++            Id = run?.Id, Period = Period(start), Type = type, StaffId = staffId,
++            Version = Version(sourceVersion, run),
+             RevisionNumber = run?.CurrentRevision ?? 0, IsPaid = run?.IsPaid ?? false,
+             IsCurrentRevision = true, IsApproved = run is not null && run.ApprovedRevisionNumber == run.CurrentRevision,
+             ApprovedAt = Utc(saved?.ApprovedAt), ApprovedBy = saved?.ApprovedBy,
+@@ -494,7 +558,8 @@ public sealed class PayrollRunService : IPayrollRunService
+     private static PayrollRunVm ToVm(PayrollRun run, PayrollRunRevision revision)
+         => new()
+         {
+-            Id = run.Id, Period = Period(run.PeriodStart), Version = Version(revision.SourceVersion, run),
++            Id = run.Id, Period = Period(run.PeriodStart), Type = run.Type, StaffId = run.StaffId,
++            Version = Version(revision.SourceVersion, run),
+             RevisionNumber = revision.RevisionNumber, IsSaved = true,
+             IsPaid = run.IsPaid && run.CurrentRevision == revision.RevisionNumber,
+             IsCurrentRevision = run.CurrentRevision == revision.RevisionNumber,
+@@ -514,6 +579,17 @@ public sealed class PayrollRunService : IPayrollRunService
+     private static bool TryPeriod(string? period, out DateTime start)
+         => DateTime.TryParseExact(period, "yyyy-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out start)
+             && start.Year < 9999;
++    private static bool TryScope(string? requestedType, int? requestedStaffId, out string type, out int? staffId)
++    {
++        type = requestedType ?? PayrollType;
++        staffId = requestedStaffId;
++        return type switch
++        {
++            PayrollType => staffId is null,
++            LeaveSalaryType => staffId > 0,
++            _ => false
++        };
++    }
+     private static string Period(DateTime date) => date.ToString("yyyy-MM", CultureInfo.InvariantCulture);
+     private static decimal Money(decimal value, int decimals) => FinancialNumberPolicy.RoundMoney(value, decimals);
+     private static DateTime? Utc(DateTime? value)
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.DataAccess\\Configuration\\PayrollRunConfig.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.DataAccess\\Configuration\\PayrollRunConfig.cs"
+index 509a810..6ba4fcd 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.DataAccess\\Configuration\\PayrollRunConfig.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.DataAccess\\Configuration\\PayrollRunConfig.cs"	
+@@ -5,12 +5,16 @@ public sealed class PayrollRunConfig : IEntityTypeConfiguration<PayrollRun>
+     public void Configure(EntityTypeBuilder<PayrollRun> builder)
+     {
+         builder.ToTable(nameof(PayrollRun));
++        builder.Property(x => x.Type).HasMaxLength(32).IsRequired().HasDefaultValue("Payroll");
+         builder.Property(x => x.PeriodStart).HasColumnType("date");
+         builder.Property(x => x.PeriodEnd).HasColumnType("date");
+         builder.Property(x => x.CurrentRevision).IsConcurrencyToken();
+         builder.Property(x => x.IsPaid).IsConcurrencyToken();
+         builder.Property(x => x.ApprovedRevisionNumber).IsConcurrencyToken();
+         // Payroll history is never silently deleted or replaced.
+-        builder.HasIndex(x => new { x.SubscriptionId, x.PeriodStart }).IsUnique();
++        builder.HasIndex(x => new { x.SubscriptionId, x.PeriodStart, x.Type, x.StaffId })
++            .IsUnique().HasFilter(null);
++        builder.HasOne(x => x.Staff).WithMany().HasForeignKey(x => x.StaffId)
++            .OnDelete(DeleteBehavior.Restrict);
+     }
+ }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.ar-SA.resx" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.ar-SA.resx"
+index 1215f45..7758263 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.ar-SA.resx"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.ar-SA.resx"	
+@@ -1982,4 +1982,21 @@
+   <data name="PayrollAmountOutOfRange" xml:space="preserve"><value>تتجاوز إجماليات الرواتب المحسوبة نطاق تخزين المبالغ المدعوم.</value></data>
+   <data name="PayrollApproved" xml:space="preserve"><value>تم اعتماد نسخة الرواتب. الصرف إجراء مستقل.</value></data>
+   <data name="PayrollFiltersInvalid" xml:space="preserve"><value>مرشحات قائمة الرواتب أو ترتيبها غير صالحة.</value></data>
++  <data name="JobCancelled" xml:space="preserve"><value>هذا العمل ملغى ولا يمكن إغلاقه أو إصدار فاتورة له.</value></data>
++  <data name="JobCancelOpenOnly" xml:space="preserve"><value>يمكن إلغاء العمل المفتوح فقط.</value></data>
++  <data name="JobCancelReferenced" xml:space="preserve"><value>هذا العمل مرتبط بمستندات مشتريات أو مخزون أو فواتير أو قيود ولا يمكن إلغاؤه.</value></data>
++  <data name="JobQualityCheckRequired" xml:space="preserve"><value>أضف تقرير فحص جودة المركبة بعد آخر تعديل للعمل قبل إغلاقه.</value></data>
++  <data name="JobQualityCheckOpenOnly" xml:space="preserve"><value>يمكن إضافة تقرير فحص جودة للعمل المفتوح فقط.</value></data>
++  <data name="JobQualityCheckedByInvalid" xml:space="preserve"><value>أدخل اسم فاحص الجودة بحد أقصى 200 حرف.</value></data>
++  <data name="JobLogDetailInvalid" xml:space="preserve"><value>أدخل تفاصيل السجل بحد أقصى 2000 حرف.</value></data>
++  <data name="JobLogAttachmentInvalid" xml:space="preserve"><value>يوجد مرفق غير صالح أو لا يتبع هذه الشركة.</value></data>
++  <data name="JobLogAttachmentDuplicate" xml:space="preserve"><value>لا يمكن تكرار المرفق داخل نفس الإدخال.</value></data>
++  <data name="JobLogSaveFailed" xml:space="preserve"><value>تعذر حفظ الإدخال في سجل العمل.</value></data>
++  <data name="PayrollScopeInvalid" xml:space="preserve"><value>حدد نوع مسير ونطاق موظف صالحين للشهر المطلوب.</value></data>
++  <data name="PayrollStaffInvalid" xml:space="preserve"><value>الموظف المحدد غير متاح حاليًا لمسير راتب الموظف غير النشط.</value></data>
++  <data name="JobTimeLogOpenOnly" xml:space="preserve"><value>يمكن تغيير وقت العمالة للعمل المفتوح فقط.</value></data>
++  <data name="JobEditOpenOnly" xml:space="preserve"><value>يمكن تعديل العمل المفتوح فقط.</value></data>
++  <data name="JobDeleteOpenOnly" xml:space="preserve"><value>يمكن حذف العمل المفتوح فقط.</value></data>
++  <data name="JobWriteFailed" xml:space="preserve"><value>تعذر حفظ العمل. أعد تحميله وحاول مرة أخرى.</value></data>
++  <data name="JobCloseOpenOnly" xml:space="preserve"><value>يمكن إغلاق العمل المفتوح فقط.</value></data>
+ </root>
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.resx" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.resx"
+index 5cb53ce..12cc671 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.resx"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Localization\\Shared\\GeneralMessage.resx"	
+@@ -1982,4 +1982,21 @@
+   <data name="PayrollAmountOutOfRange" xml:space="preserve"><value>Calculated payroll totals exceed the supported monetary storage range.</value></data>
+   <data name="PayrollApproved" xml:space="preserve"><value>Payroll revision approved. Disbursement is a separate action.</value></data>
+   <data name="PayrollFiltersInvalid" xml:space="preserve"><value>Invalid payroll list filters or sorting.</value></data>
++  <data name="JobCancelled" xml:space="preserve"><value>This job is cancelled and cannot be closed or invoiced.</value></data>
++  <data name="JobCancelOpenOnly" xml:space="preserve"><value>Only an open job can be cancelled.</value></data>
++  <data name="JobCancelReferenced" xml:space="preserve"><value>This job is linked to purchase, stock, invoice or voucher documents and cannot be cancelled.</value></data>
++  <data name="JobQualityCheckRequired" xml:space="preserve"><value>Add a vehicle quality check report after the latest job edit before closing.</value></data>
++  <data name="JobQualityCheckOpenOnly" xml:space="preserve"><value>A quality check report can be added only to an open job.</value></data>
++  <data name="JobQualityCheckedByInvalid" xml:space="preserve"><value>Enter the quality checker name, up to 200 characters.</value></data>
++  <data name="JobLogDetailInvalid" xml:space="preserve"><value>Enter a log detail of 2,000 characters or fewer.</value></data>
++  <data name="JobLogAttachmentInvalid" xml:space="preserve"><value>One or more attachments are invalid or do not belong to this company.</value></data>
++  <data name="JobLogAttachmentDuplicate" xml:space="preserve"><value>Duplicate attachments are not allowed in one entry.</value></data>
++  <data name="JobLogSaveFailed" xml:space="preserve"><value>The job log entry could not be saved.</value></data>
++  <data name="PayrollScopeInvalid" xml:space="preserve"><value>Select a valid payroll type and employee scope for the requested month.</value></data>
++  <data name="PayrollStaffInvalid" xml:space="preserve"><value>The selected employee is not currently available for leave salary payroll.</value></data>
++  <data name="JobTimeLogOpenOnly" xml:space="preserve"><value>Labour time can be changed only for an open job.</value></data>
++  <data name="JobEditOpenOnly" xml:space="preserve"><value>Only an open job can be edited.</value></data>
++  <data name="JobDeleteOpenOnly" xml:space="preserve"><value>Only an open job can be deleted.</value></data>
++  <data name="JobWriteFailed" xml:space="preserve"><value>The job could not be saved. Reload it and try again.</value></data>
++  <data name="JobCloseOpenOnly" xml:space="preserve"><value>Only an open job can be closed.</value></data>
+ </root>
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\PayrollRun.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\PayrollRun.cs"
+index dc06708..195bba5 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\PayrollRun.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\PayrollRun.cs"	
+@@ -4,6 +4,9 @@ namespace SiGma.Helpers.Models.Staffs;
+ 
+ public class PayrollRun : EntityBase
+ {
++    public string Type { get; set; } = "Payroll";
++    public int? StaffId { get; set; }
++    public Staff? Staff { get; set; }
+     public DateTime PeriodStart { get; set; }
+     public DateTime PeriodEnd { get; set; }
+     public int CurrentRevision { get; set; }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\StaffPayroll.md" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\StaffPayroll.md"
+index 811e799..80b471d 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.Helpers\\Models\\Staffs\\StaffPayroll.md"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.Helpers\\Models\\Staffs\\StaffPayroll.md"	
+@@ -14,35 +14,38 @@ This feature document describes the current source. The frozen payroll contract
+ 
+ ## Calculation policy `MonthlySalarySnapshot-v1`
+ 
+-`POST /PayrollRuns/calculate` is a read-only server calculation. Input is only `{ period: "yyyy-MM" }`; Process does not persist a payroll operation.
++`POST /PayrollRuns/calculate` is a read-only server calculation. Input is `{ period: "yyyy-MM", type: "Payroll" | "LeaveSalary", staffId?: number }`; omitted type remains `Payroll` for compatibility. Payroll requires no staff scope. LeaveSalary requires one positive staff id and revalidates that the tenant-owned staff is live, available, currently inactive and joined before the month's exclusive end. Process does not persist a payroll operation.
+ 
+-1. Select active staff who joined before the exclusive end of the calendar month. Select the latest active salary package revision effective before that end (`ApplicableFrom`, with `CreatedAt` fallback for legacy rows). Future revisions cannot change an older month.
++1. Payroll selects live, available, continuing staff (`IsInactive != true`) who joined before the exclusive end of the calendar month. LeaveSalary selects only the requested live, available, currently inactive staff member who joined before that same boundary. Both modes then use the same latest active salary package revision effective before month end (`ApplicableFrom`, with `CreatedAt` fallback for legacy rows); changing the scope does not change the salary formula, and future revisions cannot change an older month.
+ 2. Basic is component0; allowances are earning components1-11; Additional is components13-21; package deductions are components100-117. OT package rows are hourly rates, not additional earnings. Require a complete unambiguous package and Gross = Basic + Allowances.
+ 3. Sum stored overtime amounts from the payroll month, or the previous month when HRM settings select that policy. Missing amount with any nonzero total/normal/holiday hours, negative values, duplicate staff/day rows or overtime before joining block Save.
+ 4. Use active, noncompleted deductions with valid start, total, installment count and paid-installment count. Exclude passed-over rows and already paid/out-of-schedule installments. Floor equal installments to base currency precision; the final installment receives the remainder. Saving a payroll does not mark installments paid.
+ 5. `NetPay = Gross + Overtime + Additional - Deductions`. Backend monetary policy owns rounding and stored totals. Negative net, invalid identity lengths and missing/ambiguous salary inputs block Save.
+ 6. Mid-month joining/salary changes and recorded absences require approved proration/absence policies and block Save for affected rows. No leave-counter deductions or attendance-to-pay defaults are invented. Unsupported previous-month commissions or business-unit processing settings cause an explicit error.
++7. One employee cannot be saved in both run types for the same month. Calculation marks the employee with `payrollProcess.issues.duplicatePayrollScope` when the opposing type's current saved revision contains that employee; Save repeats the same tenant/live check inside its serializable transaction. Historical-only revisions do not block a current calculation.
+ 
+-The version hash includes the policy, period, overtime month, precision, employee identity, relevant salary/overtime/deduction/absence sources, undated invalid salary sources, and blocking row issues. It also binds to the run identity, current revision, payment state and current approval pointer. Save rechecks those sources under a serializable transaction.
++The version hash includes the policy, period, overtime month, precision, employee identity, relevant salary/overtime/deduction/absence sources, undated invalid salary sources, and blocking row issues. LeaveSalary additionally binds type, selected staff and current eligibility. Existing no-conflict Payroll source hashes retain their previous shape. Every response version also binds to the run identity, current revision, payment state and current approval pointer. Save rechecks those sources under a serializable transaction.
+ 
+ ## Stored payroll and revisions
+ 
+-- `PayrollRun`: one tenant/month root, current revision, approval pointer and future payment boundary (`IsPaid`/`PaidAt`). It has no client amount/status CRUD endpoint.
++- `PayrollRun`: one immutable tenant/month/type/staff-scope root, current revision, approval pointer and future payment boundary (`IsPaid`/`PaidAt`). `Payroll` has null StaffId; `LeaveSalary` has one StaffId. It has no client amount/status CRUD endpoint.
+ - `PayrollRunRevision`: immutable financial totals, source/request hashes, policy/precision/OT month and its employee lines. Approval metadata is written once without altering financial values.
+ - `PayrollLine`: staff code/name, effective salary date, source JSON and financial figures. Historical payroll does not depend on current Staff names or salary amounts.
+ - `PayrollRunLog`: successful Created/Recalculated/Approved operations, revision references, actor, UTC timestamp and amounts. The event is saved with its owning change; retries/no-ops do not add duplicate operations.
+ 
+-`POST /PayrollRuns` accepts only `{period, expectedVersion}`. First Save creates revision1. Changed unpaid inputs append a revision and clear active approval. Previous revisions stay available; an older revision is Superseded, with its historical approval preserved. Identical calculation/save is a no-op. Stale tokens conflict.
++`POST /PayrollRuns` accepts `{period, type, staffId, expectedVersion}` with the same default Payroll scope. First Save creates revision1. Changed unpaid inputs append a revision and clear active approval. Previous revisions stay available; an older revision is Superseded, with its historical approval preserved. Identical calculation/save is a no-op. Stale tokens conflict.
+ 
+ `POST /PayrollRuns/{id}/approve` accepts `{expectedVersion}` and approves only the current saved unpaid revision. It does not recalculate, create a voucher or disburse money. A changed later Save requires new approval. Corrupt approval-pointer/audit states are rejected rather than overwriting history.
+ 
+ ## Reads and UI
+ 
+-- `GET /PayrollRuns`: counted, paged current saved revisions; filters date range, Type Payroll, Pending Approval; stable Date/Amount ordering.
++- `GET /PayrollRuns`: counted, paged current saved revisions; filters date range, Type Payroll or LeaveSalary, Pending Approval; stable Date/Amount ordering. LeaveSalary rows expose the selected staff code/name from the saved snapshot.
++- `GET /PayrollRuns/leave-salary-staff`: tenant-owned live, available, currently inactive staff options (`id`, `no`, `value`).
+ - `GET /PayrollRuns/{id}`: current saved snapshot.
+ - `GET /PayrollRuns/{id}/revisions` and `GET /PayrollRuns/{id}/revisions/{revisionNumber}`: historical snapshots.
+ - `GET /PayrollRuns/{id}/logs`: tenant-owned chronological successful-operation log.
+ - `/ProcessPayroll`: monthly preview/Save/history/log/Excel, View/Edit handoff from the management list.
++- `/ProcessLeaveSalary`: the same monthly calculation, revision, approval and history lifecycle scoped to one eligible inactive staff member; it introduces no leave-day payout, gratuity, payment or journal formula.
+ - `/ProcessedPayrolls`: saved runs, View/Edit/Approve/log, complete matching-list and saved-run Excel.
+ - `/UserGuide/hrm`: bilingual workflow, calculation issues, revision/approval boundaries and separate payment explanation.
+ 
+@@ -54,4 +57,4 @@ If a root has been paid by that future owner, regular Save is refused. Process e
+ 
+ ## Owner schema and acceptance
+ 
+-The four new tables/configurations require an owner-created migration, suggested name `AddPayrollRunsAndLines`. No migration, model snapshot, database command, build or runtime check was run in this task. Owner acceptance must cover schema registration, effective-date cases, source validation, save/approve races and retries, immutable history, logs, export counts, Arabic/dark/responsive layouts and the future payment/settlement boundary.
++The payroll tables/configurations require an owner-created incremental migration, suggested name `AddPayrollRunTypeAndStaffScope`, for required Type (max 32, default Payroll), nullable StaffId and the unfiltered unique `(SubscriptionId, PeriodStart, Type, StaffId)` key. No migration, model snapshot, database command, build or runtime check was run in this task. Owner acceptance must cover legacy backfill/duplicates, schema registration, effective-date cases, source validation, save/approve races and retries, immutable history, logs, export counts, Arabic/dark/responsive layouts and the future payment/settlement boundary.
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ServerAPI\\Controller\\PayrollRunsController.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ServerAPI\\Controller\\PayrollRunsController.cs"
+index 490dbdb..75444cf 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ServerAPI\\Controller\\PayrollRunsController.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ServerAPI\\Controller\\PayrollRunsController.cs"	
+@@ -29,6 +29,10 @@ public sealed class PayrollRunsController : ControllerBase
+     public async Task<IActionResult> Calculate(PayrollCalculateVm request, CancellationToken cancellationToken)
+         => Response(await _service.CalculateAsync(request, cancellationToken));
+ 
++    [HttpGet("leave-salary-staff")]
++    public async Task<IActionResult> LeaveSalaryStaff(CancellationToken cancellationToken)
++        => Response(await _service.LeaveSalaryStaffAsync(cancellationToken));
++
+     [HttpPost]
+     public async Task<IActionResult> Save(PayrollSaveVm request, CancellationToken cancellationToken)
+         => Response(await _service.SaveAsync(request, cancellationToken));
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollCalculateVm.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollCalculateVm.cs"
+index ff572c9..e41b3cb 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollCalculateVm.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollCalculateVm.cs"	
+@@ -4,4 +4,8 @@ public sealed class PayrollCalculateVm
+ {
+     [Required, RegularExpression(@"^\d{4}-(0[1-9]|1[0-2])$")]
+     public string Period { get; set; } = string.Empty;
++    [MaxLength(32)]
++    public string Type { get; set; } = "Payroll";
++    [Range(1, int.MaxValue)]
++    public int? StaffId { get; set; }
+ }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunListVm.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunListVm.cs"
+index 4378a0b..4f45fff 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunListVm.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunListVm.cs"	
+@@ -5,6 +5,8 @@ public sealed class PayrollRunListVm
+     public int Id { get; set; }
+     public DateTime Date { get; set; }
+     public string Type { get; set; } = "Payroll";
++    public string? StaffCode { get; set; }
++    public string? StaffName { get; set; }
+     public decimal Amount { get; set; }
+     public bool IsApproved { get; set; }
+     public bool IsPaid { get; set; }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunVm.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunVm.cs"
+index fb38a11..4172b22 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunVm.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollRunVm.cs"	
+@@ -4,6 +4,8 @@ public sealed class PayrollRunVm
+ {
+     public int? Id { get; set; }
+     public string Period { get; set; } = string.Empty;
++    public string Type { get; set; } = "Payroll";
++    public int? StaffId { get; set; }
+     public string Version { get; set; } = string.Empty;
+     public int RevisionNumber { get; set; }
+     public bool IsSaved { get; set; }
+diff --git "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollSaveVm.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollSaveVm.cs"
+index 1676f03..5798951 100644
+--- "a/F:\\My Work\\Sigma\\reviews\\LEAVE_SALARY_PAYROLL_PROCESS_BASELINE\\backend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollSaveVm.cs"	
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollSaveVm.cs"	
+@@ -4,6 +4,10 @@ public sealed class PayrollSaveVm
+ {
+     [Required, RegularExpression(@"^\d{4}-(0[1-9]|1[0-2])$")]
+     public string Period { get; set; } = string.Empty;
++    [MaxLength(32)]
++    public string Type { get; set; } = "Payroll";
++    [Range(1, int.MaxValue)]
++    public int? StaffId { get; set; }
+     [Required, RegularExpression(@"^[A-F0-9]{64}$")]
+     public string ExpectedVersion { get; set; } = string.Empty;
+ }
+diff --git "a/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollStaffOptionVm.cs" "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollStaffOptionVm.cs"
+new file mode 100644
+index 0000000..cf9e9c3
+--- /dev/null
++++ "b/F:\\My Work\\Sigma\\SigmaBackend\\SiGma.ViewModels\\ViewModels\\PayrollRun\\PayrollStaffOptionVm.cs"	
+@@ -0,0 +1,8 @@
++namespace SiGma.ViewModels.ViewModels.PayrollRun;
++
++public sealed class PayrollStaffOptionVm
++{
++    public int Id { get; set; }
++    public string? No { get; set; }
++    public string Value { get; set; } = string.Empty;
++}

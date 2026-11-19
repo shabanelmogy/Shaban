@@ -1,0 +1,80 @@
+{
+  "Phase": "LinkedVerified",
+  "CompanyCode": "101007",
+  "SubscriptionId": 1007,
+  "TimeUtc": "2026-11-15T14:15:47.7528246Z",
+  "IdentityPasswordSourceUserId": 24,
+  "BranchScope": "View current branch only; existing default retained",
+  "Users": [
+    {
+      "Id": 5,
+      "UserName": "Username",
+      "Email": "Ahmed@yahoo.com",
+      "BranchId": 2,
+      "RegistrationId": "0940e046-3599-4027-8184-fabc09d1a38e",
+      "IdentityId": "42ec74e7-c8f4-4793-b8c1-9669da20356d",
+      "Active": true,
+      "IsActive": true
+    },
+    {
+      "Id": 9,
+      "UserName": "sssUsername",
+      "Email": "ssSurname@gmail.com",
+      "BranchId": 2,
+      "RegistrationId": "86f119d9-fd8a-49fb-a73f-f72e64706e24",
+      "IdentityId": "a6e8ad1f-8f8e-4bd4-8b80-7a6a5eb389fa",
+      "Active": true,
+      "IsActive": true
+    },
+    {
+      "Id": 14,
+      "UserName": "hamada",
+      "Email": "hamada.erp14@example.invalid",
+      "BranchId": 2,
+      "RegistrationId": "3552da99-867d-4c8a-be41-6a8cb3c8b33b",
+      "IdentityId": "7552fa8b-d8db-4f8f-96b4-b4c0c267494a",
+      "Active": true,
+      "IsActive": true
+    },
+    {
+      "Id": 15,
+      "UserName": "hamada@gmail.com",
+      "Email": "hamada@gmail.com",
+      "BranchId": 4,
+      "RegistrationId": "fae428a0-4338-45d9-930c-2256616baad3",
+      "IdentityId": "fa3ad16e-f7f9-42a0-a18c-802ddb0f849f",
+      "Active": true,
+      "IsActive": true
+    },
+    {
+      "Id": 16,
+      "UserName": "coachtest@test.com",
+      "Email": "hamada@mail.com",
+      "BranchId": 2,
+      "RegistrationId": "8995414b-031a-4139-bc5d-2bfb67e9bc74",
+      "IdentityId": "c1aeed00-3c3b-43ec-af7b-e6f0d58b5d67",
+      "Active": true,
+      "IsActive": true
+    },
+    {
+      "Id": 17,
+      "UserName": "Ahmed",
+      "Email": "Ahmed@gmail.com",
+      "BranchId": 2,
+      "RegistrationId": "35e5131a-9168-4d14-add4-bf00e378e838",
+      "IdentityId": "3ceb60e6-3dd3-4927-a062-d636ccf2cc47",
+      "Active": true,
+      "IsActive": true
+    },
+    {
+      "Id": 18,
+      "UserName": "test",
+      "Email": "test@gmail.com",
+      "BranchId": 2,
+      "RegistrationId": "eb3c301d-1714-4f70-ba70-1ba52446bb75",
+      "IdentityId": "4bc1b87e-22f7-4e8a-a941-89703dea9853",
+      "Active": true,
+      "IsActive": true
+    }
+  ]
+}

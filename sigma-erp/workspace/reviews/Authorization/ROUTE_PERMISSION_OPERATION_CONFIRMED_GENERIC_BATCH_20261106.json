@@ -1,0 +1,855 @@
+{
+  "status": "Draft",
+  "ownerVerificationPending": true,
+  "scope": "Source-only second batch of generic list operation evidence",
+  "catalogSource": "F:/My Work/Sigma/reviews/Authorization/PERMISSION_CATALOG_CURRENT_ACCESS_20261106.json",
+  "inventorySource": "F:/My Work/Sigma/reviews/Authorization/ROUTE_PERMISSION_ADOPTION_INVENTORY.json",
+  "evidenceLevel": "draft-candidate",
+  "verification": "Source-only candidate inventory; service method body/backend endpoint reconciliation pending; build/tests/lint/DB/browser not run.",
+  "notes": [
+    "Candidate only: a routed component getList call does not by itself prove the exact URL, endpoint permission or adjacent resources.",
+    "Promote one row only after reading the service getList body and the actual backend controller/base operation; preserve custom actions as separate evidence."
+  ],
+  "rows": [
+    {
+      "route": "AccountSetting",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "AccountGroupDefinition.View",
+        "AccountTypeDefinition.View",
+        "AccountGroupDefinition.Create",
+        "AccountTypeDefinition.Create",
+        "AccountGroupDefinition.Update",
+        "AccountTypeDefinition.Update"
+      ],
+      "resource": [
+        "AccountGroupDefinition",
+        "AccountTypeDefinition"
+      ],
+      "request": "GET /AccountGroupDefinition",
+      "sourceEvidence": [
+        "routing.ts:37 route 'AccountSetting'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Accounts/AccountSetting/account-setting.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Accounts/AccountSetting/services/account-classification.service.ts:14 super('AccountGroupDefinition')",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Accounts/AccountSetting/services/account-type-definition.service.ts:15 super('AccountTypeDefinition')",
+        "sidebar-menu-data.ts:1136 link '/AccountSetting'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Accounts/AccountSetting/components/list/list.component.ts:114 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Accounts/AccountSetting/services/account-classification.service.ts:14 super('AccountGroupDefinition') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "Provision",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "Provision.View",
+        "Provision.Create",
+        "Provision.Update"
+      ],
+      "resource": [
+        "Provision"
+      ],
+      "request": "GET /Provision",
+      "sourceEvidence": [
+        "routing.ts:56 route 'Provision'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Vouchers/Provisions/Provision/provision.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Vouchers/Provisions/Provision/services/provision.service.ts:15 super('Provision')",
+        "sidebar-menu-data.ts:992 link '/Provision'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Vouchers/Provisions/Provision/components/list/list.component.ts:128 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Vouchers/Provisions/Provision/services/provision.service.ts:15 super('Provision') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "DeliveryNote",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "DeliveryNote.View",
+        "DeliveryNote.Create",
+        "DeliveryNote.Update"
+      ],
+      "resource": [
+        "DeliveryNote"
+      ],
+      "request": "GET /DeliveryNote",
+      "sourceEvidence": [
+        "routing.ts:105 route 'DeliveryNote'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/DeliveryNote/deliverynote.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/DeliveryNote/services/deliverynote.service.ts:28 super('DeliveryNote')",
+        "sidebar-menu-data.ts:459 link '/DeliveryNote'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/DeliveryNote/components/list/list.component.ts:275 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/DeliveryNote/services/deliverynote.service.ts:28 super('DeliveryNote') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "EquipmentRentalInvoice",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "EquipmentRentalInvoice.View",
+        "EquipmentRentalInvoice.Create",
+        "EquipmentRentalInvoice.Update"
+      ],
+      "resource": [
+        "EquipmentRentalInvoice"
+      ],
+      "request": "GET /EquipmentRentalInvoice",
+      "sourceEvidence": [
+        "routing.ts:126 route 'EquipmentRentalInvoice'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentRentalInvoice/equipmentrentalinvoice.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentRentalInvoice/services/equipmentrentalinvoice.service.ts:21 super('EquipmentRentalInvoice')",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentRentalInvoice/components/list/list.component.ts:271 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentRentalInvoice/services/equipmentrentalinvoice.service.ts:21 super('EquipmentRentalInvoice') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "TimeSheet",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "TimeSheet.View",
+        "TimeSheet.Create",
+        "TimeSheet.Update"
+      ],
+      "resource": [
+        "TimeSheet"
+      ],
+      "request": "GET /TimeSheet",
+      "sourceEvidence": [
+        "routing.ts:133 route 'TimeSheet'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/TimeSheet/timesheet.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/TimeSheet/services/timesheet.service.ts:20 super('TimeSheet')",
+        "sidebar-menu-data.ts:461 link '/TimeSheet'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/TimeSheet/components/list/list.component.ts:425 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/TimeSheet/services/timesheet.service.ts:20 super('TimeSheet') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "FleetServiceBookings",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "VehicleServiceBooking.View",
+        "VehicleServiceBooking.Create",
+        "VehicleServiceBooking.Update"
+      ],
+      "resource": [
+        "VehicleServiceBooking"
+      ],
+      "request": "GET /VehicleServiceBooking",
+      "sourceEvidence": [
+        "routing.ts:218 route 'FleetServiceBookings'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Fleet/ServiceBookings/fleet-service-bookings.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Fleet/ServiceBookings/services/vehicle-service-bookings.service.ts:35 super('VehicleServiceBooking')",
+        "sidebar-menu-data.ts:270 link '/FleetServiceBookings'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Fleet/ServiceBookings/components/list/list.component.ts:178 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Fleet/ServiceBookings/services/vehicle-service-bookings.service.ts:35 super('VehicleServiceBooking') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "FleetAccidents",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "Accident.View",
+        "Accident.Create",
+        "Accident.Update"
+      ],
+      "resource": [
+        "Accident"
+      ],
+      "request": "GET /Accident",
+      "sourceEvidence": [
+        "routing.ts:225 route 'FleetAccidents'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Fleet/Accidents/fleet-accidents.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Fleet/Accidents/services/accidents.service.ts:31 super('Accident')",
+        "sidebar-menu-data.ts:276 link '/FleetAccidents'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Fleet/Accidents/components/list/list.component.ts:178 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Fleet/Accidents/services/accidents.service.ts:31 super('Accident') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "LeaseMasterAgreement",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "LeaseMasterAgreement.View",
+        "LeaseMasterAgreement.Create",
+        "LeaseMasterAgreement.Update"
+      ],
+      "resource": [
+        "LeaseMasterAgreement"
+      ],
+      "request": "GET /LeaseMasterAgreement",
+      "sourceEvidence": [
+        "routing.ts:281 route 'LeaseMasterAgreement'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Lease/LeaseMasterAgreement/leasemasteragreement.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Lease/LeaseMasterAgreement/services/leasemasteragreement.service.ts:33 super('LeaseMasterAgreement')",
+        "sidebar-menu-data.ts:416 link '/LeaseMasterAgreement'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Lease/LeaseMasterAgreement/components/list/list.component.ts:125 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Lease/LeaseMasterAgreement/services/leasemasteragreement.service.ts:33 super('LeaseMasterAgreement') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "LeaseQuotation",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "LeaseQuotation.View",
+        "LeaseQuotation.Create",
+        "LeaseQuotation.Update"
+      ],
+      "resource": [
+        "LeaseQuotation"
+      ],
+      "request": "GET /LeaseQuotation",
+      "sourceEvidence": [
+        "routing.ts:316 route 'LeaseQuotation'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Lease/LeaseQuotation/leasequotation.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Lease/LeaseQuotation/services/leasequotation.service.ts:33 super('LeaseQuotation')",
+        "sidebar-menu-data.ts:410 link '/LeaseQuotation'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Lease/LeaseQuotation/components/list/list.component.ts:134 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Lease/LeaseQuotation/services/leasequotation.service.ts:33 super('LeaseQuotation') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "CustodyMovement",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "CustodyMovement.View",
+        "CustodyMovement.Create",
+        "CustodyMovement.Update"
+      ],
+      "resource": [
+        "CustodyMovement"
+      ],
+      "request": "GET /CustodyMovement",
+      "sourceEvidence": [
+        "routing.ts:408 route 'CustodyMovement'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/CustodyMovement/custodymovement.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/CustodyMovement/services/custodymovement.service.ts:24 super('CustodyMovement')",
+        "sidebar-menu-data.ts:507 link '/CustodyMovement'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/CustodyMovement/components/list/list.component.ts:118 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/CustodyMovement/services/custodymovement.service.ts:24 super('CustodyMovement') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "DeliveryMovement",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "DeliveryMovement.View",
+        "DeliveryMovement.Create",
+        "DeliveryMovement.Update"
+      ],
+      "resource": [
+        "DeliveryMovement"
+      ],
+      "request": "GET /DeliveryMovement",
+      "sourceEvidence": [
+        "routing.ts:415 route 'DeliveryMovement'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/DeliveryMovement/deliverymovement.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/DeliveryMovement/services/deliverymovement.service.ts:23 super('DeliveryMovement')",
+        "sidebar-menu-data.ts:511 link '/DeliveryMovement'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/DeliveryMovement/components/list/list.component.ts:113 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/DeliveryMovement/services/deliverymovement.service.ts:23 super('DeliveryMovement') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "NRM",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "NRM.View",
+        "NRM.Create",
+        "NRM.Update"
+      ],
+      "resource": [
+        "NRM"
+      ],
+      "request": "GET /NRM",
+      "sourceEvidence": [
+        "routing.ts:422 route 'NRM'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/NRM/nrm.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/NRM/services/nrm.service.ts:22 super('NRM')",
+        "sidebar-menu-data.ts:500 link '/NRM'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/NRM/components/list/list.component.ts:104 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/NRM/services/nrm.service.ts:22 super('NRM') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "Workshop",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "Workshop.View",
+        "Workshop.Create",
+        "Workshop.Update"
+      ],
+      "resource": [
+        "Workshop"
+      ],
+      "request": "GET /Workshop",
+      "sourceEvidence": [
+        "routing.ts:427 route 'Workshop'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/Workshop/workshop.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/Workshop/services/workshop.service.ts:17 super('Workshop')",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/Workshop/components/list/list.component.ts:81 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/Workshop/services/workshop.service.ts:17 super('Workshop') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "WorkshopMovement",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "WorkshopMovement.View",
+        "WorkshopMovement.Create",
+        "WorkshopMovement.Update"
+      ],
+      "resource": [
+        "WorkshopMovement"
+      ],
+      "request": "GET /WorkshopMovement",
+      "sourceEvidence": [
+        "routing.ts:434 route 'WorkshopMovement'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/WorkshopMovement/workshopmovement.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service.ts:26 super('WorkshopMovement')",
+        "sidebar-menu-data.ts:503 link '/WorkshopMovement'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/WorkshopMovement/components/list/list.component.ts:103 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/WorkshopMovement/services/workshopmovement.service.ts:26 super('WorkshopMovement') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "collectionMovement",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "CollectionMovement.View",
+        "CollectionMovement.Create",
+        "CollectionMovement.Update"
+      ],
+      "resource": [
+        "CollectionMovement"
+      ],
+      "request": "GET /CollectionMovement",
+      "sourceEvidence": [
+        "routing.ts:441 route 'collectionMovement'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/collectionMovement/collection-movement.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/collectionMovement/services/collection-movement.service.ts:26 super('CollectionMovement')",
+        "sidebar-menu-data.ts:515 link '/collectionMovement'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/collectionMovement/components/list/list.component.ts:156 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Movements/collectionMovement/services/collection-movement.service.ts:26 super('CollectionMovement') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "RentalQuotation",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "RentalQuotation.View",
+        "RentalQuotation.Create",
+        "RentalQuotation.Update"
+      ],
+      "resource": [
+        "RentalQuotation"
+      ],
+      "request": "GET /RentalQuotation",
+      "sourceEvidence": [
+        "routing.ts:491 route 'RentalQuotation'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Rental/RentalQuotation/rentalquotation.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Rental/RentalQuotation/services/rentalquotation.service.ts:49 super('RentalQuotation')",
+        "sidebar-menu-data.ts:337 link '/RentalQuotation'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Rental/RentalQuotation/components/list/list.component.ts:146 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Rental/RentalQuotation/services/rentalquotation.service.ts:49 super('RentalQuotation') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "EquipmentQuotation",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "Quotation.View",
+        "Quotation.Create",
+        "Quotation.Update"
+      ],
+      "resource": [
+        "Quotation"
+      ],
+      "request": "GET /Quotation",
+      "sourceEvidence": [
+        "routing.ts:498 route 'EquipmentQuotation'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentQuotation/equipmentrental.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service.ts:45 super('Quotation')",
+        "sidebar-menu-data.ts:451 link '/EquipmentQuotation'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentQuotation/components/list/list.component.ts:131 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentQuotation/services/equipmentrental.service.ts:45 super('Quotation') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "EquipmentRentalOrder",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "SaleOrder.View",
+        "SaleOrder.Create",
+        "SaleOrder.Update"
+      ],
+      "resource": [
+        "SaleOrder"
+      ],
+      "request": "GET /SaleOrder",
+      "sourceEvidence": [
+        "routing.ts:505 route 'EquipmentRentalOrder'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentRentalOrder/equipment-rental-order.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentRentalOrder/services/equipment-rental-order.service.ts:16 super('SaleOrder')",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentRentalOrder/components/list/list.component.ts:65 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Equipment Rental/EquipmentRentalOrder/services/equipment-rental-order.service.ts:16 super('SaleOrder') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "SalesAgreement",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "SalesAgreement.View",
+        "SalesAgreement.Create",
+        "SalesAgreement.Update"
+      ],
+      "resource": [
+        "SalesAgreement"
+      ],
+      "request": "GET /SalesAgreement",
+      "sourceEvidence": [
+        "routing.ts:530 route 'SalesAgreement'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Sales/SalesAgreement/salesagreement.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Sales/SalesAgreement/services/salesagreement.service.ts:30 super('SalesAgreement')",
+        "sidebar-menu-data.ts:185 link '/SalesAgreement'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Sales/SalesAgreement/components/list/list.component.ts:306 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Sales/SalesAgreement/services/salesagreement.service.ts:30 super('SalesAgreement') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "SalesQuotation",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "SalesQuotation.View",
+        "SalesQuotation.Create",
+        "SalesQuotation.Update"
+      ],
+      "resource": [
+        "SalesQuotation"
+      ],
+      "request": "GET /SalesQuotation",
+      "sourceEvidence": [
+        "routing.ts:544 route 'SalesQuotation'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Sales/SalesQuotation/salesquotation.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Sales/SalesQuotation/services/salesquotation.service.ts:29 super('SalesQuotation')",
+        "sidebar-menu-data.ts:179 link '/SalesQuotation'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Sales/SalesQuotation/components/list/list.component.ts:331 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Sales/SalesQuotation/services/salesquotation.service.ts:29 super('SalesQuotation') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "StaffTimesheet",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "StaffTimesheet.View",
+        "StaffTimesheet.Create",
+        "StaffTimesheet.Update"
+      ],
+      "resource": [
+        "StaffTimesheet"
+      ],
+      "request": "GET /StaffTimesheet",
+      "sourceEvidence": [
+        "routing.ts:579 route 'StaffTimesheet'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/HRM/Attendances/StaffTimesheet/stafftimesheet.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/HRM/Attendances/StaffTimesheet/services/attendanceTimesheet.service.ts:17 super('StaffTimesheet')",
+        "sidebar-menu-data.ts:788 link '/StaffTimesheet'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/HRM/Attendances/StaffTimesheet/components/list/list.component.ts:252 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/HRM/Attendances/StaffTimesheet/services/attendanceTimesheet.service.ts:17 super('StaffTimesheet') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "Item",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "Item.View",
+        "Item.Create",
+        "Item.Update"
+      ],
+      "resource": [
+        "Item"
+      ],
+      "request": "GET /Item",
+      "sourceEvidence": [
+        "routing.ts:600 route 'Item'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/Item/item.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/Item/services/item.service.ts:19 super('Item')",
+        "sidebar-menu-data.ts:599 link '/Item'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/Item/components/list/list.component.ts:254 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/Item/services/item.service.ts:19 super('Item') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "UnitsOfMeasures",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "UnitsOfMeasures.View",
+        "UnitsOfMeasures.Create",
+        "UnitsOfMeasures.Update"
+      ],
+      "resource": [
+        "UnitsOfMeasures"
+      ],
+      "request": "GET /UnitsOfMeasures",
+      "sourceEvidence": [
+        "routing.ts:605 route 'UnitsOfMeasures'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/UnitsOfMeasures/units-of-measures.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/UnitsOfMeasures/services/units-of-measures.service.ts:18 super('UnitsOfMeasures')",
+        "sidebar-menu-data.ts:587 link '/UnitsOfMeasures'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/UnitsOfMeasures/components/list/list.component.ts:209 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/UnitsOfMeasures/services/units-of-measures.service.ts:18 super('UnitsOfMeasures') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "ItemIssue",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "ItemIssue.View",
+        "ItemIssue.Create",
+        "ItemIssue.Update"
+      ],
+      "resource": [
+        "ItemIssue"
+      ],
+      "request": "GET /ItemIssue",
+      "sourceEvidence": [
+        "routing.ts:612 route 'ItemIssue'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemIssue/itemissue.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemIssue/services/itemissue.service.ts:15 super('ItemIssue')",
+        "sidebar-menu-data.ts:611 link '/ItemIssue'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemIssue/components/list/list.component.ts:285 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemIssue/services/itemissue.service.ts:15 super('ItemIssue') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "ItemTypes",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "ItemType.View",
+        "ItemType.Create",
+        "ItemType.Update"
+      ],
+      "resource": [
+        "ItemType"
+      ],
+      "request": "GET /ItemType",
+      "sourceEvidence": [
+        "routing.ts:619 route 'ItemTypes'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemType/item-types.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemType/services/item-types.service.ts:17 super('ItemType')",
+        "sidebar-menu-data.ts:593 link '/ItemTypes'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemType/components/list/list.component.ts:223 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemType/services/item-types.service.ts:17 super('ItemType') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "ItemRequisition",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "ItemRequisition.View",
+        "ItemRequisition.Create",
+        "ItemRequisition.Update"
+      ],
+      "resource": [
+        "ItemRequisition"
+      ],
+      "request": "GET /ItemRequisition",
+      "sourceEvidence": [
+        "routing.ts:633 route 'ItemRequisition'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemRequisition/itemrequisition.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemRequisition/services/itemrequisition.service.ts:18 super('ItemRequisition')",
+        "sidebar-menu-data.ts:605 link '/ItemRequisition'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemRequisition/components/list/list.component.ts:309 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemRequisition/services/itemrequisition.service.ts:18 super('ItemRequisition') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "ItemReturn",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "ItemReturn.View",
+        "ItemReturn.Create",
+        "ItemReturn.Update"
+      ],
+      "resource": [
+        "ItemReturn"
+      ],
+      "request": "GET /ItemReturn",
+      "sourceEvidence": [
+        "routing.ts:647 route 'ItemReturn'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemReturn/itemreturn.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemReturn/services/itemreturn.service.ts:15 super('ItemReturn')",
+        "sidebar-menu-data.ts:617 link '/ItemReturn'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemReturn/components/list/list.component.ts:286 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/ItemReturn/services/itemreturn.service.ts:15 super('ItemReturn') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "StockTransfer",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "StockTransfer.View",
+        "StockTransfer.Create",
+        "StockTransfer.Update"
+      ],
+      "resource": [
+        "StockTransfer"
+      ],
+      "request": "GET /StockTransfer",
+      "sourceEvidence": [
+        "routing.ts:661 route 'StockTransfer'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/StockTransfer/stocktransfer.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/StockTransfer/services/stocktransfer.service.ts:15 super('StockTransfer')",
+        "sidebar-menu-data.ts:623 link '/StockTransfer'",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/StockTransfer/components/list/list.component.ts:239 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Stock/StockTransfer/services/stocktransfer.service.ts:15 super('StockTransfer') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "Transaction",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "Transaction.View",
+        "Transaction.Create",
+        "Transaction.Update"
+      ],
+      "resource": [
+        "Transaction"
+      ],
+      "request": "GET /Transaction",
+      "sourceEvidence": [
+        "routing.ts:759 route 'Transaction'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Transportation/Transaction/transaction.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Transportation/Transaction/services/transaction.service.ts:16 super('Transaction')",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Transportation/Transaction/components/list/list.component.ts:267 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Transportation/Transaction/services/transaction.service.ts:16 super('Transaction') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    },
+    {
+      "route": "TransactionItem",
+      "kind": "feature",
+      "evidenceLevel": "draft-candidate",
+      "operationConfirmedActions": [
+        "View"
+      ],
+      "candidatePermissionKeys": [
+        "TransactionItem.View",
+        "TransactionItem.Create",
+        "TransactionItem.Update"
+      ],
+      "resource": [
+        "TransactionItem"
+      ],
+      "request": "GET /TransactionItem",
+      "sourceEvidence": [
+        "routing.ts:766 route 'TransactionItem'",
+        "routeFile F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Transportation/TransactionItem/transactionitem.routes.ts",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Transportation/TransactionItem/services/transactionitem.service.ts:16 super('TransactionItem')",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Transportation/TransactionItem/components/list/list.component.ts:269 active list consumer calls this.service.getList(query)",
+        "F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Transportation/TransactionItem/services/transactionitem.service.ts:16 super('TransactionItem') service resource constructor; generic list request traced to active consumer"
+      ],
+      "decision": "Generic list View is operation-confirmed from the routed list consumer and its service getList request; create/update/delete/custom actions remain candidate-only until separately traced.",
+      "status": "resource-only-candidate",
+      "limitation": "getList consumer found; service URL/body and backend endpoint still pending individual confirmation."
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+<section class="sigma-list-page">
+  <div class="sigma-list-panel">
+    <header class="sigma-list-header">
+      <app-feature-title [title]="'budget.title' | translate" icon="bi bi-calendar2-range" />
+    </header>
+    <form class="budget-filters" appFilterPanel [mainColumns]="2" [stableLayout]="true" [busy]="busy()" [formGroup]="filterForm" (ngSubmit)="search()" (resetRequested)="reset()">
+      <div class="sigma-filter-field">
+        <label for="budget-year">{{ 'budget.fiscalYear' | translate }}</label>
+        <p-dropdown inputId="budget-year" formControlName="fiscalYearId" [options]="fiscalYears()" optionLabel="value" optionValue="id" [showClear]="true" [filter]="true" appendTo="body" />
+        <app-field-error [control]="filterForm.controls.fiscalYearId" reserveMessage="validationMessages.required" />
+      </div>
+      <div class="sigma-filter-field">
+        <label for="budget-category">{{ 'budget.accountType' | translate }}</label>
+        <p-dropdown inputId="budget-category" formControlName="accountType" [options]="accountTypes" optionLabel="label" optionValue="value" appendTo="body">
+          <ng-template pTemplate="item" let-option>{{ ('budget.accountTypes.' + option.value) | translate }}</ng-template>
+          <ng-template pTemplate="selectedItem" let-option>{{ ('budget.accountTypes.' + option.value) | translate }}</ng-template>
+        </p-dropdown>
+      </div>
+      <ng-container appFilterActions>
+        <app-primary-action-button type="submit" [label]="'general.search' | translate" icon="bi bi-search" [loading]="loadingBudget()" [disabled]="busy() || !!optionsError()" />
+        <button type="button" class="sigma-secondary-button" (click)="export()" [disabled]="busy() || !rows().length">{{ 'general.exportExcel' | translate }}</button>
+      </ng-container>
+    </form>
+    @if (optionsError()) {
+      <app-state-message kind="error" [message]="optionsError()" />
+      <button type="button" class="btn btn-secondary" (click)="loadOptions()" [disabled]="busy()">{{ 'general.retry' | translate }}</button>
+    }
+    @if (errorMessage()) { <app-state-message kind="error" [message]="errorMessage()" /> }
+    @if (refreshPending()) {
+      <button type="button" class="sigma-secondary-button" (click)="retrySavedRefresh()" [disabled]="busy()">{{ 'general.retry' | translate }}</button>
+    }
+    @if (loadingBudget()) { <app-state-message kind="loading" /> }
+    @if (dirty()) { <div class="sigma-alert" role="status">{{ 'budget.unsavedChanges' | translate }}</div> }
+    <app-summary-cards [cards]="summaryCards()" [ariaLabel]="'budget.totalBudget' | translate" density="slim" layout="row" [minCardWidth]="140" [maxHeight]="80" />
+    <div class="sigma-list-table">
+      <app-editable-collection-table [title]="'budget.title' | translate" [headingVisible]="false" [columns]="columns()" [fillHeight]="true" [stickyHeader]="true" [emptyMessage]="(hasLoaded() ? 'general.noData' : 'budget.selectFiscalYearPrompt') | translate" tableMinWidth="60rem">
+        <ng-template [appEditableCollectionRow]="rows()" let-row>
+          <td>{{ row.source.accountCode || '—' }} — {{ row.source.accountName || '—' }}</td>
+          @for (month of months(); track month) {
+            <td>
+              <p-inputNumber [formControl]="row.amounts.controls[month]" [inputId]="'budget-' + row.source.accountId + '-' + month" [ariaLabel]="(row.source.accountName || row.source.accountCode || row.source.accountId) + ' ' + month" [minFractionDigits]="2" [maxFractionDigits]="2" [useGrouping]="true" mode="decimal" inputStyleClass="sigma-numeric-input" />
+              <app-field-error [control]="row.amounts.controls[month]" />
+            </td>
+          }
+          <td><span class="app-editable-collection-table__value app-editable-collection-table__value--highlight">{{ rowTotal(row) | money }}</span></td>
+        </ng-template>
+      </app-editable-collection-table>
+    </div>
+    <footer class="sigma-editor-footer">
+      <app-primary-action-button [label]="'general.save' | translate" icon="bi bi-floppy" [loading]="saving()" [disabled]="busy() || refreshPending() || !dirty()" (pressed)="save()" />
+    </footer>
+  </div>
+</section>

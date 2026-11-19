@@ -1,0 +1,64 @@
+> Building...
+√ Building...
+Initial chunk files                   | Names                     |  Raw size
+main.js                               | main                      |   3.78 MB | 
+chunk-IM5TPYVN.js                     | -                         | 900.46 kB | 
+styles.css                            | styles                    | 422.11 kB | 
+chunk-6JUPZBZC.js                     | -                         | 262.85 kB | 
+chunk-AICLD5UF.js                     | -                         | 253.85 kB | 
+chunk-ZYROX76H.js                     | -                         | 166.75 kB | 
+chunk-LOXSB36E.js                     | -                         | 136.62 kB | 
+chunk-ZKGJ2U4D.js                     | -                         |  93.83 kB | 
+polyfills.js                          | polyfills                 |  91.26 kB | 
+chunk-XUJLH6NH.js                     | -                         |  82.07 kB | 
+chunk-IQ25B3LE.js                     | -                         |  53.50 kB | 
+chunk-AZFJTCBV.js                     | -                         |  41.24 kB | 
+chunk-EOOCIBBC.js                     | -                         |  34.89 kB | 
+chunk-E4SNBTVD.js                     | -                         |  26.40 kB | 
+chunk-ZYSQ4MJ6.js                     | -                         |  17.80 kB | 
+chunk-GJRWJLFC.js                     | -                         |   8.23 kB | 
+chunk-XA7G6GF7.js                     | -                         |   7.97 kB | 
+chunk-LH3I247C.js                     | -                         |   7.09 kB | 
+chunk-CDKNVHRD.js                     | -                         |   6.68 kB | 
+chunk-EYUD3FQI.js                     | -                         |   6.32 kB | 
+chunk-HVO63T4M.js                     | -                         |   6.16 kB | 
+chunk-UDTWVRBS.js                     | -                         |   5.74 kB | 
+chunk-53JMZGYJ.js                     | -                         |   3.87 kB | 
+chunk-YOWFPKDW.js                     | -                         |   3.67 kB | 
+chunk-ITMSGSZQ.js                     | -                         |   3.66 kB | 
+chunk-75QO5JQN.js                     | -                         |   3.62 kB | 
+chunk-7E5NB2XX.js                     | -                         |   3.29 kB | 
+chunk-2BX7WQXV.js                     | -                         |   1.01 kB | 
+chunk-KI6N746K.js                     | -                         | 904 bytes | 
+
+                                      | Initial total             |   6.43 MB
+
+Lazy chunk files                      | Names                     |  Raw size
+user-guide.routes-GTEKZKD3.js         | user-guide-routes         |   2.82 MB | 
+chunk-CCSGEJIR.js                     | -                         |   1.08 MB | 
+chunk-YN5PRGKP.js                     | -                         | 866.23 kB | 
+emailTemplates.routes-JZ6R6DCX.js     | emailTemplates-routes     | 719.39 kB | 
+chunk-S45QBZE5.js                     | -                         | 648.54 kB | 
+bill.routes-WT3MYVSZ.js               | bill-routes               | 647.95 kB | 
+layout.module-WN6XVT5C.js             | layout-module             | 611.93 kB | 
+leave.routes-KOO6IZN2.js              | leave-routes              | 588.94 kB | 
+job.routes-34CPL75H.js                | job-routes                | 462.64 kB | 
+common.component-CKCZMR3H.js          | common-component          | 444.80 kB | 
+chunk-YETZILDQ.js                     | -                         | 401.23 kB | 
+reports.routes-6LWVV3FJ.js            | reports-routes            | 399.91 kB | 
+document-number.component-QRV2EBP5.js | document-number-component | 367.54 kB | 
+invoice.routes-N5HOKLCI.js            | invoice-routes            | 367.50 kB | 
+agreement.routes-TXKUBW2N.js          | agreement-routes          | 304.71 kB | 
+...and 604 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [124.641 seconds] - 2026-11-06T05:24:18.446Z
+
+▲ [WARNING] NG8113: QuantityInputDirective is not used within the template of PurchaseOrdersComponent [plugin angular-compiler]
+
+    src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/list/list.component.ts:55:14:
+      55 │     imports: [QuantityInputDirective, InputNumberModule, ReactiveF...
+         ╵               ~~~~~~~~~~~~~~~~~~~~~~
+
+
+Output location: F:\My Work\Sigma\SiGmaAngularFrontEnd\dist\sigma
+

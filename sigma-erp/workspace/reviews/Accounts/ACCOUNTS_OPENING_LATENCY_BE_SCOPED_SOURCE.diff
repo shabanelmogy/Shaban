@@ -1,0 +1,166 @@
+diff --git a/SiGma.Business/IServices/IOpeningBalanceStateService.cs b/SiGma.Business/IServices/IOpeningBalanceStateService.cs
+index 41118205..1e235c17 100644
+--- a/SiGma.Business/IServices/IOpeningBalanceStateService.cs
++++ b/SiGma.Business/IServices/IOpeningBalanceStateService.cs
+@@ -5,4 +5,5 @@ namespace SiGma.Business.IServices;
+ public interface IOpeningBalanceStateService
+ {
+     Task<Result<List<OpeningBalanceTabStateVM>>> GetAllAsync(CancellationToken cancellationToken = default);
++    Task<Result<List<OpeningBalanceTabStateVM>>> GetForSourceAsync(string sourceKey, CancellationToken cancellationToken = default);
+ }
+diff --git a/SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceAggregateStateHelper.cs b/SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceAggregateStateHelper.cs
+index 5a266935..b447fcb6 100644
+--- a/SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceAggregateStateHelper.cs
++++ b/SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceAggregateStateHelper.cs
+@@ -14,7 +14,8 @@ internal static class OpeningBalanceAggregateStateHelper
+ 
+     public static async Task<string> ComputeVersionAsync<TEntity>(
+         IUnitOfWork<SiGmaDbContext> unitOfWork,
+-        CancellationToken cancellationToken = default)
++        CancellationToken cancellationToken = default,
++        IReadOnlyList<OpeningBalanceBatch>? knownBatches = null)
+         where TEntity : EntityBase
+     {
+         var entityType = unitOfWork.Context.Model.FindEntityType(typeof(TEntity))
+@@ -32,7 +33,9 @@ internal static class OpeningBalanceAggregateStateHelper
+             .OrderBy(row => row.Id)
+             .ToListAsync(cancellationToken);
+ 
+-        var batches = await unitOfWork.Repository
++        // State reads already validated this batch snapshot. Writers still query it independently.
++        var batches = knownBatches is null
++            ? await unitOfWork.Repository
+             .Query<OpeningBalanceBatch>()
+             .AsNoTracking()
+             .OrderBy(batch => batch.Id)
+@@ -43,7 +46,14 @@ internal static class OpeningBalanceAggregateStateHelper
+                 batch.FiscalYearId,
+                 batch.Description
+             })
+-            .ToListAsync(cancellationToken);
++            .ToListAsync(cancellationToken)
++            : knownBatches.Select(batch => new
++            {
++                batch.Id,
++                batch.OpeningDate,
++                batch.FiscalYearId,
++                batch.Description
++            }).ToList();
+ 
+         var marker = MarkerFor<TEntity>();
+         var journalVouchers = await unitOfWork.Repository
+diff --git a/SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceStateService.cs b/SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceStateService.cs
+index e8306aa3..413d3d7b 100644
+--- a/SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceStateService.cs
++++ b/SiGma.Business/Services/AccountServices/OpeneingBalances/OpeningBalanceStateService.cs
+@@ -17,9 +17,32 @@ public sealed class OpeningBalanceStateService : IOpeningBalanceStateService
+         _journalVoucherResolver = journalVoucherResolver;
+     }
+ 
+-    public async Task<Result<List<OpeningBalanceTabStateVM>>> GetAllAsync(
++    public Task<Result<List<OpeningBalanceTabStateVM>>> GetAllAsync(
+         CancellationToken cancellationToken = default)
++        => GetStatesAsync(null, cancellationToken);
++
++    public Task<Result<List<OpeningBalanceTabStateVM>>> GetForSourceAsync(
++        string sourceKey,
++        CancellationToken cancellationToken = default)
++        => GetStatesAsync(sourceKey, cancellationToken);
++
++    private async Task<Result<List<OpeningBalanceTabStateVM>>> GetStatesAsync(
++        string? sourceKey,
++        CancellationToken cancellationToken)
+     {
++        if (sourceKey is not null && sourceKey is not (
++            nameof(OpeningBalanceAccount) or nameof(OpeningBalanceCostCenter) or
++            nameof(OpeningBalanceCustomer) or nameof(OpeningBalanceSupplier) or
++            nameof(OpeningBalanceStaff) or nameof(OpeningBalanceStock) or
++            nameof(OpeningBalancePrepaid) or nameof(OpeningBalanceDeposit)))
++        {
++            return new Result<List<OpeningBalanceTabStateVM>>
++            {
++                IsSuccess = false,
++                Message = "Invalid opening balance source key."
++            };
++        }
++
+         var batches = await _unitOfWork.Repository
+             .Query<OpeningBalanceBatch>()
+             .AsNoTracking()
+@@ -36,18 +59,23 @@ public sealed class OpeningBalanceStateService : IOpeningBalanceStateService
+             };
+         }
+ 
+-        var batch = batches.SingleOrDefault();
+-        var states = new List<OpeningBalanceTabStateVM>
+-        {
+-            await BuildStateAsync<OpeningBalanceAccount>(batch, cancellationToken),
+-            await BuildStateAsync<OpeningBalanceCostCenter>(batch, cancellationToken),
+-            await BuildStateAsync<OpeningBalanceCustomer>(batch, cancellationToken),
+-            await BuildStateAsync<OpeningBalanceSupplier>(batch, cancellationToken),
+-            await BuildStateAsync<OpeningBalanceStaff>(batch, cancellationToken),
+-            await BuildStateAsync<OpeningBalanceStock>(batch, cancellationToken),
+-            await BuildStateAsync<OpeningBalancePrepaid>(batch, cancellationToken),
+-            await BuildStateAsync<OpeningBalanceDeposit>(batch, cancellationToken)
+-        };
++        var states = new List<OpeningBalanceTabStateVM>();
++        if (sourceKey is null || sourceKey == nameof(OpeningBalanceAccount))
++            states.Add(await BuildStateAsync<OpeningBalanceAccount>(batches, cancellationToken));
++        if (sourceKey is null || sourceKey == nameof(OpeningBalanceCostCenter))
++            states.Add(await BuildStateAsync<OpeningBalanceCostCenter>(batches, cancellationToken));
++        if (sourceKey is null || sourceKey == nameof(OpeningBalanceCustomer))
++            states.Add(await BuildStateAsync<OpeningBalanceCustomer>(batches, cancellationToken));
++        if (sourceKey is null || sourceKey == nameof(OpeningBalanceSupplier))
++            states.Add(await BuildStateAsync<OpeningBalanceSupplier>(batches, cancellationToken));
++        if (sourceKey is null || sourceKey == nameof(OpeningBalanceStaff))
++            states.Add(await BuildStateAsync<OpeningBalanceStaff>(batches, cancellationToken));
++        if (sourceKey is null || sourceKey == nameof(OpeningBalanceStock))
++            states.Add(await BuildStateAsync<OpeningBalanceStock>(batches, cancellationToken));
++        if (sourceKey is null || sourceKey == nameof(OpeningBalancePrepaid))
++            states.Add(await BuildStateAsync<OpeningBalancePrepaid>(batches, cancellationToken));
++        if (sourceKey is null || sourceKey == nameof(OpeningBalanceDeposit))
++            states.Add(await BuildStateAsync<OpeningBalanceDeposit>(batches, cancellationToken));
+ 
+         return new Result<List<OpeningBalanceTabStateVM>>
+         {
+@@ -57,10 +85,11 @@ public sealed class OpeningBalanceStateService : IOpeningBalanceStateService
+     }
+ 
+     private async Task<OpeningBalanceTabStateVM> BuildStateAsync<TEntity>(
+-        OpeningBalanceBatch? batch,
++        IReadOnlyList<OpeningBalanceBatch> batches,
+         CancellationToken cancellationToken)
+         where TEntity : EntityBase
+     {
++        var batch = batches.SingleOrDefault();
+         var marker = OpeningBalanceAggregateStateHelper.MarkerFor<TEntity>();
+         var vouchers = await _unitOfWork.Repository
+             .Query<JournalVoucher>(
+@@ -118,7 +147,8 @@ public sealed class OpeningBalanceStateService : IOpeningBalanceStateService
+             SourceKey = typeof(TEntity).Name,
+             Version = await OpeningBalanceAggregateStateHelper.ComputeVersionAsync<TEntity>(
+                 _unitOfWork,
+-                cancellationToken),
++                cancellationToken,
++                knownBatches: batches),
+             OpeningDate = batch?.OpeningDate,
+             HasMixedDates = hasMixedDates,
+             IsLocked = lockReason is not null,
+diff --git a/SiGma.ServerAPI/Controller/OpeningBalanceStateController.cs b/SiGma.ServerAPI/Controller/OpeningBalanceStateController.cs
+index 9e3566a1..4d28a83f 100644
+--- a/SiGma.ServerAPI/Controller/OpeningBalanceStateController.cs
++++ b/SiGma.ServerAPI/Controller/OpeningBalanceStateController.cs
+@@ -17,9 +17,11 @@ public sealed class OpeningBalanceStateController : ControllerBase
+     }
+ 
+     [HttpGet]
+-    public async Task<IActionResult> GetAsync(CancellationToken cancellationToken)
++    public async Task<IActionResult> GetAsync(CancellationToken cancellationToken, [FromQuery] string? sourceKey = null)
+     {
+-        var result = await _service.GetAllAsync(cancellationToken);
++        var result = sourceKey is null
++            ? await _service.GetAllAsync(cancellationToken)
++            : await _service.GetForSourceAsync(sourceKey, cancellationToken);
+         return result.IsSuccess ? Ok(result) : BadRequest(result);
+     }
+ }

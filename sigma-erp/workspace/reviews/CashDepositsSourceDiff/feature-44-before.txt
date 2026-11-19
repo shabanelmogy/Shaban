@@ -1,0 +1,72 @@
+namespace SiGma.Helpers.Models.Banking;
+
+public class CashDepositDetail : EntityBase
+{
+    // ── FK back to master ────────────────────────────────────────
+    public int CashDepositId { get; set; }
+    public CashDeposit? CashDeposit { get; set; }
+
+    // ── Source voucher tracking ──────────────────────────────────
+
+    /// <summary>
+    /// Which entity type this line came from: Receipt or Payment.
+    /// Determines which FK (SourceReceiptId / SourcePaymentId) is populated.
+    /// </summary>
+    public CashDepositSourceType SourceType { get; set; }
+
+    /// <summary>FK to Receipt when SourceType == Receipt.</summary>
+    public int? SourceReceiptId { get; set; }
+    public Receipt? SourceReceipt { get; set; }
+
+    /// <summary>FK to Payment when SourceType == Payment.</summary>
+    public int? SourcePaymentId { get; set; }
+    public Payment? SourcePayment { get; set; }
+
+    // ── Display fields (denormalised snapshot for performance) ───
+
+    /// <summary>Voucher date (snapshot from source).</summary>
+    public DateTime Date { get; set; }
+
+    /// <summary>
+    /// Human-readable voucher type label shown in the grid
+    /// e.g. "Supplier Payment", "Contact Receipt", "General Payment".
+    /// </summary>
+    [MaxLength(100)] public string? VoucherLabel { get; set; }
+
+    /// <summary>Source voucher number (EntityBase.No snapshot).</summary>
+    [MaxLength(100)] public string? No { get; set; }
+
+    [MaxLength(1000)] public string? Description { get; set; }
+
+    // ── Deposit tracking amounts ─────────────────────────────────
+
+    /// <summary>Total amount of the source voucher (snapshot).</summary>
+    public decimal Amount { get; set; }
+
+    /// <summary>Amount already deposited across ALL prior CashDeposit documents for this source.</summary>
+    public decimal Deposited { get; set; }
+
+    /// <summary>
+    /// Remaining due = Amount - Deposited. Server-calculated via Recalculate().
+    /// Private setter prevents client over-posting.
+    /// </summary>
+    public decimal DueAmount { get; private set; }
+
+    /// <summary>Amount being deposited in THIS transaction (entered per line by user).</summary>
+    public decimal DepositedNow { get; set; }
+
+    // ── Recalculate ───────────────────────────────────────────────
+
+    /// <summary>
+    /// Recalculates DueAmount server-side.
+    /// Also validates DepositedNow does not exceed DueAmount (over-deposit guard).
+    /// </summary>
+    public void Recalculate()
+    {
+        DueAmount = Amount - Deposited;
+
+        // Clamp DepositedNow to DueAmount to prevent over-depositing
+        if (DepositedNow > DueAmount)
+            DepositedNow = DueAmount;
+    }
+}

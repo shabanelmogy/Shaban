@@ -1,0 +1,17 @@
+[
+  {
+    "Application": "SiGma.Security",
+    "ProcessId": 22464,
+    "Stopped": true
+  },
+  {
+    "Application": "SiGma.SubscriptionAPI",
+    "ProcessId": 43612,
+    "Stopped": true
+  },
+  {
+    "Application": "SiGma.ServerAPI",
+    "ProcessId": 20084,
+    "Stopped": true
+  }
+]

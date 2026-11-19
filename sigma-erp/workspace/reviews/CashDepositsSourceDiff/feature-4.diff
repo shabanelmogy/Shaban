@@ -1,0 +1,789 @@
+diff --git a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.ts (initial) b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.ts (current)
+index f2a951a..a9bb040 100644
+--- a/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.ts (initial)	
++++ b/F:/My Work/Sigma/SiGmaAngularFrontEnd/src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.ts (current)	
+@@ -1,328 +1,490 @@
+-import { Component, OnInit, OnDestroy, inject, signal, DestroyRef } from '@angular/core';
+-import { Result } from 'src/app/modules/shared/models/result';
+-import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+-import { CashDepositService } from '../../services/cashdeposit.service';
+-import { CashDepositDetailsDTO } from '../../models/details';
+-import { CommonModule, DatePipe } from '@angular/common';
+-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+-import { ButtonModel } from 'src/app/modules/shared/models/button-model';
+-import { ButtonsComponent } from 'src/app/modules/shared/components/buttons/buttons.component';
+-import { CashDepositCreateDTO } from '../../models/create';
+-import { TranslateModule } from '@ngx-translate/core';
+-import { DropdownModule } from 'primeng/dropdown';
+-import { ChangeDetectionStrategy } from '@angular/core';
++import { CommonModule } from '@angular/common';
++import { HttpErrorResponse } from '@angular/common/http';
++import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+-import { PDCReceivableService } from 'src/app/modules/Banking/ChequesReceivables/services/pdc-receivable.service';
+-import { Bank } from 'src/app/modules/Banking/ChequesReceivables/models/list';
+-import { DetailsComponent as CashDepositDetailDetailsComponent } from '../../../CashDepositDetail/components/details/details.component';
++import { FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
++import { ActivatedRoute, Router } from '@angular/router';
++import { TranslateModule, TranslateService } from '@ngx-translate/core';
+ import { CalendarModule } from 'primeng/calendar';
++import { DropdownModule } from 'primeng/dropdown';
++import { EMPTY, Observable, Subject, catchError, combineLatest, defer, finalize, map, startWith, switchMap, takeUntil } from 'rxjs';
++import { DataTableColumn, DataTableComponent } from 'src/app/modules/shared/components/data-table/data-table.component';
++import { EditableCollectionRowDirective, EditableCollectionTableColumn, EditableCollectionTableComponent } from 'src/app/modules/shared/components/editable-collection-table/editable-collection-table.component';
++import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
++import { FieldErrorComponent, FieldErrorMessages } from 'src/app/modules/shared/components/field-error/field-error.component';
++import { FormSectionComponent } from 'src/app/modules/shared/components/form-section/form-section.component';
++import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
++import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
++import { SummaryCard } from 'src/app/modules/shared/components/summary-cards/summary-card.model';
++import { SummaryCardsComponent } from 'src/app/modules/shared/components/summary-cards/summary-cards.component';
++import { DatePickerDirective } from 'src/app/modules/shared/directives/date-picker.directive';
++import { NumericFocusDirective } from 'src/app/modules/shared/directives/numeric-focus.directive';
++import { MoneyPipe } from 'src/app/modules/shared/pipes/money.pipe';
++import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
++import { ReportPrintService } from 'src/app/modules/shared/service/report-print.service';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { dateValueValidator, parseDateValue } from 'src/app/modules/shared/utils/date-utils';
++import { EditableRows } from 'src/app/modules/shared/utils/editable-rows';
++import { roundMoney } from 'src/app/modules/shared/utils/financial-number.util';
++import { focusField } from 'src/app/modules/shared/utils/focus-field';
++import { CashDepositAddInput, CashDepositLineInput } from '../../models/create';
++import { CashDepositDetails, CashDepositLine, CashDepositLookups, UndepositedVoucher } from '../../models/details';
++import { CashDepositApprovalStatus, CashDepositSourceType } from '../../models/list';
++import { CashDepositService } from '../../services/cashdeposit.service';
++
++type EditorMode = 'create' | 'edit' | 'view';
++interface VoucherSeed extends UndepositedVoucher {
++  id: number;
++  selected: boolean;
++  available: boolean;
++}
++type VoucherRow = FormGroup<{
++  id: FormControl<number>;
++  source: FormControl<UndepositedVoucher>;
++  selected: FormControl<boolean>;
++  available: FormControl<boolean>;
++  depositedNow: FormControl<number | null>;
++}>;
++
++const voucherKeys: Readonly<Record<string, string>> = {
++  'Customer Payment': 'cashDeposits.vouchers.customerPayment', 'Supplier Payment': 'cashDeposits.vouchers.supplierPayment',
++  'General Payment': 'cashDeposits.vouchers.generalPayment', 'Deposit Refund': 'cashDeposits.vouchers.depositRefund', Deposit: 'cashDeposits.vouchers.deposit',
++  'Contract Receipt': 'cashDeposits.vouchers.contractReceipt', 'Contact Receipt': 'cashDeposits.vouchers.contactReceipt',
++  'Advance Tax Receipt': 'cashDeposits.vouchers.advanceTaxReceipt', 'General Receipt': 'cashDeposits.vouchers.generalReceipt',
++  'Staff Receipt': 'cashDeposits.vouchers.staffReceipt', 'Advance Receipt': 'cashDeposits.vouchers.advanceReceipt', 'Asset Sale Receipt': 'cashDeposits.vouchers.assetSaleReceipt',
++  'Cash Payment': 'cashDeposits.vouchers.cashPayment', 'Credit Card Payment': 'cashDeposits.vouchers.creditCardPayment', 'Debit Card Payment': 'cashDeposits.vouchers.debitCardPayment',
++  'Cheque Payment': 'cashDeposits.vouchers.chequePayment', 'Bank Transfer Payment': 'cashDeposits.vouchers.bankTransferPayment', 'Card Refund': 'cashDeposits.vouchers.cardRefund',
++  Receipt: 'cashDeposits.vouchers.receipt', Payment: 'cashDeposits.vouchers.payment',
++};
++
++const editorTitles: Readonly<Record<EditorMode, string>> = {
++  create: 'cashDeposits.editor.createTitle', edit: 'cashDeposits.editor.editTitle', view: 'cashDeposits.editor.viewTitle',
++};
+ 
+ @Component({
+-  selector: 'app-details',
++  selector: 'app-cash-deposit-details',
+   standalone: true,
+-  imports: [
+-    CommonModule,
+-    ReactiveFormsModule,
+-    ButtonsComponent,
+-    TranslateModule,
+-    DropdownModule,
+-    CalendarModule,
+-  ],
++  imports: [CommonModule, ReactiveFormsModule, TranslateModule, CalendarModule, DropdownModule, DataTableComponent,
++    EditableCollectionTableComponent, EditableCollectionRowDirective, FeatureTitleComponent,
++    FieldErrorComponent, FormSectionComponent, PrimaryActionButtonComponent, StateMessageComponent,
++    SummaryCardsComponent, DatePickerDirective, NumericFocusDirective, MoneyPipe],
+   templateUrl: './details.component.html',
+   styleUrl: './details.component.scss',
+-  providers: [DatePipe],
+   changeDetection: ChangeDetectionStrategy.OnPush,
++  host: { class: 'sigma-route-host sigma-print-flow' },
+ })
+-export class DetailsComponent extends BaseComponentService implements OnInit {
+-  //#region properties
+-  id: string;
+-  cashDeposit: CashDepositDetailsDTO;
+-
+-  cashDepositForm: FormGroup;
+-  isCreateMode: boolean = false;
+-  subscriptionId: number = Number.parseInt(
+-    localStorage.getItem('subscriptionId') || '0'
+-  );
+-  buttons: ButtonModel[] = [
+-    {
+-      id: 'btn-save',
+-      text: 'general.save',
+-      type: 'primary',
+-      class: 'me-2',
+-      disabled: false,
+-    },
+-    {
+-      id: 'btn-cancel',
+-      text: 'general.cancel',
+-      type: 'secondary',
+-      disabled: false,
+-    },
++export class DetailsComponent implements OnInit {
++  private readonly service = inject(CashDepositService);
++  private readonly route = inject(ActivatedRoute);
++  private readonly router = inject(Router);
++  private readonly destroyRef = inject(DestroyRef);
++  private readonly confirmation = inject(ConfirmationDialogService);
++  private readonly translate = inject(TranslateService);
++  readonly printSession = inject(ReportPrintService).createSession(this.destroyRef);
++  private readonly detailRetry$ = new Subject<void>();
++  private readonly voucherRequest$ = new Subject<number | null>();
++  private readonly lookupRequest$ = new Subject<void>();
++  private readonly cancelReads$ = new Subject<void>();
++  private saveCompleted = false;
++  private pendingDeselection: VoucherRow | null = null;
++  mode: EditorMode = 'view';
++  recordId: number | null = null;
++  readonly details = signal<CashDepositDetails | null>(null);
++  readonly loadingData = signal(false);
++  readonly vouchersLoading = signal(false);
++  readonly lookupsLoading = signal(false);
++  readonly saving = signal(false);
++  readonly closeConfirmationPending = signal(false);
++  readonly errorMessage = signal('');
++  readonly voucherError = signal('');
++  readonly lookupError = signal('');
++  readonly saveFailed = signal(false);
++  readonly lookups = signal<CashDepositLookups>({ banks: [], branches: [], paymentMethods: [] });
++  readonly lookupsReady = signal(false);
++  readonly vouchersReady = signal(false);
++  readonly selectedCount = signal(0);
++  readonly previewAmount = signal(0);
++  readonly submitted = signal(false);
++  readonly lines = new FormArray<VoucherRow>([]);
++  readonly form = new FormGroup({
++    date: new FormControl<Date | string | null>(new Date(), [Validators.required, dateValueValidator]),
++    bankId: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
++    paymentMethodId: new FormControl<number | null>(null, [Validators.required, Validators.min(1)]),
++    branchId: new FormControl<number | null>(null, Validators.min(1)),
++    refNo: new FormControl('', { nonNullable: true, validators: Validators.maxLength(100) }),
++    description: new FormControl('', { nonNullable: true, validators: Validators.maxLength(500) }),
++    cashDepositDetails: this.lines,
++  });
++  readonly rowMessages: FieldErrorMessages = {
++    nonzero: 'cashDeposits.validation.nonzero', sign: 'cashDeposits.validation.sign',
++    exceedsDue: 'cashDeposits.validation.exceedsDue', precision: 'cashDeposits.validation.precision',
++    sourceMissing: 'cashDeposits.validation.sourceMissing',
++  };
++  readonly columns: ReadonlyArray<EditableCollectionTableColumn> = [
++    { header: 'cashDeposits.editor.select', width: '65px', align: 'center' },
++    { header: 'cashDeposits.columns.date', width: '110px' },
++    { header: 'cashDeposits.columns.voucher', width: '150px' },
++    { header: 'cashDeposits.columns.voucherNo', width: '150px' },
++    { header: 'cashDeposits.columns.description', minWidth: '200px' },
++    { header: 'cashDeposits.columns.amount', width: '120px', numeric: true },
++    { header: 'cashDeposits.columns.deposited', width: '120px', numeric: true },
++    { header: 'cashDeposits.columns.dueAmount', width: '120px', numeric: true },
++    { header: 'cashDeposits.editor.depositedNow', width: '160px', numeric: true },
+   ];
+-  hederButtons: ButtonModel[] = [
+-    {
+-      id: 'btn-delete',
+-      text: 'general.delete',
+-      type: 'danger',
+-      disabled: false,
+-      class: 'me-2',
+-    },
+-    {
+-      id: 'btn-update',
+-      text: 'general.update',
+-      type: 'primary',
+-      disabled: false,
+-    },
+-  ];
+-  banks = signal<Bank[]>([]);
+-  readonly headerButtons: ButtonModel[] = [
+-    { id: 'btn-delete', text: 'general.delete', type: 'danger', class: 'me-2' },
+-    { id: 'btn-update', text: 'general.update', type: 'primary' },
++  readonly printColumns: ReadonlyArray<DataTableColumn<CashDepositLine>> = [
++    { field: 'date', header: 'cashDeposits.columns.date', type: 'date' },
++    { field: 'voucherLabel', header: 'cashDeposits.columns.voucher', value: (line) => this.voucherText(line.voucherLabel) },
++    { field: 'no', header: 'cashDeposits.columns.voucherNo' },
++    { field: 'description', header: 'cashDeposits.columns.description' },
++    { field: 'amount', header: 'cashDeposits.columns.amount', type: 'money' },
++    { field: 'deposited', header: 'cashDeposits.columns.deposited', type: 'money' },
++    { field: 'dueAmount', header: 'cashDeposits.columns.dueAmount', type: 'money' },
++    { field: 'depositedNow', header: 'cashDeposits.editor.depositedNow', type: 'money' },
+   ];
+-  readonly cashDepositDetailComponent = CashDepositDetailDetailsComponent;
+-
+-  //#endregion
+-
+-  //#region injectors
+-  private readonly cashDepositService = inject(CashDepositService);
+-  private readonly fb = inject(FormBuilder);
+-  private readonly datePipe = inject(DatePipe);
+-  protected readonly destroyRef = inject(DestroyRef);
+-
+-  pdcReceivableService = inject(PDCReceivableService);
+-  //#endregion
+-
+-  //#region constructor and life cycle
+-  constructor() {
+-    super();
+-    this.activatedRoute.url
+-      .pipe(takeUntilDestroyed(this.destroyRef))
+-      .subscribe((segments) => {
+-        const path = segments.join('/');
+-        if (path.includes('create')) {
+-          this.isCreateMode = true;
+-        }
+-      });
++  readonly rows = new EditableRows<VoucherRow, VoucherSeed>({
++    array: this.lines, parent: this.form, create: (seed) => this.createRow(seed!),
++    confirmation: this.confirmation, destroyRef: this.destroyRef,
++    removeTitle: 'cashDeposits.confirm.removeTitle', removeMessage: 'cashDeposits.confirm.removeMessage',
++    canMutate: () => this.canChangeSelection,
++    // Deselecting a saved line removes its write allocation, but keeps the source available.
++    onRemoved: (index) => {
++      const row = this.pendingDeselection;
++      if (!row) return;
++      row.controls.selected.setValue(false, { emitEvent: false });
++      row.controls.depositedNow.setValue(0, { emitEvent: false });
++      row.controls.depositedNow.disable({ emitEvent: false });
++      this.lines.insert(index, row);
++      row.markAsDirty();
++      this.updatePreview();
++      this.pendingDeselection = null;
++    },
++  });
+ 
+-    this.activatedRoute.params.subscribe((params) => {
+-      this.id = params['id'];
+-      if (!params['id'] && !this.isCreateMode)
+-        this.router.navigate(['/CashDeposit']);
+-    });
++  get isReadOnly(): boolean {
++    const item = this.details();
++    return this.mode === 'view' || !!item && (item.approvalStatus === CashDepositApprovalStatus.Approved || item.isPosted || item.isVoided);
++  }
++  get canEditFromView(): boolean {
++    const item = this.details();
++    return this.mode === 'view' && !!item && item.approvalStatus !== CashDepositApprovalStatus.Approved && !item.isPosted && !item.isVoided;
++  }
++  get canChangeSelection(): boolean {
++    return !this.isReadOnly && !this.saving() && !this.loadingData() && !this.vouchersLoading() && !this.closeConfirmationPending();
+   }
++  get canMutate(): boolean {
++    return this.canChangeSelection && !this.rows.confirmationPending() && !this.lookupsLoading() && this.lookupsReady() && this.vouchersReady();
++  }
++  get titleKey(): string { return editorTitles[this.mode]; }
++  get approvalKey(): string {
++    switch (this.details()?.approvalStatus) {
++      case CashDepositApprovalStatus.Approved: return 'cashDeposits.statuses.approved';
++      case CashDepositApprovalStatus.Rejected: return 'cashDeposits.statuses.rejected';
++      default: return 'cashDeposits.statuses.notApproved';
++    }
++  }
++  get collectionError(): string {
++    if (!this.submitted()) return '';
++    if (!this.selectedCount()) return 'cashDeposits.validation.selection';
++    if (this.rows.duplicateIndexes((row) => row.controls.selected.value ? this.sourceKey(row.controls.source.value) : null).length) return 'cashDeposits.validation.duplicate';
++    return this.previewAmount() <= 0 ? 'cashDeposits.validation.positiveTotal' : '';
++  }
++  get summaryCards(): ReadonlyArray<SummaryCard> {
++    const amount = this.isReadOnly ? this.details()?.amount : this.previewAmount();
++    return [
++      { id: 'selected', labelKey: 'cashDeposits.editor.selectedCount', value: this.selectedCount(), icon: 'bi bi-list-check', accent: 'neutral' },
++      { id: 'total', labelKey: 'cashDeposits.editor.total', value: amount ?? '—', format: amount === undefined ? 'text' : 'money', icon: 'bi bi-cash-stack', accent: 'neutral', ...(!this.isReadOnly ? { hintKey: 'cashDeposits.editor.preview' } : {}) },
++      { id: 'net', labelKey: 'cashDeposits.editor.netTotal', value: amount ?? '—', format: amount === undefined ? 'text' : 'money', icon: 'bi bi-bank', accent: 'primary' },
++    ];
++  }
++
+   ngOnInit(): void {
+-    this.initForm();
+-    this.fetchBanks();
+-    if (!this.isCreateMode) this.getItemById(this.id);
++    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updatePreview());
++    this.bindLookups();
++    this.bindVouchers();
++    combineLatest([this.route.paramMap, this.route.data, this.detailRetry$.pipe(startWith(undefined))]).pipe(
++      switchMap(([params, data]) => defer(() => {
++        this.mode = data['mode'] === 'create' || data['mode'] === 'edit' ? data['mode'] : 'view';
++        const id = Number(params.get('id'));
++        this.recordId = Number.isInteger(id) && id > 0 ? id : null;
++        this.resetEditor();
++        if (this.mode === 'create') {
++          this.form.enable({ emitEvent: false });
++          this.lookupRequest$.next();
++          this.voucherRequest$.next(null);
++          return EMPTY;
++        }
++        if (this.recordId === null) { this.errorMessage.set('cashDeposits.errors.details'); return EMPTY; }
++        const requestedId = this.recordId;
++        this.loadingData.set(true);
++        return this.service.getDetails(requestedId).pipe(
++          map((result) => {
++            if (!result.isSuccess || !result.entity) { this.errorMessage.set(result.message || 'cashDeposits.errors.details'); return; }
++            if (this.recordId !== requestedId) return;
++            this.applyDetails(result.entity);
++            if (!this.isReadOnly) {
++              this.lookupRequest$.next();
++              this.voucherRequest$.next(requestedId);
++            } else if (this.mode === 'edit') this.errorMessage.set('cashDeposits.errors.locked');
++            if (this.mode === 'view' && this.route.snapshot.queryParamMap.get('print') === 'true') {
++              this.print();
++              void this.router.navigate([], { relativeTo: this.route, queryParams: { print: null }, queryParamsHandling: 'merge', replaceUrl: true });
++            }
++          }),
++          catchError((error: unknown) => { this.errorMessage.set(apiErrorMessage(error, 'cashDeposits.errors.details')); return EMPTY; }),
++          finalize(() => this.loadingData.set(false)),
++        );
++      })), takeUntilDestroyed(this.destroyRef),
++    ).subscribe();
+   }
+-  //#endregion
+ 
+-  //#region methods
+-  fetchBanks() {
+-    this.loading.startLoading();
+-    this.pdcReceivableService
+-      .getAll<Bank>('/Bank')
+-      .pipe(takeUntilDestroyed(this.destroyRef))
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess) {
+-            this.banks.set(res.entities);
+-          }
+-          this.loading.endLoading();
+-        },
+-      });
++  retryDetails(): void { if (!this.loadingData() && !this.saving() && !this.form.dirty) this.detailRetry$.next(); }
++  refreshLookups(): void { if (!this.lookupsLoading() && !this.saving() && !this.isReadOnly) this.lookupRequest$.next(); }
++  retryVouchers(): void { if (this.canChangeSelection && !this.rows.confirmationPending()) this.voucherRequest$.next(this.recordId); }
++  voucherText(label: string | null): string {
++    if (label === null) return '';
++    const key = voucherKeys[label];
++    return key ? this.translate.instant(key) as string : label;
++  }
++  sourceKey(source: UndepositedVoucher): string {
++    return `${source.sourceType}:${source.sourceType === CashDepositSourceType.Receipt ? source.sourceReceiptId : source.sourcePaymentId}`;
+   }
+-  getSubscriptionId(): number {
+-    return Number.parseInt(localStorage.getItem('subscriptionId') || '0');
++  toggleSelection(row: VoucherRow): void {
++    if (!this.canMutate) return;
++    if (row.controls.selected.value && this.rows.savedId(row)) {
++      this.pendingDeselection = row;
++      this.rows.requestRemove(this.lines.controls.indexOf(row));
++    } else this.setSelected(row, !row.controls.selected.value);
+   }
+-  initForm() {
+-    this.cashDepositForm = this.fb.group({
+-      id: [{ value: '', disabled: !this.isCreateMode }],
+-      subscriptionId: [{ value: '', disabled: !this.isCreateMode }],
+-      isDeleted: [{ value: false, disabled: !this.isCreateMode }],
+-      isActive: [{ value: false, disabled: !this.isCreateMode }],
+-      isValid: [{ value: false, disabled: !this.isCreateMode }],
+-      isChanged: [{ value: false, disabled: !this.isCreateMode }],
+-      deletedAt: [{ value: '', disabled: !this.isCreateMode }],
+-      deletedBy: [{ value: '', disabled: !this.isCreateMode }],
+-      createdAt: [{ value: '', disabled: !this.isCreateMode }],
+-      createdBy: [{ value: '', disabled: !this.isCreateMode }],
+-      date: [{ value: '', disabled: !this.isCreateMode }],
+-      bankId: [{ value: '', disabled: !this.isCreateMode }],
+-      refNo: [{ value: '', disabled: !this.isCreateMode }],
++  selectAll(): void {
++    if (!this.canMutate) return;
++    this.lines.controls.forEach((row) => {
++      if (row.controls.available.value && !row.controls.selected.value) this.setSelected(row, true);
+     });
+   }
+-
+-  fillForm() {
+-    if (this.cashDeposit) {
+-      this.cashDepositForm.patchValue({
+-        id: this.cashDeposit.id,
+-        subscriptionId: this.cashDeposit.subscriptionId,
+-        isDeleted: this.cashDeposit.isDeleted,
+-        isActive: this.cashDeposit.isActive,
+-        isValid: this.cashDeposit.isValid,
+-        isChanged: this.cashDeposit.isChanged,
+-        deletedAt: this.cashDeposit.deletedAt,
+-        deletedBy: this.cashDeposit.deletedBy,
+-        createdAt: this.cashDeposit.createdAt,
+-        createdBy: this.cashDeposit.createdBy,
+-        date: this.datePipe.transform(this.cashDeposit.date, 'yyyy-MM-dd'),
+-        bankId: this.cashDeposit.bankId,
+-        refNo: this.cashDeposit.refNo,
+-      });
++  save(printAfter = false): void {
++    if (!this.canMutate) return;
++    this.submitted.set(true);
++    this.form.markAllAsTouched();
++    this.updatePreview();
++    if (this.form.invalid || this.collectionError) { this.focusInvalid(); return; }
++    const raw = this.form.getRawValue();
++    const date = parseDateValue(raw.date);
++    if (!date || raw.bankId === null || raw.paymentMethodId === null) return;
++    const cashDepositDetails: CashDepositLineInput[] = [];
++    for (const row of this.lines.controls) {
++      if (!row.controls.selected.value || row.controls.depositedNow.value === 0) continue;
++      const source = row.controls.source.value;
++      const line: CashDepositLineInput = {
++        sourceType: source.sourceType, sourceReceiptId: source.sourceReceiptId,
++        sourcePaymentId: source.sourcePaymentId, depositedNow: row.controls.depositedNow.value!,
++      };
++      if (this.mode === 'edit') line.id = this.rows.savedId(row) ?? 0;
++      cashDepositDetails.push(line);
+     }
++    const payload: CashDepositAddInput = {
++      date, bankId: raw.bankId, paymentMethodId: raw.paymentMethodId, branchId: raw.branchId,
++      refNo: raw.refNo.trim() || null, description: raw.description.trim() || null, cashDepositDetails,
++    };
++    this.saving.set(true);
++    this.saveFailed.set(false);
++    this.form.disable({ emitEvent: false });
++    const request = this.mode === 'create' ? this.service.add(payload) : this.service.update({ ...payload, id: this.recordId! });
++    request.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => {
++      this.saving.set(false);
++      if (!this.saveCompleted) this.enableEditableControls();
++    })).subscribe({
++      next: (result) => {
++        if (!result.isSuccess) { this.saveFailed.set(true); return; }
++        this.saveCompleted = true;
++        this.form.markAsPristine();
++        const savedId = Number(result.id ?? this.recordId);
++        if (Number.isInteger(savedId) && savedId > 0) {
++          void this.router.navigate(['/CashDeposit/view', savedId], { queryParams: { ...this.returnQueryParams(), ...(printAfter ? { print: true } : {}) } });
++        } else void this.router.navigate(['/CashDeposit'], { queryParams: this.returnQueryParams() }); // No saved identity means no authoritative print.
++      },
++      // Mutation feedback belongs to the interceptor; retain all inputs for retry.
++      error: () => this.saveFailed.set(true),
++    });
+   }
+-
+-  getItemById(id: string) {
+-    this.loading.startLoading();
+-    this.cashDepositService
+-      .getById<Result<CashDepositDetailsDTO>>(id)
+-      .pipe(takeUntilDestroyed(this.destroyRef))
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess) {
+-            this.cashDeposit = res.entity;
+-            this.fillForm();
+-          }
+-          this.loading.endLoading();
+-        },
+-      });
++  print(): void { if (this.mode === 'view' && this.details()) this.printSession.print(); }
++  switchToEdit(): void { if (this.canEditFromView) void this.router.navigate(['/CashDeposit/edit', this.recordId], { queryParams: this.returnQueryParams() }); }
++  requestClose(): void { if (!this.saving() && !this.rows.confirmationPending()) void this.router.navigate(['/CashDeposit'], { queryParams: this.returnQueryParams() }); }
++  canDeactivate(): Observable<boolean> | boolean {
++    if (this.saveCompleted) return true;
++    if (this.saving() || this.rows.confirmationPending() || this.closeConfirmationPending()) return false;
++    if (this.isReadOnly || !this.form.dirty) return true;
++    this.closeConfirmationPending.set(true);
++    return this.confirmation.confirm({
++      severity: 'warning', title: { key: 'cashDeposits.confirm.discardTitle' },
++      message: { key: 'cashDeposits.confirm.discardMessage' },
++      confirmLabel: { key: 'general.yes' }, cancelLabel: { key: 'general.cancel' }, icon: 'bi bi-exclamation-triangle',
++    }).pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.closeConfirmationPending.set(false)));
+   }
+ 
+-  onButtonClick(buttonId: string) {
+-    switch (buttonId) {
+-      case 'btn-save':
+-        this.save();
+-        break;
+-      case 'btn-cancel':
+-        this.cancel();
+-        break;
+-      case 'btn-delete':
+-        this.delete();
+-        break;
+-      case 'btn-update':
+-        this.update();
+-        break;
+-    }
++  private bindLookups(): void {
++    this.lookupRequest$.pipe(switchMap(() => defer(() => {
++      this.lookupsLoading.set(true);
++      this.lookupsReady.set(false);
++      this.lookupError.set('');
++      return this.service.getLookups().pipe(
++        takeUntil(this.cancelReads$),
++        map((lookups) => { this.lookups.set(lookups); this.lookupsReady.set(true); }),
++        catchError((error: unknown) => {
++          this.lookupError.set(error instanceof Error && !(error instanceof HttpErrorResponse)
++            ? error.message || 'cashDeposits.errors.lookups' : apiErrorMessage(error, 'cashDeposits.errors.lookups'));
++          return EMPTY;
++        }), finalize(() => this.lookupsLoading.set(false)),
++      );
++    })), takeUntilDestroyed(this.destroyRef)).subscribe();
+   }
+-
+-  save() {
+-    if (this.cashDepositForm.valid) {
+-      this.loading.startLoading();
+-      const cashDepositData = this.cashDepositForm.value;
+-      if (this.isCreateMode) {
+-        this.createCashDeposit(cashDepositData);
+-      } else {
+-        this.updateCashDeposit(cashDepositData);
+-      }
+-    }
++  private bindVouchers(): void {
++    this.voucherRequest$.pipe(switchMap((excludeId) => defer(() => {
++      this.vouchersLoading.set(true);
++      this.vouchersReady.set(false);
++      this.voucherError.set('');
++      return this.service.getVouchers(excludeId ?? undefined).pipe(
++        takeUntil(this.cancelReads$),
++        map((result) => {
++          if (this.recordId !== excludeId || this.isReadOnly) return;
++          if (!result.isSuccess) { this.voucherError.set(result.message || 'cashDeposits.errors.vouchers'); return; }
++          this.mergeVouchers(result.entities ?? []);
++          this.vouchersReady.set(true);
++          this.enableEditableControls();
++        }),
++        catchError((error: unknown) => { this.voucherError.set(apiErrorMessage(error, 'cashDeposits.errors.vouchers')); return EMPTY; }),
++        finalize(() => this.vouchersLoading.set(false)),
++      );
++    })), takeUntilDestroyed(this.destroyRef)).subscribe();
+   }
+-
+-  createCashDeposit(data: any) {
+-    const cashDepositData: CashDepositCreateDTO = {
+-      id: this.id,
+-      subscriptionId: this.getSubscriptionId(),
+-      isDeleted: data.isDeleted,
+-      isActive: data.isActive,
+-      isValid: data.isValid,
+-      isChanged: data.isChanged,
+-      deletedAt: data.deletedAt,
+-      deletedBy: data.deletedBy,
+-      createdAt: data.createdAt,
+-      createdBy: this.cashDeposit?.createdBy,
+-      date: data.date,
+-      bankId: data.bankId,
+-      refNo: data.refNo,
+-    };
+-
+-    this.cashDepositService
+-      .post(cashDepositData)
+-      .pipe(takeUntilDestroyed(this.destroyRef))
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess) {
+-            this.router.navigate(['/CashDeposit']);
+-          }
+-          this.loading.endLoading();
+-        },
+-      });
++  private resetEditor(): void {
++    this.cancelReads$.next();
++    this.saveCompleted = false;
++    this.submitted.set(false);
++    this.details.set(null);
++    this.errorMessage.set('');
++    this.voucherError.set('');
++    this.lookupError.set('');
++    this.vouchersReady.set(false);
++    this.lookupsReady.set(false);
++    this.pendingDeselection = null;
++    this.saveFailed.set(false);
++    this.lookups.set({ banks: [], branches: [], paymentMethods: [] });
++    this.rows.replace([]);
++    this.form.reset({ date: new Date(), bankId: null, paymentMethodId: null, branchId: null, refNo: '', description: '' }, { emitEvent: false });
++    this.form.disable({ emitEvent: false });
++    this.form.markAsPristine();
++    this.updatePreview();
+   }
+-
+-  updateCashDeposit(data: any) {
+-    const cashDepositData: CashDepositCreateDTO = {
+-      id: this.id,
+-      subscriptionId: data.subscriptionId,
+-      isDeleted: false,
+-      isActive: true,
+-      isValid: false,
+-      isChanged: false,
+-      deletedAt: data.deletedAt,
+-      deletedBy: data.deletedBy,
+-      createdAt: data.createdAt,
+-      date: data.date,
+-      bankId: data.bankId,
+-      refNo: data.refNo,
+-      createdBy: this.cashDeposit?.createdBy,
++  private applyDetails(item: CashDepositDetails): void {
++    this.details.set(item);
++    const date = parseDateValue(item.date.slice(0, 10));
++    const [year, month, day] = date ? date.split('-').map(Number) : [];
++    this.form.patchValue({
++      date: date ? new Date(year, month - 1, day) : null, bankId: item.bankId,
++      paymentMethodId: item.paymentMethodId, branchId: item.branchId,
++      refNo: item.refNo ?? '', description: item.description ?? '',
++    }, { emitEvent: false });
++    this.rows.replace(item.cashDepositDetails.map((line) => ({ ...line, selected: true, available: this.mode === 'view' })));
++    this.form.disable({ emitEvent: false });
++    this.form.markAsPristine();
++    this.updatePreview();
++  }
++  private mergeVouchers(vouchers: UndepositedVoucher[]): void {
++    const previousRows = [...this.lines.controls];
++    const previous = new Map(previousRows.map((row) => [this.sourceKey(row.controls.source.value), row] as const));
++    const seen = new Set<string>();
++    const reused = new Set<VoucherRow>();
++    const rows: VoucherRow[] = [];
++    for (const source of vouchers) {
++      const key = this.sourceKey(source);
++      if (seen.has(key)) continue;
++      seen.add(key);
++      const row = previous.get(key) ?? this.createRow({ ...source, id: 0, selected: false, available: true });
++      row.controls.source.setValue(source, { emitEvent: false });
++      row.controls.available.setValue(true, { emitEvent: false });
++      row.controls.depositedNow.updateValueAndValidity({ emitEvent: false });
++      reused.add(row);
++      rows.push(row);
++    }
++    for (const row of previousRows) {
++      if (reused.has(row) || !row.controls.selected.value) continue;
++      row.controls.available.setValue(false, { emitEvent: false });
++      row.controls.depositedNow.updateValueAndValidity({ emitEvent: false });
++      rows.push(row); // Preserve unavailable saved choices visibly; require deliberate deselection.
++    }
++    this.lines.clear({ emitEvent: false });
++    rows.forEach((row) => this.lines.push(row, { emitEvent: false }));
++    this.lines.updateValueAndValidity();
++    this.updatePreview();
++  }
++  private createRow(seed: VoucherSeed): VoucherRow {
++    const row: VoucherRow = new FormGroup({
++      id: new FormControl(seed.id, { nonNullable: true }),
++      source: new FormControl<UndepositedVoucher>(seed, { nonNullable: true }),
++      selected: new FormControl(seed.selected, { nonNullable: true }),
++      available: new FormControl(seed.available, { nonNullable: true }),
++      depositedNow: new FormControl<number | null>({ value: seed.selected ? seed.depositedNow : 0, disabled: !seed.selected }),
++    });
++    const amountValidator: ValidatorFn = (control) => {
++      if (!row.controls.selected.value) return null;
++      if (!row.controls.available.value) return { sourceMissing: true };
++      const value: unknown = control.value;
++      if (typeof value !== 'number' || !Number.isFinite(value)) return { number: true };
++      if (value === 0) return { nonzero: true };
++      const due = row.controls.source.value.dueAmount;
++      if (Math.sign(value) !== Math.sign(due)) return { sign: true };
++      if (Math.abs(value) > Math.abs(due)) return { exceedsDue: true };
++      // Existing server/persisted input scale is two decimals; no display-precision inference.
++      if (Math.abs(value - roundMoney(value, 2)) > 0.000000001) return { precision: true };
++      return null;
+     };
+-
+-    this.cashDepositService
+-      .put(cashDepositData)
+-      .pipe(takeUntilDestroyed(this.destroyRef))
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess) {
+-            this.router.navigate(['/CashDeposit']);
+-          }
+-          this.loading.endLoading();
+-        },
+-      });
++    row.controls.depositedNow.setValidators(amountValidator);
++    row.controls.depositedNow.updateValueAndValidity({ emitEvent: false });
++    return row;
+   }
+-
+-  cancel() {
+-    this.router.navigate(['/CashDeposit']);
++  private enableEditableControls(): void {
++    if (this.isReadOnly || this.saving()) return;
++    this.form.enable({ emitEvent: false });
++    this.lines.controls.forEach((row) => {
++      if (!row.controls.selected.value) row.controls.depositedNow.disable({ emitEvent: false });
++      else row.controls.depositedNow.updateValueAndValidity({ emitEvent: false });
++    });
++    this.form.updateValueAndValidity({ emitEvent: false });
++    this.updatePreview();
+   }
+-
+-  delete() {
+-    this.loading.startLoading();
+-
+-    this.cashDepositService
+-      .delete(this.id)
+-      .pipe(takeUntilDestroyed(this.destroyRef))
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess) {
+-            this.router.navigate(['/CashDeposit']);
+-          }
+-          this.loading.endLoading();
+-        },
+-      });
++  private setSelected(row: VoucherRow, selected: boolean): void {
++    if (selected && !row.controls.available.value) return;
++    row.controls.selected.setValue(selected, { emitEvent: false });
++    row.controls.depositedNow.setValue(selected ? row.controls.source.value.dueAmount : 0, { emitEvent: false });
++    if (selected) row.controls.depositedNow.enable({ emitEvent: false });
++    else row.controls.depositedNow.disable({ emitEvent: false });
++    row.markAsDirty();
++    this.form.markAsDirty();
++    this.form.updateValueAndValidity();
++    this.updatePreview();
+   }
+-
+-  update() {
+-    const fieldsToEnable = [
+-      'id',
+-      'subscriptionId',
+-      'isDeleted',
+-      'isActive',
+-      'isValid',
+-      'isChanged',
+-      'deletedAt',
+-      'deletedBy',
+-      'createdAt',
+-      'createdBy',
+-      'date',
+-      'bankId',
+-      'refNo',
+-      'createdAt',
+-      'createdBy',
+-      'date',
+-      'bankId',
+-      'refNo',
+-    ];
+-
+-    fieldsToEnable.forEach((field) => {
+-      this.cashDepositForm.get(field)?.enable();
++  private updatePreview(): void {
++    let count = 0;
++    let total = 0;
++    this.lines.controls.forEach((row) => {
++      if (!row.controls.selected.value) return;
++      count++;
++      const amount = row.controls.depositedNow.value;
++      if (typeof amount === 'number' && Number.isFinite(amount)) total += amount;
+     });
++    this.selectedCount.set(count);
++    this.previewAmount.set(roundMoney(total, 2));
++  }
++  private focusInvalid(): void {
++    const fields = ['date', 'bankId', 'paymentMethodId', 'branchId', 'refNo', 'description'] as const;
++    for (const field of fields) {
++      if (this.form.controls[field].invalid) { focusField(`cash-deposit-${field}`); return; }
++    }
++    const index = this.lines.controls.findIndex((row) => row.controls.selected.value && row.controls.depositedNow.invalid);
++    focusField(index >= 0 ? `cash-deposit-amount-${this.sourceKey(this.lines.at(index).controls.source.value)}` : 'cash-deposit-select-all', { openOverlay: false });
++  }
++  private returnQueryParams(): Record<string, unknown> {
++    const { print, ...params } = this.route.snapshot.queryParams;
++    return params;
+   }
+-
+-  //#endregion
+ }

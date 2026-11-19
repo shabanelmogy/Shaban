@@ -1,0 +1,2002 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FailedToAdd" xml:space="preserve">
+    <value>فشل في الإضافة</value>
+  </data>
+  <data name="FailedToAddBranchToSubscription" xml:space="preserve">
+    <value>تم الوصول لاقصى عدد من الافرع</value>
+  </data>
+  <data name="FailedToAddEquipmentToSubscription" xml:space="preserve">
+    <value>تم الوصول لاقصي عدد من المعدات</value>
+  </data>
+  <data name="FailedToChangePassword" xml:space="preserve">
+    <value>فشل في تغيير كلمة السر</value>
+  </data>
+  <data name="FailedToFound" xml:space="preserve">
+    <value>فشل في إيجاد المطلوب</value>
+  </data>
+  <data name="InvalidDateRange" xml:space="preserve">
+    <value>يجب أن يكون تاريخ الانتهاء في تاريخ البدء أو بعده.</value>
+  </data>
+  <data name="InvalidMovementLogFilters" xml:space="preserve">
+    <value>فلاتر سجل الحركات غير صالحة.</value>
+  </data>
+  <data name="FailedToRemove" xml:space="preserve">
+    <value>فشل في الحذف</value>
+  </data>
+  <data name="FailedToRenewalSubscription" xml:space="preserve">
+    <value>يوجد فروع أو أدوات أزيد من المطلوب</value>
+  </data>
+  <data name="FailedToUpdate" xml:space="preserve">
+    <value>فشل في التحديث</value>
+  </data>
+  <data name="FailToAuth" xml:space="preserve">
+    <value>فشل في الاتصال </value>
+  </data>
+  <data name="NotFound" xml:space="preserve">
+    <value>غير موجود</value>
+  </data>
+  <data name="SuccessedToAdd" xml:space="preserve">
+    <value>تمت الإضافة</value>
+  </data>
+  <data name="SuccessedToRemove" xml:space="preserve">
+    <value>تم الحذف</value>
+  </data>
+  <data name="SuccessedToSave" xml:space="preserve">
+    <value>تم الحفظ</value>
+  </data>
+  <data name="SuccessedToUpdate" xml:space="preserve">
+    <value>تم التحديث</value>
+  </data>
+  <data name="LeaseMasterAgreementDatesRequired" xml:space="preserve">
+    <value>تاريخا بداية الاتفاقية الرئيسية وانتهائها مطلوبان.</value>
+  </data>
+  <data name="LeaseMasterAgreementQuotationRequired" xml:space="preserve">
+    <value>يلزم وجود عرض سعر تأجير معتمد من العميل للاتفاقية الرئيسية.</value>
+  </data>
+  <data name="LeaseMasterAgreementCustomerRequired" xml:space="preserve">
+    <value>العميل مطلوب للاتفاقية الرئيسية.</value>
+  </data>
+  <data name="LeaseMasterAgreementQuotationNotFound" xml:space="preserve">
+    <value>لم يتم العثور على عرض سعر التأجير.</value>
+  </data>
+  <data name="LeaseMasterAgreementQuotationCustomerInvalid" xml:space="preserve">
+    <value>يجب أن يرتبط عرض سعر التأجير بعميل نشط.</value>
+  </data>
+  <data name="LeaseMasterAgreementQuotationApprovalRequired" xml:space="preserve">
+    <value>تتطلب الاتفاقية الرئيسية عرض سعر تأجير معتمداً من العميل.</value>
+  </data>
+  <data name="LeaseMasterAgreementCustomerMismatch" xml:space="preserve">
+    <value>يجب أن يطابق عميل الاتفاقية الرئيسية عميل عرض السعر.</value>
+  </data>
+  <data name="LeaseMasterAgreementDuplicateQuotation" xml:space="preserve">
+    <value>توجد بالفعل اتفاقية رئيسية لعرض السعر هذا.</value>
+  </data>
+  <data name="LeaseMasterAgreementCreateFailed" xml:space="preserve">
+    <value>تعذر إنشاء الاتفاقية الرئيسية.</value>
+  </data>
+  <data name="LeaseMasterAgreementCreated" xml:space="preserve">
+    <value>تم إنشاء الاتفاقية الرئيسية بنجاح.</value>
+  </data>
+  <data name="LeaseMasterAgreementNotFound" xml:space="preserve">
+    <value>لم يتم العثور على الاتفاقية الرئيسية.</value>
+  </data>
+  <data name="LeaseMasterAgreementApprovedEditBlocked" xml:space="preserve">
+    <value>لا يمكن تعديل الاتفاقيات الرئيسية المعتمدة.</value>
+  </data>
+  <data name="LeaseMasterAgreementUpdateFailed" xml:space="preserve">
+    <value>تعذر تحديث الاتفاقية الرئيسية.</value>
+  </data>
+  <data name="LeaseMasterAgreementUpdated" xml:space="preserve">
+    <value>تم تحديث الاتفاقية الرئيسية بنجاح.</value>
+  </data>
+  <data name="LeaseMasterAgreementApprovedDeleteBlocked" xml:space="preserve">
+    <value>لا يمكن حذف الاتفاقيات الرئيسية المعتمدة.</value>
+  </data>
+  <data name="LeaseMasterAgreementLeaseReferencesBlockDelete" xml:space="preserve">
+    <value>لا يمكن حذف هذه الاتفاقية الرئيسية لوجود اتفاقيات تأجير مرتبطة بها.</value>
+  </data>
+  <data name="LeaseMasterAgreementDeleted" xml:space="preserve">
+    <value>تم حذف الاتفاقية الرئيسية بنجاح.</value>
+  </data>
+  <data name="LeaseMasterAgreementDeleteFailed" xml:space="preserve">
+    <value>تعذر حذف الاتفاقية الرئيسية.</value>
+  </data>
+  <data name="LeaseMasterAgreementAlreadyApproved" xml:space="preserve">
+    <value>الاتفاقية الرئيسية معتمدة بالفعل.</value>
+  </data>
+  <data name="LeaseMasterAgreementApprovalStateInvalid" xml:space="preserve">
+    <value>يمكن اعتماد الاتفاقيات الرئيسية غير المعتمدة فقط.</value>
+  </data>
+  <data name="LeaseMasterAgreementApproved" xml:space="preserve">
+    <value>تم اعتماد الاتفاقية الرئيسية بنجاح.</value>
+  </data>
+  <data name="LeaseMasterAgreementApprovalFailed" xml:space="preserve">
+    <value>تعذر اعتماد الاتفاقية الرئيسية.</value>
+  </data>
+  <data name="LeaseAgreementNotFound" xml:space="preserve">
+    <value>لم يتم العثور على اتفاقية التأجير.</value>
+  </data>
+  <data name="LeaseAgreementReadOnly" xml:space="preserve">
+    <value>لا يمكن تعديل اتفاقيات التأجير المغلقة أو الملغاة أو المفوترة.</value>
+  </data>
+  <data name="LeaseAgreementVoidReasonRequired" xml:space="preserve">
+    <value>سبب الإلغاء مطلوب.</value>
+  </data>
+  <data name="LeaseAgreementVoidReasonTooLong" xml:space="preserve">
+    <value>يجب ألا يتجاوز سبب الإلغاء 500 حرف.</value>
+  </data>
+  <data name="LeaseAgreementAlreadyVoided" xml:space="preserve">
+    <value>تم إلغاء اتفاقية التأجير بالفعل.</value>
+  </data>
+  <data name="LeaseAgreementVoidReadOnly" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقيات التأجير المغلقة أو المفوترة.</value>
+  </data>
+  <data name="LeaseAgreementVoidPaymentBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لوجود دفعة مقدمة أو وديعة بها.</value>
+  </data>
+  <data name="LeaseAgreementVoidReceiptBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بإيصال.</value>
+  </data>
+  <data name="LeaseAgreementVoidPdcBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بشيك آجل مستحق.</value>
+  </data>
+  <data name="LeaseAgreementVoidAccidentBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بحادث.</value>
+  </data>
+  <data name="LeaseAgreementVoidServiceBookingBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بحجز خدمة مركبة.</value>
+  </data>
+  <data name="LeaseAgreementVoidTrafficFineBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بمخالفة مرورية.</value>
+  </data>
+  <data name="LeaseAgreementVoidTransportationInvoiceBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بفاتورة نقل.</value>
+  </data>
+  <data name="LeaseAgreementVoidCollectionBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بحركة تحصيل.</value>
+  </data>
+  <data name="LeaseAgreementVoidCustodyBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بحركة عهدة.</value>
+  </data>
+  <data name="LeaseAgreementVoidDeliveryBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بحركة تسليم.</value>
+  </data>
+  <data name="LeaseAgreementVoidDebitNoteBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بإشعار مدين.</value>
+  </data>
+  <data name="LeaseAgreementVoidCreditNoteBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بإشعار دائن.</value>
+  </data>
+  <data name="LeaseAgreementVoidInvoiceBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بفاتورة.</value>
+  </data>
+  <data name="LeaseAgreementVoidOpeningBalanceDepositBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بإيداع في الرصيد الافتتاحي.</value>
+  </data>
+  <data name="LeaseAgreementVoidOpeningBalanceCustomerBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لأنها مرتبطة بقيد عميل في الرصيد الافتتاحي.</value>
+  </data>
+  <data name="LeaseAgreementVoidVehicleReplacementBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لوجود سجل استبدال مركبة.</value>
+  </data>
+  <data name="LeaseAgreementVoidDriverReplacementBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية التأجير لوجود سجل استبدال سائق.</value>
+  </data>
+  <data name="LeaseAgreementVoidSaveFailed" xml:space="preserve">
+    <value>تعذر إلغاء اتفاقية التأجير.</value>
+  </data>
+  <data name="LeaseAgreementVoided" xml:space="preserve">
+    <value>تم إلغاء اتفاقية التأجير بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementExtendAgreementInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية التأجير غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementExtendDetailsRequired" xml:space="preserve">
+    <value>تفاصيل التمديد مطلوبة.</value>
+  </data>
+  <data name="LeaseAgreementExtendMonthsInvalid" xml:space="preserve">
+    <value>يجب أن تحتوي مدة التمديد على عدد موجب من الأشهر.</value>
+  </data>
+  <data name="LeaseAgreementExtendMonthsNotGreater" xml:space="preserve">
+    <value>يجب أن يكون عدد الأشهر المستهدف أكبر من مدة الاتفاقية الحالية.</value>
+  </data>
+  <data name="LeaseAgreementExtendEndDateInvalid" xml:space="preserve">
+    <value>ينتج عن مدة التمديد تاريخ انتهاء غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementExtendStale" xml:space="preserve">
+    <value>تغيرت رسوم الحجز بعد فتح النموذج. حدّث الصفحة وحاول مرة أخرى.</value>
+  </data>
+  <data name="LeaseAgreementExtendSaved" xml:space="preserve">
+    <value>تم تمديد اتفاقية التأجير بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementExtendSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ تمديد اتفاقية التأجير.</value>
+  </data>
+  <data name="LeaseAgreementDocumentNotFound" xml:space="preserve">
+    <value>لم يتم العثور على نوع مستند الاتفاقية أو أنه غير نشط.</value>
+  </data>
+  <data name="LeaseAgreementDocumentUploadBlocked" xml:space="preserve">
+    <value>لا يمكن رفع مستندات إلى اتفاقية تأجير مغلقة أو ملغاة أو مفوترة.</value>
+  </data>
+  <data name="LeaseAgreementDocumentPathInvalid" xml:space="preserve">
+    <value>مسار مستند الاتفاقية المخزن غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementDocumentFileRequired" xml:space="preserve">
+    <value>اختر مستندًا لرفعه.</value>
+  </data>
+  <data name="LeaseAgreementDocumentFileTooLarge" xml:space="preserve">
+    <value>يجب ألا يتجاوز حجم المستند 5 ميجابايت.</value>
+  </data>
+  <data name="LeaseAgreementDocumentFileInvalid" xml:space="preserve">
+    <value>يُسمح فقط بمستندات JPG وPNG وPDF الصالحة.</value>
+  </data>
+  <data name="LeaseAgreementDocumentSaved" xml:space="preserve">
+    <value>تم رفع مستند الاتفاقية بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementDocumentSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ مستند الاتفاقية.</value>
+  </data>
+  <data name="LeaseAgreementDiscountAgreementMismatch" xml:space="preserve">
+    <value>طلب الخصم لا يطابق اتفاقية التأجير المحددة.</value>
+  </data>
+  <data name="LeaseAgreementDiscountDatesRequired" xml:space="preserve">
+    <value>يتطلب كل خصم للاتفاقية تاريخ بداية وتاريخ نهاية.</value>
+  </data>
+  <data name="LeaseAgreementDiscountDateRangeInvalid" xml:space="preserve">
+    <value>يجب أن يكون تاريخ بداية خصم الاتفاقية في أو قبل تاريخ نهايته.</value>
+  </data>
+  <data name="LeaseAgreementDiscountValueInvalid" xml:space="preserve">
+    <value>لا يمكن أن يكون خصم الاتفاقية سالبًا.</value>
+  </data>
+  <data name="LeaseAgreementDiscountDuplicate" xml:space="preserve">
+    <value>لا يُسمح بتكرار نطاقات تواريخ خصم الاتفاقية.</value>
+  </data>
+  <data name="LeaseAgreementDiscountsSaved" xml:space="preserve">
+    <value>تم حفظ خصومات الاتفاقية بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementDiscountsSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ خصومات الاتفاقية.</value>
+  </data>
+  <data name="LeaseAgreementDatesRequired" xml:space="preserve">
+    <value>تاريخا بداية اتفاقية التأجير وانتهائها مطلوبان.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateAgreementInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية التأجير غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateRequired" xml:space="preserve">
+    <value>تاريخ التسليم مطلوب.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateAfterEndDate" xml:space="preserve">
+    <value>لا يمكن أن يكون تاريخ التسليم بعد تاريخ انتهاء الاتفاقية.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateSaved" xml:space="preserve">
+    <value>تم حفظ تاريخ تسليم الاتفاقية بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementDeliveryDateSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ تاريخ تسليم الاتفاقية.</value>
+  </data>
+  <data name="LeaseAgreementDeleteReadOnly" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقيات التأجير المغلقة أو الملغاة أو المفوترة.</value>
+  </data>
+  <data name="LeaseAgreementDeleteReceiptBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بإيصال.</value>
+  </data>
+  <data name="LeaseAgreementDeletePdcBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بشيك آجل مستحق.</value>
+  </data>
+  <data name="LeaseAgreementDeleteAccidentBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بحادث.</value>
+  </data>
+  <data name="LeaseAgreementDeleteServiceBookingBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بحجز خدمة مركبة.</value>
+  </data>
+  <data name="LeaseAgreementDeleteTrafficFineBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بمخالفة مرورية.</value>
+  </data>
+  <data name="LeaseAgreementDeleteTransportationInvoiceBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بفاتورة نقل.</value>
+  </data>
+  <data name="LeaseAgreementDeleteCollectionBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بحركة تحصيل.</value>
+  </data>
+  <data name="LeaseAgreementDeleteCustodyBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بحركة عهدة.</value>
+  </data>
+  <data name="LeaseAgreementDeleteDeliveryBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بحركة تسليم.</value>
+  </data>
+  <data name="LeaseAgreementDeleteDebitNoteBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بإشعار مدين.</value>
+  </data>
+  <data name="LeaseAgreementDeleteCreditNoteBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بإشعار دائن.</value>
+  </data>
+  <data name="LeaseAgreementDeleteInvoiceBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بفاتورة.</value>
+  </data>
+  <data name="LeaseAgreementDeleteOpeningBalanceDepositBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بإيداع في الرصيد الافتتاحي.</value>
+  </data>
+  <data name="LeaseAgreementDeleteOpeningBalanceCustomerBlocked" xml:space="preserve">
+    <value>لا يمكن حذف اتفاقية التأجير لأنها مرتبطة بقيد عميل في الرصيد الافتتاحي.</value>
+  </data>
+  <data name="LeaseAgreementFuelLevelInvalid" xml:space="preserve">
+    <value>مستوى الوقود غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementCustomerTypeInvalid" xml:space="preserve">
+    <value>نوع العميل غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementAmountsInvalid" xml:space="preserve">
+    <value>لا يمكن أن تكون قيم الخصم أو الدفعة المقدمة أو التأمين سالبة.</value>
+  </data>
+  <data name="LeaseAgreementTaxPercentInvalid" xml:space="preserve">
+    <value>يجب أن تكون نسبة الضريبة بين صفر ومائة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleNotFound" xml:space="preserve">
+    <value>لم يتم العثور على المركبة.</value>
+  </data>
+  <data name="LeaseAgreementCarModelNotFound" xml:space="preserve">
+    <value>لم يتم العثور على طراز المركبة.</value>
+  </data>
+  <data name="LeaseAgreementCustomerNotFound" xml:space="preserve">
+    <value>لم يتم العثور على العميل.</value>
+  </data>
+  <data name="LeaseAgreementDriverNotFound" xml:space="preserve">
+    <value>لم يتم العثور على السائق.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalDriverNotFound" xml:space="preserve">
+    <value>لم يتم العثور على السائق الإضافي.</value>
+  </data>
+  <data name="LeaseAgreementSalesPersonNotFound" xml:space="preserve">
+    <value>لم يتم العثور على مسؤول المبيعات.</value>
+  </data>
+  <data name="LeaseAgreementNotesInvalid" xml:space="preserve">
+    <value>لا يمكن أن تتجاوز الملاحظات 1000 حرف.</value>
+  </data>
+  <data name="LeaseAgreementBookingChargeInvalid" xml:space="preserve">
+    <value>لا يمكن أن تكون أسعار رسوم الحجز سالبة.</value>
+  </data>
+  <data name="LeaseAgreementDuplicateChargeType" xml:space="preserve">
+    <value>لا يمكن إرسال نوع رسم اتفاقية التأجير أكثر من مرة.</value>
+  </data>
+  <data name="LeaseAgreementRentChargeRequired" xml:space="preserve">
+    <value>رسم الإيجار مطلوب لاتفاقية التأجير.</value>
+  </data>
+  <data name="LeaseAgreementVehicleTypeNotFound" xml:space="preserve">
+    <value>المركبة المحددة لا تحتوي على نوع مركبة صالح.</value>
+  </data>
+  <data name="LeaseAgreementTariffNotFound" xml:space="preserve">
+    <value>لا توجد تعريفة تأجير نشطة للمركبة والتواريخ المحددة.</value>
+  </data>
+  <data name="LeaseAgreementChargeNotInTariff" xml:space="preserve">
+    <value>أحد الرسوم المحددة غير متاح في تعريفة التأجير المحسوبة.</value>
+  </data>
+  <data name="LeaseAgreementChargeTypeInvalid" xml:space="preserve">
+    <value>نوع واحد أو أكثر من رسوم الحجز غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementChildIdInvalid" xml:space="preserve">
+    <value>لا يمكن أن تكون معرفات الصفوف التابعة سالبة.</value>
+  </data>
+  <data name="LeaseAgreementDuplicateChild" xml:space="preserve">
+    <value>لا يُسمح بتكرار الصفوف التابعة.</value>
+  </data>
+  <data name="LeaseAgreementChildOwnershipInvalid" xml:space="preserve">
+    <value>صف تابع واحد أو أكثر لا ينتمي إلى اتفاقية التأجير هذه.</value>
+  </data>
+  <data name="LeaseAgreementClauseTypeRequired" xml:space="preserve">
+    <value>نوع البند مطلوب لكل بند.</value>
+  </data>
+  <data name="LeaseAgreementClauseTypeNotFound" xml:space="preserve">
+    <value>لم يتم العثور على نوع واحد أو أكثر من البنود.</value>
+  </data>
+  <data name="LeaseAgreementClauseDetailRequired" xml:space="preserve">
+    <value>تفاصيل البند مطلوبة.</value>
+  </data>
+  <data name="LeaseAgreementProvisionTypeInvalid" xml:space="preserve">
+    <value>نوع واحد أو أكثر من المخصصات غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementProvisionTypeRequired" xml:space="preserve">
+    <value>نوع المخصص مطلوب للمخصص الجديد.</value>
+  </data>
+  <data name="LeaseAgreementProvisionRangeInvalid" xml:space="preserve">
+    <value>يجب أن تكون قيم أشهر المخصص ويوم الشهر صالحة.</value>
+  </data>
+  <data name="LeaseAgreementProvisionTitleInvalid" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز عنوان المخصص 200 حرف.</value>
+  </data>
+  <data name="LeaseAgreementProvisionCreationBlocked" xml:space="preserve">
+    <value>لا يمكن حفظ مخصص جديد حتى يتم تحديد قاعدة الخادم لتاريخي البداية والنهاية المطلوبين.</value>
+  </data>
+  <data name="LeaseAgreementProvisionRemovalBlocked" xml:space="preserve">
+    <value>لا يمكن إزالة مخصص مرتبط بقيد يومية أو تفاصيل مخصص.</value>
+  </data>
+  <data name="LeaseAgreementPreTerminationTypeInvalid" xml:space="preserve">
+    <value>نوع واحد أو أكثر من أنواع الإنهاء المبكر غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementPreTerminationRangeInvalid" xml:space="preserve">
+    <value>يجب أن تكون نطاقات الأشهر وقيم الإنهاء المبكر صالحة.</value>
+  </data>
+  <data name="LeaseAgreementTotalChargesOverflow" xml:space="preserve">
+    <value>إجمالي رسوم الحجز المرسل كبير جداً.</value>
+  </data>
+  <data name="LeaseAgreementCloseAgreementInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية التأجير غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementCloseDetailsRequired" xml:space="preserve">
+    <value>تفاصيل إغلاق اتفاقية التأجير مطلوبة.</value>
+  </data>
+  <data name="LeaseAgreementCloseUnavailable" xml:space="preserve">
+    <value>يمكن إغلاق الاتفاقية فقط عندما تكون مفتوحة وغير مفوترة ولها مركبة حالية.</value>
+  </data>
+  <data name="LeaseAgreementCloseDateInvalid" xml:space="preserve">
+    <value>يجب ألا يسبق تاريخ ووقت الإرجاع تاريخ ووقت بدء الاتفاقية.</value>
+  </data>
+  <data name="LeaseAgreementCloseFuelLevelInvalid" xml:space="preserve">
+    <value>مستوى الوقود عند الإرجاع غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementCloseMileageInvalid" xml:space="preserve">
+    <value>يجب أن تكون قراءة العداد عند الإرجاع صالحة وألا تقل عن القراءة المسجلة.</value>
+  </data>
+  <data name="LeaseAgreementCloseBranchInvalid" xml:space="preserve">
+    <value>فرع الإرجاع المحدد غير موجود أو غير نشط.</value>
+  </data>
+  <data name="LeaseAgreementCloseStale" xml:space="preserve">
+    <value>تغيرت رسوم الاتفاقية بعد فتح النموذج. حدّث البيانات وحاول مرة أخرى.</value>
+  </data>
+  <data name="LeaseAgreementClosed" xml:space="preserve">
+    <value>تم إغلاق اتفاقية التأجير بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementCloseSaveFailed" xml:space="preserve">
+    <value>تعذر إغلاق اتفاقية التأجير.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementAgreementInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية التأجير غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementUnavailable" xml:space="preserve">
+    <value>يمكن استبدال المركبة فقط لاتفاقية تأجير مفتوحة وغير مفوترة ولها مركبة حالية.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementDetailsRequired" xml:space="preserve">
+    <value>تفاصيل استبدال المركبة مطلوبة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementVehicleRequired" xml:space="preserve">
+    <value>مركبتا الدخول والخروج مطلوبتان.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementBranchInvalid" xml:space="preserve">
+    <value>فرع واحد أو أكثر من الفروع المحددة غير موجود أو غير نشط.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementReasonInvalid" xml:space="preserve">
+    <value>سبب الاستبدال المحدد غير موجود أو غير نشط.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementDatesRequired" xml:space="preserve">
+    <value>تاريخ ووقت الدخول والخروج مطلوبان.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementFuelLevelInvalid" xml:space="preserve">
+    <value>مستوى وقود واحد أو أكثر في عملية الاستبدال غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementMileageInvalid" xml:space="preserve">
+    <value>يجب أن تكون قراءتا عداد الدخول والخروج أرقامًا صالحة وغير سالبة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementNotesTooLong" xml:space="preserve">
+    <value>لا يمكن أن تتجاوز ملاحظات استبدال المركبة 1000 حرف.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementCollectionCountryInvalid" xml:space="preserve">
+    <value>دولة التحصيل المحددة غير موجودة أو غير نشطة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementCollectionAddressTooLong" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز عنوان التحصيل 250 حرفًا.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementStale" xml:space="preserve">
+    <value>تغيرت مركبة الاتفاقية بعد فتح النموذج. حدّث البيانات وحاول مرة أخرى.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementSameVehicle" xml:space="preserve">
+    <value>يجب أن تختلف المركبة الخارجة عن المركبة الداخلة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementOutgoingVehicleInvalid" xml:space="preserve">
+    <value>المركبة الخارجة المحددة غير موجودة أو غير نشطة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementOutgoingVehicleUnavailable" xml:space="preserve">
+    <value>المركبة الخارجة المحددة لم تعد متاحة للاستبدال.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementIncomingDateInvalid" xml:space="preserve">
+    <value>لا يمكن أن يسبق تاريخ ووقت الدخول تاريخ ووقت الخروج السابق للمركبة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementIncomingMileageInvalid" xml:space="preserve">
+    <value>لا يمكن أن تقل قراءة عداد الدخول عن قراءة عداد الخروج السابقة للمركبة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementOutgoingDateInvalid" xml:space="preserve">
+    <value>لا يمكن أن يسبق تاريخ ووقت الخروج تاريخ ووقت الدخول.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementOutgoingMileageInvalid" xml:space="preserve">
+    <value>لا يمكن أن تقل قراءة عداد الخروج عن القراءة الحالية للمركبة المحددة.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementSaved" xml:space="preserve">
+    <value>تم استبدال المركبة بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementVehicleReplacementSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ استبدال المركبة.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementAgreementInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية التأجير غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementUnavailable" xml:space="preserve">
+    <value>يمكن استبدال السائق فقط لاتفاقية تأجير مفتوحة وغير مفوترة ولها سائق حالي.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementDetailsRequired" xml:space="preserve">
+    <value>تفاصيل استبدال السائق مطلوبة.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementDriverRequired" xml:space="preserve">
+    <value>السائقان الحالي والبديل مطلوبان.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementDateRequired" xml:space="preserve">
+    <value>تاريخ ووقت الاستبدال مطلوبان.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementStale" xml:space="preserve">
+    <value>تغير سائق الاتفاقية بعد فتح النموذج. حدّث البيانات وحاول مرة أخرى.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementSameDriver" xml:space="preserve">
+    <value>يجب أن يختلف السائق البديل عن السائق الحالي.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementOutgoingDriverInvalid" xml:space="preserve">
+    <value>السائق البديل المحدد غير موجود أو غير نشط.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementDateInvalid" xml:space="preserve">
+    <value>لا يمكن أن يسبق تاريخ ووقت الاستبدال تاريخ ووقت الخروج السابق للسائق الحالي.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementSaved" xml:space="preserve">
+    <value>تم استبدال السائق بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementDriverReplacementSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ استبدال السائق.</value>
+  </data>
+  <data name="ClauseDetailRequired" xml:space="preserve">
+    <value>يجب إدخال تفاصيل لكل بند.</value>
+  </data>
+  <data name="ClauseDetailTooLong" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز تفصيل البند 2000 حرف.</value>
+  </data>
+  <data name="ClauseIdInvalid" xml:space="preserve">
+    <value>معرّف بند واحد أو أكثر غير صالح.</value>
+  </data>
+  <data name="ClauseDuplicateId" xml:space="preserve">
+    <value>يحتوي الطلب على معرّف بند مكرر.</value>
+  </data>
+  <data name="ClauseOwnershipInvalid" xml:space="preserve">
+    <value>بند واحد أو أكثر لا ينتمي إلى نوع البند المحدد.</value>
+  </data>
+  <data name="ClauseDefaultCountInvalid" xml:space="preserve">
+    <value>يجب أن تحتوي مجموعة البنود غير الفارغة على بند افتراضي واحد فقط.</value>
+  </data>
+  <data name="ClauseTypeNameRequired" xml:space="preserve">
+    <value>اسم نوع البند مطلوب.</value>
+  </data>
+  <data name="ClauseTypeNameTooLong" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز اسم نوع البند 250 حرفًا.</value>
+  </data>
+  <data name="ClauseTypeNameDuplicate" xml:space="preserve">
+    <value>يوجد نوع بند آخر بالاسم نفسه.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargesAgreementInvalid" xml:space="preserve">
+    <value>مرجع عقد التأجير غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeDateRequired" xml:space="preserve">
+    <value>التاريخ مطلوب لكل رسم إضافي.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeTypeInvalid" xml:space="preserve">
+    <value>نوع رسم إضافي واحد أو أكثر غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeRateTypeInvalid" xml:space="preserve">
+    <value>نوع معدل واحد أو أكثر للرسوم الإضافية غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeAmountInvalid" xml:space="preserve">
+    <value>يجب أن يكون مبلغ كل رسم إضافي موجبًا وألا يتجاوز منزلتين عشريتين.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeIdInvalid" xml:space="preserve">
+    <value>معرّف رسم إضافي واحد أو أكثر غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeDuplicateId" xml:space="preserve">
+    <value>يحتوي الطلب على معرّف رسم إضافي مكرر.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeOwnershipInvalid" xml:space="preserve">
+    <value>رسم إضافي واحد أو أكثر لا ينتمي إلى عقد التأجير المحدد.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargeSettingInvalid" xml:space="preserve">
+    <value>مجموعة واحدة أو أكثر من نوع الرسم ونوع المعدل غير مهيأة للرسوم الإضافية لعقود التأجير.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargesSaved" xml:space="preserve">
+    <value>تم حفظ الرسوم الإضافية بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementAdditionalChargesSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ الرسوم الإضافية.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsAgreementInvalid" xml:space="preserve">
+    <value>مرجع عقد التأجير غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsMethodInvalid" xml:space="preserve">
+    <value>طريقة تعليمات الدفع غير صالحة.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsTextTooLong" xml:space="preserve">
+    <value>تتجاوز قيمة واحدة أو أكثر من تعليمات الدفع الطول المسموح.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsDateInvalid" xml:space="preserve">
+    <value>تاريخ بدء الفوترة غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsDayInvalid" xml:space="preserve">
+    <value>يجب أن يكون يوم الشهر بين 1 و31.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeIdInvalid" xml:space="preserve">
+    <value>معرّف شيك واحد أو أكثر غير صالح.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeDuplicateId" xml:space="preserve">
+    <value>يحتوي الطلب على معرّف شيك مكرر.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequePaymentMethodRequired" xml:space="preserve">
+    <value>طريقة الدفع مطلوبة لكل صف شيك.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequePaymentMethodInvalid" xml:space="preserve">
+    <value>طريقة دفع شيك واحدة أو أكثر غير صالحة أو غير نشطة.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeNoRequired" xml:space="preserve">
+    <value>رقم الشيك مطلوب لكل صف شيك.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeNoTooLong" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز رقم الشيك 100 حرف.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeDateRequired" xml:space="preserve">
+    <value>تاريخ الشيك مطلوب لكل صف شيك.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeBankRequired" xml:space="preserve">
+    <value>اسم البنك مطلوب لكل صف شيك.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeBankTooLong" xml:space="preserve">
+    <value>لا يمكن أن يتجاوز اسم بنك الشيك 100 حرف.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeAmountInvalid" xml:space="preserve">
+    <value>يجب أن يكون مبلغ كل شيك موجبًا وألا يتجاوز منزلتين عشريتين.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionChequeOwnershipInvalid" xml:space="preserve">
+    <value>صف أو أكثر من الشيكات لا ينتمي إلى عقد التأجير المحدد.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsSaved" xml:space="preserve">
+    <value>تم حفظ تعليمات الدفع بنجاح.</value>
+  </data>
+  <data name="LeaseAgreementPaymentInstructionsSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ تعليمات الدفع.</value>
+  </data>
+  <data name="ChargeSettingsRequestInvalid" xml:space="preserve">
+    <value>طلب إعدادات الرسوم غير صالح.</value>
+  </data>
+  <data name="ChargeSettingsModuleTypeInvalid" xml:space="preserve">
+    <value>يحتوي إعداد رسم واحد أو أكثر على نوع وحدة غير صالح.</value>
+  </data>
+  <data name="ChargeSettingsChargeTypeInvalid" xml:space="preserve">
+    <value>يحتوي إعداد رسم واحد أو أكثر على نوع رسم غير صالح.</value>
+  </data>
+  <data name="RentalAgreementNotFound" xml:space="preserve">
+    <value>لم يتم العثور على اتفاقية الإيجار.</value>
+  </data>
+  <data name="RentalAgreementUncloseInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية الإيجار غير صالح.</value>
+  </data>
+  <data name="RentalAgreementUncloseStateInvalid" xml:space="preserve">
+    <value>يمكن إعادة فتح اتفاقيات الإيجار المغلقة وغير المفوترة فقط.</value>
+  </data>
+  <data name="RentalAgreementUnclosed" xml:space="preserve">
+    <value>تمت إعادة فتح اتفاقية الإيجار بنجاح.</value>
+  </data>
+  <data name="RentalAgreementUncloseSaveFailed" xml:space="preserve">
+    <value>تعذر إعادة فتح اتفاقية الإيجار.</value>
+  </data>
+  <data name="RentalAgreementReadOnly" xml:space="preserve">
+    <value>لا يمكن تغيير اتفاقيات التأجير المغلقة أو المفوترة.</value>
+  </data>
+  <data name="RentalAgreementVoidInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية الإيجار غير صالح.</value>
+  </data>
+  <data name="RentalAgreementVoidReasonRequired" xml:space="preserve">
+    <value>سبب إلغاء اتفاقية الإيجار مطلوب.</value>
+  </data>
+  <data name="RentalAgreementVoidReasonTooLong" xml:space="preserve">
+    <value>يجب ألا يتجاوز سبب الإلغاء 500 حرف.</value>
+  </data>
+  <data name="RentalAgreementAlreadyVoided" xml:space="preserve">
+    <value>تم إلغاء اتفاقية الإيجار بالفعل.</value>
+  </data>
+  <data name="RentalAgreementVoidReadOnly" xml:space="preserve">
+    <value>يمكن إلغاء اتفاقيات الإيجار المفتوحة وغير المفوترة فقط.</value>
+  </data>
+  <data name="RentalAgreementVoidPaymentBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية إيجار بها دفعة مقدمة أو تأمين.</value>
+  </data>
+  <data name="RentalAgreementVoidReceiptBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود إيصالات مرتبطة بها.</value>
+  </data>
+  <data name="RentalAgreementVoidPdcBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود مستحقات آجلة مرتبطة بها.</value>
+  </data>
+  <data name="RentalAgreementVoidAccidentBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود سجلات حوادث مرتبطة بها.</value>
+  </data>
+  <data name="RentalAgreementVoidServiceBookingBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود سجلات صيانة للمركبة.</value>
+  </data>
+  <data name="RentalAgreementVoidTrafficFineBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود سجلات مخالفات مرورية.</value>
+  </data>
+  <data name="RentalAgreementVoidTransportationInvoiceBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود فواتير نقل.</value>
+  </data>
+  <data name="RentalAgreementVoidCollectionBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود حركات تحصيل.</value>
+  </data>
+  <data name="RentalAgreementVoidCustodyBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود حركات عهدة.</value>
+  </data>
+  <data name="RentalAgreementVoidDeliveryBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود حركات تسليم.</value>
+  </data>
+  <data name="RentalAgreementVoidDebitNoteBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود إشعارات مدينة.</value>
+  </data>
+  <data name="RentalAgreementVoidCreditNoteBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود إشعارات دائنة.</value>
+  </data>
+  <data name="RentalAgreementVoidInvoiceBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود فواتير.</value>
+  </data>
+  <data name="RentalAgreementVoidOpeningBalanceDepositBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود رصيد تأمين افتتاحي.</value>
+  </data>
+  <data name="RentalAgreementVoidOpeningBalanceCustomerBlocked" xml:space="preserve">
+    <value>لا يمكن إلغاء اتفاقية الإيجار لوجود رصيد عميل افتتاحي.</value>
+  </data>
+  <data name="RentalAgreementVoided" xml:space="preserve">
+    <value>تم إلغاء اتفاقية الإيجار بنجاح.</value>
+  </data>
+  <data name="RentalAgreementVoidSaveFailed" xml:space="preserve">
+    <value>تعذر إلغاء اتفاقية الإيجار.</value>
+  </data>
+  <data name="RentalAgreementBillingHistoryAgreementInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية التأجير غير صالح.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateAgreementInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية التأجير غير صالح.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateRequired" xml:space="preserve">
+    <value>تاريخ التسليم مطلوب.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateAfterEndDate" xml:space="preserve">
+    <value>لا يمكن أن يكون تاريخ التسليم بعد تاريخ انتهاء الاتفاقية.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateSaved" xml:space="preserve">
+    <value>تم حفظ تاريخ تسليم اتفاقية التأجير بنجاح.</value>
+  </data>
+  <data name="RentalAgreementDeliveryDateSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ تاريخ تسليم اتفاقية التأجير.</value>
+  </data>
+  <data name="RentalAgreementSalesPersonAgreementInvalid" xml:space="preserve">
+    <value>معرّف اتفاقية التأجير غير صالح.</value>
+  </data>
+  <data name="RentalAgreementSalesPersonInvalid" xml:space="preserve">
+    <value>مندوب المبيعات المحدد غير صالح أو غير نشط.</value>
+  </data>
+  <data name="RentalAgreementSalesPersonSaved" xml:space="preserve">
+    <value>تم حفظ مندوب مبيعات اتفاقية التأجير بنجاح.</value>
+  </data>
+  <data name="RentalAgreementSalesPersonSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ مندوب مبيعات اتفاقية التأجير.</value>
+  </data>
+  <data name="RentalAgreementDocumentNotFound" xml:space="preserve">
+    <value>لم يتم العثور على نوع مستند الاتفاقية أو أنه غير نشط.</value>
+  </data>
+  <data name="RentalAgreementDocumentUploadBlocked" xml:space="preserve">
+    <value>لا يمكن رفع مستندات إلى اتفاقية إيجار مغلقة أو مفوترة.</value>
+  </data>
+  <data name="RentalAgreementDocumentPathInvalid" xml:space="preserve">
+    <value>مسار مستند اتفاقية الإيجار المخزن غير صالح.</value>
+  </data>
+  <data name="RentalAgreementDocumentFileRequired" xml:space="preserve">
+    <value>اختر مستندًا لرفعه.</value>
+  </data>
+  <data name="RentalAgreementDocumentFileTooLarge" xml:space="preserve">
+    <value>يجب ألا يتجاوز حجم المستند 5 ميجابايت.</value>
+  </data>
+  <data name="RentalAgreementDocumentFileInvalid" xml:space="preserve">
+    <value>يُسمح فقط بمستندات JPG وPNG وPDF الصالحة.</value>
+  </data>
+  <data name="RentalAgreementDocumentSaved" xml:space="preserve">
+    <value>تم رفع مستند اتفاقية الإيجار بنجاح.</value>
+  </data>
+  <data name="RentalAgreementDocumentSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ مستند اتفاقية الإيجار.</value>
+  </data>
+  <data name="ChargeSettingsRateTypeInvalid" xml:space="preserve">
+    <value>يحتوي إعداد رسم واحد أو أكثر على نوع معدل غير صالح.</value>
+  </data>
+  <data name="LabourRateRequestInvalid" xml:space="preserve">
+    <value>طلب تعريفة العمالة غير صالح.</value>
+  </data>
+  <data name="LabourRateVehicleTypeInvalid" xml:space="preserve">
+    <value>نوع المركبة المحدد غير موجود.</value>
+  </data>
+  <data name="LabourRateRowInvalid" xml:space="preserve">
+    <value>كل صف في تعريفة العمالة يحتاج إلى موظف ونشاط ووقت وتكلفة بقيمة صفر أو أكثر.</value>
+  </data>
+  <data name="LabourRateDuplicateRow" xml:space="preserve">
+    <value>نفس الموظف والنشاط مكرران في أكثر من صف.</value>
+  </data>
+  <data name="LabourRateStaffProfileInvalid" xml:space="preserve">
+    <value>واحد أو أكثر من الموظفين المحددين غير موجود.</value>
+  </data>
+  <data name="LabourRateActivityInvalid" xml:space="preserve">
+    <value>واحد أو أكثر من الأنشطة المحددة غير موجود.</value>
+  </data>
+  <data name="LabourActivitiesReportDateRangeInvalid" xml:space="preserve">
+    <value>اختر فترة تاريخ صحيحة؛ لا يمكن أن يكون تاريخ البداية بعد تاريخ النهاية.</value>
+  </data>
+  <data name="ActivationNoRecords" xml:space="preserve">
+    <value>اختر سجلاً واحداً على الأقل.</value>
+  </data>
+  <data name="ActivationRecordsNotFound" xml:space="preserve">
+    <value>سجل أو أكثر من السجلات المحددة غير موجود. لم يتم تغيير أي شيء.</value>
+  </data>
+  <data name="ActivationSucceeded" xml:space="preserve">
+    <value>تم تحديث الحالة بنجاح.</value>
+  </data>
+  <data name="ActivationFailed" xml:space="preserve">
+    <value>تعذر تحديث الحالة.</value>
+  </data>
+  <data name="SettingsInvalidKey" xml:space="preserve">
+    <value>صف أو أكثر من الإعدادات يحتوي على نوع غير صالح. لم يتم حفظ أي شيء.</value>
+  </data>
+  <data name="BranchNameExists" xml:space="preserve">
+    <value>يوجد فرع بنفس الاسم بالفعل.</value>
+  </data>
+  <data name="BranchNotFound" xml:space="preserve">
+    <value>لم يتم العثور على الفرع.</value>
+  </data>
+  <data name="BranchReferencedByPartners" xml:space="preserve">
+    <value>لا يمكن حذف هذا الفرع: مستخدم في عملاء أو موردين.</value>
+  </data>
+  <data name="BranchReferencedByInvoices" xml:space="preserve">
+    <value>لا يمكن حذف هذا الفرع: مستخدم في فواتير.</value>
+  </data>
+  <data name="BranchReferencedByLimousineInvoices" xml:space="preserve">
+    <value>لا يمكن حذف هذا الفرع: مستخدم في فواتير الليموزين.</value>
+  </data>
+  <data name="BranchReferencedByMiscellaneousInvoices" xml:space="preserve">
+    <value>لا يمكن حذف هذا الفرع: مستخدم في فواتير متنوعة.</value>
+  </data>
+  <data name="BranchReferencedByEquipmentRentalInvoices" xml:space="preserve">
+    <value>لا يمكن حذف هذا الفرع: مستخدم في فواتير تأجير المعدات.</value>
+  </data>
+  <data name="BranchReferencedByTransportationInvoices" xml:space="preserve">
+    <value>لا يمكن حذف هذا الفرع: مستخدم في فواتير النقل.</value>
+  </data>
+  <data name="BranchReferencedByRentalQuotations" xml:space="preserve">
+    <value>لا يمكن حذف هذا الفرع: مستخدم في عروض أسعار التأجير.</value>
+  </data>
+  <data name="BranchReferencedByPurchaseOrders" xml:space="preserve">
+    <value>لا يمكن حذف هذا الفرع: مستخدم في أوامر الشراء.</value>
+  </data>
+  <data name="InvoiceSaveFailed" xml:space="preserve">
+    <value>تعذر حفظ الفاتورة. لم يتم تغيير أي شيء.</value>
+  </data>
+  <data name="IndividualPartnerNotFound" xml:space="preserve">
+    <value>العميل الفرد غير موجود.</value>
+  </data>
+  <data name="IndividualPartnerMobileExists" xml:space="preserve">
+    <value>رقم الموبايل ده مستخدم لعميل فرد تاني.</value>
+  </data>
+  <data name="IndividualPartnerEmailExists" xml:space="preserve">
+    <value>البريد الإلكتروني ده مستخدم لعميل فرد تاني.</value>
+  </data>
+  <data name="CompanyNotFound" xml:space="preserve">
+    <value>الشركة غير موجودة.</value>
+  </data>
+  <data name="CompanyNameExists" xml:space="preserve">
+    <value>توجد شركة بهذا الاسم بالفعل.</value>
+  </data>
+  <data name="CompanyVatExists" xml:space="preserve">
+    <value>توجد شركة بهذا الرقم الضريبي بالفعل.</value>
+  </data>
+  <data name="CompanyContactPersonNotFound" xml:space="preserve">
+    <value>مسؤول الاتصال غير موجود.</value>
+  </data>
+  <data name="DriverNotFound" xml:space="preserve">
+    <value>السائق غير موجود.</value>
+  </data>
+  <data name="ChildRowOwnershipInvalid" xml:space="preserve">
+    <value>أحد الصفوف المحفوظة مكرر أو لا يخص هذا السجل. أعد تحميل السجل ثم حاول مرة أخرى.</value>
+  </data>
+  <data name="CustomerDateInvalid" xml:space="preserve">
+    <value>أحد التواريخ غير صالح.</value>
+  </data>
+  <data name="CustomerDocumentExpiryNotAfterIssue" xml:space="preserve">
+    <value>يجب أن يكون تاريخ انتهاء المستند بعد تاريخ الإصدار بيوم واحد على الأقل.</value>
+  </data>
+  <data name="VehicleNotFound" xml:space="preserve">
+    <value>المركبة المختارة لم تعد موجودة.</value>
+  </data>
+  <data name="RecordInUse" xml:space="preserve">
+    <value>لا يمكن الحذف: السجل مستخدم في {0}.</value>
+  </data>
+  <data name="EntityAgreement" xml:space="preserve">
+    <value>اتفاقيات</value>
+  </data>
+  <data name="EntityBooking" xml:space="preserve">
+    <value>حجوزات</value>
+  </data>
+  <data name="EntityRentalMasterAgreement" xml:space="preserve">
+    <value>اتفاقيات إيجار رئيسية</value>
+  </data>
+  <data name="EntityLeaseMasterAgreement" xml:space="preserve">
+    <value>اتفاقيات تأجير رئيسية</value>
+  </data>
+  <data name="EntityInvoice" xml:space="preserve">
+    <value>فواتير</value>
+  </data>
+  <data name="EntityLimousineInvoice" xml:space="preserve">
+    <value>فواتير ليموزين</value>
+  </data>
+  <data name="EntityMiscellaneousInvoice" xml:space="preserve">
+    <value>فواتير متنوعة</value>
+  </data>
+  <data name="EntityEquipmentRentalInvoice" xml:space="preserve">
+    <value>فواتير تأجير معدات</value>
+  </data>
+  <data name="EntityTransportationInvoice" xml:space="preserve">
+    <value>فواتير نقل</value>
+  </data>
+  <data name="EntityReceipt" xml:space="preserve">
+    <value>سندات قبض</value>
+  </data>
+  <data name="EntityPayment" xml:space="preserve">
+    <value>سندات صرف</value>
+  </data>
+  <data name="EntityJournalVoucherDetail" xml:space="preserve">
+    <value>قيود يومية</value>
+  </data>
+  <data name="EntityOpeningBalanceCustomer" xml:space="preserve">
+    <value>أرصدة افتتاحية</value>
+  </data>
+  <data name="EntityTransportationAgreement" xml:space="preserve">
+    <value>اتفاقيات نقل</value>
+  </data>
+  <data name="EntityLeaseAgreementDriverReplacement" xml:space="preserve">
+    <value>استبدال سائقين</value>
+  </data>
+  <data name="EntityDriverTimeSheet" xml:space="preserve">
+    <value>ساعات عمل السائقين</value>
+  </data>
+  <data name="EntityCollectionMovement" xml:space="preserve">
+    <value>حركات استلام</value>
+  </data>
+  <data name="EntityDeliveryMovement" xml:space="preserve">
+    <value>حركات تسليم</value>
+  </data>
+  <data name="EntityWorkshopMovement" xml:space="preserve">
+    <value>حركات ورشة</value>
+  </data>
+  <data name="EntityTripBooking" xml:space="preserve">
+    <value>رحلات</value>
+  </data>
+  <data name="EntityTripBookingHistory" xml:space="preserve">
+    <value>سجل الرحلات</value>
+  </data>
+  <data name="EntityRentalQuotation" xml:space="preserve">
+    <value>عروض أسعار إيجار</value>
+  </data>
+  <data name="EntityLeaseQuotation" xml:space="preserve">
+    <value>عروض أسعار تأجير</value>
+  </data>
+  <data name="EntityLeaseInquiry" xml:space="preserve">
+    <value>استعلامات تأجير</value>
+  </data>
+  <data name="EntityCreditNote" xml:space="preserve">
+    <value>إشعارات دائنة</value>
+  </data>
+  <data name="EntityDebitNote" xml:space="preserve">
+    <value>إشعارات مدينة</value>
+  </data>
+  <data name="EntityPDCReceivable" xml:space="preserve">
+    <value>شيكات مستلمة</value>
+  </data>
+  <data name="EntityPDCPayable" xml:space="preserve">
+    <value>شيكات صادرة</value>
+  </data>
+  <data name="EntityUser" xml:space="preserve">
+    <value>حسابات مستخدمين</value>
+  </data>
+  <data name="ReferenceNotFound" xml:space="preserve">
+    <value>القيمة المختارة من {0} لم تعد موجودة.</value>
+  </data>
+  <data name="EntityBranch" xml:space="preserve">
+    <value>الفروع</value>
+  </data>
+  <data name="EntityStaff" xml:space="preserve">
+    <value>الموظفين</value>
+  </data>
+  <data name="EntityPartner" xml:space="preserve">
+    <value>الأطراف</value>
+  </data>
+  <data name="EntityMemberPartner" xml:space="preserve">
+    <value>الأطراف الأفراد</value>
+  </data>
+  <data name="EntityCompany" xml:space="preserve">
+    <value>الشركات</value>
+  </data>
+  <data name="EntityIndividualPartner" xml:space="preserve">
+    <value>العملاء الأفراد</value>
+  </data>
+  <data name="EntityCustomer" xml:space="preserve">
+    <value>العملاء</value>
+  </data>
+  <data name="EntitySupplier" xml:space="preserve">
+    <value>الموردين</value>
+  </data>
+  <data name="EntityDriver" xml:space="preserve">
+    <value>السائقين</value>
+  </data>
+  <data name="EntityContact" xml:space="preserve">
+    <value>جهات الاتصال</value>
+  </data>
+  <data name="EntityContactGroup" xml:space="preserve">
+    <value>مجموعات الاتصال</value>
+  </data>
+  <data name="EntityTariffCard" xml:space="preserve">
+    <value>كروت التعريفة</value>
+  </data>
+  <data name="EntityCurrency" xml:space="preserve">
+    <value>العملات</value>
+  </data>
+  <data name="EntityCountry" xml:space="preserve">
+    <value>الدول</value>
+  </data>
+  <data name="RecordAlreadyExists" xml:space="preserve">
+    <value>هذه القيمة مستخدمة في سجل آخر. حدّث الصفحة وحاول مرة أخرى.</value>
+  </data>
+  <data name="CustomerContactGroupInvalidType" xml:space="preserve">
+    <value>اختر مجموعة جهات اتصال من نوع عميل.</value>
+  </data>
+  <data name="ConcurrentWriteConflict" xml:space="preserve">
+    <value>غيّر طلب آخر البيانات أثناء الحفظ. أعد تحميل أحدث البيانات وحاول مرة أخرى.</value>
+  </data>
+  <data name="CustomerImportFieldInvalid" xml:space="preserve"><value>قيمة الحقل {0} غير صحيحة.</value></data>
+  <data name="CustomerImportBirthDateRequired" xml:space="preserve"><value>تاريخ الميلاد مطلوب.</value></data>
+  <data name="CustomerImportMappingFailed" xml:space="preserve"><value>تعذر تجهيز بيانات الصف {0}.</value></data>
+  <data name="CustomerImportPersistenceFailed" xml:space="preserve"><value>تعذر حفظ مجموعة الصفوف {0}. حاول مرة أخرى.</value></data>
+  <data name="CustomerStatementInvalidFilters" xml:space="preserve">
+    <value>اختر عميلًا ونطاق تاريخ صحيحًا وتقرير الأستاذ أو الذمم المستحقة.</value>
+  </data>
+  <data name="CustomerStatementCustomerNotFound" xml:space="preserve">
+    <value>العميل غير موجود أو مستبعد بفلتر العملاء غير النشطين.</value>
+  </data>
+  <data name="CustomerStatementReceivableAccountsMissing" xml:space="preserve">
+    <value>حسابات الذمم المدينة للعملاء غير معدة. اضبط ربط حسابات مجموعات الاتصال وحاول مرة أخرى.</value>
+  </data>
+  <data name="FollowUpReportInvalidFilters" xml:space="preserve">
+    <value>استخدم تواريخ صحيحة ومرتبة وفلتر عميل صحيحًا.</value>
+  </data>
+  <data name="SupplierVatExists" xml:space="preserve"><value>يوجد مورد نشط يستخدم رقم ضريبة القيمة المضافة هذا.</value></data>
+  <data name="SupplierTrnExists" xml:space="preserve"><value>يوجد مورد نشط يستخدم الرقم الضريبي هذا.</value></data>
+  <data name="SupplierNotFound" xml:space="preserve"><value>المورد غير موجود.</value></data>
+  <data name="SupplierContactGroupInvalidType" xml:space="preserve"><value>اختر مجموعة اتصال مورد نشطة.</value></data>
+  <data name="SupplierReportInvalidFilter" xml:space="preserve"><value>فلتر واحد أو أكثر من فلاتر تقرير الموردين غير صحيح.</value></data>
+  <data name="SupplierReportSupplierRequired" xml:space="preserve"><value>اختر موردًا.</value></data>
+  <data name="SupplierReportSupplierNotFound" xml:space="preserve"><value>المورد غير موجود أو مستبعد بفلتر الموردين غير النشطين.</value></data>
+  <data name="SupplierReportBranchNotFound" xml:space="preserve"><value>الفرع المحدد لم يعد موجودًا.</value></data>
+  <data name="SupplierReportSalesPersonNotFound" xml:space="preserve"><value>مندوب المبيعات المحدد لم يعد موجودًا.</value></data>
+  <data name="SupplierReportContactGroupNotFound" xml:space="preserve"><value>مجموعة اتصال المورد المحددة لم تعد موجودة.</value></data>
+  <data name="SupplierReportInvalidDateRange" xml:space="preserve"><value>استخدم تواريخ صحيحة ومرتبة زمنيًا.</value></data>
+  <data name="SupplierReportInvalidAsOfDate" xml:space="preserve"><value>استخدم تاريخ احتساب صحيحًا.</value></data>
+  <data name="SupplierReportInvalidStatus" xml:space="preserve"><value>اختر حالة مورد صحيحة.</value></data>
+  <data name="SupplierReportInvalidBalanceType" xml:space="preserve"><value>اختر نوع رصيد صحيحًا.</value></data>
+  <data name="SupplierBalancesSummaryInvalidRange" xml:space="preserve"><value>أدخل قيمتين صالحتين للرصيد من وإلى، بحيث تكون قيمة من أقل من أو تساوي قيمة إلى.</value></data>
+  <data name="SupplierReportInvalidStatementType" xml:space="preserve"><value>اختر نوع كشف الأستاذ أو المستحق.</value></data>
+  <data name="SupplierReportInvalidPeriods" xml:space="preserve"><value>يجب أن تكون فترات التقادم الست أعدادًا صحيحة موجبة ومتزايدة.</value></data>
+  <data name="SupplierReportMissingPayableAccounts" xml:space="preserve"><value>حسابات الذمم الدائنة للموردين غير معدة. اضبط ربط حسابات مجموعات الاتصال وحاول مرة أخرى.</value></data>
+  <data name="StaffDesignationNameExists" xml:space="preserve"><value>يوجد مسمى وظيفي بهذا الاسم بالفعل.</value></data>
+  <data name="StaffTimesheetDateRequired" xml:space="preserve"><value>اختر تاريخًا وشهرًا صالحين لكشف دوام الموظف.</value></data>
+  <data name="StaffEmailExists" xml:space="preserve"><value>يوجد موظف بهذا البريد الإلكتروني بالفعل.</value></data>
+  <data name="StaffMobileExists" xml:space="preserve"><value>يوجد موظف برقم الهاتف المحمول هذا بالفعل.</value></data>
+  <data name="StaffNotFound" xml:space="preserve"><value>الموظف غير موجود.</value></data>
+  <data name="StaffReportInvalidFilter" xml:space="preserve"><value>يوجد مرشح غير صالح في تقرير الموظفين.</value></data>
+  <data name="StaffReportMissingAccounts" xml:space="preserve"><value>حسابات الموظفين غير مهيأة. قم بتهيئة ربط حسابات مجموعات جهات اتصال الموظفين ثم حاول مرة أخرى.</value></data>
+  <data name="StaffImportBirthDateInvalid" xml:space="preserve"><value>يجب إدخال تاريخ ميلاد صالح لا يتجاوز تاريخ اليوم.</value></data>
+  <data name="StaffImportJoiningDateInvalid" xml:space="preserve"><value>يجب إدخال تاريخ التحاق صالح لا يسبق تاريخ الميلاد.</value></data>
+  <data name="StaffImportGenderInvalid" xml:space="preserve"><value>اختر جنسًا صالحًا.</value></data>
+  <data name="StaffImportCountryInvalid" xml:space="preserve"><value>بلد العنوان غير موجود.</value></data>
+  <data name="JournalAllocationInvalidRequest" xml:space="preserve"><value>يجب أن يحتوي كل تخصيص على معرفات صحيحة ونوع مصدر صالح ومبلغ موجب.</value></data>
+  <data name="JournalAllocationDuplicateSource" xml:space="preserve"><value>يمكن اختيار كل مصدر أو هدف للتخصيص مرة واحدة فقط.</value></data>
+  <data name="JournalAllocationInvalidSource" xml:space="preserve"><value>اختر مصدرًا قائمًا بعلامة معاكسة لنفس الطرف وحساب المراقبة.</value></data>
+  <data name="JournalAllocationInvalidTarget" xml:space="preserve"><value>يجب أن يكون الهدف سطرًا قائمًا ومرحلًا وغير ملغى لنفس الطرف وحساب المراقبة.</value></data>
+  <data name="JournalAllocationSourceCapacityExceeded" xml:space="preserve"><value>التخصيص يتجاوز الرصيد المتاح المتبقي في دفتر الأستاذ للمصدر.</value></data>
+  <data name="JournalAllocationTargetCapacityExceeded" xml:space="preserve"><value>التخصيص يتجاوز الرصيد المتاح المتبقي في دفتر الأستاذ للهدف.</value></data>
+  <data name="CustomerBalancesSummaryInvalidRange" xml:space="preserve"><value>أدخل قيمتين صالحتين للرصيد من وإلى، بحيث تكون قيمة من أقل من أو تساوي قيمة إلى.</value></data>
+  <data name="SalesAgreementNotFound" xml:space="preserve"><value>عقد البيع غير موجود.</value></data>
+  <data name="SalesAgreementNotOpen" xml:space="preserve"><value>لا يمكن تنفيذ هذا الإجراء إلا على عقد بيع مفتوح.</value></data>
+  <data name="SalesAgreementCustomerInvalid" xml:space="preserve"><value>اختر عميلًا صحيحًا من الأفراد أو الشركات.</value></data>
+  <data name="SalesAgreementDateRequired" xml:space="preserve"><value>تاريخ العقد مطلوب.</value></data>
+  <data name="SalesAgreementItemsRequired" xml:space="preserve"><value>أضف وحدة واحدة على الأقل إلى العقد.</value></data>
+  <data name="SalesAgreementDuplicateUnit" xml:space="preserve"><value>لا يمكن إضافة نفس الوحدة مرتين.</value></data>
+  <data name="SalesAgreementUnitNotFound" xml:space="preserve"><value>وحدة أو أكثر من الوحدات المختارة غير موجودة أو غير نشطة.</value></data>
+  <data name="SalesAgreementUnitUnavailable" xml:space="preserve"><value>وحدة أو أكثر من الوحدات المختارة محجوزة أو مباعة أو مسلمة على عقد آخر.</value></data>
+  <data name="SalesAgreementUnitOnRental" xml:space="preserve"><value>وحدة أو أكثر من الوحدات المختارة خارجة حاليًا بمذكرة تسليم تأجير معدات لم ترجع.</value></data>
+  <data name="SalesAgreementUnitIncomplete" xml:space="preserve"><value>يجب أن يكون لكل وحدة ماركة وموديل ورقم شاسيه قبل بيعها.</value></data>
+  <data name="SalesAgreementPriceInvalid" xml:space="preserve"><value>يجب أن يكون سعر كل وحدة أكبر من صفر.</value></data>
+  <data name="SalesAgreementQuotationNotFound" xml:space="preserve"><value>عرض السعر غير موجود.</value></data>
+  <data name="SalesAgreementQuotationNotApproved" xml:space="preserve"><value>عقد البيع يتطلب عرض سعر وافق عليه العميل.</value></data>
+  <data name="SalesAgreementQuotationExpired" xml:space="preserve"><value>انتهت صلاحية عرض السعر.</value></data>
+  <data name="SalesAgreementQuotationTaken" xml:space="preserve"><value>يوجد عقد بيع قائم لهذا العرض بالفعل.</value></data>
+  <data name="SalesAgreementQuotationChange" xml:space="preserve"><value>لا يمكن تغيير عرض السعر المرتبط بعقد البيع.</value></data>
+  <data name="SalesAgreementUnitsDifferFromQuotation" xml:space="preserve"><value>يجب أن تطابق الوحدات موديلات وكميات عرض السعر.</value></data>
+  <data name="SalesAgreementBankNotFound" xml:space="preserve"><value>بنك أو أكثر من البنوك المختارة غير موجود.</value></data>
+  <data name="SalesAgreementDuplicateSerial" xml:space="preserve"><value>لا يمكن إرسال سطر الجدول نفسه أكثر من مرة.</value></data>
+  <data name="SalesAgreementDownPaymentExceedsTotal" xml:space="preserve"><value>لا يمكن أن تتجاوز الدفعة المقدمة إجمالي العقد.</value></data>
+  <data name="SalesAgreementInstallmentsRequired" xml:space="preserve"><value>يجب تحديد قسط واحد على الأقل عند وجود مبلغ متبق.</value></data>
+  <data name="SalesAgreementNoInstallmentBalance" xml:space="preserve"><value>لا يوجد مبلغ متبق للتقسيط؛ اجعل عدد الأقساط صفرًا.</value></data>
+  <data name="SalesAgreementFinancialLocked" xml:space="preserve"><value>توجد سندات قبض لهذا العقد: لا يمكن تغيير العميل أو الوحدات أو الأسعار أو شروط السداد.</value></data>
+  <data name="SalesAgreementHasReceipts" xml:space="preserve"><value>توجد سندات قبض لهذا العقد؛ ألغها أو ردها أولًا.</value></data>
+  <data name="SalesAgreementNotInvoiced" xml:space="preserve"><value>لا يمكن تسليم إلا عقد بيع تمت فوترته.</value></data>
+  <data name="SalesAgreementNotDelivered" xml:space="preserve"><value>لا يمكن إقفال إلا عقد بيع تم تسليمه.</value></data>
+  <data name="SalesAgreementOutstanding" xml:space="preserve"><value>ما زال على العقد رصيد مستحق.</value></data>
+  <data name="SalesAgreementDeliveryDateInvalid" xml:space="preserve"><value>لا يمكن أن يسبق تاريخ التسليم تاريخ الفاتورة.</value></data>
+  <data name="SalesAgreementInvoiceDateInvalid" xml:space="preserve"><value>لا يمكن أن يسبق تاريخ الفاتورة تاريخ العقد.</value></data>
+  <data name="SalesAgreementUnitCostMissing" xml:space="preserve"><value>أدخل تكلفة شراء كل وحدة في أسطول البيع قبل الفوترة.</value></data>
+  <data name="SalesAgreementUnitCostLocked" xml:space="preserve"><value>هذه الوحدة مباعة وتكلفة شرائها مرحّلة، لا يمكن تغييرها.</value></data>
+  <data name="SalesAgreementCustomerAccountMissing" xml:space="preserve"><value>لم يتم ربط حساب مراقبة العملاء لهذا العميل في ربط الحسابات.</value></data>
+  <data name="SalesAgreementRevenueAccountMissing" xml:space="preserve"><value>اربط حساب إيراد بيع المركبات في ربط الحسابات &gt; عام.</value></data>
+  <data name="SalesAgreementTaxAccountMissing" xml:space="preserve"><value>اربط حساب الضريبة المحصلة في ربط الحسابات &gt; عام.</value></data>
+  <data name="SalesAgreementCostAccountMissing" xml:space="preserve"><value>اربط حسابي تكلفة المركبة المباعة والمخزون في ربط الحسابات &gt; عام.</value></data>
+  <data name="SalesAgreementInvoiceLocked" xml:space="preserve"><value>هذه الفاتورة تابعة لعقد بيع ولا يمكن تعديلها أو حذفها من هنا.</value></data>
+  <data name="SalesAgreementInvoiceBasisInvalid" xml:space="preserve"><value>اختر وحدات الاتفاقية أو صافي مبلغ أو الرصيد النهائي للفوترة.</value></data>
+  <data name="SalesAgreementInvoiceItemUnavailable" xml:space="preserve"><value>تم تضمين وحدة أو أكثر من الوحدات المختارة في فاتورة اتفاقية من قبل.</value></data>
+  <data name="SalesAgreementInvoiceAmountInvalid" xml:space="preserve"><value>يجب أن يكون صافي مبلغ الفاتورة أكبر من صفر.</value></data>
+  <data name="SalesAgreementInvoiceAmountExceedsOutstanding" xml:space="preserve"><value>لا يمكن أن يتجاوز مبلغ الفاتورة الرصيد غير المفوتر من الاتفاقية.</value></data>
+  <data name="SalesAgreementPartialDeliveryRequiresUnits" xml:space="preserve"><value>التسليم الجزئي يتطلب اختيار وحدات تمت فوترتها.</value></data>
+  <data name="SalesAgreementDeliveryItemsInvalid" xml:space="preserve"><value>اختر وحدات صالحة من الاتفاقية للتسليم.</value></data>
+  <data name="SalesAgreementAlreadyDelivered" xml:space="preserve"><value>تم تسليم وحدة أو أكثر من الوحدات المختارة من قبل.</value></data>
+  <data name="StaffConfirmationNotAfterJoining" xml:space="preserve"><value>يجب أن يكون تاريخ التأكيد في نفس يوم الانضمام أو بعده.</value></data>
+  <data name="UniqueFieldNotSupported" xml:space="preserve"><value>هذا الحقل لا يدعم التحقق من توفر القيمة.</value></data>
+  <data name="InvalidId" xml:space="preserve"><value>يجب أن يكون معرف السجل أكبر من صفر.</value></data>
+  <data name="JobInvoiceJobNotFound" xml:space="preserve"><value>أمر العمل غير موجود.</value></data>
+  <data name="JobInvoiceClosed" xml:space="preserve"><value>يمكن إصدار فاتورة لأمر عمل مفتوح فقط.</value></data>
+  <data name="JobInvoiceAlreadyExists" xml:space="preserve"><value>توجد فاتورة لهذا العمل بالفعل. أعد تحميل العمل قبل المتابعة.</value></data>
+  <data name="JobInvoiceNumberRequired" xml:space="preserve"><value>لا يوجد رقم لأمر العمل لإصدار الفاتورة.</value></data>
+  <data name="JobInvoiceCustomerRequired" xml:space="preserve"><value>يجب أن يكون لأمر العمل عميل متاح قبل إصدار الفاتورة.</value></data>
+  <data name="JobInvoiceDateRequired" xml:space="preserve"><value>تاريخ ووقت الفاتورة مطلوبان.</value></data>
+  <data name="JobInvoiceLinesRequired" xml:space="preserve"><value>أضف بندًا صالحًا واحدًا على الأقل للفاتورة.</value></data>
+  <data name="JobInvoiceChargeInvalid" xml:space="preserve"><value>اختر نوع رسوم ورشة لكل بند في الفاتورة.</value></data>
+  <data name="JobInvoiceAmountInvalid" xml:space="preserve"><value>يجب ألا يقل مبلغ أي بند في الفاتورة عن 0.01.</value></data>
+  <data name="JobInvoiceTaxInvalid" xml:space="preserve"><value>يجب أن تكون نسبة الضريبة بين 0 و100.</value></data>
+  <data name="JobInvoiceVehicleInvalid" xml:space="preserve"><value>واحدة أو أكثر من المركبات المختارة غير متاحة.</value></data>
+  <data name="JobInvoiceTextTooLong" xml:space="preserve"><value>تجاوزت تفاصيل الفاتورة أو وصف البند الطول المسموح.</value></data>
+  <data name="WorkOrderItemsRequired" xml:space="preserve"><value>أضف بنداً واحداً على الأقل إلى أمر العمل.</value></data>
+  <data name="WorkOrderNotFound" xml:space="preserve"><value>أمر العمل غير موجود.</value></data>
+  <data name="WorkOrderEditLocked" xml:space="preserve"><value>يمكن تعديل أوامر العمل المعلقة فقط. أعد تحميل أمر العمل قبل المتابعة.</value></data>
+  <data name="WorkOrderTransitionLocked" xml:space="preserve"><value>يمكن قبول أو رفض أوامر العمل المعلقة فقط. أعد تحميل القائمة قبل المتابعة.</value></data>
+  <data name="WorkOrderUsedByJob" xml:space="preserve"><value>أمر العمل مستخدم في مهمة أو أكثر ولا يمكن حذفه.</value></data>
+  <data name="JobGatePassUnavailable" xml:space="preserve"><value>يمكن طباعة تصريح الخروج للعمل المغلق الذي صدرت له فاتورة فقط. أعد تحميل العمل قبل المتابعة.</value></data>
+  <data name="SalesAgreementQuotationTaxMismatch" xml:space="preserve"><value>بنود عرض السعر لها نسب ضريبة مختلفة. اتفاقية البيع تتطلب نسبة ضريبة واحدة؛ راجع عرض السعر قبل تحويله.</value></data>
+  <data name="SalesAgreementScheduleInvalid" xml:space="preserve"><value>اختر تواريخ وصفوف أقساط صحيحة؛ يجب أن يكون جدول الأقساط الشهري ضمن نطاق التواريخ المدعوم.</value></data>
+  <data name="SalesAgreementTermsTooLong" xml:space="preserve"><value>شروط اتفاقية البيع لا يمكن أن تتجاوز 2000 حرف. راجع شروط عرض السعر قبل تحويله.</value></data>
+  <data name="ItemRequisitionAmountExceeded" xml:space="preserve"><value>مبلغ طلب الشراء يتجاوز النطاق المالي المدعوم.</value></data>
+  <data name="ItemRequisitionInvalidBranch" xml:space="preserve"><value>الفرع المحدد لم يعد متاحًا.</value></data>
+  <data name="ItemRequisitionInvalidInput" xml:space="preserve"><value>أدخل تاريخًا وعملًا صحيحين وصنفًا واحدًا على الأقل دون تكرار وبكمية موجبة.</value></data>
+  <data name="ItemRequisitionInvalidItems" xml:space="preserve"><value>صنف واحد أو أكثر من الأصناف المحددة لم يعد متاحًا.</value></data>
+  <data name="ItemRequisitionInvalidJob" xml:space="preserve"><value>العمل المحدد لم يعد متاحًا.</value></data>
+  <data name="ItemRequisitionInvalidLines" xml:space="preserve"><value>اختر صفوفًا مختلفة من هذا الطلب بكميات موجبة.</value></data>
+  <data name="ItemRequisitionInvalidSupplier" xml:space="preserve"><value>المورد المحدد لم يعد متاحًا.</value></data>
+  <data name="ItemRequisitionInvalidUom" xml:space="preserve"><value>اختر وحدة قياس متاحة وسعر وحدة صحيحًا غير سالب لكل صف.</value></data>
+  <data name="ItemRequisitionLinkedDocument" xml:space="preserve"><value>هذا الطلب مرتبط بطلب شراء أو إذن صرف ولا يمكن تعديله أو حذفه.</value></data>
+  <data name="ItemRequisitionLinkedIssueEdit" xml:space="preserve"><value>إذن الصرف المرتبط بطلب أصناف لا يقبل التعديل. احذف الإذن كاملًا عندما يكون ذلك مسموحًا ثم أصدر إذنًا جديدًا من الطلب.</value></data>
+  <data name="ItemRequisitionLinkedPurchaseRequestEdit" xml:space="preserve"><value>طلب الشراء المنشأ من طلب أصناف لا يقبل التعديل. احذفه عندما يكون ذلك مسموحًا ثم أنشئه مجددًا من طلب الأصناف.</value></data>
+  <data name="ItemRequisitionNotFound" xml:space="preserve"><value>طلب الأصناف غير موجود.</value></data>
+  <data name="ItemRequisitionPurchaseRequestExists" xml:space="preserve"><value>يوجد بالفعل طلب شراء فعال مرتبط بهذا الطلب.</value></data>
+  <data name="ItemRequisitionQuantityExceeded" xml:space="preserve"><value>الكمية تتجاوز الكمية المتبقية الحالية في الطلب. أعد التحميل قبل المتابعة.</value></data>
+  <data name="ItemRequisitionUseAggregateEditor" xml:space="preserve"><value>عدّل صفوف الطلب من شاشة طلب الأصناف.</value></data>
+  <data name="ItemIssueInvalidInput" xml:space="preserve"><value>أدخل تاريخًا وأمر عمل صحيحين وصنفًا واحدًا على الأقل دون تكرار وبكمية موجبة.</value></data>
+  <data name="ItemIssueInvalidItems" xml:space="preserve"><value>صنف واحد أو أكثر من الأصناف المحددة لم يعد متاحًا.</value></data>
+  <data name="ItemIssueInvalidJob" xml:space="preserve"><value>أمر العمل المحدد لم يعد متاحًا.</value></data>
+  <data name="ItemIssueInvalidLines" xml:space="preserve"><value>يجب أن تكون الصفوف المحفوظة تابعة لهذا الإذن دون تكرار.</value></data>
+  <data name="ItemIssueNotFound" xml:space="preserve"><value>إذن الصرف غير موجود.</value></data>
+  <data name="ItemIssueUseAggregateEditor" xml:space="preserve"><value>عدّل صفوف إذن الصرف من شاشة إذن الصرف.</value></data>
+  <data name="ItemReturnInvalidInput" xml:space="preserve"><value>أدخل تاريخًا وأمر عمل صحيحين وصنفًا واحدًا على الأقل دون تكرار وبكمية موجبة.</value></data>
+  <data name="ItemReturnInvalidItems" xml:space="preserve"><value>صنف واحد أو أكثر من الأصناف المحددة لم يعد متاحًا.</value></data>
+  <data name="ItemReturnInvalidJob" xml:space="preserve"><value>أمر العمل المحدد لم يعد متاحًا.</value></data>
+  <data name="ItemReturnInvalidLines" xml:space="preserve"><value>يجب أن تتبع البنود المحفوظة إذن المرتجع الحالي وألا تتكرر.</value></data>
+  <data name="ItemReturnNotFound" xml:space="preserve"><value>إذن المرتجع غير موجود.</value></data>
+  <data name="ItemReturnUseAggregateEditor" xml:space="preserve"><value>عدّل كل إذن مرتجع من خلال نموذج الإذن وبنوده.</value></data>
+  <data name="StockTransferInvalidBranches" xml:space="preserve"><value>فرع واحد أو أكثر من الفروع المحددة لم يعد متاحًا.</value></data>
+  <data name="StockTransferInvalidInput" xml:space="preserve"><value>أدخل تاريخًا وفرعًا مستلمًا صحيحين وبنود أصناف وفروع مصدر دون تكرار وبكميات موجبة. يجب أن يختلف المصدر عن المستلم.</value></data>
+  <data name="StockTransferInvalidItems" xml:space="preserve"><value>صنف واحد أو أكثر من الأصناف المحددة لم يعد متاحًا.</value></data>
+  <data name="StockTransferInvalidLines" xml:space="preserve"><value>يجب أن تتبع البنود المحفوظة تحويل المخزون الحالي وألا تتكرر.</value></data>
+  <data name="StockTransferNotFound" xml:space="preserve"><value>تحويل المخزون غير موجود.</value></data>
+  <data name="StockTransferUseAggregateEditor" xml:space="preserve"><value>عدّل كل تحويل مخزون من خلال نموذج التحويل وبنوده.</value></data>
+  <data name="StockReportsInvalidDateRange" xml:space="preserve"><value>أدخل نطاق تاريخ صحيحًا ومرتبًا من وإلى.</value></data>
+  <data name="StockReportsInvalidFilter" xml:space="preserve"><value>عامل تصفية واحد أو أكثر في تقرير المخزون غير صحيح.</value></data>
+  <data name="MonthCloseCheckPassed" xml:space="preserve"><value>تم اجتياز الفحص. يمكنك المتابعة.</value></data>
+  <data name="MonthCloseBlocked" xml:space="preserve"><value>تعذر تنفيذ إجراء الشهر. راجع الأسباب الموضحة.</value></data>
+  <data name="MonthCloseClosed" xml:space="preserve"><value>تم إقفال الشهر بنجاح.</value></data>
+  <data name="MonthCloseReopened" xml:space="preserve"><value>تمت إعادة فتح الشهر بنجاح.</value></data>
+  <data name="MonthCloseAlreadyClosed" xml:space="preserve"><value>الشهر مغلق بالفعل.</value></data>
+  <data name="MonthCloseAlreadyOpen" xml:space="preserve"><value>الشهر مفتوح بالفعل.</value></data>
+  <data name="MonthCloseReason_monthNotFound" xml:space="preserve"><value>سجل الشهر غير موجود.</value></data>
+  <data name="MonthCloseReason_fiscalYearNotFound" xml:space="preserve"><value>السنة المالية التابعة للشهر غير موجودة.</value></data>
+  <data name="MonthCloseReason_invalidPeriod" xml:space="preserve"><value>الشهر أو نطاق تواريخ السنة المالية غير صحيح.</value></data>
+  <data name="MonthCloseReason_fiscalYearClosed" xml:space="preserve"><value>السنة المالية ليست مفتوحة.</value></data>
+  <data name="MonthCloseReason_monthAlreadyClosed" xml:space="preserve"><value>الشهر مغلق بالفعل.</value></data>
+  <data name="MonthCloseReason_futureMonth" xml:space="preserve"><value>لا يمكن إقفال شهر مستقبلي.</value></data>
+  <data name="MonthCloseReason_previousMonthsOpen" xml:space="preserve"><value>يوجد {0} شهر سابق في هذه السنة المالية مفتوح أو دون سجل.</value></data>
+  <data name="MonthCloseReason_vouchersNotApproved" xml:space="preserve"><value>يوجد {0} قيد غير ملغى في الشهر لم يكتمل اعتماده وترحيله.</value></data>
+  <data name="MonthCloseReason_invalidVouchers" xml:space="preserve"><value>يوجد {0} قيد ببنود ناقصة أو غير متوازنة أو فترة مالية غير صحيحة.</value></data>
+  <data name="MonthCloseReason_periodImmutable" xml:space="preserve"><value>لا يمكن تغيير السنة المالية أو السنة أو الشهر لسجل فترة محفوظ.</value></data>
+  <data name="MonthCloseReason_useCloseAction" xml:space="preserve"><value>أنشئ سجل الشهر بحالة مفتوح ثم استخدم إجراء إقفال الشهر الذي يفحص الشروط.</value></data>
+  <data name="MonthCloseReason_invalidStatus" xml:space="preserve"><value>حالة الشهر غير صحيحة.</value></data>
+  <data name="MonthCloseReason_closedRecordDelete" xml:space="preserve"><value>لا يمكن حذف سجل شهر مغلق. أعد فتحه أولًا.</value></data>
+  <data name="BankReconciliationInvalidHeader" xml:space="preserve"><value>اختر بنكًا وطريقة دفع صالحين، وأدخل تاريخ كشف صحيحًا ورصيدًا موجبًا أو سالبًا لا يتجاوز منزلتين عشريتين ونطاق القيم المالية المدعوم.</value></data>
+  <data name="BankReconciliationInvalidBank" xml:space="preserve"><value>البنك المحدد لم يعد متاحًا. حدّث قائمة البنوك.</value></data>
+  <data name="BankReconciliationInvalidPaymentMethod" xml:space="preserve"><value>طريقة الدفع المحددة لم تعد متاحة. حدّث قائمة طرق الدفع.</value></data>
+  <data name="BankReconciliationMissingAccount" xml:space="preserve"><value>لا يوجد حساب أستاذ صالح مرتبط بطريقة الدفع المحددة. راجع ربط الحسابات &gt; طرق الدفع قبل المتابعة.</value></data>
+  <data name="BankReconciliationInvalidSelection" xml:space="preserve"><value>يجب أن تكون معرّفات الحركات المحددة موجبة وغير مكررة.</value></data>
+  <data name="BankReconciliationIneligibleSelection" xml:space="preserve"><value>حركة محددة أو أكثر غير متاحة أو لم تعد مؤهلة لطريقة الدفع وتاريخ الكشف المحددين. حدّث جلسة التسوية وراجع الاختيار.</value></data>
+  <data name="BankReconciliationAlreadyReconciled" xml:space="preserve"><value>تمت تسوية حركة محددة أو أكثر بالفعل. حدّث جلسة التسوية وراجع الاختيار.</value></data>
+  <data name="BankReconciliationDifferenceNotZero" xml:space="preserve"><value>يجب أن يساوي الرصيد المطابق سابقًا مضافًا إليه المدين ناقص الدائن للحركات المختارة الرصيد الختامي لكشف البنك.</value></data>
+  <data name="BankReconciliationCompleted" xml:space="preserve"><value>تم إتمام التسوية البنكية بنجاح.</value></data>
+  <data name="BankReconciliationSaveFailed" xml:space="preserve"><value>تعذر حفظ التسوية البنكية. راجع الجلسة وحاول مرة أخرى.</value></data>
+  <data name="BankNameExists" xml:space="preserve"><value>يوجد حساب بنكي بهذا الاسم بالفعل.</value></data>
+  <data name="BankTrnExists" xml:space="preserve"><value>يوجد حساب بنكي بهذا الرقم الضريبي بالفعل.</value></data>
+  <data name="BankNotFound" xml:space="preserve"><value>لم يتم العثور على الحساب البنكي. حدّث القائمة وحاول مرة أخرى.</value></data>
+  <data name="BankChequeSettingsInvalid" xml:space="preserve"><value>أدخل قياسات من 0 إلى 9999.99 ولون خط بصيغة #RRGGBB، أو اترك الحقول غير المضبوطة فارغة.</value></data>
+  <data name="BankLegacyMappingBlocksDelete" xml:space="preserve"><value>يوجد ربط قديم لهذا البنك في ربط الحسابات. انقل قيمة Value إلى AccountId وأفرغ Value قبل حذف البنك.</value></data>
+  <data name="BankLinkedAccountBlocksDelete" xml:space="preserve"><value>هذا البنك مرتبط بحساب في دفتر الأستاذ العام. أزل ربط الحساب قبل حذف البنك.</value></data>
+  <data name="CashDepositNotFound" xml:space="preserve"><value>لم يتم العثور على الإيداع النقدي. حدّث القائمة وحاول مرة أخرى.</value></data>
+  <data name="CashDepositLinesRequired" xml:space="preserve"><value>اختر سندًا واحدًا على الأقل بمبلغ إيداع غير صفري.</value></data>
+  <data name="CashDepositDateRequired" xml:space="preserve"><value>تاريخ الإيداع النقدي مطلوب.</value></data>
+  <data name="CashDepositInvalidSource" xml:space="preserve"><value>يجب أن يشير كل سطر إيداع إلى سند قبض أو دفع نقدي صحيح واحد فقط.</value></data>
+  <data name="CashDepositDuplicateSource" xml:space="preserve"><value>لا يمكن اختيار السند المصدر أكثر من مرة في الإيداع نفسه.</value></data>
+  <data name="CashDepositInvalidAmount" xml:space="preserve"><value>أدخل مبلغًا غير صفري ضمن دقة العملة والنطاق المالي المدعوم.</value></data>
+  <data name="CashDepositSourceUnavailable" xml:space="preserve"><value>أحد السندات النقدية المختارة لم يعد متاحًا. أعد تحميل السندات وراجع الإيداع.</value></data>
+  <data name="CashDepositAmountExceedsDue" xml:space="preserve"><value>يجب أن يكون مبلغ الإيداع بنفس إشارة المبلغ المتبقي وألا يتجاوزه.</value></data>
+  <data name="CashDepositTotalMustBePositive" xml:space="preserve"><value>يجب أن يكون إجمالي الإيداع موجبًا وضمن النطاق المالي المدعوم.</value></data>
+  <data name="CashDepositEditLocked" xml:space="preserve"><value>لا يمكن تعديل إيداع نقدي مرحّل أو معتمد أو ملغى.</value></data>
+  <data name="CashDepositDeleteLocked" xml:space="preserve"><value>لا يمكن حذف إيداع نقدي مرحّل أو معتمد أو ملغى.</value></data>
+  <data name="CashDepositAllocated" xml:space="preserve"><value>لهذا الإيداع تخصيصات نشطة. أزل التخصيصات المرتبطة قبل التعديل أو الحذف أو إلغاء الاعتماد.</value></data>
+  <data name="CashDepositVoidAllocated" xml:space="preserve"><value>لهذا الإيداع تخصيصات نشطة. أزل التخصيصات المرتبطة قبل الإلغاء.</value></data>
+  <data name="CashDepositBulkUnsupported" xml:space="preserve"><value>يجب حفظ الإيداعات النقدية منفردة من خلال شاشة الإيداع وتفاصيله.</value></data>
+  <data name="CashDepositApprovalVoided" xml:space="preserve"><value>لا يمكن تغيير الاعتماد أثناء إلغاء الإيداع النقدي.</value></data>
+  <data name="CashDepositJournalNotFound" xml:space="preserve"><value>لم يتم العثور على قيد الإيداع النقدي. راجع المستند قبل تغييره.</value></data>
+  <data name="CashDepositStateInvalid" xml:space="preserve"><value>حالة الإيداع والقيد المرتبط به غير متوافقة. أعد التحميل وراجعهما قبل تغيير الاعتماد.</value></data>
+  <data name="CashDepositApprovalChanged" xml:space="preserve"><value>تم تحديث اعتماد الإيداع النقدي بنجاح.</value></data>
+  <data name="CashDepositVoided" xml:space="preserve"><value>تم إلغاء الإيداع النقدي بنجاح.</value></data>
+  <data name="CashDepositUnvoided" xml:space="preserve"><value>تم استعادة الإيداع النقدي بنجاح.</value></data>
+  <data name="CashDepositBankAccountMissing" xml:space="preserve"><value>اربط حسابًا بنكيًا بطريقة الدفع المختارة في ربط الحسابات قبل الحفظ.</value></data>
+  <data name="CashDepositClearingAccountMissing" xml:space="preserve"><value>اضبط حساب الإيداعات النقدية للعملاء ضمن ربط الحسابات &gt; عام قبل الحفظ.</value></data>
+  <data name="PDCPayableNotFound" xml:space="preserve"><value>لم يتم العثور على الشيك مستحق الدفع. حدّث القائمة وحاول مرة أخرى.</value></data>
+  <data name="PDCPayableChequeDateRequired" xml:space="preserve"><value>تاريخ الشيك مطلوب.</value></data>
+  <data name="PDCPayableMaturityDateRequired" xml:space="preserve"><value>تاريخ الاستحقاق مطلوب.</value></data>
+  <data name="PDCPayableInvalidSelection" xml:space="preserve"><value>اختر شيكًا واحدًا صحيحًا أو أكثر من الشيكات مستحقة الدفع.</value></data>
+  <data name="PDCPayableSelectionNotFound" xml:space="preserve"><value>لم يعد واحد أو أكثر من الشيكات المختارة موجودًا. حدّث القائمة وحاول مرة أخرى.</value></data>
+  <data name="PDCPayableEditRequiresPending" xml:space="preserve"><value>لا يمكن تعديل إلا شيك مستحق الدفع قيد الانتظار.</value></data>
+  <data name="PDCPayableDeleteCleared" xml:space="preserve"><value>لا يمكن حذف شيك مستحق الدفع تمت تسويته.</value></data>
+  <data name="PDCPayableMatureRequiresPending" xml:space="preserve"><value>لا يمكن استحقاق إلا شيك مستحق الدفع قيد الانتظار.</value></data>
+  <data name="PDCPayableBulkRequiresPending" xml:space="preserve"><value>يجب أن تظل جميع الشيكات المختارة قيد الانتظار. حدّث القائمة وحاول مرة أخرى.</value></data>
+  <data name="PDCPayableCancelRequiresPending" xml:space="preserve"><value>لا يمكن إلغاء إلا شيك مستحق الدفع قيد الانتظار.</value></data>
+  <data name="PDCPayableBankAccountRequired" xml:space="preserve"><value>اختر حسابًا بنكيًا صحيحًا.</value></data>
+  <data name="PDCPayableBankAccountNotFound" xml:space="preserve"><value>لم يتم العثور على الحساب البنكي المختار.</value></data>
+  <data name="PDCPayablePartnerRequired" xml:space="preserve"><value>يجب أن يرتبط كل شيك مستحق الدفع بمورد أو عميل أو جهة اتصال.</value></data>
+  <data name="PDCPayableBankRequired" xml:space="preserve"><value>يجب تحديد بنك لكل شيك مستحق الدفع قبل استحقاقه.</value></data>
+  <data name="PDCPayableBankAccountNotConfigured" xml:space="preserve"><value>اضبط الحساب البنكي المرتبط قبل استحقاق الشيك.</value></data>
+  <data name="PDCPayablePartnerAccountNotConfigured" xml:space="preserve"><value>اضبط حساب مراقبة الجهة قبل استحقاق الشيك.</value></data>
+  <data name="PDCPayableMatured" xml:space="preserve"><value>تم استحقاق الشيك مستحق الدفع بنجاح.</value></data>
+  <data name="PDCPayableBulkMatured" xml:space="preserve"><value>تم استحقاق الشيكات مستحقة الدفع المختارة بنجاح.</value></data>
+  <data name="PDCPayableCancelled" xml:space="preserve"><value>تم إلغاء الشيك مستحق الدفع بنجاح.</value></data>
+  <data name="PDCPayableActionFailed" xml:space="preserve"><value>تعذر حفظ عملية الشيك. حدّث السجل وأعد المحاولة.</value></data>
+  <data name="ReconciliationReportInvalidFilters" xml:space="preserve"><value>أدخل تواريخ صحيحة للتقرير واختر بنكًا صحيحًا، أو اترك البنك فارغًا لعرض جميع البنوك.</value></data>
+  <data name="PDCReceivableAmountInvalid" xml:space="preserve"><value>يجب أن يكون المبلغ أكبر من صفر، ضمن سعة decimal(18,2)، وبحد أقصى منزلتين عشريتين.</value></data>
+  <data name="PDCReceivableAgreementRequired" xml:space="preserve"><value>اختر اتفاقية عند تفعيل خيار على اتفاقية.</value></data>
+  <data name="PDCReceivableDateInvalid" xml:space="preserve"><value>أدخل تاريخاً تقويمياً كاملاً وصحيحاً.</value></data>
+  <data name="PDCReceivablePaymentInvalid" xml:space="preserve"><value>اختر طريقة دفع صحيحة للشيك.</value></data>
+  <data name="PDCReceivableChequeTextTooLong" xml:space="preserve"><value>يجب ألا يتجاوز رقم الشيك ورقم الدفعة 100 حرف.</value></data>
+  <data name="PDCReceivableBankNameTooLong" xml:space="preserve"><value>يجب ألا يتجاوز اسم البنك 200 حرف.</value></data>
+  <data name="PDCReceivableNotesTooLong" xml:space="preserve"><value>يجب ألا تتجاوز الملاحظات المحفوظة كاملة، بما فيها سجل الشيك، 1000 حرف.</value></data>
+  <data name="PDCReceivableNotFound" xml:space="preserve"><value>لم يتم العثور على الشيك المستحق القبض.</value></data>
+  <data name="PDCReceivableEditRequiresPending" xml:space="preserve"><value>يمكن تعديل الشيك المستحق القبض المعلق فقط.</value></data>
+  <data name="PDCReceivableDeleteInvalidState" xml:space="preserve"><value>لا يمكن حذف شيك مستحق القبض تم تحصيله أو إرجاعه.</value></data>
+  <data name="PDCReceivableInvalidSelection" xml:space="preserve"><value>اختر شيكاً مستحق القبض صحيحاً واحداً أو أكثر.</value></data>
+  <data name="PDCReceivableSelectionNotFound" xml:space="preserve"><value>شيك واحد أو أكثر من الشيكات المستحقة القبض المختارة لم يعد موجوداً. حدّث القائمة وحاول مجدداً.</value></data>
+  <data name="PDCReceivableBulkRequiresPending" xml:space="preserve"><value>يجب أن تكون جميع الشيكات المستحقة القبض المختارة معلقة. حدّث القائمة وحاول مجدداً.</value></data>
+  <data name="PDCReceivableMatureRequiresPending" xml:space="preserve"><value>يمكن تحصيل الشيك المستحق القبض المعلق فقط.</value></data>
+  <data name="PDCReceivableReturnRequiresCleared" xml:space="preserve"><value>يمكن إرجاع الشيك المستحق القبض المحصل فقط.</value></data>
+  <data name="PDCReceivableResubmitRequiresBounced" xml:space="preserve"><value>يمكن إعادة تقديم الشيك المستحق القبض المرتجع فقط.</value></data>
+  <data name="PDCReceivableBankRequired" xml:space="preserve"><value>اختر بنكاً صحيحاً.</value></data>
+  <data name="PDCReceivableBranchNotFound" xml:space="preserve"><value>لم يتم العثور على الفرع المختار.</value></data>
+  <data name="PDCReceivableBankAccountNotConfigured" xml:space="preserve"><value>اضبط الحساب البنكي المرتبط قبل تحصيل الشيك المستحق القبض.</value></data>
+  <data name="PDCReceivablePartnerRequired" xml:space="preserve"><value>يجب تحديد عميل أو جهة اتصال لكل شيك مستحق القبض قبل تحصيله.</value></data>
+  <data name="PDCReceivablePartnerAccountNotConfigured" xml:space="preserve"><value>اضبط حساب مراقبة الطرف قبل ترحيل عملية الشيك.</value></data>
+  <data name="PDCReceivableOriginalJournalNotFound" xml:space="preserve"><value>لم يتم العثور على قيد سند القبض الأصلي. لا يمكن إرجاع الشيك.</value></data>
+  <data name="PDCReceivableOriginalBankNotFound" xml:space="preserve"><value>لم يتم العثور على الحساب البنكي من قيد سند القبض الأصلي.</value></data>
+  <data name="PDCReceivableMatured" xml:space="preserve"><value>تم تحصيل الشيك المستحق القبض بنجاح.</value></data>
+  <data name="PDCReceivableBulkMatured" xml:space="preserve"><value>تم تحصيل الشيكات المستحقة القبض المختارة بنجاح.</value></data>
+  <data name="PDCReceivableReturned" xml:space="preserve"><value>تم إرجاع الشيك المستحق القبض بنجاح.</value></data>
+  <data name="PDCReceivableResubmitted" xml:space="preserve"><value>تمت إعادة تقديم الشيك المستحق القبض وأصبح معلقاً.</value></data>
+  <data name="PDCReceivableImportSizeInvalid" xml:space="preserve"><value>استورد من 1 إلى 1000 صف في الدفعة الواحدة.</value></data>
+  <data name="PDCReceivableImportRowInvalid" xml:space="preserve"><value>يجب أن يكون كل صف استيراد صحيحاً وله رقم صف موجب وغير مكرر.</value></data>
+  <data name="PDCReceivableImportContactRequired" xml:space="preserve"><value>رمز جهة الاتصال مطلوب.</value></data>
+  <data name="PDCReceivableImportPaymentRequired" xml:space="preserve"><value>طريقة الدفع مطلوبة.</value></data>
+  <data name="PDCReceivableImportChequeRequired" xml:space="preserve"><value>رقم الشيك مطلوب.</value></data>
+  <data name="PDCReceivableImportContactNotFound" xml:space="preserve"><value>يجب أن يطابق رمز جهة الاتصال جهة اتصال واحدة موجودة وغير محذوفة في الاشتراك الحالي.</value></data>
+  <data name="PDCReceivableImportContactNameMismatch" xml:space="preserve"><value>اسم جهة الاتصال لا يطابق جهة الاتصال المحفوظة لهذا الرمز.</value></data>
+  <data name="PDCReceivableImportValidationFailed" xml:space="preserve"><value>فشل التحقق من بيانات الاستيراد. لم يتم حفظ أي صف.</value></data>
+  <data name="PDCReceivableImportNotSaved" xml:space="preserve"><value>لم يتم الحفظ؛ يجب اجتياز التحقق لجميع صفوف الدفعة.</value></data>
+  <data name="PDCReceivableActionFailed" xml:space="preserve"><value>تعذر حفظ عملية الشيك. حدّث السجل قبل المحاولة مرة أخرى.</value></data>
+  <data name="PDCReceivableImportPersistenceFailed" xml:space="preserve"><value>تعذر تأكيد الاستيراد. راجع الشيكات المستحقة القبض قبل إعادة محاولة استيراد هذه الدفعة.</value></data>
+  <data name="BankReconciliationDateBeforeLatest" xml:space="preserve"><value>لا يمكن أن يسبق تاريخ الكشف تسوية فعالة لاحقة لنفس حساب الأستاذ.</value></data>
+  <data name="BankReconciliationLedgerChanged" xml:space="preserve"><value>لم تعد الدفاتر متوافقة مع بيانات المطابقات السابقة، أو تجاوز أحد الأرصدة الدقة أو النطاق المدعوم. راجع الحساب والتسويات السابقة.</value></data>
+  <data name="BankReconciliationPeriodClosed" xml:space="preserve"><value>تتطلب التسوية سنة مالية وشهرًا مفتوحين بتاريخ كشف البنك.</value></data>
+  <data name="BankReconciliationVoidInvalid" xml:space="preserve"><value>اختر تسوية صحيحة وأدخل سبب إلغاء لا يتجاوز 500 حرف.</value></data>
+  <data name="BankReconciliationNotFound" xml:space="preserve"><value>لم يتم العثور على التسوية المعتمدة. حدّث التقرير.</value></data>
+  <data name="BankReconciliationLegacyAccountMissing" xml:space="preserve"><value>تعذر تحديد حساب الأستاذ الأصلي لهذه التسوية التاريخية بشكل موثوق. راجع الحركات المحفوظة بها.</value></data>
+  <data name="BankReconciliationVoidLatestOnly" xml:space="preserve"><value>ألغِ آخر تسوية فعالة لنفس حساب الأستاذ أولًا.</value></data>
+  <data name="BankReconciliationVoided" xml:space="preserve"><value>تم إلغاء التسوية وأصبحت حركاتها متاحة للمطابقة مجددًا، مع بقاء القيود الأصلية كما هي.</value></data>
+  <data name="BankReconciliationVoidFailed" xml:space="preserve"><value>تعذر إلغاء التسوية. حدّث التقرير ثم أعد المحاولة.</value></data>
+  <data name="CardTransferNotFound" xml:space="preserve"><value>لم يتم العثور على تحويل معاملات البطاقة. حدّث القائمة وحاول مرة أخرى.</value></data>
+  <data name="CardTransferEditLocked" xml:space="preserve"><value>يمكن تعديل تحويل البطاقة غير المعتمد وغير المرحّل وغير الملغى فقط.</value></data>
+  <data name="CardTransferDeleteLocked" xml:space="preserve"><value>يمكن حذف تحويل البطاقة غير المعتمد وغير المرحّل وغير الملغى فقط.</value></data>
+  <data name="CardTransferApprovalVoided" xml:space="preserve"><value>لا يمكن اعتماد تحويل بطاقة ملغى أو إلغاء اعتماده.</value></data>
+  <data name="CardTransferApprovalStateInvalid" xml:space="preserve"><value>حالتا الاعتماد والترحيل غير متوافقتين أو لا تسمحان بهذا الإجراء.</value></data>
+  <data name="CardTransferJournalNotFound" xml:space="preserve"><value>لم يتم العثور على القيد الخاص بتحويل البطاقة.</value></data>
+  <data name="CardTransferActiveAllocations" xml:space="preserve"><value>يرتبط تحويل البطاقة بتخصيصات فعالة. أزلها قبل التعديل أو الحذف أو إلغاء الاعتماد.</value></data>
+  <data name="CardTransferVoidActiveAllocations" xml:space="preserve"><value>يرتبط تحويل البطاقة بتخصيصات فعالة. أزلها قبل الإلغاء.</value></data>
+  <data name="CardTransferBankNotFound" xml:space="preserve"><value>اختر بنكًا متاحًا.</value></data>
+  <data name="CardTransferPaymentMethodNotFound" xml:space="preserve"><value>اختر طريقة دفع متاحة.</value></data>
+  <data name="CardTransferBranchNotFound" xml:space="preserve"><value>الفرع المحدد غير متاح.</value></data>
+  <data name="CardTransferDetailsRequired" xml:space="preserve"><value>اختر معاملة بطاقة معلقة واحدة على الأقل.</value></data>
+  <data name="CardTransferDuplicateReceipt" xml:space="preserve"><value>لا يمكن تكرار الإيصال داخل تحويل البطاقة.</value></data>
+  <data name="CardTransferReceiptNotFound" xml:space="preserve"><value>لم تعد بعض الإيصالات المحددة متاحة.</value></data>
+  <data name="CardTransferReceiptUnavailable" xml:space="preserve"><value>لا يمكن تحويل إيصال محذوف أو ملغى.</value></data>
+  <data name="CardTransferReceiptNotCard" xml:space="preserve"><value>يمكن تحويل إيصالات الدفع بالبطاقة فقط.</value></data>
+  <data name="CardTransferCommissionInvalid" xml:space="preserve"><value>يجب أن تكون نسبة العمولة بين 0 و100.</value></data>
+  <data name="CardTransferCommissionExceedsAmount" xml:space="preserve"><value>لا يجوز أن تتجاوز العمولة والضريبة مبلغ الإيصال.</value></data>
+  <data name="CardTransferReceiptAlreadySettled" xml:space="preserve"><value>تم تحويل إيصال محدد بالفعل في مستند فعال آخر.</value></data>
+  <data name="CardTransferPaymentMethodAccountMissing" xml:space="preserve"><value>لا يوجد حساب بنكي مربوط بطريقة الدفع المحددة.</value></data>
+  <data name="CardTransferCommissionAccountMissing" xml:space="preserve"><value>حساب مصروف العمولة غير مهيأ.</value></data>
+  <data name="CardTransferTaxAccountMissing" xml:space="preserve"><value>حساب الضريبة المدفوعة غير مهيأ.</value></data>
+  <data name="CardTransferClearingAccountMissing" xml:space="preserve"><value>حساب تسوية إيداعات بطاقات العملاء غير مهيأ.</value></data>
+  <data name="CardTransferAddFailed" xml:space="preserve"><value>تعذر إنشاء تحويل البطاقة. حدّث المعاملات المعلقة وحاول مرة أخرى.</value></data>
+  <data name="CardTransferUpdateFailed" xml:space="preserve"><value>تعذر تحديث تحويل البطاقة. حدّثه وحاول مرة أخرى.</value></data>
+  <data name="CardTransferDeleteFailed" xml:space="preserve"><value>تعذر حذف تحويل البطاقة. حدّثه وحاول مرة أخرى.</value></data>
+  <data name="CardTransferActionFailed" xml:space="preserve"><value>تعذر حفظ إجراء تحويل البطاقة. حدّثه وحاول مرة أخرى.</value></data>
+  <data name="CardTransferInvalidInput" xml:space="preserve"><value>أدخل تاريخًا صحيحًا وحدد معاملات البطاقة.</value></data>
+  <data name="CardTransferApprovalChanged" xml:space="preserve"><value>تم تحديث حالة اعتماد تحويل البطاقة.</value></data>
+  <data name="CardTransferVoided" xml:space="preserve"><value>تم إلغاء تحويل البطاقة.</value></data>
+  <data name="CardTransferUnvoided" xml:space="preserve"><value>تمت استعادة تحويل البطاقة.</value></data>
+  <data name="LoanReportInvalidDateRange" xml:space="preserve"><value>أدخل نطاق تاريخ صحيحًا ومرتبًا من وإلى.</value></data>
+  <data name="LoanReportInvalidFilter" xml:space="preserve"><value>يوجد عامل تصفية غير صحيح واحد أو أكثر في تقرير القروض.</value></data>
+  <data name="DepreciationEntryBatchOnly" xml:space="preserve"><value>لا يمكن إنشاء قيود الإهلاك إلا بحفظ دفعة إهلاك مُعَدّة.</value></data>
+  <data name="DepreciationInvalidMonth" xml:space="preserve"><value>أدخل شهرًا صحيحًا بالصيغة yyyy-MM-01.</value></data>
+  <data name="DepreciationPreparationStale" xml:space="preserve"><value>تغيرت بيانات الإهلاك المُعَدّة. أعد إعداد الدفعة.</value></data>
+  <data name="DepreciationBatchCannotSave" xml:space="preserve"><value>لا يمكن حفظ دفعة الإهلاك. راجع بيانات الأصول وطريقة القسط الثابت وربط حساب مصروف الإهلاك ومجمّع الإهلاك بنوع الأصل، ثم أعد إعدادها.</value></data>
+  <data name="DepreciationBatchEmpty" xml:space="preserve"><value>لا توجد صفوف إهلاك موجبة وغير محفوظة للترحيل.</value></data>
+  <data name="DepreciationAlreadySaved" xml:space="preserve"><value>تم حفظ إهلاك أصل واحد أو أكثر لهذا الشهر بالفعل.</value></data>
+  <data name="DepreciationSaveFailed" xml:space="preserve"><value>تعذر حفظ دفعة الإهلاك. أعد إعدادها ثم حاول مرة أخرى.</value></data>
+  <data name="DepreciationDuplicateSnapshots" xml:space="preserve"><value>توجد لقطات إهلاك مكررة لأصل وشهر واحد. عالجها قبل إعداد هذه الدفعة.</value></data>
+  <data name="TripBookingNotFound" xml:space="preserve">
+    <value>لم يتم العثور على الرحلة.</value>
+  </data>
+  <data name="TripBookingDriverRequiredAfterAssignment" xml:space="preserve">
+    <value>يلزم تحديد السائق بعد تخصيص الرحلة أو إرسالها.</value>
+  </data>
+  <data name="TripBookingConcurrentChange" xml:space="preserve">
+    <value>عدّل مستخدم آخر هذه الرحلة. حدّث البيانات وأعد المحاولة.</value>
+  </data>
+  <data name="TripBookingAssignStateInvalid" xml:space="preserve">
+    <value>يمكن تخصيص الرحلات الجديدة فقط.</value>
+  </data>
+  <data name="TripBookingVehicleRequiredToAssign" xml:space="preserve">
+    <value>يلزم تحديد المركبة قبل تخصيص الرحلة.</value>
+  </data>
+  <data name="TripBookingDriverRequiredToAssign" xml:space="preserve">
+    <value>يلزم تحديد السائق قبل تخصيص الرحلة.</value>
+  </data>
+  <data name="TripBookingAssigned" xml:space="preserve">
+    <value>تم تخصيص الرحلة بنجاح.</value>
+  </data>
+  <data name="TripBookingDispatchStateInvalid" xml:space="preserve">
+    <value>يمكن إرسال الرحلات الجديدة أو المخصصة فقط.</value>
+  </data>
+  <data name="TripBookingAssignmentRequiredBeforeDispatch" xml:space="preserve">
+    <value>تتطلب هذه الشركة تخصيص الرحلة قبل إرسالها.</value>
+  </data>
+  <data name="TripBookingVehicleRequiredToDispatch" xml:space="preserve">
+    <value>يلزم تحديد المركبة قبل إرسال الرحلة.</value>
+  </data>
+  <data name="TripBookingDriverRequiredToDispatch" xml:space="preserve">
+    <value>يلزم تحديد السائق قبل إرسال الرحلة.</value>
+  </data>
+  <data name="TripBookingDriverNotFound" xml:space="preserve">
+    <value>لم يتم العثور على السائق.</value>
+  </data>
+  <data name="TripBookingDispatched" xml:space="preserve">
+    <value>تم إرسال الرحلة بنجاح.</value>
+  </data>
+  <data name="TripBookingStartStateInvalid" xml:space="preserve">
+    <value>يمكن بدء الرحلات المرسلة فقط.</value>
+  </data>
+  <data name="TripBookingStartDateRequired" xml:space="preserve">
+    <value>يلزم إدخال تاريخ ووقت البدء.</value>
+  </data>
+  <data name="TripBookingStarted" xml:space="preserve">
+    <value>بدأت الرحلة بنجاح.</value>
+  </data>
+  <data name="TripBookingFinishStateInvalid" xml:space="preserve">
+    <value>يمكن إنهاء الرحلات التي بدأت فقط.</value>
+  </data>
+  <data name="TripBookingDropOffDateRequired" xml:space="preserve">
+    <value>يلزم إدخال تاريخ ووقت الوصول.</value>
+  </data>
+  <data name="TripBookingDropOffBeforeStart" xml:space="preserve">
+    <value>لا يجوز أن يسبق وقت الوصول وقت بدء الرحلة.</value>
+  </data>
+  <data name="TripBookingKmsNegative" xml:space="preserve">
+    <value>لا يمكن أن تكون الكيلومترات سالبة.</value>
+  </data>
+  <data name="TripBookingTripChargesNegative" xml:space="preserve">
+    <value>لا يمكن أن تكون رسوم الرحلة سالبة.</value>
+  </data>
+  <data name="TripBookingFinished" xml:space="preserve">
+    <value>انتهت الرحلة بنجاح.</value>
+  </data>
+  <data name="TripBookingNoShowStateInvalid" xml:space="preserve">
+    <value>يمكن تسجيل عدم الحضور للرحلات المرسلة فقط.</value>
+  </data>
+  <data name="TripBookingMarkedNoShow" xml:space="preserve">
+    <value>تم تسجيل عدم الحضور للرحلة.</value>
+  </data>
+  <data name="TripBookingInvoicedCannotCancel" xml:space="preserve">
+    <value>لا يمكن إلغاء رحلة مفوترة. اعكس الفاتورة أولًا.</value>
+  </data>
+  <data name="TripBookingCancellationReasonRequired" xml:space="preserve">
+    <value>يلزم إدخال سبب الإلغاء.</value>
+  </data>
+  <data name="TripBookingCancelled" xml:space="preserve">
+    <value>تم إلغاء الرحلة بنجاح.</value>
+  </data>
+  <data name="TripBookingVehicleTypeRequired" xml:space="preserve">
+    <value>يلزم تحديد نوع المركبة.</value>
+  </data>
+  <data name="TripBookingInvoicedCannotDelete" xml:space="preserve">
+    <value>لا يمكن حذف رحلة مفوترة.</value>
+  </data>
+  <data name="TripBookingDeleteStateInvalid" xml:space="preserve">
+    <value>يمكن حذف الرحلات الجديدة أو الملغاة فقط.</value>
+  </data>
+  <data name="TripBookingDateRangeInvalid" xml:space="preserve">
+    <value>يجب ألا يتجاوز تاريخ البداية تاريخ النهاية.</value>
+  </data>
+  <data name="TripBookingUtilizationBreakupInvalid" xml:space="preserve">
+    <value>يجب أن يكون تجميع الاستخدام بالساعة أو باليوم.</value>
+  </data>
+  <data name="TripBookingBranchNotFound" xml:space="preserve">
+    <value>لم يتم العثور على الفرع.</value>
+  </data>
+  <data name="TripBookingCustomerNotFound" xml:space="preserve">
+    <value>لم يتم العثور على العميل.</value>
+  </data>
+  <data name="TripBookingVehicleTypeNotFound" xml:space="preserve">
+    <value>لم يتم العثور على نوع المركبة.</value>
+  </data>
+  <data name="TripBookingCustomerRequired" xml:space="preserve">
+    <value>يلزم تحديد العميل.</value>
+  </data>
+  <data name="TripBookingTripTypeRequired" xml:space="preserve">
+    <value>يلزم تحديد نوع الرحلة.</value>
+  </data>
+  <data name="TripBookingPickupLocationRequired" xml:space="preserve">
+    <value>يلزم تحديد موقع الانطلاق.</value>
+  </data>
+  <data name="TripBookingDropOffLocationRequired" xml:space="preserve">
+    <value>يلزم تحديد موقع الوصول.</value>
+  </data>
+  <data name="TripBookingPickupDateRequired" xml:space="preserve">
+    <value>يلزم إدخال تاريخ ووقت الانطلاق.</value>
+  </data>
+  <data name="TripBookingDropOffDateOrder" xml:space="preserve">
+    <value>يجب أن يلي وقت الوصول وقت الانطلاق.</value>
+  </data>
+  <data name="TripBookingChargesNegative" xml:space="preserve">
+    <value>لا يمكن أن تكون الرسوم سالبة.</value>
+  </data>
+  <data name="TripBookingTaxNegative" xml:space="preserve">
+    <value>لا يمكن أن تكون الضريبة سالبة.</value>
+  </data>
+  <data name="TripBookingDiscountNegative" xml:space="preserve">
+    <value>لا يمكن أن يكون الخصم سالبًا.</value>
+  </data>
+  <data name="TripBookingSupplierChargesNegative" xml:space="preserve">
+    <value>لا يمكن أن تكون رسوم المورد سالبة.</value>
+  </data>
+  <data name="TripBookingTripTypeNotFound" xml:space="preserve">
+    <value>لم يتم العثور على نوع الرحلة.</value>
+  </data>
+  <data name="TripBookingPickupLocationNotFound" xml:space="preserve">
+    <value>لم يتم العثور على موقع الانطلاق.</value>
+  </data>
+  <data name="TripBookingDropOffLocationNotFound" xml:space="preserve">
+    <value>لم يتم العثور على موقع الوصول.</value>
+  </data>
+  <data name="TripBookingVehicleNotFound" xml:space="preserve">
+    <value>لم يتم العثور على المركبة.</value>
+  </data>
+  <data name="TripBookingSupplierNotFound" xml:space="preserve">
+    <value>لم يتم العثور على المورد.</value>
+  </data>
+  <data name="TripBookingExternalRegistrationRequired" xml:space="preserve">
+    <value>يلزم إدخال رقم تسجيل المركبة الخارجية.</value>
+  </data>
+  <data name="TripBookingExternalMakeModelRequired" xml:space="preserve">
+    <value>يلزم إدخال الماركة والطراز للمركبة الخارجية.</value>
+  </data>
+  <data name="TripBookingExternalSupplierRequired" xml:space="preserve">
+    <value>يلزم تحديد المورد لحجز المركبة الخارجية.</value>
+  </data>
+  <data name="TripBookingExternalDriverRequired" xml:space="preserve">
+    <value>يلزم إدخال اسم السائق للمركبة الخارجية.</value>
+  </data>
+  <data name="TripBookingVehicleSelectionRequired" xml:space="preserve">
+    <value>يلزم تحديد المركبة عند تعطيل البحث التلقائي أو عدم توفر مركبة مناسبة.</value>
+  </data>
+  <data name="TripBookingVehicleTypeMismatch" xml:space="preserve">
+    <value>المركبة المختارة لا تطابق نوع المركبة المحدد.</value>
+  </data>
+  <data name="TripBookingVehicleUnavailable" xml:space="preserve">
+    <value>المركبة المختارة غير متاحة في الوقت المحدد.</value>
+  </data>
+  <data name="TripBookingDriverUnavailable" xml:space="preserve">
+    <value>السائق المختار غير متاح في الوقت المحدد.</value>
+  </data>
+  <data name="TripBookingEditStateInvalid" xml:space="preserve">
+    <value>لا يمكن تعديل الرحلة في حالتها الحالية.</value>
+  </data>
+  <data name="TripBookingCancelStateInvalid" xml:space="preserve">
+    <value>لا يمكن إلغاء الرحلة في حالتها الحالية.</value>
+  </data>
+  <data name="TripBookingInvalidDocumentOwnership" xml:space="preserve">
+    <value>يجب أن يتبع كل مستند محفوظ هذه الرحلة وألا يتكرر.</value>
+  </data>
+  <data name="LimoQuotationNotFound" xml:space="preserve">
+    <value>لم يتم العثور على عرض سعر الليموزين.</value>
+  </data>
+  <data name="LimoQuotationEditStateInvalid" xml:space="preserve">
+    <value>يمكن تعديل عروض الأسعار قيد الانتظار فقط.</value>
+  </data>
+  <data name="LimoQuotationDeleteStateInvalid" xml:space="preserve">
+    <value>يمكن حذف عروض الأسعار قيد الانتظار فقط.</value>
+  </data>
+  <data name="LimoQuotationInternalApproveStateInvalid" xml:space="preserve">
+    <value>يمكن اعتماد عروض الأسعار قيد الانتظار داخليًا فقط.</value>
+  </data>
+  <data name="LimoQuotationInternalRejectStateInvalid" xml:space="preserve">
+    <value>يمكن رفض عروض الأسعار قيد الانتظار داخليًا فقط.</value>
+  </data>
+  <data name="LimoQuotationCustomerApproveStateInvalid" xml:space="preserve">
+    <value>يمكن للعميل اعتماد عروض الأسعار المعتمدة داخليًا فقط.</value>
+  </data>
+  <data name="LimoQuotationCustomerRejectStateInvalid" xml:space="preserve">
+    <value>يمكن للعميل رفض عروض الأسعار المعتمدة داخليًا فقط.</value>
+  </data>
+  <data name="LimoQuotationReviseStateInvalid" xml:space="preserve">
+    <value>يمكن مراجعة عروض الأسعار المعتمدة داخليًا فقط.</value>
+  </data>
+  <data name="LimoQuotationChargesNegative" xml:space="preserve">
+    <value>يجب ألا تكون الرسوم سالبة.</value>
+  </data>
+  <data name="LimoQuotationTaxNegative" xml:space="preserve">
+    <value>يجب ألا تكون الضريبة سالبة.</value>
+  </data>
+  <data name="LimoQuotationCustomerInvalid" xml:space="preserve">
+    <value>العميل المحدد غير صالح.</value>
+  </data>
+  <data name="LimoQuotationTripTypeInvalid" xml:space="preserve">
+    <value>نوع الرحلة المحدد غير صالح.</value>
+  </data>
+  <data name="LimoQuotationPickUpLocationInvalid" xml:space="preserve">
+    <value>موقع الانطلاق المحدد غير صالح.</value>
+  </data>
+  <data name="LimoQuotationDropOffLocationInvalid" xml:space="preserve">
+    <value>موقع الوصول المحدد غير صالح.</value>
+  </data>
+  <data name="LimoQuotationTariffGroupInvalid" xml:space="preserve">
+    <value>مجموعة التعريفة المحددة غير صالحة.</value>
+  </data>
+  <data name="LimoQuotationFuelChargeInvalid" xml:space="preserve">
+    <value>رسوم الوقود المحددة غير صالحة.</value>
+  </data>
+  <data name="LimoQuotationCustomerRequired" xml:space="preserve">
+    <value>يلزم تحديد العميل قبل الاعتماد الداخلي.</value>
+  </data>
+  <data name="LimoQuotationTripTypeRequired" xml:space="preserve">
+    <value>يلزم تحديد نوع الرحلة قبل الاعتماد الداخلي.</value>
+  </data>
+  <data name="LimoQuotationTariffGroupRequired" xml:space="preserve">
+    <value>يلزم تحديد مجموعة التعريفة قبل الاعتماد الداخلي.</value>
+  </data>
+  <data name="LimoQuotationPickUpLocationRequired" xml:space="preserve">
+    <value>يلزم تحديد موقع الانطلاق قبل الاعتماد الداخلي.</value>
+  </data>
+  <data name="LimoQuotationDropOffLocationRequired" xml:space="preserve">
+    <value>يلزم تحديد موقع الوصول قبل الاعتماد الداخلي.</value>
+  </data>
+  <data name="LimoQuotationFuelChargeRequired" xml:space="preserve">
+    <value>يلزم تحديد رسوم الوقود قبل الاعتماد الداخلي.</value>
+  </data>
+  <data name="LimoQuotationInternallyApproved" xml:space="preserve">
+    <value>تم اعتماد عرض سعر الليموزين داخليًا بنجاح.</value>
+  </data>
+  <data name="LimoQuotationInternallyRejected" xml:space="preserve">
+    <value>تم رفض عرض سعر الليموزين داخليًا بنجاح.</value>
+  </data>
+  <data name="LimoQuotationCustomerApproved" xml:space="preserve">
+    <value>اعتمد العميل عرض سعر الليموزين بنجاح.</value>
+  </data>
+  <data name="LimoQuotationCustomerRejected" xml:space="preserve">
+    <value>رفض العميل عرض سعر الليموزين بنجاح.</value>
+  </data>
+  <data name="LimoQuotationRevised" xml:space="preserve">
+    <value>تمت مراجعة عرض سعر الليموزين بنجاح.</value>
+  </data>
+  <data name="LimoQuotationStatusUpdateFailed" xml:space="preserve">
+    <value>تعذر تحديث حالة عرض سعر الليموزين.</value>
+  </data>
+  <data name="LimousineBillingTripInvalid" xml:space="preserve">
+    <value>رحلة أو أكثر من الرحلات المحددة غير موجودة أو مكررة أو غير متاحة.</value>
+  </data>
+  <data name="LimousineBillingTripNotFinished" xml:space="preserve">
+    <value>لا يمكن إصدار فاتورة إلا للرحلات المنتهية.</value>
+  </data>
+  <data name="LimousineBillingBalanceInvalid" xml:space="preserve">
+    <value>مبالغ الرحلة أو ضريبة فواتيرها السابقة غير متسقة. راجع السجلات المحفوظة قبل إصدار فاتورة.</value>
+  </data>
+  <data name="LimousineBillingAmountPositive" xml:space="preserve">
+    <value>يجب أن يكون مبلغ جزء الفاتورة أكبر من صفر.</value>
+  </data>
+  <data name="LimousineBillingAmountExceedsRemaining" xml:space="preserve">
+    <value>مبلغ جزء الفاتورة يتجاوز المتبقي من إجمالي الرحلة. حدّث البيانات وراجع الرصيد.</value>
+  </data>
+  <data name="LimousineBillingMoneyScaleInvalid" xml:space="preserve">
+    <value>استخدم دقة العملة الأساسية المحددة لمبلغ جزء الفاتورة.</value>
+  </data>
+  <data name="LimousineBillingCustomerInvalid" xml:space="preserve">
+    <value>عميل الرحلة غير محدد أو لم يعد متاحًا.</value>
+  </data>
+  <data name="LimousineBillingDriverInvalid" xml:space="preserve">
+    <value>سائق الرحلة لم يعد متاحًا.</value>
+  </data>
+  <data name="LimousineBillingDateRangeInvalid" xml:space="preserve">
+    <value>يجب ألا يكون تاريخ البداية بعد تاريخ النهاية.</value>
+  </data>
+  <data name="LimousineBillingSelectionRequired" xml:space="preserve">
+    <value>حدد رحلة واحدة على الأقل وأدخل تاريخ فاتورة صالحًا.</value>
+  </data>
+  <data name="LimousineBillingInvoiceNotFound" xml:space="preserve">
+    <value>لم يتم العثور على فاتورة الليموزين.</value>
+  </data>
+  <data name="LimousineBillingTripTotalBelowBilled" xml:space="preserve">
+    <value>إجمالي الرحلة أو الضريبة الجديد يتعارض مع المبالغ المفوترة بالفعل. راجع الفواتير قبل تعديل سعر الرحلة.</value>
+  </data>
+  <data name="LimousineBillingTripHasInvoices" xml:space="preserve">
+    <value>لا يمكن إلغاء أو حذف رحلة لها فواتير قائمة.</value>
+  </data>
+  <data name="LimousineInvoiceTripRequired" xml:space="preserve">
+    <value>يجب تحديد رحلة لكل فاتورة ليموزين.</value>
+  </data>
+  <data name="LimousineInvoiceDateRequired" xml:space="preserve">
+    <value>تاريخ فاتورة صالح مطلوب.</value>
+  </data>
+  <data name="LimousineInvoiceDuplicateTrip" xml:space="preserve">
+    <value>حدد كل رحلة مرة واحدة فقط داخل عملية الحفظ نفسها.</value>
+  </data>
+  <data name="LimousineInvoiceTripNotFound" xml:space="preserve">
+    <value>لم يتم العثور على رحلة محددة أو أنها غير متاحة.</value>
+  </data>
+  <data name="LimousineInvoiceAccountingLocked" xml:space="preserve">
+    <value>هذه الفاتورة لها قيد مرحّل أو معتمد أو ملغى أو مرتبط بتخصيص أو غير متاح. استخدم إجراء التصحيح المحاسبي.</value>
+  </data>
+  <data name="LimousineInvoiceReferenceInvalid" xml:space="preserve">
+    <value>أحد المراجع المطلوبة للفاتورة غير محدد أو غير متاح.</value>
+  </data>
+  <data name="ReceiptSettlementSourceLocked" xml:space="preserve"><value>هذا السند معتمد أو مرتبط بتاريخ تسويات ولا يمكن تغييره.</value></data>
+  <data name="ReceiptDepositSourceImmutable" xml:space="preserve"><value>يجب أن يظل عميل وعقد وغرض سند التأمين مطابقًا لمصدره.</value></data>
+  <data name="ReceiptCreditAccountMissing" xml:space="preserve"><value>حساب الطرف الدائن لسند القبض غير معد في ربط الحسابات.</value></data>
+  <data name="ReceiptAccountsMustDiffer" xml:space="preserve"><value>يجب أن يختلف حساب الطرف المدين عن حساب الطرف الدائن لسند القبض.</value></data>
+  <data name="ReceiptBatchInvalid" xml:space="preserve"><value>أرسل مجموعة سندات غير فارغة بأرقام تحديث غير مكررة.</value></data>
+  <data name="ReceiptAdvanceDepositAllocationInvalid" xml:space="preserve"><value>لا تقبل سندات تحصيل المقدم والتأمين تخصيصات إشعارات الدائن.</value></data>
+  <data name="ReceiptCreditNoteAllocationInvalid" xml:space="preserve"><value>يجب أن تخص تخصيصات إشعارات الدائن هذا العميل وألا تتجاوز رصيد المصدر أو السند.</value></data>
+  <data name="ReceiptDepositExpectedExceeded" xml:space="preserve"><value>مبلغ السند يتجاوز المتبقي من التأمين المتوقع.</value></data>
+  <data name="ReceiptDepositAgreementUnavailable" xml:space="preserve"><value>لا يمكن تحصيل تأمين للعقد في حالته الحالية.</value></data>
+  <data name="ReceiptMoneyScaleInvalid" xml:space="preserve"><value>مبلغ السند يتجاوز دقة المنازل العشرية للعملة الأساسية.</value></data>
+  <data name="ReceiptCustomerRequired" xml:space="preserve"><value>يلزم تحديد عميل مطابق لسند المقدم أو التأمين.</value></data>
+  <data name="TaxAdvanceAlreadyGenerated" xml:space="preserve"><value>توجد بالفعل فاتورة مقدم ضريبي لهذا السند.</value></data>
+  <data name="TaxAdvanceLegacyReconciliationRequired" xml:space="preserve"><value>هذا المقدم الضريبي التاريخي لا يملك ارتباطًا موثوقًا بمصدره ويحتاج إلى مراجعة محاسبية.</value></data>
+  <data name="TaxAdvanceSourceCreditMismatch" xml:space="preserve"><value>سطور القيد الدائنة للمقدم الضريبي لا تطابق إجمالي المستند.</value></data>
+  <data name="CustomerDepositBulkEmpty" xml:space="preserve"><value>يلزم تأمين عميل واحد على الأقل.</value></data>
+  <data name="CustomerDepositBulkDuplicateId" xml:space="preserve"><value>تحتوي مجموعة التأمينات على أرقام مكررة.</value></data>
+  <data name="CustomerDepositExpiryDaysRequired" xml:space="preserve"><value>يجب أن تكون مدة الاحتفاظ يومًا واحدًا على الأقل.</value></data>
+  <data name="CustomerDepositReceiptSourceInvalid" xml:space="preserve"><value>يجب ربط التأمين بسند تأمين صالح له قيد محاسبي.</value></data>
+  <data name="CustomerDepositUseDateRequired" xml:space="preserve"><value>تاريخ استخدام التأمين مطلوب.</value></data>
+  <data name="CustomerDepositUseAmountInvalid" xml:space="preserve"><value>يجب أن يكون مبلغ الاستخدام موجبًا وبالدقة المحددة للعملة.</value></data>
+  <data name="CustomerDepositAllocationInvalid" xml:space="preserve"><value>يجب ألا تتكرر الفواتير وأن تكون مبالغ التخصيص موجبة وبدقة العملة.</value></data>
+  <data name="CustomerDepositAllocationExceedsUse" xml:space="preserve"><value>لا يمكن أن تتجاوز تخصيصات الفواتير مبلغ الاستخدام.</value></data>
+  <data name="CustomerDepositUseExceedsAvailable" xml:space="preserve"><value>مبلغ الاستخدام يتجاوز رصيد التأمين المتاح.</value></data>
+  <data name="CustomerDepositBranchInvalid" xml:space="preserve"><value>الفرع المحدد غير صالح أو غير نشط.</value></data>
+  <data name="CustomerDepositSourceBranchMismatch" xml:space="preserve"><value>الفرع المحدد لا يطابق فرع مصدر التأمين.</value></data>
+  <data name="CustomerDepositPaymentMethodInvalid" xml:space="preserve"><value>طريقة الدفع غير صالحة أو غير نشطة أو لا تسمح بالقبض.</value></data>
+  <data name="CustomerDepositReceivableAccountMissing" xml:space="preserve"><value>حساب ذمم العميل غير معد.</value></data>
+  <data name="CustomerDepositLiabilityMatchesReceivable" xml:space="preserve"><value>يجب أن يختلف حساب التأمين الأصلي عن حساب ذمم العميل.</value></data>
+  <data name="CustomerDepositAllocationInvoiceUnavailable" xml:space="preserve"><value>الفاتورة غير موجودة أو غير مرحلة أو ملغاة أو تخص عميلًا آخر.</value></data>
+  <data name="CustomerDepositAllocationInvoiceAmbiguous" xml:space="preserve"><value>رقم الفاتورة المحدد غير واضح بين أنواع الفواتير.</value></data>
+  <data name="CustomerDepositAllocationBranchMismatch" xml:space="preserve"><value>الفاتورة المحددة تخص فرعًا مختلفًا.</value></data>
+  <data name="CustomerDepositAllocationReceivableAmbiguous" xml:space="preserve"><value>لا يمكن تحديد سطر ذمم العميل للفاتورة بصورة مؤكدة.</value></data>
+  <data name="CustomerDepositAllocationExceedsInvoiceOutstanding" xml:space="preserve"><value>مبلغ تخصيص الفاتورة يتجاوز رصيدها المستحق.</value></data>
+  <data name="CustomerDepositSourceCountInvalid" xml:space="preserve"><value>يجب أن يكون للتأمين مصدر مالي واحد فقط.</value></data>
+  <data name="CustomerDepositSourceReceiptMissing" xml:space="preserve"><value>سند مصدر التأمين غير موجود.</value></data>
+  <data name="CustomerDepositSourceReceiptUnavailable" xml:space="preserve"><value>يجب أن يكون مصدر التأمين سند تأمين معتمدًا وغير ملغى.</value></data>
+  <data name="CustomerDepositSourcePdcMissing" xml:space="preserve"><value>شيك مصدر التأمين غير موجود.</value></data>
+  <data name="CustomerDepositSourcePdcUnavailable" xml:space="preserve"><value>يجب أن يكون شيك التأمين محصلًا ومربوطًا بسند معتمد وصالح.</value></data>
+  <data name="CustomerDepositSourceOpeningMissing" xml:space="preserve"><value>مصدر الرصيد الافتتاحي للتأمين غير موجود.</value></data>
+  <data name="CustomerDepositSourceMissing" xml:space="preserve"><value>المصدر المالي للتأمين غير موجود.</value></data>
+  <data name="CustomerDepositSourceIncomplete" xml:space="preserve"><value>بيانات المصدر المالي للتأمين غير مكتملة.</value></data>
+  <data name="CustomerDepositSourceJournalUnavailable" xml:space="preserve"><value>يجب أن يكون قيد مصدر التأمين مرحلًا وغير ملغى.</value></data>
+  <data name="CustomerDepositLiabilityAccountAmbiguous" xml:space="preserve"><value>لا يمكن تحديد حساب التأمين الأصلي بصورة مؤكدة.</value></data>
+  <data name="CustomerDepositRefundAmountInvalid" xml:space="preserve"><value>يجب أن يكون مبلغ الرد موجبًا وبدقة العملة المحددة.</value></data>
+  <data name="CustomerDepositRefundExceedsAvailable" xml:space="preserve"><value>مبلغ الرد يتجاوز رصيد التأمين المتاح.</value></data>
+  <data name="CustomerDepositRefundPaymentMethodInvalid" xml:space="preserve"><value>طريقة رد التأمين غير صالحة أو غير نشطة أو لا تسمح بالصرف.</value></data>
+  <data name="CustomerDepositRefundPaymentMethodBranchMismatch" xml:space="preserve"><value>طريقة الرد غير متاحة لفرع التأمين.</value></data>
+  <data name="CustomerDepositRefundBankRequired" xml:space="preserve"><value>البنك مطلوب عند الرد بتحويل بنكي.</value></data>
+  <data name="CustomerDepositRefundBankInvalid" xml:space="preserve"><value>بنك الرد غير صالح أو غير نشط.</value></data>
+  <data name="CustomerDepositRefundBankNotAllowed" xml:space="preserve"><value>اختيار البنك متاح فقط للرد بتحويل بنكي.</value></data>
+  <data name="CustomerDepositRefundMethodRequiredForBank" xml:space="preserve"><value>طريقة الدفع مطلوبة عند تحديد بنك الرد.</value></data>
+  <data name="CustomerDepositRefundAccountMissing" xml:space="preserve"><value>حساب صرف رد التأمين غير معد.</value></data>
+  <data name="CustomerDepositRefundAccountMatchesLiability" xml:space="preserve"><value>يجب أن يختلف حساب الرد عن حساب التأمين الأصلي.</value></data>
+  <data name="InvoiceSettlementLocked" xml:space="preserve"><value>هذه الفاتورة لها تاريخ مالي مرحل أو مخصص ولا يمكن حذفها أو تغييرها من هذا الإجراء.</value></data>
+  <data name="CreditNoteSettlementSourceLocked" xml:space="preserve"><value>إشعار الدائن محجوز بسند قبض قائم ولا يمكن تغييره من هذا الإجراء.</value></data>
+  <data name="ReceiptPaymentMethodUnavailable" xml:space="preserve"><value>يجب أن تكون طريقة الدفع نشطة ومخصصة للتحصيل ومتاحة لفرع سند القبض.</value></data>
+  <data name="ReceiptAllocationOwnerRequired" xml:space="preserve"><value>احفظ تخصيصات سند القبض من خلال السند نفسه للتحقق من أرصدة المصادر والحالة المالية معًا.</value></data>
+  <data name="OpeningBalanceSettlementResetLocked" xml:space="preserve"><value>لا يمكن تصفير أرصدة افتتاحية لها قيود مرحّلة أو استخدام أو ردّ تأمين أو سجل تخصيصات.</value></data>
+  <data name="EquipmentIdentifierInvalid" xml:space="preserve"><value>معرّف المعدة غير صالح.</value></data>
+  <data name="EquipmentNotFound" xml:space="preserve"><value>لم يتم العثور على المعدة.</value></data>
+  <data name="EquipmentPlateRequired" xml:space="preserve"><value>رقم اللوحة مطلوب.</value></data>
+  <data name="EquipmentMakeInvalid" xml:space="preserve"><value>اختر علامة تجارية نشطة.</value></data>
+  <data name="EquipmentModelInvalid" xml:space="preserve"><value>اختر طرازًا نشطًا تابعًا للعلامة التجارية المحددة.</value></data>
+  <data name="EquipmentBranchInvalid" xml:space="preserve"><value>اختر فرعًا نشطًا.</value></data>
+  <data name="EquipmentTypeInvalid" xml:space="preserve"><value>اختر نوع مركبة نشطًا.</value></data>
+  <data name="EquipmentPlateExists" xml:space="preserve"><value>توجد معدة مسجلة برقم اللوحة نفسه.</value></data>
+  <data name="EquipmentSoldActivationLocked" xml:space="preserve"><value>الوحدة المباعة خارج الخدمة ولا يمكن تنشيطها.</value></data>
+  <data name="SalesAgreementDueDateRangeInvalid" xml:space="preserve"><value>اختر نطاق تواريخ صحيحًا.</value></data>
+  <data name="SalesQuotationDownPaymentExceedsTotal" xml:space="preserve"><value>لا يمكن أن تتجاوز الدفعة المقدمة إجمالي عرض السعر.</value></data>
+  <data name="SalesQuotationCreateFailed" xml:space="preserve"><value>تعذر إنشاء عرض سعر البيع.</value></data>
+  <data name="SalesQuotationCreated" xml:space="preserve"><value>تم إنشاء عرض سعر البيع بنجاح.</value></data>
+  <data name="SalesQuotationNotFound" xml:space="preserve"><value>عرض سعر البيع غير موجود.</value></data>
+  <data name="SalesQuotationEditStateInvalid" xml:space="preserve"><value>يمكن تعديل عروض الأسعار المعلقة أو المرفوضة داخليًا فقط.</value></data>
+  <data name="SalesQuotationDuplicateItemIds" xml:space="preserve"><value>لا يسمح بتكرار معرفات بنود عرض السعر.</value></data>
+  <data name="SalesQuotationItemOwnershipInvalid" xml:space="preserve"><value>بند واحد أو أكثر لا ينتمي إلى عرض السعر الحالي.</value></data>
+  <data name="SalesQuotationUpdateFailed" xml:space="preserve"><value>تعذر تحديث عرض سعر البيع.</value></data>
+  <data name="SalesQuotationUpdated" xml:space="preserve"><value>تم تحديث عرض سعر البيع بنجاح.</value></data>
+  <data name="SalesQuotationDeleteStateInvalid" xml:space="preserve"><value>يمكن حذف عروض الأسعار المعلقة أو المرفوضة داخليًا فقط.</value></data>
+  <data name="SalesQuotationDeleted" xml:space="preserve"><value>تم حذف عرض سعر البيع بنجاح.</value></data>
+  <data name="SalesQuotationDeleteFailed" xml:space="preserve"><value>تعذر حذف عرض سعر البيع.</value></data>
+  <data name="SalesQuotationInternallyApproved" xml:space="preserve"><value>تمت الموافقة الداخلية على عرض سعر البيع.</value></data>
+  <data name="SalesQuotationInternallyRejected" xml:space="preserve"><value>تم رفض عرض سعر البيع داخليًا.</value></data>
+  <data name="SalesQuotationExpired" xml:space="preserve"><value>انتهت صلاحية عرض السعر؛ أعد مراجعته قبل تسجيل موافقة العميل.</value></data>
+  <data name="SalesQuotationCustomerApproved" xml:space="preserve"><value>تم تسجيل موافقة العميل على عرض سعر البيع.</value></data>
+  <data name="SalesQuotationCustomerRejected" xml:space="preserve"><value>تم تسجيل رفض العميل لعرض سعر البيع.</value></data>
+  <data name="SalesQuotationRevised" xml:space="preserve"><value>أعيد عرض سعر البيع إلى الحالة المعلقة للمراجعة.</value></data>
+  <data name="SalesQuotationUnapproveStateInvalid" xml:space="preserve"><value>يمكن إلغاء الموافقة على عروض الأسعار المقبولة من العميل فقط.</value></data>
+  <data name="SalesQuotationUnapproveLinkedRecords" xml:space="preserve"><value>لا يمكن إلغاء الموافقة على عرض السعر لوجود عقد بيع أو سند قبض مرتبط به.</value></data>
+  <data name="SalesQuotationUnapproved" xml:space="preserve"><value>تم إلغاء موافقة العميل على عرض سعر البيع.</value></data>
+  <data name="SalesQuotationReceiptApprovalRequired" xml:space="preserve"><value>يلزم قبول العميل لعرض السعر قبل إعداد سند قبض الدفعة المقدمة.</value></data>
+  <data name="SalesQuotationReceiptNoDownPayment" xml:space="preserve"><value>لا توجد دفعة مقدمة في عرض السعر لإعداد سند قبض لها.</value></data>
+  <data name="SalesQuotationReceiptExists" xml:space="preserve"><value>يوجد بالفعل سند قبض دفعة مقدمة فعال لعرض السعر الحالي.</value></data>
+  <data name="SalesQuotationReceiptReady" xml:space="preserve"><value>يمكن إعداد سند القبض. أكمل الفرع وطريقة الدفع في نموذج سند القبض.</value></data>
+  <data name="SalesQuotationRejectionReasonInvalid" xml:space="preserve"><value>يجب أن يتراوح سبب الرفض بين 5 و500 حرف.</value></data>
+  <data name="SalesQuotationTransitionInvalid" xml:space="preserve"><value>حالة عرض السعر الحالية لا تسمح بتنفيذ الإجراء المطلوب.</value></data>
+  <data name="SalesQuotationStatusUpdateFailed" xml:space="preserve"><value>تعذر تحديث حالة عرض السعر.</value></data>
+  <data name="SalesQuotationDateRequired" xml:space="preserve"><value>تاريخ عرض السعر مطلوب.</value></data>
+  <data name="SalesQuotationDateTooFar" xml:space="preserve"><value>لا يمكن أن يتجاوز تاريخ عرض السعر 30 يومًا في المستقبل.</value></data>
+  <data name="SalesQuotationValidityBeforeDate" xml:space="preserve"><value>لا يمكن أن يكون تاريخ انتهاء الصلاحية قبل تاريخ عرض السعر.</value></data>
+  <data name="SalesQuotationCustomerNotFound" xml:space="preserve"><value>العميل غير موجود.</value></data>
+  <data name="SalesQuotationTermsTooLong" xml:space="preserve"><value>لا يمكن أن تتجاوز الشروط والأحكام 10,000 حرف.</value></data>
+  <data name="SalesQuotationDownPaymentNegative" xml:space="preserve"><value>لا يمكن أن تكون الدفعة المقدمة سالبة.</value></data>
+  <data name="SalesQuotationInstallmentsRange" xml:space="preserve"><value>يجب أن يتراوح عدد الأقساط بين 1 و120.</value></data>
+  <data name="SalesQuotationItemsRequired" xml:space="preserve"><value>يلزم إضافة بند واحد على الأقل لعرض السعر.</value></data>
+  <data name="SalesQuotationItemModelRequired" xml:space="preserve"><value>الماركة والموديل مطلوبان لكل بند.</value></data>
+  <data name="SalesQuotationItemUnitRange" xml:space="preserve"><value>يجب أن تتراوح كمية البند بين 1 و999,999.</value></data>
+  <data name="SalesQuotationItemPriceRange" xml:space="preserve"><value>يجب أن يتراوح سعر وحدة البند بين 0.01 و999,999,999.99.</value></data>
+  <data name="SalesQuotationItemTaxRange" xml:space="preserve"><value>يجب أن تتراوح نسبة ضريبة البند بين 0 و100.</value></data>
+  <data name="SalesQuotationItemModelsInvalid" xml:space="preserve"><value>مرجع ماركة وموديل واحد أو أكثر غير صالح.</value></data>
+  <data name="ReceiptSalesLinkConflict" xml:space="preserve">
+    <value>يمكن ربط سند القبض بعقد بيع أو عرض سعر أو عقد إيجار واحد فقط.</value>
+  </data>
+  <data name="ReceiptSalesAgreementCollectionStateInvalid" xml:space="preserve">
+    <value>يمكن التحصيل بسند قبض فقط لعقد بيع مفتوح أو مفوتر أو تم تسليمه.</value>
+  </data>
+  <data name="ReceiptSalesAgreementCustomerMismatch" xml:space="preserve">
+    <value>عميل سند القبض لا يطابق عميل عقد البيع المحدد.</value>
+  </data>
+  <data name="ReceiptSalesAgreementAmountExceedsOutstanding" xml:space="preserve">
+    <value>مبلغ سند القبض يتجاوز الرصيد المستحق لعقد البيع.</value>
+  </data>
+  <data name="ReceiptSalesAgreementReopenFailed" xml:space="preserve">
+    <value>تعذر إعادة فتح عقد البيع بعد عكس سند القبض.</value>
+  </data>
+  <data name="ReceiptSalesQuotationDownPaymentMismatch" xml:space="preserve">
+    <value>يجب أن يساوي مبلغ سند القبض الدفعة المقدمة لعرض السعر.</value>
+  </data>
+  <data name="StaffRequestRequired" xml:space="preserve"><value>طلب الموظف مطلوب.</value></data>
+  <data name="StaffSalaryApplicableDateRequired" xml:space="preserve"><value>يلزم تحديد تاريخ سريان صحيح لحزمة الراتب.</value></data>
+  <data name="StaffSalaryApplicableDateOutOfRange" xml:space="preserve"><value>تاريخ السريان خارج النطاق المدعوم.</value></data>
+  <data name="StaffSelectionRequired" xml:space="preserve"><value>اختر موظفاً صحيحاً.</value></data>
+  <data name="StaffNotFoundOrInactive" xml:space="preserve"><value>الموظف غير موجود أو غير نشط.</value></data>
+  <data name="StaffAllocationSourcesUnavailable" xml:space="preserve"><value>تعذر تحميل مصادر التخصيص. حاول مرة أخرى.</value></data>
+  <data name="StaffMonthRequired" xml:space="preserve"><value>الشهر مطلوب. استخدم التنسيق yyyy-MM.</value></data>
+  <data name="StaffMonthInvalid" xml:space="preserve"><value>أدخل شهراً صحيحاً بالتنسيق yyyy-MM.</value></data>
+  <data name="StaffReportBranchNotFound" xml:space="preserve"><value>الفرع المحدد غير موجود.</value></data>
+  <data name="StaffReportSalesPersonNotFound" xml:space="preserve"><value>مندوب المبيعات المحدد غير موجود.</value></data>
+  <data name="StaffMonthDayInvalid" xml:space="preserve"><value>اليوم {0} غير صحيح. يجب أن يكون اليوم بين 1 و{1}.</value></data>
+  <data name="StaffDutyDuplicateDay" xml:space="preserve"><value>يوجد صف جدول دوام مكرر لليوم {0}.</value></data>
+  <data name="StaffOvertimeDuplicateDay" xml:space="preserve"><value>يوجد صف عمل إضافي مكرر لليوم {0}.</value></data>
+  <data name="StaffDutyBeforeJoining" xml:space="preserve"><value>لا يمكن تسجيل جدول الدوام في {0} لأنه يسبق تاريخ التحاق الموظف {1}.</value></data>
+  <data name="StaffOvertimeBeforeJoining" xml:space="preserve"><value>لا يمكن تسجيل العمل الإضافي في {0} لأنه يسبق تاريخ التحاق الموظف {1}.</value></data>
+  <data name="StaffDutyTimeInvalid" xml:space="preserve"><value>تنسيق الوقت في اليوم {0} غير صحيح. استخدم HH:mm أو HH:mm:ss.</value></data>
+  <data name="StaffDutyShiftNotFound" xml:space="preserve"><value>الوردية المحددة غير موجودة.</value></data>
+  <data name="StaffOvertimeMinutesInvalid" xml:space="preserve"><value>لا يمكن أن تكون دقائق العمل الإضافي سالبة لليوم {0}.</value></data>
+  <data name="StaffReportingSelfInvalid" xml:space="preserve"><value>لا يمكن أن يكون الموظف مسؤولاً عن نفسه.</value></data>
+  <data name="StaffReportingCycleInvalid" xml:space="preserve"><value>تعيين المسؤول يؤدي إلى حلقة في التسلسل الإداري.</value></data>
+  <data name="StaffDocumentDatesRequired" xml:space="preserve"><value>يلزم تحديد تاريخ إصدار وتاريخ انتهاء صحيحين للمستند.</value></data>
+  <data name="PayrollCalculationChanged" xml:space="preserve"><value>تغيرت بيانات الرواتب أو النسخة المحفوظة. أعد معالجة الشهر قبل الحفظ.</value></data>
+  <data name="PayrollHistoryInvalid" xml:space="preserve"><value>سجل نسخ الرواتب غير مكتمل. يجب توافر النسخة الحالية قبل إعادة الحساب.</value></data>
+  <data name="PayrollNotFound" xml:space="preserve"><value>لم يتم العثور على مسير الرواتب أو نسخته.</value></data>
+  <data name="PayrollPaidRequiresSettlement" xml:space="preserve"><value>تم صرف هذا المسير. احتفظ بالنسخة المصروفة وسجل الفرق من خلال تسوية مستقلة.</value></data>
+  <data name="PayrollPeriodInvalid" xml:space="preserve"><value>أدخل شهر رواتب كاملًا بصيغة yyyy-MM، من سنة 0001 إلى 9998.</value></data>
+  <data name="PayrollResolveIssues" xml:space="preserve"><value>عالج الرواتب وصحح جميع ملاحظات الموظفين قبل الحفظ.</value></data>
+  <data name="PayrollSaved" xml:space="preserve"><value>تم حفظ نسخة الرواتب بنجاح. الصرف إجراء مستقل.</value></data>
+  <data name="PayrollSettingsUnsupported" xml:space="preserve"><value>إعدادات الرواتب مكررة أو تفعّل معالجة العمولات أو وحدات الأعمال دون مصدر مدعوم. راجع إعدادات الموارد البشرية قبل المعالجة.</value></data>
+  <data name="PayrollAmountOutOfRange" xml:space="preserve"><value>تتجاوز إجماليات الرواتب المحسوبة نطاق تخزين المبالغ المدعوم.</value></data>
+  <data name="PayrollApproved" xml:space="preserve"><value>تم اعتماد نسخة الرواتب. الصرف إجراء مستقل.</value></data>
+  <data name="PayrollFiltersInvalid" xml:space="preserve"><value>مرشحات قائمة الرواتب أو ترتيبها غير صالحة.</value></data>
+  <data name="JobCancelled" xml:space="preserve"><value>هذا العمل ملغى ولا يمكن إغلاقه أو إصدار فاتورة له.</value></data>
+  <data name="JobCancelOpenOnly" xml:space="preserve"><value>يمكن إلغاء العمل المفتوح فقط.</value></data>
+  <data name="JobCancelReferenced" xml:space="preserve"><value>هذا العمل مرتبط بمستندات مشتريات أو مخزون أو فواتير أو قيود ولا يمكن إلغاؤه.</value></data>
+  <data name="JobQualityCheckRequired" xml:space="preserve"><value>أضف تقرير فحص جودة المركبة بعد آخر تعديل للعمل قبل إغلاقه.</value></data>
+  <data name="JobQualityCheckOpenOnly" xml:space="preserve"><value>يمكن إضافة تقرير فحص جودة للعمل المفتوح فقط.</value></data>
+  <data name="JobQualityCheckedByInvalid" xml:space="preserve"><value>أدخل اسم فاحص الجودة بحد أقصى 200 حرف.</value></data>
+  <data name="JobLogDetailInvalid" xml:space="preserve"><value>أدخل تفاصيل السجل بحد أقصى 2000 حرف.</value></data>
+  <data name="JobLogAttachmentInvalid" xml:space="preserve"><value>يوجد مرفق غير صالح أو لا يتبع هذه الشركة.</value></data>
+  <data name="JobLogAttachmentDuplicate" xml:space="preserve"><value>لا يمكن تكرار المرفق داخل نفس الإدخال.</value></data>
+  <data name="JobLogSaveFailed" xml:space="preserve"><value>تعذر حفظ الإدخال في سجل العمل.</value></data>
+  <data name="PayrollScopeInvalid" xml:space="preserve"><value>حدد نوع مسير ونطاق موظف صالحين للشهر المطلوب.</value></data>
+  <data name="PayrollStaffInvalid" xml:space="preserve"><value>الموظف المحدد غير متاح حاليًا لمسير راتب الموظف غير النشط.</value></data>
+  <data name="JobTimeLogOpenOnly" xml:space="preserve"><value>يمكن تغيير وقت العمالة للعمل المفتوح فقط.</value></data>
+  <data name="JobEditOpenOnly" xml:space="preserve"><value>يمكن تعديل العمل المفتوح فقط.</value></data>
+  <data name="JobDeleteOpenOnly" xml:space="preserve"><value>يمكن حذف العمل المفتوح فقط.</value></data>
+  <data name="JobWriteFailed" xml:space="preserve"><value>تعذر حفظ العمل. أعد تحميله وحاول مرة أخرى.</value></data>
+  <data name="JobCloseOpenOnly" xml:space="preserve"><value>يمكن إغلاق العمل المفتوح فقط.</value></data>
+</root>

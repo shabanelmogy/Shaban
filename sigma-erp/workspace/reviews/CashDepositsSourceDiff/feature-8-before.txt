@@ -1,0 +1,163 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ActionList } from 'src/app/modules/shared/models/action-list';
+import { ColType, ListCol, TableListComponent } from 'node_modules/ms-lib'
+import { Results } from 'src/app/modules/shared/models/results';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { CashDepositDTO } from '../../models/list';
+import { CashDepositService } from '../../services/cashdeposit.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+@Component({
+  selector: 'app-cash-deposits',
+  standalone: true,
+  imports: [
+    TranslateModule,
+    CommonModule,
+    ReactiveFormsModule,
+    TableListComponent,
+    DialogModule,
+    ButtonModule,
+  ],
+  templateUrl: './list.component.html',
+  styleUrl: './list.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class CashDepositsComponent
+  extends BaseComponentService
+  implements OnInit
+{
+  //#region properties
+  data = signal<CashDepositDTO[]>([]);
+  protected readonly destroyRef = inject(DestroyRef);
+
+  //data: any[] = [];
+  columns: ListCol[];
+  moreActions: ActionList[];
+  visible: boolean = false;
+  //#endregion
+
+  //#region injectors
+  private readonly cashDepositsService = inject(CashDepositService);
+  //#endregion
+
+  //#region constructor and life cycle
+  constructor() {
+    super();
+  }
+  ngOnInit(): void {
+    this.initCols();
+    this.getListItems();
+  }
+
+  //#endregion
+
+  //#region methods
+  initCols() {
+    this.columns = [
+      //
+      {
+        displayName: 'mangeDetails.refNo',
+        colName: 'refNo',
+        type: ColType.link,
+        path: 'details',
+
+      },
+
+      //
+      {
+        displayName: 'general.createdBy',
+        colName: 'createdBy',
+        type: ColType.link,
+      },
+      //
+      {
+        displayName: 'general.createdAt',
+        colName: 'createdAt',
+        type: ColType.date,
+      },
+      //
+      {
+        displayName: 'mangeDetails.date',
+        colName: 'date',
+        type: ColType.date,
+      },
+      {
+        displayName: 'mangeDetails.bank',
+        colName: 'bank',
+        type: ColType.link,
+      },
+    ];
+
+    this.moreActions = [
+      {
+        title: 'general.viewDetails',
+        icon: 'bi fs-3 bi-person',
+        action: () => {
+        },
+      },
+      {
+        title: 'general.edit',
+        action: () => {
+        },
+      },
+      {
+        title: 'general.delete',
+        action: () => {
+        },
+      },
+    ];
+  }
+
+  //#endregion
+
+  //#region methods
+  getListItems(filter?: any) {
+    this.loading.startLoading();
+
+    this.cashDepositsService
+      .get(filter)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res: Results<CashDepositDTO>) => {
+          if (res.isSuccess) {
+            this.data.set(res.entities);
+          }
+          this.loading.endLoading();
+        },
+      });
+  }
+
+  /* fixUrl(url: string) {
+    if (url) {
+      let correctedUrl = url.replace(/\\/g, '/');
+      if (correctedUrl !== environment.baseImageUrl) {
+        return correctedUrl;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  } */
+  //#endregion
+
+  goCreate(status: boolean) {
+    this.router.navigate(['/CashDeposit/create']);
+  }
+  search(event: any): void {
+    this.getListItems(event);
+  }
+  //#endregion
+}

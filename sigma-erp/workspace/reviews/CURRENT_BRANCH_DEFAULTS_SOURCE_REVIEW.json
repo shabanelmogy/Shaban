@@ -1,0 +1,948 @@
+{
+  "kind": "Source syntax/import/order inventory only; no compilation/runtime claim",
+  "tsCount": 105,
+  "htmlCount": 12,
+  "translationKeyCount": 12,
+  "consumerCount": 94,
+  "issues": [],
+  "consumers": [
+    {
+      "file": "src/app/modules/Accounts/BalanceSheetMonthWise/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 33,
+          "text": "{ key: 'branchId', labelKey: 'balanceSheetMonthWise.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/IncomeComparison/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 31,
+          "text": "{ key: 'branchId', labelKey: 'incomeComparison.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/IncomeStatement/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 32,
+          "text": "{ key: 'branchId', labelKey: 'incomeStatement.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/IncomeStatement2/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 57,
+          "text": "{ key: 'branchId', labelKey: 'incomeStatement2.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/IncomeStatementFy/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 31,
+          "text": "{ key: 'branchId', labelKey: 'incomeStatementFy.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/IncomeStatementFy2/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 29,
+          "text": "{ key: 'branchId', labelKey: 'incomeStatementFy2.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/IncomeStatementYtd/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 30,
+          "text": "{ key: 'branchId', labelKey: 'incomeStatementYtd.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 46,
+          "text": "{ key: 'branchId', labelKey: 'incomeStatementYtd2.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/Link Accounts/LinkAccounts/components/payment-methods/payment-methods.component.ts",
+      "uses": [
+        {
+          "line": 90,
+          "text": "const defaultBranchId = this.currentBranch.defaultBranchId();"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/TrailBalance/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 32,
+          "text": "{ key: 'branchId', labelKey: 'trialBalance.branch', kind: 'select', initialValue: this.currentBranch.defaultBranchId(), requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/openingBalances/components/accounts/accounts.component.ts",
+      "uses": [
+        {
+          "line": 263,
+          "text": "branchId: this.fb.control<number | null>(data ? data.branchId : this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Accounts/openingBalances/components/cost-center/cost-center.component.ts",
+      "uses": [
+        {
+          "line": 328,
+          "text": "branchId: this.fb.control<number | null>(data ? data.branchId : this.currentBranch.defaultBranchId(), Validators.required),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Administration/PaymentMethods/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 85,
+          "text": "if (this.mode === 'create') this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransfer/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 422,
+          "text": "branchId: this.mode === 'create' ? this.currentBranch.defaultBranchId() : null,"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Banking/Card Transactions Bank Transfers/CardTransactionBankTransfer/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 84,
+          "text": "bankId: this.fb.control<number | null>(null), branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 311,
+          "text": "no: state.text('no'), bankId: this.lookupId(state.number('bankId')), branchId: this.currentBranch.filterBranchId(this.route.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Banking/Cash Deposits/CashDeposit/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 389,
+          "text": "branchId: this.mode === 'create' ? this.currentBranch.defaultBranchId() : null,"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Banking/Cash Deposits/CashDeposit/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 87,
+          "text": "bankId: this.fb.control<number | null>(null), branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId())"
+        },
+        {
+          "line": 538,
+          "text": "no: text('no'), bankId: this.positiveLookupId(number('bankId')), branchId: this.currentBranch.filterBranchId(this.route.snapshot.queryParamMap), dateRange: dateFrom || dateTo"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Banking/ChequesPayables/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 164,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Banking/ChequesPayables/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 96,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 288,
+          "text": "contactId: state.number('contactId'), branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap), dateRange: rawDate,"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Banking/ChequesReceivables/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 120,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Banking/ChequesReceivables/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 105,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 436,
+          "text": "customerId: state.number('customerId'), branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Customers/BalancesSummary/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 226,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Customers/Companies/CompanyPartner/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 104,
+          "text": "this.currentBranch.applyDefault(this.form.controls.details.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Customers/Companies/CompanyPartner/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 106,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 162,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Customers/Individual/IndividualPartner/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 307,
+          "text": "if (this.mode() === 'create') this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Customers/Individual/IndividualPartner/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 109,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 424,
+          "text": "branchId: this.currentBranch.filterBranchId(this.route.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Customers/ReceivableAgeAnalysis/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 269,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Equipment Rental/DeliveryNote/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 78,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()), plateNo: this.fb.nonNullable.control(''),"
+        },
+        {
+          "line": 242,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap), plateNo: route.text('plateNo'), customerId: route.number('customerId'),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Equipment Rental/EquipmentQuotation/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 464,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Equipment Rental/EquipmentQuotation/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 98,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 538,
+          "text": "this.filterForm.patchValue({ quotationNo: state.text('quotationNo'), partnerId: state.number('partnerId'), branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap), internalApproval: state.number('internalApproval'), customerApproval: state.number('customerApproval'), dateRange: from && to ? [toPickerDate(from)!, toPickerDate(to)!] : state.flag('datesCleared') ? null : currentMonthRange() });"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Fleet/Alerts/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 127,
+          "text": "branchId: [this.currentBranch.defaultBranchId() as number | null],"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Fleet/Vehicle/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 227,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.vehicleForm.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Fleet/Vehicle/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 154,
+          "text": "branchId: [this.currentBranch.defaultBranchId() as number | null],"
+        },
+        {
+          "line": 461,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap), carModelId: state.number('carModelId'), status: state.number('status'), year: state.number('year'),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Fleet/VehicleQRLabel/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 158,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Fleet/VehicleQRLabel/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 91,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/HRM/Payroll/PayrollProcess/components/disbursement/payroll-disbursement.component.ts",
+      "uses": [
+        {
+          "line": 61,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Lease/LeaseAgreement/components/closing/closing.component.ts",
+      "uses": [
+        {
+          "line": 347,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchInId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Lease/LeaseAgreement/components/deposit/deposit.component.ts",
+      "uses": [
+        {
+          "line": 213,
+          "text": "this.currentBranch.applyDefault(this.depositForm.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Lease/LeaseAgreement/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 217,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 967,
+          "text": "branchId: this.currentBranch.filterBranchId(query), customerId: positiveId('customerId'), salesPersonId: positiveId('salesPersonId'),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Lease/LeaseAgreement/components/vehicle-replacement/vehicle-replacement.component.ts",
+      "uses": [
+        {
+          "line": 237,
+          "text": "this.currentBranch.applyDefault(this.form.controls.incomingBranchInId);"
+        },
+        {
+          "line": 267,
+          "text": "this.currentBranch.applyDefault(this.form.controls.outgoingBranchOutId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Limousine/LimousineInvoice/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 164,
+          "text": "branchId: query.get('branchId') ? Number(query.get('branchId')) : this.currentBranch.defaultBranchId(),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Limousine/TripBooking/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 134,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 371,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap), vehicleId: state.number('vehicleId'), customerId: state.number('customerId'),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Limousine/UtilizationReport/components/utilization-report.component.ts",
+      "uses": [
+        {
+          "line": 93,
+          "text": "branchId: this.fb.control<number | string | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/CustodyMovement/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 198,
+          "text": "if (this.mode === 'create') this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/CustodyMovement/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 67,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 107,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Movements/collectionMovement/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 131,
+          "text": "if (this.mode === 'create') this.currentBranch.applyDefault(this.form.controls.branchInId);"
+        },
+        {
+          "line": 283,
+          "text": "if (this.mode === 'create') this.currentBranch.applyDefault(this.form.controls.branchInId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Rental/Agreement/components/deposit/deposit.component.ts",
+      "uses": [
+        {
+          "line": 211,
+          "text": "this.currentBranch.applyDefault(this.depositForm.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Rental/Agreement/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 213,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 764,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Rental/Booking/components/deposit/deposit.component.ts",
+      "uses": [
+        {
+          "line": 86,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Rental/Booking/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 142,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 513,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Rental/RentalQuotation/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 360,
+          "text": "private resetForm(): void { this.form.reset({ date: new Date(), type: null, salesPersonId: null, customerId: null, contactPersonId: null, branchId: null, discount: 0, notes: null }, { emitEvent: false }); this.items.clear({ emitEvent: false }); this.form.enable({ emitEvent: false }); this.currentBranch.applyDefault(this.form.controls.branchId); }"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Rental/RentalQuotation/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 120,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 476,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Reports/Collection/components/collection.component.ts",
+      "uses": [
+        {
+          "line": 119,
+          "text": "branch: [this.currentBranch.defaultBranchId()],"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Reports/CollectionAndRefunds/components/collection-and-refunds.component.ts",
+      "uses": [
+        {
+          "line": 121,
+          "text": "branch: [this.currentBranch.defaultBranchId()],"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Reports/CollectionAndRefunds2/components/collection-and-refunds2.component.ts",
+      "uses": [
+        {
+          "line": 124,
+          "text": "branch: [this.currentBranch.defaultBranchId()],"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Reports/CustomerWiseCollection/components/customer-wise-collection.component.ts",
+      "uses": [
+        {
+          "line": 119,
+          "text": "branch: [this.currentBranch.defaultBranchId()],"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Reports/DailyBusiness/components/daily-business.component.ts",
+      "uses": [
+        {
+          "line": 132,
+          "text": "branchId: [this.currentBranch.defaultBranchId()],"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Reports/RentalSalesForSixtBahrain/components/rental-sales-for-sixt-bahrain.component.ts",
+      "uses": [
+        {
+          "line": 105,
+          "text": "branchId: [this.currentBranch.defaultBranchId()],"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Reports/SaleReport/components/sale-report.component.ts",
+      "uses": [
+        {
+          "line": 173,
+          "text": "branch: [this.currentBranch.defaultBranchId()],"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Sales/Fleet/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 314,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.equipmentForm.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Sales/Fleet/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 111,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 344,
+          "text": "branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap), carModelId: r.number('carModelId'), vehicleTypeId: r.number('vehicleTypeId'),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Staff/Staff/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 237,
+          "text": "if (this.pageMode() === 'create') { this.currentBranch.applyDefault(this.staffForm.controls.branchId); this.ready.set(true); this.salaryReady.set(true); this.attachUniqueValidators(); }"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Staff/StaffBalancesSummary/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 113,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()), staffId: this.fb.control<number | string | null>(null),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Stock/Item/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 120,
+          "text": "if (this.mode === 'create') this.currentBranch.applyDefault(this.form.controls.stockBranchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Stock/ItemRequisition/components/purchase-request/purchase-request.component.ts",
+      "uses": [
+        {
+          "line": 216,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Stock/StockTransfer/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 149,
+          "text": "this.currentBranchId = this.currentBranch.defaultBranchId();"
+        },
+        {
+          "line": 150,
+          "text": "this.currentBranchName.set(this.currentBranch.branch()?.branchName ?? '');"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Suppliers/SupplierBalancesSummary/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 119,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()), supplierId: this.fb.control<number | string | null>(null),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/Bills/Bill/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 133,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.billForm.get('branchId'));"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/Bills/Bill/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 60,
+          "text": "\"branchId\": new FormControl<string | number | Date | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/CreditNote/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 152,
+          "text": "if (this.isCreateMode) this.currentBranch.applyDefault(branchControl);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/CreditNote/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 69,
+          "text": "\"branchId\": new FormControl<number | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/DebitNotes/DebitNote/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 163,
+          "text": "if (this.isCreateMode) this.currentBranch.applyDefault(this.debitNoteForm.get('branchId'));"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/DebitNotes/DebitNote/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 63,
+          "text": "\"branchId\": new FormControl<number | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/GRNs/GoodsReceivedNote/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 127,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.grnForm.get('branchId'));"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/Invoices/Invoice/components/limousine-bulk-details/limousine-bulk-details.component.ts",
+      "uses": [
+        {
+          "line": 138,
+          "text": "branchId: [this.currentBranch.defaultBranchId()]"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/Invoices/Invoice/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 128,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/JVs/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 131,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.journalVoucherForm().get('branchId'));"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/JVs/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 51,
+          "text": "\"branchId\": new FormControl<string | number | Date | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/Payments/Payment/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 113,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.paymentForm.get('branchId'));"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/Payments/Payment/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 58,
+          "text": "\"branchId\": new FormControl<string | number | Date | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 115,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.purchaseOrderForm.get('branchId'));"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/PurchaseOrders/PurchaseOrder/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 54,
+          "text": "\"branchId\": new FormControl<number | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 240,
+          "text": "this.currentBranch.applyDefault(this.form.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/PurchaseRequests/PurchaseRequest/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 110,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 352,
+          "text": "supplierCode: state.text('supplierCode'), branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/PurchaseReturns/PurchaseReturn/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 122,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.purchaseReturnForm.get('branchId'));"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/PurchaseReturns/PurchaseReturn/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 52,
+          "text": "\"branchId\": new FormControl<string | number | Date | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/Receipts/Receipt/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 279,
+          "text": "if (this.isCreateMode()) this.currentBranch.applyDefault(this.receiptForm.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Vouchers/Receipts/Receipt/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 61,
+          "text": "\"branchId\": new FormControl<number | null>(this.currentBranch.defaultBranchId()),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Workshop/Job/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 148,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 676,
+          "text": "branchId: this.currentBranch.filterBranchId(this.route.snapshot.queryParamMap), ownership: number('ownership') as JobOwnership | null,"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Workshop/JobEstimation/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 122,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 577,
+          "text": "branchId: this.currentBranch.filterBranchId(this.route.snapshot.queryParamMap),"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Workshop/JobEstimation/components/report/report.component.ts",
+      "uses": [
+        {
+          "line": 172,
+          "text": "const defaultBranchId = this.currentBranch.filterBranchId(params);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Workshop/WorkOrder/components/details/details.component.ts",
+      "uses": [
+        {
+          "line": 138,
+          "text": "this.currentBranch.applyDefault(this.workOrderForm.controls.branchId);"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Workshop/WorkOrder/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 92,
+          "text": "branchId: this.fb.control<number | null>(this.currentBranch.defaultBranchId()),"
+        },
+        {
+          "line": 240,
+          "text": "vehicleId: state.number('vehicleId'), customerId: state.number('customerId'), branchId: this.currentBranch.filterBranchId(this.activatedRoute.snapshot.queryParamMap), chassisNo: state.text('chassisNo') });"
+        }
+      ]
+    },
+    {
+      "file": "src/app/modules/Workshop/workshopVehicles/components/list/list.component.ts",
+      "uses": [
+        {
+          "line": 145,
+          "text": "branchId: [this.currentBranch.defaultBranchId() as number | null],"
+        }
+      ]
+    }
+  ]
+}

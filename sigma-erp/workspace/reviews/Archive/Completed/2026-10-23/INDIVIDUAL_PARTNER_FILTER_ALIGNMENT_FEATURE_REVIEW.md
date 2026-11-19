@@ -1,0 +1,15 @@
+| Field | Value |
+|---|---|
+| Status | Implemented — source-only |
+| Owner verification pending | yes |
+| Date | 2026-10-08 |
+
+# IndividualPartner filter action alignment
+
+Owner requests buttons aligned with the search controls. Scope: Customers/Individual/IndividualPartner list template and the existing Individual topic in UserGuide/content/customer-profile-topics.ts. Current type03 routed customer list, business fields, routes, API, grid, default filters and handlers retained; no backend/migration or new shared implementation. The scoped files are clean at discovery; unrelated edits preserved.
+
+Pre-edit/frozen comparison: UI4 owns filter semantics/layout; actual LinkAccounts details uses FilterPanelComponent.inlineActions=true/stableLayout=true with configured columns. The current shared component exposes those boolean inputs and mainColumns; its SCSS uses minmax(0,1fr)/auto columns, bottom-aligns the toolbar with the input line and owns 34px controls, wrapping, narrow behavior and RTL. Target already registers FilterPanelComponent/FilterActionsDirective, has no advanced template or validation feedback, and currently renders actions on a separate row. Opt into inlineActions/stableLayout, select five main grid slots for Branch(1), Search(2), Agreement status(1), Inactive checkbox(1), retaining the wide Search proportion and all four filters. Existing Reset/Excel/Search keep their handlers/order/busy ownership. This is the owner-requested placement through the existing shared owner, not local CSS.
+
+Authority: SIGMA_FEATURE_REVIEW_MASTER, UI4 and required sigma-screen-refactor skill. Recipe check reports PLAN00/Phase00–06 stale; canonical sources govern, owner regeneration/semantic review pending; packets untouched. Phases0/1 freeze, Phase2 presentation, Phase5 public-input integration and Phase6 scoped source review apply. Write/actions/domain/schema phases not applicable. No agents needed for this small sequential change. Source-only: no builds/tests/lint/typecheck/runtime/browser/DB/migrations/commits/push/deploy.
+
+Final reconciliation: implemented the three existing public inputs in the list template and updated the Individual search step in EN/AR in customer-profile-topics.ts. Existing Customers guide/menu/reader ownership and screen route retained; no new guide/control/CSS. All four filter controls and existing actions remain; five configured slots equal 1+2+1+1, preserving the wide search. Full scoped diff reviewed in the real frontend repository; git diff --check, Angular template syntax parsing and TypeScript guide syntax parsing pass. No compilation/typecheck performed or visual result claimed. Owner verification: confirm action/input alignment, dropdown label wrapping, narrow viewport, RTL/light/dark appearance and Search/Reset/Excel behavior. No backend/contract/formula change, migration or unresolved source finding. Suggested frontend commit only: `fix(customers): align individual filter actions with inputs`. No prohibited command run; no new reusable guidance requiring a book/skill change. Owner visual/runtime/build verification pending yes.

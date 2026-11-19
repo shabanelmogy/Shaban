@@ -1,0 +1,1107 @@
+diff --git a/sigma-erp/CHANGELOG.md b/sigma-erp/CHANGELOG.md
+index a41ea0e..4d84e11 100644
+--- a/sigma-erp/CHANGELOG.md
++++ b/sigma-erp/CHANGELOG.md
+@@ -12,7 +12,37 @@ longer changes the block 0 fingerprint of every packet.
+ 
+ | Date | Version | Change |
+ |---|---|---|
+-| 2026-10-02 | 1.51 | Follow Up adopts the frozen professional Summary extension within the existing Details/Summary workspace tabs: the responsive Summary maximum is 960px, superseding the provisional 520px example for this report; shared totals cards present server-owned additive operational metrics, comparison bars use shared-grid custom cells, and the user action drills into the exact raw username. Active-section Excel and full print include their authoritative scope and restore state; formulas remain in the frozen contract/review. UI 20 and skill updated; packets regenerated. Source-only; visual/runtime acceptance pending. |
++| 2026-10-05 | 1.81 | Owner explicitly requests one accounting CashFlow view. Shared DataTable optional rowTone/column width/conditional links present activity headings, authoritative net subtotals/final double rule in one fill table; KPI values relocate into statement rows and the unconsumed Accounts tab adapter is retired. Complete source/ledger links/Excel shape/print retained; other reports unchanged. UI6/20/24/skill synchronized; source-only, owner visual acceptance pending. |
++| 2026-10-05 | 1.80 | Further owner rejection of CashFlowStatement layout supersedes its document adoption: shared workspace activity tabs with icons/counts and one full-width visible fill grid, mounted panels/print-only headings and slim/row/min150/max80 summary. Full-width route modifier reuses the existing owner. Frozen all-section Excel/print, figures/links remain; other reports retain defaults. UI20/24/skill synchronized; source-only, owner visual acceptance pending. |
++| 2026-10-05 | 1.79 | Owner rejects CashFlowStatement design. Accounts-local optional sectionLayout=document adopts the already canonical UI20 complete-response document alternative: full-width sequential operating/investing/financing sections, one shared outer scroll frame, natural-height shared grids and compact empty states. Existing columns, figures, ledger links and complete print/Excel remain; other reports retain default panes. UI20/skill synchronized; source-only, owner visual acceptance pending. |
++| 2026-10-05 | 1.78 | Owner requests OpeningBalances inline search actions/equal card edges across all tabs. Shared sigma-editor-panel--workspace extends UI3 title/filter frame alignment to tabbed editors; OpeningBalances adopts it across eight tabs, with inline filter actions in Customers/Suppliers/Prepaid/Deposit and shared field stacking at720px beside the actions. UI3/4/skill/history synchronized; source-only, owner visual/RTL/narrow-layout acceptance pending. |
++| 2026-10-05 | 1.77 | Owner requests LinkAccounts Reset on the search line and all page cards aligned as a general rule. Shared FilterPanel inlineActions (default off, no advanced filters) owns compact search/actions; shared workspace modifier aligns filter frame inline edges with title/tabs/tables. UI3/4 and skill synchronized. Source-only; owner responsive/RTL/visual acceptance pending. |
++| 2026-10-05 | 1.76 | Owner requests equal page-card widths and Account title/workspace alignment. UI3 and skill require shared sibling card/frame edges, preserving intentional columns/nested cards and summary tiles. Shared sigma-list-panel--workspace removes only title inline inset; Account list adopts it. Source-only; owner responsive/RTL/visual acceptance pending. |
++| 2026-10-05 | 1.75 | Accounts review promotes optional typed DataTable hierarchy/flat indentation and all-descendant print, feature-local typed report composition with server context and complete exports, and EditableRows pending confirmation/mutation recheck. UI6/14/20 and required skill synchronized; existing paged APIs, formulas, full-replacement payloads and non-adopting consumers retained. Source-only; owner build/runtime/visual acceptance pending. |
++| 2026-10-05 | 1.74 | Owner-approved Stock Reports badges retain numeric fields beside derived statuses. Shared DataTable header/body loops now key each column by field plus stable header translation key, avoiding duplicate identities while preserving sort/row/format/export behavior. UI5 and required skill/history synchronized after scoped source comparison. Feature KPI predicates remain frozen in the Stock Reports contract. Source-only; owner runtime/visual acceptance and derivative packet regeneration/semantic review pending. |
++| 2026-10-04 | 1.73 | StockReports eight consumers share a typed feature-family form/request/print/export composition over ReportPage, FeatureTitle, DataTable and SummaryCards. UI20 records complete-response flag/count proof and typed pageSize-to-rows paging adaptation; feature formulas/source proxies remain frozen in the StockReports contract. Skill synchronized. Source-only; owner runtime/visual acceptance and derivative packet regeneration/semantic review pending. |
++| 2026-10-04 | 1.72 | Owner reports ItemRequisition View Quantity at the edge and requests application-wide alignment. Shared editable table numeric headers/plain numeric cells and value text now default to center, respecting explicit column overrides; 17 plain values in five Stock/Workshop templates adopt existing blue highlight. Inputs, values/formatting/calculations, widths/theme/scroll/API remain unchanged. UI14/skill synchronized; source-only, visual acceptance and packet regeneration/semantic review pending. |
++| 2026-10-04 | 1.71 | Owner requests same-row filter alignment and explicit Guide emphasis, then limits adoption to Item Issue onward because previous screens are already adjusted. Item Issue uses existing shared stableLayout and reserved date feedback, matching Workshop Job reference. UI4/skill make stableLayout mandatory for new/subsequently reviewed filters; earlier features and shared default/columns/breakpoints/query behavior are unchanged. Source-only, visual acceptance and derivative packet regeneration/semantic review pending. |
++| 2026-10-04 | 1.70 | Owner requests application-wide editable Quantity numeric inputs with increase/decrease buttons. Shared QuantityInputDirective configures the existing PrimeNG CVA; global styles own the 34px line and 22px stacked rail. All 36 inventoried controls in 28 templates adopt it; integer/decimal bounds, step, validation, number/null transport, calculations and read-only badge owners remain feature-owned. Input IDs/accessibility and post-CVA onInput callbacks are preserved. UI14/27 and skill/history synchronized; derivative packet regeneration/semantic review pending. Source-only, owner build/keyboard/stepping/RTL/theme/narrow-layout acceptance pending. |
++| 2026-10-04 | 1.69 | Owner generalizes the existing Workshop blue numeric highlight to every non-editable numeric cell in new/reviewed editable collection rows. UI14 requires shared value/highlight text and public numeric/center headers, retaining 34px height, 12% primary tint, 700 weight and 6px radius. Requisition Create PR adopts Remaining Quantity/Amount/Tax/Gross; editable inputs, formatting, calculations, payloads, report/DataTable and summary owners remain unchanged. Canonical book and required skill synchronized; derivative packet regeneration/semantic review pending. Source-only, owner visual/RTL/theme/print acceptance pending. |
++| 2026-10-04 | 1.68 | Owner extends immediate numeric replacement to the whole application. Root GlobalNumericFocusService delegates focusin/first-pointer-click selection for native number and PrimeNG spinbutton inputs, including dynamic rows and dialog portals; later clicks preserve caret editing, readonly/disabled controls are excluded, no value/form/calculation writes occur. AppComponent owns start/stop; NumericFocusDirective retains appearance only. UI27 and required skill synchronized, derivative packets regenerated. Source-only; owner keyboard/pointer/runtime acceptance pending. |
++| 2026-10-04 | 1.67 | Owner requests immediate overwrite of numeric values and explicitly promotes it to a general documentation rule. Shared NumericFocusDirective selects on entry/first pointer click without changing forms, values or calculations; later clicks retain caret editing. Nine Workshop native-number consumers opt in. Shared numeric-input appearance and 34px text-only table value treatment align Job/Estimate numeric values with row controls; derived Price/Charges pair centered public header alignment with a themed blue highlight after the owner's styling correction. Three-pane lookup labels shrink inside their column to fix Work Order overflow in Create Job; generic English required wording becomes Required field. UI14/16/19/27 and skill/history synchronized; source-only, owner pointer/Tab/RTL/theme/visual acceptance pending. |
++| 2026-10-04 | 1.66 | Owner requests Job/JobEstimation Create in three columns: Details, Jobs, selected Job details. Shared editor form/body/pane classes own 240–280px/170–200px/remainder columns, one-column master fields, container-responsive 900/620px placement and print release; existing internal scroll, slim totals, fixed footer and typed form hierarchy retained. UI1/13 and skill synchronized; source-only, owner visual/RTL/narrow/print acceptance pending. |
++| 2026-10-04 | 1.65 | Owner requests smaller master-detail totals to preserve row visibility. Shared SummaryCards adds opt-in slim density: horizontal 20px icon/copy, 6px/10px padding, 6px gaps and 1rem figures. Workshop Job/Estimate/WorkOrder select slim/row/min140/max80; shared responsive wrap, keyboard scroll, print release, themes and formatting retained. UI14/24 and skill synchronized; source-only, owner visual acceptance pending. |
++| 2026-10-03 | 1.64 | Workshop shared adapters: real-date/range/time validation with local typed datetime transport; confirmed collection removal rechecks busy state and default Remove supports removeDisabled; FileField emits original-name/path metadata only after successful stored upload; opt-in FormSection sigma-print-flow releases internal fill bounds; public cellClass wrapping preserves full notes and attachment links. UI5/14/17/18/21 and skill synchronized. Feature tax/precision/transition policies remain in frozen Workshop contracts. Source-only, owner runtime/input/print acceptance pending. |
++| 2026-10-03 | 1.63 | Logs Movement Documents and the direct Agreement reader reuse FileField selectionOnly for existing atomic multipart endpoints and FileLink for persisted same-origin files; historical file readability is separate from row upload eligibility. Check Card opts into shared dialog print isolation and ReportPrintSession options while retaining existing consumers. Owner-reported TS4104 fixes filtered dropdown return type to a mutable array. UI16/18/21 and skill synchronized; source-only, owner build/runtime/RTL/theme/print acceptance pending. |
++| 2026-10-03 | 1.62 | Job Invoice on Customer adds shared allocateDocumentTax alongside documentTax, matching VatPolicy per-rate proportional allocation with largest absolute remainder, first tie and zero-net behavior; the affected Close preview also adopts it. Job context returns backend ledger precision from base Currency, distinct from Common display precision. Shared amountInWords uses tenant currency/decimal-currency labels and display precision with existing English voucher wording. Workshop-linked MiscellaneousInvoice persists matching line/header tax and journal values, derived previews stay out of payloads. UI19 and skill/history synchronized; source-only, owner build/runtime/visual/ledger acceptance pending. |
++| 2026-10-03 | 1.61 | Owner applies the agreed early duplicate behavior to every step form. Shared blur validator caches completed normalized-value/edit-id checks, cancels stale work and blocks/retries failures. Shared settling gate commits focused blur edits and awaits pending checks at every forward route/Save; Individual, Company, Staff and legacy Closed Lease consume it with existing validation rules. Shared FieldError owns status/duplicate/failure feedback; UI12/19 and skill synchronized. Source-only; owner runtime acceptance pending. |
++| 2026-10-03 | 1.60 | Owner requests fixed dash/spaces during date-range editing and removes repeated Supplier Statement table titles, asking to document the rule. Shared DatePickerDirective protects/capture-normalizes the exact delimiter with caret preservation before PrimeNG parses once; existing clear/history/single-date/validation semantics remain. UI20 makes tab captions the sole on-screen section title for reviewed tabbed reports, retaining utility-hidden print headings; Supplier Statement adopts it. UI17/20 and skill/history synchronized; source-only, runtime/input/visual acceptance pending. Supplier Balance single-card sizing remains a feature-specific host-placement choice. |
++| 2026-10-03 | 1.59 | Owner reports filters moving while typing and extends repair to Supplier/Staff Balance Summary. FilterPanel opt-in stableLayout owns top alignment, field-bounded PrimeNG controls and a reserved zero-count badge slot; FieldError reserveMessage owns translated wrapped feedback geometry without duplicate alerts/clipping. Customers reserves range errors; Supplier adopts the same frozen More Filters shape as Staff. UI4/19/20, skill and generated packets synchronized. Source-only; visual/runtime acceptance pending. |
++| 2026-10-03 | 1.58 | Sidebar group collapse fix removes competing RouterLinkActive/Metronic disclosure writers. SidebarMenuComponent owns both levels, explicit user choices override route/search defaults, sibling opens close peers, one groupHeader renders native disclosure and independent Pin buttons, and propagation is isolated. UI1 and skill synchronized; source-only, owner runtime/visual acceptance pending. |
++| 2026-10-03 | 1.57 | Customer Statement owner requests the usual Sigma blue for Report Type. Shared opt-in sigma-report-filter-choice owns PrimeNG radio selected/hover/focus states through existing primary/hover/focus tokens; other groups remain unchanged. UI20 and skill rule/history synchronized. Owner-specific row spacing remains in its feature contract. Source-only; visual acceptance pending. |
++| 2026-10-03 | 1.56 | Staff review extracts parseMonthValue into shared date-utils: valid local picker Date or complete MM/YYYY/yyyy-MM normalizes to yyyy-MM, rejecting partial/invalid months and years outside 1–9999 without timezone conversion or short-year coercion. Staff Overtime, Duty Schedule and Timesheet consume it and currentMonthRange()[0]; UI17 and skill rule/history synchronized. Source-only; owner runtime acceptance pending. |
++| 2026-10-03 | 1.55 | Owner requests default 15 table rows, explicitly superseding the earlier 20. Shared DEFAULT_PAGE_SIZE supplies initial/fallback rows and all Suppliers pagers; standard choices become 10/15/20/50/100, including normalization of former standard choices. Explicit user sizes and the 10-row minimum remain; report transport, completeness, totals, print and export scopes stay intact. UI6/20 and skill rule/history synchronized; generated packets regenerated. Source-only; owner runtime acceptance pending. |
++| 2026-10-03 | 1.54 | Owner requests title styling generally like the filter card. FeatureTitle/list-filter/report-filter reuse one root/dark-scoped background token with themed border/shadow, 3px logical-start primary accent and 8px radius; title padding matches list filters while its height/text/icon/actions remain. Canonical report panels align title/filter edges by default, superseding the earlier three-report opt-in; modifier remains compatible. Shared title print is white/readable without shadow. UI3/4/20, skill/history and generated packets synchronized. Source-only; owner visual/runtime acceptance pending. |
++| 2026-10-03 | 1.53 | Suppliers source review extracts ReportPrintService.createSession(DestroyRef) for guarded one-frame preparation, afterPrint/failure restore and scheduled-frame cancellation; reviewed local-paginator reports bind shared grid flow to its readonly printing signal. DataTable forwards changed local firstChange offsets, fixing PrimeNG sort resets that do not emit onPage; lazy grids and print preparation retain their owners. UI6/21 and skill synchronized. Phase5 template corrected to existing UI1 one-root-client wiring; derivative packets regenerated with the generator. Source-only; runtime/visual acceptance pending. |
++| 2026-10-03 | 1.52 | Owner requires one shared summary/KPI/total-card component on every screen type and prefers Dashboard. SummaryCardsComponent extracts the Dashboard KPI shape; Dashboard, FollowUpReport, DebtCollection, Customers/Alerts, BalancesSummary (main and statement dialog) and ReceivableAgeAnalysis adopt it. Public comfortable/compact/dense density, grid/fit-row layout, minimum width and optional internal height bound own responsive sizing. Aging's last-card/smaller-number correction fits twelve cards inside the wide container, wraps below1100px, uses1.05rem values and12px host bottom separation. Monetary formatting/DrCr, Alerts selection, totals/formulas/request scope, tab/paging/print/Excel contracts stay intact. Follow Up is full width and gains translated Details page report. UI 0/14/20/24, catalog and skill updated; generated packets regenerated. Source-only; visual/runtime acceptance pending. |
++| 2026-10-02 | 1.51 | Follow Up adopts the frozen professional Summary extension and paging/alignment refinement within the existing Details/Summary workspace tabs: the responsive Summary maximum is 960px, superseding the provisional 520px example; Summary remains unpaginated while complete-array Details uses the shared controlled local paginator with default 20 rows and shared options, retaining page/size across tabs and resetting offsets on valid Search/filter/Reset/drill-down. The existing aligned-title modifier matches title/filter card widths. Shared totals cards present server-owned additive operational metrics, comparison bars use shared-grid custom cells, and the user action drills into the exact raw username. Active-section Excel exports all filtered rows and full print includes both arrays/KPIs then restores state; formulas remain in the frozen contract/review. UI 6/20 and skill updated; packets regenerated. Source-only; visual/runtime acceptance pending. |
+ | 2026-10-02 | 1.50 | Owner chooses one Details tab and one Summary tab for Follow Up, with a narrower summary. Existing shared EditorTabs workspace presentation and DataTable viewport/formatting are reused; summary width stays feature-owned, both arrays remain mounted and complete, Excel follows the active section and print includes both. UI 20 and skill record the scoped adoption; packets regenerated. No new shared disclosure capability. Source-only; visual/runtime acceptance pending. |
+ | 2026-10-02 | 1.49 | Report transport/layout guidance reconciled: proven complete responses use `lazy=false`, while frozen paged responses retain `lazy=true`, server paging and authoritative counts. Independent bounded shared-grid panes cover both complete `paginator=false` sections and complete local-paginator sections; no report is made complete by importing the grid. UI 6/20 and skill §6.1 updated; packets regenerated. Documentation only. |
+ | 2026-10-02 | 1.48 | Report table guidance reconciled with the frozen bounded layout: every new/reviewed report table uses typed `app-data-table`; full-document flow may use one outer frame with `scrollable=false`, while independently visible sections use separate overflow-hidden boundaries and shared row viewports. Former native report classes are compatibility-only until scoped review, the shared grid owns row palette/hover treatment, and totals stay outside current grid rows unless shared capability is implemented in scope. UI 6/20, report navigation and skill reconciled; packets regenerated. Documentation only. |
+@@ -98,7 +128,11 @@ now on.
+ 
+ | Date | Guide | Version | Change |
+ |---|---|---|---|
++| 2026-10-03 | Backend | 0.76 | Staff deletion reported an opaque Partner blocker. Shared InUseAsync now names the matched concrete EF entity via an untracked one-row hierarchy read, with declared fallback; ordinary types retain AnyAsync. Partner/concrete subtype categories have en/ar resources. Actual usages, inheritance-link/owned-row exclusions, soft delete, endpoint/DTO/schema and development diagnostics stay unchanged. BE8 and skill/history synchronized; source-only, owner actual-reference/runtime acceptance pending. |
+ | 2026-10-02 | Master | 1.26 | Owner requests preventing report-review omissions. Master 5 requires actual consumer/producer symbols and compared values, distinguishes Uncertain evidence/findings from runtime acceptance, and routes report reviews through UI 20's required source table before/final implementation. Skill and Phase-02/06 evidence/handoffs reconciled. Documentation only. |
++| 2026-10-03 | Backend | 0.75 | Authenticated inherited CheckUnique API is an advisory read of whitelisted UniqueColumns, with typed request/Result entity.isAvailable and positive edit identity exclusion. Shared UniqueValueExistsAsync serves preflight and final writes; Staff email/phone normalization preserves existing save policy. No preflight mutation/lock/number/schema change; authoritative write protections stay. BE8 and skill synchronized. Source-only; owner compilation/runtime acceptance pending. |
++| 2026-10-03 | Backend | 0.74 | Staff owner permits Confirmation on the Joining day. Shared DateAfter adds explicit AllowEqual with a false default, localized on-or-after messages and matching Angular comparison/minimum. Existing document expiry consumers remain strict and optional dates stay optional. BE3 and skill/history synchronized; source-only, owner compilation/runtime acceptance pending. |
++| 2026-10-03 | Backend | 0.73 | Staff review verifies that generic detail service/interface/controller only map and return responses. Their class constraint permits explicit lean Staff/Designation/Timesheet detail contracts without unused tenant/audit fields, preserving existing derived DTOs and specialized constraints. BE 3/5 and skill updated together; source-only, owner compilation/runtime acceptance pending. |
+ | 2026-10-02 | Backend | 0.72 | ReceivableAgeAnalysis repair establishes two-sided capacity-bounded remaining amounts before aging, no second subtraction from debit-credit net, allocation and actual-source cutoff parity, and strict AR membership when mapping is missing. BE 17 and skill capture reusable invariants while column formulas remain feature-owned. An explicit complete-response option avoids repeated report calculation and preserves paged callers. Source-only application repair; runtime/accounting acceptance pending. |
+ | 2026-10-02 | Backend | 0.71 | Paged report wrappers explicitly declare row/count/page clamp and totals scope. Conditional custom aging filters have off/default semantics, positive increasing integer end-days at the API boundary and consistent effective labels across outputs; exact formulas/defaults remain feature-owned. BE 17 and skill updated after ReceivableAgeAnalysis evidence. Documentation only, no API/accounting code change. |
+ | 2026-10-02 | Master | 1.25 | Owner reported Customer Statement diverged from the documented Trial Balance reference and should not need repeated reminders. Master 5 requires source conformance evidence before edits and at handoff in existing artifacts; shared class names alone are insufficient, and book edits cannot retroactively authorize a deviation. AGENTS.md and skill reconciled. Source-only; no runtime/visual certification. |
+diff --git a/sigma-erp/recipe-system/generated/PHASE-00-discovery-evidence.md b/sigma-erp/recipe-system/generated/PHASE-00-discovery-evidence.md
+index 455742b..9a2809a 100644
+--- a/sigma-erp/recipe-system/generated/PHASE-00-discovery-evidence.md
++++ b/sigma-erp/recipe-system/generated/PHASE-00-discovery-evidence.md
+@@ -16,11 +16,11 @@ contract map. It does not authorize source edits.
+ - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
+ - master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:681863fa27d60be8922ee563bd76488b459947d5d0497e478de2ef748bb2abed
+-- ui.1: ## 1. Feature folders and wiring | sha256:0199f7c682b9dcfd8c3db876787322c06e105cd81f70b6d4ea17f06dcb46e408
++- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:a78392c4ab1857841dceb22efcf4f682524a80bc703a1efccbee054638597ce6
++- ui.1: ## 1. Feature folders and wiring | sha256:9ee96ee7ed32012437ec6728cccda7200876163dfe9e4c94cc1d7ccc25f542e2
+ - ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
+-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
+-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
++- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:61e7045aef9ca5ccd6bdadf3bd5e278d4f74f445efa5d44e392c7a501eca5820
++- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+ 
+ Approved references, when a shape is already known:
+ 
+diff --git a/sigma-erp/recipe-system/generated/PHASE-01-domain-api.md b/sigma-erp/recipe-system/generated/PHASE-01-domain-api.md
+index 22a190e..dcf29fb 100644
+--- a/sigma-erp/recipe-system/generated/PHASE-01-domain-api.md
++++ b/sigma-erp/recipe-system/generated/PHASE-01-domain-api.md
+@@ -15,25 +15,25 @@ are finalized.
+ - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
+ - master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
++- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:61e7045aef9ca5ccd6bdadf3bd5e278d4f74f445efa5d44e392c7a501eca5820
+ - backend.1: ## 1. Step 1 — Entity | sha256:3d755799b3e4b42bb225a46660377f86994c9d67b9450ca7b9ec9ca126c78f2b
+ - backend.2: ## 2. Step 2 — EF configuration | sha256:542434089dccbb109c242e52bd9ccc357f6b6d217efa9b68ed0dad17259e7a48
+-- backend.3: ## 3. Step 3 — ViewModels | sha256:4a11c70ca487d4644b26fc5082a6d9244db925d3a6ef8d3f7c174b0548fb48a1
++- backend.3: ## 3. Step 3 — ViewModels | sha256:5fe3498b4de88bd6caa3c508d4873fb3df2c77e4e80db35a9af5e3caaf98a027
+ - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
+-- backend.5: ## 5. Step 5 — Interface and service | sha256:d8ab105a1462baaa5dee9c089419a7783ede54cdb09d075a51805970fef624f9
++- backend.5: ## 5. Step 5 — Interface and service | sha256:b8ac558806ca55c63d2eb1b8ca229fd5f51b6b6784833f6d68268d12489f5b26
+ - backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
+ - backend.7: ## 7. ListVM scope rule | sha256:24fbfbcf92b61da465eb4b8b4d9aa50f2c48c1f43e8711402843db1ff1a7771e
+-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:1798ea5f97d741d74fdb69fb8555447c0a2d04fabc40b88895e17d22b8588e36
++- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c2e52bf2108b49cd64e5d0c27c34e572bf1182418d777ef56fb96732e3bf82a3
+ - backend.9: ## 9. Search model and filters | sha256:80adaa0424534a753b302d2ae386e8374958bea389692e3b856f7ecc8cdf082e
+ - backend.10: ## 10. Select and dropdowns | sha256:700a3fc93df824f337cf2bf5c2fe12f866d8aee46c8be35976a2fccf7fa533cb
+ - backend.11: ## 11. Document numbers (No) | sha256:64b0d4b95e91a9b9dd3abc1f8eb55a0251a388795d6ea0743a61e3c329d1b202
+ - backend.12: ## 12. Activate and deactivate | sha256:0ab72d83147f2121f134159c72ce89862f2e6687b34d190aedcb9f48dd277c8d
+ - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
+ - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:72df618eef97754d2145fd42ce10e3a09b842ec6870bce6a2e7ee3eced51af93
+-- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:7e2d36c3ce382f62e903e3c14d8cc74023eb1e28cadc8913c5cc0e37aceb62d7
++- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:5e5d2a09422f7ebdf641b142f491d189a67884a605d8990acd51a974f5889991
+ - backend.16: ## 16. Pattern 4 — Settings | sha256:f2379884db393f76c984b88a487c4ec4cbad1e492a69a48302d9761d6fa2339e
+ - backend.17: ## 17. Pattern 5 — Reports | sha256:57ec4fd3d996915f15d15c7baad51a573b258d24cd19680dc1c2f10ef437aa73
+-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
++- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+ 
+ Approved backend references:
+ 
+diff --git a/sigma-erp/recipe-system/generated/PHASE-02-read-grid.md b/sigma-erp/recipe-system/generated/PHASE-02-read-grid.md
+index 2401b62..f7164c9 100644
+--- a/sigma-erp/recipe-system/generated/PHASE-02-read-grid.md
++++ b/sigma-erp/recipe-system/generated/PHASE-02-read-grid.md
+@@ -15,38 +15,38 @@ query to Grid rendering, paging, and export.
+ - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
+ - master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:681863fa27d60be8922ee563bd76488b459947d5d0497e478de2ef748bb2abed
+-- ui.1: ## 1. Feature folders and wiring | sha256:0199f7c682b9dcfd8c3db876787322c06e105cd81f70b6d4ea17f06dcb46e408
++- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:a78392c4ab1857841dceb22efcf4f682524a80bc703a1efccbee054638597ce6
++- ui.1: ## 1. Feature folders and wiring | sha256:9ee96ee7ed32012437ec6728cccda7200876163dfe9e4c94cc1d7ccc25f542e2
+ - ui.2: ## 2. Service and response wrappers | sha256:f401fd78f48c7eb001ca812c42ea69bc65e828c659fe1396ce6ca415a3721231
+-- ui.3: ## 3. Header | sha256:1e3da25fd1acefc141c10732f5ba8cc98fdd85e765508dfa06fb181b1557664f
+-- ui.4: ## 4. Filters | sha256:ecb6dec87bc52a8a00473131769f5c4bfce2409465e0ac35a873f4cad407454c
+-- ui.5: ## 5. Columns | sha256:4176dac2cf772ccf3ad43b3ac304dfeb612a3189e821e70bb75f09e3866c0b3e
+-- ui.6: ## 6. Grid and footer | sha256:43650195bf71f1acc13d0fa89fb316c76c6e1c38c1a2807f75dcb9d826f082e0
++- ui.3: ## 3. Header | sha256:d2cd7ac65a819808b1af9b89c74262a7e438bf27ba0851b0e38ab1f833ea82a0
++- ui.4: ## 4. Filters | sha256:5db2d72035ee953474ceb39657292f386193981db5d5991132f78ff4175b3191
++- ui.5: ## 5. Columns | sha256:987bc8f2b9e07fcde2040866c7d5e1bdf4ece16f47ff76fc34eca975583dce33
++- ui.6: ## 6. Grid and footer | sha256:ce34b09fcad18a71e90c84b8251dd0f0f239622b0dc5cc024bfdbcbc8e4378da
+ - ui.7: ## 7. Action button cycle | sha256:62ab02ec6d136911130f189df3b805427a8b4d952cea916799a6a7640badc197
+ - ui.8: ## 8. Export to Excel | sha256:5bfec17456738ba432a51b708f8307a5ce156596b3f4a2d3db6a31eafc8a30cf
+ - ui.9: ## 9. Confirm: delete | sha256:b446c09fa7fe12e63f8aa03e99f184ebb14f957fa585576931ddd8f15cb6fd75
+ - ui.15: ## 15. View mode | sha256:022f00069635b29f668f8ca24b27ef784df55a57a05ae66594c166e74263184c
+-- ui.16: ## 16. Dropdowns, lookups, enums | sha256:c2b03fa4a30625613cddace497a177d09eaaa6b39c4cf002efee5e69b484bc0b
+-- ui.17: ## 17. Dates | sha256:a3ac49f8b648689d708d0ae9be80f4e18eea8c6c7bba15aca14d0adc1a2539b5
+-- ui.19: ## 19. Validation messages | sha256:685c272c3ad9e689d5796a2d56f127798f8f3fd2ba3d5707c0555ee5066f7bff
+-- ui.20: ## 20. Report page | sha256:e1a3c2fc290a45b0e63c2b4481e1a0e8984f28c57937e901b9d25757bb549eba
+-- ui.21: ## 21. Report print | sha256:73879c5fa501ca5c2b31b22809dc9f9b5e96770166f7b4301c0a0ac0f4141112
++- ui.16: ## 16. Dropdowns, lookups, enums | sha256:36af2b224c0cce33c1f10586abc472bd44441b5161b189b2f71a4e4cd413deda
++- ui.17: ## 17. Dates | sha256:216b3ed992d5fd6a4bc7262e4b8d81505e6cf6a3c4317206c7050e5cb392e98b
++- ui.19: ## 19. Validation messages | sha256:bcb787553910f211e03f608ef319f355e68b01873508cb6fca0eee66a6f2115f
++- ui.20: ## 20. Report page | sha256:a1286e0ef05b87e9320b53eede393e1251a14ec44ca6158a6e114cd7fb846301
++- ui.21: ## 21. Report print | sha256:2e6cc0be29f3d57b6207c5519aee74fa6b30576e92a4b79312fee0f6deafe171
+ - ui.22: ## 22. Loading, empty, error, toast | sha256:eb29f7481ec7434ae7f60d0039b643c2249dbd343d4b6eb608c9a619791521f0
+ - ui.23: ## 23. Translations | sha256:3600856df82f27c6eb0710076d8755979f2038a625ddf573a0079197d0b8248c
+-- ui.24: ## 24. Colors, icons, buttons | sha256:341892ba07b97a6084675228946bfdfcf7fc5165142949f6e30769d35a1cfde6
++- ui.24: ## 24. Colors, icons, buttons | sha256:ceab92354823f68c9c61a452f587607f287bcf4ae402b5b569b55ea2b7ec80e6
+ - ui.25: ## 25. RTL and dark theme | sha256:7239bd7a1b0de149e09f0cf704ddc404e46af34f60e3f1548c293b00fbbf3061
+ - ui.26: ## 26. Permissions and route access | sha256:468e5ceba58128db01cd338059c6119761123144af55950bfaaf1a2d4866f0ff
+-- ui.27: ## 27. Focus and keyboard | sha256:333d07eb2a8f10db1439820d9fa2fa5c940157fc64745f70d9620141d98569e3
++- ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
+ - ui.28: ## 28. Request cancellation and stale responses | sha256:a5e48de60c3679102dda13ec7edd9d7cd0840d7f7301508f0e3c5a6736055d32
+ - ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
+-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
++- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:61e7045aef9ca5ccd6bdadf3bd5e278d4f74f445efa5d44e392c7a501eca5820
+ - backend.7: ## 7. ListVM scope rule | sha256:24fbfbcf92b61da465eb4b8b4d9aa50f2c48c1f43e8711402843db1ff1a7771e
+-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:1798ea5f97d741d74fdb69fb8555447c0a2d04fabc40b88895e17d22b8588e36
++- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c2e52bf2108b49cd64e5d0c27c34e572bf1182418d777ef56fb96732e3bf82a3
+ - backend.9: ## 9. Search model and filters | sha256:80adaa0424534a753b302d2ae386e8374958bea389692e3b856f7ecc8cdf082e
+ - backend.10: ## 10. Select and dropdowns | sha256:700a3fc93df824f337cf2bf5c2fe12f866d8aee46c8be35976a2fccf7fa533cb
+ - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
+ - backend.17: ## 17. Pattern 5 — Reports | sha256:57ec4fd3d996915f15d15c7baad51a573b258d24cd19680dc1c2f10ef437aa73
+-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
++- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+ 
+ Approved references by read-path shape:
+ 
+@@ -81,11 +81,11 @@ second grid implementation.
+   flags, and remote internal-table mutation from the existing list TypeScript.
+ - Keep the existing feature route and service boundary unless confirmed source
+   requires a contract change.
+-- Preserve row Create/View/Edit handoff to the single controlled modal owned by
+-  Phase 3; Phase 2 does not create a second editor component or editor route.
+-  The only exception is the routed full-page editor variant (UI block 13), used
+-  when the frozen contract approves an independently addressable route; Create,
+-  View, and Edit then navigate to that one editor.
++- Preserve Create/View/Edit handoff to the single editor selected by UI block
++  13's D4-2 rule and frozen in Phase 1: fields only or one small child list
++  without totals use a controlled modal; two or more child collections, totals,
++  or approval/posting use a routed editor. Phase 2 does not create another
++  editor. Create, View, and Edit use that same selected editor in all modes.
+ 
+ A request to restore or preserve an older filter, title, or action-button
+ appearance applies only to feature-owned layout and styling. It never permits
+diff --git a/sigma-erp/recipe-system/generated/PHASE-03-detail-write.md b/sigma-erp/recipe-system/generated/PHASE-03-detail-write.md
+index 4dd3855..af21201 100644
+--- a/sigma-erp/recipe-system/generated/PHASE-03-detail-write.md
++++ b/sigma-erp/recipe-system/generated/PHASE-03-detail-write.md
+@@ -4,9 +4,11 @@
+ # PHASE 3: Detail and Write Path
+ 
+ Use this packet for Create, Edit, and View behavior from detail loading through
+-Save, discard, and parent refresh. Ordinary list-owned CRUD uses one controlled
+-dialog editor; a routed editor requires confirmed source or a documented
+-business workflow.
++Save, discard, and parent refresh. Select the editor using UI block 13's D4-2
++rule: fields only or one small child list without totals use a controlled modal;
++two or more child collections, totals, or approval/posting use a routed editor.
++Create, Edit, and View share that editor with an explicit mode. Ordered step
++workflows follow UI block 12; deliberate exceptions are recorded in the review.
+ 
+ ## Canonical provenance
+ 
+@@ -17,50 +19,52 @@ business workflow.
+ - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
+ - master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:681863fa27d60be8922ee563bd76488b459947d5d0497e478de2ef748bb2abed
+-- ui.1: ## 1. Feature folders and wiring | sha256:0199f7c682b9dcfd8c3db876787322c06e105cd81f70b6d4ea17f06dcb46e408
++- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:a78392c4ab1857841dceb22efcf4f682524a80bc703a1efccbee054638597ce6
++- ui.1: ## 1. Feature folders and wiring | sha256:9ee96ee7ed32012437ec6728cccda7200876163dfe9e4c94cc1d7ccc25f542e2
+ - ui.2: ## 2. Service and response wrappers | sha256:f401fd78f48c7eb001ca812c42ea69bc65e828c659fe1396ce6ca415a3721231
+ - ui.9: ## 9. Confirm: delete | sha256:b446c09fa7fe12e63f8aa03e99f184ebb14f957fa585576931ddd8f15cb6fd75
+ - ui.10: ## 10. Confirm: discard | sha256:b687d2e0d4baa6c392a7bb78b6842e876ff362f2fd42fdc310f82eb72a3c7e5f
+ - ui.11: ## 11. Small modal on top | sha256:766d16df7263c9b35550aa8657b683f39073bb0513063ca7fc3d794bb8798842
+-- ui.12: ## 12. Step form | sha256:ccd240a68cfb769b5eab6bc864c23f8b532b833ecb2353f80a188891ff5085da
+-- ui.13: ## 13. Modal with tabs | sha256:d56d1336d697d33e86afd79fa5a87171273b2b6e91b7f69a410a033cec526310
+-- ui.14: ## 14. Editable collection table | sha256:4beda6867941beb4260d5854994bf37931d3b2053b4f92397317701b5458584e
++- ui.12: ## 12. Step form | sha256:f53be24965afaa8dcf58477207a84800f70a148fb1dedb881e4370f7e897d56a
++- ui.13: ## 13. Modal with tabs | sha256:ecccf32784539c68f4d21d75707c9b6a707e688e21aa69dc5d0edc567966917e
++- ui.14: ## 14. Editable collection table | sha256:af22ffa1047c19ecc62b1366b30a4ac6bfb4dee2629e8b92854ce7da0d6cb0ec
+ - ui.15: ## 15. View mode | sha256:022f00069635b29f668f8ca24b27ef784df55a57a05ae66594c166e74263184c
+-- ui.16: ## 16. Dropdowns, lookups, enums | sha256:c2b03fa4a30625613cddace497a177d09eaaa6b39c4cf002efee5e69b484bc0b
+-- ui.17: ## 17. Dates | sha256:a3ac49f8b648689d708d0ae9be80f4e18eea8c6c7bba15aca14d0adc1a2539b5
+-- ui.18: ## 18. Documents and upload | sha256:aa5f88a7108ce1bafbad833219c66c83e43e6be731fa0ecda6c544537197b143
+-- ui.19: ## 19. Validation messages | sha256:685c272c3ad9e689d5796a2d56f127798f8f3fd2ba3d5707c0555ee5066f7bff
++- ui.16: ## 16. Dropdowns, lookups, enums | sha256:36af2b224c0cce33c1f10586abc472bd44441b5161b189b2f71a4e4cd413deda
++- ui.17: ## 17. Dates | sha256:216b3ed992d5fd6a4bc7262e4b8d81505e6cf6a3c4317206c7050e5cb392e98b
++- ui.18: ## 18. Documents and upload | sha256:bc1d2cb0f5c9da3afba19b07b24e0dbe8141d2e26dab3fc651c405acbf6d63af
++- ui.19: ## 19. Validation messages | sha256:bcb787553910f211e03f608ef319f355e68b01873508cb6fca0eee66a6f2115f
+ - ui.22: ## 22. Loading, empty, error, toast | sha256:eb29f7481ec7434ae7f60d0039b643c2249dbd343d4b6eb608c9a619791521f0
+ - ui.23: ## 23. Translations | sha256:3600856df82f27c6eb0710076d8755979f2038a625ddf573a0079197d0b8248c
+-- ui.24: ## 24. Colors, icons, buttons | sha256:341892ba07b97a6084675228946bfdfcf7fc5165142949f6e30769d35a1cfde6
++- ui.24: ## 24. Colors, icons, buttons | sha256:ceab92354823f68c9c61a452f587607f287bcf4ae402b5b569b55ea2b7ec80e6
+ - ui.25: ## 25. RTL and dark theme | sha256:7239bd7a1b0de149e09f0cf704ddc404e46af34f60e3f1548c293b00fbbf3061
+ - ui.26: ## 26. Permissions and route access | sha256:468e5ceba58128db01cd338059c6119761123144af55950bfaaf1a2d4866f0ff
+-- ui.27: ## 27. Focus and keyboard | sha256:333d07eb2a8f10db1439820d9fa2fa5c940157fc64745f70d9620141d98569e3
++- ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
+ - ui.28: ## 28. Request cancellation and stale responses | sha256:a5e48de60c3679102dda13ec7edd9d7cd0840d7f7301508f0e3c5a6736055d32
+ - ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
+-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
+-- backend.3: ## 3. Step 3 — ViewModels | sha256:4a11c70ca487d4644b26fc5082a6d9244db925d3a6ef8d3f7c174b0548fb48a1
++- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:61e7045aef9ca5ccd6bdadf3bd5e278d4f74f445efa5d44e392c7a501eca5820
++- backend.3: ## 3. Step 3 — ViewModels | sha256:5fe3498b4de88bd6caa3c508d4873fb3df2c77e4e80db35a9af5e3caaf98a027
+ - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
+-- backend.5: ## 5. Step 5 — Interface and service | sha256:d8ab105a1462baaa5dee9c089419a7783ede54cdb09d075a51805970fef624f9
++- backend.5: ## 5. Step 5 — Interface and service | sha256:b8ac558806ca55c63d2eb1b8ca229fd5f51b6b6784833f6d68268d12489f5b26
+ - backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
+-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:1798ea5f97d741d74fdb69fb8555447c0a2d04fabc40b88895e17d22b8588e36
++- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c2e52bf2108b49cd64e5d0c27c34e572bf1182418d777ef56fb96732e3bf82a3
+ - backend.10: ## 10. Select and dropdowns | sha256:700a3fc93df824f337cf2bf5c2fe12f866d8aee46c8be35976a2fccf7fa533cb
+ - backend.12: ## 12. Activate and deactivate | sha256:0ab72d83147f2121f134159c72ce89862f2e6687b34d190aedcb9f48dd277c8d
+ - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
+ - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:72df618eef97754d2145fd42ce10e3a09b842ec6870bce6a2e7ee3eced51af93
+-- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:7e2d36c3ce382f62e903e3c14d8cc74023eb1e28cadc8913c5cc0e37aceb62d7
++- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:5e5d2a09422f7ebdf641b142f491d189a67884a605d8990acd51a974f5889991
+ - backend.16: ## 16. Pattern 4 — Settings | sha256:f2379884db393f76c984b88a487c4ec4cbad1e492a69a48302d9761d6fa2339e
+-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
++- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+ 
+ Approved references by editor shape:
+ 
+ - `SiGmaAngularFrontEnd/src/app/modules/shared/components/editor-dialog`
+ - `SiGmaAngularFrontEnd/src/app/modules/shared/components/editor-tabs`
+ - `SiGmaAngularFrontEnd/src/app/modules/shared/components/step-form`
++- `SiGmaAngularFrontEnd/src/app/modules/shared/components/form-validation-summary`
+ - `SiGmaAngularFrontEnd/src/app/modules/shared/components/form-section`
+ - `SiGmaAngularFrontEnd/src/app/modules/shared/components/editable-collection-table`
+ - `SiGmaAngularFrontEnd/src/app/modules/Fleet/VehicleService/components/details`
++- `SiGmaAngularFrontEnd/src/app/modules/Workshop/Job/components/editor`
+ - `SiGmaAngularFrontEnd/src/app/modules/Customers/Companies/CompanyPartner/components/details`
+ - `SiGmaAngularFrontEnd/src/app/modules/Sales/Fleet/components/details`
+ - `SiGmaAngularFrontEnd/src/app/modules/Customers/Companies/CompanyPartner/components/detalisForm/drivers`
+@@ -82,6 +86,8 @@ Reference ownership is explicit:
+   `shared/components/editable-collection-table`;
+ - ordinary modal modes, feature content, dirty lifecycle and persistence:
+   `Fleet/VehicleService/components/details`;
++- routed document editor shell, panes, fixed footer and Create/Edit/View modes:
++  `Workshop/Job/components/editor`;
+ - routed step-form state, forward-validation gate, invalid-field discovery and
+   focus, content, footer actions and persistence:
+   `Customers/Companies/CompanyPartner/components/details`;
+@@ -119,11 +125,11 @@ tablist, or copy a feature-specific direct `p-dialog` shell. Combine the shared
+ shell with the canonical controlled dirty-close lifecycle; do not copy a source
+ visibility hook that closes before discard approval.
+ 
+-Create, View and Edit for an ordinary CRUD list must open that same controlled
+-`app-editor-dialog` component with an explicit mode. Do not mix modal Create with routed
+-View/Edit, or add editor routes merely because legacy routes exist. View mode is
+-read-only, hides Save and exits through Close. Record the confirmed workflow
+-evidence before selecting a routed editor instead.
++Create, View and Edit use the same shape selected by D4-2 and the screen catalog:
++the controlled `app-editor-dialog` for a simple record, or the shared routed
++editor shell for a document. Do not mix modal Create with routed View/Edit, or
++select a shape merely because legacy routes exist. View mode is read-only,
++hides Save and exits through Close. Record the selected rule and source evidence.
+ 
+ The Master Guide and canonical pattern books are authoritative. This packet is
+ derivative. Stop and report drift when they disagree.
+@@ -165,14 +171,19 @@ Required:
+ - Phase 1 Detail/Add/Update and aggregate contracts.
+ - Approved reference for each editor/dialog shape.
+ 
+-Required screenshot fields with Missing contracts remain unresolved rather than
+-being added to a payload.
++For screenshot-backed missing business explicitly placed in scope by the user,
++apply Master block 2's owner standing rule: resolve Missing details using the
++closest correct source-supported option or the minimal new element, record the
++decision and evidence, and report it. Data destruction, access restrictions and
++accounting effects still require the owner's decision. Other genuinely Missing
++contracts remain unresolved and are not invented in a payload.
+ 
+ ## Procedure
+ 
+-1. Confirm one `app-editor-dialog` Add/View/Edit surface and a list-only route
+-   for ordinary CRUD, or record the exact evidence that requires routed editor
+-   URLs. Use `app-editor-tabs` for custom editor tab navigation; tabs are
++1. Apply UI block 13's D4-2 rule and record the source-supported screen type.
++   Simple list records use one `app-editor-dialog` Add/View/Edit surface and a
++   list-only route; documents use the shared routed shell in all three modes.
++   Use `app-editor-tabs` for custom editor tab navigation; tabs are
+    projected body content, not a reason for another shell. For a confirmed
+    routed step workflow, use `app-step-form` and wrap repeated content groups
+    with `app-form-section`; keep the single parent form, forward-validation
+@@ -241,9 +252,9 @@ being added to a payload.
+ - Add and Update contain client-editable inputs only.
+ - View mode does not depend on disabled controls alone for security.
+ - Dirty dialogs use controlled visibility; the library must not close first.
+-- Ordinary Create/View/Edit uses the shared `app-editor-dialog`, one feature
+-  content component and an explicit mode; no mixed routed/modal editor survives
+-  without confirmed evidence.
++- Create/View/Edit shares one feature content component and explicit modes in
++  the shape selected by UI block 13's D4-2 rule; no mixed routed/modal editor
++  survives without a documented governing exception.
+ - A new or refactored tabbed Add/View/Edit modal projects `app-editor-tabs` and
+   matching feature-owned panels into `app-editor-dialog`; it owns neither a
+   feature-local tab keyboard handler nor a direct `p-dialog` shell.
+diff --git a/sigma-erp/recipe-system/generated/PHASE-04-domain-actions.md b/sigma-erp/recipe-system/generated/PHASE-04-domain-actions.md
+index 3123484..02c5c42 100644
+--- a/sigma-erp/recipe-system/generated/PHASE-04-domain-actions.md
++++ b/sigma-erp/recipe-system/generated/PHASE-04-domain-actions.md
+@@ -15,35 +15,45 @@ domain transitions. It is not a container for every button click.
+ - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
+ - master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:681863fa27d60be8922ee563bd76488b459947d5d0497e478de2ef748bb2abed
++- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:a78392c4ab1857841dceb22efcf4f682524a80bc703a1efccbee054638597ce6
+ - ui.7: ## 7. Action button cycle | sha256:62ab02ec6d136911130f189df3b805427a8b4d952cea916799a6a7640badc197
+ - ui.9: ## 9. Confirm: delete | sha256:b446c09fa7fe12e63f8aa03e99f184ebb14f957fa585576931ddd8f15cb6fd75
+ - ui.10: ## 10. Confirm: discard | sha256:b687d2e0d4baa6c392a7bb78b6842e876ff362f2fd42fdc310f82eb72a3c7e5f
+ - ui.11: ## 11. Small modal on top | sha256:766d16df7263c9b35550aa8657b683f39073bb0513063ca7fc3d794bb8798842
++- ui.13: ## 13. Modal with tabs | sha256:ecccf32784539c68f4d21d75707c9b6a707e688e21aa69dc5d0edc567966917e
+ - ui.15: ## 15. View mode | sha256:022f00069635b29f668f8ca24b27ef784df55a57a05ae66594c166e74263184c
+ - ui.22: ## 22. Loading, empty, error, toast | sha256:eb29f7481ec7434ae7f60d0039b643c2249dbd343d4b6eb608c9a619791521f0
+ - ui.23: ## 23. Translations | sha256:3600856df82f27c6eb0710076d8755979f2038a625ddf573a0079197d0b8248c
+-- ui.24: ## 24. Colors, icons, buttons | sha256:341892ba07b97a6084675228946bfdfcf7fc5165142949f6e30769d35a1cfde6
++- ui.24: ## 24. Colors, icons, buttons | sha256:ceab92354823f68c9c61a452f587607f287bcf4ae402b5b569b55ea2b7ec80e6
+ - ui.25: ## 25. RTL and dark theme | sha256:7239bd7a1b0de149e09f0cf704ddc404e46af34f60e3f1548c293b00fbbf3061
+ - ui.26: ## 26. Permissions and route access | sha256:468e5ceba58128db01cd338059c6119761123144af55950bfaaf1a2d4866f0ff
+-- ui.27: ## 27. Focus and keyboard | sha256:333d07eb2a8f10db1439820d9fa2fa5c940157fc64745f70d9620141d98569e3
++- ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
+ - ui.28: ## 28. Request cancellation and stale responses | sha256:a5e48de60c3679102dda13ec7edd9d7cd0840d7f7301508f0e3c5a6736055d32
+ - ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
+-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
+-- backend.5: ## 5. Step 5 — Interface and service | sha256:d8ab105a1462baaa5dee9c089419a7783ede54cdb09d075a51805970fef624f9
++- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:61e7045aef9ca5ccd6bdadf3bd5e278d4f74f445efa5d44e392c7a501eca5820
++- backend.5: ## 5. Step 5 — Interface and service | sha256:b8ac558806ca55c63d2eb1b8ca229fd5f51b6b6784833f6d68268d12489f5b26
+ - backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
+-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:1798ea5f97d741d74fdb69fb8555447c0a2d04fabc40b88895e17d22b8588e36
++- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:c2e52bf2108b49cd64e5d0c27c34e572bf1182418d777ef56fb96732e3bf82a3
+ - backend.12: ## 12. Activate and deactivate | sha256:0ab72d83147f2121f134159c72ce89862f2e6687b34d190aedcb9f48dd277c8d
+ - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
+ - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:72df618eef97754d2145fd42ce10e3a09b842ec6870bce6a2e7ee3eced51af93
+-- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:7e2d36c3ce382f62e903e3c14d8cc74023eb1e28cadc8913c5cc0e37aceb62d7
++- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:5e5d2a09422f7ebdf641b142f491d189a67884a605d8990acd51a974f5889991
+ - backend.16: ## 16. Pattern 4 — Settings | sha256:f2379884db393f76c984b88a487c4ec4cbad1e492a69a48302d9761d6fa2339e
+-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
++- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+ 
+ Approved confirmation and workflow references:
+ 
+ - `SiGmaAngularFrontEnd/src/app/modules/shared/service/confirmation-dialog.service.ts`
+-- `SiGmaAngularFrontEnd/src/app/modules/Fleet/Vehicle`
++- `SiGmaAngularFrontEnd/src/app/modules/shared/components/action-button`
++- `SiGmaAngularFrontEnd/src/app/modules/Sales/SalesQuotation/components/list`
++- `SiGmaAngularFrontEnd/src/app/modules/Workshop/Job/components/close-job`
++
++Reference roles: the shared confirmation service owns confirmation-only
++interactions; `shared/components/action-button` owns menu rendering;
++`Sales/SalesQuotation/components/list` owns the quotation specialization (UI 7);
++`Workshop/Job/components/close-job` is the typed action-dialog reference (UI 13
++and screen 09). Other domain transitions select their owning feature reference
++after its state contract is frozen; do not copy quotation business rules.
+ 
+ The Master Guide and canonical pattern books are authoritative. This packet is
+ derivative. Stop and report drift when they disagree.
+@@ -87,6 +97,12 @@ simulate authorization or state rules only in Angular.
+ 
+ ## Procedure
+ 
++Before implementation, inventory every public domain action in the approved
++reference's backend interface, service and controller, and Angular service and
++owning action menu (Master blocks 3 and 4). Classify every action as Supported,
++Not Applicable, Missing or Conflicting. An exclusion names the absent domain
++state or dependency; absence from a screenshot is not sufficient.
++
+ 1. List every domain action and its owner surface.
+ 2. Define visible, disabled, and server-permitted states separately.
+ 3. Verify tenant, ownership, existence, references, and state at the backend.
+@@ -101,6 +117,18 @@ simulate authorization or state rules only in Angular.
+ 
+ ## Required outputs
+ 
++### Approved-reference action coverage
++
++| Approved-reference action | Target classification | Evidence or exclusion reason |
++|---|---|---|
++| | Supported / Not Applicable / Missing / Conflicting | |
++
++Every Supported action records its exact source/target state, response flags,
++backend interface/service, controller verb/route/payload, Angular service,
++interaction, dependency/concurrency rule, failure recovery and refresh in the
++Master block 4 action-state contract. Missing or Conflicting decisions block the
++affected slice rather than authorizing an invented transition.
++
+ ### Action-state matrix
+ 
+ | Action | Owner surface | Visible when | Disabled when | Server permits when | Confirmation/input | Busy guard | Success state | Refresh | Recovery |
+@@ -115,6 +143,8 @@ simulate authorization or state rules only in Angular.
+ 
+ ## Continuous gates
+ 
++- Every approved-reference public action is classified once, and every Supported
++  action has a complete backend-to-UI vertical slice with no blank contract cell.
+ - UI visibility is never described as security.
+ - Confirmation is not used for Save, Next, Search, Export, or Print.
+ - Confirmation services are shared; typed workflows remain typed forms.
+diff --git a/sigma-erp/recipe-system/generated/PHASE-05-integration-runtime.md b/sigma-erp/recipe-system/generated/PHASE-05-integration-runtime.md
+index d5514fc..49dd424 100644
+--- a/sigma-erp/recipe-system/generated/PHASE-05-integration-runtime.md
++++ b/sigma-erp/recipe-system/generated/PHASE-05-integration-runtime.md
+@@ -14,27 +14,34 @@ contracts are connected through the actual application injector and route tree.
+ - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:542c18b6aebf46ed0eef2c290f184e04de0eea49bea5d148c7e423b05f7259c7
+ - master.5: ## 5. Continuous quality gates | sha256:f58faeabf6c2409c74fefb2ab8bffe86ad0dfc6f4042220c4425e07697d4e22f
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:681863fa27d60be8922ee563bd76488b459947d5d0497e478de2ef748bb2abed
+-- ui.1: ## 1. Feature folders and wiring | sha256:0199f7c682b9dcfd8c3db876787322c06e105cd81f70b6d4ea17f06dcb46e408
++- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:a78392c4ab1857841dceb22efcf4f682524a80bc703a1efccbee054638597ce6
++- ui.1: ## 1. Feature folders and wiring | sha256:9ee96ee7ed32012437ec6728cccda7200876163dfe9e4c94cc1d7ccc25f542e2
+ - ui.2: ## 2. Service and response wrappers | sha256:f401fd78f48c7eb001ca812c42ea69bc65e828c659fe1396ce6ca415a3721231
+ - ui.22: ## 22. Loading, empty, error, toast | sha256:eb29f7481ec7434ae7f60d0039b643c2249dbd343d4b6eb608c9a619791521f0
+ - ui.23: ## 23. Translations | sha256:3600856df82f27c6eb0710076d8755979f2038a625ddf573a0079197d0b8248c
+ - ui.26: ## 26. Permissions and route access | sha256:468e5ceba58128db01cd338059c6119761123144af55950bfaaf1a2d4866f0ff
+-- ui.27: ## 27. Focus and keyboard | sha256:333d07eb2a8f10db1439820d9fa2fa5c940157fc64745f70d9620141d98569e3
++- ui.27: ## 27. Focus and keyboard | sha256:73ccaf72760b8799fc815e44b6e1d3c21696dd91f837bfa7a468f9bc8b0e359f
+ - ui.28: ## 28. Request cancellation and stale responses | sha256:a5e48de60c3679102dda13ec7edd9d7cd0840d7f7301508f0e3c5a6736055d32
+ - ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
+-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
+-- backend.3: ## 3. Step 3 — ViewModels | sha256:4a11c70ca487d4644b26fc5082a6d9244db925d3a6ef8d3f7c174b0548fb48a1
++- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:61e7045aef9ca5ccd6bdadf3bd5e278d4f74f445efa5d44e392c7a501eca5820
++- backend.3: ## 3. Step 3 — ViewModels | sha256:5fe3498b4de88bd6caa3c508d4873fb3df2c77e4e80db35a9af5e3caaf98a027
+ - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
+-- backend.5: ## 5. Step 5 — Interface and service | sha256:d8ab105a1462baaa5dee9c089419a7783ede54cdb09d075a51805970fef624f9
++- backend.5: ## 5. Step 5 — Interface and service | sha256:b8ac558806ca55c63d2eb1b8ca229fd5f51b6b6784833f6d68268d12489f5b26
+ - backend.6: ## 6. Step 6 — Controller | sha256:ef99a6dec8e52b278bc36495c5415bd445b65183e12189e02ecd9e88cee3d75e
+-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
++- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+ 
+ Approved wiring references:
+ 
+-- `SiGmaAngularFrontEnd/src/app/_metronic/layout/layout.module.ts`
++- `SiGmaAngularFrontEnd/src/app/pages/routing.ts`
++- `SiGmaAngularFrontEnd/src/app/app.module.ts`
+ - `SiGmaAngularFrontEnd/src/app/app-routing.module.ts`
+ 
++Reference roles: `pages/routing.ts` owns the lazy feature entry;
++`app.module.ts` owns the single interceptor-equipped root client;
++`app-routing.module.ts` is the transitional AuthGuard/access reference from
++UI block 26. LayoutModule is inspected as a consumer when relevant, not copied
++as a feature-level HttpClient provider.
++
+ The Master Guide and canonical pattern books are authoritative. This packet is
+ derivative. Stop and report drift when they disagree.
+ 
+@@ -81,11 +88,10 @@ Required:
+ 3. Verify every standalone import used by the template.
+ 4. Trace each feature service to its actual injector and `HttpClient` provider.
+ 5. Verify token and error interceptors are applied.
+-6. Under the current transitional architecture, verify every authenticated
+-   feature service resolves from `_metronic/layout/layout.module.ts` providers,
+-   because that injector owns the interceptor-equipped client. Reject a manual
+-   Bearer header or feature-level `provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor]))`
+-   fork as a workaround.
++6. Follow UI block 1's one-root-client contract: authenticated feature services
++   use `providedIn: 'root'` and the interceptor-equipped client configured once
++   in AppModule. LayoutModule and feature injectors do not provide another client.
++   Reject manual Bearer headers or feature-level `provideHttpClient` forks.
+ 7. Verify each request has one active interceptor path and each mutation has one
+    success-feedback owner; a feature success after a standard mutation must not
+    duplicate the global interceptor toast.
+@@ -121,11 +127,8 @@ Required:
+ 
+ ## Continuous gates
+ 
+-- A service registered only in the root injector must not accidentally bypass
+-  Layout interceptors.
+-- Until the root-client backlog is resolved, authenticated feature services are
+-  registered in the interceptor-owning `LayoutModule` injector; there is no
+-  manual Authorization-header or feature `provideHttpClient` fork.
++- Feature services resolve the one interceptor-equipped root HttpClient; there
++  is no LayoutModule client, manual Authorization header or feature client fork.
+ - One request traverses one interceptor chain, and one successful mutation emits
+   one success notification.
+ - Routed editors and dialog editors use the route counts defined by their shape.
+diff --git a/sigma-erp/recipe-system/generated/PHASE-06-final-reconciliation.md b/sigma-erp/recipe-system/generated/PHASE-06-final-reconciliation.md
+index 96a6fab..34b3df6 100644
+--- a/sigma-erp/recipe-system/generated/PHASE-06-final-reconciliation.md
++++ b/sigma-erp/recipe-system/generated/PHASE-06-final-reconciliation.md
+@@ -17,13 +17,13 @@ broad feature review or implementation.
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+ - master.7: ## 7. End-to-end reconciliation and final report | sha256:8fa78e06f935902ad9952aea5946dc0aa7338c1773ed5ae26b2a8773c7fb1ad8
+ - master.8: ## 8. Packet generation and governance | sha256:de0bdccd8d6abdfc58ff5c34954fd4d027818fc95b7c31678b4added20fb742a
+-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:681863fa27d60be8922ee563bd76488b459947d5d0497e478de2ef748bb2abed
+-- ui.20: ## 20. Report page | sha256:e1a3c2fc290a45b0e63c2b4481e1a0e8984f28c57937e901b9d25757bb549eba
+-- ui.21: ## 21. Report print | sha256:73879c5fa501ca5c2b31b22809dc9f9b5e96770166f7b4301c0a0ac0f4141112
++- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:a78392c4ab1857841dceb22efcf4f682524a80bc703a1efccbee054638597ce6
++- ui.20: ## 20. Report page | sha256:a1286e0ef05b87e9320b53eede393e1251a14ec44ca6158a6e114cd7fb846301
++- ui.21: ## 21. Report print | sha256:2e6cc0be29f3d57b6207c5519aee74fa6b30576e92a4b79312fee0f6deafe171
+ - ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
+ - ui.30: ## 30. Backlog, by priority | sha256:3ba3365df2abbe12ebaaa967384555764c4b21ef601c53130db88f48381e198f
+-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
+-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
++- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:61e7045aef9ca5ccd6bdadf3bd5e278d4f74f445efa5d44e392c7a501eca5820
++- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+ - backend.19: ## 19. Backlog | sha256:b7b2b40c39735d0f149c7df2b3280c32f8c2cb0fdc04b425cd0bafa3a8c1af30
+ 
+ Approved references used by prior phases:
+diff --git a/sigma-erp/recipe-system/generated/PLAN-00-maintenance-evolution.md b/sigma-erp/recipe-system/generated/PLAN-00-maintenance-evolution.md
+index a62028b..0314c5e 100644
+--- a/sigma-erp/recipe-system/generated/PLAN-00-maintenance-evolution.md
++++ b/sigma-erp/recipe-system/generated/PLAN-00-maintenance-evolution.md
+@@ -19,11 +19,11 @@ it does not authorize source edits.
+ - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
+ - master.7: ## 7. End-to-end reconciliation and final report | sha256:8fa78e06f935902ad9952aea5946dc0aa7338c1773ed5ae26b2a8773c7fb1ad8
+ - master.8: ## 8. Packet generation and governance | sha256:de0bdccd8d6abdfc58ff5c34954fd4d027818fc95b7c31678b4added20fb742a
+-- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:681863fa27d60be8922ee563bd76488b459947d5d0497e478de2ef748bb2abed
++- ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:a78392c4ab1857841dceb22efcf4f682524a80bc703a1efccbee054638597ce6
+ - ui.29: ## 29. Verification expectations | sha256:e167960f8e5261f686e1f814e7b72c810aa26533fe5b419607c8f709429be865
+ - ui.30: ## 30. Backlog, by priority | sha256:3ba3365df2abbe12ebaaa967384555764c4b21ef601c53130db88f48381e198f
+-- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:73c6e842f2a188bb1fc2ca3391756683ac7fca9cd64c805e229c02ae7ce03bb5
+-- backend.18: ## 18. Edge cases | sha256:a485f6c78402f9f0717d03164ce3fcccd4a7ea449c0352b381fd6aa77e88c108
++- backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:61e7045aef9ca5ccd6bdadf3bd5e278d4f74f445efa5d44e392c7a501eca5820
++- backend.18: ## 18. Edge cases | sha256:ac57e18f32891be679ab03e00c127257a4f54d2fbae1fa05863723837b0edc77
+ - backend.19: ## 19. Backlog | sha256:b7b2b40c39735d0f149c7df2b3280c32f8c2cb0fdc04b425cd0bafa3a8c1af30
+ 
+ Approved references are selected only after the affected UI/backend shapes are
+diff --git a/sigma-erp/ui/00-preamble.md b/sigma-erp/ui/00-preamble.md
+index a4e55a7..4ac9c48 100644
+--- a/sigma-erp/ui/00-preamble.md
++++ b/sigma-erp/ui/00-preamble.md
+@@ -3,9 +3,9 @@
+ | | |
+ |---|---|
+ | Status | **Draft canonical.** Binding for new work; open items in block 30 |
+-| Version | 1.51 |
++| Version | 1.81 |
+ | Last verified against source | 2026-09-21 (shared `data-table`, `editor-dialog`, `feature-title`, `base-component.service.ts`, `loading.service.ts`, and `src/styles.scss` re-checked 2026-09-28) |
+-| Last content change | 2026-10-02 — Follow Up adopts the frozen professional Summary extension in its existing Details/Summary workspace tabs: responsive 960px maximum, shared server-owned additive KPI cards, shared-grid comparison cells and raw-username drill-down, with active-section Excel and full-document print preserving state. Feature formulas remain in the frozen contract/review. UI 20 and skill synchronized; source-only, owner visual/runtime acceptance pending. History in `../CHANGELOG.md` |
++| Last content change | 2026-10-05 — Owner requests one accounting view for CashFlow: shared statement rows/column widths/conditional links, authoritative subtotals and final double rule; family tabs retired, other reports unchanged. UI6/20/24/skill synchronized; source-only, owner visual acceptance pending. History in `../CHANGELOG.md` |
+ | Verified by | source inspection only — no build, test, or browser run |
+ 
+ One page per UI building block. Every block has a **reference file** you can
+@@ -43,6 +43,15 @@ Dropdowns use one wrapper border, `6px` radius, shared surface/text/border
+ tokens, the common primary focus ring, and the shared `34px` filter height or
+ `36px` editable-row height according to context.
+ 
++Summary, KPI and total-card regions follow the same shared-first rule on every
++screen shape: list, report, dashboard, routed editor and dialog. New or reviewed
++work uses `app-summary-cards` with typed values and public density/layout/width/height
++inputs. Features own content, placement and host bounds only; they do not create
++local card geometry, palette, typography, icon tiles or financial/status
++formulas. The existing compact accounting summary bar remains a compatibility
++owner for out-of-scope consumers, and legacy screens migrate when explicitly
++reviewed rather than being claimed as already migrated.
++
+ Existing legacy screens may still contain older visual forks. Treat those as
+ unification debt: do not copy them, and replace them with the canonical shared
+ pattern when the feature is reviewed or modified. A deliberate visual exception
+@@ -84,6 +93,7 @@ This table names the shared piece each shape is built on and what the feature ke
+ | Routed document editor | the shared editor shell (`src/styles.scss`, block 1) + `shared/utils/editable-rows.ts` + `app-field-error` | workspace layout, forms, persistence |
+ | Editable child collection | `shared/components/editable-collection-table/` (chrome, headers, Add/Remove, empty state, `fillHeight` scroll, light/dark); consumers `Customers/Companies/CompanyPartner/components/detalisForm/{contact-persons,credit-cards,documents,drivers}` | typed rows, projected cells and actions, validation, confirmation, persistence |
+ | Nested child draft | editor dialog + editor tabs; consumer `Customers/Companies/CompanyPartner/components/detalisForm/drivers` | draft isolation, dirty-close approval, parent commit on Save only |
++| Summary, KPI and total cards | `shared/components/summary-cards/` (`app-summary-cards`, typed `SummaryCard[]`, public density/layout/minCardWidth/maxHeight and optional native selection) | authoritative values, labels/hints, placement and screen-specific selection mapping |
+ | Confirmation and discard | `shared/service/confirmation-dialog.service.ts` (block 9, 10); `requestClose()` in `Workshop/Job/components/editor` (routed) and `Fleet/Vehicle/components/details` (dialog) | when to ask, and what happens after |
+ | Report | `shared/components/report-page/` + `shared/components/report-actions/` + shared print coordination | typed filter, sections, totals |
+ 
+diff --git a/sigma-erp/ui/06-grid-and-footer.md b/sigma-erp/ui/06-grid-and-footer.md
+index 5fde37f..8d0906c 100644
+--- a/sigma-erp/ui/06-grid-and-footer.md
++++ b/sigma-erp/ui/06-grid-and-footer.md
+@@ -20,6 +20,46 @@ light/dark styling. Never
+ hand-build a second pager on the main grid. The feature retains all data and
+ business ownership.
+ 
++**Shared default page size — owner decision 2026-10-03.** Tables open with
++15 rows through `DEFAULT_PAGE_SIZE` in `shared/utils/list-query.ts`, superseding
++the earlier 20-row default. Standard choices are 10/15/20/50/100. The shared
++DataTable applies them for omitted/empty/legacy options, including the former
++10/20/50/100 standard. New or reviewed controlled grids use the shared default;
++explicit custom sizes/choices and user-selected sizes retain their owners.
++The minimum stays 10; presentation paging never changes report completeness,
++totals, export or full-print scope. All four Suppliers screens consume this
++shared default. Source-only; owner runtime acceptance pending.
++
++**Optional complete-report hierarchy (Accounts review, 2026-10-05).**
++`DataTableHierarchy<T>` retains the backend's nested rows. The feature supplies
++stable `rowKey`, `children`, optional code/label and existing inline navigation;
++the shared grid owns expansion, accessible native toggle buttons, logical 14px
++depth indentation and stable visible-row materialization. `defaultExpanded`
++initializes each identity once. `printAllRows` traverses every descendant without
++changing screen expansion, and the report exporter traverses the same complete
++source independently of expansion. A deliberately flat report may use the public
++column `indent` callback; it must not invent children. No hierarchy input means
++the ordinary grid retains its previous behavior. Column `link` represents an
++existing cell navigation action, without changing row selection/action semantics.
++This is a presentation capability, not new paging or accounting aggregation.
++The public column `cellClass: 'sigma-data-table__cell--wrap'` also wraps its
++shared inline navigation label; the shared stylesheet owns this opt-in rule.
++Ordinary links retain ellipsis/nowrap. CashFlowStatement adopts wrapping for
++long account names without changing link activation or exported values.
++Source conformance is reviewed; owner compilation/visual/print acceptance remains
++pending.
++
++**Optional accounting statement rows (CashFlow owner request, 2026-10-05).**
++DataTable `rowTone` returns section/subtotal/total/null. The shared stylesheet
++owns themed heading surfaces, bold net subtotals with a single rule and a
++double-rule final total. Feature display rows retain complete source values;
++totals come from backend fields, never a UI sum. Public column `width` applies
++to matching header/body cells; optional `link.enabled` renders plain text for
++non-navigable headings/totals and guards activation. Omitted inputs preserve
++ordinary grid behavior. CashFlow uses78%/22% Account/Amount columns and the
++existing32rem minimum, with tabular LTR amounts via shared numeric cell class.
++Full print retains every statement row and the shared white print surface.
++
+ The selected paginator page is a primary action state: use
+ `var(--sigma-primary)` for its border and background, with white text retained
+ through hover and keyboard focus. Keep this in the shared table stylesheet so
+@@ -123,11 +163,12 @@ shown as an externally scrolling full document uses `scrollable=false`; the
+ outer report frame owns both axes. A
+ report with independently visible bounded sections uses `fill=true` and
+ `scrollable=true` for each section on screen when the shared grid owns its row
+-viewport. This applies to a complete response with `paginator=false` (as in
+-Follow Up) and to a complete response with a bottom-pinned local paginator:
+-each section's layout boundary becomes a shrinking flex boundary with overflow
+-hidden, passes its remaining height to the grid, and leaves that section's
+-shared row wrapper as its active scroll owner. A frozen paged response keeps
++viewport. This applies to a complete response with an unpaginated section (the
++Follow Up Summary) and to a complete response with a bottom-pinned local
++paginator (the Follow Up Details and Customer Statement): each section's layout
++boundary becomes a shrinking flex boundary with overflow hidden, passes its
++remaining height to the grid, and leaves that section's shared row wrapper as
++its active scroll owner. A frozen paged response keeps
+ `lazy=true` and its server paginator/count contract. Keep section headings
+ outside the wrapper. Customer Statement uses this fill variant like
+ BalancesSummary; no feature PrimeNG/pager rules or viewport arithmetic are
+@@ -137,7 +178,8 @@ For a proven complete response, `paginator=false` shows every row. A local
+ paginator is allowed only when the complete collection has been proved and the
+ report contract calls for presentation paging; it slices the already loaded
+ array without a request.
+-Customer Statement uses local pagination. A report with hierarchical rows
++Customer Statement and Follow Up Details use local pagination. Follow Up Summary
++remains unpaginated. A report with hierarchical rows
+ retains that hierarchy through typed shared-grid support; if the shared
+ component lacks a required hierarchy capability, add it in that report's
+ scoped implementation. Do not flatten the hierarchy or introduce a feature
+@@ -145,7 +187,7 @@ owned table as a workaround.
+ 
+ For local pagination, bind each section's complete array, its length as
+ `totalRecords`, and independent controlled `first`/`rows` inputs. Use the shared
+-default page size and 10/20/50/100 options. Reconcile `paginationChange` through
++default page size and 10/15/20/50/100 options. Reconcile `paginationChange` through
+ `resolveListPaging` before updating the section's state. Switching tabs retains
+ their pages/sizes; filter changes and valid Search/Refresh reset offsets to zero
+ while preserving chosen sizes. This is presentation paging, not server paging.
+@@ -153,6 +195,15 @@ Print must temporarily disable all section paginators, wait for rendering and
+ restore the controlled state through `ReportPrintService.afterPrint` (block 21).
+ Export and totals continue to use complete response arrays.
+ 
++For local sorting, the shared table also consumes PrimeNG `firstChange` and forwards
++the changed offset through the same typed pagination event. PrimeNG resets local
++sorts to the first page without `onPage`; ignoring that output leaves a consumer's
++controlled page stale. This synchronization is disabled for lazy/server grids and
++while the paginator is off for print preparation, preserving their existing owners.
++Features use `resolveListPaging` on that shared event rather than reaching into the
++PrimeNG table. Source evidence: `DataTableComponent.onTableFirstChange` and the
++installed PrimeNG table's local-sort reset; runtime acceptance remains pending.
++
+ **Prove completeness before local paging.** Inspect the actual request and backend
+ page-size clamp/slicing/counts (block 20). A first-page array is not the complete
+ report even when its wrapper is Result<T>. If the API is paged, retain server paging
+diff --git a/sigma-erp/ui/20-report-page.md b/sigma-erp/ui/20-report-page.md
+index a1068bf..6bf2ddd 100644
+--- a/sigma-erp/ui/20-report-page.md
++++ b/sigma-erp/ui/20-report-page.md
+@@ -30,6 +30,45 @@ When a report needs a capability the shared grid does not yet provide, extend
+ the shared component in that report's scoped implementation. Do not flatten a
+ hierarchy or silently authorize a feature-owned table.
+ 
++### Accounts family composition — reviewed source
++
++The fourteen complete Accounts reports use an Accounts-local typed
++`AccountReportConfig`/`AccountReportPageComponent` over the existing shared hosts,
++controls, grid and cards. Configurations retain feature-owned filter names,
++request/response types, sections, backend totals and existing navigation.
++`FormRecord` owns controls; lookup failures block Search and have local retry.
++Changing filters invalidates output; requests capture the applied snapshot and
++disable the form until completion. Export reads complete source rows and builds
++translated headers at click time. Hierarchies use UI6's optional shared adapter;
++FY2 remains flat. Server-owned context such as Ledger account identity/currency
++is retained outside the grid through `responseContext`, not invented as a new
++transport column. Sections default to independent bounded shared row viewports.
++Optional `sectionLayout: 'document'` selects the existing complete-document
++alternative: full-width sections in source order, one keyboard-accessible outer
++`sigma-report-table-frame`, and grids with `fill=false`/`scrollable=false`.
++The owner's later explicit accounting-format decision supersedes CashFlow's
++document and tab experiments (2026-10-05). It uses one full-width filling shared
++table, one Account/Amount header and two common78%/22% columns. Section rows
++identify operating/investing/financing activities; each complete array precedes
++its authoritative server net subtotal, followed by server NetChangeInCash with
++a shared double rule. NetIncome uses its existing producer-defined operating
++line (translated label), or the response field when that line is absent.
++The five figures remain within the statement instead of KPI tiles. There are
++no activity tabs, expandable groups or independently scrolling activity panes.
++UI6's optional shared rowTone/column width/link.enabled own the presentation;
++synthetic headings/totals have stable local identities and no ledger link.
++No frontend financial calculation is introduced. CashFlow's explicit exportRows
++retains the previous complete three-section Excel shape from original arrays,
++without injecting structural display rows; print includes the whole statement.
++The full-width route modifier and public32rem minimum/wrapping remain. The
++unconsumed Accounts-specific tab adapter is retired; other report layouts are
++unchanged. Optional summaryDensity/summaryMaxHeight still pass through public
++SummaryCards inputs for card consumers. Document mode remains an optional
++complete-response presentation with shared empty states. Print releases bounds.
++This composition does not convert
++Journal's existing paged API or introduce new financial calculations. The shared
++page shell/appearance is unchanged; source-only, owner acceptance pending.
++
+ ### Shared shell — mandatory replacement
+ 
+ Every report route imports `ReportPageComponent` and places `appReportPage` on
+@@ -107,25 +146,29 @@ examples only.
+ 
+ #### Title and filter card width
+ 
+-**Explicit owner choice, 2026-10-02:** Customer Statement of Account and
+-Receivable Age Analysis keep the title card the same width as the filter card,
+-with both inline edges aligned. Their existing `.sigma-report-panel` also uses
+-`sigma-report-panel--aligned-title`. The shared rule in `src/styles.scss` sets
+-only its direct `app-feature-title` child's `margin-inline: 0`, matching the
+-report filter strip's zero inline margins. Both cards stretch to the same panel
+-content width in LTR and RTL, including the responsive panel-padding change.
+-
+-Keep the existing title block spacing, panel padding, colors and scroll owners.
+-Do not add a fixed width, a feature-local margin override or compensating filter
+-padding. This modifier is a reusable opt-in capability; the owner decision is
+-scoped to these two reports, and other consumers retain their existing title
+-presentation until explicitly approved. This supersedes the earlier Trial
+-Balance title-inline comparison for these two consumers only. Actual visual
+-acceptance remains owner verification when the change is reviewed from source.
+-
+-Every report filter strip and accounting summary uses the shared global classes in
+-`src/styles.scss` (reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). A report
+-writes no filter or totals CSS of its own:
++**General owner choice, 2026-10-03:** canonical `.sigma-report-panel` title cards
++match the filter card's appearance and inline edges by default. The shared rule
++sets its direct `app-feature-title` child's margin to `-8px 0 16px`, retaining
++block spacing and matching the report filter strip's zero inline margins.
++Both cards stretch to the same panel content width in LTR/RTL and through
++responsive panel-padding changes. Title/list-filter/report-filter backgrounds
++share `--sigma-filter-panel-background` and the themed border/shadow; block3/4
++own the card rule. Existing filter padding/control geometry and scroll owners
++remain.
++
++This supersedes the 2026-10-02 alignment choice previously scoped to Customer
++Statement, Receivable Age Analysis and Follow Up. The existing
++`sigma-report-panel--aligned-title` modifier remains an idempotent compatibility
++alias; new canonical report panels do not need it. Do not add fixed widths,
++feature-local margin overrides or compensating filter padding. Legacy feature
++layout overrides are not bulk rewritten by this shared change. Actual visual
++acceptance remains owner verification when source-only reviewed.
++
++Every report filter strip uses the shared global classes in `src/styles.scss`
++(reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). New or reviewed
++summary/KPI cards use `app-summary-cards`; the former compact accounting bar is
++compatibility-only for out-of-scope consumers. A report writes no filter or
++summary-card CSS of its own:
+ 
+ ```html
+ <form class="sigma-filter-form sigma-report-filter-panel no-print" ...>
+@@ -134,15 +177,19 @@ writes no filter or totals CSS of its own:
+   <div appReportActions class="sigma-report-filter-actions">...</div>
+ </form>
+ 
+-<div class="sigma-report-summary-bar">
+-  <div class="sigma-report-totals">
+-    <div class="sigma-report-total sigma-report-total--debit">...</div>
+-    <div class="sigma-report-total sigma-report-total--credit">...</div>
+-    <!-- add --balance/--net only when the response owns that total -->
+-  </div>
+-</div>
++<app-summary-cards
++  [ariaLabel]="translatedSummaryLabel"
++  [cards]="summaryCards()"
++  [minCardWidth]="190"
++/>
+ ```
+ 
++The feature supplies a typed `ReadonlyArray<SummaryCard>` descriptor, for
++example `{ id, labelKey, value, icon, accent, format: 'number' }`; use
++`format: 'money'` and a translated `suffixKey` for authoritative financial
++values. Labels, hints, secondary values and selection remain descriptor inputs;
++the shared component owns card markup, geometry, palette, formatting and print.
++
+ The strip owns its layout, the 34px control height (`--sigma-filter-control-height`), focus,
+ dark theme, RTL and narrow-screen stacking. The actions use the shared variants
+ `sigma-report-action--search` (primary), `--refresh` (quiet primary), `--reset` (neutral) and
+@@ -160,18 +207,90 @@ layout as the existing `app-buttons` group. Report semantics still follow block
+ Search submits the real filter form, and the strip is never a second vertical scroll owner.
+ A list screen uses the filter panel of block 4 instead; the two shared strips are not mixed.
+ 
+-Accounting report totals use the shared summary bar above (also used by financial editors,
+-block 14): shared surface/border/radius, tabular numerals, and semantic
+-Debit/Credit/Balance-or-Net accents. The **numbers still come from the backend
+-response**; shared styling never authorizes client-side recomputation of
++An explicit frozen owner decision can select block4's FilterPanel for a report's
++main search form, keeping the block20 shell, data/totals/print contracts and
++statement-dialog strips. Staff and Suppliers Balance Summary use five main
++columns plus Balance Type in More Filters; Customers retains its existing paged
++summary/list exception. The owner's 2026-10-03 stability follow-up opts all three
++into shared stableLayout. Use the existing mx-0 utility to retain report card
++edges, and project report actions with appFilterActions/appReportActions plus
++one shared Reset. This is a recorded presentation exception, not a blanket
++report migration or a change to Range/business semantics.
++
++Report radio groups can opt into the shared `sigma-report-filter-choice` class
++on their labelled radiogroup. `src/styles.scss` then owns PrimeNG radio selected,
++hover and focus states through `--sigma-primary`, `--sigma-primary-hover` and
++`--sigma-control-focus-ring`, overriding the installed Lara theme's separate blue.
++Keep existing `p-radioButton` controls, associated labels, disabled states and
++reactive-form values; no feature radio palette or deep selectors. The class is
++opt-in and does not recolour out-of-scope existing groups. Customer Statement's
++Report Type consumes it. Row grouping and spacing remain feature decisions
++recorded in the feature contract, using existing layout utilities.
++
++The existing compact `sigma-report-summary-bar`/`sigma-report-totals`/
++`sigma-report-total` accounting bar remains the compatibility owner for
++out-of-scope consumers: shared surface/border/radius, tabular numerals and
++semantic Debit/Credit/Balance-or-Net accents. The **numbers still come from the
++backend response**; shared styling never authorizes client-side recomputation of
+ accounting totals. Keep the summary as small as the report needs: Trial Balance
+ uses only **Total Debit** and **Total Credit**. Do not add Beginning/Ending/Net
+ cards merely because the line model exposes those values. Add Balance or Net
+ summary cards only when they are a deliberate report KPI owned by the backend
+ contract and useful to the user.
+-If a report has a non-accounting KPI layout that genuinely needs another visual
+-shape, document the reason in its review evidence instead of silently forking the
+-filter/summary pattern.
++If a report has a non-accounting KPI need, keep its cards in
++`app-summary-cards` and document only the feature content/placement in review
++evidence; do not fork the shared visual shape or filter/summary pattern.
++
++### Shared summary/KPI cards across screen types
++
++Any new or reviewed summary, KPI or total-card region on a list, report,
++dashboard, routed editor or dialog uses the one shared `app-summary-cards`
++component from `shared/components/summary-cards/`. It accepts a readonly typed
++`SummaryCard[]` with stable `id`, translated `labelKey`, authoritative display
++`value`, Bootstrap `icon`, approved `accent`, optional `format` (`number`,
++`money` or `text`), translated `suffixKey`, `hintKey`/`hintParams` and an
++optional secondary value. The component fetches nothing, derives no totals,
++changes no business state and owns the card geometry, palette, typography,
++surface, icon tile, focus and print treatment.
++
++Width is container-responsive through auto-fit columns and the public
++`minCardWidth` input (190px default); height follows content with equal row
++stretching. The optional numeric `maxHeight` input defaults to null. When it is
++supplied, the shared internal card list owns its vertical scroll and receives
++keyboard focus/tabindex with visible focus; when absent, cards remain natural
++height. Features may place or bound the host and choose public `density`
++(`comfortable`, `compact` or `dense`), `layout`, `minCardWidth`, `maxHeight`, `selectable`,
++`selectedId` and `disabled`; they never override card internals, colors, padding,
++radius or fonts. Selectable cards use native buttons, `aria-pressed`, visible
++focus and a stable-id `cardSelected` output; static cards have no card-level
++click affordance or tab stop. Number formatting uses Angular `formatNumber`,
++monetary values use the shared `formatMoney` owner, and BalancesSummary
++preserves absolute magnitude with a translated Dr/Cr suffix. Print removes any
++card-list bound (`maxHeight: none; overflow: visible`) while retaining every
++card and hint.
++The row option fits all cards into equal columns on a container wider than
++1100px, wrapping through the shared auto-fit/minimum-width rule below that
++threshold; it does not leave a last card outside the screen. Dense density
++provides smaller figures through the same shared owner (UI 24). Print wraps
++all cards independently of screen layout. No new accounting/status formulas
++are introduced by the visual component.
++
++The shared component is the approved adoption target for Dashboard,
++FollowUpReport, DebtCollection, Customers/Alerts, BalancesSummary and
++ReceivableAgeAnalysis. Their public sizing contracts are Follow Up
++`minCardWidth=220`/`maxHeight=180`, Debt compact `170`/`180`, Alerts compact
++`180`/`160`, Receivable Age dense/row `140`/`180` with 12px bottom separation on
++the host, Balances main compact `180`
++with a host bound of `320` plus three dialog compact cards at `180` without a
++card bound, and Dashboard default `190` at natural height. Existing consumers
++migrate when explicitly in scope, so this rule does not claim that every legacy
++screen has already migrated. Follow Up keeps its report-specific metrics,
++paging, tabs, drill-down and complete output contracts below; those formulas
++remain in the feature contract/review.
++
++DebtCollection and ReceivableAgeAnalysis keep 12px bottom separation from the
++following grid on the shared component host (UI 24); keep card internals owned
++by the shared component and do not duplicate an existing parent gap.
+ 
+ For an explicitly approved dense accounting report that keeps its controls
+ visible, the routed report may be bounded to the available shell height. Each
+@@ -185,22 +304,58 @@ so the full report can flow across pages.
+ 
+ ### Tabbed report sections
+ 
+-**Explicit presentation choice, 2026-10-02:** Follow Up uses two shared workspace
+-tabs, Details and Summary, after the owner requests one tab per section. Details
+-is initial; Summary uses a responsive maximum inline width of 960px at logical
+-start within the bounded result area. This supersedes the provisional 520px
+-example for Follow Up only; it is not a shared tab default. Both typed grids
+-retain complete arrays with paginator=false, the active grid owns row scrolling,
+-and the public shared-grid minimum width allows the expanded Summary metrics to
+-overflow horizontally on narrow windows without page scroll. Existing shared
+-`sigma-report-summary-bar`, `sigma-report-totals` and `sigma-report-total`
+-classes present the four server-owned additive operational KPI cards. Comparison
+-bars are custom cells in the shared grid renderer with presentation-only max
+-scaling, and the user cell's shared secondary action drills into the exact raw
+-username filter value; null/blank groups remain label-only. Ordinary Excel follows
+-the active complete section and its current columns; full print includes the KPI
+-cards and both Summary/Details arrays regardless of selection, then restores
+-selection and form state. Keep busy, printing and filter-invalidation gates.
++**One on-screen section title (owner confirmation, 2026-10-03).** In every new
++or reviewed tabbed report, when the Tab caption identifies the table's section,
++do not repeat that caption as a heading above the table on screen. Keep the main
++feature title and column headers. Retain a print-only section heading because
++tabs are hidden in print; use the existing `d-none d-print-block` utilities on
++the heading, without a feature heading style. Keep each panel's
++aria-labelledby pointing to its Tab, its existing mode-specific caption and
++all applicable sections in the DOM. Supplier Statement adopts this for its
++Ledger/Outstanding and Advance Tax headings; other consumers adopt in scope.
++This makes the existing Customer Statement print-only-heading rule below
++explicit for all reviewed tabbed reports; it changes no data or print scope.
++
++**Frozen owner refinement, 2026-10-03:** Follow Up keeps two shared workspace
++tabs, Details and Summary, and both sections stretch to the report panel's full
++content width through the existing public `sigma-route-host--full-width`
++placement. This supersedes the earlier 520px and 960px Summary limits; the panel
++remains responsive and the public shared-grid minimum width owns any internal
++horizontal overflow without page scroll. Summary remains unpaginated;
++Details binds the complete array to the existing controlled local paginator with
++the shared default 15 rows and 10/15/20/50/100 choices (the later owner decision
++in UI6 supersedes the earlier 20-row default), using the feature
++`reports.followUpShowingEntries` page-report key with `{first}`, `{last}` and
++`{totalRecords}` placeholders. Details retains its page and
++chosen size when switching tabs; valid Search, filter edits, Reset and the
++raw-username drill-down reset its offset while preserving size. Existing shared
++`app-summary-cards` presents the four server-owned additive operational KPI cards
++in equal auto-fit columns with `[minCardWidth]="220"` and `[maxHeight]="180"`:
++four columns when the
++container permits, then three, two or one as it narrows. Use its
++comfortable Dashboard KPI shape: 14px vertical/16px horizontal padding, 44px
++semantic icon with a 14% accent wash, 10px radius, 12px gap, 1.6rem value, 9%
++accent wash and 3px
++logical-start accent through the shared sigma/Bootstrap tokens. Compact density
++uses the shared 10px/12px padding, 32px icon, 8px gap and 1.35rem value when the
++screen's content requires it; no feature card geometry or palette is copied.
++The overall follow-up count uses the approved primary accent through its
++descriptor; no feature-only emphasis variant is introduced. The user
++cell uses the quiet shared `sigma-report-user-action` secondary action, including
++inherited hover/focus/busy behavior; null/blank groups remain label-only.
++Comparison bars remain custom cells in the shared grid renderer, with feature
++placement limited to the public 88px/7px semantic bar dimensions and Summary's
++175px count column through public column classes. A compact translated
++scope/reference-date row and balanced caption row sit above the grid. Ordinary
++Excel follows the active complete section and its current columns, exporting all
++filtered Details rows regardless of the visible page; full print keeps KPI values,
++captions, reference text and all Summary/Details arrays regardless of selection,
++hides decorative icon tiles, temporarily releases pagination/scrolling, then
++restores the controlled page, size, selected tab and form state. Follow Up's
++existing `.sigma-report-panel` also opts into the public
++`sigma-report-panel--aligned-title` modifier. Keep busy, printing,
++filter-invalidation, metrics, formulas and reference-date semantics unchanged;
++feature formulas remain in the frozen contract/review.
+ Metric formulas, scopes and reference-date semantics remain in the frozen Follow
+ Up contract/review and are not universal report defaults. No new shared
+ disclosure capability or feature-owned tab/card palette is required.
+@@ -293,6 +448,20 @@ total-card styling when these shared classes fit the same UI role.
+ 
+ ### Required report review evidence
+ 
++For a reviewed family of reports with the same read-only lifecycle, a typed
++feature-family composition may share the form/request/print/export code and
++template while each consumer owns its columns, filters, lookups and returned
++totals. It still composes the canonical ReportPage, FeatureTitle, DataTable and
++SummaryCards owners; it does not create a second visual pattern or infer data
++completeness. StockReports uses `stockReports/shared/StockReportPage` and its
++typed `StockReportConfig` for eight consumers (2026-10-04). Every reader requests
++the frozen complete-response opt-in, and the composition checks both the flag
++and matching row count before enabling output. Adapt DataTable's typed
++`pageSize` event to the `rows` input expected by `resolveListPaging` before
++writing local paging state. Backend formulas and source limitations remain in
++the feature contract. This adoption is source-only; owner runtime and visual
++acceptance remain pending.
++
+ Record these rows in the existing feature review, with actual frontend/backend
+ file symbols, the confirmed contract and a match/finding/Uncertain result. Phase 2
+ produces them and Phase 6 compares them against final source; imports/class names
+diff --git a/sigma-erp/ui/24-colors-icons-buttons.md b/sigma-erp/ui/24-colors-icons-buttons.md
+index a45fca6..e6baf5e 100644
+--- a/sigma-erp/ui/24-colors-icons-buttons.md
++++ b/sigma-erp/ui/24-colors-icons-buttons.md
+@@ -132,6 +132,79 @@ colour that no shared token expresses (for example a vehicle-status colour), wit
+ value. The 108 feature stylesheets that still declare palettes (2026-10-01) switch to the
+ global tokens in their reviews.
+ 
++### Shared summary/KPI cards
++
++`app-summary-cards` (`shared/components/summary-cards/`) is the single visual
++owner for summary, KPI and total cards on any screen shape: list, report,
++dashboard, routed editor or dialog. It uses the existing Sigma/Bootstrap tokens
++for surface, border, text, primary and semantic accents. The Dashboard KPI strip
++is the visual reference: comfortable cards use 14px vertical/16px horizontal
++padding, a 44px icon tile with a 14% accent wash, 10px radius, 12px gap, a
++1.6rem value, a 9% accent gradient wash and a 3px logical-start accent stripe.
++Compact density uses 10px
++vertical/12px horizontal padding, a 32px icon tile, 8px gap and a 1.35rem value.
++Dense density uses 8px/10px padding, a 24px icon, 6px content gap, 1.05rem
++values and 0.6875rem labels with vertical icon/copy placement for narrow tiles.
++Slim density is for totals beside a master-detail workspace: 6px vertical/10px
++horizontal padding, a 20px icon beside the copy, 6px card/content gaps, 1rem
++values and 0.6875rem labels. It reduces height without feature card overrides.
++Workshop Job, JobEstimation and WorkOrder select slim/row/min140/max80 after
++the owner's 2026-10-04 request to preserve detail visibility. The 80px bound
++keeps wrapped totals internally scrollable; print releases it. This is an
++opt-in presentation choice; other densities and authoritative values remain.
++
++CashFlowStatement's later explicit accounting-format decision supersedes its
++slim-card experiment: its five authoritative figures sit within one shared
++statement table using UI6's optional section/subtotal/total rows. These are
++accounting document rows, not bespoke KPI cards. Other card consumers retain
++their shared sizing and appearance.
++
++Approved accents are primary, success, info, warning, danger and neutral, using
++the existing Sigma/Bootstrap theme tokens. Debit, credit and balance consume
++the existing accounting-value tokens and retain their non-semantic accounting
++meaning; colors never change a formula or become a success/error assertion.
++
++The shared owner renders one `<ul class="sigma-summary-cards">` wrapper with
++private component SCSS, auto-fit columns, a 190px default public `minCardWidth`,
++content-sized height with equal row stretch, readable wrapped labels, tabular
++values and text access to truncated amounts. Features may place or bound the
++host and pass public density/layout/minimum-width/maximum-height/selection inputs; they do not override
++card geometry, colors, padding, radius, font or icon-tile styling. The earlier
++report-specific insights draft is retired; there is no global insights variant.
++The old compact accounting summary bar remains compatibility-only for
++out-of-scope consumers. New/reviewed financial cards use the shared `formatMoney`
++owner plus translated Dr/Cr suffixes, while number cards use Angular
++`formatNumber` for authoritative values; this visual owner never adds accounting
++or status formulas.
++
++The typed `SummaryCard` shape carries `id`, `labelKey`, `value`, `icon`,
++`accent`, optional `format` (`number`/`money`/`text`), `suffixKey`,
++`hintKey`/`hintParams` and `secondary`. The component inputs are `cards`,
++`ariaLabel`, `density`, `layout`, `minCardWidth`, `maxHeight`, `selectable`, `selectedId` and
++`disabled`; `cardSelected` emits only the stable card id. It fetches nothing and
++does not derive or mutate business state. `density` is comfortable, compact,
++dense or slim. `layout` defaults to grid; row fits the actual card count into equal
++`minmax(0, 1fr)` tracks above a 1100px container width, then wraps through
++auto-fit/public minimum width in smaller containers. Do not render an off-screen
++horizontal rail. Optional numeric `maxHeight` (pixels, null by default) bounds
++the shared internal list; it owns its scroll and keyboard/visible focus while
++the surrounding table retains usable height. Natural-height consumers keep
++their existing scroll owner. These inputs change space usage, not card colors
++or business scope.
++
++Keep 12px separation between a summary-card region and the following grid. Use
++the parent's existing gap when it already supplies this separation; otherwise
++place margin-block-end on the component host, not its private card/list
++selectors. DebtCollection and ReceivableAgeAnalysis use this host placement.
++
++Selectable cards are native buttons with `aria-pressed`, visible focus, disabled
++busy guard and a stable-id selection output. Static cards have no click affordance
++or card-level tab stop; a bounded or row-layout list remains keyboard-focusable.
++Print removes the height bound/overflow and wraps every row-layout card. It uses
++compact white cards, neutral borders/text, wrapped values
++and hints, break-inside avoidance, and hides decorative icon tiles/washes/stripes
++while preserving captions and authoritative values in both themes and directions.
++
+ ### Where body-appended overlay styles belong
+ 
+ A `p-dialog`, dropdown panel or calendar with `appendTo="body"` is moved outside

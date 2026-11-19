@@ -1,0 +1,62 @@
+<div class="card card-custom">
+    <div class="card-body">
+        <form appMockData *ngIf="profileForm" [formGroup]="profileForm">
+            <div class="form-group pb-8">
+                <label class="form-label required" for="letterHeadPath">
+                    {{ 'settings.profileModel.letterHead' | translate }}
+                </label>
+                <div class="d-flex align-items-center mb-3 text-start" *ngIf="profileForm.get('letterHeadPath')?.value">
+                    <div class="symbol symbol-100px me-5 position-relative">
+                        <span class="symbol-label bg-light">
+                            <img [src]="baseUrl + profileForm.get('letterHeadPath')?.value" class="h-100 align-self-end"
+                                alt="" />
+                        </span>
+                        <div class="position-absolute top-0 start-100 translate-middle">
+                            <button type="button"
+                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar"
+                                (click)="clearControl('letterHeadPath', letterHeadUpload)">
+                                <i class="bi bi-x fs-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <p-fileUpload #letterHeadUpload name="letterHeadPath" [multiple]="false" accept="image/*,.svg"
+                    [maxFileSize]="5000000" [customUpload]="true" (uploadHandler)="uploadLetterHead($event)"
+                    (onRemove)="clearControl('letterHeadPath', letterHeadUpload)">
+                </p-fileUpload>
+            </div>
+            <div class="form-group pb-8">
+                <label class="form-label required" for="logoPath">
+                    {{ 'settings.profileModel.logo' | translate }}
+                </label>
+                <div class="d-flex align-items-center mb-3 text-start" *ngIf="profileForm.get('logoPath')?.value">
+                    <div class="symbol symbol-100px me-5 position-relative">
+                        <span class="symbol-label bg-light">
+                            <img [src]="baseUrl + profileForm.get('logoPath')?.value" class="h-100 align-self-end"
+                                alt="" />
+                        </span>
+                        <div class="position-absolute top-0 start-100 translate-middle">
+                            <button type="button"
+                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar"
+                                (click)="clearControl('logoPath', logoUpload)">
+                                <i class="bi bi-x fs-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <p-fileUpload #logoUpload name="logoPath" [multiple]="false" accept="image/*,.svg"
+                    [maxFileSize]="5000000" [customUpload]="true" (uploadHandler)="uploadLogo($event)"
+                    (onRemove)="clearControl('logoPath', logoUpload)">
+                </p-fileUpload>
+            </div>
+
+
+            <div>
+                <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+            </div>
+        </form>
+    </div>
+</div>

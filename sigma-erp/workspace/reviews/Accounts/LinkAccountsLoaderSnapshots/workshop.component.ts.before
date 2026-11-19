@@ -1,0 +1,307 @@
+import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
+import { Subscription, finalize, forkJoin } from 'rxjs';
+import { JobCategoryService } from 'src/app/modules/Workshop/JobCategory/services/jobcategory.service';
+import {
+  EditableCollectionRowDirective,
+  EditableCollectionTableColumn,
+  EditableCollectionTableComponent,
+} from 'src/app/modules/shared/components/editable-collection-table/editable-collection-table.component';
+import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+import { Results } from 'src/app/modules/shared/models/results';
+import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
+import {
+  LinkAccountsEnumOptionVM,
+  LinkAccountsListVM,
+  LinkAccountsUpsertDTO,
+  getLinkAccountsEnumId,
+  toLinkAccountsUpsert,
+} from '../../models/list';
+import { LinkAccountsService } from '../../services/linkaccounts.service';
+import { LinkAccountTabStateComponent } from '../tab-state/tab-state.component';
+
+@Component({
+  selector: 'app-workshop',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    StateMessageComponent,    FormsModule,
+    DropdownModule,
+    TranslateModule,
+    LinkAccountTabStateComponent,
+    EditableCollectionRowDirective,
+    EditableCollectionTableComponent,
+  ],
+  templateUrl: './workshop.component.html',
+  styleUrl: './workshop.component.scss',
+})
+export class WorkshopComponent extends BaseComponentService implements OnInit {
+  private readonly linkAccountsService = inject(LinkAccountsService);
+  private readonly jobCategoryService = inject(JobCategoryService);
+  private readonly confirmationDialog = inject(ConfirmationDialogService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly translate = inject(TranslateService);
+  private loadRequest?: Subscription;
+  readonly loaded = output<void>();
+  readonly busy = input(false);
+  readonly refreshing = input(false);
+  readonly confirmationPending = signal(false);
+  readonly accounts = input<DropDownSelect[]>([]);
+  readonly searchTerm = input('');
+  readonly typeId = input.required<number>();
+  readonly linkSections = input<LinkAccountsEnumOptionVM[]>([]);
+  readonly itemTypes = input<LinkAccountsEnumOptionVM[]>([]);
+  readonly jobTypes = input<LinkAccountsEnumOptionVM[]>([]);
+  readonly rows = signal<LinkAccountsListVM[]>([]);
+  readonly jobCategories = signal<DropDownSelect[]>([]);
+  readonly ready = signal(false);
+  readonly dirty = signal(false);
+  readonly tabLoading = signal(true);
+  readonly loadFailed = signal(false);
+  readonly enumId = getLinkAccountsEnumId;
+  readonly sections = computed(() => ({
+    asset: this.enumId(this.linkSections(), 'Default'),
+    revenue: this.enumId(this.linkSections(), 'StockRevenueAccounts'),
+    expense: this.enumId(this.linkSections(), 'StockExpenseAccounts'),
+  }));
+  readonly duplicateSections = computed(() => {
+    const logicalKeysBySection = new Map<number, Set<string>>();
+    const duplicates = new Set<number>();
+
+    for (const row of this.rows()) {
+      const section = row.linkSection ?? this.sections().asset;
+      const logicalKeys = logicalKeysBySection.get(section) ?? new Set<string>();
+      const key = [
+        row.value ?? 'null',
+        row.subType ?? 'null',
+        row.jobType ?? 'null',
+      ].join('|');
+
+      if (logicalKeys.has(key)) duplicates.add(section);
+      logicalKeys.add(key);
+      logicalKeysBySection.set(section, logicalKeys);
+    }
+
+    return duplicates;
+  });
+  readonly valid = computed(() => {
+    const rows = this.rows();
+    const complete = rows.every((row) => {
+      const section = row.linkSection ?? this.sections().asset;
+      return section === this.sections().asset ||
+        (row.value !== undefined && row.value !== null &&
+         row.accountId !== undefined && row.accountId !== null);
+    });
+    if (!complete) return false;
+    return this.duplicateSections().size === 0;
+  });
+  readonly anyLabel = signal(this.translate.instant('linkAccounts.any'));
+  readonly revenueColumns: ReadonlyArray<EditableCollectionTableColumn> = [
+    { header: 'linkAccounts.jobCategory', width: '220px' },
+    { header: 'linkAccounts.itemType', required: true, width: '220px' },
+    { header: 'linkAccounts.revenueAccount', required: true, width: '220px' },
+  ];
+  readonly assetColumns: ReadonlyArray<EditableCollectionTableColumn> = [
+    { header: 'linkAccounts.itemType', width: '220px' },
+    { header: 'linkAccounts.assetAccount', width: '280px' },
+  ];
+  readonly expenseColumns: ReadonlyArray<EditableCollectionTableColumn> = [
+    { header: 'linkAccounts.jobCategory', width: '220px' },
+    { header: 'linkAccounts.jobType', width: '220px' },
+    { header: 'linkAccounts.itemType', required: true, width: '220px' },
+    { header: 'linkAccounts.expenseAccount', required: true, width: '280px' },
+  ];
+  readonly categoryOptions = computed<DropDownSelect[]>(() => [
+    { id: '', value: this.anyLabel() },
+    ...this.jobCategories(),
+  ]);
+  readonly jobTypeOptions = computed<DropDownSelect[]>(() => [
+    { id: '', value: this.anyLabel() },
+    ...this.jobTypes(),
+  ]);
+  readonly assetRows = computed(() => this.filterRows(this.sections().asset));
+  readonly revenueRows = computed(() => this.filterRows(this.sections().revenue));
+  readonly expenseRows = computed(() => this.filterRows(this.sections().expense));
+
+  ngOnInit(): void {
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.anyLabel.set(this.translate.instant('linkAccounts.any')));
+    this.loadData();
+  }
+
+  loadData(): void {
+    if (this.busy() && !this.refreshing()) return;
+    this.loadRequest?.unsubscribe();
+    this.ready.set(false);
+    this.tabLoading.set(true);
+    this.loadFailed.set(false);
+    this.loadRequest = forkJoin({
+      linkAccounts: this.linkAccountsService.getLinkAccountsByType(this.typeId()),
+      jobCategories: this.jobCategoryService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }),
+    }).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      finalize(() => this.tabLoading.set(false))
+    ).subscribe({
+      next: ({ linkAccounts, jobCategories }) => {
+        if (!linkAccounts.isSuccess || !jobCategories.isSuccess) {
+          this.loadFailed.set(true);
+          return;
+        }
+        this.rows.set(linkAccounts.entities);
+        this.jobCategories.set(jobCategories.entities);
+        this.dirty.set(false);
+        this.ready.set(true);
+          this.loaded.emit();
+      },
+      error: () => this.loadFailed.set(true),
+    });
+  }
+
+  addRevenueRow(): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => [
+      ...rows,
+      { type: this.typeId(), linkSection: this.sections().revenue },
+    ]);
+    this.dirty.set(true);
+  }
+
+  addExpenseRow(): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => [
+      ...rows,
+      { type: this.typeId(), linkSection: this.sections().expense },
+    ]);
+    this.dirty.set(true);
+  }
+
+  removeRow(target: LinkAccountsListVM): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.rows.update((rows) => rows.filter((row) => row !== target));
+    this.dirty.set(true);
+  }
+
+  removeRevenueRow(index: number): void {
+    const target = this.revenueRows()[index];
+    if (target) this.confirmRemove(target);
+  }
+
+  removeExpenseRow(index: number): void {
+    const target = this.expenseRows()[index];
+    if (target) this.confirmRemove(target);
+  }
+
+  updateRow(target: LinkAccountsListVM, changes: Partial<LinkAccountsListVM>): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    Object.assign(target, changes);
+    this.rows.update((rows) => [...rows]);
+    this.dirty.set(true);
+  }
+
+  private filterRows(section: number): LinkAccountsListVM[] {
+    const rows = this.rows()
+      .filter((row) =>
+        (row.linkSection ?? this.sections().asset) === section
+      )
+      .sort((left, right) =>
+        ((left.subType ?? 0) - (right.subType ?? 0)) ||
+        ((left.jobType ?? 0) - (right.jobType ?? 0)) ||
+        ((left.value ?? Number.MAX_SAFE_INTEGER) -
+          (right.value ?? Number.MAX_SAFE_INTEGER))
+      );
+    const query = this.searchTerm().trim().toLocaleLowerCase();
+    if (!query) return rows;
+
+    const accountLabels = new Map(
+      this.accounts().map((account) => [Number(account.id), account.value])
+    );
+    const jobCategoryLabels = new Map(
+      this.jobCategories().map((category) => [Number(category.id), category.value])
+    );
+    const itemTypeLabels = new Map(
+      this.itemTypes().map((itemType) => [Number(itemType.id), itemType.value])
+    );
+    const jobTypeLabels = new Map(
+      this.jobTypes().map((jobType) => [Number(jobType.id), jobType.value])
+    );
+
+    return rows.filter((row) => [
+      row.settingLabel,
+      row.settingKey,
+      row.subType !== undefined && row.subType !== null
+        ? jobCategoryLabels.get(row.subType)
+        : this.anyLabel(),
+      row.jobType !== undefined && row.jobType !== null
+        ? jobTypeLabels.get(row.jobType)
+        : this.anyLabel(),
+      row.value !== undefined ? itemTypeLabels.get(row.value) : '',
+      row.accountId ? accountLabels.get(row.accountId) : '',
+    ]
+      .filter((value) => value !== undefined && value !== null)
+      .join(' ')
+      .toLocaleLowerCase()
+      .includes(query)
+    );
+  }
+
+  itemTypeLabel(value: number | undefined): string {
+    return this.itemTypes().find(
+      (itemType) => Number(itemType.id) === value
+    )?.value ?? '';
+  }
+
+  optionalNumber(value: number | string | null): number | undefined {
+    return value === null || value === '' ? undefined : Number(value);
+  }
+
+  hasDuplicateInSection(section: number): boolean {
+    return this.duplicateSections().has(section);
+  }
+
+  getPayload(): LinkAccountsUpsertDTO[] {
+    return toLinkAccountsUpsert(
+      this.rows(),
+      this.sections().asset
+    );
+  }
+
+  markSaved(): void {
+    this.dirty.set(false);
+  }
+
+  private confirmRemove(target: LinkAccountsListVM): void {
+    if (this.busy() || !this.ready() || this.confirmationPending()) return;
+    this.confirmationPending.set(true);
+    this.confirmationDialog
+      .confirm({
+        severity: 'warning',
+        title: { key: 'linkAccounts.removeTitle' },
+        message: { key: 'linkAccounts.removeMessage' },
+        confirmLabel: { key: 'linkAccounts.removeConfirm' },
+        cancelLabel: { key: 'general.cancel' },
+        confirmIcon: 'bi bi-trash3',
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.confirmationPending.set(false)))
+      .subscribe((confirmed) => {
+        this.confirmationPending.set(false);
+        if (confirmed && !this.busy() && this.ready() && this.rows().includes(target)) this.removeRow(target);
+      });
+  }
+
+}

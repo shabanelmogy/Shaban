@@ -1,0 +1,124 @@
+SOURCE: src/app/modules/Accounts/BalanceSheet/components/list/list.component.ts
+import { Component, inject } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+
+import { BalanceSheetDTO, BalanceSheetFilter, AccountDetail } from '../../models/list';
+import { BalanceSheetRow } from '../../models/balance-sheet-row';
+import { BalanceSheetService } from '../../services/balance-sheet.service';
+import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
+import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
+import { reportDate, reportBoolean } from '../../../shared/report-family/account-report-values';
+
+import { Router } from '@angular/router';
+import { DataTableColumn, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+
+@Component({
+  selector: 'app-balance-sheet-list', standalone: true,
+  imports: [AccountReportPageComponent],
+  templateUrl: './list.component.html', styleUrl: './list.component.scss',
+  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+})
+export class BalanceSheetComponent {
+  private readonly service = inject(BalanceSheetService);
+  private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+  private readonly accountColumns: ReadonlyArray<DataTableColumn<AccountDetail>> = [
+    { field: 'name', header: 'balanceSheet.account', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—' },
+    { field: 'amount', header: 'balanceSheet.amount', type: 'money' },
+  ];
+  private readonly columns: ReadonlyArray<DataTableColumn<BalanceSheetRow>> = [
+    {
+      field: 'name', header: 'balanceSheet.account', width: '78%',
+      cellClass: 'sigma-data-table__cell--wrap',
+      value: row => row.labelKey
+        ? this.translate.instant(row.labelKey)
+        : [row.code, row.name].filter(Boolean).join(' — ') || '—',
+    },
+    {
+      field: 'amount', header: 'balanceSheet.amount', width: '22%', type: 'money',
+      headerClass: 'text-end', cellClass: 'text-end sigma-data-table__cell--numeric',
+    },
+  ];
+  readonly config: AccountReportConfig<BalanceSheetDTO, BalanceSheetFilter, BalanceSheetRow> = {
+    id: 'balanceSheet', titleKey: 'sideMenu.accountss.balanceSheet', icon: 'bi bi-file-earmark-spreadsheet', exportFileName: 'BalanceSheet',
+    filters: [
+      { key: 'asOfDate', labelKey: 'balanceSheet.asOfDate', kind: 'date', initialValue: new Date() },
+      { key: 'includeZeros', labelKey: 'balanceSheet.includeZeros', kind: 'checkbox', initialValue: false }
+    ],
+    load: filter => this.service.getReport(filter),
+    buildFilter: raw => {
+      const date = reportDate(raw, 'asOfDate'); if (date && date > reportDate({ date: new Date() }, 'date')!) return { errorKey: 'balanceSheet.futureDateError', focusKey: 'asOfDate' };
+      return { filter: { asOfDate: reportDate(raw, 'asOfDate'), includeZeros: reportBoolean(raw, 'includeZeros') } };
+    },
+    sections: response => [
+      {
+        id: 'statement', dataKey: 'id', minWidth: '32rem',
+        rows: this.statementRows(response), columns: this.columns, rowTone: row => row.tone,
+        hierarchy: {
+          rowKey: row => row.id, children: row => row.children, defaultExpanded: true,
+          activateEnabled: row => row.accountId > 0,
+          activate: row => this.openLedger(row.accountId), activateTitle: 'balanceSheet.openLedger',
+        },
+      },
+    ],
+    exportRows: (response, _sections, translate) => this.exportRows(response, translate),
+  };
+
+  private statementRows(response: BalanceSheetDTO): BalanceSheetRow[] {
+    const rows: BalanceSheetRow[] = [];
+    for (const section of this.sourceSections(response)) {
+      for (const account of section.accounts) rows.push(this.accountRow(account, section.key, true));
+      rows.push({
+        id: section.totalKey, accountId: 0, code: null, name: null, level: null, parentId: null,
+        amount: section.total, labelKey: `balanceSheet.${section.totalKey}`, tone: 'total', children: [],
+      });
+    }
+    return rows;
+  }
+
+  private accountRow(account: AccountDetail, section: string, root = false): BalanceSheetRow {
+    return {
+      ...account, id: `${section}-account-${account.accountId}`, tone: root ? 'section' : null,
+      children: (account.children ?? []).map(child => this.accountRow(child, section)),
+    };
+  }
+
+  private sourceSections(response: BalanceSheetDTO) {
+    return [
+      { key: 'assets', accounts: response.assets ?? [], totalKey: 'totalAssets', total: response.totalAssets },
+      { key: 'liabilities', accounts: response.liabilities ?? [], totalKey: 'totalLiabilities', total: response.totalLiabilities },
+      { key: 'equity', accounts: response.equity ?? [], totalKey: 'totalEquity', total: response.totalEquity },
+    ];
+  }
+
+  private exportRows(response: BalanceSheetDTO, translate: (key: string) => string): Array<Record<string, string | number>> {
+    const rows: Array<Record<string, string | number>> = [];
+    for (const section of this.sourceSections(response)) {
+      const accounts: AccountDetail[] = [];
+      const visit = (source: ReadonlyArray<AccountDetail>): void => {
+        for (const account of source) {
+          accounts.push(account);
+          visit(account.children ?? []);
+        }
+      };
+      visit(section.accounts);
+      for (const row of dataTableExportRows(accounts, this.accountColumns, translate)) {
+        rows.push({ [translate('accountReports.section')]: translate(`balanceSheet.${section.key}`), ...row });
+      }
+    }
+    return rows;
+  }
+
+  private openLedger(accountId: number): void {
+    if (accountId > 0) void this.router.navigate(['/Ledger'], { queryParams: { accountId } });
+  }
+}
+SOURCE: src/app/modules/Accounts/BalanceSheet/models/balance-sheet-row.ts
+import { AccountDetail } from './list';
+
+export interface BalanceSheetRow extends AccountDetail {
+  id: string;
+  labelKey?: string;
+  tone: 'section' | 'total' | null;
+  children: BalanceSheetRow[];
+}

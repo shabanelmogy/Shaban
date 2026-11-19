@@ -1,0 +1,73 @@
+<form [formGroup]="cashDepositDetailForm" class="row">
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="id">{{ 'mangeDetails.id' | translate }}</label>
+    <input class="form-control" type="text" formControlName="id">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="subscriptionId">{{ 'mangeDetails.subscriptionId' | translate }}</label>
+    <input class="form-control" type="number" formControlName="subscriptionId">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="isDeleted">{{ 'mangeDetails.isDeleted' | translate }}</label>
+    <input class="form-control" type="checkbox" formControlName="isDeleted">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="isActive">{{ 'mangeDetails.isActive' | translate }}</label>
+    <input class="form-control" type="checkbox" formControlName="isActive">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="isValid">{{ 'mangeDetails.isValid' | translate }}</label>
+    <input class="form-control" type="checkbox" formControlName="isValid">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="isChanged">{{ 'mangeDetails.isChanged' | translate }}</label>
+    <input class="form-control" type="checkbox" formControlName="isChanged">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="deletedAt">{{ 'mangeDetails.deletedAt' | translate }}</label>
+    <input class="form-control" type="text" formControlName="deletedAt">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="deletedBy">{{ 'mangeDetails.deletedBy' | translate }}</label>
+    <input class="form-control" type="text" formControlName="deletedBy">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="createdAt">{{ 'mangeDetails.createdAt' | translate }}</label>
+    <input class="form-control" type="text" formControlName="createdAt">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="createdBy">{{ 'mangeDetails.createdBy' | translate }}</label>
+    <input class="form-control" type="text" formControlName="createdBy">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="cashDepositId">{{ 'mangeDetails.cashDepositId' | translate }}</label>
+    <input class="form-control" type="number" formControlName="cashDepositId">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="date">{{ 'mangeDetails.date' | translate }}</label>
+    <input class="form-control" type="date" formControlName="date">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="no">{{ 'mangeDetails.no' | translate }}</label>
+    <input class="form-control" type="text" formControlName="no">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="description">{{ 'mangeDetails.description' | translate }}</label>
+    <input class="form-control" type="text" formControlName="description">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="amount">{{ 'mangeDetails.amount' | translate }}</label>
+    <input class="form-control" type="number" formControlName="amount">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="dueAmount">{{ 'mangeDetails.dueAmount' | translate }}</label>
+    <input class="form-control" type="number" formControlName="dueAmount">
+  </div>
+  <div class="form-group col-md-12 col-lg-6 p-4">
+    <label class="form-label" for="depositedNow">{{ 'mangeDetails.depositedNow' | translate }}</label>
+    <input class="form-control" type="number" formControlName="depositedNow">
+  </div>
+  <div>
+    <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+  </div>
+</form>

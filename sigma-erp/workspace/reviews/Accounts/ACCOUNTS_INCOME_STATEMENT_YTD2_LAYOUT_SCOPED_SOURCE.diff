@@ -1,0 +1,562 @@
+diff --git a/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.html b/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.html
+index efaa720..7bfe4a4 100644
+--- a/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.html
++++ b/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.html
+@@ -1,190 +1 @@
+-<form class="sigma-filter-form" [formGroup]="filterForm">
+-  <div class="row g-3">
+-
+-    <!-- Month -->
+-    <div class="col-md-3">
+-      <label class="form-label">
+-        {{ 'incomeStatementYtd2.month' | translate }}
+-        <span class="text-danger">*</span>
+-      </label>
+-      <p-calendar formControlName="month" view="month" dateFormat="yy-mm" [showIcon]="true"
+-        placeholder="{{ 'incomeStatementYtd2.monthPlaceholder' | translate }}">
+-      </p-calendar>
+-    </div>
+-
+-    <!-- Branch -->
+-    <div class="col-md-3">
+-      <label class="form-label">{{ 'incomeStatementYtd2.branch' | translate }}</label>
+-      <p-dropdown formControlName="branchId" [options]="branches()" optionLabel="value" optionValue="id"
+-        [showClear]="true" placeholder="{{ 'incomeStatementYtd2.branch' | translate }}">
+-      </p-dropdown>
+-    </div>
+-
+-    <!-- Checkboxes -->
+-    <div class="col-md-3 d-flex align-items-end">
+-      <p-checkbox formControlName="hideZeroActivity" binary="true"
+-        label="{{ 'incomeStatementYtd2.hideZeroActivity' | translate }}">
+-      </p-checkbox>
+-    </div>
+-
+-    <div class="col-md-3 d-flex align-items-end">
+-      <p-checkbox formControlName="summaryReport" binary="true"
+-        label="{{ 'incomeStatementYtd2.summaryReport' | translate }}">
+-      </p-checkbox>
+-    </div>
+-
+-  </div>
+-
+-  <div class="d-flex justify-content-end my-4">
+-    <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)">
+-    </app-buttons>
+-  </div>
+-</form>
+-
+-<!-- Header KPI Cards -->
+-<div class="row g-4 mt-3 mb-5">
+-  <div class="col-md-4">
+-    <div class="card border-0 shadow-sm">
+-      <div class="card-body py-4">
+-        <h6 class="fw-bold text-muted">{{ 'incomeStatementYtd2.profitLossCurrentMonth' | translate }}</h6>
+-        <span class="fs-3 fw-bold" [class.text-success]="profitLossCurrentMonth() >= 0"
+-          [class.text-danger]="profitLossCurrentMonth() < 0">
+-          {{ profitLossCurrentMonth() | number: '1.2-2' }}
+-        </span>
+-      </div>
+-    </div>
+-  </div>
+-  <div class="col-md-4">
+-    <div class="card border-0 shadow-sm">
+-      <div class="card-body py-4">
+-        <h6 class="fw-bold text-muted">{{ 'incomeStatementYtd2.profitLossCurrentYtd' | translate }}</h6>
+-        <span class="fs-3 fw-bold" [class.text-success]="profitLossCurrentYtd() >= 0"
+-          [class.text-danger]="profitLossCurrentYtd() < 0">
+-          {{ profitLossCurrentYtd() | number: '1.2-2' }}
+-        </span>
+-      </div>
+-    </div>
+-  </div>
+-  <div class="col-md-4">
+-    <div class="card border-0 shadow-sm">
+-      <div class="card-body py-4">
+-        <h6 class="fw-bold text-muted">{{ 'incomeStatementYtd2.profitLossPreviousYearMonth' | translate }}</h6>
+-        <span class="fs-3 fw-bold" [class.text-success]="profitLossPreviousYearMonth() >= 0"
+-          [class.text-danger]="profitLossPreviousYearMonth() < 0">
+-          {{ profitLossPreviousYearMonth() | number: '1.2-2' }}
+-        </span>
+-      </div>
+-    </div>
+-  </div>
+-</div>
+-
+-<!-- Subtotals Table -->
+-<div class="card border-0 shadow-sm mb-5">
+-  <div class="card-body p-0">
+-    <table class="table table-bordered table-sm mb-0">
+-      <thead class="table-light">
+-        <tr>
+-          <th>{{ 'incomeStatementYtd2.subtotal' | translate }}</th>
+-          <th class="text-end">{{ 'incomeStatementYtd2.currentMonth' | translate }}</th>
+-          <th class="text-end">{{ 'incomeStatementYtd2.currentYtd' | translate }}</th>
+-          <th class="text-end">{{ 'incomeStatementYtd2.previousYearMonth' | translate }}</th>
+-        </tr>
+-      </thead>
+-      <tbody>
+-        <!-- Gross Profit/Loss -->
+-        <tr>
+-          <td class="fw-semibold">{{ 'incomeStatementYtd2.grossProfitLoss' | translate }}</td>
+-          <td class="text-end" [class.text-success]="grossProfitLoss().currentMonth >= 0"
+-            [class.text-danger]="grossProfitLoss().currentMonth < 0">
+-            {{ grossProfitLoss().currentMonth | number: '1.2-2' }}
+-          </td>
+-          <td class="text-end" [class.text-success]="grossProfitLoss().currentYtd >= 0"
+-            [class.text-danger]="grossProfitLoss().currentYtd < 0">
+-            {{ grossProfitLoss().currentYtd | number: '1.2-2' }}
+-          </td>
+-          <td class="text-end" [class.text-success]="grossProfitLoss().previousYearMonth >= 0"
+-            [class.text-danger]="grossProfitLoss().previousYearMonth < 0">
+-            {{ grossProfitLoss().previousYearMonth | number: '1.2-2' }}
+-          </td>
+-        </tr>
+-        <!-- P/L Before Sale of Assets -->
+-        <tr>
+-          <td class="fw-semibold">{{ 'incomeStatementYtd2.profitLossBeforeSaleOfAssets' | translate }}</td>
+-          <td class="text-end" [class.text-success]="profitLossBeforeSaleOfAssets().currentMonth >= 0"
+-            [class.text-danger]="profitLossBeforeSaleOfAssets().currentMonth < 0">
+-            {{ profitLossBeforeSaleOfAssets().currentMonth | number: '1.2-2' }}
+-          </td>
+-          <td class="text-end" [class.text-success]="profitLossBeforeSaleOfAssets().currentYtd >= 0"
+-            [class.text-danger]="profitLossBeforeSaleOfAssets().currentYtd < 0">
+-            {{ profitLossBeforeSaleOfAssets().currentYtd | number: '1.2-2' }}
+-          </td>
+-          <td class="text-end" [class.text-success]="profitLossBeforeSaleOfAssets().previousYearMonth >= 0"
+-            [class.text-danger]="profitLossBeforeSaleOfAssets().previousYearMonth < 0">
+-            {{ profitLossBeforeSaleOfAssets().previousYearMonth | number: '1.2-2' }}
+-          </td>
+-        </tr>
+-        <!-- P/L on Sale of Assets -->
+-        <tr>
+-          <td class="fw-semibold">{{ 'incomeStatementYtd2.profitLossOnSaleOfAssets' | translate }}</td>
+-          <td class="text-end" [class.text-success]="profitLossOnSaleOfAssets().currentMonth >= 0"
+-            [class.text-danger]="profitLossOnSaleOfAssets().currentMonth < 0">
+-            {{ profitLossOnSaleOfAssets().currentMonth | number: '1.2-2' }}
+-          </td>
+-          <td class="text-end" [class.text-success]="profitLossOnSaleOfAssets().currentYtd >= 0"
+-            [class.text-danger]="profitLossOnSaleOfAssets().currentYtd < 0">
+-            {{ profitLossOnSaleOfAssets().currentYtd | number: '1.2-2' }}
+-          </td>
+-          <td class="text-end" [class.text-success]="profitLossOnSaleOfAssets().previousYearMonth >= 0"
+-            [class.text-danger]="profitLossOnSaleOfAssets().previousYearMonth < 0">
+-            {{ profitLossOnSaleOfAssets().previousYearMonth | number: '1.2-2' }}
+-          </td>
+-        </tr>
+-        <!-- Net P/L -->
+-        <tr class="table-active fw-bold">
+-          <td>{{ 'incomeStatementYtd2.netProfitLoss' | translate }}</td>
+-          <td class="text-end" [class.text-success]="netProfitLoss().currentMonth >= 0"
+-            [class.text-danger]="netProfitLoss().currentMonth < 0">
+-            {{ netProfitLoss().currentMonth | number: '1.2-2' }}
+-          </td>
+-          <td class="text-end" [class.text-success]="netProfitLoss().currentYtd >= 0"
+-            [class.text-danger]="netProfitLoss().currentYtd < 0">
+-            {{ netProfitLoss().currentYtd | number: '1.2-2' }}
+-          </td>
+-          <td class="text-end" [class.text-success]="netProfitLoss().previousYearMonth >= 0"
+-            [class.text-danger]="netProfitLoss().previousYearMonth < 0">
+-            {{ netProfitLoss().previousYearMonth | number: '1.2-2' }}
+-          </td>
+-        </tr>
+-      </tbody>
+-    </table>
+-  </div>
+-</div>
+-
+-<!-- Tree Table -->
+-<p-treeTable [value]="accounts()" [tableStyle]="{ 'min-width': '70rem' }" [resizableColumns]="true"
+-  columnResizeMode="expand">
+-  <ng-template pTemplate="header">
+-    <tr>
+-      <th ttResizableColumn>{{ 'incomeStatementYtd2.account' | translate }}</th>
+-      <th ttResizableColumn class="text-end">{{ 'incomeStatementYtd2.currentMonth' | translate }}</th>
+-      <th ttResizableColumn class="text-end">{{ 'incomeStatementYtd2.currentYtd' | translate }}</th>
+-      <th ttResizableColumn class="text-end">{{ 'incomeStatementYtd2.previousYearMonth' | translate }}</th>
+-    </tr>
+-  </ng-template>
+-  <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+-    <tr [ttRow]="rowNode">
+-      <td>
+-        <p-treeTableToggler [rowNode]="rowNode" />
+-        <span>{{ rowData.name }}</span>
+-      </td>
+-      <td class="text-end">{{ rowData.currentMonth | number: '1.2-2' }}</td>
+-      <td class="text-end">{{ rowData.currentYtd | number: '1.2-2' }}</td>
+-      <td class="text-end">{{ rowData.previousYearMonth | number: '1.2-2' }}</td>
+-    </tr>
+-  </ng-template>
+-  <ng-template pTemplate="emptymessage">
+-    <tr>
+-      <td colspan="4" class="text-center text-muted py-4">{{ 'general.noData' | translate }}</td>
+-    </tr>
+-  </ng-template>
+-</p-treeTable>
+\ No newline at end of file
++<app-account-report-page [config]="config" />
+diff --git a/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.scss b/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.scss
+index 8b13789..dd00994 100644
+--- a/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.scss
++++ b/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.scss
+@@ -1 +1 @@
+-
++// Shared report hosts, controls and grid own the layout and theme.
+diff --git a/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.ts b/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.ts
+index b4529bf..a85eae8 100644
+--- a/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.ts
++++ b/src/app/modules/Accounts/IncomeStatementYtd2/components/list/list.component.ts
+@@ -1,213 +1,117 @@
+-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+-import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+-import { CommonModule } from '@angular/common';
+-import { TranslateModule } from '@ngx-translate/core';
+-import { TreeNode } from 'primeng/api';
+-import { TreeTableModule } from 'primeng/treetable';
+-import { CalendarModule } from 'primeng/calendar';
+-import { CheckboxModule } from 'primeng/checkbox';
+-import { DropdownModule } from 'primeng/dropdown';
+-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+-import { finalize } from 'rxjs';
+-import { Result } from 'src/app/modules/shared/models/result';
+-import { Results } from 'src/app/modules/shared/models/results';
+-import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
++import { Component, inject } from '@angular/core';
++import { TranslateService } from '@ngx-translate/core';
++import { IncomeStatementYtd2DTO, IncomeStatementYtd2Filter, IncomeStatementYtd2Line } from '../../models/list';
++import { IncomeStatementYtd2Row } from '../../models/income-statement-ytd2-row';
+ import { IncomeStatementYtd2Service } from '../../services/income-statement-ytd2.service';
+-import {
+-  IncomeStatementYtd2DTO,
+-  IncomeStatementYtd2Filter,
+-  IncomeStatementYtd2Line,
+-  YtdSubtotalEntry,
+-} from '../../models/list';
++import { AccountReportPageComponent } from '../../../shared/report-family/account-report-page.component';
++import { AccountReportConfig } from '../../../shared/report-family/account-report.models';
++import { reportNumber, reportMonth, reportBoolean } from '../../../shared/report-family/account-report-values';
++
++import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
++import { Results } from 'src/app/modules/shared/models/results';
+ import { BranchService } from 'src/app/modules/Administration/Branches/services/branch.service';
+-import { ButtonModel } from 'src/app/modules/shared/models/button-model';
+-import { ButtonsComponent } from 'src/app/modules/shared/components/buttons/buttons.component';
+-import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
++import { DataTableColumn, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
+ 
+ @Component({
+-  selector: 'app-income-statement-ytd2',
+-  standalone: true,
+-  imports: [
+-    TranslateModule,
+-    CommonModule,
+-    FormsModule,
+-    ReactiveFormsModule,
+-    TreeTableModule,
+-    CalendarModule,
+-    CheckboxModule,
+-    DropdownModule,
+-    ButtonsComponent,
+-  ],
+-  templateUrl: './list.component.html',
+-  styleUrl: './list.component.scss',
++  selector: 'app-income-statement-ytd2', standalone: true,
++  imports: [AccountReportPageComponent],
++  templateUrl: './list.component.html', styleUrl: './list.component.scss',
++  host: { class: 'sigma-route-host sigma-route-host--full-width sigma-print-flow' },
+ })
+-export class IncomeStatementYtd2Component extends BaseComponentService implements OnInit {
+-  private reportService = inject(IncomeStatementYtd2Service);
+-  private branchService = inject(BranchService);
+-  private destroyRef   = inject(DestroyRef);
+-  private fb           = inject(FormBuilder);
+-
+-  //#region Properties
+-  accounts                    = signal<TreeNode[]>([]);
+-  exportData                  = signal<any[]>([]);
+-  branches                    = signal<DropDownSelect[]>([]);
+-  filterForm!: FormGroup;
+-
+-  // Header totals
+-  profitLossCurrentMonth      = signal<number>(0);
+-  profitLossCurrentYtd        = signal<number>(0);
+-  profitLossPreviousYearMonth = signal<number>(0);
+-
+-  // Subtotals
+-  zero: YtdSubtotalEntry = { currentMonth: 0, currentYtd: 0, previousYearMonth: 0 };
+-  grossProfitLoss              = signal<YtdSubtotalEntry>(this.zero);
+-  profitLossBeforeSaleOfAssets = signal<YtdSubtotalEntry>(this.zero);
+-  profitLossOnSaleOfAssets     = signal<YtdSubtotalEntry>(this.zero);
+-  netProfitLoss                = signal<YtdSubtotalEntry>(this.zero);
+-  //#endregion
+-
+-  constructor() {
+-    super();
+-  }
+-
+-  //#region Lifecycle
+-  ngOnInit(): void {
+-    this.initForm();
+-    this.loadBranches();
+-  }
+-  //#endregion
+-
+-  //#region Init
+-  initForm(): void {
+-    this.filterForm = this.fb.group({
+-      month:            [null],
+-      branchId:         [null],
+-      hideZeroActivity: [false],
+-      summaryReport:    [false],
+-    });
+-  }
+-
+-  loadBranches(): void {
+-    this.loading.startLoading();
+-    this.branchService.getSelectList<Results<DropDownSelect>>()
+-      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.endLoading()))
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess && res.entities.length > 0)
+-            this.branches.set(res.entities);
+-        }
+-      });
+-  }
+-  //#endregion
+-
+-  //#region Actions
+-  buttons: ButtonModel[] = [
+-    { id: 'btn-search',  text: 'general.search',     type: 'primary',   class: 'me-2', icon: 'bi bi-search' },
+-    { id: 'btn-refresh', text: 'general.refresh',     type: 'secondary', class: 'me-2', icon: 'bi bi-arrow-clockwise' },
+-    { id: 'btn-reset',   text: 'general.reset',       type: 'secondary', class: 'me-2', icon: 'bi bi-arrow-clockwise' },
+-    { id: 'btn-excel',   text: 'general.exportExcel', type: 'secondary', class: 'me-2', icon: 'bi bi-file-earmark-excel' },
++export class IncomeStatementYtd2Component {
++  private readonly service = inject(IncomeStatementYtd2Service);
++  private readonly translate = inject(TranslateService);
++  private readonly branches = inject(BranchService);
++  private readonly amountColumns: ReadonlyArray<DataTableColumn<IncomeStatementYtd2Row>> =
++    (['currentMonth', 'currentYtd', 'previousYearMonth'] as const).map<DataTableColumn<IncomeStatementYtd2Row>>(field => ({
++      field, header: `incomeStatementYtd2.${field}`, type: 'money', width: '18%',
++      headerClass: 'text-end', cellClass: 'text-end sigma-data-table__cell--numeric',
++    }));
++  private readonly columns: ReadonlyArray<DataTableColumn<IncomeStatementYtd2Row>> = [
++    {
++      field: 'name', header: 'incomeStatementYtd2.account', width: '46%',
++      cellClass: 'sigma-data-table__cell--wrap',
++      value: row => row.labelKey ? this.translate.instant(row.labelKey)
++        : [row.code, row.name].filter(Boolean).join(' — ') || '—',
++    },
++    ...this.amountColumns,
+   ];
+-
+-  onButtonClick(buttonId: string): void {
+-    switch (buttonId) {
+-      case 'btn-search':  this.onSearch(); break;
+-      case 'btn-refresh': this.onRefresh(); break;
+-      case 'btn-reset':   this.onReset(); break;
+-      case 'btn-excel':   onExportToExcel(this.exportData, 'IncomeStatementYtd2'); break;
+-    }
+-  }
+-
+-  onSearch(): void { this.getListItems(); }
+-
+-  onRefresh(): void {
+-    this.filterForm.reset({ month: null, branchId: null, hideZeroActivity: false, summaryReport: false });
+-    this.clearResults();
+-  }
+-
+-  onReset(): void {
+-    this.filterForm.reset({ month: null, branchId: null, hideZeroActivity: false, summaryReport: false });
+-    this.getListItems();
+-  }
+-
+-  private clearResults(): void {
+-    this.accounts.set([]);
+-    this.exportData.set([]);
+-    this.profitLossCurrentMonth.set(0);
+-    this.profitLossCurrentYtd.set(0);
+-    this.profitLossPreviousYearMonth.set(0);
+-    this.grossProfitLoss.set(this.zero);
+-    this.profitLossBeforeSaleOfAssets.set(this.zero);
+-    this.profitLossOnSaleOfAssets.set(this.zero);
+-    this.netProfitLoss.set(this.zero);
+-  }
+-  //#endregion
+-
+-  //#region Data
+-  getListItems(): void {
+-    const filter = this.buildFilter();
+-    this.loading.startLoading();
+-    this.reportService.get<Result<IncomeStatementYtd2DTO>>(filter)
+-      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.endLoading()))
+-      .subscribe({
+-        next: (res) => {
+-          if (res.isSuccess && res.entity) {
+-            const e = res.entity;
+-            this.profitLossCurrentMonth.set(e.profitLossCurrentMonth);
+-            this.profitLossCurrentYtd.set(e.profitLossCurrentYtd);
+-            this.profitLossPreviousYearMonth.set(e.profitLossPreviousYearMonth);
+-            this.grossProfitLoss.set(e.grossProfitLoss);
+-            this.profitLossBeforeSaleOfAssets.set(e.profitLossBeforeSaleOfAssets);
+-            this.profitLossOnSaleOfAssets.set(e.profitLossOnSaleOfAssets);
+-            this.netProfitLoss.set(e.netProfitLoss);
+-            this.accounts.set(this.mapToTreeNodes(e.lines));
+-            this.exportData.set(this.flattenLines(e.lines));
+-          }
+-        }
+-      });
+-  }
+-
+-  private buildFilter(): IncomeStatementYtd2Filter {
+-    const v = this.filterForm.value;
+-    const filter: IncomeStatementYtd2Filter = {};
+-    if (v.month instanceof Date)   filter.month            = this.formatMonth(v.month);
+-    if (v.branchId != null)        filter.branchId         = v.branchId;
+-    if (v.hideZeroActivity)        filter.hideZeroActivity = v.hideZeroActivity;
+-    if (v.summaryReport)           filter.summaryReport    = v.summaryReport;
+-    return filter;
+-  }
+-
+-  formatMonth(date: Date): string {
+-    const y = date.getFullYear();
+-    const m = String(date.getMonth() + 1).padStart(2, '0');
+-    return `${y}-${m}`;
++  readonly config: AccountReportConfig<IncomeStatementYtd2DTO, IncomeStatementYtd2Filter, IncomeStatementYtd2Row> = {
++    id: 'incomeStatementYtd2', titleKey: 'incomeStatementYtd2.title', icon: 'bi bi-file-earmark-spreadsheet', exportFileName: 'IncomeStatementYtd2',
++    summaryDensity: 'slim', summaryMaxHeight: 80,
++    filters: [
++      { key: 'month', labelKey: 'incomeStatementYtd2.month', kind: 'month', initialValue: new Date(), required: true },
++      { key: 'branchId', labelKey: 'incomeStatementYtd2.branch', kind: 'select', initialValue: null, requiredLookup: true, loadOptions: () => this.branches.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true }) },
++      { key: 'hideZeroActivity', labelKey: 'incomeStatementYtd2.hideZeroActivity', kind: 'checkbox', initialValue: false },
++      { key: 'summaryReport', labelKey: 'incomeStatementYtd2.summaryReport', kind: 'checkbox', initialValue: false }
++    ],
++    load: filter => this.service.getReport(filter),
++    buildFilter: raw => {
++
++      return { filter: { month: reportMonth(raw, 'month'), branchId: reportNumber(raw, 'branchId'), hideZeroActivity: reportBoolean(raw, 'hideZeroActivity'), summaryReport: reportBoolean(raw, 'summaryReport') } };
++    },
++    sections: response => [
++      {
++        id: 'statement', dataKey: 'id', minWidth: '52rem',
++        rows: [...(response.lines ?? []).map(line => this.accountRow(line, true)), ...this.subtotalRows(response)],
++        columns: this.columns, rowTone: row => row.tone,
++        hierarchy: { rowKey: row => row.id, children: row => row.children, defaultExpanded: true },
++      },
++    ],
++    exportRows: (response, _sections, translate) => this.exportRows(response, translate),
++    summaryCards: response => [
++      { id: 'profitLossCurrentMonth', labelKey: 'incomeStatementYtd2.profitLossCurrentMonth', value: response.profitLossCurrentMonth, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
++      { id: 'profitLossCurrentYtd', labelKey: 'incomeStatementYtd2.profitLossCurrentYtd', value: response.profitLossCurrentYtd, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' },
++      { id: 'profitLossPreviousYearMonth', labelKey: 'incomeStatementYtd2.profitLossPreviousYearMonth', value: response.profitLossPreviousYearMonth, format: 'money', icon: 'bi bi-cash-stack', accent: 'primary' }
++    ]
++  };
++
++  private accountRow(line: IncomeStatementYtd2Line, root = false): IncomeStatementYtd2Row {
++    return {
++      ...line, id: `account-${line.accountId}`, tone: root ? 'section' : null,
++      children: (line.children ?? []).map(child => this.accountRow(child)),
++    };
+   }
+ 
+-  mapToTreeNodes(lines: IncomeStatementYtd2Line[]): TreeNode[] {
+-    return lines.map(node => ({
+-      key: String(node.accountId),
+-      data: {
+-        accountId:         node.accountId,
+-        name:              `${node.code} - ${node.name}`,
+-        currentMonth:      node.currentMonth,
+-        currentYtd:        node.currentYtd,
+-        previousYearMonth: node.previousYearMonth,
+-        level:             node.level,
+-      },
+-      children: node.children?.length ? this.mapToTreeNodes(node.children) : [],
++  private subtotalRows(response: IncomeStatementYtd2DTO): IncomeStatementYtd2Row[] {
++    const entries = [
++      { key: 'grossProfitLoss', value: response.grossProfitLoss },
++      { key: 'profitLossBeforeSaleOfAssets', value: response.profitLossBeforeSaleOfAssets },
++      { key: 'profitLossOnSaleOfAssets', value: response.profitLossOnSaleOfAssets },
++      { key: 'netProfitLoss', value: response.netProfitLoss },
++    ];
++    return entries.map((entry, index) => ({
++      ...entry.value, id: `subtotal-${entry.key}`, labelKey: `incomeStatementYtd2.${entry.key}`,
++      accountId: -(index + 1), code: '', name: '', level: 1, parentId: null,
++      allowChildren: false, children: [], tone: entry.key === 'netProfitLoss' ? 'total' : 'subtotal',
+     }));
+   }
+ 
+-  private flattenLines(lines: IncomeStatementYtd2Line[], rows: any[] = []): any[] {
+-    for (const line of lines) {
+-      rows.push({
+-        code: line.code, name: line.name, level: line.level,
+-        currentMonth: line.currentMonth, currentYtd: line.currentYtd,
+-        previousYearMonth: line.previousYearMonth,
+-      });
+-      if (line.children?.length) this.flattenLines(line.children, rows);
++  private exportRows(response: IncomeStatementYtd2DTO, translate: (key: string) => string): Array<Record<string, string | number>> {
++    const subtotalColumns: ReadonlyArray<DataTableColumn<IncomeStatementYtd2Row>> = [
++      { field: 'name', header: 'incomeStatementYtd2.subtotal', value: row => translate(row.labelKey!) },
++      ...this.amountColumns,
++    ];
++    const accountColumns: ReadonlyArray<DataTableColumn<IncomeStatementYtd2Line>> = [
++      { field: 'name', header: 'incomeStatementYtd2.account', value: row => [row.code, row.name].filter(Boolean).join(' — ') || '—' },
++      { field: 'currentMonth', header: 'incomeStatementYtd2.currentMonth', type: 'money' },
++      { field: 'currentYtd', header: 'incomeStatementYtd2.currentYtd', type: 'money' },
++      { field: 'previousYearMonth', header: 'incomeStatementYtd2.previousYearMonth', type: 'money' },
++    ];
++    const rows: Array<Record<string, string | number>> = dataTableExportRows(this.subtotalRows(response), subtotalColumns, translate).map(row => ({
++      [translate('accountReports.section')]: translate('incomeStatementYtd2.subtotal'), ...row,
++    }));
++    const accounts: IncomeStatementYtd2Line[] = [];
++    const visit = (source: ReadonlyArray<IncomeStatementYtd2Line>): void => {
++      for (const line of source) {
++        accounts.push(line);
++        visit(line.children ?? []);
++      }
++    };
++    visit(response.lines ?? []);
++    for (const row of dataTableExportRows(accounts, accountColumns, translate)) {
++      rows.push({ [translate('accountReports.section')]: translate('incomeStatementYtd2.title'), ...row });
+     }
+     return rows;
+   }
+-  //#endregion
+ }
+diff --git a/src/app/modules/Accounts/IncomeStatementYtd2/models/list.ts b/src/app/modules/Accounts/IncomeStatementYtd2/models/list.ts
+index ef4b39a..ba46887 100644
+--- a/src/app/modules/Accounts/IncomeStatementYtd2/models/list.ts
++++ b/src/app/modules/Accounts/IncomeStatementYtd2/models/list.ts
+@@ -17,9 +17,9 @@ export interface YtdSubtotalEntry {
+ 
+ export interface IncomeStatementYtd2Line {
+   accountId: number;
+-  code: string;
+-  name: string;
+-  level: number;
++  code: string | null;
++  name: string | null;
++  level: number | null;
+   parentId: number | null;
+   allowChildren: boolean;
+   currentMonth: number;
+diff --git a/src/app/modules/Accounts/IncomeStatementYtd2/services/income-statement-ytd2.service.ts b/src/app/modules/Accounts/IncomeStatementYtd2/services/income-statement-ytd2.service.ts
+index 3e13d1a..fc7638b 100644
+--- a/src/app/modules/Accounts/IncomeStatementYtd2/services/income-statement-ytd2.service.ts
++++ b/src/app/modules/Accounts/IncomeStatementYtd2/services/income-statement-ytd2.service.ts
+@@ -1,12 +1,12 @@
+ import { Injectable } from '@angular/core';
+-import { BaseService } from 'src/app/modules/shared/service/base-service.service';
+-import { environment } from 'src/environments/environment';
++import { AccountReportEndpointService } from '../../shared/report-family/account-report-endpoint.service';
++import { IncomeStatementYtd2DTO, IncomeStatementYtd2Filter } from '../models/list';
+ 
+ @Injectable({
+   providedIn: 'root',
+ })
+-export class IncomeStatementYtd2Service extends BaseService {
++export class IncomeStatementYtd2Service extends AccountReportEndpointService<IncomeStatementYtd2Filter, IncomeStatementYtd2DTO> {
+   constructor() {
+-    super('AccountReports/IncomeStatementYtd2', environment.baseUrl);
++    super('IncomeStatementYtd2');
+   }
+ }

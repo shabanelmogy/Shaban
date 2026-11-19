@@ -1,0 +1,228 @@
+diff --git a/src/styles.scss b/src/styles.scss
+index b6e6b5c..705dc92 100644
+--- a/src/styles.scss
++++ b/src/styles.scss
+@@ -3129,6 +3129,30 @@ p-calendar.p-calendar-clearable .p-calendar .p-calendar-clear-icon:hover {
+   white-space: nowrap;
+ }
+ 
++/* Shared report checkbox accents follow the same Sigma tokens as report radio choices. */
++.sigma-report-filter-check .p-checkbox .p-checkbox-box.p-highlight {
++  border-color: var(--sigma-primary);
++  background: var(--sigma-primary);
++}
++
++.sigma-report-filter-check .p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon {
++  color: var(--bs-white);
++}
++
++.sigma-report-filter-check .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
++  border-color: var(--sigma-primary-hover);
++  background: var(--sigma-primary-hover);
++}
++
++.sigma-report-filter-check .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:not(.p-highlight):hover {
++  border-color: var(--sigma-primary);
++}
++
++.sigma-report-filter-check .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
++  border-color: var(--sigma-primary);
++  box-shadow: var(--sigma-control-focus-ring);
++}
++
+ /* Opt-in report radio choices share Sigma's primary accent and focus treatment. */
+ .sigma-report-filter-choice .p-radiobutton .p-radiobutton-box.p-highlight {
+   border-color: var(--sigma-primary);
+@@ -4021,6 +4045,12 @@ body.sigma-app-viewport .app-content:has(.sigma-route-host) {
+ .sigma-list-header { flex: 0 0 auto; }
+ .sigma-list-header app-feature-title { display: block; }
+ 
++/* Tree/settings workspaces fill the panel content; align title/filter cards with that frame (UI block 3). */
++.sigma-list-panel--workspace > .sigma-list-header app-feature-title,
++.sigma-editor-panel--workspace > app-feature-title { margin-inline: 0; }
++.sigma-list-panel--workspace .sigma-filter-panel,
++.sigma-editor-panel--workspace .sigma-filter-panel { margin-inline: 0; }
++
+ /* Read-only report document: a single frame owns all section/table scrolling. */
+ .sigma-report-page.sigma-report-page--fill { padding: 7px; }
+ 
+@@ -4401,6 +4431,78 @@ body.sigma-app-viewport .app-content:has(.sigma-route-host) {
+ .sigma-editor-scroll > * { flex: 0 0 auto; }
+ .sigma-editor-panel > app-feature-title { flex: 0 0 auto; }
+ 
++/* Shared three-pane record editor: Details / Jobs / selected Job details (UI 1, 13). */
++.sigma-editor-form--three-pane {
++  container: sigma-editor-workspace / inline-size;
++}
++
++.sigma-editor-body.sigma-editor-body--three-pane {
++  display: grid;
++  grid-template-columns: minmax(240px, 280px) minmax(170px, 200px) minmax(0, 1fr);
++  grid-template-rows: minmax(0, 1fr);
++}
++
++.sigma-editor-pane {
++  display: flex;
++  min-inline-size: 0;
++  min-block-size: 0;
++  flex-direction: column;
++  overflow: hidden;
++}
++
++.sigma-editor-pane > app-form-section { flex: 1 1 0; }
++.sigma-editor-grid.sigma-editor-pane-fields { grid-template-columns: minmax(0, 1fr); }
++
++/* Closed lookup text must shrink inside the three-pane editor's field width. */
++.sigma-editor-form--three-pane .sigma-field :is(p-dropdown, .p-dropdown) {
++  box-sizing: border-box;
++  min-width: 0;
++  width: 100%;
++  max-width: 100%;
++}
++
++.sigma-editor-form--three-pane .sigma-field .p-dropdown-label {
++  display: block;
++  min-width: 0;
++  flex: 1 1 auto;
++  overflow: hidden;
++  text-overflow: ellipsis;
++  white-space: nowrap;
++}
++
++.sigma-editor-form--three-pane .sigma-field .p-dropdown-trigger { flex-shrink: 0; }
++
++@container sigma-editor-workspace (max-width: 900px) {
++  .sigma-editor-body.sigma-editor-body--three-pane {
++    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
++    grid-template-rows: minmax(120px, 0.35fr) minmax(0, 1fr);
++  }
++  .sigma-editor-pane--master { grid-column: 1; grid-row: 1 / 3; }
++  .sigma-editor-pane--jobs { grid-column: 2; grid-row: 1; }
++  .sigma-editor-pane--detail { grid-column: 2; grid-row: 2; }
++}
++
++@container sigma-editor-workspace (max-width: 620px) {
++  .sigma-editor-body.sigma-editor-body--three-pane {
++    grid-template-columns: minmax(0, 1fr);
++    grid-template-rows: minmax(130px, 0.7fr) minmax(120px, 0.4fr) minmax(0, 1fr);
++  }
++  .sigma-editor-pane--master { grid-column: 1; grid-row: 1; }
++  .sigma-editor-pane--jobs { grid-column: 1; grid-row: 2; }
++  .sigma-editor-pane--detail { grid-column: 1; grid-row: 3; }
++}
++
++@media print {
++  .sigma-editor-form--three-pane { container-type: normal; }
++  .sigma-editor-body.sigma-editor-body--three-pane,
++  .sigma-editor-body--three-pane > .sigma-editor-pane {
++    display: block;
++    height: auto;
++    max-height: none;
++    overflow: visible;
++  }
++}
++
+ /* Field grid: --sigma-editor-columns (default 4); 2 under 1024px, 1 under 700px. */
+ .sigma-editor-grid {
+   display: grid;
+@@ -4580,3 +4682,100 @@ body.sigma-app-viewport .app-content:has(.sigma-route-host) {
+   .sigma-editor-grid { grid-template-columns: minmax(0, 1fr); }
+   .sigma-editor-totals { gap: 6px 12px; font-size: 0.6875rem; }
+ }
++
++.sigma-numeric-input {
++  min-width: 0;
++  direction: ltr;
++  text-align: right;
++  font-variant-numeric: tabular-nums;
++  appearance: textfield;
++  -moz-appearance: textfield;
++
++  &::-webkit-inner-spin-button,
++  &::-webkit-outer-spin-button {
++    margin: 0;
++    -webkit-appearance: none;
++  }
++}
++
++/* Quantity has one widget owner; feature fields and table columns retain their widths. */
++.sigma-quantity-input-host {
++  display: block;
++  min-width: 0;
++  max-width: 100%;
++  width: 100%;
++}
++
++.sigma-quantity-input-host .sigma-quantity-input.p-inputnumber {
++  display: inline-flex;
++  box-sizing: border-box;
++  min-width: 0;
++  width: 100%;
++  height: var(--sigma-editor-control-height, 34px);
++  direction: ltr;
++  border: 1px solid var(--app-editor-dialog-input-border, var(--sigma-border));
++  border-radius: var(--sigma-control-radius, 6px);
++  color: var(--app-editor-dialog-text, var(--sigma-text));
++  background: var(--app-editor-dialog-surface, var(--sigma-surface));
++
++  &:focus-within {
++    border-color: var(--sigma-primary);
++    box-shadow: var(--sigma-control-focus-ring);
++  }
++
++  .p-inputnumber-input {
++    flex: 1 1 0;
++    box-sizing: border-box;
++    min-width: 0;
++    width: 0;
++    height: 100%;
++    min-height: 0;
++    padding: 7px 9px;
++    border: 0;
++    border-radius: var(--sigma-control-radius, 6px) 0 0 var(--sigma-control-radius, 6px);
++    color: inherit;
++    background: transparent;
++    font-size: 12px;
++    box-shadow: none;
++    outline: 0;
++  }
++
++  .p-inputnumber-button-group {
++    display: flex;
++    flex: 0 0 22px;
++    width: 22px;
++    flex-direction: column;
++    overflow: hidden;
++    border-inline-start: 1px solid var(--app-editor-dialog-input-border, var(--sigma-border));
++    border-start-end-radius: var(--sigma-control-radius, 6px);
++    border-end-end-radius: var(--sigma-control-radius, 6px);
++  }
++
++  .p-inputnumber-button {
++    display: flex;
++    min-width: 0;
++    width: 100%;
++    min-height: 0;
++    height: 50%;
++    flex: 1 1 0;
++    justify-content: center;
++    align-items: center;
++    padding: 0;
++    border: 0;
++    border-radius: 0;
++    color: var(--sigma-primary);
++    background: color-mix(in srgb, var(--sigma-primary) 8%, var(--app-editor-dialog-surface, var(--sigma-surface)));
++    box-shadow: none;
++
++    &:enabled:hover { background: color-mix(in srgb, var(--sigma-primary) 16%, var(--app-editor-dialog-surface, var(--sigma-surface))); }
++    &:focus-visible { outline: 1px solid var(--sigma-primary); outline-offset: -2px; }
++    &:disabled { opacity: 0.45; }
++    .p-icon { width: 10px; height: 10px; }
++  }
++
++  .p-inputnumber-button-up { border-block-end: 1px solid var(--app-editor-dialog-input-border, var(--sigma-border)); }
++}
++
++.sigma-quantity-input-host:is(.ng-invalid.ng-touched, .ng-invalid.ng-dirty) .sigma-quantity-input {
++  border-color: var(--bs-danger);
++}

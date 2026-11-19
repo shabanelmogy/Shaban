@@ -1,0 +1,33 @@
+using SiGma.ViewModels.ViewModels.CashDeposit;
+
+namespace SiGma.Business.MapperConfig
+{
+    public class CashDepositProfiler : Profile
+    {
+        public CashDepositProfiler()
+        {
+            // Write maps (Add/Update → Entity)
+            CreateMap<CashDepositAddVM, CashDeposit>()
+                .ForMember(dest => dest.CashDepositDetails, opt => opt.MapFrom(src => src.CashDepositDetails));
+
+            CreateMap<CashDepositUpdateVM, CashDeposit>()
+                // The tracked service reconciles this full snapshot and supplies source-owned values.
+                .ForMember(dest => dest.CashDepositDetails, opt => opt.Ignore());
+
+            // Read maps (Entity → DetailVM/ListVM) — ForMember for navigation name strings
+            CreateMap<CashDeposit, CashDepositDetailVM>()
+                .ForMember(dest => dest.BankName,
+                    opt => opt.MapFrom(src => src.Bank != null ? src.Bank.Name : string.Empty))
+                .ForMember(dest => dest.PaymentMethodName,
+                    opt => opt.MapFrom(src => src.PaymentMethod != null ? src.PaymentMethod.Name : string.Empty))
+                .ForMember(dest => dest.BranchName,
+                    opt => opt.MapFrom(src => src.Branch != null ? src.Branch.Name : string.Empty))
+                .ForMember(dest => dest.CashDepositDetails,
+                    opt => opt.MapFrom(src => src.CashDepositDetails));
+
+            CreateMap<CashDeposit, CashDepositListVM>()
+                .ForMember(dest => dest.BankName,
+                    opt => opt.MapFrom(src => src.Bank != null ? src.Bank.Name : string.Empty));
+        }
+    }
+}

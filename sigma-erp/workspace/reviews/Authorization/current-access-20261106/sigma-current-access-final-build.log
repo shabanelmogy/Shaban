@@ -1,0 +1,39 @@
+  SiGma.Helpers -> F:\My Work\Sigma\SigmaBackend\SiGma.Helpers\bin\Debug\net10.0\SiGma.Helpers.dll
+  SiGma.Repos -> F:\My Work\Sigma\SigmaBackend\SiGma.Repos\bin\Debug\net10.0\SiGma.Repos.dll
+  SiGma.DataAccess -> F:\My Work\Sigma\SigmaBackend\SiGma.DataAccess\bin\Debug\net10.0\SiGma.DataAccess.dll
+  SiGma.ViewModels -> F:\My Work\Sigma\SigmaBackend\SiGma.ViewModels\bin\Debug\net10.0\SiGma.ViewModels.dll
+  SiGma.Business -> F:\My Work\Sigma\SigmaBackend\SiGma.Business\bin\Debug\net10.0\SiGma.Business.dll
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\AccrualsController.cs(54,27): warning CS0108: 'AccrualsController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\PayrollDisbursementController.cs(28,27): warning CS0108: 'PayrollDisbursementController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\PayrollRunsController.cs(56,27): warning CS0108: 'PayrollRunsController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\PaySlipsController.cs(27,27): warning CS0108: 'PaySlipsController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\AmortizationController.cs(60,27): warning CS0108: 'AmortizationController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\MockDataController.cs(27,27): warning CS0108: 'MockDataController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\MonthlyPostingController.cs(26,27): warning CS0108: 'MonthlyPostingController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(87,24): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(88,27): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(89,26): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(94,26): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(95,32): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\DebitNoteController.cs(38,131): warning CS1573: Parameter 'excludeDebitNoteId' has no matching param tag in the XML comment for 'DebitNoteController.GetBillsBySupplier(int, CancellationToken, int?)' (but other parameters do) [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+  SiGma.ServerAPI -> F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\bin\Debug\net10.0\SiGma.ServerAPI.dll
+
+Build succeeded.
+
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\AccrualsController.cs(54,27): warning CS0108: 'AccrualsController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\PayrollDisbursementController.cs(28,27): warning CS0108: 'PayrollDisbursementController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\PayrollRunsController.cs(56,27): warning CS0108: 'PayrollRunsController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\PaySlipsController.cs(27,27): warning CS0108: 'PaySlipsController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\AmortizationController.cs(60,27): warning CS0108: 'AmortizationController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\MockDataController.cs(27,27): warning CS0108: 'MockDataController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\MonthlyPostingController.cs(26,27): warning CS0108: 'MonthlyPostingController.Response(Result)' hides inherited member 'ControllerBase.Response'. Use the new keyword if hiding was intended. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(87,24): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(88,27): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(89,26): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(94,26): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Middleware\ErrorLogsMiddleware.cs(95,32): warning CS8601: Possible null reference assignment. [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\Controller\DebitNoteController.cs(38,131): warning CS1573: Parameter 'excludeDebitNoteId' has no matching param tag in the XML comment for 'DebitNoteController.GetBillsBySupplier(int, CancellationToken, int?)' (but other parameters do) [F:\My Work\Sigma\SigmaBackend\SiGma.ServerAPI\SiGma.ServerAPI.csproj]
+    13 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:07.59

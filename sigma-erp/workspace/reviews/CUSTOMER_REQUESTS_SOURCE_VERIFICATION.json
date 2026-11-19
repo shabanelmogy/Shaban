@@ -1,0 +1,30 @@
+{
+  "files": [
+    "src/app/modules/Administration/CustomerRequests/components/details/details.component.html",
+    "src/app/modules/Administration/CustomerRequests/components/details/details.component.ts",
+    "src/app/modules/Administration/CustomerRequests/components/list/list.component.html",
+    "src/app/modules/Administration/CustomerRequests/components/list/list.component.ts",
+    "src/app/modules/Administration/CustomerRequests/customerrequest.routes.ts",
+    "src/app/modules/Administration/CustomerRequests/models/create.ts",
+    "src/app/modules/Administration/CustomerRequests/models/details.ts",
+    "src/app/modules/Administration/CustomerRequests/models/list.ts",
+    "src/app/modules/Administration/CustomerRequests/services/customerrequest.service.ts"
+  ],
+  "sourceImportExports": "exact local named exports and unused named-import scan",
+  "translationKeysChecked": 42,
+  "listVM": [
+    "CreatedAt",
+    "CustomerName",
+    "Detail",
+    "Id",
+    "Status"
+  ],
+  "detailOwnFields": [
+    "CreatedAt",
+    "CustomerId",
+    "CustomerName",
+    "Detail",
+    "Status"
+  ],
+  "problems": []
+}

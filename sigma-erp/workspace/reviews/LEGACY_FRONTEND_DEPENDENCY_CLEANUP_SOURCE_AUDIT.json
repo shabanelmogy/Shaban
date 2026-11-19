@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-15",
+  "mode": "source-only; no build, tests or lint",
+  "removedPackageNodes": 66,
+  "removed": [
+    "node_modules/@angular/material",
+    "node_modules/@material/animation",
+    "node_modules/@material/auto-init",
+    "node_modules/@material/banner",
+    "node_modules/@material/base",
+    "node_modules/@material/button",
+    "node_modules/@material/card",
+    "node_modules/@material/checkbox",
+    "node_modules/@material/chips",
+    "node_modules/@material/circular-progress",
+    "node_modules/@material/data-table",
+    "node_modules/@material/density",
+    "node_modules/@material/dialog",
+    "node_modules/@material/dom",
+    "node_modules/@material/drawer",
+    "node_modules/@material/elevation",
+    "node_modules/@material/fab",
+    "node_modules/@material/feature-targeting",
+    "node_modules/@material/floating-label",
+    "node_modules/@material/focus-ring",
+    "node_modules/@material/form-field",
+    "node_modules/@material/icon-button",
+    "node_modules/@material/image-list",
+    "node_modules/@material/layout-grid",
+    "node_modules/@material/line-ripple",
+    "node_modules/@material/linear-progress",
+    "node_modules/@material/list",
+    "node_modules/@material/menu",
+    "node_modules/@material/menu-surface",
+    "node_modules/@material/notched-outline",
+    "node_modules/@material/progress-indicator",
+    "node_modules/@material/radio",
+    "node_modules/@material/ripple",
+    "node_modules/@material/rtl",
+    "node_modules/@material/segmented-button",
+    "node_modules/@material/select",
+    "node_modules/@material/shape",
+    "node_modules/@material/slider",
+    "node_modules/@material/snackbar",
+    "node_modules/@material/switch",
+    "node_modules/@material/tab",
+    "node_modules/@material/tab-bar",
+    "node_modules/@material/tab-indicator",
+    "node_modules/@material/tab-scroller",
+    "node_modules/@material/textfield",
+    "node_modules/@material/theme",
+    "node_modules/@material/tokens",
+    "node_modules/@material/tooltip",
+    "node_modules/@material/top-app-bar",
+    "node_modules/@material/touch-target",
+    "node_modules/@material/typography",
+    "node_modules/@types/datatables.net",
+    "node_modules/@types/jquery",
+    "node_modules/@types/sizzle",
+    "node_modules/clipboard",
+    "node_modules/datatables.net",
+    "node_modules/datatables.net-bs5",
+    "node_modules/delegate",
+    "node_modules/good-listener",
+    "node_modules/jquery",
+    "node_modules/ngx-clipboard",
+    "node_modules/ngx-window-token",
+    "node_modules/nouislider",
+    "node_modules/safevalues",
+    "node_modules/select",
+    "node_modules/tiny-emitter"
+  ],
+  "added": [],
+  "changedVersions": [],
+  "changedSurvivors": [
+    {
+      "key": "node_modules/@angular/cdk",
+      "before": {
+        "version": "17.3.10",
+        "license": "MIT",
+        "peer": true,
+        "dependencies": {
+          "tslib": "^2.3.0"
+        },
+        "optionalDependencies": {
+          "parse5": "^7.1.2"
+        },
+        "peerDependencies": {
+          "@angular/common": "^17.0.0 || ^18.0.0",
+          "@angular/core": "^17.0.0 || ^18.0.0",
+          "rxjs": "^6.5.3 || ^7.4.0"
+        }
+      },
+      "after": {
+        "version": "17.3.10",
+        "license": "MIT",
+        "dependencies": {
+          "tslib": "^2.3.0"
+        },
+        "optionalDependencies": {
+          "parse5": "^7.1.2"
+        },
+        "peerDependencies": {
+          "@angular/common": "^17.0.0 || ^18.0.0",
+          "@angular/core": "^17.0.0 || ^18.0.0",
+          "rxjs": "^6.5.3 || ^7.4.0"
+        }
+      }
+    }
+  ],
+  "targetsAbsent": true,
+  "cdk": "17.3.10",
+  "parsedTs": [
+    "src/app/app.module.ts",
+    "src/app/modules/Administration/Settings/components/fines/fines.component.ts",
+    "src/app/modules/Vouchers/Provisions/Provision/components/details/details.component.ts",
+    "src/app/pages/role/role-details/role-details.component.ts",
+    "src/app/pages/user/user-listing/user-listing.component.ts"
+  ],
+  "parsedHtml": [
+    "src/app/_metronic/layout/components/toolbar/saas/saas.component.html"
+  ],
+  "failures": []
+}

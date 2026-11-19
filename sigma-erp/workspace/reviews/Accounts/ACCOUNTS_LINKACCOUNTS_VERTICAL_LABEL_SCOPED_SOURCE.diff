@@ -1,0 +1,394 @@
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/banck-account/banck-account.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/banck-account/banck-account.component.html
+index 4d8494e..1b2b3b3 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/banck-account/banck-account.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/banck-account/banck-account.component.html	
+@@ -1,21 +1,14 @@
+ <app-link-account-tab-state [loading]="tabLoading()" [failed]="loadFailed()" (retry)="loadData()">
+-<section class="link-account-table" aria-labelledby="bank-settings-heading">
+-  <div class="link-account-table__header link-account-table__header--two">
+-    <h2 id="bank-settings-heading">{{ 'linkAccounts.bankName' | translate }}</h2>
+-    <h2>{{ 'linkAccounts.accounts' | translate }}</h2>
+-  </div>
+-  <div class="link-account-table__body">
+-    @for (row of visibleRows(); track row.subType) {
+-      <div class="link-account-row link-account-row--two">
+-        <span class="link-account-row__label">{{ row.bankName || '-' }}</span>
+-        <p-dropdown appendTo="body" [filter]="true" [options]="accounts()"
++
++  <app-editable-collection-table title="linkAccounts.bankAccounts" [headingVisible]="false"
++    [columns]="columns" [editable]="false"
++    tableMinWidth="36rem" emptyMessage="linkAccounts.noSearchResults">
++    <ng-template [appEditableCollectionRow]="visibleRows()" let-row>
++      <td class="align-middle">{{ row.bankName || "—" }}</td>
++      <td><div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="accounts()"
+           optionLabel="value" optionValue="id" [ngModel]="row.accountId"
+           (ngModelChange)="onAccountChange(row, $event)"
+-          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown>
+-      </div>
+-    } @empty {
+-      <div class="link-account-empty">{{ 'linkAccounts.noSearchResults' | translate }}</div>
+-    }
+-  </div>
+-</section>
++          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown></div></td>
++    </ng-template>
++  </app-editable-collection-table>
+ </app-link-account-tab-state>
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/charges-type/charges-type.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/charges-type/charges-type.component.html
+index 6ed716d..313c64e 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/charges-type/charges-type.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/charges-type/charges-type.component.html	
+@@ -1,8 +1,5 @@
+ <app-link-account-tab-state [loading]="tabLoading()" [failed]="loadFailed()" (retry)="loadData()">
+-<section class="link-account-table" aria-labelledby="charge-settings-heading">
+-  <div class="link-account-toolbar">
+-    <label for="charge-module">{{ 'linkAccounts.module' | translate }}</label>
+-    <p-dropdown
++  <div class="sigma-field link-account-toolbar"><label for="charge-module">{{ 'linkAccounts.module' | translate }}</label><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate"
+       inputId="charge-module"
+       appendTo="body"
+       [options]="chargeModules()"
+@@ -10,21 +7,13 @@
+       optionValue="id"
+       [ngModel]="selectedModule()"
+       (ngModelChange)="onModuleChange($event)"
+-    ></p-dropdown>
+-  </div>
+-
+-  <div class="link-account-table__header link-account-table__header--two">
+-    <h2 id="charge-settings-heading">{{ 'linkAccounts.chargesType' | translate }}</h2>
+-    <h2>{{ 'linkAccounts.accounts' | translate }}</h2>
+-  </div>
+-
+-  <div class="link-account-table__body">
+-    @for (row of visibleRows(); track row.value) {
+-      <div class="link-account-row link-account-row--two">
+-        <span class="link-account-row__label">
+-          {{ row.settingLabel || row.settingKey || row.value }}
+-        </span>
+-        <p-dropdown
++    ></p-dropdown></div>
++  <app-editable-collection-table title="linkAccounts.chargesType" [headingVisible]="false"
++    [columns]="columns" [editable]="false"
++    tableMinWidth="36rem" emptyMessage="linkAccounts.noSearchResults">
++    <ng-template [appEditableCollectionRow]="visibleRows()" let-row>
++      <td class="align-middle">{{ row.settingLabel || row.settingKey || row.value }}</td>
++      <td><div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate"
+           appendTo="body"
+           [filter]="true"
+           [options]="accounts()"
+@@ -33,11 +22,7 @@
+           [ngModel]="row.accountId"
+           (ngModelChange)="onAccountChange(row, $event)"
+           [placeholder]="'linkAccounts.selectAccount' | translate"
+-        ></p-dropdown>
+-      </div>
+-    } @empty {
+-      <div class="link-account-empty">{{ 'linkAccounts.noSearchResults' | translate }}</div>
+-    }
+-  </div>
+-</section>
++        ></p-dropdown></div></td>
++    </ng-template>
++  </app-editable-collection-table>
+ </app-link-account-tab-state>
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/contacts/contacts.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/contacts/contacts.component.html
+index 0c08a78..e580417 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/contacts/contacts.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/contacts/contacts.component.html	
+@@ -1,30 +1,15 @@
+ <app-link-account-tab-state [loading]="tabLoading()" [failed]="loadFailed()" (retry)="loadData()">
+-<section class="link-account-table" aria-labelledby="contact-settings-heading">
+-  <div class="link-account-table__header link-account-table__header--three">
+-    <h2 id="contact-settings-heading">{{ 'linkAccounts.type' | translate }}</h2>
+-    <h2>{{ 'linkAccounts.contactGroup' | translate }}</h2>
+-    <h2>{{ 'linkAccounts.accounts' | translate }}</h2>
+-  </div>
+-  <div class="link-account-table__body">
+-    @for (row of visibleRows(); track row.value) {
+-      <div class="link-account-row link-account-row--three">
+-        <span class="link-account-row__label">{{ row.contactType || '-' }}</span>
+-        <span class="link-account-row__label link-account-row__label--group">
+-          <span>{{ row.contactGroup || '-' }}</span>
+-          @if (row.isDefaultContactGroup) {
+-            <span class="badge badge-light-primary" [title]="'contactGroup.defaultHint' | translate">
+-              {{ 'contactGroup.default' | translate }}
+-            </span>
+-          }
+-        </span>
+-        <p-dropdown appendTo="body" [filter]="true" [options]="accounts()"
++
++  <app-editable-collection-table title="linkAccounts.contacts" [headingVisible]="false"
++    [columns]="columns" [editable]="false"
++    tableMinWidth="52rem" emptyMessage="linkAccounts.noSearchResults">
++    <ng-template [appEditableCollectionRow]="visibleRows()" let-row>
++      <td class="align-middle">{{ row.contactType || "—" }}</td>
++      <td class="align-middle">{{ row.contactGroup || '—' }} @if (row.isDefaultContactGroup) { <span class="badge badge-light-primary" [title]="'contactGroup.defaultHint' | translate">{{ 'contactGroup.default' | translate }}</span> }</td>
++      <td><div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="accounts()"
+           optionLabel="value" optionValue="id" [ngModel]="row.accountId"
+           (ngModelChange)="onAccountChange(row, $event)"
+-          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown>
+-      </div>
+-    } @empty {
+-      <div class="link-account-empty">{{ 'linkAccounts.noSearchResults' | translate }}</div>
+-    }
+-  </div>
+-</section>
++          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown></div></td>
++    </ng-template>
++  </app-editable-collection-table>
+ </app-link-account-tab-state>
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/general/general.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/general/general.component.html
+index 6fcb3e0..03f2411 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/general/general.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/general/general.component.html	
+@@ -1,17 +1,11 @@
+ <app-link-account-tab-state [loading]="tabLoading()" [failed]="loadFailed()" (retry)="loadData()">
+-<section class="link-account-table" aria-labelledby="general-settings-heading">
+-  <div class="link-account-table__header link-account-table__header--two">
+-    <h2 id="general-settings-heading">{{ 'linkAccounts.general' | translate }}</h2>
+-    <h2>{{ 'linkAccounts.accounts' | translate }}</h2>
+-  </div>
+ 
+-  <div class="link-account-table__body">
+-    @for (row of visibleRows(); track row.value) {
+-      <div class="link-account-row link-account-row--two">
+-        <span class="link-account-row__label">
+-          {{ row.settingLabel || row.settingKey || row.value }}
+-        </span>
+-        <p-dropdown
++  <app-editable-collection-table title="linkAccounts.general" [headingVisible]="false"
++    [columns]="columns" [editable]="false"
++    tableMinWidth="36rem" emptyMessage="linkAccounts.noSearchResults">
++    <ng-template [appEditableCollectionRow]="visibleRows()" let-row>
++      <td class="align-middle">{{ row.settingLabel || row.settingKey || row.value }}</td>
++      <td><div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate"
+           appendTo="body"
+           [filter]="true"
+           [options]="accounts()"
+@@ -20,11 +14,7 @@
+           [ngModel]="row.accountId"
+           (ngModelChange)="onAccountChange(row, $event)"
+           [placeholder]="'linkAccounts.selectAccount' | translate"
+-        ></p-dropdown>
+-      </div>
+-    } @empty {
+-      <div class="link-account-empty">{{ 'linkAccounts.noSearchResults' | translate }}</div>
+-    }
+-  </div>
+-</section>
++        ></p-dropdown></div></td>
++    </ng-template>
++  </app-editable-collection-table>
+ </app-link-account-tab-state>
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/payment-methods/payment-methods.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/payment-methods/payment-methods.component.html
+index b4cadcd..48b833c 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/payment-methods/payment-methods.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/payment-methods/payment-methods.component.html	
+@@ -1,31 +1,18 @@
+ <app-link-account-tab-state [loading]="tabLoading()" [failed]="loadFailed()" (retry)="loadData()">
+-<section class="link-account-table" aria-labelledby="payment-settings-heading">
+-  <div class="link-account-toolbar link-account-toolbar--stacked">
+-    <label for="payment-method-branch">{{ 'linkAccounts.branch' | translate }}</label>
+-    <p-dropdown inputId="payment-method-branch" appendTo="body" [filter]="true"
++  <div class="sigma-field link-account-toolbar"><label for="payment-method-branch">{{ 'linkAccounts.branch' | translate }}</label><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" inputId="payment-method-branch" appendTo="body" [filter]="true"
+       [options]="branches()" optionLabel="value" optionValue="id"
+       [ngModel]="selectedBranchId()" (ngModelChange)="onBranchChange($event)"
+-      [placeholder]="'linkAccounts.selectBranch' | translate"></p-dropdown>
+-  </div>
+-
+-  <div class="link-account-table__header link-account-table__header--three">
+-    <h2 id="payment-settings-heading">{{ 'linkAccounts.paymentCategory' | translate }}</h2>
+-    <h2>{{ 'linkAccounts.paymentMethod' | translate }}</h2>
+-    <h2>{{ 'linkAccounts.accounts' | translate }}</h2>
+-  </div>
+-  <div class="link-account-table__body">
+-    @for (row of visibleRows(); track row.value) {
+-      <div class="link-account-row link-account-row--three">
+-        <span class="link-account-row__label">{{ row.paymentCategory || '-' }}</span>
+-        <span class="link-account-row__label">{{ row.paymentMethod || '-' }}</span>
+-        <p-dropdown appendTo="body" [filter]="true" [options]="accounts()"
++      [placeholder]="'linkAccounts.selectBranch' | translate"></p-dropdown></div>
++  <app-editable-collection-table title="linkAccounts.paymentMethods" [headingVisible]="false"
++    [columns]="columns" [editable]="false"
++    tableMinWidth="52rem" emptyMessage="linkAccounts.noSearchResults">
++    <ng-template [appEditableCollectionRow]="visibleRows()" let-row>
++      <td class="align-middle">{{ row.paymentCategory || "—" }}</td>
++      <td class="align-middle">{{ row.paymentMethod || "—" }}</td>
++      <td><div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="accounts()"
+           optionLabel="value" optionValue="id" [ngModel]="row.accountId"
+           (ngModelChange)="onAccountChange(row, $event)"
+-          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown>
+-      </div>
+-    } @empty {
+-      <div class="link-account-empty">{{ 'linkAccounts.noSearchResults' | translate }}</div>
+-    }
+-  </div>
+-</section>
++          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown></div></td>
++    </ng-template>
++  </app-editable-collection-table>
+ </app-link-account-tab-state>
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/prepaid-expense/prepaid-expense.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/prepaid-expense/prepaid-expense.component.html
+index 5077180..0822a35 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/prepaid-expense/prepaid-expense.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/prepaid-expense/prepaid-expense.component.html	
+@@ -1,9 +1,9 @@
+ <app-link-account-tab-state [loading]="tabLoading()" [failed]="loadFailed()" (retry)="loadData()">
+   <app-editable-collection-table
+     title="linkAccounts.prepaidExpense"
+-    [headingVisible]="false"
++    [headingVisible]="false" [validationMessage]="valid() ? '': 'linkAccounts.saveBlocked'"
+     [columns]="columns"
+-    [editable]="true"
++    [editable]="!busy() && !confirmationPending() && ready()" [removeDisabled]="busy() || confirmationPending()"
+     addLabel="linkAccounts.addMapping"
+     removeLabel="linkAccounts.removeMapping"
+     tableMinWidth="36rem"
+@@ -13,17 +13,17 @@
+     (removeRequested)="removeVisibleMapping($event)"
+   >
+     <ng-template [appEditableCollectionRow]="visibleRows()" let-row>
+-      <td [class.prepaid-mapping-cell--invalid]="isRowInvalid(row)">
+-        <p-dropdown appendTo="body" [filter]="true" [options]="prepaidAccountOptions(row)"
++      <td>
++        <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="prepaidAccountOptions(row)"
+           optionLabel="value" optionValue="id" [ngModel]="row.value"
+           (ngModelChange)="onPrepaidAccountChange(row, $event)"
+-          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown>
++          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown></div>
+       </td>
+-      <td [class.prepaid-mapping-cell--invalid]="isRowInvalid(row)">
+-        <p-dropdown appendTo="body" [filter]="true" [options]="accounts()"
++      <td>
++        <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="accounts()"
+           optionLabel="value" optionValue="id" [ngModel]="row.accountId"
+           (ngModelChange)="onExpenseAccountChange(row, $event)"
+-          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown>
++          [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown></div>
+       </td>
+     </ng-template>
+   </app-editable-collection-table>
+diff --git a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/workshop/workshop.component.html b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/workshop/workshop.component.html
+index 6c1331f..8278c7d 100644
+--- a/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/workshop/workshop.component.html	
++++ b/src/app/modules/Accounts/Link Accounts/LinkAccounts/components/workshop/workshop.component.html	
+@@ -1,35 +1,24 @@
+ <app-link-account-tab-state [loading]="tabLoading()" [failed]="loadFailed()" (retry)="loadData()">
+ <div class="workshop-account-sections">
+-  <section class="link-account-table workshop-account-section" aria-labelledby="stock-asset-heading">
+-    <h2 class="workshop-account-section__title" id="stock-asset-heading">
+-      {{ 'linkAccounts.stockAssetAccounts' | translate }}
+-    </h2>
+-    <div class="link-account-table__header workshop-asset-grid">
+-      <h2>{{ 'linkAccounts.itemType' | translate }}</h2>
+-      <h2>{{ 'linkAccounts.assetAccount' | translate }}</h2>
+-    </div>
+-    <div class="link-account-table__body">
+-      @for (row of assetRows(); track row.value) {
+-        <div class="link-account-row workshop-asset-grid">
+-          <span class="link-account-row__label">
+-            {{ row.settingLabel || itemTypeLabel(row.value) }}
+-          </span>
+-          <p-dropdown appendTo="body" [filter]="true" [options]="accounts()"
+-            optionLabel="value" optionValue="id" [ngModel]="row.accountId"
+-            (ngModelChange)="updateRow(row, { accountId: $event ?? undefined })"
+-            [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown>
+-        </div>
+-      } @empty {
+-        <div class="link-account-empty">{{ 'linkAccounts.noSearchResults' | translate }}</div>
+-      }
+-    </div>
++  <section class="workshop-account-section">
++    <app-editable-collection-table title="linkAccounts.stockAssetAccounts" [columns]="assetColumns"
++      [editable]="false" emptyMessage="linkAccounts.noSearchResults" tableMinWidth="36rem">
++      <ng-template [appEditableCollectionRow]="assetRows()" let-row>
++        <td class="align-middle">{{ row.settingLabel || itemTypeLabel(row.value) }}</td>
++        <td><div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()"
++          styleClass="w-100" [ariaLabel]="'linkAccounts.assetAccount' | translate" appendTo="body"
++          [filter]="true" [options]="accounts()" optionLabel="value" optionValue="id"
++          [ngModel]="row.accountId" (ngModelChange)="updateRow(row, { accountId: $event ?? undefined })"
++          [placeholder]="'linkAccounts.selectAccount' | translate" /></div></td>
++      </ng-template>
++    </app-editable-collection-table>
+   </section>
+ 
+   <section class="workshop-account-section">
+     <app-editable-collection-table
+       title="linkAccounts.stockRevenueAccounts"
+       [columns]="revenueColumns"
+-      [editable]="true"
++      [editable]="!busy() && !confirmationPending() && ready()" [removeDisabled]="busy() || confirmationPending()"
+       addLabel="linkAccounts.addRow"
+       removeLabel="linkAccounts.removeMapping"
+       [validationMessage]="hasDuplicateInSection(sections().revenue) ? 'linkAccounts.duplicateMapping' : ''"
+@@ -41,20 +30,20 @@
+     >
+       <ng-template [appEditableCollectionRow]="revenueRows()" let-row>
+         <td>
+-          <p-dropdown appendTo="body" [filter]="true" [options]="categoryOptions()"
++          <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="categoryOptions()"
+             optionLabel="value" optionValue="id" [ngModel]="row.subType ?? ''"
+-            (ngModelChange)="updateRow(row, { subType: optionalNumber($event) })"></p-dropdown>
++            (ngModelChange)="updateRow(row, { subType: optionalNumber($event) })"></p-dropdown></div>
+         </td>
+         <td>
+-          <p-dropdown appendTo="body" [options]="itemTypes()" optionLabel="value" optionValue="id"
++          <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [options]="itemTypes()" optionLabel="value" optionValue="id"
+             [ngModel]="row.value" (ngModelChange)="updateRow(row, { value: $event })"
+-            [placeholder]="'linkAccounts.itemType' | translate"></p-dropdown>
++            [placeholder]="'linkAccounts.itemType' | translate"></p-dropdown></div>
+         </td>
+         <td>
+-          <p-dropdown appendTo="body" [filter]="true" [options]="accounts()"
++          <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="accounts()"
+             optionLabel="value" optionValue="id" [ngModel]="row.accountId"
+             (ngModelChange)="updateRow(row, { accountId: $event ?? undefined })"
+-            [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown>
++            [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown></div>
+         </td>
+       </ng-template>
+     </app-editable-collection-table>
+@@ -64,7 +53,7 @@
+     <app-editable-collection-table
+       title="linkAccounts.stockExpenseAccounts"
+       [columns]="expenseColumns"
+-      [editable]="true"
++      [editable]="!busy() && !confirmationPending() && ready()" [removeDisabled]="busy() || confirmationPending()"
+       addLabel="linkAccounts.addRow"
+       removeLabel="linkAccounts.removeMapping"
+       [validationMessage]="hasDuplicateInSection(sections().expense) ? 'linkAccounts.duplicateMapping' : ''"
+@@ -76,25 +65,25 @@
+     >
+       <ng-template [appEditableCollectionRow]="expenseRows()" let-row>
+         <td>
+-          <p-dropdown appendTo="body" [filter]="true" [options]="categoryOptions()"
++          <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="categoryOptions()"
+             optionLabel="value" optionValue="id" [ngModel]="row.subType ?? ''"
+-            (ngModelChange)="updateRow(row, { subType: optionalNumber($event) })"></p-dropdown>
++            (ngModelChange)="updateRow(row, { subType: optionalNumber($event) })"></p-dropdown></div>
+         </td>
+         <td>
+-          <p-dropdown appendTo="body" [options]="jobTypeOptions()" optionLabel="value" optionValue="id"
++          <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [options]="jobTypeOptions()" optionLabel="value" optionValue="id"
+             [ngModel]="row.jobType ?? ''"
+-            (ngModelChange)="updateRow(row, { jobType: optionalNumber($event) })"></p-dropdown>
++            (ngModelChange)="updateRow(row, { jobType: optionalNumber($event) })"></p-dropdown></div>
+         </td>
+         <td>
+-          <p-dropdown appendTo="body" [options]="itemTypes()" optionLabel="value" optionValue="id"
++          <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [options]="itemTypes()" optionLabel="value" optionValue="id"
+             [ngModel]="row.value" (ngModelChange)="updateRow(row, { value: $event })"
+-            [placeholder]="'linkAccounts.itemType' | translate"></p-dropdown>
++            [placeholder]="'linkAccounts.itemType' | translate"></p-dropdown></div>
+         </td>
+         <td>
+-          <p-dropdown appendTo="body" [filter]="true" [options]="accounts()"
++          <div class="sigma-field"><p-dropdown [disabled]="busy() || confirmationPending() || !ready()" styleClass="w-100" [ariaLabel]="'linkAccounts.accounts' | translate" appendTo="body" [filter]="true" [options]="accounts()"
+             optionLabel="value" optionValue="id" [ngModel]="row.accountId"
+             (ngModelChange)="updateRow(row, { accountId: $event ?? undefined })"
+-            [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown>
++            [placeholder]="'linkAccounts.selectAccount' | translate"></p-dropdown></div>
+         </td>
+       </ng-template>
+     </app-editable-collection-table>

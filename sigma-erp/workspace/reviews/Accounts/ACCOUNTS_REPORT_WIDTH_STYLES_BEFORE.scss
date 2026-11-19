@@ -1,0 +1,4853 @@
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+/* You can add global styles to this file, and also import other style files */
+@import "./assets/sass/style.scss";
+// Replace above style with this css file to enable RTL styles
+// @import "./assets/css/style.rtl";
+@import './assets/sass/plugins.scss';
+// @import "./assets/css/style.rtl.css";
+@import "./assets/sass/style.angular.scss";
+
+// Keenicons - High quality and pixel perfect font icons available in 3 styles, duotone, outline and solid for Metronic elements
+@import "./assets/plugins/keenicons/duotone/style.css";
+@import "./assets/plugins/keenicons/outline/style.css";
+@import "./assets/plugins/keenicons/solid/style.css";
+@import 'flag-icons/css/flag-icons.min.css';
+@import './app/modules/shared/components/api-error-dialog/api-error-dialog.component';
+@import './app/modules/shared/components/confirmation-dialog/confirmation-dialog.component';
+
+:root {
+  --sigma-primary: #3498db;
+  --sigma-primary-hover: #2587c5;
+  --sigma-filter-control-height: 34px;
+  --sigma-editor-control-height: 34px;
+  --sigma-control-radius: 6px;
+  --sigma-control-focus-ring: 0 0 0 3px color-mix(in srgb, var(--sigma-primary) 13%, transparent);
+  --sigma-surface: #fff;
+  --sigma-surface-soft: #f7fafc;
+  --sigma-canvas: #f1f3f7;
+  --sigma-canvas-rgb: 241, 243, 247;
+  --sigma-border: #c9d2dc;
+  --sigma-border-strong: #b8c7d8;
+  --sigma-text: #3f4850;
+  --sigma-muted: #728596;
+  --sigma-filter-panel-surface: #f8fbfd;
+  --sigma-filter-panel-border: #d7e3eb;
+  --sigma-filter-panel-label: #4a6174;
+  /* Shared filter strip (app filter-panel, UI block 4): controls, muted text, toggle chip. */
+  --sigma-filter-panel-shadow: 0 3px 10px rgb(29 54 73 / 5%);
+  --sigma-filter-control-border: #cbd5e1;
+  --sigma-filter-control-surface: #fff;
+  --sigma-filter-control-text: #25364a;
+  --sigma-filter-control-placeholder: #8a9aab;
+  --sigma-filter-control-focus: var(--sigma-primary);
+  --sigma-filter-muted: #657487;
+  --sigma-filter-secondary-text: #34495e;
+  --sigma-filter-toggle-icon-color: color-mix(in srgb, var(--sigma-primary) 70%, #0b2a40);
+  --sigma-filter-toggle-icon-bg: color-mix(in srgb, var(--sigma-primary) 16%, #ffffff);
+  --sigma-filter-toggle-icon-bg-active: color-mix(in srgb, var(--sigma-primary) 26%, #ffffff);
+  --sigma-filter-toggle-icon-ring: 0 1px 3px color-mix(in srgb, var(--sigma-primary) 30%, transparent);
+  --sigma-debit-accent: #2f9d72;
+  --sigma-debit-value: #237b59;
+  --sigma-credit-accent: #c46a52;
+  --sigma-credit-value: #9e503d;
+  --sigma-balance-value: #176f9d;
+}
+
+[data-bs-theme='dark'] {
+  --sigma-surface: #182630;
+  --sigma-surface-soft: #20313d;
+  --sigma-canvas: #111820;
+  --sigma-canvas-rgb: 17, 24, 32;
+  --sigma-border: #405364;
+  --sigma-border-strong: #52697b;
+  --sigma-text: #e4edf5;
+  --sigma-muted: #a9bdca;
+  --sigma-filter-panel-surface: #172630;
+  --sigma-filter-panel-border: #3d5262;
+  --sigma-filter-panel-label: #b3c4d0;
+  --sigma-filter-panel-shadow: 0 3px 10px rgb(0 0 0 / 25%);
+  --sigma-filter-control-border: #526879;
+  --sigma-filter-control-surface: #182631;
+  --sigma-filter-control-text: #e5edf4;
+  --sigma-filter-control-placeholder: #8194a5;
+  --sigma-filter-control-focus: #69b7df;
+  --sigma-filter-muted: #9dafbf;
+  --sigma-filter-secondary-text: #d5e1ea;
+  --sigma-filter-toggle-icon-color: #ffffff;
+  --sigma-filter-toggle-icon-bg: var(--sigma-primary);
+  --sigma-filter-toggle-icon-bg-active: color-mix(in srgb, var(--sigma-primary) 82%, #ffffff);
+  --sigma-filter-toggle-icon-ring: 0 0 0 1px rgb(255 255 255 / 18%);
+  --sigma-debit-value: #7fd6b2;
+  --sigma-credit-value: #f0a28d;
+  --sigma-balance-value: #8fd7f5;
+}
+
+/* Resolve the shared title/filter card wash in each theme scope before inheritance. */
+:root,
+[data-bs-theme='dark'] {
+  --sigma-filter-panel-background:
+    linear-gradient(135deg, color-mix(in srgb, var(--sigma-primary) 5%, transparent), transparent 42%),
+    var(--sigma-filter-panel-surface);
+}
+
+html {
+  height: 100%;
+  scrollbar-gutter: auto;
+  overflow-y: auto;
+}
+
+body {
+  min-height: 100%;
+  overflow-y: auto;
+}
+
+// The authenticated Metronic shell owns one viewport. Keep the browser
+// document fixed and let only the content region scroll when a feature is
+// taller than the available space. LayoutComponent owns this class lifecycle,
+// so auth and error routes retain normal document scrolling.
+body.sigma-app-viewport {
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body.sigma-app-viewport #kt_app_root,
+body.sigma-app-viewport #kt_app_page,
+body.sigma-app-viewport #kt_app_wrapper,
+body.sigma-app-viewport #kt_app_main,
+body.sigma-app-viewport #kt_app_main > .d-flex.flex-column.flex-column-fluid {
+  min-height: 0;
+  overflow: hidden;
+}
+
+// Metronic's flex-column-fluid utility does not shrink by default. Allow the
+// content wrapper to use only the space above the footer, and keep the footer
+// at its configured height.
+body.sigma-app-viewport #kt_app_main > .d-flex.flex-column.flex-column-fluid {
+  flex: 1 1 auto;
+}
+
+body.sigma-app-viewport #kt_app_main > .app-footer {
+  flex-shrink: 0;
+}
+
+body.sigma-app-viewport #kt_app_root,
+body.sigma-app-viewport #kt_app_page {
+  height: 100%;
+}
+
+body.sigma-app-viewport .app-content {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/*
+ * The authenticated shell above the route content.
+ *
+ * Metronic already gives `.app-content` no vertical padding here: the active
+ * layout config is LightSidebarConfig (`layout.service.ts`), which sets
+ * `toolbar.fixed` and `footer.fixed` to false, so the
+ * `[data-kt-app-toolbar-enabled=true]:not([data-kt-app-toolbar-fixed=true])`
+ * and `:not([data-kt-app-footer-fixed=true])` rules both match and pin
+ * `padding-top` / `padding-bottom` to 0. Nothing needs to be added for that.
+ *
+ * The band between the toolbar and the route content is the toolbar's own
+ * vertical padding, and it is the whole of the toolbar's vertical size rather
+ * than a slice of it: `toolbar.fixed` is false, so Metronic's
+ * `body:not([data-kt-app-toolbar-fixed=true]) .app-toolbar { height: auto }`
+ * wins over the base `height: var(--bs-app-toolbar-height)`.
+ *
+ * The layout config's `py-lg-6` gives the band 24px above and 24px below the
+ * page title. It is tightened to 16px above and 8px below: the top keeps the
+ * title off the app header, and the bottom is the gap between the title and the
+ * routed card, which only needs a hairline. Desktop only — mobile already runs
+ * `py-3` (12px / 12px) and is left alone.
+ *
+ * THE COMPANION RULE BELOW IS NOT OPTIONAL. 34 feature stylesheets still size
+ * their page with
+ * `calc(100dvh - … - var(--bs-app-toolbar-height) - … - <slack>)`, so they
+ * reserve a fixed height for this band. Reducing the band by 24px without
+ * reducing that reserved height by 24px would leave every one of those routes
+ * 24px taller than its container — a scrollbar in `.app-content` — including
+ * five sibling Movements screens on this branch (collectionMovement,
+ * CustodyMovement, DeliveryMovement, NRM, WorkshopMovement). `--bs-app-toolbar-
+ * height` has no other live consumer: every other use in the Metronic SASS is
+ * gated on `toolbar.fixed` / `toolbar.sticky`, both off here.
+ *
+ * A route that fills its container instead (`height: 100%`, see
+ * SIGMA_UI_PATTERNS.md, bounded route frame) does not need the companion rule.
+ * As those 34 screens migrate, the `--bs-app-toolbar-height` override can be
+ * deleted.
+ */
+@media (min-width: 992px) {
+  .app-toolbar {
+    padding-top: 16px !important;
+    padding-bottom: 8px !important;
+  }
+
+  /*
+   * 55px (the Metronic base) minus the 24px the band gave back. This keeps the
+   * legacy page-height calcs measuring the same available space as before, so
+   * tightening the band moves no other screen.
+   */
+  :root {
+    --bs-app-toolbar-height: 31px;
+  }
+}
+
+/*
+ * App header surface (owner choice 2026-10-01): the header sits on the card surface with a
+ * hairline and a soft shadow instead of blending into the page canvas (`$body-bg`). Only
+ * Metronic's header colour variables change; the header height is untouched because legacy
+ * page calcs still reserve `--bs-app-header-height` (UI block 1). The hairline is an inset
+ * shadow, not a border, so it adds no height.
+ */
+:root {
+  --bs-app-header-base-bg-color: var(--sigma-surface);
+  --bs-app-header-minimize-bg-color: var(--sigma-surface);
+  --bs-app-header-sticky-bg-color: var(--sigma-surface);
+  --bs-app-header-base-box-shadow: inset 0 -1px 0 var(--sigma-border), 0 2px 10px rgb(35 48 62 / 6%);
+  --bs-app-header-minimize-box-shadow: var(--bs-app-header-base-box-shadow);
+  --bs-app-header-sticky-box-shadow: var(--bs-app-header-base-box-shadow);
+}
+
+[data-bs-theme='dark'] {
+  --bs-app-header-base-bg-color: var(--sigma-surface);
+  --bs-app-header-minimize-bg-color: var(--sigma-surface);
+  --bs-app-header-sticky-bg-color: var(--sigma-surface);
+  --bs-app-header-base-box-shadow: inset 0 -1px 0 var(--sigma-border), 0 2px 10px rgb(0 0 0 / 30%);
+  --bs-app-header-minimize-box-shadow: var(--bs-app-header-base-box-shadow);
+  --bs-app-header-sticky-box-shadow: var(--bs-app-header-base-box-shadow);
+
+  // Keep the active LightSidebarConfig and footer on the header's Sigma surface.
+  --bs-app-sidebar-light-bg-color: var(--sigma-surface);
+  --bs-app-sidebar-light-menu-link-bg-color-active: var(--sigma-surface-soft);
+  --bs-app-sidebar-light-menu-link-color: var(--sigma-text);
+  --bs-app-sidebar-light-menu-link-icon-color: var(--sigma-muted);
+  --bs-app-sidebar-light-menu-heading-color: var(--sigma-muted);
+  --bs-app-sidebar-light-scrollbar-color-hover: var(--sigma-border);
+  --bs-app-footer-bg-color: var(--sigma-surface);
+}
+
+// The authenticated body and Bootstrap background helpers share the route canvas
+// in both themes. The explicit background also wins over the loaded RTL reboot.
+html body.sigma-app-viewport {
+  --bs-app-bg-color: var(--sigma-canvas);
+  --bs-body-bg: var(--sigma-canvas);
+  --bs-body-bg-rgb: var(--sigma-canvas-rgb);
+  background-color: var(--sigma-canvas);
+}
+
+html[data-bs-theme='dark'] body.sigma-app-viewport {
+  #kt_app_sidebar {
+    border-color: var(--sigma-border);
+
+    // Metronic hardcodes the submenu title colour outside its theme variables.
+    .menu-sub .menu-link:not(.active) .menu-title {
+      color: var(--sigma-text);
+    }
+
+    .menu-link.active {
+      .menu-title {
+        color: var(--sigma-text);
+      }
+
+      .menu-icon i {
+        color: var(--sigma-primary);
+      }
+    }
+  }
+}
+
+/*
+ * Sidebar appbar pin toggles hide with the titles when the desktop sidebar is minimized
+ * (same conditions as Metronic's `app-layout-minimize(app-sidebar)` mixin).
+ */
+@media (min-width: 992px) {
+  [data-kt-app-sidebar-minimize='on']:not([data-kt-app-sidebar-hoverable='true']) .app-sidebar .sigma-menu-appbar-pin,
+  [data-kt-app-sidebar-minimize='on'][data-kt-app-sidebar-hoverable='true'] .app-sidebar:not(:hover) .sigma-menu-appbar-pin {
+    display: none;
+  }
+}
+
+@media print {
+  body.rental-agreement-print .rental-agreement-print-dialog .p-dialog-header,
+  body.rental-agreement-print .rental-agreement-print-dialog .p-dialog-footer,
+  body.rental-agreement-print .rental-agreement-print-dialog .app-editor-dialog-close,
+  body.rental-agreement-print .rental-agreement-print-dialog .rental-agreement-print-toolbar {
+    display: none !important;
+  }
+
+  body.rental-agreement-print .p-dialog-mask,
+  body.rental-agreement-print .rental-agreement-print-dialog,
+  body.rental-agreement-print .rental-agreement-print-dialog .p-dialog-content,
+  body.rental-agreement-print .rental-agreement-print-dialog .app-editor-dialog-content,
+  body.rental-agreement-print .rental-agreement-print-dialog .rental-agreement-print-shell,
+  body.rental-agreement-print .rental-agreement-print-dialog .rental-agreement-print-document {
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    inset: auto !important;
+  }
+
+  body.rental-agreement-print .p-dialog-mask,
+  body.rental-agreement-print .rental-agreement-print-dialog {
+    padding: 0 !important;
+    border: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  body.rental-agreement-print .rental-agreement-print-dialog .app-editor-dialog-content,
+  body.rental-agreement-print .rental-agreement-print-dialog .rental-agreement-print-shell,
+  body.rental-agreement-print .rental-agreement-print-dialog .rental-agreement-print-document {
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  body.lease-agreement-print #kt_app_root,
+  body.lease-agreement-print .p-dialog-footer,
+  body.lease-agreement-print .app-editor-dialog-close,
+  body.lease-agreement-print app-editor-tabs,
+  body.lease-agreement-print [editorDialogHint] {
+    display: none !important;
+  }
+
+  body.lease-agreement-print .p-dialog-mask,
+  body.lease-agreement-print .lease-agreement-editor-dialog,
+  body.lease-agreement-print .lease-agreement-editor-dialog .p-dialog-content,
+  body.lease-agreement-print .lease-agreement-editor-content,
+  body.lease-agreement-print .lease-agreement-editor-form,
+  body.lease-agreement-print .lease-agreement-editor-panels {
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    inset: auto !important;
+  }
+
+  body.lease-agreement-print .p-dialog-mask,
+  body.lease-agreement-print .lease-agreement-editor-dialog {
+    padding: 0 !important;
+    border: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  body.lease-agreement-print .lease-agreement-editor-content {
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  body.lease-agreement-print .lease-agreement-editor-panel {
+    padding: 0 !important;
+  }
+
+  body.sigma-app-viewport.app-print-content-only,
+  body.sigma-app-viewport.app-print-content-only #kt_app_root,
+  body.sigma-app-viewport.app-print-content-only #kt_app_page,
+  body.sigma-app-viewport.app-print-content-only #kt_app_wrapper,
+  body.sigma-app-viewport.app-print-content-only #kt_app_main,
+  body.sigma-app-viewport.app-print-content-only #kt_app_main > .d-flex.flex-column.flex-column-fluid,
+  body.sigma-app-viewport.app-print-content-only .app-content {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    overscroll-behavior: auto;
+  }
+
+  body.sigma-app-viewport.app-print-content-only .app-content {
+    flex: none;
+    scrollbar-gutter: auto;
+  }
+}
+
+@media print {
+  body.rental-agreement-deposit-print #kt_app_root,
+  body.rental-agreement-deposit-print .p-dialog-footer,
+  body.rental-agreement-deposit-print .app-editor-dialog-close,
+  body.rental-agreement-deposit-print .rental-agreement-deposit__message {
+    display: none !important;
+  }
+
+  body.rental-agreement-deposit-print .p-dialog-mask,
+  body.rental-agreement-deposit-print .rental-agreement-deposit-dialog,
+  body.rental-agreement-deposit-print .rental-agreement-deposit-dialog .p-dialog-content,
+  body.rental-agreement-deposit-print .app-editor-dialog-content,
+  body.rental-agreement-deposit-print .rental-agreement-deposit {
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    inset: auto !important;
+  }
+
+  body.rental-agreement-deposit-print .p-dialog-mask,
+  body.rental-agreement-deposit-print .rental-agreement-deposit-dialog {
+    padding: 0 !important;
+    border: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  body.rental-agreement-deposit-print .app-editor-dialog-content,
+  body.rental-agreement-deposit-print .rental-agreement-deposit {
+    color: #000 !important;
+    background: #fff !important;
+  }
+}
+
+@media print {
+  body.lease-agreement-extend-period-print #kt_app_root,
+  body.lease-agreement-extend-period-print .p-dialog-footer,
+  body.lease-agreement-extend-period-print .app-editor-dialog-close,
+  body.lease-agreement-extend-period-print .extend-period__message {
+    display: none !important;
+  }
+
+  body.lease-agreement-extend-period-print .p-dialog-mask,
+  body.lease-agreement-extend-period-print .lease-agreement-extend-period-dialog,
+  body.lease-agreement-extend-period-print .lease-agreement-extend-period-dialog .p-dialog-content,
+  body.lease-agreement-extend-period-print .app-editor-dialog-content,
+  body.lease-agreement-extend-period-print .extend-period {
+    position: static !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    inset: auto !important;
+  }
+
+  body.lease-agreement-extend-period-print .p-dialog-mask,
+  body.lease-agreement-extend-period-print .lease-agreement-extend-period-dialog {
+    padding: 0 !important;
+    border: 0 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  body.lease-agreement-extend-period-print .app-editor-dialog-content,
+  body.lease-agreement-extend-period-print .extend-period {
+    color: #000 !important;
+    background: #fff !important;
+  }
+}
+
+@media print {
+  body.rental-quotation-print app-rental-quotation-details {
+    position: static !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    inset: auto !important;
+  }
+
+  body.rental-quotation-print .rental-quotation-editor-page {
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  body.rental-quotation-print .rental-quotation-page-card {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.rental-quotation-print .rental-quotation-page-back,
+  body.rental-quotation-print .rental-quotation-page-actions,
+  body.rental-quotation-print app-primary-action-button {
+    display: none !important;
+  }
+
+  body.rental-quotation-print .rental-quotation-editor-content {
+    display: block !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.rental-quotation-print .rental-quotation-form {
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  body.rental-quotation-print .app-editable-collection-table__frame {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body.rental-quotation-print .app-editable-collection-table table {
+    min-width: 0 !important;
+  }
+}
+
+body.p-overflow-hidden {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+// Shared editor dialogs and the Vehicle Service picker are appended to body,
+// so their PrimeNG shell styles must remain global. Projected content stays
+// feature-scoped.
+.app-editor-dialog.p-dialog,
+.vehicle-service-item-picker-dialog.p-dialog {
+  --app-editor-dialog-surface: #fff;
+  --app-editor-dialog-content: #f4f7fa;
+  --app-editor-dialog-toolbar: #f7fafc;
+  --app-editor-dialog-border: #d8e4ec;
+  --app-editor-dialog-input-border: #cbd8e3;
+  --app-editor-dialog-title: #263d52;
+  --app-editor-dialog-text: #34495a;
+  --app-editor-dialog-muted: #728596;
+  --vehicle-service-surface: var(--app-editor-dialog-surface);
+  --vehicle-service-content: var(--app-editor-dialog-content);
+  --vehicle-service-toolbar: var(--app-editor-dialog-toolbar);
+  --vehicle-service-dialog-border: var(--app-editor-dialog-border);
+  --vehicle-service-input-border: var(--app-editor-dialog-input-border);
+  --vehicle-service-dialog-title: var(--app-editor-dialog-title);
+  --vehicle-service-text: var(--app-editor-dialog-text);
+  --vehicle-service-dialog-muted: var(--app-editor-dialog-muted);
+  --vehicle-service-error: #b4232d;
+  --vehicle-service-error-surface: #fff5f5;
+  --vehicle-service-error-border: #f1b8bd;
+
+  display: flex;
+  max-height: calc(100dvh - 24px);
+  flex-direction: column;
+  margin-block-start: 12px !important;
+  overflow: hidden;
+  border: 1px solid #cbd8e3;
+  border-radius: 10px;
+  background: var(--app-editor-dialog-surface);
+  box-shadow: 0 18px 46px rgb(20 38 58 / 26%);
+}
+
+.app-editor-dialog.movement-check-card-dialog.p-dialog {
+  --movement-check-card-accent: var(--sigma-primary);
+  --movement-check-card-text: var(--sigma-text);
+  --movement-check-card-muted: var(--sigma-muted);
+  --movement-check-card-border: var(--sigma-border);
+  --movement-check-card-surface: var(--sigma-surface);
+  --movement-check-card-surface-soft: var(--sigma-surface-soft);
+  --movement-check-card-content: var(--sigma-canvas);
+  --movement-check-card-danger: #a82e3a;
+  --movement-check-card-danger-surface: #fff5f5;
+  --movement-check-card-success: #237b59;
+  --movement-check-card-warning: #76560d;
+  --movement-check-card-warning-surface: #fff9e9;
+}
+
+.vehicle-service-item-picker-dialog.p-dialog {
+  margin-block-start: 20px !important;
+  z-index: 1104;
+}
+
+.app-editor-dialog .p-dialog-header,
+.vehicle-service-item-picker-dialog .p-dialog-header {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--app-editor-dialog-border);
+  background: var(--app-editor-dialog-surface);
+}
+
+.app-editor-dialog .p-dialog-content,
+.vehicle-service-item-picker-dialog .p-dialog-content {
+  min-height: 0;
+  flex: 1 1 auto;
+  padding: 0;
+  overflow: auto;
+  color: var(--app-editor-dialog-text);
+  background: var(--app-editor-dialog-content);
+  overscroll-behavior: contain;
+}
+
+.app-editor-dialog .p-dialog-footer,
+.vehicle-service-item-picker-dialog .p-dialog-footer {
+  flex: 0 0 auto;
+  padding: 10px 14px;
+  border-top: 0;
+  background: var(--app-editor-dialog-surface);
+}
+
+// The editor dialog is appended to body, so keep the Cost Parameter field
+// gutter in the global overlay scope as well as in the feature stylesheet.
+.app-editor-dialog.lease-cost-parameter-editor-dialog
+  .app-editor-dialog-content
+  .lease-cost-parameter-form {
+  padding-inline: 0;
+}
+
+.app-editor-dialog.lease-cost-parameter-editor-dialog
+  .app-editor-dialog-content
+  .lease-cost-parameter-field,
+.app-editor-dialog.lease-cost-parameter-editor-dialog
+  .app-editor-dialog-content
+  .lease-cost-parameter-form-error {
+  margin-inline: 12px;
+}
+
+.vehicle-service-dropdown-panel.p-dropdown-panel {
+  border-color: #cbd8e3;
+  color: #34495a;
+  background: #fff;
+}
+
+.vehicle-service-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: #155e81;
+  background: color-mix(in srgb, var(--sigma-primary) 13%, #fff);
+}
+
+[data-bs-theme='dark'] .app-editor-dialog.p-dialog,
+[data-bs-theme='dark'] .vehicle-service-item-picker-dialog.p-dialog {
+  --app-editor-dialog-surface: #182630;
+  --app-editor-dialog-content: #111c24;
+  --app-editor-dialog-toolbar: #20313d;
+  --app-editor-dialog-border: #405364;
+  --app-editor-dialog-input-border: #405364;
+  --app-editor-dialog-title: #e5edf4;
+  --app-editor-dialog-text: #dce7ee;
+  --app-editor-dialog-muted: #a9bdca;
+  --vehicle-service-surface: var(--app-editor-dialog-surface);
+  --vehicle-service-content: var(--app-editor-dialog-content);
+  --vehicle-service-toolbar: var(--app-editor-dialog-toolbar);
+  --vehicle-service-dialog-border: var(--app-editor-dialog-border);
+  --vehicle-service-input-border: var(--app-editor-dialog-input-border);
+  --vehicle-service-dialog-title: var(--app-editor-dialog-title);
+  --vehicle-service-text: var(--app-editor-dialog-text);
+  --vehicle-service-dialog-muted: var(--app-editor-dialog-muted);
+  --vehicle-service-error: #ff9aa2;
+  --vehicle-service-error-surface: #39262c;
+  --vehicle-service-error-border: #70464e;
+
+  border-color: #405364;
+  background: #182630;
+  box-shadow: 0 22px 54px rgb(0 0 0 / 52%);
+}
+
+[data-bs-theme='dark'] .app-editor-dialog.movement-check-card-dialog.p-dialog {
+  --movement-check-card-accent: var(--sigma-primary);
+  --movement-check-card-text: #e4edf5;
+  --movement-check-card-muted: #a9bdca;
+  --movement-check-card-border: #405364;
+  --movement-check-card-surface: #182630;
+  --movement-check-card-surface-soft: #20313d;
+  --movement-check-card-content: #111820;
+  --movement-check-card-danger: #ff9aa2;
+  --movement-check-card-danger-surface: #39262c;
+  --movement-check-card-success: #7fd6b2;
+  --movement-check-card-warning: #f0c674;
+  --movement-check-card-warning-surface: #3b3424;
+}
+
+[data-bs-theme='dark'] .vehicle-service-dropdown-panel.p-dropdown-panel {
+  border-color: #405364;
+  color: #dce7ee;
+  background: #182630;
+}
+
+[data-bs-theme='dark'] .vehicle-service-dropdown-panel .p-dropdown-header,
+[data-bs-theme='dark'] .vehicle-service-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  color: #dce7ee;
+  background: #182630;
+}
+
+[data-bs-theme='dark'] .vehicle-service-dropdown-panel .p-dropdown-items .p-dropdown-item:hover,
+[data-bs-theme='dark'] .vehicle-service-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: #fff;
+  background: #284151;
+}
+
+// Company driver editor is appended to body; keep its shell and overlays global.
+.company-driver-dialog.p-dialog {
+  --sigma-dialog-surface: #fff;
+  --sigma-dialog-content: #f4f7fa;
+  --sigma-dialog-toolbar: #f7fafc;
+  --sigma-dialog-border: #d8e4ec;
+  --sigma-dialog-input-border: #cbd8e3;
+  --sigma-dialog-title: #22384a;
+  --sigma-dialog-text: #34495a;
+  --sigma-dialog-muted: #7c8f9f;
+  --sigma-dialog-primary: var(--sigma-primary);
+  --sigma-dialog-accent: #0f7375;
+  --sigma-dialog-error: #b4232d;
+  --sigma-dialog-error-surface: #fff5f5;
+  --sigma-dialog-error-hover: #ffe3e5;
+  --sigma-dialog-error-border: #f1b8bd;
+
+  display: flex;
+  max-height: calc(100dvh - 24px);
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #d4e0e9;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 22px 55px rgb(31 52 70 / 24%);
+}
+
+.company-driver-dialog .p-dialog-header {
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border-bottom: 1px solid #dce6ed;
+  background: #fff;
+}
+
+.company-driver-dialog .p-dialog-header-icons {
+  align-self: flex-start;
+}
+
+.company-driver-dialog .p-dialog-header-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: #718596;
+}
+
+.company-driver-dialog .p-dialog-header-icon:hover,
+.company-driver-dialog .p-dialog-header-icon:focus-visible {
+  color: #1e7ca9;
+  background: #e9f5fa;
+}
+
+.company-driver-dialog .p-dialog-content {
+  min-height: 0;
+  flex: 1 1 auto;
+  color: #34495a;
+  background: #f4f7fa;
+}
+
+.company-driver-dialog .company-driver-editor {
+  height: auto;
+  max-height: min(720px, calc(100dvh - 142px));
+  min-height: 0;
+  overflow: hidden;
+}
+
+.company-driver-dialog .company-driver-tabs {
+  display: flex;
+  height: auto;
+  max-height: inherit;
+  min-height: 0;
+  flex-direction: column;
+  background: transparent;
+}
+
+.company-driver-dialog .company-driver-tabs .p-tabview-nav-container {
+  flex: 0 0 auto;
+  border-bottom: 1px solid #dbe5ed;
+  background: #fff;
+}
+
+.company-driver-dialog .company-driver-tabs .p-tabview-nav {
+  gap: 4px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+}
+
+.company-driver-dialog
+  .company-driver-tabs
+  .p-tabview-nav
+  li
+  .p-tabview-nav-link {
+  padding: 9px 13px 8px;
+  border-width: 0 0 2px;
+  border-color: transparent;
+  border-radius: 0;
+  color: #6c8091;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.company-driver-dialog
+  .company-driver-tabs
+  .p-tabview-nav
+  li.p-highlight
+  .p-tabview-nav-link {
+  border-color: #2497d4;
+  color: #167fb2;
+  background: #f3fbfe;
+}
+
+.company-driver-dialog .company-driver-tabs .p-tabview-panels {
+  min-height: 0;
+  flex: 0 1 auto;
+  padding: 8px;
+  overflow: auto;
+  background: transparent;
+  overscroll-behavior: contain;
+  scrollbar-color: #9db0be transparent;
+  scrollbar-width: thin;
+}
+
+.company-driver-dialog .p-dialog-footer {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-top: 1px solid #dce6ed;
+  background: #fff;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog.p-dialog {
+  --sigma-dialog-surface: #182630;
+  --sigma-dialog-content: #111c24;
+  --sigma-dialog-toolbar: #20313d;
+  --sigma-dialog-border: #3d5060;
+  --sigma-dialog-input-border: #405364;
+  --sigma-dialog-title: #e5eef5;
+  --sigma-dialog-text: #dfeaf2;
+  --sigma-dialog-muted: #9fb2c0;
+  --sigma-dialog-primary: var(--sigma-primary);
+  --sigma-dialog-accent: #126f75;
+  --sigma-dialog-error: #ff9aa2;
+  --sigma-dialog-error-surface: #39262c;
+  --sigma-dialog-error-hover: #56343b;
+  --sigma-dialog-error-border: #70464e;
+
+  border-color: #405364;
+  background: #17242e;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 52%);
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .p-dialog-header,
+[data-bs-theme='dark'] .company-driver-dialog .p-dialog-footer,
+[data-bs-theme='dark']
+  .company-driver-dialog
+  .company-driver-tabs
+  .p-tabview-nav-container {
+  border-color: #405364;
+  background: #1b2a35;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .p-dialog-content {
+  color: #dfeaf2;
+  background: #111c24;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .p-dialog-header-icon {
+  color: #9fb1bf;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .p-dialog-header-icon:hover,
+[data-bs-theme='dark'] .company-driver-dialog .p-dialog-header-icon:focus-visible {
+  color: #fff;
+  background: #304454;
+}
+
+[data-bs-theme='dark']
+  .company-driver-dialog
+  .company-driver-tabs
+  .p-tabview-nav
+  li
+  .p-tabview-nav-link {
+  color: #a8bac7;
+}
+
+[data-bs-theme='dark']
+  .company-driver-dialog
+  .company-driver-tabs
+  .p-tabview-nav
+  li.p-highlight
+  .p-tabview-nav-link {
+  border-color: #58bce8;
+  color: #8bd7f6;
+  background: #203745;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-dialog-title h2,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-group-heading h3,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-documents-heading h3,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-field .form-label {
+  color: #e5eef5;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-dialog-title p,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-group-heading p,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-documents-heading p,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-required-hint {
+  color: #98aab8;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-dialog-icon,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-group-heading > span,
+[data-bs-theme='dark']
+  .company-driver-dialog
+  .company-driver-documents-heading
+  > span {
+  border-color: #315568;
+  color: #78cbed;
+  background: #1d3a49;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-group,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-documents {
+  border-color: #3d5060;
+  background: #182630;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-group-heading,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-documents-heading {
+  border-color: #3d5060;
+  background: linear-gradient(90deg, #20313d, #1a2833);
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-field .form-control,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-field .p-dropdown,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-field .p-calendar,
+[data-bs-theme='dark'] .company-driver-dialog .company-driver-field .p-inputtext {
+  border-color: #405364;
+  color: #e5edf4;
+  background: #14212a;
+}
+
+[data-bs-theme='dark']
+  .company-driver-dialog
+  .company-driver-field
+  .p-dropdown-label,
+[data-bs-theme='dark']
+  .company-driver-dialog
+  .company-driver-field
+  .p-dropdown-trigger {
+  color: #dfeaf2;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-dialog-secondary {
+  border-color: #45596a;
+  color: #dce7ee;
+  background: #253542;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-dialog-secondary i {
+  color: #a9bbc8;
+}
+
+[data-bs-theme='dark'] .company-driver-dialog .company-dialog-secondary:hover {
+  border-color: #5b7385;
+  color: #fff;
+  background: #304454;
+}
+
+// The driver dialog is appended to body and its lazy component styles load after
+// the global bundle. Keep these selectors more specific so the dark palette wins.
+html[data-bs-theme='dark'] body .company-driver-dialog {
+  .company-driver-dialog-title h2,
+  .company-driver-group-heading h3,
+  .company-driver-documents-heading h3,
+  .company-driver-field .form-label {
+    color: #e5eef5;
+  }
+
+  .company-driver-dialog-title p,
+  .company-driver-group-heading p,
+  .company-driver-documents-heading p,
+  .company-driver-required-hint {
+    color: #9fb2c0;
+  }
+
+  .company-driver-field .form-control,
+  .company-driver-field .p-dropdown,
+  .company-driver-field .p-calendar,
+  .company-driver-field .p-inputtext {
+    border-color: #405364;
+    color: #e5edf4;
+    background: #14212a;
+  }
+
+  .company-driver-field .form-control::placeholder,
+  .company-driver-field .p-inputtext::placeholder,
+  .company-driver-field .p-dropdown-label.p-placeholder {
+    color: #8195a5;
+    opacity: 1;
+  }
+}
+
+html[dir='rtl'] .company-driver-dialog,
+body[dir='rtl'] .company-driver-dialog {
+  direction: rtl;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .company-driver-dialog.p-dialog {
+    max-height: calc(100dvh - 16px);
+    border-radius: 11px;
+  }
+
+  .company-driver-dialog .p-dialog-header {
+    padding: 10px 12px;
+  }
+
+  .company-driver-dialog .company-driver-editor {
+    max-height: calc(100dvh - 150px);
+  }
+
+  .company-driver-dialog .company-driver-tabs .p-tabview-nav {
+    padding-inline: 8px;
+  }
+
+  .company-driver-dialog
+    .company-driver-tabs
+    .p-tabview-nav
+    li
+    .p-tabview-nav-link {
+    padding: 10px;
+  }
+
+  .company-driver-dialog .company-driver-tabs .p-tabview-panels {
+    padding: 8px;
+  }
+
+  .company-driver-dialog .p-dialog-footer {
+    padding: 8px 10px;
+  }
+}
+
+@media (max-height: 820px) and (min-width: 641px) {
+  .company-driver-dialog .company-driver-group-heading p,
+  .company-driver-dialog .company-driver-documents-heading p {
+    display: none;
+  }
+
+  .company-driver-dialog .company-driver-editor {
+    max-height: calc(100dvh - 132px);
+  }
+}
+
+// Fleet dialogs reuse the approved Company driver shell. PrimeNG controls are
+// rendered through the body-appended dialog, so their internal styles belong
+// with the global overlay owner rather than the feature host selector.
+.fleet-editor-dialog .form-field .p-dropdown,
+.fleet-editor-dialog .form-field .p-calendar,
+.fleet-editor-dialog .fleet-related-table .p-dropdown,
+.fleet-editor-dialog .fleet-related-table .p-calendar {
+  width: 100%;
+  min-height: 34px;
+  border-color: var(--sigma-dialog-input-border);
+  border-radius: 6px;
+  color: var(--sigma-dialog-text);
+  background: var(--sigma-dialog-surface);
+}
+
+.fleet-editor-dialog .form-field .p-inputtext,
+.fleet-editor-dialog .fleet-related-table .p-inputtext {
+  width: 100%;
+  min-height: 32px;
+  padding: 5px 9px;
+  border-color: var(--sigma-dialog-input-border);
+  border-radius: 6px;
+  color: var(--sigma-dialog-text);
+  background: var(--sigma-dialog-surface);
+  font-size: 12px;
+}
+
+.fleet-editor-dialog .p-dropdown-label,
+.fleet-editor-dialog .p-dropdown-trigger,
+.fleet-editor-dialog .p-dropdown-clear-icon,
+.fleet-editor-dialog .p-calendar .p-datepicker-trigger {
+  color: var(--sigma-dialog-text);
+}
+
+.fleet-editor-dialog .p-dropdown:not(.p-disabled).p-focus,
+.fleet-editor-dialog .p-calendar:not(.p-calendar-disabled).p-focus {
+  border-color: var(--sigma-dialog-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sigma-primary) 12%, transparent);
+}
+
+// Purchase order content is projected into the body-appended editor dialog.
+// Keep the quotation number frame visible outside the feature host as well.
+.purchase-order-create-dialog .purchase-order-supplier-quotation-frame {
+  display: flex;
+  width: 100%;
+  min-height: 38px;
+  box-sizing: border-box;
+  align-items: stretch;
+  border: 1px solid #bfd0df !important;
+  border-radius: 7px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.purchase-order-create-dialog .purchase-order-supplier-quotation-frame > .purchase-order-supplier-quotation-input {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 36px;
+  padding: 9px 10px;
+  border: 0 !important;
+  border-radius: 7px;
+  color: #203348;
+  background: transparent;
+  box-shadow: none;
+}
+
+.purchase-order-create-dialog .purchase-order-supplier-quotation-frame:focus-within {
+  border-color: var(--sigma-primary);
+  outline: 0;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--sigma-primary) 16%, transparent);
+}
+
+.purchase-order-create-dialog .app-editor-dialog-icon,
+.purchase-order-create-dialog .app-form-section__icon {
+  color: var(--sigma-primary) !important;
+}
+
+.purchase-order-create-dialog .app-editor-dialog-icon i,
+.purchase-order-create-dialog .app-form-section__icon i {
+  color: currentColor !important;
+}
+
+.purchase-order-create-dialog .p-calendar .p-datepicker-trigger {
+  color: var(--sigma-primary) !important;
+}
+
+.purchase-order-create-dialog .purchase-order-add-detail .bi-plus-lg,
+.purchase-order-create-dialog .purchase-order-delete-detail .bi-trash3,
+.purchase-order-create-dialog .purchase-order-document-remove .bi-trash3 {
+  color: #fff !important;
+}
+
+.purchase-order-create-dialog .purchase-order-document-icon i {
+  color: var(--sigma-primary) !important;
+}
+
+[data-bs-theme='dark'] .purchase-order-create-dialog .purchase-order-supplier-quotation-frame {
+  border-color: #486175;
+  background: #1b2935;
+}
+
+[data-bs-theme='dark'] .purchase-order-create-dialog .purchase-order-supplier-quotation-frame > .purchase-order-supplier-quotation-input {
+  color: #e6eef5;
+}
+
+.fleet-editor-dialog .p-disabled,
+.fleet-editor-dialog .p-component:disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+[data-bs-theme='dark'] .fleet-editor-dialog .p-dropdown-label.p-placeholder,
+[data-bs-theme='dark'] .fleet-editor-dialog .p-inputtext::placeholder {
+  color: #8195a5;
+  opacity: 1;
+}
+
+// Supplier editor follows the same compact modal system as the company driver guide.
+.supplier-dialog.p-dialog {
+  display: flex;
+  max-height: calc(100dvh - 24px);
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #d4e0e9;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 22px 55px rgb(31 52 70 / 24%);
+}
+
+.supplier-dialog .p-dialog-header {
+  flex: 0 0 auto;
+  padding: 9px 14px;
+  border-bottom: 1px solid #dce6ed;
+  background: #fff;
+}
+
+.supplier-dialog .p-dialog-header-icons {
+  align-self: flex-start;
+}
+
+.supplier-dialog .p-dialog-header-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: #718596;
+}
+
+.supplier-dialog .p-dialog-header-icon:hover,
+.supplier-dialog .p-dialog-header-icon:focus-visible {
+  color: #1e7ca9;
+  background: #e9f5fa;
+}
+
+.supplier-dialog .p-dialog-content {
+  min-height: 0;
+  flex: 1 1 auto;
+  color: #34495a;
+  background: #f4f7fa;
+  overscroll-behavior: contain;
+  scrollbar-color: #9db0be transparent;
+  scrollbar-width: thin;
+}
+
+.supplier-dialog .p-dialog-content app-supplier-details {
+  display: block;
+}
+
+.supplier-dialog .p-dialog-footer {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-top: 1px solid #dce6ed;
+  background: #fff;
+}
+
+[data-bs-theme='dark'] .supplier-dialog.p-dialog {
+  border-color: #405364;
+  background: #17242e;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 52%);
+}
+
+[data-bs-theme='dark'] .supplier-dialog .p-dialog-header,
+[data-bs-theme='dark'] .supplier-dialog .p-dialog-footer {
+  border-color: #405364;
+  background: #1b2a35;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .p-dialog-content {
+  color: #dfeaf2;
+  background: #111c24;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .p-dialog-header-icon {
+  color: #9fb1bf;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .p-dialog-header-icon:hover,
+[data-bs-theme='dark'] .supplier-dialog .p-dialog-header-icon:focus-visible {
+  color: #fff;
+  background: #304454;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .supplier-dialog-title h2 {
+  color: #e5eef5;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .supplier-dialog-title p,
+[data-bs-theme='dark'] .supplier-dialog .supplier-required-hint {
+  color: #98aab8;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .supplier-dialog-icon {
+  border-color: #315568;
+  color: #78cbed;
+  background: #1d3a49;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .supplier-dialog-secondary {
+  border-color: #45596a;
+  color: #dce7ee;
+  background: #253542;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .supplier-dialog-secondary i {
+  color: #a9bbc8;
+}
+
+[data-bs-theme='dark'] .supplier-dialog .supplier-dialog-secondary:hover {
+  border-color: #5b7385;
+  color: #fff;
+  background: #304454;
+}
+
+html[dir='rtl'] .supplier-dialog,
+body[dir='rtl'] .supplier-dialog {
+  direction: rtl;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .supplier-dialog.p-dialog {
+    max-height: calc(100dvh - 16px);
+    border-radius: 11px;
+  }
+
+  .supplier-dialog .p-dialog-header {
+    padding: 10px 12px;
+  }
+
+  .supplier-dialog .p-dialog-footer {
+    padding: 8px 10px;
+  }
+}
+
+// Supplier delete confirmation is intentionally scoped so other workflows keep
+// their own confirmation-dialog presentation.
+.supplier-confirm-mask {
+  background: rgb(16 27 36 / 46%);
+  backdrop-filter: blur(2px);
+}
+
+.supplier-confirm-dialog.p-dialog {
+  overflow: hidden;
+  border: 1px solid #e6d5d8;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 22px 60px rgb(35 23 27 / 26%);
+}
+
+.supplier-confirm-dialog .p-dialog-header {
+  padding: 16px 18px 8px;
+  border: 0;
+  color: #293f51;
+  background: #fff;
+}
+
+.supplier-confirm-dialog .p-dialog-title {
+  color: #293f51;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.supplier-confirm-dialog .p-dialog-header-icons {
+  margin-inline-start: auto;
+}
+
+.supplier-confirm-dialog .p-dialog-header-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  color: #7c8f9f;
+}
+
+.supplier-confirm-dialog .p-dialog-header-icon:hover,
+.supplier-confirm-dialog .p-dialog-header-icon:focus-visible {
+  color: #a52b38;
+  background: #fceef0;
+  box-shadow: none;
+}
+
+.supplier-confirm-dialog .p-dialog-content {
+  display: flex;
+  min-height: 80px;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 8px 20px 22px;
+  overflow: hidden;
+  color: #526777;
+  background: #fff;
+}
+
+.supplier-confirm-dialog .p-confirm-dialog-icon {
+  display: inline-grid;
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  place-items: center;
+  border: 1px solid #f2c5ca;
+  border-radius: 13px;
+  color: #cf3545;
+  background: linear-gradient(145deg, #fff4f5, #fde8eb);
+  font-size: 20px;
+}
+
+.supplier-confirm-dialog .p-confirm-dialog-message {
+  margin: 3px 0 0;
+  color: #526777;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.supplier-confirm-dialog .p-dialog-footer {
+  display: flex;
+  min-height: 61px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 18px;
+  border-top: 1px solid #e5ebef;
+  background: #f8fafb;
+}
+
+.supplier-confirm-dialog .p-dialog-footer .p-button {
+  display: inline-flex;
+  min-width: 96px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 14px;
+  border-radius: 6px;
+  box-shadow: none;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.supplier-confirm-dialog .p-dialog-footer .p-button:focus-visible {
+  outline: 2px solid rgb(207 53 69 / 25%);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.supplier-confirm-dialog .p-dialog-footer .p-button .p-button-icon {
+  margin: 0;
+  font-size: 12px;
+}
+
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-cancel {
+  border: 1px solid #c5d2dc;
+  color: #34495a;
+  background: #fff;
+}
+
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-cancel .p-button-icon {
+  color: #708494;
+}
+
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-cancel:hover,
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-cancel:focus-visible {
+  border-color: #a9bac8;
+  color: #263d4f;
+  background: #eef3f6;
+}
+
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-confirm {
+  border: 1px solid #cf3545;
+  color: #fff;
+  background: linear-gradient(135deg, #d94352, #bd2c3b);
+  box-shadow: 0 4px 11px rgb(207 53 69 / 20%);
+}
+
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-confirm .p-button-icon {
+  color: #fff;
+}
+
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-confirm:hover,
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-confirm:focus-visible {
+  border-color: #ae2331;
+  color: #fff;
+  background: linear-gradient(135deg, #c73443, #aa2230);
+  box-shadow: 0 6px 14px rgb(190 43 58 / 27%);
+  transform: translateY(-1px);
+}
+
+.supplier-confirm-dialog .p-dialog-footer .supplier-delete-confirm:active {
+  transform: translateY(0);
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog.p-dialog {
+  border-color: #5b4047;
+  background: #17242e;
+  box-shadow: 0 24px 65px rgb(0 0 0 / 58%);
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-dialog-header,
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-dialog-content {
+  color: #dfeaf2;
+  background: #17242e;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-dialog-title {
+  color: #eef5fa;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-dialog-header-icon {
+  color: #9fb1bf;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-dialog-header-icon:hover,
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-dialog-header-icon:focus-visible {
+  color: #ff9ca5;
+  background: #452c34;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-confirm-dialog-icon {
+  border-color: #70414a;
+  color: #ff8d98;
+  background: linear-gradient(145deg, #472b33, #38252c);
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-confirm-dialog-message {
+  color: #afbfcb;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .p-dialog-footer {
+  border-color: #405364;
+  background: #1b2a35;
+}
+
+[data-bs-theme='dark']
+  .supplier-confirm-dialog
+  .p-dialog-footer
+  .supplier-delete-cancel {
+  border-color: #4b6070;
+  color: #dce7ee;
+  background: #253542;
+}
+
+[data-bs-theme='dark']
+  .supplier-confirm-dialog
+  .p-dialog-footer
+  .supplier-delete-cancel:hover,
+[data-bs-theme='dark']
+  .supplier-confirm-dialog
+  .p-dialog-footer
+  .supplier-delete-cancel:focus-visible {
+  border-color: #61798a;
+  color: #fff;
+  background: #304454;
+}
+
+html[dir='rtl'] .supplier-confirm-dialog,
+body[dir='rtl'] .supplier-confirm-dialog {
+  direction: rtl;
+  text-align: right;
+}
+
+@media (max-width: 480px) {
+  .supplier-confirm-dialog .p-dialog-header {
+    padding: 14px 14px 7px;
+  }
+
+  .supplier-confirm-dialog .p-dialog-content {
+    gap: 11px;
+    padding: 8px 14px 18px;
+  }
+
+  .supplier-confirm-dialog .p-confirm-dialog-icon {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+    border-radius: 11px;
+    font-size: 18px;
+  }
+
+  .supplier-confirm-dialog .p-dialog-footer {
+    padding: 10px 14px;
+  }
+
+  .supplier-confirm-dialog .p-dialog-footer .p-button {
+    min-width: 88px;
+    padding-inline: 11px;
+  }
+}
+
+.supplier-confirm-dialog .supplier-delete-heading {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 11px;
+}
+
+.supplier-confirm-dialog .supplier-delete-heading-icon {
+  display: inline-grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  place-items: center;
+  border: 1px solid #f2c5ca;
+  border-radius: 11px;
+  color: #cf3545;
+  background: linear-gradient(145deg, #fff4f5, #fde8eb);
+}
+
+.supplier-confirm-dialog .supplier-delete-heading-icon i {
+  color: inherit;
+  font-size: 17px;
+}
+
+.supplier-confirm-dialog .supplier-delete-heading h2,
+.supplier-confirm-dialog .supplier-delete-heading p {
+  margin: 0;
+}
+
+.supplier-confirm-dialog .supplier-delete-heading h2 {
+  color: #293f51;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.supplier-confirm-dialog .supplier-delete-heading p {
+  margin-top: 3px;
+  color: #7c8f9f;
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.supplier-confirm-dialog .p-dialog-content {
+  display: block;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.supplier-confirm-dialog .supplier-delete-dialog-body {
+  padding: 10px 18px 19px;
+}
+
+.supplier-confirm-dialog .supplier-delete-question {
+  margin: 0 0 11px;
+  color: #526777;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.supplier-confirm-dialog .supplier-delete-record {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 11px 12px;
+  border: 1px solid #dce6ed;
+  border-inline-start: 3px solid #2497d4;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+
+.supplier-confirm-dialog .supplier-delete-record-icon {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  place-items: center;
+  border-radius: 9px;
+  color: #168fc8;
+  background: #e7f6fc;
+}
+
+.supplier-confirm-dialog .supplier-delete-record-icon i {
+  color: inherit;
+  font-size: 15px;
+}
+
+.supplier-confirm-dialog .supplier-delete-record > div {
+  display: grid;
+  min-width: 0;
+}
+
+.supplier-confirm-dialog .supplier-delete-record span {
+  color: #7d90a0;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.supplier-confirm-dialog .supplier-delete-record strong {
+  overflow: hidden;
+  margin-top: 1px;
+  color: #293f51;
+  font-size: 13px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.supplier-confirm-dialog .supplier-delete-record small {
+  margin-top: 2px;
+  color: #718596;
+  font-size: 9px;
+}
+
+.supplier-confirm-dialog .supplier-delete-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 11px 0 0;
+  padding: 9px 10px;
+  border: 1px solid #f2d3d7;
+  border-radius: 8px;
+  color: #9e3440;
+  background: #fff6f7;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.supplier-confirm-dialog .supplier-delete-warning i {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: #cf3545;
+  font-size: 12px;
+}
+
+.supplier-confirm-dialog .supplier-delete-dialog-actions {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.supplier-confirm-dialog .supplier-delete-cancel,
+.supplier-confirm-dialog .supplier-delete-confirm {
+  display: inline-flex;
+  min-width: 100px;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease,
+    background-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+}
+
+.supplier-confirm-dialog .supplier-delete-cancel:focus-visible,
+.supplier-confirm-dialog .supplier-delete-confirm:focus-visible {
+  outline: 2px solid rgb(207 53 69 / 25%);
+  outline-offset: 2px;
+}
+
+.supplier-confirm-dialog .supplier-delete-cancel:disabled,
+.supplier-confirm-dialog .supplier-delete-confirm:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.supplier-confirm-dialog .supplier-delete-cancel {
+  border: 1px solid #c5d2dc;
+  color: #34495a;
+  background: #fff;
+}
+
+.supplier-confirm-dialog .supplier-delete-cancel i {
+  color: #708494;
+}
+
+.supplier-confirm-dialog .supplier-delete-cancel:hover:not(:disabled),
+.supplier-confirm-dialog .supplier-delete-cancel:focus-visible:not(:disabled) {
+  border-color: #a9bac8;
+  color: #263d4f;
+  background: #eef3f6;
+}
+
+.supplier-confirm-dialog .supplier-delete-confirm {
+  border: 1px solid #cf3545;
+  color: #fff;
+  background: linear-gradient(135deg, #d94352, #bd2c3b);
+  box-shadow: 0 4px 11px rgb(207 53 69 / 20%);
+}
+
+.supplier-confirm-dialog .supplier-delete-confirm i {
+  color: #fff;
+}
+
+.supplier-confirm-dialog .supplier-delete-confirm:hover:not(:disabled),
+.supplier-confirm-dialog .supplier-delete-confirm:focus-visible:not(:disabled) {
+  border-color: #ae2331;
+  color: #fff;
+  background: linear-gradient(135deg, #c73443, #aa2230);
+  box-shadow: 0 6px 14px rgb(190 43 58 / 27%);
+  transform: translateY(-1px);
+}
+
+.supplier-confirm-dialog .supplier-delete-confirm:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.supplier-delete-spinner {
+  animation: supplier-delete-spin 800ms linear infinite;
+}
+
+@keyframes supplier-delete-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-heading h2,
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-record strong {
+  color: #eef5fa;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-heading p,
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-question,
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-record small {
+  color: #a8bac7;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-heading-icon {
+  border-color: #70414a;
+  color: #ff8d98;
+  background: linear-gradient(145deg, #472b33, #38252c);
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-record {
+  border-color: #405364;
+  border-inline-start-color: #58bce8;
+  background: #1d2d38;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-record-icon {
+  color: #78cbed;
+  background: #1d3a49;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-record span {
+  color: #91a5b4;
+}
+
+[data-bs-theme='dark'] .supplier-confirm-dialog .supplier-delete-warning {
+  border-color: #65414a;
+  color: #f3adb4;
+  background: #38262d;
+}
+
+[data-bs-theme='dark']
+  .supplier-confirm-dialog
+  .supplier-delete-cancel {
+  border-color: #4b6070;
+  color: #dce7ee;
+  background: #253542;
+}
+
+[data-bs-theme='dark']
+  .supplier-confirm-dialog
+  .supplier-delete-cancel:hover:not(:disabled),
+[data-bs-theme='dark']
+  .supplier-confirm-dialog
+  .supplier-delete-cancel:focus-visible:not(:disabled) {
+  border-color: #61798a;
+  color: #fff;
+  background: #304454;
+}
+
+@media (max-width: 480px) {
+  .supplier-confirm-dialog .supplier-delete-dialog-body {
+    padding: 9px 14px 16px;
+  }
+
+  .supplier-confirm-dialog .supplier-delete-dialog-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .supplier-confirm-dialog .supplier-delete-cancel,
+  .supplier-confirm-dialog .supplier-delete-confirm {
+    min-width: 0;
+    padding-inline: 10px;
+  }
+}
+
+// Reusable API/RFC 9110 validation dialog opened by the global interceptor.
+.api-error-dialog.p-dialog {
+  overflow: hidden;
+  border: 1px solid #d7e1e8;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 22px 60px rgb(24 43 58 / 28%);
+}
+
+.api-error-dialog.p-dialog .p-dialog-content {
+  padding: 0;
+  border-radius: inherit;
+  background: transparent;
+}
+
+html[data-bs-theme='dark'] .api-error-dialog.p-dialog {
+  border-color: #425665;
+  background: #17242e;
+  box-shadow: 0 24px 65px rgb(0 0 0 / 58%);
+}
+
+html.company-editor-scroll-lock,
+body.company-editor-scroll-lock {
+  height: 100%;
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+// Shared action button used by list tables across modules.
+.action-button-toggle,
+.action-button-toggle:hover,
+.action-button-toggle:focus,
+.action-button-toggle:active,
+.action-button-toggle.show {
+  border-color: #3498db !important;
+  color: #fff !important;
+  background-color: #3498db !important;
+  box-shadow: none !important;
+}
+
+.action-button-toggle:hover,
+.action-button-toggle:focus,
+.action-button-toggle:active,
+.action-button-toggle.show {
+  border-color: #2d8dcc !important;
+  background-color: #2d8dcc !important;
+}
+
+.action-button-toggle i {
+  color: #fff !important;
+}
+
+.action-menu-portal.dropdown-menu {
+  min-width: 170px;
+  padding: 5px;
+  overflow-x: hidden;
+  border: 1px solid #d5e0e8;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgb(25 46 66 / 18%);
+}
+
+.action-menu-portal.dropdown-menu .dropdown-item {
+  min-height: 34px;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  color: #344b5f;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.action-menu-portal.dropdown-menu .dropdown-item i {
+  width: 16px;
+  color: #2497d4;
+  text-align: center;
+}
+
+.action-menu-portal.dropdown-menu .dropdown-item:hover,
+.action-menu-portal.dropdown-menu .dropdown-item:focus-visible {
+  color: #263f53;
+  background: #edf7fc;
+}
+
+[data-bs-theme='dark'] .action-menu-portal.dropdown-menu {
+  border-color: #3b5061;
+  background: #1c2a36;
+  box-shadow: 0 14px 32px rgb(0 0 0 / 38%);
+}
+
+[data-bs-theme='dark'] .action-menu-portal.dropdown-menu .dropdown-item {
+  color: #dbe7ef;
+}
+
+[data-bs-theme='dark'] .action-menu-portal.dropdown-menu .dropdown-item i {
+  color: #71c8f2;
+}
+
+[data-bs-theme='dark'] .action-menu-portal.dropdown-menu .dropdown-item:hover,
+[data-bs-theme='dark'] .action-menu-portal.dropdown-menu .dropdown-item:focus-visible {
+  color: #fff;
+  background: #273b4a;
+}
+
+[dir='rtl'] .action-menu-portal.dropdown-menu {
+  direction: rtl;
+  text-align: right;
+}
+
+.location-create-mask {
+  z-index: 2000 !important;
+}
+
+.location-create-dialog {
+  z-index: 2001 !important;
+  direction: ltr !important;
+  text-align: left;
+}
+
+.location-create-dialog .p-dialog-header,
+.location-create-dialog .p-dialog-content {
+  direction: ltr !important;
+  text-align: left;
+}
+
+.location-create-dialog .location-modal-actions {
+  direction: ltr !important;
+  justify-content: flex-end !important;
+  text-align: left !important;
+}
+
+html[dir='rtl'] .location-create-dialog,
+body[dir='rtl'] .location-create-dialog,
+html[dir='rtl'] .location-create-dialog .p-dialog-header,
+body[dir='rtl'] .location-create-dialog .p-dialog-header,
+html[dir='rtl'] .location-create-dialog .p-dialog-content,
+body[dir='rtl'] .location-create-dialog .p-dialog-content {
+  direction: rtl !important;
+  text-align: right;
+}
+
+html[dir='rtl'] .location-create-dialog .location-modal-form,
+body[dir='rtl'] .location-create-dialog .location-modal-form {
+  direction: rtl !important;
+}
+
+html[dir='rtl'] .location-create-dialog .location-short-field,
+body[dir='rtl'] .location-create-dialog .location-short-field {
+  grid-column: 2;
+}
+
+html[dir='rtl'] .location-create-dialog .location-detail-label,
+body[dir='rtl'] .location-create-dialog .location-detail-label {
+  grid-column: 1;
+}
+
+html[dir='rtl'] .location-create-dialog .location-modal-actions,
+body[dir='rtl'] .location-create-dialog .location-modal-actions {
+  direction: ltr !important;
+  justify-content: flex-start !important;
+}
+
+// Preserve the application's table direction and only normalize cell content.
+table-list .p-datatable-thead > tr > th,
+table-list .p-datatable-tbody > tr > td {
+  direction: inherit !important;
+  text-align: inherit !important;
+}
+
+// Shared dark theme for every grid built with table-list.
+// Important is intentional here so the active theme wins over legacy
+// feature styles that still contain fixed light colors.
+[data-bs-theme='dark'] table-list {
+  color: #e4edf5;
+  color-scheme: dark;
+}
+
+// Theme the feature-owned shell around every shared grid. The direct-owner
+// selector covers existing screens without requiring each module to duplicate
+// the same dark page/card rules.
+[data-bs-theme='dark'] :where(section, main, div):has(> table-list) {
+  border-color: #344758 !important;
+  color: #e4edf5 !important;
+  background: #19232d !important;
+  box-shadow: 0 6px 18px rgb(0 0 0 / 22%) !important;
+}
+
+[data-bs-theme='dark'] :where(section, main, div)[class*='-page']:has(table-list) {
+  color: #e4edf5 !important;
+  background: #111820 !important;
+}
+
+[data-bs-theme='dark']
+  :where(section, main, div)[class*='-page']:has(table-list)
+  > :where(header, [class*='-heading'])
+  h1 {
+  color: #e4edf5 !important;
+}
+
+[data-bs-theme='dark']
+  :where(section, main, div)[class*='-page']:has(table-list)
+  > :where(header, [class*='-heading'])
+  h1
+  span {
+  color: #9dafbf !important;
+}
+
+[data-bs-theme='dark'] table-list > .card,
+[data-bs-theme='dark'] table-list .card-body,
+[data-bs-theme='dark'] table-list .p-datatable,
+[data-bs-theme='dark'] table-list .p-datatable-header,
+[data-bs-theme='dark'] table-list .p-datatable-wrapper,
+[data-bs-theme='dark'] table-list .p-datatable-table {
+  border-color: #344758 !important;
+  color: #e4edf5 !important;
+  background: #19232d !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-header {
+  border-bottom-color: #344758 !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-header input[data-action='filter'] {
+  border-color: #405364 !important;
+  color: #e5edf4 !important;
+  background: #182631 !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-header input[data-action='filter']::placeholder {
+  color: #8194a5 !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-header input[data-action='filter']:focus {
+  border-color: #69b7df !important;
+  box-shadow: 0 0 0 2px rgb(105 183 223 / 18%) !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-header i,
+[data-bs-theme='dark'] table-list .p-sortable-column-icon {
+  color: #9fb0bf !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-thead > tr > th {
+  border-color: #3b4d5d !important;
+  color: #d7e2eb !important;
+  background: #243441 !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-tbody > tr {
+  color: #dce6ee !important;
+  background: #1d2a37 !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-tbody > tr:nth-child(even) {
+  background: #22313e !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-tbody > tr:hover,
+[data-bs-theme='dark'] table-list .p-datatable-tbody > tr.p-highlight {
+  color: #fff !important;
+  background: #293c4c !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-tbody > tr > td {
+  border-color: #344758 !important;
+  color: inherit !important;
+  background: transparent !important;
+}
+
+[data-bs-theme='dark'] table-list .p-datatable-tbody > tr > td a {
+  color: #73c5ee;
+}
+
+[data-bs-theme='dark'] table-list .p-paginator {
+  border-color: #344758 !important;
+  color: #aebdca !important;
+  background: #18222c !important;
+}
+
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-current,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-page,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-first,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-prev,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-next,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-last {
+  color: #aebdca !important;
+}
+
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-page:not(.p-highlight):hover,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-first:hover,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-prev:hover,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-next:hover,
+[data-bs-theme='dark'] table-list .p-paginator .p-paginator-last:hover {
+  color: #fff !important;
+  background: #304454 !important;
+}
+
+[data-bs-theme='dark'] table-list .p-paginator .p-highlight {
+  color: #fff !important;
+  background: #246b98 !important;
+}
+
+[data-bs-theme='dark'] table-list .p-paginator .p-dropdown,
+[data-bs-theme='dark'] table-list .p-paginator .p-select {
+  border-color: #405364 !important;
+  color: #e5edf4 !important;
+  background: #22313e !important;
+}
+
+[data-bs-theme='dark'] table-list .dropdown-menu {
+  border-color: #405364 !important;
+  background: #22313e !important;
+  box-shadow: 0 8px 20px rgb(0 0 0 / 32%) !important;
+}
+
+[data-bs-theme='dark'] table-list .dropdown-item {
+  color: #dce6ee !important;
+  background: transparent !important;
+}
+
+[data-bs-theme='dark'] table-list .dropdown-item:hover,
+[data-bs-theme='dark'] table-list .dropdown-item:focus-visible {
+  color: #fff !important;
+  background: #304454 !important;
+}
+
+[data-bs-theme='dark'] table-list.has-grid-search-clear .p-datatable-header .grid-search-clear {
+  color: #9dafbf;
+}
+
+[data-bs-theme='dark'] table-list.has-grid-search-clear .p-datatable-header .grid-search-clear:hover,
+[data-bs-theme='dark'] table-list.has-grid-search-clear .p-datatable-header .grid-search-clear:focus-visible {
+  color: #fff;
+  background: #304454;
+}
+
+// Compact clear control for the table-list built-in Keyboard Search input.
+table-list.has-grid-search-clear .p-datatable-header input[data-action='filter'] {
+  padding-inline-end: 38px !important;
+}
+
+table-list.has-grid-search-clear .p-datatable-header .grid-search-clear {
+  position: absolute;
+  top: 50%;
+  inset-inline-end: 8px;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  color: #7c8797;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+table-list.has-grid-search-clear .p-datatable-header .grid-search-clear.is-visible {
+  display: inline-flex;
+}
+
+table-list.has-grid-search-clear .p-datatable-header .grid-search-clear i {
+  color: currentColor;
+  font-size: 12px;
+  line-height: 1;
+}
+
+table-list.has-grid-search-clear .p-datatable-header .grid-search-clear:hover,
+table-list.has-grid-search-clear .p-datatable-header .grid-search-clear:focus-visible {
+  color: #344054;
+  background: #e4e7ec;
+}
+
+table-list.has-grid-search-clear .p-datatable-header .grid-search-clear:focus-visible {
+  outline: 2px solid #3498db;
+  outline-offset: 1px;
+}
+
+// Global clear control for editable text-like inputs, including lazy-loaded pages.
+input.sigma-clearable-input {
+  padding-inline-end: 38px !important;
+}
+
+input.sigma-clearable-input[type='search']::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.sigma-input-clear-button {
+  position: absolute;
+  z-index: 6;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  color: #667085;
+  background: transparent;
+  cursor: pointer;
+  line-height: 1;
+  transition:
+    color 120ms ease,
+    background-color 120ms ease,
+    transform 120ms ease;
+}
+
+.sigma-input-clear-button.is-visible {
+  display: inline-flex;
+}
+
+.sigma-input-clear-button i {
+  color: currentColor;
+  font-size: 12px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.sigma-input-clear-button:hover {
+  color: #1f2937;
+  background: #e9eef3;
+}
+
+.sigma-input-clear-button:active {
+  transform: scale(0.92);
+}
+
+.sigma-input-clear-button:focus-visible {
+  color: #116b9f;
+  background: #e5f4fb;
+  outline: 2px solid #2497d4;
+  outline-offset: 1px;
+}
+
+[data-bs-theme='dark'] .sigma-input-clear-button {
+  color: #9dafbf;
+}
+
+[data-bs-theme='dark'] .sigma-input-clear-button:hover,
+[data-bs-theme='dark'] .sigma-input-clear-button:focus-visible {
+  color: #fff;
+  background: #304454;
+}
+
+html[dir='rtl'] table-list .p-paginator,
+body[dir='rtl'] table-list .p-paginator {
+  direction: rtl !important;
+  justify-content: flex-start;
+}
+
+html[dir='rtl'] table-list .p-paginator .p-paginator-current,
+body[dir='rtl'] table-list .p-paginator .p-paginator-current {
+  margin: 0 !important;
+  text-align: right;
+}
+
+html[dir='rtl'] table-list .p-paginator,
+body[dir='rtl'] table-list .p-paginator {
+  gap: 0 !important;
+}
+
+table-list .p-paginator .p-dropdown .p-dropdown-label,
+table-list .p-paginator .p-select .p-select-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  text-align: center;
+}
+
+// Shared buttons follow the active document direction in every module.
+html[dir='rtl'] .button-group,
+body[dir='rtl'] .button-group {
+  direction: rtl;
+}
+
+html[dir='rtl'] .button-group .justify-content-start,
+body[dir='rtl'] .button-group .justify-content-start {
+  justify-content: flex-end !important;
+}
+
+html[dir='rtl'] .button-group .justify-content-end,
+body[dir='rtl'] .button-group .justify-content-end {
+  justify-content: flex-start !important;
+  direction: ltr;
+}
+
+html[dir='rtl'] .location-modal-actions,
+body[dir='rtl'] .location-modal-actions {
+  direction: ltr !important;
+  justify-content: flex-start !important;
+}
+
+html[dir='rtl'] table-list .p-paginator .p-paginator-icon,
+body[dir='rtl'] table-list .p-paginator .p-paginator-icon {
+  transform: rotate(180deg);
+}
+
+p-calendar,
+p-inputtext,
+p-inputtextarea,
+p-inputnumber,
+p-dropdown {
+  display: block;
+
+  .p-calendar,
+  .p-inputtext,
+  .p-inputtextarea,
+  .p-inputnumber,
+  .p-dropdown {
+    width: 100%;
+
+    &.p-disabled {
+      color: var(--bs-gray-500);
+      background-color: var(--bs-gray-200);
+      border-color: var(--bs-gray-300);
+      opacity: 1;
+    }
+  }
+}
+
+.errors p,
+p.errors {
+  color: red;
+  margin-left: 5px;
+  margin-top: 2px;
+
+}
+
+label.required::after,
+.feild-required::after {
+  content: "*";
+  color: red;
+  font-weight: bold;
+}
+
+ul {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.p-datepicker-trigger {
+  display: none !important;
+}
+
+.p-calendar,
+.p-inputtext {
+  border-radius: 6px !important;
+  -webkit-border-radius: 6px !important;
+  -moz-border-radius: 6px !important;
+  -ms-border-radius: 6px !important;
+  -o-border-radius: 6px !important;
+}
+
+.form-check-label {
+  color: #40576b !important;
+}
+
+html[data-bs-theme='dark'] body .form-check-label {
+  color: #dce7ef !important;
+}
+
+html[data-bs-theme='dark']
+  body
+  .form-check:has(.form-check-input:disabled)
+  .form-check-label {
+  color: #91a4b3 !important;
+}
+
+.p-tabview-nav {
+  display: none !important;
+}
+
+
+.form-array-template {
+  padding: 12px;
+
+  .card {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 12px;
+  }
+
+  .table-header {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 1rem;
+  }
+
+  .text-right {
+    text-align: right;
+    font-weight: 600;
+  }
+
+  .text-center {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+  }
+
+  // Error styling
+  .p-error {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #e24c4c;
+  }
+
+  .ng-invalid.ng-dirty {
+    border-color: #e24c4c;
+  }
+
+  // Table cell padding
+  ::ng-deep {
+    .p-datatable {
+      .p-datatable-tbody>tr>td {
+        padding: 0.75rem;
+      }
+
+      .p-datatable-thead>tr>th {
+        padding: 1rem 0.75rem;
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.875rem;
+      }
+
+      .p-datatable-footer>tr>td {
+        padding: 1rem 0.75rem;
+        background-color: #f8f9fa;
+        font-weight: 600;
+      }
+    }
+
+    // Dropdown styling
+    .p-dropdown {
+      width: 100%;
+    }
+
+    // Calendar styling
+    .p-calendar {
+      width: 100%;
+    }
+
+    // Input number styling
+    .p-inputnumber {
+      width: 100%;
+
+      input {
+        width: 100%;
+      }
+    }
+
+    // Button styling
+    .p-button-sm {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    button {
+      border-radius: 8px !important;
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    padding: 1rem;
+
+    .card {
+      padding: 1rem;
+    }
+
+    ::ng-deep {
+      .p-datatable {
+        font-size: 0.875rem;
+
+        .p-datatable-tbody>tr>td,
+        .p-datatable-thead>tr>th {
+          padding: 0.5rem;
+        }
+      }
+    }
+  }
+}
+/* Global toast direction follows the active application language. */
+html[dir='rtl'] .p-toast {
+  direction: rtl;
+}
+
+html[dir='rtl'] .p-toast.p-toast-top-right {
+  right: auto !important;
+  left: 20px !important;
+}
+
+html[dir='rtl'] .p-toast .p-toast-message-content {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir='rtl'] .p-toast .p-toast-message-text {
+  margin: 0 1rem 0 0;
+  text-align: right;
+}
+
+html[dir='rtl'] .p-toast .p-toast-icon-close {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message {
+  --sigma-toast-accent: #71c8f2;
+  --sigma-toast-tint: 113 200 242;
+
+  overflow: hidden;
+  border: 1px solid #3b4e5e !important;
+  border-inline-start: 4px solid var(--sigma-toast-accent) !important;
+  border-radius: 10px;
+  color: #e8f0f6 !important;
+  background:
+    linear-gradient(
+      135deg,
+      rgb(var(--sigma-toast-tint) / 12%),
+      transparent 48%
+    ),
+    #1b2834 !important;
+  box-shadow: 0 16px 34px rgb(0 0 0 / 38%);
+  backdrop-filter: blur(10px);
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message.p-toast-message-success {
+  --sigma-toast-accent: #48d39b;
+  --sigma-toast-tint: 72 211 155;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message.p-toast-message-info {
+  --sigma-toast-accent: #5ab0ff;
+  --sigma-toast-tint: 90 176 255;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message.p-toast-message-warn {
+  --sigma-toast-accent: #f2b84b;
+  --sigma-toast-tint: 242 184 75;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message.p-toast-message-error {
+  --sigma-toast-accent: #ff747d;
+  --sigma-toast-tint: 255 116 125;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message .p-toast-message-content {
+  align-items: flex-start;
+  padding: 13px 14px;
+  border: 0 !important;
+  color: inherit;
+  background: transparent;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message .p-toast-message-icon {
+  margin-top: 1px;
+  color: var(--sigma-toast-accent) !important;
+  font-size: 20px;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message .p-toast-message-text {
+  margin-inline-start: 11px;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message .p-toast-summary {
+  color: #f6f9fb;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message .p-toast-detail {
+  margin-top: 4px;
+  color: #b7c6d2;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message .p-toast-icon-close {
+  width: 28px;
+  height: 28px;
+  margin-inline-start: auto;
+  color: #b9c8d3 !important;
+  background: rgb(255 255 255 / 5%);
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message .p-toast-icon-close:hover {
+  color: #fff !important;
+  background: rgb(255 255 255 / 12%);
+}
+
+[data-bs-theme='dark'] .p-toast .p-toast-message .p-toast-icon-close:focus-visible {
+  box-shadow: 0 0 0 3px rgb(var(--sigma-toast-tint) / 24%);
+}
+
+
+/* **************** */
+html[dir='rtl'] p-calendar.p-calendar-clearable .p-calendar-w-btn .p-calendar-clear-icon {
+  right: auto;
+  left: 3.75rem;
+}
+
+/*
+ * Global PrimeNG dark surfaces.
+ * Overlay panels are appended to <body>, so component-scoped :host-context
+ * rules cannot reach them reliably.
+ */
+[data-bs-theme='dark'] {
+  .p-dialog {
+    border: 1px solid #3a4d5d;
+    color: #e3edf4;
+    background: #18242e;
+    box-shadow: 0 22px 52px rgb(0 0 0 / 42%);
+
+    .p-dialog-header,
+    .p-dialog-content,
+    .p-dialog-footer {
+      border-color: #3a4d5d;
+      color: #e3edf4;
+      background: #18242e;
+    }
+
+    .p-dialog-header-icon {
+      color: #a9bdca;
+
+      &:hover,
+      &:focus-visible {
+        color: #fff;
+        background: #2d4050;
+      }
+    }
+  }
+
+  .p-dropdown,
+  .p-select,
+  .p-multiselect {
+    border-color: #405364;
+    color: #e5edf4;
+    background: #182631;
+
+    &:not(.p-disabled):hover,
+    &.p-focus {
+      border-color: #58abd5;
+    }
+
+    &.p-focus {
+      box-shadow: 0 0 0 3px rgb(88 171 213 / 16%);
+    }
+
+    .p-dropdown-label,
+    .p-select-label,
+    .p-multiselect-label {
+      color: #e5edf4;
+
+      &.p-placeholder {
+        color: #8297a8;
+      }
+    }
+
+    .p-dropdown-trigger,
+    .p-select-dropdown,
+    .p-multiselect-trigger,
+    .p-dropdown-clear-icon,
+    .p-select-clear-icon {
+      color: #a7bac8;
+    }
+  }
+
+  .p-dropdown-panel,
+  .p-select-overlay,
+  .p-multiselect-panel {
+    overflow: hidden;
+    border: 1px solid #405364;
+    color: #dce7ef;
+    background: #1b2935;
+    box-shadow: 0 14px 32px rgb(0 0 0 / 42%);
+
+    .p-dropdown-header,
+    .p-select-header,
+    .p-multiselect-header {
+      padding: 10px;
+      border-color: #3a4d5d;
+      background: #202f3b;
+    }
+
+    .p-dropdown-filter,
+    .p-select-filter,
+    .p-multiselect-filter {
+      border-color: #496071;
+      color: #e9f1f6;
+      background: #14212b;
+
+      &::placeholder {
+        color: #8095a6;
+      }
+
+      &:focus {
+        border-color: #58abd5;
+        box-shadow: 0 0 0 3px rgb(88 171 213 / 16%);
+      }
+    }
+
+    .p-dropdown-filter-icon,
+    .p-select-filter-icon,
+    .p-multiselect-filter-icon {
+      color: #a7bac8;
+    }
+
+    .p-dropdown-items,
+    .p-select-list,
+    .p-multiselect-items {
+      padding-block: 5px;
+      background: #1b2935;
+    }
+
+    .p-dropdown-item,
+    .p-select-option,
+    .p-multiselect-item {
+      color: #d8e4ec;
+      background: transparent;
+
+      &:not(.p-highlight):not(.p-disabled):hover,
+      &:not(.p-highlight):not(.p-disabled):focus-visible {
+        color: #fff;
+        background: #2a3d4c;
+      }
+
+      &.p-highlight {
+        color: #ecf8ff;
+        background: #24516d;
+      }
+    }
+
+    .p-dropdown-empty-message,
+    .p-select-empty-message,
+    .p-multiselect-empty-message {
+      color: #9eb0be;
+    }
+
+    * {
+      scrollbar-color: #506879 #1b2935;
+    }
+
+    *::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: #1b2935;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      border: 2px solid #1b2935;
+      border-radius: 999px;
+      background: #506879;
+    }
+  }
+}
+
+/*
+ * Global date and upload controls.
+ * Prime calendar inputs live inside library markup and file inputs are used by
+ * multiple feature modules, so these rules intentionally remain global.
+ */
+p-calendar {
+  display: block;
+  min-width: 0;
+}
+
+p-calendar .p-calendar {
+  width: 100%;
+  min-width: 0;
+}
+
+p-calendar .p-calendar .p-inputtext {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 34px 6px 9px;
+  border-color: #cbd8e3;
+  border-radius: 6px;
+  color: #34495a;
+  background: #fff;
+  font-size: 11px;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease;
+}
+
+[dir='rtl'] p-calendar .p-calendar .p-inputtext {
+  padding-right: 9px;
+  padding-left: 34px;
+}
+
+p-calendar .p-calendar:not(.p-disabled):hover .p-inputtext {
+  border-color: #72b6d7;
+}
+
+p-calendar .p-calendar.p-focus .p-inputtext,
+p-calendar .p-calendar .p-inputtext:focus {
+  border-color: #3498db;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgb(52 152 219 / 13%);
+}
+
+p-calendar .p-calendar .p-datepicker-trigger {
+  width: 36px;
+  min-width: 36px;
+  border-color: #cbd8e3;
+  color: #348fbe;
+  background: #f3f8fb;
+}
+
+p-calendar .p-calendar .p-datepicker-trigger:hover,
+p-calendar .p-calendar .p-datepicker-trigger:focus-visible {
+  border-color: #3498db;
+  color: #fff;
+  background: #3498db;
+}
+
+p-calendar .p-calendar-clear-icon {
+  color: #92a4b2;
+}
+
+// Keep the clear control beside (not on top of) the calendar icon when
+// PrimeNG renders the icon inside the input.
+p-calendar.p-calendar-clearable .p-calendar .p-inputtext {
+  padding-inline-end: 3.5rem !important;
+}
+
+p-calendar.p-calendar-clearable .p-calendar .p-calendar-clear-icon {
+  position: absolute;
+  top: 50% !important;
+  inset-inline-end: 1.25rem;
+  z-index: 2;
+  display: inline-flex;
+  width: 1.1rem;
+  height: 1.1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0 !important;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition:
+    color 140ms ease,
+    background-color 140ms ease,
+    transform 140ms ease;
+}
+
+p-calendar .p-calendar.p-input-icon-right > .p-icon-wrapper {
+  top: 50% !important;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0 !important;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+p-calendar .p-calendar.p-input-icon-right > .p-icon-wrapper .p-icon {
+  display: block;
+  margin: 0;
+}
+
+p-calendar.p-calendar-clearable .p-calendar .p-calendar-clear-icon:hover {
+  color: #247aa5;
+  background: rgb(52 152 219 / 12%);
+  transform: translateY(-50%) scale(1.08);
+}
+
+[dir='rtl'] p-calendar.p-calendar-clearable .p-calendar .p-inputtext {
+  padding-inline-start: 3.5rem !important;
+  padding-inline-end: 9px !important;
+}
+
+/*
+ * Canonical filter controls share one outer height across the shared filter panel
+ * (form[appFilterPanel], host class sigma-filter-panel — UI block 4) and the feature-owned
+ * *-filters / *-filter-form containers and reusable sigma-filter-form blocks.
+ * Only the dimension is centralized here; each feature continues to own its
+ * control colors, borders, focus treatment, and responsive layout.
+ */
+:where(
+  .sigma-filter-panel,
+  .sigma-filter-form,
+  [class$='-filters'],
+  [class*='-filters '],
+  [class$='-filter-form'],
+  [class*='-filter-form ']
+)
+  :is(
+    input:not([type='button']):not([type='checkbox']):not([type='file']):not([type='hidden']):not([type='radio']):not([type='reset']):not([type='submit']),
+    select:not([multiple]),
+    .p-dropdown,
+    .p-select,
+    .p-multiselect,
+    .p-calendar,
+    .p-calendar .p-inputtext,
+    .p-inputnumber,
+    .p-inputnumber-input
+  ) {
+  box-sizing: border-box;
+  height: var(--sigma-filter-control-height) !important;
+  min-height: var(--sigma-filter-control-height) !important;
+  max-height: var(--sigma-filter-control-height) !important;
+}
+
+:where(
+  .sigma-filter-panel,
+  .sigma-filter-form,
+  [class$='-filters'],
+  [class*='-filters '],
+  [class$='-filter-form'],
+  [class*='-filter-form ']
+)
+  :is(.p-dropdown, .p-select, .p-multiselect) {
+  overflow: hidden;
+}
+
+:where(
+  .sigma-filter-panel,
+  .sigma-filter-form,
+  [class$='-filters'],
+  [class*='-filters '],
+  [class$='-filter-form'],
+  [class*='-filter-form ']
+)
+  :is(.p-dropdown-label, .p-select-label, .p-multiselect-label) {
+  box-sizing: border-box;
+  display: flex;
+  min-width: 0;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-items: center;
+  padding-block: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:where(
+  .sigma-filter-panel,
+  .sigma-filter-form,
+  [class$='-filters'],
+  [class*='-filters '],
+  [class$='-filter-form'],
+  [class*='-filter-form ']
+)
+  :is(
+    .p-dropdown-trigger,
+    .p-select-dropdown,
+    .p-multiselect-trigger
+  ) {
+  align-self: stretch;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+:where(
+  .sigma-filter-panel,
+  .sigma-filter-form,
+  [class$='-filters'],
+  [class*='-filters '],
+  [class$='-filter-form'],
+  [class*='-filter-form ']
+)
+  .p-datepicker-trigger {
+  width: var(--sigma-filter-control-height);
+  min-width: var(--sigma-filter-control-height);
+  height: 100% !important;
+}
+
+/*
+ * Canonical report filter + totals language.
+ * Opening Balances is the visual reference: compact bordered filter strip with
+ * a primary inline-start accent, and compact debit/credit/balance total cards.
+ * Report features should consume these shared classes rather than recreating
+ * their own filter or summary surfaces.
+ */
+.sigma-report-filter-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 5px 8px;
+  margin: 0 0 6px;
+  padding: 5px 8px 6px;
+  border: 1px solid var(--sigma-filter-panel-border);
+  border-inline-start: 3px solid var(--sigma-primary);
+  border-radius: 8px;
+  background: var(--sigma-filter-panel-background);
+  box-shadow: var(--sigma-filter-panel-shadow);
+}
+
+.sigma-report-filter-field {
+  min-width: 170px;
+  max-width: 300px;
+  flex: 1 1 170px;
+}
+
+// Stable report filters keep controls in place as feedback and selected labels change.
+.sigma-report-filter-panel--stable > .sigma-report-filter-field {
+  align-self: flex-start;
+}
+
+.sigma-report-filter-panel--stable .sigma-report-filter-field :is(p-dropdown, p-calendar, .p-dropdown, .p-calendar) {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sigma-report-filter-panel--stable .sigma-report-filter-field :is(p-dropdown, p-calendar) {
+  display: block;
+}
+
+.sigma-report-filter-panel--stable .sigma-report-filter-field .p-dropdown-label {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sigma-report-filter-panel--stable .sigma-report-filter-field .p-calendar .p-inputtext {
+  width: 100%;
+  min-width: 0;
+}
+
+.sigma-report-filter-field > label,
+.sigma-report-filter-field > .sigma-report-filter-caption {
+  display: block;
+  margin: 0 0 2px;
+  color: var(--sigma-filter-panel-label);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+// Inline reports keep the action field on the same control line as the filters.
+.sigma-report-filter-panel--inline {
+  display: grid;
+  grid-template-columns: repeat(var(--sigma-report-filter-columns, 3), minmax(0, 1fr)) auto;
+  align-items: start;
+}
+
+.sigma-report-filter-panel--inline > .sigma-report-filter-field {
+  min-width: 0;
+  max-width: none;
+  width: 100%;
+}
+
+.sigma-report-filter-panel--inline .sigma-report-filter-field > :is(label, .sigma-report-filter-caption) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sigma-report-filter-panel--inline .sigma-report-filter-field > input {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.sigma-report-filter-panel--inline .sigma-report-filter-actions :is(.btn, .app-primary-action-button) {
+  box-sizing: border-box;
+  height: var(--sigma-filter-control-height);
+  min-height: var(--sigma-filter-control-height);
+  white-space: nowrap;
+}
+
+@media (max-width: 1250px) {
+  .sigma-report-filter-panel--inline {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .sigma-report-filter-panel--inline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.sigma-report-filter-field :is(.p-calendar, .p-dropdown, .p-select) {
+  width: 100%;
+}
+
+.sigma-report-filter-field :is(.p-calendar .p-inputtext, .p-dropdown, .p-select) {
+  min-height: var(--sigma-filter-control-height);
+  border: 1px solid var(--sigma-border-strong);
+  border-radius: var(--sigma-control-radius);
+  color: var(--sigma-text);
+  background: var(--sigma-surface);
+  box-shadow: none;
+  font-size: 11px;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease;
+}
+
+.sigma-report-filter-field :is(.p-calendar .p-inputtext, .p-dropdown, .p-select):hover {
+  border-color: color-mix(in srgb, var(--sigma-primary) 55%, var(--sigma-border-strong));
+}
+
+.sigma-report-filter-field .p-calendar:not(.p-disabled):focus-within .p-inputtext,
+.sigma-report-filter-field .p-dropdown:not(.p-disabled).p-focus,
+.sigma-report-filter-field .p-select:not(.p-disabled).p-focus {
+  border-color: var(--sigma-primary);
+  outline: 0;
+  box-shadow: var(--sigma-control-focus-ring);
+}
+
+.sigma-report-filter-check {
+  display: inline-flex;
+  min-height: var(--sigma-filter-control-height);
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding-inline: 2px 8px;
+  color: var(--sigma-filter-panel-label);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Shared report checkbox accents follow the same Sigma tokens as report radio choices. */
+.sigma-report-filter-check .p-checkbox .p-checkbox-box.p-highlight {
+  border-color: var(--sigma-primary);
+  background: var(--sigma-primary);
+}
+
+.sigma-report-filter-check .p-checkbox .p-checkbox-box.p-highlight .p-checkbox-icon {
+  color: var(--bs-white);
+}
+
+.sigma-report-filter-check .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+  border-color: var(--sigma-primary-hover);
+  background: var(--sigma-primary-hover);
+}
+
+.sigma-report-filter-check .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:not(.p-highlight):hover {
+  border-color: var(--sigma-primary);
+}
+
+.sigma-report-filter-check .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+  border-color: var(--sigma-primary);
+  box-shadow: var(--sigma-control-focus-ring);
+}
+
+/* Opt-in report radio choices share Sigma's primary accent and focus treatment. */
+.sigma-report-filter-choice .p-radiobutton .p-radiobutton-box.p-highlight {
+  border-color: var(--sigma-primary);
+  background: var(--sigma-primary);
+}
+
+.sigma-report-filter-choice .p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
+  border-color: var(--sigma-primary-hover);
+  background: var(--sigma-primary-hover);
+}
+
+.sigma-report-filter-choice .p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
+  border-color: var(--sigma-primary);
+}
+
+.sigma-report-filter-choice .p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
+  border-color: var(--sigma-primary);
+  box-shadow: var(--sigma-control-focus-ring);
+}
+
+.sigma-report-filter-actions {
+  display: flex;
+  min-width: max-content;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-inline-start: auto;
+}
+
+.sigma-report-filter-actions .button-group,
+.sigma-report-filter-actions .button-group > div {
+  width: auto !important;
+}
+
+.sigma-report-filter-actions .button-group > div {
+  gap: 5px !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action-group {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.sigma-report-filter-actions:has(> .sigma-report-action-group) {
+  min-width: 0;
+}
+
+.sigma-report-filter-actions .btn {
+  min-height: var(--sigma-filter-control-height);
+  padding: 0 10px;
+  border-radius: var(--sigma-control-radius);
+  box-shadow: none;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.sigma-report-filter-actions .btn i {
+  color: inherit !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action--search {
+  border-color: var(--sigma-primary) !important;
+  color: #fff !important;
+  background: var(--sigma-primary) !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action--search:hover,
+.sigma-report-filter-actions .sigma-report-action--search:focus-visible {
+  border-color: var(--sigma-primary-hover) !important;
+  color: #fff !important;
+  background: var(--sigma-primary-hover) !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action--refresh {
+  border-color: color-mix(in srgb, var(--sigma-primary) 48%, var(--sigma-border-strong)) !important;
+  color: var(--sigma-balance-value) !important;
+  background: color-mix(in srgb, var(--sigma-primary) 9%, var(--sigma-surface)) !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action--refresh:hover,
+.sigma-report-filter-actions .sigma-report-action--refresh:focus-visible {
+  border-color: var(--sigma-primary) !important;
+  color: var(--sigma-primary-hover) !important;
+  background: color-mix(in srgb, var(--sigma-primary) 15%, var(--sigma-surface)) !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action--reset {
+  border-color: var(--sigma-border-strong) !important;
+  color: var(--sigma-text) !important;
+  background: var(--sigma-surface) !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action--reset:hover,
+.sigma-report-filter-actions .sigma-report-action--reset:focus-visible {
+  border-color: var(--sigma-primary) !important;
+  color: var(--sigma-balance-value) !important;
+  background: color-mix(in srgb, var(--sigma-primary) 7%, var(--sigma-surface)) !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action--export {
+  border-color: var(--sigma-border-strong) !important;
+  color: var(--sigma-text) !important;
+  background: var(--sigma-surface-soft) !important;
+}
+
+.sigma-report-filter-actions .sigma-report-action--export:hover,
+.sigma-report-filter-actions .sigma-report-action--export:focus-visible {
+  border-color: var(--sigma-primary) !important;
+  color: var(--sigma-balance-value) !important;
+  background: color-mix(in srgb, var(--sigma-primary) 7%, var(--sigma-surface)) !important;
+}
+
+[data-bs-theme='dark'] .sigma-report-filter-actions .sigma-report-action--refresh {
+  color: #8fd7f5 !important;
+  background: #203846 !important;
+}
+
+[data-bs-theme='dark'] .sigma-report-filter-actions .sigma-report-action--reset {
+  color: #dce7ee !important;
+  background: #253542 !important;
+}
+
+.sigma-report-filter-actions .btn:disabled,
+.sigma-report-filter-actions .btn.disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  box-shadow: none !important;
+}
+
+.sigma-report-summary-bar {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--sigma-border);
+  border-radius: 8px;
+  background: var(--sigma-surface-soft);
+}
+
+.sigma-report-totals {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 7px;
+}
+
+.sigma-report-total {
+  display: grid;
+  min-width: 132px;
+  gap: 1px;
+  padding: 6px 10px;
+  border: 1px solid var(--sigma-border);
+  border-radius: 7px;
+  background: var(--sigma-surface);
+  box-shadow: 0 1px 3px rgb(28 47 65 / 5%);
+}
+
+.sigma-report-total__label {
+  color: var(--sigma-muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.sigma-report-total__value {
+  color: var(--sigma-text);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.sigma-report-total--debit {
+  border-inline-start: 3px solid var(--sigma-debit-accent);
+}
+
+.sigma-report-total--debit .sigma-report-total__value {
+  color: var(--sigma-debit-value);
+}
+
+.sigma-report-total--credit {
+  border-inline-start: 3px solid var(--sigma-credit-accent);
+}
+
+.sigma-report-total--credit .sigma-report-total__value {
+  color: var(--sigma-credit-value);
+}
+
+.sigma-report-total--balance {
+  border-inline-start: 3px solid var(--sigma-primary);
+}
+
+.sigma-report-total--net {
+  border-inline-start: 3px solid var(--sigma-primary);
+}
+
+.sigma-report-total--balance .sigma-report-total__value,
+.sigma-report-total--net .sigma-report-total__value {
+  color: var(--sigma-balance-value);
+}
+
+@media (max-width: 640px) {
+  .sigma-report-filter-panel {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 5px;
+    padding: 6px 8px;
+  }
+
+  .sigma-report-filter-field {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    flex: 0 0 auto;
+  }
+
+  .sigma-report-filter-check {
+    width: 100%;
+  }
+
+  .sigma-report-filter-actions {
+    width: 100%;
+    min-width: 0;
+    margin-inline-start: 0;
+  }
+
+  .sigma-report-filter-actions app-buttons,
+  .sigma-report-filter-actions .button-group,
+  .sigma-report-filter-actions .button-group > div {
+    width: 100% !important;
+  }
+
+  .sigma-report-filter-actions .button-group > div {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sigma-report-filter-actions .sigma-report-action-group {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sigma-report-filter-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sigma-report-summary-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sigma-report-totals {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sigma-report-total {
+    min-width: 0;
+  }
+}
+
+input[type='file'].form-control {
+  min-height: 38px;
+  padding: 4px;
+  overflow: hidden;
+  border-color: #cbd8e3;
+  border-radius: 6px;
+  color: #536b7d;
+  background: #fff;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+input[type='file'].form-control::file-selector-button {
+  height: 28px;
+  margin: 0 9px 0 0;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 5px;
+  color: #fff;
+  background: linear-gradient(135deg, #3498db, #2686ba);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+[dir='rtl'] input[type='file'].form-control::file-selector-button {
+  margin-right: 0;
+  margin-left: 9px;
+}
+
+input[type='file'].form-control:hover,
+input[type='file'].form-control:focus {
+  border-color: #3498db;
+}
+
+input[type='file'].form-control:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px rgb(52 152 219 / 13%);
+}
+
+.p-fileupload {
+  overflow: hidden;
+  border: 1px solid #d5e0e9;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.p-fileupload .p-fileupload-buttonbar {
+  padding: 8px;
+  border-color: #d5e0e9;
+  background: #f4f8fb;
+}
+
+.p-fileupload .p-fileupload-content {
+  padding: 10px;
+  border-color: #d5e0e9;
+  color: #526a7d;
+  background: #fff;
+}
+
+html[data-bs-theme='dark'] body {
+  p-calendar .p-calendar .p-inputtext {
+    border-color: #405364;
+    color: #e5edf4;
+    background: #15232d;
+  }
+
+  p-calendar .p-calendar .p-inputtext::placeholder {
+    color: #8297a8;
+    opacity: 1;
+  }
+
+  p-calendar .p-calendar:not(.p-disabled):hover .p-inputtext,
+  p-calendar .p-calendar.p-focus .p-inputtext,
+  p-calendar .p-calendar .p-inputtext:focus {
+    border-color: #58abd5;
+  }
+
+  p-calendar .p-calendar.p-focus .p-inputtext,
+  p-calendar .p-calendar .p-inputtext:focus {
+    box-shadow: 0 0 0 3px rgb(88 171 213 / 16%);
+  }
+
+  p-calendar .p-calendar .p-datepicker-trigger {
+    border-color: #405364;
+    color: #8fd1ef;
+    background: #21323f;
+  }
+
+  p-calendar .p-calendar-clear-icon {
+    color: #9eb1bf;
+  }
+
+  input[type='file'].form-control {
+    border-color: #405364;
+    color: #c7d4de;
+    background: #15232d;
+  }
+
+  .p-fileupload {
+    border-color: #405364;
+    background: #182630;
+  }
+
+  .p-fileupload .p-fileupload-buttonbar {
+    border-color: #405364;
+    background: #223443;
+  }
+
+  .p-fileupload .p-fileupload-content {
+    border-color: #405364;
+    color: #c5d3dd;
+    background: #182630;
+  }
+
+  .company-upload-name {
+    border-color: #405364;
+    color: #dce7ef;
+    background: #15232d;
+  }
+
+  .company-upload-name.is-empty {
+    color: #8297a8;
+  }
+
+  .company-upload-name i {
+    color: #77c9ed;
+  }
+}
+
+/* Reusable calendar popup for compact editable-table date fields. */
+.sigma-datepicker-panel.p-datepicker {
+  min-width: 290px;
+  overflow: hidden;
+  border: 1px solid #d6e1e9;
+  border-radius: 12px;
+  color: #31465a;
+  background: #fff;
+  box-shadow: 0 18px 42px rgb(34 57 78 / 22%);
+
+  .p-datepicker-header {
+    padding: 10px 12px;
+    border-bottom: 1px solid #e4ebf0;
+    color: #31465a;
+    background: linear-gradient(135deg, #f8fbfd, #eef7fb);
+  }
+
+  .p-datepicker-title {
+    gap: 5px;
+
+    button {
+      padding: 5px 7px;
+      border-radius: 7px;
+      color: #2f526a;
+      font-size: 13px;
+      font-weight: 700;
+    }
+  }
+
+  .p-datepicker-prev,
+  .p-datepicker-next {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    color: #3b789a;
+
+    &:hover,
+    &:focus-visible {
+      color: #fff;
+      background: #3498db;
+    }
+  }
+
+  table {
+    margin: 7px 0 3px;
+    font-size: 12px;
+
+    th {
+      padding: 5px;
+      color: #7a8d9d;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 2px;
+
+      > span {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        color: #40576b;
+
+        &:not(.p-highlight):not(.p-disabled):hover {
+          color: #247daf;
+          background: #e9f6fc;
+        }
+
+        &.p-highlight {
+          color: #fff;
+          background: linear-gradient(135deg, #3498db, #247daf);
+          box-shadow: 0 4px 10px rgb(36 125 175 / 25%);
+        }
+      }
+
+      &.p-datepicker-today > span:not(.p-highlight) {
+        border: 1px solid #3498db;
+        color: #247daf;
+        background: #f0f9fd;
+      }
+    }
+  }
+
+  .p-datepicker-buttonbar {
+    padding: 8px 12px 10px;
+    border-top: 1px solid #e4ebf0;
+
+    .p-button {
+      min-height: 32px;
+      padding: 0 10px;
+      border-radius: 7px;
+      color: #247daf;
+      font-size: 11px;
+      font-weight: 700;
+    }
+  }
+
+  .p-monthpicker {
+    padding: 10px;
+    gap: 5px;
+  }
+
+  .p-monthpicker-month {
+    border-radius: 8px;
+    color: #40576b;
+
+    &:not(.p-disabled):not(.p-highlight):hover {
+      color: #247daf;
+      background: #e9f6fc;
+    }
+
+    &.p-highlight {
+      color: #fff;
+      background: linear-gradient(135deg, #3498db, #247daf);
+    }
+  }
+}
+
+[data-bs-theme='dark'] .sigma-datepicker-panel.p-datepicker {
+  border-color: #405364;
+  color: #e5edf4;
+  background: #1b2935;
+  box-shadow: 0 18px 42px rgb(0 0 0 / 45%);
+
+  .p-datepicker-header {
+    border-color: #3a4d5d;
+    color: #e5edf4;
+    background: linear-gradient(135deg, #223441, #1b2935);
+  }
+
+  .p-datepicker-title button,
+  .p-datepicker-prev,
+  .p-datepicker-next {
+    color: #c5d7e3;
+  }
+
+  table {
+    th {
+      color: #8fa4b4;
+    }
+
+    td {
+      > span {
+        color: #d9e6ee;
+
+        &:not(.p-highlight):not(.p-disabled):hover {
+          color: #fff;
+          background: #2b4252;
+        }
+
+        &.p-highlight {
+          color: #fff;
+          background: linear-gradient(135deg, #3498db, #247daf);
+        }
+      }
+
+      &.p-datepicker-today > span:not(.p-highlight) {
+        border-color: #58b7e5;
+        color: #8dd4f4;
+        background: #213b4b;
+      }
+    }
+  }
+
+  .p-datepicker-buttonbar {
+    border-color: #3a4d5d;
+
+    .p-button {
+      color: #8dd4f4;
+    }
+  }
+
+  .p-monthpicker-month {
+    color: #d9e6ee;
+
+    &:not(.p-disabled):not(.p-highlight):hover {
+      color: #fff;
+      background: #2b4252;
+    }
+  }
+}
+
+/* Fleet / Vehicle Type body-appended dialogs. */
+.vehicle-type-editor-dialog.p-dialog {
+  --vehicle-type-text: #243648;
+  --vehicle-type-muted: #708295;
+  --vehicle-type-border: #dce5ed;
+  --vehicle-type-surface: #fff;
+  --vehicle-type-canvas: #f4f7fa;
+
+  overflow: hidden;
+  border: 1px solid var(--vehicle-type-border);
+  border-radius: 12px;
+  background: var(--vehicle-type-surface);
+  box-shadow: 0 22px 65px rgb(0 0 0 / 26%);
+}
+
+.vehicle-type-editor-dialog.p-dialog .p-dialog-header {
+  display: flex;
+  width: 100%;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--vehicle-type-border);
+  color: var(--vehicle-type-text);
+  background: var(--vehicle-type-surface);
+}
+
+.vehicle-type-editor-dialog .p-dialog-content {
+  overflow: hidden;
+  padding: 0;
+  color: var(--vehicle-type-text);
+  background: var(--vehicle-type-canvas);
+}
+
+.vehicle-type-editor-dialog .p-dialog-footer {
+  padding: 8px 12px;
+  border-top: 1px solid var(--vehicle-type-border);
+  color: var(--vehicle-type-text);
+  background: var(--vehicle-type-surface);
+}
+
+.vehicle-group-dialog-shell.p-dialog {
+  --vehicle-group-text: #263746;
+  --vehicle-group-muted: #6b7885;
+  --vehicle-group-border: #dce5ed;
+  --vehicle-group-surface: #fff;
+  --vehicle-group-canvas: #f4f7fa;
+
+  overflow: hidden;
+  border: 1px solid var(--vehicle-group-border);
+  border-radius: 8px;
+  background: var(--vehicle-group-surface);
+  box-shadow: 0 18px 54px rgb(0 0 0 / 24%);
+}
+
+.vehicle-group-dialog-shell .p-dialog-content {
+  overflow: hidden;
+  padding: 0;
+  color: var(--vehicle-group-text);
+  background: var(--vehicle-group-surface);
+}
+
+[data-bs-theme='dark'] .vehicle-type-editor-dialog.p-dialog {
+  --vehicle-type-text: #e4edf5;
+  --vehicle-type-muted: #9dafbf;
+  --vehicle-type-border: #344557;
+  --vehicle-type-surface: #1d2a37;
+  --vehicle-type-canvas: #16222d;
+
+  box-shadow: 0 24px 70px rgb(0 0 0 / 50%);
+}
+
+[data-bs-theme='dark'] .vehicle-type-editor-dialog .p-dialog-header,
+[data-bs-theme='dark'] .vehicle-type-editor-dialog .p-dialog-content,
+[data-bs-theme='dark'] .vehicle-type-editor-dialog .p-dialog-footer {
+  color: var(--vehicle-type-text);
+  background: var(--vehicle-type-surface);
+}
+
+[data-bs-theme='dark'] .vehicle-type-editor-dialog .vehicle-type-dialog-content {
+  --vehicle-type-text: #e4edf5;
+  --vehicle-type-muted: #9dafbf;
+  --vehicle-type-border: #344557;
+  --vehicle-type-surface: #1d2a37;
+  --vehicle-type-canvas: #16222d;
+}
+
+[data-bs-theme='dark'] .vehicle-group-dialog-shell.p-dialog,
+[data-bs-theme='dark'] .vehicle-group-dialog-shell .vehicle-group-dialog {
+  --vehicle-group-text: #e4edf5;
+  --vehicle-group-muted: #9dafbf;
+  --vehicle-group-border: #344557;
+  --vehicle-group-surface: #1d2a37;
+  --vehicle-group-canvas: #16222d;
+}
+
+[data-bs-theme='dark'] .vehicle-group-dialog-shell .p-dialog-content {
+  color: var(--vehicle-group-text);
+  background: var(--vehicle-group-surface);
+}
+
+[dir='rtl'] .vehicle-type-editor-dialog,
+[dir='rtl'] .vehicle-group-dialog-shell {
+  text-align: start;
+}
+
+@media (max-width: 680px) {
+  .vehicle-type-editor-dialog .p-dialog-header,
+  .vehicle-type-editor-dialog .p-dialog-footer {
+    padding-inline: 12px;
+  }
+
+}
+
+/* Source Code is a compact body-appended editor; keep its PrimeNG shell global. */
+.source-code-editor-dialog.p-dialog {
+  overflow: hidden;
+  border: 1px solid #d4e0e9;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 20px 55px rgb(31 52 70 / 24%);
+}
+
+.source-code-editor-dialog .p-dialog-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid #dce6ed;
+  background: #fff;
+}
+
+.source-code-editor-dialog .p-dialog-content {
+  overflow: hidden;
+  padding: 0;
+  background: #f4f7fa;
+}
+
+.source-code-editor-dialog .p-dialog-footer {
+  padding: 9px 14px;
+  border-top: 1px solid #dce6ed;
+  background: #fff;
+}
+
+[data-bs-theme='dark'] .source-code-editor-dialog.p-dialog {
+  border-color: #405364;
+  background: #17242e;
+  box-shadow: 0 24px 60px rgb(0 0 0 / 52%);
+}
+
+[data-bs-theme='dark'] .source-code-editor-dialog .p-dialog-header,
+[data-bs-theme='dark'] .source-code-editor-dialog .p-dialog-footer {
+  border-color: #405364;
+  background: #1b2a35;
+}
+
+[data-bs-theme='dark'] .source-code-editor-dialog .p-dialog-content {
+  background: #111c24;
+}
+
+[data-bs-theme='dark'] .source-code-editor-dialog .source-code-dialog-heading h2,
+[data-bs-theme='dark'] .source-code-editor-dialog .source-code-field label {
+  color: #e5eef5;
+}
+
+[data-bs-theme='dark'] .source-code-editor-dialog .source-code-dialog-heading p,
+[data-bs-theme='dark'] .source-code-editor-dialog .source-code-required-hint {
+  color: #9fb2c0;
+}
+
+[data-bs-theme='dark'] .source-code-editor-dialog .source-code-field input {
+  border-color: #405364;
+  color: #e5edf4;
+  background: #14212a;
+}
+
+[data-bs-theme='dark'] .source-code-editor-dialog .source-code-secondary-button,
+[data-bs-theme='dark'] .source-code-editor-dialog .source-code-dialog-close {
+  border-color: #45596a;
+  color: #dce7ee;
+  background: #253542;
+}
+
+html[data-bs-theme='dark'] body .source-code-editor-dialog {
+  .source-code-dialog-heading h2,
+  .source-code-field label {
+    color: #e5eef5;
+  }
+
+  .source-code-dialog-heading p,
+  .source-code-required-hint {
+    color: #9fb2c0;
+  }
+
+  .source-code-dialog-icon {
+    border-color: #315568;
+    color: #78cbed;
+    background: #1d3a49;
+  }
+
+  .source-code-state {
+    color: #a9bdca;
+  }
+
+  .source-code-state.is-error,
+  .source-code-field-error,
+  .source-code-save-error {
+    color: #ff9aa2;
+  }
+
+  .source-code-save-error {
+    border-color: #70464e;
+    background: #39262c;
+  }
+}
+
+[dir='rtl'] .source-code-editor-dialog,
+body[dir='rtl'] .source-code-editor-dialog {
+  direction: rtl;
+  text-align: start;
+}
+
+/*
+ * Shared list page shell (UI block 1 *No page scroll*, UI block 6). A list route adds
+ * `host: { class: 'sigma-route-host' }` and uses these classes instead of feature copies:
+ *   .sigma-route-host > .sigma-list-page > .sigma-list-panel
+ *     > .sigma-list-header (app-feature-title) · form[appFilterPanel] · alerts
+ *     > .sigma-list-table (app-data-table [fill]="true")
+ */
+.sigma-route-host {
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/*
+ * One outer gap on all four edges of the card (owner decision 2026-10-01). Metronic's content
+ * container adds 30px (20px under 992px) inline padding, and `.app-content` reserves a scrollbar
+ * gutter at the inline end; both made the sides wider than the top and bottom. A route on the
+ * shared shell never scrolls the page (UI block 1), so for those routes only the container
+ * padding and the gutter are dropped and the page owns the whole inset. Legacy routes keep the
+ * Metronic insets.
+ */
+:root {
+  --sigma-page-gap: 20px;
+}
+
+@media (max-width: 991.98px) {
+  :root {
+    --sigma-page-gap: 12px;
+  }
+}
+
+.app-container:has(> .sigma-route-host) {
+  padding-inline: 0 !important;
+}
+
+/* Explicit full-width workspace opt-in; other routes retain their configured container. */
+.app-container:has(> .sigma-route-host--full-width) {
+  width: 100%;
+  max-width: none !important;
+}
+
+/*
+ * Metronic pads `.app-content` 30px (20px under 992px) at the top and clears it only when
+ * `data-kt-app-toolbar-enabled` is on <body>. Only ToolbarComponent sets that attribute, and
+ * LayoutComponent.showToolbar() never renders the toolbar, so the padding stayed and made the
+ * gap under the header wider than the other edges. Shell routes clear it (and the mobile bottom
+ * padding) so `--sigma-page-gap` is the only inset.
+ */
+body.sigma-app-viewport .app-content:has(.sigma-route-host) {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  scrollbar-gutter: auto;
+}
+
+.sigma-list-page,
+.sigma-editor-page,
+.sigma-report-page.sigma-report-page--fill {
+  display: flex;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  flex-direction: column;
+  padding: var(--sigma-page-gap);
+  overflow: hidden;
+  color: var(--sigma-text);
+  background: var(--sigma-canvas);
+}
+
+.sigma-list-panel,
+.sigma-editor-panel,
+.sigma-report-panel {
+  display: flex;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 6px 12px;
+  overflow: hidden;
+  border: 1px solid var(--sigma-border);
+  background: var(--sigma-surface);
+  box-shadow: 0 2px 8px rgb(35 48 62 / 16%);
+}
+
+.sigma-list-header { flex: 0 0 auto; }
+.sigma-list-header app-feature-title { display: block; }
+
+/* Tree/settings workspaces fill the panel content; align title/filter cards with that frame (UI block 3). */
+.sigma-list-panel--workspace > .sigma-list-header app-feature-title,
+.sigma-editor-panel--workspace > app-feature-title { margin-inline: 0; }
+.sigma-list-panel--workspace .sigma-filter-panel,
+.sigma-editor-panel--workspace .sigma-filter-panel { margin-inline: 0; }
+
+/* Read-only report document: a single frame owns all section/table scrolling. */
+.sigma-report-page.sigma-report-page--fill { padding: 7px; }
+
+.sigma-report-panel {
+  gap: 0;
+  padding: 16px 14px 14px;
+  border-radius: var(--sigma-control-radius, 6px);
+  box-shadow: 0 2px 8px rgb(28 48 64 / 7%);
+}
+
+.sigma-report-panel > app-feature-title { margin: -8px 0 16px; }
+
+/* Compatibility alias; canonical report panels align title/filter edges by default (UI 20). */
+.sigma-report-panel--aligned-title > app-feature-title { margin-inline: 0; }
+
+.sigma-report-panel > app-feature-title,
+.sigma-report-panel > form,
+.sigma-report-panel > .sigma-report-summary-bar {
+  flex: 0 0 auto;
+}
+
+.sigma-report-table-frame {
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--sigma-border);
+  border-radius: var(--sigma-control-radius);
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--sigma-border) transparent;
+}
+
+.sigma-report-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  table-layout: fixed;
+  color: var(--sigma-text);
+  background: var(--sigma-surface);
+  font-size: 11px;
+}
+
+.sigma-report-table th,
+.sigma-report-table td {
+  padding: 3px 8px;
+  border-bottom: 1px solid var(--sigma-border);
+  vertical-align: middle;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sigma-report-table thead th {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+  height: 34px;
+  padding-block: 5px;
+  padding-inline: 9px;
+  border-inline-end: 1px solid var(--sigma-border);
+  border-bottom: 2px solid color-mix(in srgb, var(--sigma-primary) 32%, var(--sigma-border));
+  color: color-mix(in srgb, var(--sigma-text) 92%, var(--sigma-primary));
+  background: color-mix(in srgb, var(--sigma-surface-soft) 88%, var(--sigma-primary) 12%);
+  box-shadow: 0 1px 0 rgb(0 0 0 / 3%);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.sigma-report-table thead th:last-child { border-inline-end: 0; }
+.sigma-report-table tbody td {
+  height: 30px;
+  color: var(--sigma-text);
+  background: var(--sigma-surface);
+  line-height: 1.2;
+}
+
+.sigma-report-table .sigma-report-number {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+
+.sigma-report-table .sigma-report-empty { text-align: center; white-space: normal; }
+
+@media print {
+  .sigma-report-page.sigma-report-page--fill,
+  .sigma-report-panel {
+    padding: 0 !important;
+    border: 0;
+    color: #222;
+    background: #fff;
+    box-shadow: none !important;
+    flex: none;
+  }
+
+  .sigma-report-table-frame {
+    border: 0;
+    scrollbar-gutter: auto;
+    flex: none;
+  }
+
+  .sigma-report-table {
+    min-width: 0 !important;
+    width: 100%;
+    font-size: 7pt;
+  }
+
+  .sigma-report-table th,
+  .sigma-report-table td {
+    height: auto !important;
+    padding: 2pt 3pt;
+    color: #222;
+    background: #fff;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .sigma-report-table thead th { position: static; color: #222; background: #fff; box-shadow: none; }
+  .sigma-report-table tbody td { color: #222; background: #fff; }
+  .sigma-report-table tr { break-inside: avoid; }
+
+  .sigma-report-panel .sigma-report-summary-bar,
+  .sigma-report-panel .sigma-report-total {
+    border-color: #ccc;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .sigma-report-panel .sigma-report-total__label,
+  .sigma-report-panel .sigma-report-total__value { color: #222; }
+}
+
+/* Same 8px inline margin as app-feature-title and the filter panel: the three cards share both edges (UI block 6). */
+.sigma-list-table {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  margin: 0 8px;
+  overflow: hidden;
+}
+
+/* Compact secondary action (Export, Reset, header secondary actions). */
+.sigma-secondary-button {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid var(--sigma-filter-control-border);
+  border-radius: 4px;
+  color: var(--sigma-filter-secondary-text);
+  background: var(--sigma-surface);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.sigma-secondary-button:hover:not(:disabled),
+.sigma-secondary-button:focus-visible {
+  border-color: var(--sigma-primary);
+  color: var(--sigma-primary);
+  background: color-mix(in srgb, var(--sigma-primary) 7%, var(--sigma-surface));
+}
+
+.sigma-secondary-button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--sigma-primary) 60%, #fff);
+  outline-offset: 2px;
+}
+
+.sigma-secondary-button:disabled { cursor: not-allowed; opacity: 0.65; }
+
+.sigma-secondary-button.sigma-report-user-action {
+  max-inline-size: 100%;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 3px 6px;
+  border-color: transparent;
+  background: transparent;
+}
+
+.sigma-report-user-action__avatar {
+  display: inline-grid;
+  inline-size: 28px;
+  block-size: 28px;
+  flex: 0 0 28px;
+  place-items: center;
+  border-radius: 7px;
+  color: var(--sigma-primary);
+  background: color-mix(in srgb, var(--sigma-primary) 9%, var(--sigma-surface));
+}
+
+.sigma-report-user-action__label {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 700;
+  text-overflow: ellipsis;
+}
+
+/*
+ * Destructive action outside a dialog footer (UI block 24): same geometry as the secondary
+ * button, danger colour. The action still goes through its confirmation (UI block 9).
+ */
+.sigma-secondary-button.sigma-danger-button {
+  border-color: color-mix(in srgb, var(--bs-danger, #d9214e) 45%, var(--sigma-filter-control-border));
+  color: var(--bs-danger, #d9214e);
+}
+
+.sigma-secondary-button.sigma-danger-button:hover:not(:disabled),
+.sigma-secondary-button.sigma-danger-button:focus-visible {
+  border-color: var(--bs-danger, #d9214e);
+  color: var(--bs-danger, #d9214e);
+  background: color-mix(in srgb, var(--bs-danger, #d9214e) 8%, var(--sigma-surface));
+}
+
+.sigma-secondary-button.sigma-danger-button:focus-visible {
+  outline-color: color-mix(in srgb, var(--bs-danger, #d9214e) 60%, #fff);
+}
+
+/*
+ * Report print (UI block 21): mark every bounded height or scroll container of the report
+ * with `sigma-print-flow`, so the whole report flows across pages instead of being clipped.
+ */
+@media print {
+  .sigma-print-flow {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Opt-in EditorDialog report printing; ReportPrintService owns the body class. */
+  body.sigma-dialog-print #kt_app_root,
+  body.sigma-dialog-print .p-dialog-mask:not(:has(.sigma-report-print-dialog)),
+  body.sigma-dialog-print .sigma-report-print-dialog .p-dialog-header,
+  body.sigma-dialog-print .sigma-report-print-dialog .p-dialog-footer,
+  body.sigma-dialog-print .sigma-report-print-dialog .no-print {
+    display: none !important;
+  }
+
+  body.sigma-dialog-print .p-dialog-mask:has(.sigma-report-print-dialog),
+  body.sigma-dialog-print .sigma-report-print-dialog,
+  body.sigma-dialog-print .sigma-report-print-dialog .p-dialog-content,
+  body.sigma-dialog-print .sigma-report-print-dialog .app-editor-dialog-content {
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    border: 0 !important;
+    color: #000 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Inline page alert (load/lookup failures). Default = danger; --warning for partial data. */
+.sigma-alert {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  margin: 0 8px 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--bs-danger-border-subtle);
+  border-radius: 6px;
+  color: var(--bs-danger-text-emphasis);
+  background: var(--bs-danger-bg-subtle);
+  font-size: 0.8125rem;
+}
+
+.sigma-alert--warning {
+  border-color: var(--bs-warning-border-subtle);
+  color: var(--bs-warning-text-emphasis);
+  background: var(--bs-warning-bg-subtle);
+}
+
+/* Long row diagnostics keep their own scroll region inside a fixed page alert. */
+.sigma-alert-list {
+  margin: 0;
+  min-width: 0;
+  max-height: 8rem;
+  overflow: auto;
+  padding-inline-start: 1.25rem;
+}
+
+[data-bs-theme='dark'] .sigma-list-panel,
+[data-bs-theme='dark'] .sigma-editor-panel,
+[data-bs-theme='dark'] .sigma-report-panel { box-shadow: 0 2px 8px rgb(0 0 0 / 30%); }
+
+/* Status badge for grid cells (UI block 5): neutral base + semantic variants, light and dark. */
+.sigma-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: #52606d;
+  background: #eef2f6;
+}
+
+.sigma-status-badge::before {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.sigma-status-badge--success { color: #1f7a52; background: #e3f5ec; border-color: #bfe6d2; }
+.sigma-status-badge--info { color: #1c6ea4; background: #e4f1fa; border-color: #c2dff2; }
+.sigma-status-badge--warning { color: #8a5a00; background: #fff4db; border-color: #f5dfa8; }
+.sigma-status-badge--danger { color: #a3303b; background: #fbe7e9; border-color: #f2c2c7; }
+
+[data-bs-theme='dark'] .sigma-status-badge { color: #b8c6d2; background: #243543; }
+[data-bs-theme='dark'] .sigma-status-badge--success { color: #7fd6b2; background: rgb(47 157 114 / 18%); border-color: rgb(47 157 114 / 40%); }
+[data-bs-theme='dark'] .sigma-status-badge--info { color: #8fd0f5; background: rgb(52 152 219 / 18%); border-color: rgb(52 152 219 / 40%); }
+[data-bs-theme='dark'] .sigma-status-badge--warning { color: #f3cc7a; background: rgb(232 170 40 / 16%); border-color: rgb(232 170 40 / 38%); }
+[data-bs-theme='dark'] .sigma-status-badge--danger { color: #f0a2a9; background: rgb(212 72 86 / 18%); border-color: rgb(212 72 86 / 40%); }
+
+@media (max-width: 720px) {
+  .sigma-list-page,
+  .sigma-editor-page { padding: 4px; }
+  .sigma-list-panel,
+  .sigma-editor-panel { padding: 4px 6px; }
+}
+
+@media (max-width: 620px) {
+  .sigma-report-page.sigma-report-page--fill { padding: 4px; }
+  .sigma-report-panel { padding: 12px 10px; }
+}
+
+/*
+ * Routed editor shell (UI blocks 1, 12, 13; reference Workshop/Job/components/editor).
+ * Page and panel share the list shell values above. The form/body is the bounded region; each
+ * pane inside it owns its own scroll. Footer and totals stay fixed at the bottom.
+ */
+.sigma-editor-form,
+.sigma-editor-body {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sigma-editor-body { gap: 10px; padding: 0 8px 8px; }
+
+/* The single scroll owner of a one-pane editor (step form, plain record): sections stack inside it. */
+.sigma-editor-scroll {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+}
+
+/*
+ * Sections keep their content height and the scroll owner scrolls. Without this a section with
+ * `min-height: 0` (app-form-section) is squeezed and the next one draws over it.
+ */
+.sigma-editor-scroll > * { flex: 0 0 auto; }
+.sigma-editor-panel > app-feature-title { flex: 0 0 auto; }
+
+/* Shared three-pane record editor: Details / Jobs / selected Job details (UI 1, 13). */
+.sigma-editor-form--three-pane {
+  container: sigma-editor-workspace / inline-size;
+}
+
+.sigma-editor-body.sigma-editor-body--three-pane {
+  display: grid;
+  grid-template-columns: minmax(240px, 280px) minmax(170px, 200px) minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.sigma-editor-pane {
+  display: flex;
+  min-inline-size: 0;
+  min-block-size: 0;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sigma-editor-pane > app-form-section { flex: 1 1 0; }
+.sigma-editor-grid.sigma-editor-pane-fields { grid-template-columns: minmax(0, 1fr); }
+
+/* Closed lookup text must shrink inside the three-pane editor's field width. */
+.sigma-editor-form--three-pane .sigma-field :is(p-dropdown, .p-dropdown) {
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.sigma-editor-form--three-pane .sigma-field .p-dropdown-label {
+  display: block;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sigma-editor-form--three-pane .sigma-field .p-dropdown-trigger { flex-shrink: 0; }
+
+@container sigma-editor-workspace (max-width: 900px) {
+  .sigma-editor-body.sigma-editor-body--three-pane {
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    grid-template-rows: minmax(120px, 0.35fr) minmax(0, 1fr);
+  }
+  .sigma-editor-pane--master { grid-column: 1; grid-row: 1 / 3; }
+  .sigma-editor-pane--jobs { grid-column: 2; grid-row: 1; }
+  .sigma-editor-pane--detail { grid-column: 2; grid-row: 2; }
+}
+
+@container sigma-editor-workspace (max-width: 620px) {
+  .sigma-editor-body.sigma-editor-body--three-pane {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(130px, 0.7fr) minmax(120px, 0.4fr) minmax(0, 1fr);
+  }
+  .sigma-editor-pane--master { grid-column: 1; grid-row: 1; }
+  .sigma-editor-pane--jobs { grid-column: 1; grid-row: 2; }
+  .sigma-editor-pane--detail { grid-column: 1; grid-row: 3; }
+}
+
+@media print {
+  .sigma-editor-form--three-pane { container-type: normal; }
+  .sigma-editor-body.sigma-editor-body--three-pane,
+  .sigma-editor-body--three-pane > .sigma-editor-pane {
+    display: block;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* Field grid: --sigma-editor-columns (default 4); 2 under 1024px, 1 under 700px. */
+.sigma-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--sigma-editor-columns, 4), minmax(0, 1fr));
+  /* Cells keep their own height: an error under one control never moves its neighbours. */
+  align-items: start;
+  gap: 7px 16px;
+}
+
+/* One labelled control: label above, 34px control or read-only value below. */
+.sigma-field { display: grid; align-content: start; min-width: 0; gap: 4px; }
+.sigma-field--full { grid-column: 1 / -1; }
+.sigma-field > label { color: var(--sigma-muted); font-size: 0.75rem; font-weight: 500; }
+
+.sigma-field > input,
+.sigma-field > textarea,
+.sigma-field > select,
+.sigma-field > .sigma-field__read,
+.sigma-field > .p-dropdown,
+.sigma-field > p-dropdown,
+.sigma-field > .p-calendar,
+.sigma-field > p-calendar { width: 100%; }
+
+/* One control height (owner request 2026-10-01): every single-line control is exactly the token. */
+.sigma-field > input:not([type='checkbox']):not([type='radio']):not([type='file']),
+.sigma-field > select:not([multiple]),
+.sigma-field > .sigma-field__read,
+.sigma-field .p-dropdown,
+.sigma-field .p-calendar,
+.sigma-field .p-calendar .p-inputtext,
+.sigma-field .p-inputnumber,
+.sigma-field .p-inputnumber-input {
+  box-sizing: border-box;
+  height: var(--sigma-editor-control-height);
+  min-height: var(--sigma-editor-control-height);
+  max-height: var(--sigma-editor-control-height);
+}
+.sigma-field .p-dropdown { display: flex; align-items: center; }
+.sigma-field .p-dropdown .p-dropdown-label { display: flex; align-items: center; height: auto; min-height: 0; padding-block: 0; }
+.sigma-field .p-dropdown .p-dropdown-trigger { align-self: stretch; height: auto; }
+
+.sigma-field > input,
+.sigma-field > textarea,
+.sigma-field > select {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 5px 9px;
+  border: 1px solid var(--sigma-border-strong);
+  border-radius: var(--sigma-control-radius, 6px);
+  color: var(--sigma-text);
+  background: var(--sigma-surface);
+  font: inherit;
+  font-size: 0.8125rem;
+}
+
+.sigma-field > input:focus,
+.sigma-field > textarea:focus,
+.sigma-field > select:focus {
+  border-color: var(--sigma-primary);
+  outline: 0;
+  box-shadow: var(--sigma-control-focus-ring, 0 0 0 3px rgb(52 152 219 / 16%));
+}
+
+.sigma-field > input[readonly] { color: var(--sigma-muted); background: var(--sigma-surface-soft); }
+.sigma-field > textarea { min-height: 42px; resize: vertical; }
+
+.sigma-field__read {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  overflow: hidden;
+  border-bottom: 1px dotted var(--sigma-border);
+  color: var(--sigma-text);
+  font-size: 0.8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A checkbox field: the box and its label on the control line (UI block 1). */
+.sigma-field--check {
+  display: flex;
+  box-sizing: content-box;
+  align-self: start;
+  align-items: center;
+  gap: 8px;
+  height: var(--sigma-editor-control-height);
+  /* Sits on its neighbours' control line, below their label line, whatever the row height. */
+  padding-block-start: calc(0.75rem * 1.5 + 4px);
+}
+.sigma-field--check > label { margin: 0; color: var(--sigma-text); font-size: 0.8125rem; cursor: pointer; }
+.sigma-field--check > input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  min-height: 0;
+  margin: 0;
+  accent-color: var(--sigma-primary);
+}
+
+/* A file field: hidden input, picker button, file name, remove (UI blocks 1, 18). */
+/* Looks like the other controls: one 34px box, name first, icon actions at the end (owner 2026-10-01). */
+.sigma-file-field {
+  position: relative;
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  height: var(--sigma-editor-control-height);
+  padding-inline: 9px 3px;
+  border: 1px solid var(--sigma-border-strong);
+  border-radius: var(--sigma-control-radius, 6px);
+  background: var(--sigma-surface);
+}
+.sigma-file-field:focus-within { border-color: var(--sigma-primary); box-shadow: var(--sigma-control-focus-ring, 0 0 0 3px rgb(52 152 219 / 16%)); }
+.sigma-file-field > .sigma-secondary-button.sigma-icon-button {
+  flex: 0 0 auto;
+  width: 26px;
+  min-width: 26px;
+  height: 26px;
+  min-height: 26px;
+  margin: 0;
+  border-color: transparent;
+  background: transparent;
+}
+.sigma-file-field > .sigma-secondary-button.sigma-icon-button:hover { border-color: var(--sigma-border); }
+.sigma-file-field > input[type='file'] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.sigma-file-field__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1.2;
+  color: var(--sigma-text);
+  font-size: 0.8125rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sigma-file-field__name.is-empty { color: var(--sigma-muted); }
+/* app-file-field host: a block that can shrink inside a grid cell or a table cell. */
+.sigma-file-field-host { display: block; min-width: 0; }
+
+/* Document totals line (subtotal, tax, total). Debit/Credit summaries use sigma-report-summary-bar. */
+.sigma-editor-totals {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 8px 4px 2px;
+  border-top: 1px solid var(--sigma-border);
+  font-size: 0.75rem;
+}
+
+.sigma-editor-totals > div { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.sigma-editor-totals span { color: var(--sigma-primary); font-weight: 600; }
+.sigma-editor-totals__grand strong { font-size: 0.875rem; }
+
+.sigma-editor-footer {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 8px 2px;
+  border-top: 1px solid var(--sigma-border);
+}
+
+/* Square icon-only secondary action (Back). */
+.sigma-secondary-button.sigma-icon-button { width: 34px; padding: 0; }
+
+@media (max-width: 1024px) {
+  .sigma-editor-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sigma-editor-totals { justify-content: flex-start; }
+}
+
+@media (max-width: 700px) {
+  .sigma-editor-grid { grid-template-columns: minmax(0, 1fr); }
+  .sigma-editor-totals { gap: 6px 12px; font-size: 0.6875rem; }
+}
+
+.sigma-numeric-input {
+  min-width: 0;
+  direction: ltr;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+}
+
+/* Quantity has one widget owner; feature fields and table columns retain their widths. */
+.sigma-quantity-input-host {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.sigma-quantity-input-host .sigma-quantity-input.p-inputnumber {
+  display: inline-flex;
+  box-sizing: border-box;
+  min-width: 0;
+  width: 100%;
+  height: var(--sigma-editor-control-height, 34px);
+  direction: ltr;
+  border: 1px solid var(--app-editor-dialog-input-border, var(--sigma-border));
+  border-radius: var(--sigma-control-radius, 6px);
+  color: var(--app-editor-dialog-text, var(--sigma-text));
+  background: var(--app-editor-dialog-surface, var(--sigma-surface));
+
+  &:focus-within {
+    border-color: var(--sigma-primary);
+    box-shadow: var(--sigma-control-focus-ring);
+  }
+
+  .p-inputnumber-input {
+    flex: 1 1 0;
+    box-sizing: border-box;
+    min-width: 0;
+    width: 0;
+    height: 100%;
+    min-height: 0;
+    padding: 7px 9px;
+    border: 0;
+    border-radius: var(--sigma-control-radius, 6px) 0 0 var(--sigma-control-radius, 6px);
+    color: inherit;
+    background: transparent;
+    font-size: 12px;
+    box-shadow: none;
+    outline: 0;
+  }
+
+  .p-inputnumber-button-group {
+    display: flex;
+    flex: 0 0 22px;
+    width: 22px;
+    flex-direction: column;
+    overflow: hidden;
+    border-inline-start: 1px solid var(--app-editor-dialog-input-border, var(--sigma-border));
+    border-start-end-radius: var(--sigma-control-radius, 6px);
+    border-end-end-radius: var(--sigma-control-radius, 6px);
+  }
+
+  .p-inputnumber-button {
+    display: flex;
+    min-width: 0;
+    width: 100%;
+    min-height: 0;
+    height: 50%;
+    flex: 1 1 0;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    color: var(--sigma-primary);
+    background: color-mix(in srgb, var(--sigma-primary) 8%, var(--app-editor-dialog-surface, var(--sigma-surface)));
+    box-shadow: none;
+
+    &:enabled:hover { background: color-mix(in srgb, var(--sigma-primary) 16%, var(--app-editor-dialog-surface, var(--sigma-surface))); }
+    &:focus-visible { outline: 1px solid var(--sigma-primary); outline-offset: -2px; }
+    &:disabled { opacity: 0.45; }
+    .p-icon { width: 10px; height: 10px; }
+  }
+
+  .p-inputnumber-button-up { border-block-end: 1px solid var(--app-editor-dialog-input-border, var(--sigma-border)); }
+}
+
+.sigma-quantity-input-host:is(.ng-invalid.ng-touched, .ng-invalid.ng-dirty) .sigma-quantity-input {
+  border-color: var(--bs-danger);
+}

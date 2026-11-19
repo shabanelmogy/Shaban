@@ -1,0 +1,17 @@
+Source-only syntax and contract evidence; compilation/runtime pending.
+src/app/modules/Accounts/FiscalYears/components/details/details.component.ts: 0 syntax errors
+src/app/modules/Accounts/MonthClose/components/list/list.component.ts: 0 syntax errors
+src/app/modules/Accounts/MonthClose/components/close/close.component.ts: 0 syntax errors
+src/app/modules/Accounts/MonthClose/components/check-result/check-result.component.ts: 0 syntax errors
+src/app/modules/Accounts/MonthClose/models/month-close.ts: 0 syntax errors
+src/app/modules/Accounts/MonthClose/services/month-close.service.ts: 0 syntax errors
+src/app/modules/i18n/vocabs/en.ts: 0 syntax errors
+src/app/modules/i18n/vocabs/ar.ts: 0 syntax errors
+src/app/modules/Accounts/MonthClose/components/close/close.component.ts: explicit runtime entries 1
+src/app/modules/Accounts/MonthClose/components/check-result/check-result.component.ts: explicit runtime entries 1
+monthClose translation parity: EN=49, AR=49, missingEN=0, missingAR=0
+src/app/modules/Accounts/FiscalYears/components/details/details.component.html: 0 template syntax errors
+src/app/modules/Accounts/MonthClose/components/list/list.component.html: 0 template syntax errors
+src/app/modules/Accounts/MonthClose/components/close/close.component.html: 0 template syntax errors
+src/app/modules/Accounts/MonthClose/components/check-result/check-result.component.html: 0 template syntax errors
+Total source parse/wiring/parity findings: 0

@@ -1,0 +1,29 @@
+<section class="sigma-editor-page">
+  <div class="sigma-editor-panel">
+    <app-feature-title [title]="'settings.apiKey' | translate" icon="bi bi-key" />
+    <div class="sigma-editor-body">
+      <div class="sigma-editor-scroll">
+        <app-deepseek-settings #deepSeekSettings [showSave]="false" [blocked]="busy()" />
+        <app-form-section title="settings.apiKeyModel.googleMapApiKey" icon="bi bi-map" density="compact">
+          @if (error()) {
+            <app-state-message kind="error" [message]="error()" />
+            @if (!ready()) { <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="getLastSetting()">{{ 'general.retry' | translate }}</button> }
+          }
+          <form [formGroup]="apiKeyFrom" (ngSubmit)="save()" class="sigma-editor-grid" style="--sigma-editor-columns: 1" novalidate>
+            <div class="sigma-field">
+              <label for="sigma-google-map-key">{{ 'settings.apiKeyModel.googleMapApiKey' | translate }}</label>
+              <input id="sigma-google-map-key" type="text" formControlName="googleMapApiKey" [readonly]="busy() || !ready()"
+                [placeholder]="'settings.apiKeyModel.selctedgoogleMapApiKey' | translate" />
+            </div>
+          </form>
+        </app-form-section>
+      </div>
+    </div>
+    <footer class="sigma-editor-footer">
+      <app-primary-action-button [label]="'mockData.saveDeepSeekKey' | translate" icon="bi bi-save"
+        [loading]="deepSeekSettings.saving()" [disabled]="busy() || deepSeekSettings.loading() || deepSeekSettings.saving() || !deepSeekSettings.canSave" (pressed)="deepSeekSettings.save()" />
+      <app-primary-action-button [label]="'mockData.saveGoogleKey' | translate" icon="bi bi-save"
+        [loading]="busy()" [disabled]="busy() || !ready() || deepSeekSettings.saving()" (pressed)="save()" />
+    </footer>
+  </div>
+</section>

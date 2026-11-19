@@ -1,0 +1,1200 @@
+diff --git a/src/app/modules/Administration/CustomerRequests/components/details/details.component.html b/src/app/modules/Administration/CustomerRequests/components/details/details.component.html
+index ced894c0..df42dfe0 100644
+--- a/src/app/modules/Administration/CustomerRequests/components/details/details.component.html
++++ b/src/app/modules/Administration/CustomerRequests/components/details/details.component.html
+@@ -1,32 +1,66 @@
+-<div class="card card-custom">
+-  <div class="card-header border-0 pt-5">
+-    <h3 class="card-title">{{ (isCreateMode ? 'customerRequest.create' : 'customerRequest.edit') | translate }}</h3>
+-  </div>
+-  <div class="card-body pt-2 pb-0 mt-n3">
+-    <form appMockData [formGroup]="customerRequestForm" class="row">
+-      <div class="col-12">
+-        <div class="row">
+-          <div class="form-group col-md-12 col-lg-6 p-4">
+-            <label class="form-label" for="customerId">{{ 'customerRequest.customerId' | translate }}</label>
+-            <p-dropdown
+-              formControlName="customerId"
+-              [options]="customers"
+-              optionLabel="name"
+-              optionValue="id"
+-              placeholder="{{ 'customerRequest.selectCustomer' | translate }}"
+-              [disabled]="!isCreateMode"
+-            />
+-          </div>
+-          <div class="form-group col-md-12 col-lg-6 p-4">
+-            <label class="form-label" for="detail">{{ 'customerRequest.detail' | translate }}</label>
+-            <textarea class="form-control" formControlName="detail"></textarea>
+-          </div>
++<app-editor-dialog [visible]="visible()" [title]="titleKey() | translate"
++  [subtitle]="id ? ('customerRequest.recordSubtitle' | translate: { id: id }) : ('customerRequest.editorHint' | translate)"
++  icon="bi bi-chat-left-text" [mode]="mode()" [contentPadded]="true"
++  [saving]="saving()" [closeDisabled]="busy()"
++  [primaryActionVisible]="detailReady() && !detailError()"
++  [primaryActionDisabled]="busy() || (mode() !== 'view' && !lookupsReady())"
++  [closeLabel]="'general.close' | translate" [cancelLabel]="'general.cancel' | translate"
++  [saveLabel]="'general.save' | translate" [editLabel]="'general.edit' | translate"
++  (closeRequested)="requestClose()" (escapeRequested)="onEscape($event)"
++  (editRequested)="enableEditing()" (saveRequested)="save()">
++  @if (loadingDetail()) {
++    <app-state-message kind="loading" />
++  } @else if (detailError()) {
++    <app-state-message kind="error" [message]="detailError()" />
++    <button type="button" class="sigma-secondary-button" (click)="loadDetail()">{{ 'general.retry' | translate }}</button>
++  } @else {
++    <form appMockData [formGroup]="form" class="sigma-editor-form flex-fill" (ngSubmit)="save()">
++      <div class="sigma-editor-body flex-fill">
++        <div class="sigma-editor-scroll flex-fill">
++          @if (lookupError()) {
++            <app-state-message kind="error" [message]="lookupError()" />
++            <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="loadCustomers()">{{ 'general.retry' | translate }}</button>
++          }
++          @if (lookupsLoading()) {
++            <app-state-message kind="loading" />
++          }
++          @if (saveError()) {
++            <app-state-message kind="error" [message]="saveError()" />
++          }
++          <app-form-section title="customerRequest.basicInfo" icon="bi bi-chat-left-text" density="compact">
++            <div class="sigma-editor-grid" [style.--sigma-editor-columns]="2">
++              <div class="sigma-field sigma-field--full">
++                <label for="request-customer">{{ 'customerRequest.customerId' | translate }}</label>
++                @if (mode() === 'view') {
++                  <input id="request-customer" type="text" [value]="detail()?.customerName ?? ''" disabled />
++                } @else {
++                  <p-dropdown inputId="request-customer" formControlName="customerId"
++                    [options]="customerOptions()" optionLabel="value" optionValue="id" [filter]="true"
++                    filterBy="value" [showClear]="true" [loading]="lookupsLoading()"
++                    [placeholder]="'customerRequest.selectCustomer' | translate" styleClass="w-100" appendTo="body" />
++                  <app-field-error [control]="form.controls.customerId" />
++                }
++              </div>
++              <div class="sigma-field sigma-field--full">
++                <label for="request-detail">{{ 'customerRequest.detail' | translate }}</label>
++                <textarea id="request-detail" rows="4" maxlength="1000" formControlName="detail"
++                  [attr.aria-invalid]="form.controls.detail.invalid && form.controls.detail.touched"></textarea>
++                <app-field-error [control]="form.controls.detail" />
++              </div>
++              @if (id) {
++                <div class="sigma-field">
++                  <label for="request-date">{{ 'customerRequest.dateAndTime' | translate }}</label>
++                  <input id="request-date" type="text" [value]="displayDate()" disabled />
++                </div>
++                <div class="sigma-field">
++                  <label for="request-state">{{ 'customerRequest.status' | translate }}</label>
++                  <input id="request-state" type="text" [value]="statusKey() | translate" disabled />
++                </div>
++              }
++            </div>
++          </app-form-section>
+         </div>
+       </div>
+-
+-      <div class="col-12">
+-        <app-buttons [endButtons]="buttons" (buttonsClick)="onButtonClick($event)"></app-buttons>
+-      </div>
+     </form>
+-  </div>
+-</div>
+\ No newline at end of file
++  }
++</app-editor-dialog>
+diff --git a/src/app/modules/Administration/CustomerRequests/components/details/details.component.scss b/src/app/modules/Administration/CustomerRequests/components/details/details.component.scss
+deleted file mode 100644
+index e69de29b..00000000
+diff --git a/src/app/modules/Administration/CustomerRequests/components/details/details.component.spec.ts b/src/app/modules/Administration/CustomerRequests/components/details/details.component.spec.ts
+deleted file mode 100644
+index 38347001..00000000
+--- a/src/app/modules/Administration/CustomerRequests/components/details/details.component.spec.ts
++++ /dev/null
+@@ -1,23 +0,0 @@
+-import { ComponentFixture, TestBed } from '@angular/core/testing';
+-
+-import { DetailsComponent } from './details.component';
+-
+-describe('DetailsComponent', () => {
+-  let component: DetailsComponent;
+-  let fixture: ComponentFixture<DetailsComponent>;
+-
+-  beforeEach(async () => {
+-    await TestBed.configureTestingModule({
+-      imports: [DetailsComponent]
+-    })
+-    .compileComponents();
+-    
+-    fixture = TestBed.createComponent(DetailsComponent);
+-    component = fixture.componentInstance;
+-    fixture.detectChanges();
+-  });
+-
+-  it('should create', () => {
+-    expect(component).toBeTruthy();
+-  });
+-});
+\ No newline at end of file
+diff --git a/src/app/modules/Administration/CustomerRequests/components/details/details.component.ts b/src/app/modules/Administration/CustomerRequests/components/details/details.component.ts
+index ec2943a9..3292c10b 100644
+--- a/src/app/modules/Administration/CustomerRequests/components/details/details.component.ts
++++ b/src/app/modules/Administration/CustomerRequests/components/details/details.component.ts
+@@ -1,233 +1,214 @@
++import { CommonModule } from '@angular/common';
++import { Component, DestroyRef, EventEmitter, Input, OnInit, Output, computed, inject, signal } from '@angular/core';
++import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
++import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
++import { TranslateModule } from '@ngx-translate/core';
++import { DropdownModule } from 'primeng/dropdown';
++import { Observable, defer, finalize, of } from 'rxjs';
++import { EditorDialogComponent, EditorDialogMode } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
++import { FieldErrorComponent } from 'src/app/modules/shared/components/field-error/field-error.component';
++import { FormSectionComponent } from 'src/app/modules/shared/components/form-section/form-section.component';
+ import { MockDataFormsModule } from 'src/app/modules/shared/components/mock-data/mock-data-forms.module';
+-import { Component, OnInit, OnDestroy } from '@angular/core';
++import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
++import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+ import { Result } from 'src/app/modules/shared/models/result';
++import { Results } from 'src/app/modules/shared/models/results';
+ import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
++import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
++import { CustomerService } from 'src/app/modules/shared/service/customer.service';
++import { apiErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { formatDisplayDate } from 'src/app/modules/shared/utils/date-utils';
++import { freezeFormState } from 'src/app/modules/shared/utils/form-state';
+ import { CustomerRequestDetailsDTO } from '../../models/details';
+-import { CommonModule, DatePipe } from '@angular/common';
+-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+-import { ButtonModel } from 'src/app/modules/shared/models/button-model';
+-import { ButtonsComponent } from 'src/app/modules/shared/components/buttons/buttons.component';
+-import { ActivatedRoute } from '@angular/router';
++import { CustomerRequestStatus } from '../../models/list';
+ import { CustomerRequestCreateDTO } from '../../models/create';
+-import { TranslateModule } from '@ngx-translate/core';
+-import { DropdownModule } from 'primeng/dropdown';
+ import { CustomerRequestService } from '../../services/customerrequest.service';
+ 
+-interface Customer {
+-  id: number;
+-  name: string;
+-}
+-
+ @Component({
+   selector: 'app-customer-request-details',
+   standalone: true,
+-  imports: [MockDataFormsModule, CommonModule, ReactiveFormsModule, ButtonsComponent, TranslateModule, DropdownModule],
++  imports: [CommonModule, ReactiveFormsModule, TranslateModule, DropdownModule,
++    EditorDialogComponent, FieldErrorComponent, FormSectionComponent, MockDataFormsModule, StateMessageComponent],
+   templateUrl: './details.component.html',
+-  styleUrl: './details.component.scss',
+-  providers: [DatePipe],
+ })
+-export class CustomerRequestDetailsComponent extends BaseComponentService implements OnInit, OnDestroy {
+-  id: string;
+-  customerRequest: CustomerRequestDetailsDTO;
+-  customerRequestForm: FormGroup;
+-  subscriptionId: number = Number.parseInt(localStorage.getItem('subscriptionId') || '0');
+-  isCreateMode: boolean = false;
+-  customers: Customer[] = [];
+-  buttons: ButtonModel[] = [
+-    {
+-      id: 'btn-save',
+-      text: 'general.save',
+-      type: 'primary',
+-      class: 'me-2',
+-      disabled: false,
+-    },
+-    {
+-      id: 'btn-cancel',
+-      text: 'general.cancel',
+-      type: 'secondary',
+-      disabled: false,
+-    },
+-  ];
+-  headerButtons: ButtonModel[] = [
+-    {
+-      id: 'btn-delete',
+-      text: 'general.delete',
+-      type: 'danger',
+-      disabled: false,
+-      class: 'me-2',
+-    },
+-    {
+-      id: 'btn-update',
+-      text: 'general.update',
+-      type: 'primary',
+-      disabled: false,
+-    },
+-  ];
+-
+-  constructor(
+-    private customerRequestService: CustomerRequestService,
+-    private fb: FormBuilder,
+-    private route: ActivatedRoute
+-  ) {
+-    super();
+-    this.route.url.subscribe((segments) => {
+-      const path = segments.join('/');
+-      if (path.includes('create')) {
+-        this.isCreateMode = true;
+-      }
+-    });
+-
+-    this.route.params.subscribe((params) => {
+-      this.id = params['id'];
+-      if (!params['id'] && !this.isCreateMode) {
+-        this.router.navigate(['/CustomerRequest']);
+-      }
+-    });
+-  }
++export class CustomerRequestDetailsComponent extends BaseComponentService implements OnInit {
++  @Input() id: number | null = null;
++  @Input() initialMode: EditorDialogMode = 'create';
++  @Output() readonly closed = new EventEmitter<boolean>();
++  private readonly service = inject(CustomerRequestService);
++  private readonly customers = inject(CustomerService);
++  private readonly confirmation = inject(ConfirmationDialogService);
++  private readonly destroyRef = inject(DestroyRef);
++  private readonly fb = inject(FormBuilder);
++
++  readonly visible = signal(true);
++  readonly mode = signal<EditorDialogMode>('create');
++  readonly detail = signal<CustomerRequestDetailsDTO | null>(null);
++  readonly customerOptions = signal<DropDownSelect[]>([]);
++  readonly loadingDetail = signal(false);
++  readonly lookupsLoading = signal(false);
++  readonly lookupsReady = signal(false);
++  readonly detailReady = signal(false);
++  readonly detailError = signal('');
++  readonly lookupError = signal('');
++  readonly saveError = signal('');
++  readonly saving = signal(false);
++  readonly confirming = signal(false);
++  readonly busy = computed(() => this.loadingDetail() || this.lookupsLoading() || this.saving() || this.confirming());
++  readonly titleKey = computed(() => this.mode() === 'create' ? 'customerRequest.create'
++    : this.mode() === 'view' ? 'customerRequest.view' : 'customerRequest.edit');
++  readonly statusKey = computed(() => this.detail()?.status === CustomerRequestStatus.Closed
++    ? 'customerRequest.statuses.closed' : 'customerRequest.statuses.open');
++  readonly displayDate = computed(() => formatDisplayDate(this.detail()?.createdAt, true));
++  readonly form = this.fb.group({
++    customerId: this.fb.control<number | null>(null, control => {
++      if (control.value === null || !this.lookupsReady()) return null;
++      return this.customerOptions().some(option => Number(option.id) === control.value) ? null : { invalidSelection: true };
++    }),
++    detail: this.fb.control<string | null>(null, Validators.maxLength(1000)),
++  });
+ 
+   ngOnInit(): void {
+-    this.initForm();
+-    // this.fetchCustomers();
+-    if (!this.isCreateMode) this.getItemById(this.id);
+-  }
+-
+-  initForm() {
+-    this.customerRequestForm = this.fb.group({
+-      customerId: [{ value: null, disabled: !this.isCreateMode }],
+-      detail: [{ value: '', disabled: !this.isCreateMode }],
+-      subscriptionId: [{ value: this.subscriptionId, disabled: !this.isCreateMode }],
+-    });
+-  }
+-
+-  fillForm(data: CustomerRequestCreateDTO) {
+-    if (data) {
+-      this.customerRequestForm.patchValue({
+-        customerId: data.customerId,
+-        detail: data.detail,
+-        subscriptionId: data.subscriptionId || this.subscriptionId,
+-      });
++    this.mode.set(this.initialMode);
++    this.form.disable({ emitEvent: false });
++    if (this.initialMode === 'create') {
++      this.detailReady.set(true);
++    } else {
++      this.loadDetail();
+     }
++    if (this.initialMode !== 'view') this.loadCustomers();
+   }
+ 
+-  // fetchCustomers() {
+-  //   this.loading.startLoading();
+-  //   this.subscriptions.push(
+-  //     this.customerRequestService.get<Customer[]>('/Customer').subscribe({
+-  //       next: (res: Result<Customer[]>) => {
+-  //         if (res.isSuccess) {
+-  //           this.customers = res.entities;
+-  //         }
+-  //         this.loading.endLoading();
+-  //       },
+-  //       error: () => this.loading.endLoading(),
+-  //     })
+-  //   );
+-  // }
+-
+-  getItemById(id: string) {
++  loadDetail(): void {
++    if (!this.id || this.loadingDetail() || this.saving() || this.confirming()) return;
++    this.loadingDetail.set(true);
++    this.detailError.set('');
+     this.loading.startLoading();
+-    this.subscriptions.push(
+-      this.customerRequestService.getById<Result<CustomerRequestDetailsDTO>>(id).subscribe({
+-        next: (res) => {
+-          if (res.isSuccess) {
+-            this.customerRequest = res.entity;
+-            this.fillForm(this.customerRequest as any);
+-          }
++    this.service.getById<Result<CustomerRequestDetailsDTO>>(String(this.id), { skipErrorInterceptor: true })
++      .pipe(
++        takeUntilDestroyed(this.destroyRef),
++        finalize(() => {
++          this.loadingDetail.set(false);
+           this.loading.endLoading();
++          this.syncFormState();
++        }),
++      ).subscribe({
++        next: response => {
++          if (!response.isSuccess || !response.entity || response.entity.id !== this.id) {
++            this.detailError.set(response.message || 'customerRequest.errors.detail');
++            return;
++          }
++          this.detail.set(response.entity);
++          this.form.reset({ customerId: response.entity.customerId, detail: response.entity.detail });
++          this.detailReady.set(true);
+         },
+-      })
+-    );
++        error: error => this.detailError.set(apiErrorMessage(error, 'customerRequest.errors.detail')),
++      });
+   }
+ 
+-  onButtonClick(buttonId: string) {
+-    switch (buttonId) {
+-      case 'btn-save':
+-        this.save();
+-        break;
+-      case 'btn-cancel':
+-        this.cancel();
+-        break;
+-      case 'btn-delete':
+-        this.delete();
+-        break;
+-      case 'btn-update':
+-        this.update();
+-        break;
+-    }
++  loadCustomers(): void {
++    if (this.lookupsLoading() || this.saving() || this.confirming()) return;
++    this.lookupsLoading.set(true);
++    this.lookupError.set('');
++    this.lookupsReady.set(false);
++    this.syncFormState();
++    this.customers.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true })
++      .pipe(
++        takeUntilDestroyed(this.destroyRef),
++        finalize(() => {
++          this.lookupsLoading.set(false);
++          this.syncFormState();
++        }),
++      ).subscribe({
++        next: response => {
++          if (!response.isSuccess) {
++            this.lookupError.set(response.message || 'customerRequest.errors.customers');
++            return;
++          }
++          this.customerOptions.set((response.entities ?? []).map(option => ({ ...option, id: Number(option.id) })));
++          this.lookupsReady.set(true);
++          this.form.controls.customerId.updateValueAndValidity({ emitEvent: false });
++        },
++        error: error => this.lookupError.set(apiErrorMessage(error, 'customerRequest.errors.customers')),
++      });
+   }
+ 
+-  save() {
+-    if (this.customerRequestForm.valid) {
+-      this.loading.startLoading();
+-      const customerRequestData = this.customerRequestForm.value;
+-      if (this.isCreateMode) {
+-        this.createCustomerRequest(customerRequestData);
+-      } else {
+-        this.updateCustomerRequest(customerRequestData);
+-      }
+-    }
++  enableEditing(): void {
++    if (this.busy() || !this.detailReady() || this.detailError()) return;
++    this.mode.set('edit');
++    this.loadCustomers();
+   }
+ 
+-  createCustomerRequest(data: any) {
+-    const customerRequestData: CustomerRequestCreateDTO = {
+-      customerId: data.customerId,
+-      detail: data.detail,
+-      subscriptionId: data.subscriptionId || this.subscriptionId,
+-      isDeleted: false,
+-      guid: '',
+-      isActive: true,
+-      isValid: true,
+-      isChanged: true,
+-      deletedAt: '',
+-      deletedBy: '',
+-      createdAt: new Date().toISOString(),
+-      createdBy: '',
+-    };
+-    console.log('create Data', customerRequestData);
++  save(): void {
++    if (this.busy() || this.mode() === 'view' || !this.detailReady() || !this.lookupsReady() || this.detailError()) return;
++    this.form.markAllAsTouched();
++    if (this.form.invalid || this.form.pending) return;
++    const payload: CustomerRequestCreateDTO = this.form.getRawValue();
++    const restore = freezeFormState(this.form, this.destroyRef);
++    this.saving.set(true);
++    this.saveError.set('');
++    this.loading.startLoading();
++    const request = this.mode() === 'create' ? this.service.create(payload)
++      : this.service.update({ ...payload, id: this.id! });
++    request.pipe(
++      takeUntilDestroyed(this.destroyRef),
++      finalize(() => {
++        this.saving.set(false);
++        this.loading.endLoading();
++        if (this.visible()) restore();
++      }),
++    ).subscribe({
++      next: response => {
++        if (!response.isSuccess) {
++          this.saveError.set(response.message || 'customerRequest.errors.save');
++          return;
++        }
++        this.close(true);
++      },
++      error: error => this.saveError.set(apiErrorMessage(error, 'customerRequest.errors.save')),
++    });
+   }
+ 
+-  updateCustomerRequest(data: any) {
+-    const customerRequestData: CustomerRequestCreateDTO = {
+-      id: this.id,
+-      customerId: data.customerId,
+-      detail: data.detail,
+-      subscriptionId: data.subscriptionId || this.subscriptionId,
+-      isDeleted: false,
+-      guid: this.customerRequest?.id || '',
+-      isActive: true,
+-      isValid: true,
+-      isChanged: true,
+-      deletedAt: '',
+-      deletedBy: '',
+-      createdAt: this.customerRequest?.createdAt || new Date().toISOString(),
+-      createdBy: this.customerRequest?.createdBy || '',
+-    };
+-    console.log('update Data', customerRequestData);
++  canDeactivate(): Observable<boolean> {
++    return defer(() => {
++      if (!this.visible()) return of(true);
++      if (this.busy()) return of(false);
++      if (this.mode() === 'view' || !this.form.dirty) return of(true);
++      this.confirming.set(true);
++      const restore = freezeFormState(this.form, this.destroyRef);
++      return this.confirmation.confirmDiscard('customerRequest').pipe(
++        takeUntilDestroyed(this.destroyRef),
++        finalize(() => {
++          this.confirming.set(false);
++          if (this.visible() && !this.saving()) restore();
++        }),
++      );
++    });
+   }
+ 
+-  cancel() {
+-    this.router.navigate(['/CustomerRequest']);
++  requestClose(): void {
++    this.canDeactivate().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(confirmed => {
++      // Accepted confirmation emits before finalize clears confirming.
++      if (confirmed && this.visible() && !this.saving() && !this.loadingDetail() && !this.lookupsLoading()) this.close(false);
++    });
+   }
+ 
+-  delete() {
+-    this.loading.startLoading();
+-    this.subscriptions.push(
+-      this.customerRequestService.delete(this.id).subscribe({
+-        next: (res) => {
+-          if (res.isSuccess) {
+-            this.router.navigate(['/CustomerRequest']);
+-          }
+-          this.loading.endLoading();
+-        },
+-      })
+-    );
++  onEscape(event: Event): void {
++    event.preventDefault();
++    event.stopPropagation();
++    this.requestClose();
+   }
+ 
+-  update() {
+-    this.customerRequestForm.enable();
++  private close(saved: boolean): void {
++    this.visible.set(false);
++    this.closed.emit(saved);
+   }
+ 
+-  ngOnDestroy(): void {
+-    this.unSubscribe();
++  private syncFormState(): void {
++    if (this.mode() === 'view' || !this.detailReady() || !this.lookupsReady() || this.busy() || this.detailError()) {
++      this.form.disable({ emitEvent: false });
++    } else {
++      this.form.enable({ emitEvent: false });
++    }
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/src/app/modules/Administration/CustomerRequests/components/list/list.component.html b/src/app/modules/Administration/CustomerRequests/components/list/list.component.html
+index 3a01c1ef..d85f4a2a 100644
+--- a/src/app/modules/Administration/CustomerRequests/components/list/list.component.html
++++ b/src/app/modules/Administration/CustomerRequests/components/list/list.component.html
+@@ -1,4 +1,57 @@
+-<div class="card">
+-    <table-list [columns]="columns" [list]="data" [hasCreate]="true" [moreActions]="moreActions" (openDialog)="goCreate($event)"></table-list>
++<section class="sigma-list-page">
++  <div class="sigma-list-panel">
++    <header class="sigma-list-header">
++      <app-feature-title [title]="'customerRequest.title' | translate"
++        [subtitle]="'customerRequest.subtitle' | translate" icon="bi bi-chat-left-text">
++        <app-primary-action-button [label]="'customerRequest.create' | translate"
++          icon="bi bi-plus-lg" [disabled]="busy()" (pressed)="openEditor('create')" />
++      </app-feature-title>
++    </header>
++    <form class="customer-requests-filters" appFilterPanel [stableLayout]="true"
++      [mainColumns]="2" [formGroup]="filterForm" [busy]="busy()"
++      (ngSubmit)="search()" (resetRequested)="resetFilters()">
++      <div class="sigma-filter-field">
++        <label for="request-customer-filter">{{ 'customerRequest.customerId' | translate }}</label>
++        <p-dropdown inputId="request-customer-filter" formControlName="customerId"
++          [options]="customerOptions()" optionLabel="value" optionValue="id"
++          [filter]="true" filterBy="value" [showClear]="true" [loading]="lookupsLoading()"
++          [placeholder]="'customerRequest.allCustomers' | translate" styleClass="w-100" appendTo="body" />
++      </div>
++      <div class="sigma-filter-field">
++        <label for="request-status-filter">{{ 'customerRequest.status' | translate }}</label>
++        <p-dropdown inputId="request-status-filter" formControlName="status"
++          [options]="statusOptions | translateOptions" optionLabel="label" optionValue="id"
++          [showClear]="true" [placeholder]="'customerRequest.allStatuses' | translate"
++          styleClass="w-100" appendTo="body" />
++      </div>
++      <ng-container appFilterActions>
++        <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="exportExcel()">
++          <i class="bi bi-file-earmark-excel" aria-hidden="true"></i>{{ 'general.exportExcel' | translate }}
++        </button>
++        <button type="button" class="sigma-secondary-button" [disabled]="busy()" (click)="refresh()">
++          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>{{ 'customerRequest.refresh' | translate }}
++        </button>
++        <app-primary-action-button type="submit" [label]="'general.search' | translate"
++          icon="bi bi-search" [disabled]="busy()" [loading]="loadingList()" />
++      </ng-container>
++    </form>
++    @if (lookupError()) {
++      <app-state-message kind="error" [message]="lookupError()" />
++      <button type="button" class="sigma-secondary-button" [disabled]="lookupsLoading() || busy()" (click)="loadCustomers()">{{ 'general.retry' | translate }}</button>
++    }
++    @if (errorMessage()) {
++      <app-state-message kind="error" [message]="errorMessage()" />
++    }
++    <div class="sigma-list-table">
++      <app-data-table [value]="data()" [columns]="columns" [actions]="actions" dataKey="id"
++        [first]="(pageNo() - 1) * pageSize()" [rows]="pageSize()" [rowsPerPageOptions]="rowsPerPageOptions"
++        [totalRecords]="totalRecords()" [loading]="loadingList()" [sortField]="sortField()"
++        [sortOrder]="sortOrder()" [showEmpty]="!errorMessage()" [fill]="true"
++        currentPageReport="customerRequest.showingEntries" emptyMessage="general.noDataFound"
++        (lazyLoad)="onLazyLoad($event)" />
++    </div>
+   </div>
+-  
+\ No newline at end of file
++  @if (editor(); as session) {
++    <app-customer-request-details [id]="session.id" [initialMode]="session.mode" (closed)="onEditorClosed($event)" />
++  }
++</section>
+diff --git a/src/app/modules/Administration/CustomerRequests/components/list/list.component.scss b/src/app/modules/Administration/CustomerRequests/components/list/list.component.scss
+deleted file mode 100644
+index e69de29b..00000000
+diff --git a/src/app/modules/Administration/CustomerRequests/components/list/list.component.spec.ts b/src/app/modules/Administration/CustomerRequests/components/list/list.component.spec.ts
+deleted file mode 100644
+index 6f686b3b..00000000
+--- a/src/app/modules/Administration/CustomerRequests/components/list/list.component.spec.ts
++++ /dev/null
+@@ -1,23 +0,0 @@
+-import { ComponentFixture, TestBed } from '@angular/core/testing';
+-import { ListsComponent } from 'src/app/modules/widgets-examples/lists/lists.component';
+-
+-
+-describe('ListComponent', () => {
+-  let component: ListsComponent;
+-  let fixture: ComponentFixture<ListsComponent>;
+-
+-  beforeEach(async () => {
+-    await TestBed.configureTestingModule({
+-      imports: [ListsComponent]
+-    })
+-    .compileComponents();
+-    
+-    fixture = TestBed.createComponent(ListsComponent);
+-    component = fixture.componentInstance;
+-    fixture.detectChanges();
+-  });
+-
+-  it('should create', () => {
+-    expect(component).toBeTruthy();
+-  });
+-});
+\ No newline at end of file
+diff --git a/src/app/modules/Administration/CustomerRequests/components/list/list.component.ts b/src/app/modules/Administration/CustomerRequests/components/list/list.component.ts
+index 6794530b..da8df6b9 100644
+--- a/src/app/modules/Administration/CustomerRequests/components/list/list.component.ts
++++ b/src/app/modules/Administration/CustomerRequests/components/list/list.component.ts
+@@ -1,102 +1,296 @@
+-import { MockDataFormsModule } from 'src/app/modules/shared/components/mock-data/mock-data-forms.module';
+-import { Component, OnDestroy, OnInit } from '@angular/core';
+-import { ReactiveFormsModule } from '@angular/forms';
++import { CommonModule } from '@angular/common';
++import { Component, DestroyRef, OnInit, ViewChild, computed, inject, signal } from '@angular/core';
++import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
++import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
++import { ActivatedRoute } from '@angular/router';
++import { TranslateModule, TranslateService } from '@ngx-translate/core';
++import { DropdownModule } from 'primeng/dropdown';
++import { TableLazyLoadEvent } from 'primeng/table';
++import { EMPTY, Observable, Subject, catchError, defer, finalize, of, switchMap } from 'rxjs';
++import { onExportToExcel } from 'src/app/_metronic/layout/core/utilities';
++import { DataTableColumn, DataTableComponent, dataTableExportRows } from 'src/app/modules/shared/components/data-table/data-table.component';
++import { EditorDialogMode } from 'src/app/modules/shared/components/editor-dialog/editor-dialog.component';
++import { FeatureTitleComponent } from 'src/app/modules/shared/components/feature-title/feature-title.component';
++import { FilterPanelComponent } from 'src/app/modules/shared/components/filter-panel/filter-panel.component';
++import { FilterActionsDirective } from 'src/app/modules/shared/components/filter-panel/filter-panel.directives';
++import { PrimaryActionButtonComponent } from 'src/app/modules/shared/components/primary-action-button/primary-action-button.component';
++import { StateMessageComponent } from 'src/app/modules/shared/components/state-message/state-message.component';
+ import { ActionList } from 'src/app/modules/shared/models/action-list';
+-import { ColType, ListCol, TableListComponent } from 'node_modules/ms-lib'
++import { DropDownSelect } from 'src/app/modules/shared/models/dropdown-select';
+ import { Results } from 'src/app/modules/shared/models/results';
++import { TranslateOptionsPipe } from 'src/app/modules/shared/pipes/translate-options.pipe';
+ import { BaseComponentService } from 'src/app/modules/shared/service/base-component.service';
+-import { CommonModule } from '@angular/common';
+-import { TranslateModule } from '@ngx-translate/core';
+-import { ButtonModule } from 'primeng/button';
+-import { DialogModule } from 'primeng/dialog';
+-import { CustomerRequestDTO } from '../../models/list';
++import { ConfirmationDialogService } from 'src/app/modules/shared/service/confirmation-dialog.service';
++import { CustomerService } from 'src/app/modules/shared/service/customer.service';
++import { apiErrorMessage, composedReadErrorMessage } from 'src/app/modules/shared/utils/api-error';
++import { DEFAULT_PAGE_SIZE, resolveListPaging } from 'src/app/modules/shared/utils/list-query';
++import { readListRoute, writeListRoute } from 'src/app/modules/shared/utils/list-route-state';
++import { CustomerRequestDTO, CustomerRequestFilters, CustomerRequestListQuery, CustomerRequestStatus } from '../../models/list';
+ import { CustomerRequestService } from '../../services/customerrequest.service';
++import { CustomerRequestDetailsComponent } from '../details/details.component';
+ 
+ @Component({
+   selector: 'app-customer-requests',
+   standalone: true,
+-  imports: [MockDataFormsModule,
+-    TranslateModule,
+-    CommonModule,
+-    ReactiveFormsModule,
+-    TableListComponent,
+-    DialogModule,
+-    ButtonModule,
+-  ],
++  imports: [CommonModule, ReactiveFormsModule, TranslateModule, DropdownModule,
++    TranslateOptionsPipe, DataTableComponent, FeatureTitleComponent, FilterPanelComponent,
++    FilterActionsDirective, PrimaryActionButtonComponent, StateMessageComponent,
++    CustomerRequestDetailsComponent],
+   templateUrl: './list.component.html',
+-  styleUrl: './list.component.scss',
++  host: { class: 'sigma-route-host' },
+ })
+-export class CustomerRequestsComponent extends BaseComponentService implements OnInit, OnDestroy {
+-  data: any[] = [];
+-  columns: ListCol[];
+-  moreActions: ActionList[];
+-  visible: boolean = false;
+-
+-  constructor(private customerRequestService: CustomerRequestService) {
+-    super();
+-  }
++export class CustomerRequestsComponent extends BaseComponentService implements OnInit {
++  private readonly service = inject(CustomerRequestService);
++  private readonly customerService = inject(CustomerService);
++  private readonly confirmation = inject(ConfirmationDialogService);
++  private readonly translate = inject(TranslateService);
++  private readonly route = inject(ActivatedRoute);
++  private readonly destroyRef = inject(DestroyRef);
++  private readonly fb = inject(FormBuilder);
++  private readonly queries = new Subject<CustomerRequestListQuery>();
++  private lastQueryKey = '';
++  @ViewChild(CustomerRequestDetailsComponent) private editorComponent?: CustomerRequestDetailsComponent;
++
++  readonly data = signal<CustomerRequestDTO[]>([]);
++  readonly customerOptions = signal<DropDownSelect[]>([]);
++  readonly loadingList = signal(false);
++  readonly lookupsLoading = signal(false);
++  readonly lookupError = signal('');
++  readonly errorMessage = signal('');
++  readonly actionPending = signal(false);
++  readonly exporting = signal(false);
++  readonly editor = signal<{ id: number | null; mode: EditorDialogMode } | null>(null);
++  readonly pageNo = signal(1);
++  readonly pageSize = signal(DEFAULT_PAGE_SIZE);
++  readonly totalRecords = signal(0);
++  readonly sortField = signal('id');
++  readonly sortOrder = signal<1 | -1>(-1);
++  readonly busy = computed(() => this.loadingList() || this.actionPending() || this.exporting() || this.editor() !== null);
++  readonly rowsPerPageOptions = [10, 15, 20, 50, 100];
++  readonly filterForm = this.fb.group({
++    customerId: this.fb.control<number | null>(null),
++    status: this.fb.control<CustomerRequestStatus | null>(CustomerRequestStatus.Open),
++  });
++  private appliedFilters: CustomerRequestFilters = this.filterForm.getRawValue();
++  readonly statusOptions = [
++    { id: CustomerRequestStatus.Open, key: 'customerRequest.statuses.open' },
++    { id: CustomerRequestStatus.Closed, key: 'customerRequest.statuses.closed' },
++  ];
++  readonly columns: ReadonlyArray<DataTableColumn<CustomerRequestDTO>> = [
++    { field: 'id', header: 'customerRequest.id', type: 'number', sortable: true,
++      link: { activate: row => this.openEditor('view', row), enabled: () => !this.busy() } },
++    { field: 'customerName', header: 'customerRequest.customerId' },
++    { field: 'createdAt', header: 'customerRequest.dateAndTime', type: 'dateTime', sortable: true },
++    { field: 'detail', header: 'customerRequest.detail', sortable: true, cellClass: 'sigma-data-table__cell--wrap' },
++    { field: 'status', header: 'customerRequest.status', type: 'status', sortable: true,
++      status: row => row.status === CustomerRequestStatus.Open
++        ? { label: 'customerRequest.statuses.open', tone: 'success' }
++        : { label: 'customerRequest.statuses.closed', tone: 'neutral' } },
++  ];
++  readonly actions: ActionList<CustomerRequestDTO>[] = [
++    { title: 'general.viewDetails', icon: 'bi bi-eye', action: row => row && this.openEditor('view', row), disabled: () => this.busy() },
++    { title: 'general.edit', icon: 'bi bi-pencil-square', action: row => row && this.openEditor('edit', row), disabled: () => this.busy() },
++    { title: 'customerRequest.closeRequest', icon: 'bi bi-check2-circle',
++      action: row => row && this.confirmAction(row, 'close'),
++      visible: row => row?.status === CustomerRequestStatus.Open, disabled: () => this.busy() },
++    { title: 'general.delete', icon: 'bi bi-trash', action: row => row && this.confirmAction(row, 'delete'), disabled: () => this.busy() },
++  ];
+ 
+   ngOnInit(): void {
+-    this.initCols();
+-    this.getListItems();
++    const route = readListRoute(this.route);
++    const paging = route.paging();
++    this.pageNo.set(paging.pageNo);
++    this.pageSize.set(paging.pageSize);
++    if (paging.sortField && this.isSortable(paging.sortField)) this.sortField.set(paging.sortField);
++    this.sortOrder.set(paging.sortOrder ?? -1);
++    const status = route.text('status');
++    this.filterForm.patchValue({
++      customerId: route.number('customerId'),
++      status: status === 'all' ? null
++        : Number(status) === CustomerRequestStatus.Closed ? CustomerRequestStatus.Closed : CustomerRequestStatus.Open,
++    });
++    this.appliedFilters = this.filterForm.getRawValue();
++    this.queries.pipe(
++      switchMap(query => defer(() => {
++        this.loadingList.set(true);
++        this.errorMessage.set('');
++        this.loading.startLoading();
++        return this.service.getList(query).pipe(
++          catchError(error => {
++            this.listFailed(apiErrorMessage(error, 'customerRequest.errors.load'));
++            return EMPTY;
++          }),
++          finalize(() => {
++            this.loadingList.set(false);
++            this.loading.endLoading();
++          }),
++        );
++      })),
++      takeUntilDestroyed(this.destroyRef),
++    ).subscribe(response => {
++      if (!response.isSuccess) {
++        this.listFailed(response.message || 'customerRequest.errors.load');
++        return;
++      }
++      this.data.set(response.entities ?? []);
++      this.totalRecords.set(response.totalCount ?? 0);
++      // A concurrent deletion or Close may empty the current filtered page.
++      if (!this.data().length && this.pageNo() > 1) {
++        this.pageNo.set(Math.max(1, Math.ceil(this.totalRecords() / this.pageSize())));
++        this.requestList(true);
++      }
++    });
++    this.loadCustomers();
++    this.requestList();
+   }
+ 
+-  ngOnDestroy(): void {
+-    this.unSubscribe();
++  loadCustomers(): void {
++    if (this.lookupsLoading()) return;
++    this.lookupsLoading.set(true);
++    this.lookupError.set('');
++    this.customerService.getSelectList<Results<DropDownSelect>>({ skipErrorInterceptor: true })
++      .pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.lookupsLoading.set(false)))
++      .subscribe({
++        next: response => {
++          if (response.isSuccess) {
++            this.customerOptions.set((response.entities ?? []).map(option => ({ ...option, id: Number(option.id) })));
++          } else {
++            this.lookupError.set(response.message || 'customerRequest.errors.customers');
++          }
++        },
++        error: error => this.lookupError.set(apiErrorMessage(error, 'customerRequest.errors.customers')),
++      });
+   }
+ 
+-  initCols() {
+-    this.columns = [
+-      {
+-        colName: 'id',
+-        displayName: 'customerRequest.id',
+-        type: ColType.link,
+-        path: 'details',
+-      },
+-      {
+-        displayName: 'customerRequest.customerId',
+-        colName: 'customerId',
+-      },
+-      {
+-        displayName: 'customerRequest.detail',
+-        colName: 'detail',
+-      },
+-      {
+-        displayName: 'general.createdBy',
+-        colName: 'createdBy',
+-      },
+-      {
+-        displayName: 'general.createdAt',
+-        colName: 'createdAt',
+-        type: ColType.date,
+-      },
+-    ];
+-    this.moreActions = [
+-      {
+-        title: 'general.delete',
+-        icon: 'bi fs-3 bi-trash',
+-        action: () => {
+-          console.log('Delete');
+-        },
++  search(): void {
++    if (this.busy()) return;
++    this.appliedFilters = this.filterForm.getRawValue();
++    this.pageNo.set(1);
++    this.requestList(true);
++  }
++
++  resetFilters(): void {
++    if (this.busy()) return;
++    this.filterForm.reset({ customerId: null, status: CustomerRequestStatus.Open });
++    this.search();
++  }
++
++  refresh(): void {
++    if (!this.busy()) this.requestList(true);
++  }
++
++  onLazyLoad(event: TableLazyLoadEvent): void {
++    if (this.actionPending() || this.exporting() || this.editor()) return;
++    const paging = resolveListPaging(event, { pageNo: this.pageNo(), pageSize: this.pageSize() });
++    const field = typeof event.sortField === 'string' && this.isSortable(event.sortField) ? event.sortField : this.sortField();
++    const order = event.sortOrder === 1 || event.sortOrder === -1 ? event.sortOrder : this.sortOrder();
++    const changed = paging.changed || field !== this.sortField() || order !== this.sortOrder();
++    this.pageNo.set(paging.pageNo);
++    this.pageSize.set(paging.pageSize);
++    this.sortField.set(field);
++    this.sortOrder.set(order);
++    if (changed) this.requestList();
++  }
++
++  openEditor(mode: EditorDialogMode, row?: CustomerRequestDTO): void {
++    if (this.busy()) return;
++    this.editor.set({ id: row?.id ?? null, mode });
++  }
++
++  onEditorClosed(saved: boolean): void {
++    this.editor.set(null);
++    if (saved) this.requestList(true);
++  }
++
++  canDeactivate(): Observable<boolean> {
++    if (this.actionPending() || this.exporting()) return of(false);
++    return this.editorComponent?.canDeactivate() ?? of(true);
++  }
++
++  confirmAction(row: CustomerRequestDTO, kind: 'close' | 'delete'): void {
++    if (this.busy() || (kind === 'close' && row.status !== CustomerRequestStatus.Open)) return;
++    this.actionPending.set(true);
++    const record = { title: String(row.id), meta: row.customerName ?? '', label: { key: 'customerRequest.id' } };
++    const decision = kind === 'delete'
++      ? this.confirmation.confirmDelete({
++        title: { key: 'customerRequest.confirmDeleteTitle' },
++        message: { key: 'customerRequest.confirmDeleteMessage' }, record,
++      })
++      : this.confirmation.confirm({
++        severity: 'warning', title: { key: 'customerRequest.confirmCloseTitle' },
++        message: { key: 'customerRequest.confirmCloseMessage' }, record,
++        confirmLabel: { key: 'customerRequest.closeRequest' }, cancelLabel: { key: 'general.cancel' },
++      });
++    decision.pipe(
++      switchMap(confirmed => {
++        if (!confirmed) return EMPTY;
++        this.errorMessage.set('');
++        this.loading.startLoading();
++        return (kind === 'delete' ? this.service.remove(row.id) : this.service.closeRequest(row.id))
++          .pipe(finalize(() => this.loading.endLoading()));
++      }),
++      takeUntilDestroyed(this.destroyRef),
++      finalize(() => this.actionPending.set(false)),
++    ).subscribe({
++      next: response => {
++        if (!response.isSuccess) {
++          this.errorMessage.set(response.message || 'customerRequest.errors.action');
++          return;
++        }
++        this.requestList(true);
+       },
+-    ];
++      error: error => this.errorMessage.set(apiErrorMessage(error, 'customerRequest.errors.action')),
++    });
+   }
+ 
+-  getListItems() {
++  exportExcel(): void {
++    if (this.busy()) return;
++    this.exporting.set(true);
++    this.errorMessage.set('');
+     this.loading.startLoading();
+-    this.subscriptions.push(
+-      this.customerRequestService.get().subscribe({
+-        next: (res: Results<CustomerRequestDTO>) => {
+-          if (res.isSuccess) {
+-            this.data = res.entities;
+-          }
+-          this.loading.endLoading();
+-        },
+-      })
+-    );
++    this.service.getAllList(this.currentQuery()).pipe(
++      takeUntilDestroyed(this.destroyRef),
++      finalize(() => {
++        this.exporting.set(false);
++        this.loading.endLoading();
++      }),
++    ).subscribe({
++      next: rows => {
++        if (!rows.length) {
++          this.errorMessage.set('customerRequest.errors.noExport');
++          return;
++        }
++        onExportToExcel(signal(dataTableExportRows(rows, this.columns, key => this.translate.instant(key))), 'CustomerRequests');
++      },
++      error: error => this.errorMessage.set(composedReadErrorMessage(error, 'customerRequest.errors.export')),
++    });
++  }
++
++  private currentQuery(): CustomerRequestListQuery {
++    return { pageNo: this.pageNo(), pageSize: this.pageSize(), filters: { ...this.appliedFilters },
++      sortField: this.sortField(), sortOrder: this.sortOrder() };
++  }
++
++  private requestList(force = false): void {
++    const query = this.currentQuery();
++    const key = JSON.stringify(query);
++    if (!force && key === this.lastQueryKey) return;
++    this.lastQueryKey = key;
++    writeListRoute(this.router, this.route, {
++      ...this.appliedFilters, status: this.appliedFilters.status ?? 'all',
++      pageNo: query.pageNo, pageSize: query.pageSize, sortField: query.sortField, sortOrder: query.sortOrder,
++    });
++    this.queries.next(query);
++  }
++
++  private listFailed(message: string): void {
++    this.data.set([]);
++    this.totalRecords.set(0);
++    this.errorMessage.set(message);
++    this.lastQueryKey = '';
+   }
+ 
+-  goCreate(status: boolean) {
+-    this.router.navigate(['CustomerRequest/create']);
++  private isSortable(field: string): boolean {
++    return this.columns.some(column => column.field === field && column.sortable);
+   }
+ }
+diff --git a/src/app/modules/Administration/CustomerRequests/customerrequest.routes.ts b/src/app/modules/Administration/CustomerRequests/customerrequest.routes.ts
+index 1d5f8fb0..fab52f3b 100644
+--- a/src/app/modules/Administration/CustomerRequests/customerrequest.routes.ts
++++ b/src/app/modules/Administration/CustomerRequests/customerrequest.routes.ts
+@@ -1,18 +1,10 @@
+ import { Routes } from '@angular/router';
+ import { CustomerRequestsComponent } from './components/list/list.component';
+-import { CustomerRequestDetailsComponent } from './components/details/details.component';
+ 
+ export const CustomerRequest_Routes: Routes = [
+   {
+     path: '',
+     component: CustomerRequestsComponent,
++    canDeactivate: [(component: CustomerRequestsComponent) => component.canDeactivate()],
+   },
+-  {
+-    path: 'details/:id',
+-    component: CustomerRequestDetailsComponent,
+-  },
+-  {
+-    path: 'create',
+-    component: CustomerRequestDetailsComponent,
+-  },
+-];
+\ No newline at end of file
++];
+diff --git a/src/app/modules/Administration/CustomerRequests/models/create.ts b/src/app/modules/Administration/CustomerRequests/models/create.ts
+index 9bc1711c..8fa746a5 100644
+--- a/src/app/modules/Administration/CustomerRequests/models/create.ts
++++ b/src/app/modules/Administration/CustomerRequests/models/create.ts
+@@ -1,18 +1,8 @@
+-export interface CustomerRequestCreateDTO extends EntityBaseDTO {
+-  customerId: number;
+-  detail: string;
++export interface CustomerRequestCreateDTO {
++  customerId: number | null;
++  detail: string | null;
+ }
+ 
+-export interface EntityBaseDTO {
+-  id?: string;
+-  subscriptionId: number;
+-  isDeleted: boolean;
+-  guid: string;
+-  isActive: boolean;
+-  isValid: boolean;
+-  isChanged: boolean;
+-  deletedAt: string;
+-  deletedBy: string;
+-  createdAt: string;
+-  createdBy: string;
+-}
+\ No newline at end of file
++export interface CustomerRequestUpdateDTO extends CustomerRequestCreateDTO {
++  id: number;
++}
+diff --git a/src/app/modules/Administration/CustomerRequests/models/details.ts b/src/app/modules/Administration/CustomerRequests/models/details.ts
+index c9c37fe8..f6f4bc88 100644
+--- a/src/app/modules/Administration/CustomerRequests/models/details.ts
++++ b/src/app/modules/Administration/CustomerRequests/models/details.ts
+@@ -1,7 +1,5 @@
+-export interface CustomerRequestDetailsDTO {
+-  id: string;
+-  customerId: number;
+-  detail: string;
+-  createdBy: string;
+-  createdAt: string;
+-}
+\ No newline at end of file
++import { CustomerRequestDTO } from './list';
++
++export interface CustomerRequestDetailsDTO extends CustomerRequestDTO {
++  customerId: number | null;
++}
+diff --git a/src/app/modules/Administration/CustomerRequests/models/list.ts b/src/app/modules/Administration/CustomerRequests/models/list.ts
+index 25773bad..cfc85632 100644
+--- a/src/app/modules/Administration/CustomerRequests/models/list.ts
++++ b/src/app/modules/Administration/CustomerRequests/models/list.ts
+@@ -1,7 +1,21 @@
++import { ListQuery } from 'src/app/modules/shared/utils/list-query';
++
++export enum CustomerRequestStatus {
++  Open = 0,
++  Closed = 1,
++}
++
+ export interface CustomerRequestDTO {
+-  id: string;
+-  customerId: number;
+-  detail: string;
+-  createdBy: string;
+-  createdAt: string;
+-}
+\ No newline at end of file
++  id: number;
++  customerName: string | null;
++  createdAt: string | null;
++  detail: string | null;
++  status: CustomerRequestStatus;
++}
++
++export interface CustomerRequestFilters {
++  customerId: number | null;
++  status: CustomerRequestStatus | null;
++}
++
++export type CustomerRequestListQuery = ListQuery<CustomerRequestFilters>;
+diff --git a/src/app/modules/Administration/CustomerRequests/services/customerrequest.service.ts b/src/app/modules/Administration/CustomerRequests/services/customerrequest.service.ts
+index d7a6c458..121bc1e5 100644
+--- a/src/app/modules/Administration/CustomerRequests/services/customerrequest.service.ts
++++ b/src/app/modules/Administration/CustomerRequests/services/customerrequest.service.ts
+@@ -1,12 +1,55 @@
+ import { Injectable } from '@angular/core';
++import { Observable } from 'rxjs';
+ import { BaseService } from 'src/app/modules/shared/service/base-service.service';
++import { Result } from 'src/app/modules/shared/models/result';
++import { Results } from 'src/app/modules/shared/models/results';
++import { fetchAllPages, toListParams } from 'src/app/modules/shared/utils/list-query';
+ import { environment } from 'src/environments/environment';
++import { CustomerRequestDTO, CustomerRequestListQuery } from '../models/list';
++import { CustomerRequestCreateDTO, CustomerRequestUpdateDTO } from '../models/create';
+ 
+-@Injectable({
+-  providedIn: 'root',
+-})
++@Injectable({ providedIn: 'root' })
+ export class CustomerRequestService extends BaseService {
+   constructor() {
+     super('CustomerRequest', environment.baseUrl);
+   }
+-}
+\ No newline at end of file
++
++  getList(query: CustomerRequestListQuery): Observable<Results<CustomerRequestDTO>> {
++    return this.http.get<Results<CustomerRequestDTO>>(`${this.baseUrl}CustomerRequest`, {
++      params: toListParams(query),
++      headers: { 'X-Skip-Error-Interceptor': 'true' },
++    });
++  }
++
++  getAllList(query: CustomerRequestListQuery): Observable<CustomerRequestDTO[]> {
++    return fetchAllPages(
++      pageNo => this.getList({ ...query, pageNo, pageSize: 100 }),
++      'customerRequest.errors.export',
++    );
++  }
++
++  create(payload: CustomerRequestCreateDTO): Observable<Result<unknown>> {
++    return this.http.post<Result<unknown>>(`${this.baseUrl}CustomerRequest`, payload, {
++      headers: { 'X-Skip-Error-Interceptor': 'true' },
++    });
++  }
++
++  update(payload: CustomerRequestUpdateDTO): Observable<Result<unknown>> {
++    return this.http.put<Result<unknown>>(`${this.baseUrl}CustomerRequest`, payload, {
++      headers: { 'X-Skip-Error-Interceptor': 'true' },
++    });
++  }
++
++  closeRequest(id: number): Observable<Result<unknown>> {
++    return this.http.post<Result<unknown>>(`${this.baseUrl}CustomerRequest/${id}/Close`, {}, {
++      headers: { 'X-Skip-Error-Interceptor': 'true' },
++    });
++  }
++
++  remove(id: number): Observable<Result<unknown>> {
++    return this.http.delete<Result<unknown>>(`${this.baseUrl}CustomerRequest`, {
++      params: { id },
++      headers: { 'X-Skip-Error-Interceptor': 'true' },
++    });
++  }
++}

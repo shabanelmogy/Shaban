@@ -1,0 +1,26 @@
+diff --git a/F:/My Work/Sigma/SigmaBackend/SiGma.Helpers/Models/Banking/CashDepositDetail.cs (initial) b/F:/My Work/Sigma/SigmaBackend/SiGma.Helpers/Models/Banking/CashDepositDetail.cs (current)
+index a490125..3748a0d 100644
+--- a/F:/My Work/Sigma/SigmaBackend/SiGma.Helpers/Models/Banking/CashDepositDetail.cs (initial)	
++++ b/F:/My Work/Sigma/SigmaBackend/SiGma.Helpers/Models/Banking/CashDepositDetail.cs (current)	
+@@ -1,4 +1,4 @@
+-namespace SiGma.Helpers.Models.Banking;
++﻿namespace SiGma.Helpers.Models.Banking;
+ 
+ public class CashDepositDetail : EntityBase
+ {
+@@ -59,14 +59,10 @@ public class CashDepositDetail : EntityBase
+ 
+     /// <summary>
+     /// Recalculates DueAmount server-side.
+-    /// Also validates DepositedNow does not exceed DueAmount (over-deposit guard).
++    /// Validation happens before mutation; invalid input is never silently clamped.
+     /// </summary>
+     public void Recalculate()
+     {
+         DueAmount = Amount - Deposited;
+-
+-        // Clamp DepositedNow to DueAmount to prevent over-depositing
+-        if (DepositedNow > DueAmount)
+-            DepositedNow = DueAmount;
+     }
+ }

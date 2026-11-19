@@ -1,0 +1,10 @@
+{"check":"Browser owner login","status":200}
+{"check":"Role editor opened","hasActivityControl":true}
+{"check":"Permission change summary","text":"Review unsaved changes\n1 added and 0 removed permissions.\n\nPermissions to grant\n\nBranch.View"}
+{"check":"Browser role Save","status":200,"success":true,"roleId":10}
+{"check":"Browser role copy draft","name":"Browser Reader 2 1793934582117 (Copy)"}
+{"check":"Copy draft asks before discard","passed":true}
+{"check":"Role view mode is read only","passed":true}
+{"check":"Browser role deactivation Save","status":200}
+{"check":"Inactive role badge appears","passed":true}
+{"url":"http://localhost:4200/#/Role","text":"Success\nUpdated Successfully\nSelect branch\nS\nRoles and permissions\n\nConfigure role permissions and direct user grants\n\nRefresh\nCREATE ROLE\nPermissions apply to supported operations on the server. Operations awaiting classification cannot be granted here.\nSearch roles\nRole type\nAll role types\nSystem roles\nCustom roles\n1 roles\nClear filters\nExpand all\nCollapse all\nBrowser Reader 2 1793934582117\nCustom role\nInactive role\nView\nEdit\nCopy role\nDelete\n\n© 2026 7STARSS ERP\nPowered by Systmatix\n\nSupport\n(opens in a new tab)","errors":[],"network":[],"requests":[{"url":"https://localhost:7120/auth/consolelogin","method":"POST"},{"url":"https://localhost:7178/CurrentBranch/Options","method":"GET"},{"url":"https://localhost:7178/CurrentBranch/Mine","method":"GET"},{"url":"https://localhost:7178/Language/Options","method":"GET"},{"url":"https://localhost:7178/MockData/Settings","method":"GET"},{"url":"https://localhost:7178/Authorization/workspace","method":"GET"},{"url":"https://localhost:7178/Localization/Runtime?languageCode=en","method":"GET"},{"url":"https://localhost:7178/Authorization/roles","method":"POST"},{"url":"https://localhost:7178/Authorization/roles/10","method":"PUT"}],"inputs":[{"id":"authorization-role-search","type":"search"}]}
