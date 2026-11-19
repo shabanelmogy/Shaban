@@ -47,7 +47,7 @@ Newest first. Details and exact status live in the linked file.
 
 | Work | Main file |
 |---|---|
-| Documentation audit fixes and version-control preparation | [Current state and handoff](SIGMA_DOCUMENTATION_SYSTEM_CURRENT_STATE.md) |
+| Documentation audit fixes and completed version-control cutover | [Current state and handoff](SIGMA_DOCUMENTATION_SYSTEM_CURRENT_STATE.md) |
 | Trips With Overtime Report (with Driver↔Staff link & shift-based overtime) | [Review & implementation](TRIPS_WITH_OVERTIME_REPORT_FEATURE_REVIEW.md) |
 | Instruction slimming and token reduction | [Current state](SIGMA_DOCUMENTATION_SYSTEM_CURRENT_STATE.md) |
 | Surcharge Variance Report deferred (inactive / `Soon`) | [Deferred](Deferred/SURCHARGE_VARIANCE_REPORT_DEFERRED_REVIEW.md) |

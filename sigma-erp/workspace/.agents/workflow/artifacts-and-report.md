@@ -55,13 +55,11 @@ File names below are relative to that folder.
 - A frozen artifact is a historical record of the decision and its evidence. If
   a later instruction changes the contract, record the change and the reason
   rather than silently rewriting the earlier decision.
-- These artifacts currently sit outside both Git repositories: the workspace
-  root is not a repository, so they are local, unversioned records. Owner
-  decision D7 (2026-09-28): the documentation repository
-  `F:\My Work\Shaban Documents\Shaban` becomes the version-control owner of the
-  instruction layer (this file, `GEMINI.md`, `PROJECT_MAP.md`, `.agents/`, and
-  `reviews/`). The owner performs that move and its commits; update this section
-  in the same change.
+- The Shaban documentation repository owns `sigma-erp/workspace/`, including
+  `AGENTS.md`, `GEMINI.md`, `PROJECT_MAP.md`, `.agents/` and `reviews/`.
+  Use the usual Sigma workspace paths for editing. They link to the same files.
+  Review instruction and artifact changes in the Shaban repository under that
+  path; review application changes in their respective repositories.
 - Create only the artifacts the requested scope requires.
 - Every new artifact starts with a status table containing at least
   `Status` — one of `Draft`, `Frozen`, `Blocked`, `Implemented — source-only`,

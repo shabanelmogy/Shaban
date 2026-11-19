@@ -1234,3 +1234,21 @@ findings and no size warnings.
 - Replaced the generated [currency entry](CURRENCY_CURRENT_STATE.md) with a written summary of sections 13 and 14, the governing ledger and revaluation contracts, source verification and pending acceptance. Other features retain next-touch conversion (51 generated indexes remain).
 - Prepared the [D7 transfer handoff](SIGMA_DOCUMENTATION_SYSTEM_VERSION_CONTROL_HANDOFF.md). The local staging set is separate from both live paths and the Shaban worktree. Its adjacent manifest is the file-level content baseline. Repeat the comparison at cutover to pick up intervening work.
 - The real-task timing pilot remains open for the next small change and single-screen review. No application build, runtime, browser or database work was needed in this round.
+
+## D7 local cutover and Git recovery — 2026-11-19
+
+| Item | Value |
+|---|---|
+| Status | Closed |
+| Owner verification pending | no |
+| Documentation baseline | `1dea05ce`, 102 scoped files |
+| Workspace transfer | `c008a2a8`, 2,203 files plus the Git attribute for byte-preserving storage |
+
+The owner authorized both local commits and the cutover. Before switching the
+five live entries, the destination matched all file hashes and 238 directory
+paths. Both junctions and all three file links resolve to their repository
+targets. All 2,203 Git blobs were retrieved from the transfer commit and
+compared with the independent SHA-256 manifest. Packet check: eight OK.
+Reference check: zero findings. The archived baseline copy retains its
+pre-existing trailing blank line. The [handoff](SIGMA_DOCUMENTATION_SYSTEM_VERSION_CONTROL_HANDOFF.md)
+records the installed layout, recovery directory and full revisions.

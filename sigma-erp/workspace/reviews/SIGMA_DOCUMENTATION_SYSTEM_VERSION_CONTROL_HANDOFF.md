@@ -2,14 +2,31 @@
 
 | Item | Value |
 |---|---|
-| Status | Frozen |
-| Owner verification pending | yes |
-| Owner decision | Prepare locally on 2026-11-19. Install after the owner records the existing documentation changes. |
+| Status | Closed |
+| Owner verification pending | no |
+| Owner decision | Initial preparation was followed by explicit authorization on 2026-11-19 to review, commit locally and complete the transfer. |
 | Contract | [Maintenance plan, decision D7 and slice S1](SIGMA_DOCUMENTATION_SYSTEM_MAINTENANCE_EVOLUTION_PLAN.md) |
 
-## Prepared layout
+## Installed layout and recovery
 
-The workspace remains the live writer. The transfer snapshot is in
+The Shaban repository owns `sigma-erp/workspace/`. The Sigma workspace uses
+directory junctions for `.agents` and `reviews`, and file symbolic links for
+`AGENTS.md`, `GEMINI.md` and `PROJECT_MAP.md`. Each pair resolves to the same
+filesystem object. Run Git commands in the owning repository.
+
+The documentation baseline is `1dea05ceba9e8043fe55e98593e782ef401be72c`.
+The transfer is `c008a2a84f2b0b8b5de47eac8285ee457d647b39`. All 2,203
+transfer blobs were read back from that commit and matched their original
+SHA-256 values, including the entry, companion and approval contract.
+The live and original trees also matched before the closure records were edited.
+The previously empty `reviews/Workshop/` has a tracked placeholder so a fresh
+checkout recreates all 238 directory paths.
+The original files and directories are retained locally under
+`F:\My Work\Sigma\.codex-build\documentation-handoff-20261119\originals`.
+
+## Original preparation record
+
+The pre-cutover transfer snapshot is in
 `F:\My Work\Sigma\.codex-build\documentation-handoff-20261119\workspace`.
 The adjacent `manifest.csv` records each workspace-relative file path, length
 and SHA-256. The package contains exactly the three entry files
@@ -17,12 +34,12 @@ and SHA-256. The package contains exactly the three entry files
 `reviews` directories, including historical evidence. Filesystem timestamps
 are outside the content comparison.
 
-The proposed destination is `sigma-erp/workspace/` inside the Shaban repository.
+The selected destination was `sigma-erp/workspace/` inside the Shaban repository.
 This keeps the three files and both directories together and preserves their
 relative layout. The repository's existing top-level personal `AGENTS.md`
 remains a separate file.
 
-## After the owner records the documentation baseline
+## Original cutover checklist (completed)
 
 1. Record the baseline commit and confirm the destination is free. Compare the
    live five entries with the snapshot again by relative path, size and SHA-256.

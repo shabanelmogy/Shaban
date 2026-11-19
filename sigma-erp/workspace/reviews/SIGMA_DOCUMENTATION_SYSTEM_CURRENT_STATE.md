@@ -4,7 +4,7 @@
 |---|---|
 | Status | Implemented — source-only |
 | Owner verification pending | yes |
-| Last recorded round | 2026-11-19, documentation audit fixes and D7 preparation |
+| Last recorded round | 2026-11-19, D7 version-control cutover and restoration check |
 | Full record | [SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md](SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md) (audits 1–8 then later rounds, newest at the bottom) |
 
 Read this first. Older audits are history; do not read them to execute a new task.
@@ -22,6 +22,8 @@ Read this first. Older audits are history; do not read them to execute a new tas
 
 ## Latest implementation
 
+- The Shaban documentation repository owns the five workspace entries under `sigma-erp/workspace/`. The original live paths link there. All 2,203 files retrieved from transfer commit `c008a2a8` matched the original SHA-256 manifest. See the [cutover record](SIGMA_DOCUMENTATION_SYSTEM_VERSION_CONTROL_HANDOFF.md).
+
 - The Arabic Verify command points to the live command and permission owner. The Master index uses an existing block.
 - The reference checker includes public entry pages, book indexes and the active review index. It checks local heading fragments. A scoped fixture verifies diagnostics for a bad block, a missing file and two missing headings.
 - The [currency entry](CURRENCY_CURRENT_STATE.md) now records governing contracts, source-only evidence and outstanding acceptance.
@@ -29,10 +31,11 @@ Read this first. Older audits are history; do not read them to execute a new tas
 ## Pending
 
 - Try a real tier S and tier M task with the new instructions.
-- Complete [D7 cutover](SIGMA_DOCUMENTATION_SYSTEM_VERSION_CONTROL_HANDOFF.md) after the owner records the existing documentation baseline.
 - Continue replacing generated indexes when their feature is next touched. The currency example has been converted.
 
 ## Useful sections in the full record
+
+- D7 local cutover and Git recovery — 2026-11-19
 
 - Documentation audit fixes and D7 preparation — 2026-11-19
 
