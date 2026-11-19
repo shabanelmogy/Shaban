@@ -26,8 +26,9 @@ param(
 #   8. duplicate - the same long paragraph in more than one instruction file (one rule, one owner);
 #   9. size      - warning only: canonical block over 30 KB, or review over 40 KB without a
 #                  *_CURRENT_STATE.md that links to it (current-state files themselves are budgeted at 4 KB).
+#  10. status    - a *_CURRENT_STATE.md without an allowed Status row or Owner verification pending row;
 # An unresolved item is a finding to read, not an automatic error: a route or an illustrative
-# name can look like a path. Exit code = number of findings in groups path, block, link, budget and table.
+# name can look like a path. Exit code = number of findings in groups path, block, link, budget, table and status.
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -275,6 +276,19 @@ foreach ($p in $budgets.Keys) {
         } else { $para.Add($line) }
     }
 }
+# 10. Every current-state file starts with the Master4/artifact status table (allowed values only).
+$statusValues = 'Draft|Frozen|Blocked|Implemented ' + [char]0x2014 + ' source-only|Closed'
+foreach ($cs in $currentStates) {
+    $csText = [System.IO.File]::ReadAllText($cs.FullName, [System.Text.Encoding]::UTF8)
+    $csName = 'reviews\' + $cs.FullName.Substring($reviewsDir.Length).TrimStart('\')
+    if ($csText -notmatch ('(?m)^\|\s*Status\s*\|\s*(' + $statusValues + ')\s*\|')) {
+        Add-Finding 'status' $csName 0 'missing a Status row with an allowed value'
+    }
+    if ($csText -notmatch '(?m)^\|\s*Owner verification pending\s*\|\s*(yes|no)\s*\|') {
+        Add-Finding 'status' $csName 0 'missing an Owner verification pending row (yes/no)'
+    }
+}
+
 foreach ($book in @('master', 'ui', 'backend')) {
     foreach ($f in Get-ChildItem -LiteralPath (Join-Path $DocsRoot $book) -Filter '*.md' -Recurse) {
         if ($f.Length -gt $blockWarnBytes) { Add-Finding 'size' ($book + '\' + $f.Name) 0 ("{0} bytes > {1}; split or remove history (Master8)" -f $f.Length, $blockWarnBytes) }
@@ -310,5 +324,5 @@ foreach ($g in $groups) {
     $g.Group | Select-Object -First $Show | ForEach-Object { Write-Host ("  {0}:{1}  {2}" -f $_.File, $_.Line, $_.Text) }
 }
 if ($findings.Count -eq 0) { Write-Host 'OK - every checked reference resolves.' }
-$hard = @($findings | Where-Object { $_.Group -in @('path', 'block', 'link', 'budget', 'table') }).Count
+$hard = @($findings | Where-Object { $_.Group -in @('path', 'block', 'link', 'budget', 'table', 'status') }).Count
 exit $hard

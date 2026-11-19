@@ -2,13 +2,15 @@
 
 | Item | Value |
 |---|---|
-| Status (first recorded in the main file) | Implemented R01–R04 and confirmed loading extensions — source-only; owner runtime verification pending |
-| Owner verification pending | yes |
+| Status | Draft |
+| Owner verification pending | no |
+| Kind | Generated navigation index, not a written summary (Master8) |
+| Status recorded in the full file | Implemented R01–R04 and confirmed loading extensions — source-only; owner runtime verification pending |
 | Latest date found | 2026-10-28 |
 | Full file | [HRM_CURRENT_FEATURE_REVIEW.md](HRM_CURRENT_FEATURE_REVIEW.md) (70 KB) |
 
-Generated index, not a written summary (Master8). Read the needed section of the full file by
-heading. When this feature is next touched, replace this file with an English summary of at most 4 KB.
+Read the needed section of the full file by heading. When this feature is next touched,
+replace this file with a written English summary of at most 4 KB.
 
 ## Sections of HRM_CURRENT_FEATURE_REVIEW.md
 

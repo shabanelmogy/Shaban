@@ -2,13 +2,15 @@
 
 | Item | Value |
 |---|---|
-| Status (first recorded in the main file) | Frozen |
-| Owner verification pending | yes |
+| Status | Draft |
+| Owner verification pending | no |
+| Kind | Generated navigation index, not a written summary (Master8) |
+| Status recorded in the full file | Frozen |
 | Latest date found | 2026-10-22 |
 | Full file | [ANGULAR_21_ARCHITECTURE_FEATURE_REVIEW.md](ANGULAR_21_ARCHITECTURE_FEATURE_REVIEW.md) (65 KB) |
 
-Generated index, not a written summary (Master8). Read the needed section of the full file by
-heading. When this feature is next touched, replace this file with an English summary of at most 4 KB.
+Read the needed section of the full file by heading. When this feature is next touched,
+replace this file with a written English summary of at most 4 KB.
 
 ## Sections of ANGULAR_21_ARCHITECTURE_FEATURE_REVIEW.md
 

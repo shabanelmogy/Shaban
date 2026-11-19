@@ -28,6 +28,8 @@ Read this first. Older audits are history; do not read them to execute a new tas
 - The reference checker includes public entry pages, book indexes and the active review index. It checks local heading fragments. A scoped fixture verifies diagnostics for a bad block, a missing file and two missing headings.
 - The [currency entry](CURRENCY_CURRENT_STATE.md) now records governing contracts, source-only evidence and outstanding acceptance.
 
+- Comprehensive review fixes (2026-11-20): `.gitignore` for build output, `New-CurrentStateIndexes.ps1` with a standard status table, current-state status check in `Check-BookReferences.ps1`, UI20 permission wording, Arabic README reading model.
+
 ## Pending
 
 - Try a real tier S and tier M task with the new instructions.

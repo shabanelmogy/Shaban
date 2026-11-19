@@ -2,13 +2,15 @@
 
 | Item | Value |
 |---|---|
-| Status (first recorded in the main file) | Frozen |
-| Owner verification pending | yes |
+| Status | Draft |
+| Owner verification pending | no |
+| Kind | Generated navigation index, not a written summary (Master8) |
+| Status recorded in the full file | Frozen |
 | Latest date found | 2026-10-07 |
 | Full file | [RENTAL_BOOKING_CREATE_REFACTOR_CONTRACT.md](RENTAL_BOOKING_CREATE_REFACTOR_CONTRACT.md) (40 KB) |
 
-Generated index, not a written summary (Master8). Read the needed section of the full file by
-heading. When this feature is next touched, replace this file with an English summary of at most 4 KB.
+Read the needed section of the full file by heading. When this feature is next touched,
+replace this file with a written English summary of at most 4 KB.
 
 ## Sections of RENTAL_BOOKING_CREATE_REFACTOR_CONTRACT.md
 

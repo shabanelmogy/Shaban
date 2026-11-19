@@ -2,13 +2,15 @@
 
 | Item | Value |
 |---|---|
-| Status (first recorded in the main file) | Confirmed fixes implemented — source reconciliation complete |
-| Owner verification pending | yes |
+| Status | Draft |
+| Owner verification pending | no |
+| Kind | Generated navigation index, not a written summary (Master8) |
+| Status recorded in the full file | Confirmed fixes implemented — source reconciliation complete |
 | Latest date found | 2026-10-26 |
 | Full file | [STAFF_FEATURE_REVIEW.md](STAFF_FEATURE_REVIEW.md) (97 KB) |
 
-Generated index, not a written summary (Master8). Read the needed section of the full file by
-heading. When this feature is next touched, replace this file with an English summary of at most 4 KB.
+Read the needed section of the full file by heading. When this feature is next touched,
+replace this file with a written English summary of at most 4 KB.
 
 ## Related files
 

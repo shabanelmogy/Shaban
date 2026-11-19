@@ -1,5 +1,17 @@
 # Sigma documentation changes
 
+## 2026-11-20 — Comprehensive review fixes
+
+`.gitignore` excludes `bin/` and `obj/`; the 69 tracked build files of the
+UserIdentityLinkRepair review tool were removed from the index (kept on disk).
+`recipe-system/New-CurrentStateIndexes.ps1` replaces the ad-hoc generator: generated
+indexes now carry `Status: Draft` and `Owner verification pending: no`, `-Refresh`
+rewrites generated indexes only and removes one covered by a written summary (the
+currency scenario). 50 indexes were refreshed. `Check-BookReferences.ps1` fails a
+current-state file without an allowed status table. UI20 states that its read-path
+checks add nothing beyond Master5's standing scoped permission. The Arabic README
+describes the current reading model, language rule, scoped tests and the index tool.
+
 ## 2026-11-19 — Action rows in filterless reports
 
 UI20 clarifies that the shared report filter panel supplies the spacing below

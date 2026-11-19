@@ -100,6 +100,10 @@ where a block holds several topics. A review that grows past 40 KB gets a
 contracts in force, pending items, useful section headings); every later round
 rewrites that file in the same task. The full review stays at its path so
 existing links and anchors keep working.
+Generated navigation indexes come from `recipe-system/New-CurrentStateIndexes.ps1`
+(`Status` `Draft`, owner verification `no`, the full file's recorded status in a
+separate row). `-Refresh -Apply` rewrites generated indexes only, never a written
+summary, and removes a generated index once a written summary covers its files.
 
 **Block topic folders (2026-11-19).** A block that covers several independent
 topics keeps its number and main file (`ui/13-modal-with-tabs.md`) and moves each
@@ -128,7 +132,8 @@ where links depend on the anchor.
 `Check-BookReferences.ps1` enforces these size budgets and fails when one is
 exceeded: `AGENTS.md` 8 KB, the companion core 14 KB, each companion section
 file 12 KB, the skill 15 KB, `reviews/INDEX.md` 12 KB, each
-`*_CURRENT_STATE.md` 4 KB. It warns (without failing) for a canonical block over
+`*_CURRENT_STATE.md` 4 KB, and fails a current-state file without an allowed
+`Status` and `Owner verification pending` row. It warns (without failing) for a canonical block over
 30 KB and a review artifact over 40 KB that has no current-state file. It also
 reports paragraphs repeated verbatim across the instruction files. Raise a budget only
 by an explicit owner decision recorded here, never to absorb restated rules.

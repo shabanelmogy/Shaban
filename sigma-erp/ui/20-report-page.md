@@ -92,8 +92,9 @@ and a previous review's "Matched" claim do not supply the evidence (Master 5).
 | Dates and language | Confirm appDatePicker plus the required single-date dateInputMask/placeholder recipe (17), valid control state and shared serialization before Search. Resolve dropdown enum labels, display statuses and export headers in the active language rather than storing translated labels only at initialization (16/23). |
 | Busy, failure and empty states | Trace declared and transport failures for report and lookups, one feedback owner and the matching skip header for inline errors (22), visible recovery, and distinct not-run/empty/error output. Mark narrow-layout and print/runtime acceptance pending unless actually authorized and performed (29). |
 
-These are focused read-path checks, not permission to run builds/tests/browser/DB
-commands or to modify unrelated consumers. A known mismatch remains a finding;
+These are focused read-path checks; they add no permission beyond the standing
+scoped build/test/lint permission (Master5) and do not authorize browser/DB
+commands or changes to unrelated consumers. A known mismatch remains a finding;
 updating this book does not repair the application.
 
 ### Unpaged document contract example

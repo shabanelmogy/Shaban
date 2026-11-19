@@ -2,13 +2,15 @@
 
 | Item | Value |
 |---|---|
-| Status (first recorded in the main file) | Closed |
-| Owner verification pending | yes |
+| Status | Draft |
+| Owner verification pending | no |
+| Kind | Generated navigation index, not a written summary (Master8) |
+| Status recorded in the full file | Closed |
 | Latest date found | 2026-10-25 |
 | Full file | [JVS_FULL_STACK_REVIEW.md](JVS_FULL_STACK_REVIEW.md) (50 KB) |
 
-Generated index, not a written summary (Master8). Read the needed section of the full file by
-heading. When this feature is next touched, replace this file with an English summary of at most 4 KB.
+Read the needed section of the full file by heading. When this feature is next touched,
+replace this file with a written English summary of at most 4 KB.
 
 ## Related files
 

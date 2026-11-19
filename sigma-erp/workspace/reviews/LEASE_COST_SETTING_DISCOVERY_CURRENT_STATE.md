@@ -2,13 +2,15 @@
 
 | Item | Value |
 |---|---|
-| Status (first recorded in the main file) | Not recorded |
-| Owner verification pending | Not recorded |
+| Status | Draft |
+| Owner verification pending | no |
+| Kind | Generated navigation index, not a written summary (Master8) |
+| Status recorded in the full file | not recorded |
 | Latest date found | 2026-08-16 |
 | Full file | [LEASE_COST_SETTING_DISCOVERY_CONTRACT_FREEZE.md](LEASE_COST_SETTING_DISCOVERY_CONTRACT_FREEZE.md) (48 KB) |
 
-Generated index, not a written summary (Master8). Read the needed section of the full file by
-heading. When this feature is next touched, replace this file with an English summary of at most 4 KB.
+Read the needed section of the full file by heading. When this feature is next touched,
+replace this file with a written English summary of at most 4 KB.
 
 ## Sections of LEASE_COST_SETTING_DISCOVERY_CONTRACT_FREEZE.md
 

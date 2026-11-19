@@ -1,0 +1,3 @@
+# Build output of tools kept beside review evidence (machine-specific, regenerated on build).
+**/bin/
+**/obj/
