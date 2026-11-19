@@ -28,6 +28,7 @@
    - Only trips with overtime > 0 are listed. Display `HH:mm`; amount = `Charges + Tax − Discount` (LimousineBillingService definition).
 3. **Daily shift read is viewer-independent.** Attendance shift IDs and their shifts are read with `IgnoreQueryFilters()` bounded by tenant, soft delete, staff IDs and dates (PayrollRunService pattern), so the same trip gives the same overtime for every authorized viewer.
 4. **API and access.** `GET /TripsWithOvertimeReports/Options|Read|Print|Export` with `TripsWithOvertimeReports.Read` (+ `Print`/`Export`); registered in `BranchOperationRules.WholeDocumentReads`, `PermissionPrerequisites` and `route-access-policy.ts`. Options list only staff linked to a driver.
+5. **Amount visibility (owner decision, 2026-11-19).** New assignable capability `TripsWithOvertimeReports.ViewCharges` ("View trip charges", prerequisite `Read`), listed through `CapabilityPermissions` in `ApiPermissionCatalog`. The controller evaluates it from `CurrentAccessService` (tenant admin or granted key; fails closed) and the service returns `Amount`/`TotalAmount` as null with `CanViewCharges = false`. The UI drops the column, footer amount and Excel total on that server flag.
 
 ## 3. Conformance
 
@@ -35,7 +36,7 @@
 |---|---|---|---|
 | Page and frame | UI1 / UI20 | `appReportPage`, `app-feature-title` | Match |
 | Filters and loading | UI20 / UI22 / UI17 | `createReportReadState`, `p-datepicker[view=month]`, `parseMonthValue`/`toMonthPickerDate`/`monthValueValidator` (date-utils) | Match |
-| Table, totals, sorting | UI6 / UI19 / UI20 | `app-data-table` (18 columns, `footerRows`, `exactMoney`); overtime column numeric minutes with an `HH:mm` cell template | Match |
+| Table, totals, sorting | UI6 / UI19 / UI20 | `app-data-table` (18 columns, 17 without ViewCharges; `footerRows`, `exactMoney`); overtime column numeric minutes with an `HH:mm` cell template | Match |
 | Print and export | UI20 / UI21 | `ReportPrintService`, `dataTableExportRows`, `onExportToExcel` (overtime exported as `HH:mm`) | Match |
 | Access and branches | UI26 / BE9 | `PermissionCatalogAction`, `BranchOperationRules`, `QueryReport<T>()`; bounded tenant read for shifts | Match |
 | Numbers | BE18 / UI19 | `FinancialNumberPolicy`, `CurrencyAmountJsonConverter` | Match |
@@ -64,13 +65,13 @@ Columns added beyond the screenshot: **Actual Start** and **Actual Finish**, so 
 | Backend build | `dotnet build SiGma.ServerAPI -c Release` | Succeeded |
 | Calculator tests | `dotnet test SiGma.BranchAccess.Tests --filter TripsWithOvertimeCalculatorTests` | 9/9 passed (adds overlap total, flexible overlap, no shift, overnight after holiday) |
 | Frontend build | `npm run build` | Succeeded |
-| Frontend lint | `npx eslint` on the 7 changed files | 0 problems |
+| Frontend lint | `npx eslint` on the changed files | 0 problems |
+| Spec type-check | `tsc -p tsconfig.spec.json --noEmit` | 57 pre-existing errors, none in this feature (second spec covers withheld charges) |
 | Frontend spec | `ng test --include …trips-with-overtime-report.component.spec.ts` | **Blocked**: the Karma build fails on pre-existing compile errors in unrelated specs (Bills, Purchase Requests/Orders, GRN, Rental, Fleet, Assets); no error in this feature's files |
 | Runtime | Browser, print, Excel, live data, SQL timing | Pending owner |
 
 ## 7. Open items
 
-- Amount column visibility: the Speed controller exposes `canViewCharges` to its template; Sigma has no equivalent trip-charges permission — owner decision.
 - A concurrent duplicate link now fails at the unique index with a generic error instead of the localized 409 message.
 - `DetailedVehicleUtilizationReport` keeps its own month helpers; adopt `date-utils` when that feature is next touched.
 

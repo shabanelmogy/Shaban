@@ -83,7 +83,7 @@ headings first and read only the named or needed sections by line range.
 | Inline report/filter feedback | UI22 · StateMessage.compact |
 | Branch-scoped report reads and company-wide exclusions | BE9 · AgreementReturnReportQueries.LatestIdsAsync |
 | Domain actions, approval workflow, journals, linked documents | Master4; UI7/9/13/22/26/28; BE8/11/12/14/15/18 · injectApprovalStatusAction, DocumentApprovalCycle |
-| Authorization, current-session access, write invariants | UI7/21/26/28; BE6/8/9; Master4/5/7 · PermissionPrerequisites |
+| Authorization, current-session access, write invariants | UI7/21/26/28; BE6/8/9; Master4/5/7 · PermissionPrerequisites, CapabilityPermissions |
 | Permission changes while editors/overlays are mounted | UI13 §Access changes while a body-appended editor is open; UI26/28 · EditorDialog access requirement |
 | Concurrent writers, conditional grants, shared catalogs | BE8; Master4/5 · TransactionWriteLock |
 | Entity/EF/DTO/mapping/service/controller, transactions, MVC routes, upload paths | BE1–6/8/13–18; Master4/5 · PrivateUploadPath, IReleasesLinksOnRemove |
@@ -113,8 +113,8 @@ companion §9)
 
 | Date | Revision | Owning blocks and evidence |
 |---|---|---|
+| 2026-11-19 | Data capabilities inside an authorized response (`CapabilityPermissions`, controller-evaluated, server omits values) | UI26; Trips With Overtime ViewCharges |
 | 2026-11-19 | Unique links on TPT-derived rows release on soft delete (`IReleasesLinksOnRemove`); `toMonthPickerDate` for month pickers | BE8, UI17; Trips With Overtime review fixes |
-| 2026-11-19 | Topic folders also for UI2/6/7/14/22/24 and BE15/18; no block over 30 KB | Master8; verbatim split, packets 8/8 OK |
 | 2026-11-19 | `§Name` may live in a block's `NN/` topic folder (UI1/13/20); generated current-state indexes cover large reviews | Master8; block split and generator fingerprint |
 | 2026-11-19 | Section-level routing (`§Name`) for large blocks; read `_CURRENT_STATE.md` before a full review | Master8; UI1/13/20/22 headings; token-reduction remediation |
 | 2026-11-19 | Add shared `.sigma-print-only` utility in `src/styles.scss` (replacing retired Bootstrap `d-none d-print-block`) and keep every active tab and inner side-list selector title print-only rather than repeating it inside panels on screen | UI20/21; owner instruction on Detailed Vehicle Utilization Report (all tabs + `Branch Wise Rented` split pane); runtime/visual pending |
