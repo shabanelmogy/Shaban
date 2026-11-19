@@ -32,3 +32,11 @@ Core guides:
 Before changing a MiniErp feature, read every applicable guide completely,
 including all shared rules and verification gates. The user's latest explicit
 decision has highest authority. Preserve unrelated working-tree changes.
+
+## Sigma projects
+
+Apply this section only when a task involves Sigma: its application
+repositories or this repository's `sigma-erp/` documentation and workspace.
+Read `sigma-erp/workspace/AGENTS.md` (also reached as `F:\My Work\Sigma\AGENTS.md`)
+and follow it completely before any work; it is the Sigma entry point and
+outranks this file for Sigma tasks.

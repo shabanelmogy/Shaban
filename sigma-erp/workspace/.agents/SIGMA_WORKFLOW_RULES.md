@@ -158,8 +158,11 @@ Preserve unrelated user and peer changes in the working tree.
 
 - Review the complete scoped diff in each actual repository
   (`SiGmaAngularFrontEnd`, `SigmaBackend`); the workspace root is not a Git
-  repository. Use a per-command `git -c safe.directory=<repo> -C <repo>` if
-  ownership protection blocks a read; never change global Git config.
+  repository. Instruction, book and review-artifact changes (including
+  `reviews/`, reached through the workspace link) belong to the Shaban
+  documentation repository under `sigma-erp/`; review that diff too. Use a
+  per-command `git -c safe.directory=<repo> -C <repo>` if ownership protection
+  blocks a read; never change global Git config.
 - Report separately: source conformance, build (target + outcome), tests and
   lint (command + count + outcome), and anything pending (runtime, browser,
   visual, SQL timing). Never describe an unexecuted step as done.
