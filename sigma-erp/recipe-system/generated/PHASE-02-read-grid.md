@@ -9,46 +9,46 @@ query to Grid rendering, paging, and export.
 ## Canonical provenance
 
 - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06
-- master.1: ## 1. Governance and review principles | sha256:a2ea89d19643c80d5d6fedef76e1e562333792eee34cf2eaad1e1ada1a4c47e0
+- master.1: ## 1. Governance and review principles | sha256:4af3c22f52464c9696ac85adb7f000d9c89d1bd76ecabfffa2662030d5fa66b2
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:8e602319017e268b923ed2bb8b7a8d21a1a3252640f23a986d99821842ea0c6f
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
-- master.5: ## 5. Continuous quality gates | sha256:2dc0c50abbb9337e62e6ddea88ae341cfff9ff0da0849dca7f58bf304d9544d1
+- master.5: ## 5. Continuous quality gates | sha256:db683d8cd9d81f554a0a9711335795c930c8e0846d9bc73fcf40f1da6084171f
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55
+- master.8: ## 8. Packet generation and governance | sha256:ad1ffed7bdf0b87f1c739ec1c7146a76c8a7d516f4d50e666cdeef3a7fb98b1c
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
-- ui.1: ## 1. Feature folders and wiring | sha256:96f5147de3041c0ab098fbd3b6005bb94b38ccde0ac890395818fdf989ca7868
-- ui.2: ## 2. Service and response wrappers | sha256:c2e46bdaf00c1fbee66d6ae2c655f335e348e60efad6a972e6ed6755ea520734
-- ui.3: ## 3. Header | sha256:851217e9c1d0c250c4bc91b66e764ecb3307b792d2887f44e25f98c97637821c
+- ui.1: ## 1. Feature folders and wiring | sha256:c4df20098e8e79cd73612e9fb0128bfcb8c75d4390c745a8bc636906e517aa1f
+- ui.2: ## 2. Service and response wrappers | sha256:f3a7b69c4ad6f7f09008f0dac6cb67b18d88fd938e2e64c568380e3b7d116bb7
+- ui.3: ## 3. Header | sha256:1e306ffae7e2e436e6eb354ef3fa7e12c8a131877efb52ff475cea07a3cb2892
 - ui.4: ## 4. Filters | sha256:c1987a0baf932b729b6e40e300fe831cc41ef7217dfbc51ddca8fac474dbc293
 - ui.5: ## 5. Columns | sha256:94c69136f60aa67980faee4318970d957142b4d2ac98f2bc2b549fc6fee8bd3f
-- ui.6: ## 6. Grid and footer | sha256:4590c510ef2351962dff9c6bb771d0f53f14c3fbad2a2d8fbd04f1230159b57e
-- ui.7: ## 7. Action button cycle | sha256:687c92bb4681fccf5c48878735d7bbe787bf5fc41dbf9bc1296300698f68dbc6
+- ui.6: ## 6. Grid and footer | sha256:91b9c9804b9d32e952e59230d015305b63e3c8632eea823508b466f724e6837f
+- ui.7: ## 7. Action button cycle | sha256:d761c13f061cd62f22c5216391ce26364f1d2cb427973a2adcfbc9cdce4d770e
 - ui.8: ## 8. Export to Excel | sha256:72abfe42a49132de80ba3aba5e3b3d4f2768bc68d05bce1ad4531a27d75ed329
 - ui.9: ## 9. Confirm: delete | sha256:54b220b80d7129d76c43ee26792787028fb140c1c99b540189776b8ed1c58c20
 - ui.15: ## 15. View mode | sha256:d65759cb2f87af8e2c60a44951906befcb022b449bb0fc709f0f8af000ed9911
 - ui.16: ## 16. Dropdowns, lookups, enums | sha256:a3da0497ac2b3a9f7ec3f25a6f3c0693ab65ddf5e7f4fb0834ca9dcbcb0efd1a
-- ui.17: ## 17. Dates | sha256:b83f662c6c700953af3243160c84fdd743629d4749a8d8674bf8d1419721cb5a
+- ui.17: ## 17. Dates | sha256:69a4324f1a97950349ab5ba6b3b9274bfe8e0f9db2f15b5eca62b186cbb442d5
 - ui.19: ## 19. Validation messages | sha256:6e7f00d5fed6d68fe924aa9d2bf6b64bba9368624df97317680d14ad6f5870d9
-- ui.20: ## 20. Report page | sha256:0a26bd9cddc464de5a9525a6cdcbb9fc7e7c738852c77f1eb5acf0213489cbd3
-- ui.21: ## 21. Report print | sha256:e8f6ef5b03400e4a9bf5dd01d658d5384f39af61473f3f64d29da5763d2bd1f8
-- ui.22: ## 22. Loading, empty, error, toast | sha256:8a43d6f6e7adf12e07a82fdb67e8f625158509fc0f88fe8f181f4c8a9c17e4a3
+- ui.20: ## 20. Report page | sha256:ef1ef058604b6a78bb26e08e2a0d27528623482c353bb6e0f3f2ae1aa35a3754
+- ui.21: ## 21. Report print | sha256:11ea0a036c9d332fa9687d37ef1d4efe9843c0a23252c52bd60f398425fd9db6
+- ui.22: ## 22. Loading, empty, error, toast | sha256:895b36e116e8ead97b444e10d6ff9fa7c127a7e6606b18ed80952387b3789974
 - ui.23: ## 23. Translations | sha256:0cf1190b29df3b524017967f0fba1a4611c683b902cb344278193f5e06de1377
-- ui.24: ## 24. Colors, icons, buttons | sha256:762e32970e629fe1c579f7df4da00cfd9439f939d18adae1137849b452383b4c
+- ui.24: ## 24. Colors, icons, buttons | sha256:fbaf5c46def760c9466d4d4082c393dfb56a950b1cf0b489e05336d7a821c378
 - ui.25: ## 25. RTL and dark theme | sha256:43a3a8e0348d40c7dabf045d26827de50445cb6ba22441e1a7b9db9cdc8f8179
 - ui.26: ## 26. Permissions and route access | sha256:ce3f2c451a72880ac11e264517cb14795d8539ef326b281ce297f75ae5d59223
 - ui.27: ## 27. Focus and keyboard | sha256:8f5713225ff4aecd70093f9ac8e6ba96c91003126335ebad80f925e573fa8586
 - ui.28: ## 28. Request cancellation and stale responses | sha256:b9ee811088e53d9771459815766c135cee973724042db691a7a4444ab5408325
-- ui.29: ## 29. Verification expectations | sha256:1ff1411e4cbc36bb44b06ef153a062ad0ddc7d8ca7728bdc7a3deae3ea99656e
+- ui.29: ## 29. Verification expectations | sha256:857fd2de21235042c2d3c3d8af841d8bed3580a97bed2ff1680f6a3c2c291f04
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
 - backend.2: ## 2. Step 2 — EF configuration | sha256:6fc404d5c366c960f1ff9292a0b9ce4b69c6825da3f4416385af0389c0ebc386
 - backend.7: ## 7. ListVM scope rule | sha256:6ae3e69d94ccc02a60bd005f20020b7cd4b9f105b81afa9baf63c427cfa05caa
-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:6ea7b47108bd89bf68e821373303b7390ed3b42e664fa831ccc3d5a2c3624f33
-- backend.9: ## 9. Search model and filters | sha256:e8208878685bd880c99eb2f2816e6f491ff2cd9ce17ab0f850655b509aba7525
+- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:9ffa9db969ffca5f271d1d047180ffd0fa5e7416eab045c9d3688b79c88c2e12
+- backend.9: ## 9. Search model and filters | sha256:4ef414b8a321331568d54b24460ed22775a51164f055f89cb217841f815639dd
 - backend.10: ## 10. Select and dropdowns | sha256:61f5fb1f28d7992cf7610dfbe5a9e4fc6d08fd656230d72ab36067a6f1c04925
 - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
 - backend.17: ## 17. Pattern 5 — Reports | sha256:44e453b0f1099ea1885b08213580864c71447e9e93b0b1cf24f5fb81d7362742
-- backend.18: ## 18. Edge cases | sha256:8878697ea5e4b00ab272b14d83fd2091eb9cd129c168a238ab98b88bed22d2a0
+- backend.18: ## 18. Edge cases | sha256:13d0548154a54a05fda8d1276d7d19529ee31b2b79d7945ab1363e7f18abb6f0
 
 Approved references by read-path shape:
 

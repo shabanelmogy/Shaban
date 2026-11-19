@@ -106,8 +106,9 @@ inline index style so its first-paint behavior does not depend on that lookup.
 | Contract match against the service and model | author | yes |
 | Translation keys exist in `en.ts` **and** `ar.ts`, correct block and casing | author | yes, see block 23 |
 | Stale imports, dead types, merge markers | author | yes |
-| TypeScript compiles | owner | **no** |
-| Unit tests pass | owner | **no** |
+| TypeScript compiles | author, scoped build (Master5) | only when the build was executed |
+| Affected unit tests pass; changed files lint clean | author, scoped run (Master5) | only when executed |
+| Full test suite | owner | **no** |
 | Runtime behaviour, network headers, `401` cause | owner | **no** |
 | Visual match, light and dark, LTR and RTL | owner | **no** |
 | Responsive consistency across supported widths, breakpoint boundaries and intermediate sizes | owner | **no** |

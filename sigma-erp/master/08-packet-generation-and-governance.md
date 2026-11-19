@@ -58,8 +58,8 @@ because that template exists.
 
 The screen skill is a short operational router into those same sources. It must
 not become a second copy of all code examples, feature-specific decisions or
-revision history. Keep its current rules cited to the owning block, and retain a
-dated revision row. Superseded skill text, completed review records and old
+revision history. Keep its routing cited to the owning block, and retain a
+dated revision row within the limit below. Superseded skill text, completed review records and old
 changelog entries belong in clearly labelled archive folders. Active plans and
 unresolved decisions remain discoverable; archive by lifecycle and supersession,
 not age alone. Preserve frozen decisions and update callers when a file moves.
@@ -77,6 +77,61 @@ loaded entry small enough for the host's combined global/project instruction
 budget; do not solve growth only by raising that budget or discarding rules.
 If the live continuation cannot be read, report the missing source and stop
 dependent work instead of inferring authorization.
+
+**Core and on-demand sections; one owner per rule (owner-requested speed
+remediation, 2026-11-19).** The live companion is a short core that is always
+read (authority order, modes, permissions, gates table, minimum handoff); its
+section files under `.agents/workflow/` are read only when the task reaches
+them. Each rule has exactly one owner; other files carry a one-line pointer,
+not a restated copy. Dated owner-instruction history belongs in `CHANGELOG.md`,
+not in live rule text. The skill holds a gate checklist and a pointer table
+(concern → blocks and key shared owners) only; a new lesson goes into its
+owning block and adds at most a routing keyword plus one dated revision row.
+The skill keeps its five newest revision rows; older rows move to
+`archive/SKILL_REVISION_HISTORY.md`. The review index `reviews/INDEX.md` is a
+short table of recent work; feature artifacts are found by name
+(`reviews/**/<FEATURE>_*.md`) and its earlier narrative is `reviews/INDEX_HISTORY.md`.
+
+**Section-level reading and current-state files (2026-11-19).** Agents read a
+large block, packet or review by section: list its headings, then read only the
+needed line ranges. The skill routes to named sections (`UI20 §Filter bar`)
+where a block holds several topics. A review that grows past 40 KB gets a
+`<FEATURE>_CURRENT_STATE.md` of at most 4 KB beside it (status, latest round,
+contracts in force, pending items, useful section headings); every later round
+rewrites that file in the same task. The full review stays at its path so
+existing links and anchors keep working.
+
+**Block topic folders (2026-11-19).** A block that covers several independent
+topics keeps its number and main file (`ui/13-modal-with-tabs.md`) and moves each
+topic into `<book>/<NN>/<nn>-<topic>.md`. The main file lists its topic files near
+the top; a topic file is part of the same block, with the same status and
+authority, so references such as "UI13" stay valid. `Generate-SigmaRecipes.ps1`
+fingerprints the main file followed by its topic files, so a topic change makes
+dependent packets stale. Agents read the main file's list and then only the
+needed topic file. Blocks with topic folders: UI1, UI2, UI6, UI7, UI13, UI14, UI20,
+UI22, UI24, BE15 and BE18.
+
+**Language of agent-facing files (owner decision, 2026-11-19).** Files written
+for agents — instructions, canonical blocks, packets, review/contract/plan
+artifacts, `*_CURRENT_STATE.md` and `reviews/INDEX.md` — are written in English.
+Replies to the owner follow the companion's Arabic communication rule, and the
+in-app user guide remains bilingual application content. Existing Arabic
+artifacts are not translated retroactively; a feature's next round writes its
+current-state file in English.
+
+**Rule text without history (2026-11-19).** A canonical block states the current
+rule. When a correction or owner clarification changes a rule, rewrite the rule
+in place and record the date, source and superseded wording in `CHANGELOG.md`;
+do not append a dated note beside the old text. Heading dates are kept only
+where links depend on the anchor.
+
+`Check-BookReferences.ps1` enforces these size budgets and fails when one is
+exceeded: `AGENTS.md` 8 KB, the companion core 14 KB, each companion section
+file 12 KB, the skill 15 KB, `reviews/INDEX.md` 12 KB, each
+`*_CURRENT_STATE.md` 4 KB. It warns (without failing) for a canonical block over
+30 KB and a review artifact over 40 KB that has no current-state file. It also
+reports paragraphs repeated verbatim across the instruction files. Raise a budget only
+by an explicit owner decision recorded here, never to absorb restated rules.
 
 The screen skill routes tasks and conditional concerns to their complete current
 book blocks. Do not reload archived skill snapshots to execute a new task: the

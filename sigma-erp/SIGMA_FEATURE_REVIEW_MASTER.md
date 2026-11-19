@@ -1,7 +1,7 @@
 # Sigma Feature Review Master Guide — index
 
 This guide is stored as one file per block in `master/`. The block number is the
-citation key: "Master block 17" means `master/17-*.md`. Status, version, and dates
+citation key: "Master block 4" refers to [the required decisions and contracts](master/04-required-decisions-artifacts-and-contract-invariants.md). Status, version, and dates
 are in [`master/00-preamble.md`](master/00-preamble.md). History is in
 [`CHANGELOG.md`](CHANGELOG.md).
 

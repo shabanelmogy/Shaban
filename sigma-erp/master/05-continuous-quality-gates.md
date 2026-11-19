@@ -12,6 +12,20 @@ member visibility, and check project references and source inclusion. Seed
 fixtures independently of the restricted actor, then assert against that actor's
 observable result. Report build and executed test results independently.
 
+**Scoped tests and lint (owner instruction, 2026-11-19).** An authorized
+implementation, fix or refactor includes running the specifications that cover
+the changed code and linting the changed files, without a separate request:
+
+- Angular: `ng test --watch=false --include=<affected spec paths>` and
+  `ng lint --lint-file-patterns=<changed files>` (or `npx eslint <changed files>`).
+- .NET: `dotnet test <affected test project> --filter <affected classes>`.
+
+Fix failures caused by the change; report pre-existing failures as findings
+without widening scope. This does not authorize full-suite runs, end-to-end or
+browser/application execution, review-only or plan-only tasks, or fixes for
+unrelated lint debt. Report the exact command, count and outcome; a test that
+was not executed stays explicitly pending.
+
 Match the fixture to the behavior it claims to verify. EF InMemory is useful
 for suitable isolated queries. Use SQL Server for behavior that depends on its
 transactions, application locks or query translation. A test double can verify

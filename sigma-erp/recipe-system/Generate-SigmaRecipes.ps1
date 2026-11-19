@@ -89,6 +89,15 @@ function Get-SourceBlock {
 
     $lines = @(Get-Content -Encoding UTF8 -LiteralPath $blockFiles[0].FullName)
     $heading = if ($Block -eq 0) { "$($lines[0]) - preamble" } else { $lines[0] }
+    # A large block may keep topic files in <BookPath>/<NN>/ (Master8). They are part of the
+    # same block: fingerprint the main file followed by every topic file in name order.
+    $topicDir = Join-Path $BookPath ('{0:D2}' -f $Block)
+    if (Test-Path -LiteralPath $topicDir -PathType Container) {
+        foreach ($topic in Get-ChildItem -LiteralPath $topicDir -File -Filter '*.md' | Sort-Object Name) {
+            $lines += "<!-- topic: $($topic.Name) -->"
+            $lines += @(Get-Content -Encoding UTF8 -LiteralPath $topic.FullName)
+        }
+    }
     $text = Normalize-Text ($lines -join "`n")
     $sha = [System.Security.Cryptography.SHA256]::Create()
     try {

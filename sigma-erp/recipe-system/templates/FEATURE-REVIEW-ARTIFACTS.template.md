@@ -207,6 +207,6 @@ only scenarios relevant to the approved contract and changed paths.
 | Mapping/server-owned fields checked | | |
 | Merge markers/whitespace checked | | |
 | Scoped local build including affected test project | | |
-| Tests | | |
+| Affected tests and changed-file lint (Master5) | | Command, count, outcome |
 | Browser/runtime | | |
 | Database/migration (Master7) | | Migration ID, target and history/schema/row checks, or pending owner action |

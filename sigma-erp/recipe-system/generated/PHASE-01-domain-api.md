@@ -9,13 +9,13 @@ are finalized.
 ## Canonical provenance
 
 - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06
-- master.1: ## 1. Governance and review principles | sha256:a2ea89d19643c80d5d6fedef76e1e562333792eee34cf2eaad1e1ada1a4c47e0
+- master.1: ## 1. Governance and review principles | sha256:4af3c22f52464c9696ac85adb7f000d9c89d1bd76ecabfffa2662030d5fa66b2
 - master.2: ## 2. Screenshot and visual evidence policy | sha256:8e602319017e268b923ed2bb8b7a8d21a1a3252640f23a986d99821842ea0c6f
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
-- master.5: ## 5. Continuous quality gates | sha256:2dc0c50abbb9337e62e6ddea88ae341cfff9ff0da0849dca7f58bf304d9544d1
+- master.5: ## 5. Continuous quality gates | sha256:db683d8cd9d81f554a0a9711335795c930c8e0846d9bc73fcf40f1da6084171f
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.8: ## 8. Packet generation and governance | sha256:368f82a1a1e9ee0e73c3037cd8098b55137b988524ebfb828a99d6d10aeb0c55
+- master.8: ## 8. Packet generation and governance | sha256:ad1ffed7bdf0b87f1c739ec1c7146a76c8a7d516f4d50e666cdeef3a7fb98b1c
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
 - backend.1: ## 1. Step 1 — Entity | sha256:b762e9cee6264a5d9fe46208210f1f17dbdced5bc1092f8fc692717ffc86114e
 - backend.2: ## 2. Step 2 — EF configuration | sha256:6fc404d5c366c960f1ff9292a0b9ce4b69c6825da3f4416385af0389c0ebc386
@@ -24,17 +24,17 @@ are finalized.
 - backend.5: ## 5. Step 5 — Interface and service | sha256:848b38b971e23945d10cb02d95cd2f94c2f3a176fe126e1a2169dca039be816d
 - backend.6: ## 6. Step 6 — Controller | sha256:f0f56867e3997a688067c5e5ec7f19070f1f4d621a0d5617e4e9639fdf74eba6
 - backend.7: ## 7. ListVM scope rule | sha256:6ae3e69d94ccc02a60bd005f20020b7cd4b9f105b81afa9baf63c427cfa05caa
-- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:6ea7b47108bd89bf68e821373303b7390ed3b42e664fa831ccc3d5a2c3624f33
-- backend.9: ## 9. Search model and filters | sha256:e8208878685bd880c99eb2f2816e6f491ff2cd9ce17ab0f850655b509aba7525
+- backend.8: ## 8. Validation: duplicates, keys, delete | sha256:9ffa9db969ffca5f271d1d047180ffd0fa5e7416eab045c9d3688b79c88c2e12
+- backend.9: ## 9. Search model and filters | sha256:4ef414b8a321331568d54b24460ed22775a51164f055f89cb217841f815639dd
 - backend.10: ## 10. Select and dropdowns | sha256:61f5fb1f28d7992cf7610dfbe5a9e4fc6d08fd656230d72ab36067a6f1c04925
 - backend.11: ## 11. Document numbers (No) | sha256:5e5b57934271ae234d4fe49041c94703c53cc2eae9babe645b502a693e2e1e1d
 - backend.12: ## 12. Activate and deactivate | sha256:0ab72d83147f2121f134159c72ce89862f2e6687b34d190aedcb9f48dd277c8d
 - backend.13: ## 13. Pattern 1 — Normal entity | sha256:edfeb2f60ddcaaa73b8b31192afaba55bee59f8dde932beb111c6181e2d8daa2
 - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:a0a4980bbe7adae8b1b5f95016247802b86f664f2f8fa0b43b4f635ab5355659
-- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:936233bb5efd0ec72cbc63cb7184cf4baaf7e2363296b4f143001917536bb6d0
+- backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:617d88ab8c71663d9b5dde488440db4ea5d176c266854e28550625b166439ee7
 - backend.16: ## 16. Pattern 4 — Settings | sha256:1464b56b0af2c120542e7f5be144c24b4bf268ab01db1613cfd803bd58817a77
 - backend.17: ## 17. Pattern 5 — Reports | sha256:44e453b0f1099ea1885b08213580864c71447e9e93b0b1cf24f5fb81d7362742
-- backend.18: ## 18. Edge cases | sha256:8878697ea5e4b00ab272b14d83fd2091eb9cd129c168a238ab98b88bed22d2a0
+- backend.18: ## 18. Edge cases | sha256:13d0548154a54a05fda8d1276d7d19529ee31b2b79d7945ab1363e7f18abb6f0
 
 Approved backend references:
 

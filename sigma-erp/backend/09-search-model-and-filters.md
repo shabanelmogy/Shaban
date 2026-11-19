@@ -39,6 +39,33 @@ lookup contracts. Cover padded text and nullable live-state flags where the
 schema permits them. Verify projected grid keys and sort fields independently
 before count, paging and export.
 
+### Company-wide exclusion reads and branch filters (source-reviewed, 2026-11-18)
+
+EF Core's `IgnoreQueryFilters` in a composed subquery can suppress the global
+filters of its outer query and joined selectors. `QueryReport` retains explicit
+tenant and live-row predicates, while branch authorization relies on its global
+filters. Trace the complete published query, including count, totals and options.
+For a company-wide structural exclusion, execute its bounded tenant-owned ID read
+separately, then apply the materialized exclusion IDs to the normally filtered
+report query. An existing explicit scope-preservation owner can also retain its
+documented boundary. Check related labels and selector results as well as parents.
+Use the existing branch owner and record the extra query/data-volume cost.
+Evidence is the purchase-request preservation contract in
+`SiGmaDbContext.BranchAccess` and the collection report source reconciliation.
+Behavioral and SQL Server acceptance remain separate from source review.
+
+For report fields requiring the latest actual agreement return, reuse
+`AgreementReturnReportQueries.LatestIdsAsync` with already authorized bounded
+agreement candidates. It completes the explicit tenant/live identity probe before
+the caller reads `CollectionMovement` through normal `QueryReport` scope. Order
+by `DateAndTime`, then `Id`; do not select the latest visible/in-period return
+as though it were the latest actual event. The feature decides whether an
+unreadable latest event excludes a row or leaves its returned-date field blank.
+Daily Business retains its final-return membership rule; Sale Report retains
+invoice revenue and redacts an unavailable return date. Neither invents an end
+date from the expected return. Source/build verification remains distinct from
+SQL Server and browser acceptance. (Source 2026-11-18.)
+
 ### Shared advanced column rules (owner-approved, 2026-10-23)
 
 Reserve `Filters[grid]` for the shared JSON `{ columns: [{ field, operator,

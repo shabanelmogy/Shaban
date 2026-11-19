@@ -157,6 +157,9 @@ values return null; month is 1–12 and year is 1–9999. Never coerce a short y
 copy a month parser into a feature. Use `currentMonthRange()[0]` for a current-month
 picker default. Staff Overtime, Duty Schedule and Timesheet are source-inspected
 consumers; their payroll and sparse-write contracts remain feature-owned.
+The inverse for a month picker value is `toMonthPickerDate(yyyy-MM)` (first local
+calendar day, via `localCalendarDate`); use it for server-supplied default months
+instead of a feature `parseMonthKey`. Example: Trips With Overtime.
 
 **Shared month validation (2026-10-06, Master5 extraction gate).** Reviewed month
 controls use `monthValueValidator` from `date-utils.ts`, with `Validators.required`

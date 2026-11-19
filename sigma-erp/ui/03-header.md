@@ -31,7 +31,7 @@ and dark-theme scopes (block 4). The shared component owns white, readable,
 shadow-free title cards in print.
 
 Canonical report panels align the direct title's inline edges with the filter
-by default, as defined in [block 20](20-report-page.md#title-and-filter-card-width).
+by default, as defined in [block 20](20/02-shell-and-visual-invariants.md#title-filter-summary-and-table-width).
 The earlier scoped modifier remains compatible but is no longer required.
 Ordinary lists retain their shared 8px inline inset. Full-width tree/settings
 workspaces use `sigma-list-panel sigma-list-panel--workspace`; `src/styles.scss`
