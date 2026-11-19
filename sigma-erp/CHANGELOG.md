@@ -1,5 +1,16 @@
 # Sigma documentation changes
 
+## 2026-11-19 — Action rows in filterless reports
+
+UI20 clarifies that the shared report filter panel supplies the spacing below
+an action-only row, including when the next element is a tab strip.
+
+## 2026-11-19 — Preserve explicit all-category output when adding report tabs
+
+UI20 links the tab conversion step to UI8's existing all-sections export
+contract. Vehicle Ageing supplies the example: selecting a category changes
+the visible table while the named Excel action still includes all categories.
+
 ## 2026-11-19 — Verify routing and public reference checks
 
 The Arabic Verify command links to the live command table for its permissions.

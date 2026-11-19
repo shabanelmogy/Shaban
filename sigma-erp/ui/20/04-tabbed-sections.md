@@ -103,8 +103,10 @@ Preserve the report's mode-specific section conditions and existing radio/select
 mode controls. Switching sections changes presentation without another API call,
 server paging or changed accounting. Ordinary Excel follows the selected section's
 complete array and current columns (block 8); print still covers every applicable
-section (block 21). Empty
-sections remain inspectable without a fabricated response. Resetting filters
+section (block 21). When converting an existing grouped report to tabs, check its
+output contract first. If one export already covers every group, retain that
+scope and label the action accordingly under [UI8, tabbed report scope](../08-export-to-excel.md).
+Empty sections remain inspectable without a fabricated response. Resetting filters
 selects the primary section; a Refresh of the same filters retains selection.
 Reset the actual row viewport when selecting a section without moving keyboard
 focus off the selected tab. Flow reports reset the outer frame; filling

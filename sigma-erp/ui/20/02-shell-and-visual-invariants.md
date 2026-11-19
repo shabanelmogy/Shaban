@@ -120,7 +120,10 @@ feature-local margin overrides or compensating filter padding. Legacy feature
 layout overrides are not bulk rewritten by this shared change.
 
 Every report filter strip uses the shared global classes in `src/styles.scss`
-(reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). New or reviewed
+(reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). A filterless
+report with a top row of actions keeps the same strip around `appReportActions`.
+The strip separates the buttons from the following tabs or results; the toolbar
+spaces the buttons within the row. New or reviewed
 summary/KPI cards use `app-summary-cards`; the former compact accounting bar is
 compatibility-only for out-of-scope consumers. A report writes no filter or
 summary-card CSS of its own:
