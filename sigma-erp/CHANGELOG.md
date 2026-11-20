@@ -1,5 +1,14 @@
 # Sigma documentation changes
 
+## 2026-11-20 — Topic folders for UI4, UI16, UI17, UI18 and UI19
+
+The five largest unsplit blocks on screen reading paths moved independent topics
+verbatim into topic folders (main files now 6.6-13.1 KB). The screen catalog's
+topic routing table lists their topics and read conditions; Master8 lists every
+block with a topic folder. Maximum per-screen reading (main files plus all named
+topics) fell to 117-305 KB (from 147-450 KB before topic routing). Packets
+regenerated and checked.
+
 ## 2026-11-20 — Topic-level routing, checklist templates and Master5/BE14 topic folders
 
 Screen files route to topic files with read conditions, and the catalog's new

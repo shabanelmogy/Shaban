@@ -17,21 +17,21 @@ itself; this packet restates no values.
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
 - master.5: ## 5. Continuous quality gates | sha256:e332beddb8ee63faeea534279ce185f91f103e03d24514943b975a169f4ee748
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.8: ## 8. Packet generation and governance | sha256:23f6c66d0152b21977b8ec2695c4977ceb4855a56eb4b6c54ab68ee43ee46741
+- master.8: ## 8. Packet generation and governance | sha256:d21cd155e9041bfdac3d153a52d6941147d10be5a89e67c19ab748ba1166caa1
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
 - ui.1: ## 1. Feature folders and wiring | sha256:c4df20098e8e79cd73612e9fb0128bfcb8c75d4390c745a8bc636906e517aa1f
 - ui.2: ## 2. Service and response wrappers | sha256:f3a7b69c4ad6f7f09008f0dac6cb67b18d88fd938e2e64c568380e3b7d116bb7
 - ui.3: ## 3. Header | sha256:1e306ffae7e2e436e6eb354ef3fa7e12c8a131877efb52ff475cea07a3cb2892
-- ui.4: ## 4. Filters | sha256:c1987a0baf932b729b6e40e300fe831cc41ef7217dfbc51ddca8fac474dbc293
+- ui.4: ## 4. Filters | sha256:779873485e47d42b85c9dedee5f1280ac772308932b1d77034f70e822417f667
 - ui.5: ## 5. Columns | sha256:94c69136f60aa67980faee4318970d957142b4d2ac98f2bc2b549fc6fee8bd3f
 - ui.6: ## 6. Grid and footer | sha256:91b9c9804b9d32e952e59230d015305b63e3c8632eea823508b466f724e6837f
 - ui.7: ## 7. Action button cycle | sha256:d761c13f061cd62f22c5216391ce26364f1d2cb427973a2adcfbc9cdce4d770e
 - ui.8: ## 8. Export to Excel | sha256:72abfe42a49132de80ba3aba5e3b3d4f2768bc68d05bce1ad4531a27d75ed329
 - ui.9: ## 9. Confirm: delete | sha256:54b220b80d7129d76c43ee26792787028fb140c1c99b540189776b8ed1c58c20
 - ui.15: ## 15. View mode | sha256:d65759cb2f87af8e2c60a44951906befcb022b449bb0fc709f0f8af000ed9911
-- ui.16: ## 16. Dropdowns, lookups, enums | sha256:a3da0497ac2b3a9f7ec3f25a6f3c0693ab65ddf5e7f4fb0834ca9dcbcb0efd1a
-- ui.17: ## 17. Dates | sha256:69a4324f1a97950349ab5ba6b3b9274bfe8e0f9db2f15b5eca62b186cbb442d5
-- ui.19: ## 19. Validation messages | sha256:6e7f00d5fed6d68fe924aa9d2bf6b64bba9368624df97317680d14ad6f5870d9
+- ui.16: ## 16. Dropdowns, lookups, enums | sha256:5eb34c7e77a01349c1b686038a34f2ffa32f03f8d570fd884066df37a5a6cfd8
+- ui.17: ## 17. Dates | sha256:00b300ae17bfdba44d8725aa56ef62d7ff5aa9e7dde9da893cbaae769fbf4d73
+- ui.19: ## 19. Validation messages | sha256:1d09f983bc9bfc10b29408abd84b9ed3933d1d140a1fe20da4ce84b935ecdde6
 - ui.20: ## 20. Report page | sha256:256fc4284c259506cf1fc225bfad10dd36d5dee3ecfb11b5a5029340a8edeedb
 - ui.21: ## 21. Report print | sha256:11ea0a036c9d332fa9687d37ef1d4efe9843c0a23252c52bd60f398425fd9db6
 - ui.22: ## 22. Loading, empty, error, toast | sha256:895b36e116e8ead97b444e10d6ff9fa7c127a7e6606b18ed80952387b3789974

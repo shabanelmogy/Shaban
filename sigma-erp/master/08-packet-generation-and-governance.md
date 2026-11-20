@@ -116,8 +116,8 @@ the top; a topic file is part of the same block, with the same status and
 authority, so references such as "UI13" stay valid. `Generate-SigmaRecipes.ps1`
 fingerprints the main file followed by its topic files, so a topic change makes
 dependent packets stale. Agents read the main file's list and then only the
-needed topic file. Blocks with topic folders: Master5, UI1, UI2, UI6, UI7, UI13, UI14, UI20,
-UI22, UI24, BE14, BE15 and BE18.
+needed topic file. Blocks with topic folders: Master5, UI1, UI2, UI4, UI6, UI7, UI13, UI14,
+UI16, UI17, UI18, UI19, UI20, UI22, UI24, BE14, BE15 and BE18.
 
 **Language of agent-facing files (owner decision, 2026-11-19).** Files written
 for agents — instructions, canonical blocks, packets, review/contract/plan

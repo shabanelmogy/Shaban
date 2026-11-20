@@ -21,7 +21,7 @@ explicit mode; a deliberate exception is recorded in the review.
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
 - master.5: ## 5. Continuous quality gates | sha256:e332beddb8ee63faeea534279ce185f91f103e03d24514943b975a169f4ee748
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.8: ## 8. Packet generation and governance | sha256:23f6c66d0152b21977b8ec2695c4977ceb4855a56eb4b6c54ab68ee43ee46741
+- master.8: ## 8. Packet generation and governance | sha256:d21cd155e9041bfdac3d153a52d6941147d10be5a89e67c19ab748ba1166caa1
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
 - ui.1: ## 1. Feature folders and wiring | sha256:c4df20098e8e79cd73612e9fb0128bfcb8c75d4390c745a8bc636906e517aa1f
 - ui.2: ## 2. Service and response wrappers | sha256:f3a7b69c4ad6f7f09008f0dac6cb67b18d88fd938e2e64c568380e3b7d116bb7
@@ -33,10 +33,10 @@ explicit mode; a deliberate exception is recorded in the review.
 - ui.13: ## 13. Modal with tabs | sha256:050c316580fb934435b1ccf4d8cf6dc0e9e1619a2dc1de523eee3c8bf1072b53
 - ui.14: ## 14. Editable collection table | sha256:0df2f277edac033e92463ee78bb985bd7e1b68c27c046038170f6e7da25d900f
 - ui.15: ## 15. View mode | sha256:d65759cb2f87af8e2c60a44951906befcb022b449bb0fc709f0f8af000ed9911
-- ui.16: ## 16. Dropdowns, lookups, enums | sha256:a3da0497ac2b3a9f7ec3f25a6f3c0693ab65ddf5e7f4fb0834ca9dcbcb0efd1a
-- ui.17: ## 17. Dates | sha256:69a4324f1a97950349ab5ba6b3b9274bfe8e0f9db2f15b5eca62b186cbb442d5
-- ui.18: ## 18. Documents and upload | sha256:eb265ad8325dc885f5473bc5f1e5cf2541aacc8ded1734b2416c8d2435e44140
-- ui.19: ## 19. Validation messages | sha256:6e7f00d5fed6d68fe924aa9d2bf6b64bba9368624df97317680d14ad6f5870d9
+- ui.16: ## 16. Dropdowns, lookups, enums | sha256:5eb34c7e77a01349c1b686038a34f2ffa32f03f8d570fd884066df37a5a6cfd8
+- ui.17: ## 17. Dates | sha256:00b300ae17bfdba44d8725aa56ef62d7ff5aa9e7dde9da893cbaae769fbf4d73
+- ui.18: ## 18. Documents and upload | sha256:5ffbb4173fb5789d46a71982c6ab74c8944b1f6d477200b29a99b5bd3210379a
+- ui.19: ## 19. Validation messages | sha256:1d09f983bc9bfc10b29408abd84b9ed3933d1d140a1fe20da4ce84b935ecdde6
 - ui.22: ## 22. Loading, empty, error, toast | sha256:895b36e116e8ead97b444e10d6ff9fa7c127a7e6606b18ed80952387b3789974
 - ui.23: ## 23. Translations | sha256:0cf1190b29df3b524017967f0fba1a4611c683b902cb344278193f5e06de1377
 - ui.24: ## 24. Colors, icons, buttons | sha256:fbaf5c46def760c9466d4d4082c393dfb56a950b1cf0b489e05336d7a821c378

@@ -15,7 +15,7 @@ Read this first. Older audits are history; do not read them to execute a new tas
 - One authority order (companion section 1); one owner per rule (Master8).
 - The skill is a gate checklist and pointer table with section references and five revision rows; its full history is in the documentation archive.
 - `reviews/INDEX.md` is a short English table; feature files are found by name; large reviews have a `_CURRENT_STATE.md` (hand-written or generated index).
-- Large blocks keep their numbers with `NN/` topic folders (Master5, UI1, UI2, UI6, UI7, UI13, UI14, UI20, UI22, UI24, BE14, BE15, BE18), fingerprinted with their block; the screen catalog routes to topic files.
+- Large blocks keep their numbers with `NN/` topic folders (Master5, UI1, UI2, UI4, UI6, UI7, UI13, UI14, UI16, UI17, UI18, UI19, UI20, UI22, UI24, BE14, BE15, BE18), fingerprinted with their block; the screen catalog routes to topic files.
 - Agent-facing files are English; replies to the owner are Arabic.
 - Scoped tests and changed-file lint are allowed during authorized implementation (Master5).
 - `Check-BookReferences.ps1` enforces size budgets and table structure, reports duplicates, and warns for large blocks and reviews.
@@ -34,7 +34,6 @@ Read this first. Older audits are history; do not read them to execute a new tas
 
 ## Pending
 
-- Optional: split UI4, UI16, UI17, UI18 and UI19, the largest remaining unsplit blocks on screen reading paths.
 
 - Try a real tier S and tier M task with the new instructions.
 - Continue replacing generated indexes when their feature is next touched. The currency example has been converted.

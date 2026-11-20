@@ -1,5 +1,12 @@
 ## 17. Dates
 
+**Topic files of this block** (read only the one the task needs; they are part of this block):
+
+- [Month transport and shared month validation](17/01-month-pickers.md)
+- [Date-only editing and the structured single-date recipe](17/02-single-date-entry.md)
+- [Range picker, dash delimiter and caret preservation](17/03-date-ranges.md)
+- [Dialogs open with the calendar overlay closed](17/04-dialog-calendars.md)
+
 **Calendar-day difference (2026-11-02).** Reuse
 `calendarDaysBetween(from, to)` from `shared/utils/date-utils.ts` when a frozen
 feature counts whole local calendar dates. Inputs are validated Date values;
@@ -148,151 +155,12 @@ typed local date-time is `DD/MM/YYYY HH:mm[:ss]`, never browser-dependent month-
 The structured picker mask and business-specific bounds retain their own roles. Workshop
 is the source-inspected consumer; build/input acceptance remains owner-pending.
 
-**Month transport.** A reviewed month picker uses `Date | string | null`,
-`view="month"`, `dateFormat="mm/yy"`, the shared structured mask and
-`placeholder="mm/yyyy"`. Normalize with `parseMonthValue` from
-`shared/utils/date-utils.ts`: a valid local picker Date, complete `MM/YYYY`, or
-complete API `yyyy-MM` becomes `yyyy-MM`. Empty, partial, malformed and out-of-range
-values return null; month is 1–12 and year is 1–9999. Never coerce a short year or
-copy a month parser into a feature. Use `currentMonthRange()[0]` for a current-month
-picker default. Staff Overtime, Duty Schedule and Timesheet are source-inspected
-consumers; their payroll and sparse-write contracts remain feature-owned.
-The inverse for a month picker value is `toMonthPickerDate(yyyy-MM)` (first local
-calendar day, via `localCalendarDate`); use it for server-supplied default months
-instead of a feature `parseMonthKey`. Example: Trips With Overtime.
-
-**Shared month validation (2026-10-06, Master5 extraction gate).** Reviewed month
-controls use `monthValueValidator` from `date-utils.ts`, with `Validators.required`
-only when mandatory. It delegates to `parseMonthValue`, accepts an empty optional
-control and returns the existing `date` validation error for invalid or partial
-months and non-date/non-string values. Depreciation adopts it. Accounts report
-family and Staff Timesheet retain two source-inspected local validator copies
-until their own review (UI30/39); this addition does not authorize a bulk change.
-The shared picker mask, current-month default, business bounds and transport
-remain separate owners. Source-only; owner input/runtime acceptance pending.
-
 **Explicit picker-only request.** When the owner requests selection without text
 entry, keep `appDatePicker` and override `[readonlyInput]="true"` and
 `[keepInvalid]="false"` on those calendars. Do not disable the control or filter text
 keystrokes. The shared directive opens picker-only inputs with Enter, Space or
 Arrow Down; panel keyboard navigation, clear action and date validators remain
 available. Use this only while the owner's explicit picker-only decision applies.
-
-**Date-only editing (owner standing decision, 2026-10-01).** Every date field
-allows manual date editing or picker selection, and rejects arbitrary text.
-`appDatePicker` enables `dateNumericInput` by default; no per-field opt-in is
-required. Its shared insertion/paste/key guards accept digits and the configured
-numeric date separators, with the space/hyphen separator for ranges and
-space/colon for time. A 12-hour time also allows its AM/PM marker characters.
-Editing/navigation keys and shortcuts remain available. Keep `keepInvalid=true`
-so partial numeric dates survive editing; the calendar parser and form validators
-still enforce real dates, range ordering and business limits. Character filtering
-does not replace date validation. The shared directive also captures native
-`input` before PrimeNG's handler, strips disallowed characters and preserves the
-caret if insertion bypassed the preventive guards. PrimeNG's keydown gate is
-enabled for that input event so paste/drop/mobile editing reaches its normal
-parser once. Scope this to the calendar's actual text input, skip disabled and
-picker-only fields, and remove the listener on destroy. Do not repair only the
-visible text after PrimeNG has already stored it in the form.
-Use numeric date formats; never add feature-local
-keyboard guards or disable filtering to allow arbitrary text. The existing
-Companies/Driver and Individual date fields consume the shared directive;
-legacy calendars without it adopt it during their screen review (UI backlog 39).
-
-**Required structured single-date recipe (owner decision, 2026-10-02).** Character
-filtering alone does not constrain a date's shape. Every new or reviewed date
-field uses `appDatePicker`; bind `[dateInputMask]="true"` for single
-`dd/mm/yy` and `mm/yy` calendars without time. This is the required recipe for
-future date fields; the directive retains opt-in behavior for existing consumers
-until their screen review. Show `placeholder="dd/mm/yyyy"`
-or `placeholder="mm/yyyy"` to match the configured format. Do not add a local
-mask, native date input or per-feature input handlers.
-The shared guard limits day/month to two digits and year to four, requires `/`
-between parts, rejects complete day/month values outside 1–31/1–12, and restores
-the prior value for invalid insertion that cannot be canceled. Separators are
-typed by the user; the directive does not insert them automatically. Partial
-edits remain strings and invalid until a complete real `DD/MM/YYYY` or `MM/YYYY`
-value is entered. Angular validation prevents PrimeNG's short-year parsing from
-turning a partial year into a valid saved date. Clear and picker selection keep
-their normal behavior; month-view expiry retains its existing first-day storage.
-Individual Birth/Document/Card dates and Company Card/Document/Driver dates use
-this same shared implementation. Driver Documents reuses Company Documents.
-Date order and other business validators remain on the form. Time/range fields
-retain the shared character guard and their existing real-date/order validation;
-the single-date mask does not define a time or range grammar. Legacy fields
-without `appDatePicker` adopt it during their screen review, without a bulk rewrite.
-
-**A date range is one range picker on two months.** Never render two separate
-From/To inputs. `selectionMode="range"` pairs with `[numberOfMonths]="2"`, so a
-range that straddles a month boundary needs no paging. A list or report range
-filter defaults to the **current month**, from the 1st to its last day:
-
-```html
-<p-datepicker
-  inputId="featureDateRange"
-  formControlName="dateRange"
-  selectionMode="range"
-  [numberOfMonths]="2"
-  [readonlyInput]="false"
-  [keepInvalid]="true"
-  [showButtonBar]="true"
-  dateFormat="dd/mm/yy"
-  appendTo="body"
-  panelStyleClass="sigma-datepicker-panel"
-  styleClass="w-100"
-></p-datepicker>
-```
-
-```ts
-readonly filterForm = this.fb.group({
-  dateRange: this.fb.control<Date[] | string | null>(currentMonthRange()),
-});
-```
-
-`currentMonthRange()` is shared (`date-utils.ts`); the rule is the owner's (2026-09-24,
-"الشهر الحالي") and applies to lists **and** reports (block 20).
-
-**Fixed dash-range delimiter (owner request, 2026-10-03).** For enabled,
-typeable numeric `appDatePicker` range fields with the default dash separator,
-keep the exact ` - ` delimiter (one space on each side). The shared directive
-protects an existing marker from partial deletion/replacement; Backspace/Delete
-at it move to the adjacent date boundary. Select-all replacement/deletion and
-clear remain available. Normalize missing/excess spaces before PrimeNG's native
-input parser, preserving selection offsets; slash-based date formats make an
-unspaced dash unambiguous. If the date format itself uses a dash, protect its
-existing spaced delimiter without guessing compact pasted boundaries. A
-pre-edit snapshot restores the range and selection when a noncancelable partial
-edit destroys its marker; history/select-all/empty edits remain allowed.
-Single/multiple/custom-separator/disabled/picker-only fields keep their existing
-behavior. Do not add local masks, synthetic input, another parser or an extra
-form write: the existing capture-input guard corrects text before PrimeNG parses
-once. Partial dates, validators/bounds/order, picker/clear and API transport
-remain with their existing owners. Source conformance is not runtime acceptance.
-
-**Range caret preservation (owner defect report, 2026-10-14).** Manual edits to
-either range endpoint, including its year, retain their caret/selection.
-Owner rejected the first render-based workaround and clarified selecting the
-From year before typing. Shared protectRangeMarker previously blocked a year
-selection overlapping the trailing delimiter space and moved insertText to
-markerEnd (To start). Narrow a selection that includes one endpoint and part
-or all of the delimiter to that endpoint before native replacement/deletion.
-Keep the marker intact. Marker-only/cross-endpoint insertions remain blocked
-with selection retained, while collapsed Backspace/Delete keep their deliberate
-boundary skip. Select-all, history and noncancelable fallback keep their existing
-handling. Remove the unsuccessful afterNextRender/display-binding workaround;
-do not move focus, dispatch synthetic input or duplicate model/parser updates.
-Single-date/month masks, partial text, range validators, bounds, picker and
-clear remain with their existing owners. Source trace proves the prevented
-beforeinput jump; exact browser selection/runtime acceptance is owner-pending.
-Verify From/To word selection with/without adjacent spaces, paste/deletion,
-navigation, RTL/theme/mobile and calendar/clear.
-
-`numberOfMonths` is a **panel** property: it widens the overlay, not the field.
-The range field still occupies exactly one column of the block 4 grid — do not
-compensate for the second month by giving the field a larger `grid-column` span,
-which would break the field distribution rule and narrow every other control.
-The panel is appended to body, so the second month is never clipped by the
-strip.
 
 **A calendar carries no icon (owner decision, 2026-09-28).** Never set
 `[showIcon]`, on filters or in editors. The global sheet hides
@@ -331,45 +199,6 @@ Use the shared `toApiDate(value)` — it builds the date from local parts and ke
 
 Validate ordering in the UI as well as the backend, e.g.
 `validationMessages.expiryAfterIssueDate` for issue/expiry pairs.
-
-**A dialog opens with its calendar overlay closed.** Bind the shell's
-`[focusOnShow]="false"` on `app-editor-dialog`, and on each calendar use
-`[showOnFocus]="false"` with `(click)="dateCal.showOverlay()"` (editor snippet
-above). The panel then opens only on an intentional click on the input, never
-while the dialog is being displayed or when focus lands on the field. Keyboard
-users type the date directly, because every calendar is typeable. Do not call
-the calendar input's `focus()` from `ngOnInit`, `onEditorShown`, or another
-lifecycle hook. If initial focus is required in View mode, focus the shared
-dialog close control instead of a calendar.
-
-When a small dialog's first required action is choosing a date, it may open the
-calendar overlay after the shared editor shell emits `shown`. Keep this opt-in
-and local to that workflow; do not auto-open every calendar in the app:
-
-```ts
-@ViewChild('effectiveDateCalendar')
-private effectiveDateCalendar?: DatePicker;
-
-openDatePicker(): void {
-  queueMicrotask(() => {
-    const calendar = this.effectiveDateCalendar;
-    if (!calendar) return;
-    calendar.inputfieldViewChild?.nativeElement.focus();
-    calendar.showOverlay();
-  });
-}
-```
-
-```html
-<app-editor-dialog (shown)="openDatePicker()">
-  <p-datepicker
-    #effectiveDateCalendar
-    [showOnFocus]="false"
-    appendTo="body"
-    ...
-  ></p-datepicker>
-</app-editor-dialog>
-```
 
 **Check:** single date fields use shared structured DD/MM/YYYY or MM/YYYY
 editing and matching placeholders; incomplete/invalid input blocks Save ·

@@ -82,6 +82,9 @@ files name the same topics for their type).
 | 2 | [`02/02`](../02/02-reference-lookup-cache.md) | The screen consumes reference lookups |
 | 2 | [`02/03`](../02/03-settings-and-policy-caches.md) | Settings reads, currency policy or dashboard snapshot caches |
 | 2 | [`02/04`](../02/04-import-and-realtime.md) | Batch import transport or real-time read invalidation |
+| 4 | [`04/01`](../04/01-layout-and-spacing.md) | List filter panels: narrow-screen collapse, action/field spacing, stable editing layout |
+| 4 | [`04/02`](../04/02-inline-strips.md) | Compact, validated or intermediate inline filter strips |
+| 4 | [`04/03`](../04/03-paint-and-check-fields.md) | Filter card paint, check or choice filter fields |
 | 6 | [`06/01`](../06/01-columns-filters-money.md) | Money, percentage, frozen-first or advanced-filter columns; grid scroll owner |
 | 6 | [`06/02`](../06/02-row-presentation.md) | Post-save text rows or row centering |
 | 6 | [`06/03`](../06/03-report-rows-and-trees.md) | Report row width, report hierarchy, tree bulk controls or statement rows |
@@ -102,6 +105,17 @@ files name the same topics for their type).
 | 14 | [`14/01`](../14/01-bounded-scroll-and-print.md) | Routed editors with bounded row scrolling, or printing a collection |
 | 14 | [`14/02`](../14/02-public-inputs.md), [`14/03`](../14/03-row-mechanics.md) | Any editable collection |
 | 14 | [`14/04`](../14/04-financial-collection-editor.md) | Financial collection editor (screen 05) |
+| 16 | [`16/01`](../16/01-working-branch-defaults.md) | Branch-defaulted selects or working-branch defaults |
+| 16 | [`16/02`](../16/02-server-lookups-and-saved-options.md) | Server lookups, saved selections or translated options |
+| 16 | [`16/03`](../16/03-enums-and-typed-choices.md) | Enum dropdowns or type-driven choices |
+| 17 | [`17/01`](../17/01-month-pickers.md) | Month pickers |
+| 17 | [`17/02`](../17/02-single-date-entry.md) | Single-date entry fields |
+| 17 | [`17/03`](../17/03-date-ranges.md) | Date range pickers |
+| 17 | [`17/04`](../17/04-dialog-calendars.md) | Calendars inside dialogs |
+| 18 | [`18/01`](../18/01-scoped-storage-and-field-lifetime.md) | Document storage folders and field lifetime |
+| 18 | [`18/02`](../18/02-attachment-permissions.md) | Attachment upload, replacement or clearing permissions |
+| 18 | [`18/03`](../18/03-partner-rows-and-child-drafts.md) | Partner rows or isolated child drafts with documents |
+| 19 | [`19/01`](../19/01-money-and-tax.md) | Money, currency or tax fields in forms |
 | 20 | [`20/01`](../20/01-accounts-family.md) | Accounts family reports |
 | 20 | [`20/02`](../20/02-shell-and-visual-invariants.md) | Any report (shell, filter/totals invariants, title width) |
 | 20 | [`20/03`](../20/03-summary-cards.md) | Report summary/KPI cards |
