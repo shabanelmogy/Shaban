@@ -56,7 +56,7 @@ DetailBaseVm   // legacy: as ListBaseVm plus IsDeleted; unchanged for compatibil
 SelectListBaseVm // Value, Text, LocalizedText — dropdowns
 ```
 
-**Lean detail contracts (2026-10-03).** Declare only identity, displayed/action
+**Lean detail contracts.** Declare only identity, displayed/action
 state and editor fields. Do not inherit unused tenant/audit/flags merely to satisfy
 a generic constraint. `IService`, `Service` and `SiGmaControllerBase` accept
 `TDetailVm : class`: their detail paths map/return that type without using base
@@ -125,7 +125,7 @@ use an explicit localized `ErrorMessage` key saying on-or-after. Null remains go
 requiredness. Existing strict consumers, including document expiry, keep the default.
 The Angular group comparison and picker minimum must match that inclusive or strict rule.
 
-**Customer import boundary (2026-10-01).** Reuse the ordinary write VM's validation metadata
+**Customer import boundary.** Reuse the ordinary write VM's validation metadata
 for matching CSV fields, including billing minima and persisted length limits. Check enum
 text with both TryParse and IsDefined before mapping. A required import date must distinguish
 an omitted/default value from a real calendar day; future-date validation alone is insufficient.
@@ -153,7 +153,7 @@ the service runs. Required, length and format rules live on the VM (`[Required]`
 `[MaxLength]`, `[EmailAddress]`), and the service does not repeat them by hand. The service
 keeps the business rules only: duplicates, references, ownership, dates and state.
 
-**Request text is trimmed on read (2026-10-01).** `TrimIncomingStrings` (`SiGma.ServerAPI/Extensions`,
+**Request text is trimmed on read.** `TrimIncomingStrings` (`SiGma.ServerAPI/Extensions`,
 registered in `Program`) trims every string of a request body as it is deserialized:
 
 - **Empty text:** it becomes null on a nullable property (`string?`) and stays "" on a non-nullable one.

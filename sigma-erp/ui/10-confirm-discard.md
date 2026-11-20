@@ -100,7 +100,7 @@ scoped Escape handler call `requestClose()`; its mask close is disabled. If a
 screen must support mask-to-close, the mask intent must be intercepted before
 visibility changes and routed through the same method.
 
-**Presets (2026-10-01).** `confirmation.confirmDiscard('<feature>')` uses the three feature keys. The list
+**Presets.** `confirmation.confirmDiscard('<feature>')` uses the three feature keys. The list
 keeps its state with `readListRoute(route)` / `writeListRoute(router, route, params)`
 (`shared/utils/list-route-state.ts`): `number`, `text`, `flag` and `paging()` read it back.
 
@@ -138,7 +138,7 @@ either disabled or goes through that method before the dialog hides · pending
 confirmation freezes controls · deferred guard rechecks identity/busy state ·
 Cancel restores the same values and dirty state.
 
-**Accepted decision ordering (2026-10-10).** RxJS delivers the confirmation's
+**Accepted decision ordering.** RxJS delivers the confirmation's
 accepted value before its `finalize` releases `closeConfirmationPending`.
 The accepted X/Cancel/Escape subscriber therefore checks the same visible
 session and independent save/load/parsing gates, without treating that

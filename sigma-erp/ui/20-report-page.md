@@ -26,7 +26,7 @@ choose server paging or an explicitly complete collection for local presentation
 paging. Do not introduce server paging into an already complete report merely to
 reuse a grid, or infer completeness from Result<T> rather than Results<T>.
 
-**Owner-requested incremental transport (2026-10-31).** An explicit request to
+**Owner-requested incremental transport.** An explicit request to
 load a report while scrolling may introduce an additive paged read alongside its
 complete read after freezing the filter, slot/order/count/summary/output contract.
 It remains a read-only report. Limousine Utilization is the scoped adoption:

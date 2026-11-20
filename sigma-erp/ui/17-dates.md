@@ -7,7 +7,7 @@
 - [Range picker, dash delimiter and caret preservation](17/03-date-ranges.md)
 - [Dialogs open with the calendar overlay closed](17/04-dialog-calendars.md)
 
-**Calendar-day difference (2026-11-02).** Reuse
+**Calendar-day difference.** Reuse
 `calendarDaysBetween(from, to)` from `shared/utils/date-utils.ts` when a frozen
 feature counts whole local calendar dates. Inputs are validated Date values;
 the helper constructs UTC calendar stamps with setUTCFullYear, avoiding both
@@ -15,7 +15,7 @@ daylight-saving elapsed-hour shifts and Date.UTC's remapping of years0–99.
 Keep the feature's own minimum-day/time-order/financial policy; the helper does
 not authorize a different billing duration, timezone conversion or rounding.
 
-**PrimeNG21 compatibility (2026-10-22).** Import `DatePicker`/`DatePickerModule`
+**PrimeNG21 compatibility.** Import `DatePicker`/`DatePickerModule`
 from `primeng/datepicker` and use `<p-datepicker appDatePicker appendTo="body">`.
 The component's `appendTo` is a signal input: bind it in the consumer template;
 the shared directive must not overwrite the signal or write the removed
@@ -108,7 +108,7 @@ When the calendar is inside a canonical filter boundary from block 4, its
 wrapper and input consume `--sigma-filter-control-height`. Do not add a
 feature-local filter-calendar height.
 
-**Shared date picker (2026-10-01).** Put `appDatePicker` (`shared/directives/date-picker.directive.ts`) on
+**Shared date picker.** Put `appDatePicker` (`shared/directives/date-picker.directive.ts`) on
 every `p-datepicker`: it applies `dd/mm/yy`, typeable with `keepInvalid`, button bar, no icon, the
 `sigma-datepicker-panel` class, `appendTo="body"`, no open on focus, and open on click. The element
 then carries only what differs — `inputId`, the control, `[minDate]`/`[maxDate]`, `view="month"
@@ -132,7 +132,7 @@ Keep `dateFormat="dd/mm/yy"` everywhere, so what the user types is what the box
 shows. Minimum and maximum dates, plus start/end ordering, are still validated
 in the form and on the backend.
 
-**Picker bounds reflect existing date-order rules (2026-10-23).** When a
+**Picker bounds reflect existing date-order rules.** When a
 document already requires expiry strictly after issue, bind expiry minDate to
 issue plus one local calendar day and issue maxDate to expiry minus one day.
 Inclusive picker bounds therefore exclude equality as well as reversed dates.

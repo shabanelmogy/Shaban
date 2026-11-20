@@ -120,7 +120,7 @@ this.service.getList(query)
   .subscribe({ … });
 ```
 
-**Independent editor bootstrap reads (2026-10-17).** When opening an editor
+**Independent editor bootstrap reads.** When opening an editor
 requires both a navigation-identity snapshot and fresh detail, independent
 HTTP requests may join through forkJoin rather than waiting sequentially.
 Validate both envelopes and record/source identity before opening. Carry the

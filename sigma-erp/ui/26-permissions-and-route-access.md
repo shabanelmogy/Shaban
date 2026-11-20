@@ -193,7 +193,7 @@ live ERP security-stamp verification remain separate pending H1 work.
   on its existing guarded transition; login opens the internal URL with query
   and fragment preserved. This remains authentication, not permission enforcement.
 
-**Unavailable account actions (2026-11-05).** Until a real registration or
+**Unavailable account actions.** Until a real registration or
 password-reset API contract exists, the existing auth routes show a translated
 unavailable state through StateMessage and a RouterLink back to login. Do not
 collect credentials, simulate success or invent an endpoint for those routes.

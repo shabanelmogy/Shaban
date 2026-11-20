@@ -96,7 +96,7 @@ writes no `value` function or template for common cells:
 `value` still wins over `type`, and `cellTemplate` remains for anything richer. Reference:
 Job list (`type: 'status' | 'money' | 'dateTime'`, no templates, no formatting helpers).
 
-**Exact money columns (2026-11-04).** After the endpoint and every direct
+**Exact money columns.** After the endpoint and every direct
 consumer adopt decimal strings, declare `type:'money', exactMoney:true`.
 The existing DataTable owns text filter entry, numeric match modes and private
 BigInt comparison units (UI6). Keep the source text for display/actions/export;

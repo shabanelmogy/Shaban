@@ -59,7 +59,7 @@ Journal voucher rules: debit equals credit; each line has a positive debit or a
 positive credit, never both; account, partner, branch, fiscal year, date,
 description and document link follow the existing resolver.
 
-**Existing-account-only partner resolution (2026-10-29).** When a frozen financial
+**Existing-account-only partner resolution.** When a frozen financial
 contract forbids account creation, reuse `ILinkAccountLookup.GetPartnerAccountAsync`
 through `JournalVoucherResolver`, with the optional `allowCreate: false` argument.
 The default remains `true` for existing callers. The false path reads current

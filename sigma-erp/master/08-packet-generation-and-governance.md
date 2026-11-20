@@ -94,7 +94,7 @@ owning block and adds at most a routing keyword; the change is recorded in
 short table of recent work; feature artifacts are found by name
 (`reviews/**/<FEATURE>_*.md`) and its earlier narrative is `reviews/INDEX_HISTORY.md`.
 
-**Section-level reading and current-state files (2026-11-19).** Agents read a
+**Section-level reading and current-state files.** Agents read a
 large block, packet or review by section: list its headings, then read only the
 needed line ranges. The skill routes to named sections (`UI20 §Filter bar`)
 where a block holds several topics. When a feature whose review exceeds 40 KB is
@@ -104,7 +104,7 @@ headings); every later round rewrites that file in the same task. The full revie
 existing links and anchors keep working. Without a summary, list the review's
 headings and read only the needed section.
 
-**Block topic folders (2026-11-19).** A block that covers several independent
+**Block topic folders.** A block that covers several independent
 topics keeps its number and main file (`ui/13-modal-with-tabs.md`) and moves each
 topic into `<book>/<NN>/<nn>-<topic>.md`. The main file lists its topic files near
 the top; a topic file is part of the same block, with the same status and
@@ -122,11 +122,11 @@ in-app user guide remains bilingual application content. Existing Arabic
 artifacts are not translated retroactively; a feature's next round writes its
 current-state file in English.
 
-**Rule text without history (2026-11-19).** A canonical block states the current
+**Rule text without history.** A canonical block states the current
 rule. When a correction or owner clarification changes a rule, rewrite the rule
 in place and record the date, source and superseded wording in `CHANGELOG.md`;
-do not append a dated note beside the old text. Heading dates are kept only
-where links depend on the anchor.
+do not append a dated note beside the old text. Bold rule labels carry no date;
+a heading date is kept only where links depend on the anchor.
 
 `Check-BookReferences.ps1` enforces these size budgets and fails when one is
 exceeded: `AGENTS.md` 8 KB, the companion core 14 KB, each companion section

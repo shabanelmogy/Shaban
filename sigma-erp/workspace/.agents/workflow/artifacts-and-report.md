@@ -42,7 +42,7 @@ File names below are relative to that folder.
 | Maintenance / Evolution Plan | `<FEATURE_NAME>_MAINTENANCE_EVOLUTION_PLAN.md` |
 | Impact Analysis | `<FEATURE_NAME>_IMPACT_ANALYSIS.md` |
 | Final reconciliation | `<FEATURE_NAME>_FINAL_RECONCILIATION.md` |
-| Current state (read first) | `<FEATURE_NAME>_CURRENT_STATE.md` — at most 4 KB; required once a review exceeds 40 KB; rewrite it (do not append) in the same task as every later round |
+| Current state (read first) | `<FEATURE_NAME>_CURRENT_STATE.md` — at most 4 KB; when to write and rewrite it: Master8 §Section-level reading and current-state files |
 | Documentation-system audit | `SIGMA_DOCUMENTATION_SYSTEM_AUDIT.md` |
 | Multi-part feature | `<FeatureFolder>/<FILE>.md` |
 

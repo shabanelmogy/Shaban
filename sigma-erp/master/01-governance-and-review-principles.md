@@ -71,7 +71,7 @@ inventing one or treating a hidden control as secured.
 
 ### Business correctness first
 
-> Owner rule (2026-10-01): "انا عايز بشكل عام تقديم الاصح فى البيزنس عن السهل او اللى موجود".
+> Owner rule: "In general, prefer what is correct for the business over what is easy or already exists." (Arabic original: "انا عايز بشكل عام تقديم الاصح فى البيزنس عن السهل او اللى موجود")
 
 When a decision has a business- or accounting-correct answer and an easier one, the review
 recommends and the implementation applies the **correct** one. The current code, the number

@@ -88,7 +88,7 @@ typed custom list projections and the 2026-10-23 owner-approved unified contract
 `reviews/SHARED_TABLE_REMOTE_FILTER_CONTRACT_FREEZE.md`. Runtime/SQL/visual acceptance
 remains owner verification; the source-only review must name compatibility exclusions.
 
-**Exact monetary comparisons (2026-11-04).** An opted-in `exactMoney` column
+**Exact monetary comparisons.** An opted-in `exactMoney` column
 retains numeric equals/notEquals/lt/lte/gt/gte menus but uses a text input. For
 complete flat local data, its private view cell is a scale6 BigInt parsed by
 `currencyAmountUnits`; the table-scoped FilterService compares exact units.
@@ -108,7 +108,7 @@ Other fields retain their current empty-text behavior. Shared filters do not
 establish SQL/query/runtime conformance; explicitly reconcile both sides and
 complete report/export scope before marking adoption complete.
 
-**PrimeNG21 scroll owner (2026-10-22).** The actual row viewport is
+**PrimeNG21 scroll owner.** The actual row viewport is
 `.p-datatable-table-container`, a direct child of `.p-datatable`; the old
 `.p-datatable-wrapper` no longer exists. Shared DataTable owns this hook in
 fixed-height, scrollable, fill and flow modes. Preserve the existing height/flex,

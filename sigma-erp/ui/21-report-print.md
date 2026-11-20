@@ -73,7 +73,7 @@ changes during an opened browser print dialog, defer its fresh read until
 `afterPrint` when the same context can still read. Cover both event orders
 with the existing print session (UI28).
 
-**Dialog reports (2026-10-03).** A read-only EditorDialog preview can opt into shared print
+**Dialog reports.** A read-only EditorDialog preview can opt into shared print
 isolation with `dialogClass="sigma-report-print-dialog"` (alongside its feature class) and
 `printSession.print({ bodyClasses: ['sigma-dialog-print'] })`. The shared stylesheet hides the
 application root, other portal dialog masks and the report header/footer, releases only the

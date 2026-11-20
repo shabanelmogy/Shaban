@@ -19,7 +19,7 @@ contract. UI29 owns reproducible cold/warm before/after timing and owner checks;
 Master5 owns handoff evidence. Full reports/exports need their own bounded work
 and complete-output contract, rather than comparing their duration to one page.
 
-**Screen detail and allocation reuse (2026-10-26).** When a screen consumes a
+**Screen detail and allocation reuse.** When a screen consumes a
 small owned detail contract, replace a confirmed recursive graph read in that
 screen's service with an explicit no-tracking DTO projection and finite owned
 collection reads. Keep every consumed identity, address flag and historical
@@ -28,7 +28,7 @@ generic repository for unrelated consumers. For repeated in-memory matching,
 reuse keyed lookups while retaining original ordering, explicit-source authority
 and first-match behavior where uniqueness is not guaranteed.
 
-**Composed filtered Includes (2026-10-27).** When extending a query helper that
+**Composed filtered Includes.** When extending a query helper that
 already filters a collection Include, keep any repeated filter expression
 identical across its ThenInclude branches, including lambda parameter names.
 EF Core 10's ExpressionEqualityComparer compares those names; semantically equal
@@ -48,7 +48,7 @@ reservation and capacity rechecks, existing unconstrained callers and failure
 contracts. Evidence: Staff F5/F6/F8 frozen corrective handoff and source diff;
 finite source query boundaries are not measured SQL/latency results.
 
-**Child numbering settings reads (2026-10-26).** `CodeCreateService` resolves the
+**Child numbering settings reads.** `CodeCreateService` resolves the
 existing entity-to-document-type mapping before reading document-number settings.
 An unsupported child keeps its existing uppercase-name/ticks fallback without an
 unused settings query. The same single resolver owns the counter mapping, avoiding

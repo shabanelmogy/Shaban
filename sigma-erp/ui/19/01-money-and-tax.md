@@ -4,7 +4,7 @@
 
 > Money, tax and derived-value rules for every form. Derived row cells: block 14 *Derived cells*.
 
-**Exact monetary text (2026-11-04).** When a frozen currency contract transports
+**Exact monetary text.** When a frozen currency contract transports
 money as decimal strings, retain the string through form, payload, display and
 export. Use `financialTextValidator` / `isCurrencyAmountText` and
 `isExchangeRateText` from the existing `financial-number.util` owner. Money has
@@ -39,7 +39,7 @@ screens retain their calculation preview role and do not submit derived values.
 Percentage/quantity conversion to text is domain-bounded; never reconstruct money
 from Number. These helpers apply only to fully adopted exact document contracts.
 
-**Document currency selection owner (2026-11-04).** Extend the existing
+**Document currency selection owner.** Extend the existing
 `DocumentCurrencyComponent` for connected document editors instead of adding
 another currency field. It remains read-only until the document's DTO, service,
 snapshot persistence and consumers adopt the frozen selection contract. Its
@@ -65,7 +65,7 @@ the editor. This is an explicit source contract, not a fallback that relabels
 foreign amounts as base. Booking/Rental/Lease deposit dialogs adopt it
 (2026-11-05); runtime acceptance remains pending.
 
-**Read totals and comparison adoption (2026-11-04).** The optional `aggregate`
+**Read totals and comparison adoption.** The optional `aggregate`
 argument of `sumCurrencyAmountTexts` permits a read total beyond a single
 amount's16-whole-digit limit; every input is still strictly bounded/validated.
 Display that computed total with `formatExactMoney(total,places,true)` and
@@ -74,7 +74,7 @@ Do not use aggregate display as a write validator. UI5/6 own `exactMoney` grid
 adoption and `moneyAggregate` read columns. Monetary comparison units and raw
 filter strings remain separate from formatted grouping and currency labels.
 
-**Shared approval amount (2026-11-04).** An adopted exact-money producer passes
+**Shared approval amount.** An adopted exact-money producer passes
 `DocumentApprovalContext.amount` as decimal text together with
 `moneyDecimalPlaces` and `currencyCode`. The shared approval reader uses these
 through MoneyPipe; do not convert the amount to Number or force the base
@@ -123,7 +123,7 @@ the backend Workshop-linked MiscellaneousInvoice uses the same
 allocation and persists matching rows/header totals. Source conformance is not runtime
 acceptance.
 
-**Positive allocation remainder (2026-10-15).** The shared Angular
+**Positive allocation remainder.** The shared Angular
 `allocateDocumentTax` also mirrors `VatPolicy`'s exceptional all-positive branch:
 when rounded non-remainder shares exceed a nonnegative rate total, floor those
 shares to currency precision and give the largest source the exact remainder.

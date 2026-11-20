@@ -44,7 +44,7 @@ after `isSuccess`, rather than copying it into editors or a global interceptor.
 Do not issue an extra policy request or change backend precision/rounding rules
 as part of invalidation. Failed writes retain the cached policy and editor draft.
 
-**Feedback ownership for explicit policy reads (2026-10-25).**
+**Feedback ownership for explicit policy reads.**
 `FinancialNumberPolicyService.load(force = false, options?: { skipErrorInterceptor?: boolean })`
 keeps the same `Currency/GetFinancialNumberPolicy` endpoint and typed Result.
 Omitting options retains the existing global error owner; a caller with inline
@@ -58,7 +58,7 @@ policy caller or a background watch that changes an open document's precision.
 The policy retains its own direct service/cache contract, `invalidate()` and
 server-owned precision/rounding; it is not opted into ReferenceLookupCacheService.
 Failed reads preserve draft values and remain actionable through Retry.
-**Policy memo recovery (2026-11-05):** coalesce pending requests and retain only
+**Policy memo recovery:** coalesce pending requests and retain only
 successful nonnull policy objects. Failed Result/malformed bodies, HTTP failures
 and navigation's empty completion must release the memo for the next load; keep
 the failure envelope/error for current subscribers. Compare request identity so

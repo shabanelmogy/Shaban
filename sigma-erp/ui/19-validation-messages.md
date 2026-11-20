@@ -20,7 +20,7 @@ retain their necessary detail.
 - `fileSize`, `fileType`, `maxItems`, `minItems`, `invalidSelection`;
 - `custom` is the fallback.
 
-**Numeric scale (2026-10-30).** `decimalScaleValidator(() => decimalPlaces)` in
+**Numeric scale.** `decimalScaleValidator(() => decimalPlaces)` in
 `shared/utils/scalar-validators` accepts optional empty values, requires a finite
 number and rejects excess decimal scale, including exponent notation. It never
 rounds a control. `appQuantityInput`'s classified profiles reuse it (block14),

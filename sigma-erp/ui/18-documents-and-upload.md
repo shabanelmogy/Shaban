@@ -12,7 +12,7 @@
 
 ### One documents presentation
 
-**`app-file-field` (2026-10-01).** A single file control is
+**`app-file-field`.** A single file control is
 `<app-file-field [inputId] folder="…" [accept] [control]="form.controls.path" />`
 (`shared/components/file-field`): it draws the box below, uploads through the editor's
 `DocumentUploadTracker`, checks `accept` and the shared size/type rules, marks a replaced or
@@ -31,7 +31,7 @@ to `app-field-error`. A nonempty rejection message takes precedence; otherwise t
 control errors (such as the document/profile path length) appear through the same shared
 presentation. Do not add a second feature-local file error below the shared field.
 
-**Atomic multipart actions (2026-10-03).** When an existing endpoint owns file storage,
+**Atomic multipart actions.** When an existing endpoint owns file storage,
 attachment persistence and rollback cleanup together, use the same field with
 `[selectionOnly]="true"` and a typed `FormControl<File | null>`. It validates through
 `FileUploadService.validationError`, marks the local selection dirty/touched and never uploads,
@@ -41,7 +41,7 @@ mode retains the required editor tracker and its cleanup lifecycle. Do not route
 attachment through Media first or duplicate feature file validation/markup. Reviewed Agreement
 documents and Movement View consume this opt-in mode.
 
-**Shared atomic storage failure cleanup (2026-10-14).** `FileStore.Upload` accepts
+**Shared atomic storage failure cleanup.** `FileStore.Upload` accepts
 an optional cancellation token and removes only the file created by that attempt
 when copying fails or is cancelled, after disposing its stream. A failed
 `CreateNew` must never remove an existing file. Cleanup failure is logged internally
@@ -53,7 +53,7 @@ This shared storage repair serves Media and atomic attachment consumers; source
 conformance does not prove runtime cancellation, disk failure or process-crash
 recovery. No background orphan sweeper is implied.
 
-**Saved-file links (2026-10-03).** Use `app-file-link [path]="savedPath"` for a read-only
+**Saved-file links.** Use `app-file-link [path]="savedPath"` for a read-only
 stored-file action. It resolves root-relative/relative or same-origin absolute paths against
 the current API origin, accepts HTTP(S) only and opens with `noopener noreferrer`. It shows no
 action for an absent/invalid path. Return persisted `documentPath` in the read DTO rather than

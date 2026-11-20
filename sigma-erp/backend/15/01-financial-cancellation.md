@@ -52,7 +52,7 @@ A proportional reversal rounds each share to the money precision and gives the r
 largest line (`FinancialNumberPolicy.AllocateProportionally`), so it equals the allocated amount.
 Implementation order and status: `reviews/VOUCHERS_JOURNALS_MAINTENANCE_EVOLUTION_PLAN.md`.
 
-**Exact currency arithmetic (2026-11-04).** The approved currency plan extends
+**Exact currency arithmetic.** The approved currency plan extends
 `FinancialNumberPolicy` through its Currency partial: decimal money text is
 validated before parsing can discard excess scale; amounts have at most16 whole
 digits and currency scale0–6, dated rates have16 whole digits and12 places.
@@ -73,7 +73,7 @@ weight behavior otherwise retains the same algebra and zero-sum behavior. Do not
 add a second allocation engine or repair an unbalanced journal inside posting.
 Source checks and algebraic review do not prove runtime numeric acceptance.
 
-**Read aggregates and currency-position arithmetic (2026-11-05).**
+**Read aggregates and currency-position arithmetic.**
 `SumCurrencyReadAmounts` uses aligned BigInteger coefficients to sum reporting
 balances without the16-whole-digit limit of a single writable amount. It rejects
 an unrepresentable decimal result instead of allowing implicit decimal rounding.
@@ -106,7 +106,7 @@ of relying on decimal multiplication or ratio-first overflow fallbacks. Keep
 legacy `VatPolicy` callers on their frozen adoption boundary; do not change their
 storage or DTOs implicitly. UI19's exact text preview mirrors this owner.
 
-**Owned generated draft currency (2026-11-04).** An adopted source writer uses
+**Owned generated draft currency.** An adopted source writer uses
 `SiGmaDbContext.EnsureEditableSourceJournalAsync` before changing a
 tracked source when its saved unposted journal must change with it. Resolve
 save-capable account lookups against a detached candidate first. Persist the

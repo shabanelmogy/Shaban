@@ -34,7 +34,7 @@ The base `GetManyAsync` runs one query:
 
 It returns `TotalCount` and `TotalPages`. Steps 1–3 are `ListQuery(filters)`, which an export of the same rows reuses.
 
-**What a list service writes (2026-10-01), and nothing more:**
+**What a list service writes, and nothing more:**
 
 | Need | Write |
 |---|---|

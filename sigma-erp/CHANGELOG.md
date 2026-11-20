@@ -1,5 +1,13 @@
 # Sigma documentation changes
 
+## 2026-11-20 — Review fixes
+
+The artifact-naming row for `<FEATURE>_CURRENT_STATE.md` no longer says it is
+required once a review exceeds 40 KB; it points to Master8, which writes it when
+such a feature is next touched. Dates were removed from 63 bold rule labels and
+Master8's no-history rule now covers labels. Master1's Arabic owner quote gained
+an English rendering (original kept); a removal artifact in UI30 was corrected.
+
 ## 2026-11-20 — Simplification
 
 Removed detail that did not change execution: the skill's revision table (changes

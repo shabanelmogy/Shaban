@@ -77,7 +77,7 @@ or nested transactions. Added-row numbering is shared at UnitOfWork save (block 
 
 A customer service adds only what is its own.
 
-**One agreement history (2026-10-01).** `Services/AgreementServices/AgreementHistory.cs` reads
+**One agreement history.** `Services/AgreementServices/AgreementHistory.cs` reads
 the rental and lease agreements of one customer, vehicle or driver
 (`LoadAsync(customerId:|vehicleId:|driverId:)`), newest first, into `AgreementHistoryVM`. It
 returns them with `AsResults`, or `NotFound(message)` when the record does not exist.

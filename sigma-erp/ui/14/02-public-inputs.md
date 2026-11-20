@@ -50,7 +50,7 @@ The ownership boundary is strict:
 Keep the array typed and feature-owned. Create or attach it in the feature form;
 the shared component must never create controls or reconcile the aggregate.
 
-**Pending removal and Save (2026-10-03).** Supply `EditableRows.canMutate` for reviewed
+**Pending removal and Save.** Supply `EditableRows.canMutate` for reviewed
 editors whose collection can become locked. It checks before opening the confirmation and
 again after it resolves, in addition to re-resolving the row identity. A confirmation opened
 before Save cannot remove a row from the submitted snapshot. Feature Add methods keep their

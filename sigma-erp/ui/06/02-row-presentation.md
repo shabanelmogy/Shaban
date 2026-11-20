@@ -1,6 +1,6 @@
 <!-- Part of UI block 6: see ../06-grid-and-footer.md. Same status and authority as the block. -->
 
-**Stable post-save text rows (2026-10-17).** A text editor may return typed
+**Stable post-save text rows.** A text editor may return typed
 canonical committed row snapshots to its existing parent. When the active
 query is All, has no Search, and orders by immutable key, overriding text
 cannot change row membership, ordering or count: merge visible matching keys

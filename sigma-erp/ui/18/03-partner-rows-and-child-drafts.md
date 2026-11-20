@@ -35,7 +35,7 @@ files saved. Block draft Save/Close during upload or cleanup. When a collection 
 a whole row, retain the original saved paths and compare them with the successful payload to
 mark paths that disappeared; include nested documents in that comparison.
 
-**Concurrent uploads and cleanup (2026-10-01).** The tracker counts subscribed uploads,
+**Concurrent uploads and cleanup.** The tracker counts subscribed uploads,
 including overlapping controls, and remains busy until all finish. Cleanup waits for uploads
 before taking its pending-path snapshot and blocks new uploads while cleaning. Transfer
 requires idle trackers. Editor Save, step navigation and Close use that complete busy state.

@@ -20,7 +20,7 @@ validated bulk mutation — it checks every target before mutating any target:
 - any id not found in the caller's tenant → `ActivationRecordsNotFound`, and nothing changes;
 - success and failure messages are localized (`ActivationSucceeded`, `ActivationFailed`).
 
-**Activation changes one field (2026-10-02).** Load every target tracked in the write
+**Activation changes one field.** Load every target tracked in the write
 context, change `IsActive`, and call `UnitOfWork.SaveChangesAsync` directly. Do not call
 `Repository.Update`/`UpdateRange` for these tracked rows: it marks unrelated scalar fields
 modified and can overwrite another request's name or notes with an older snapshot. The

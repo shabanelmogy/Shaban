@@ -106,7 +106,7 @@ Explicit `selectCacheDependencies` controller names default empty and cover
 verified indirect producers only: Supplier may provision its default ContactGroup,
 so both Supplier adapters invalidate ContactGroup too. No global mutation watcher.
 
-**Dependent sources are independent of the writer's own opt-in (2026-10-25).**
+**Dependent sources are independent of the writer's own opt-in.**
 `invalidateSelectOnSuccess` invalidates explicitly declared dependencies even
 when the writer's `cacheSelect` is false; its own GetSelect is invalidated only
 when it opts in. This does not enable the writer's cache. Keep dependency names
@@ -122,7 +122,7 @@ rows, failed writes and HTTP errors do not invalidate. The existing
 or source opt-in is introduced. Evidence: JVS_DOMAIN_API_CONTRACT_FREEZE cache
 amendment and JVS_IMPLEMENTATION_FINAL_RECONCILIATION source matrix.
 
-**Customer default-group dependency (2026-10-26).** Company/IndividualPartner
+**Customer default-group dependency.** Company/IndividualPartner
 Add/Update/contact-group writes call `CustomerGroupIdAsync`, which can provision
 the Customer default ContactGroup. Their declared dependencies therefore include
 both `Customer` and `ContactGroup`. Companies/IndividualPartner import producers

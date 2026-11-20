@@ -173,7 +173,7 @@ do not add different UOMs. Batch the line/usage read for the current page,
 and expose the same read-only fields in saved details. Freeze a different
 downstream linkage/denominator before applying this pattern to another model.
 
-**Retained one-to-one identity and live navigation rows (2026-10-21).** A soft
+**Retained one-to-one identity and live navigation rows.** A soft
 delete retains the unique foreign-key slot. Editing an owned one-to-one reference
 must reconcile the retained draft instance rather than soft-delete it and insert
 another with the same unique parent FK. When the confirmed draft workflow can

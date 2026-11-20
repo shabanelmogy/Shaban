@@ -81,13 +81,13 @@ There is no `GetByIdAsync` on `IRepository`. For relations use
 `GetByIdWithNavigationsAsync<T>(id, ct)`, or `GetByIdDeepAsync<T>(id, ct)` for a
 read-only tree (`SiGma.Repos/IRepository/IRepository.cs`).
 
-**Detail read (2026-10-01).** The base `DetailWithNavigationsAsync` reads the record through
+**Detail read.** The base `DetailWithNavigationsAsync` reads the record through
 `GetByIdDeepAsync`: every navigation level, deleted rows skipped, no circular loops. A service does
 not override it, and a profile adds no `.Where(x => x.IsDeleted != true)` to a detail map. Override
 it only for a projection the editor really needs that the deep load cannot give, and record why
 (Company and Driver overrides removed).
 
-**Read-only context isolation (2026-10-02).** Detail loading must not attach read copies,
+**Read-only context isolation.** Detail loading must not attach read copies,
 detach entries or clear the tracker of the write unit of work. The generic
 `GetByIdDeepAsync` resolves a separate scoped `TContext` through the existing DI registration,
 loads its graph there, and disposes that read scope on success, missing root, cancellation or
@@ -168,7 +168,7 @@ block 15 rule 8.
 
 ### Failure messages
 
-**Database localization read cost (2026-10-17).** Runtime middleware may need
+**Database localization read cost.** Runtime middleware may need
 multiple resource sources before the endpoint executes. Reuse a successful
 runtime-only options/default snapshot within that scoped request and batch
 General/Mock source projections. Preserve tenant-filtered overrides, exact

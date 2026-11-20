@@ -85,13 +85,13 @@ authorize saving a deleted reference. Closed Lease Agreements' Clause Type
 picker uses `ClauseType/GetSelect`, while View reads `clauseTypeName` from the
 agreement detail (2026-10-03, source-only).
 
-**Typed option arrays (2026-10-03).** PrimeNG's `p-select.options` input in the current
+**Typed option arrays.** PrimeNG's `p-select.options` input in the current
 application expects a mutable array. A feature getter returning a freshly filtered list
 declares `T[]`, not `readonly T[]`; preserve readonly source collections by making a mutable
 copy before binding when necessary. Do not hide an input mismatch with an untyped cast.
 The owner-reported Logs Movement TS4104 was corrected by returning `CheckCardDocument[]`.
 
-**Saved select options (2026-10-02).** Use the pure shared
+**Saved select options.** Use the pure shared
 `mergeSelectOptions(incoming, saved)` from `shared/utils/select-options.ts`
 when a loaded record has selected IDs/names that a lookup does not return.
 Fetched options keep their order and labels; append saved detail-derived pairs
@@ -111,7 +111,7 @@ branch and job-category selects still use their normal select endpoints. Do not
 split a confirmed composite options contract merely to force every lookup through
 `DropDownSelect`.
 
-**Translated options (2026-10-01).** Bind `[options]="genderOptions | translateOptions"` with
+**Translated options.** Bind `[options]="genderOptions | translateOptions"` with
 `optionLabel="label"` (`shared/pipes/translate-options.pipe.ts`): the pipe adds the translated label,
 caches it per language, and the dropdown filter searches the translated text. No
 `pTemplate="item"`/`"selectedItem"` pair just to translate a key.

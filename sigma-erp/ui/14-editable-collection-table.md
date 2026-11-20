@@ -7,7 +7,7 @@
 - [Row mechanics (EditableRows)](14/03-row-mechanics.md)
 - [Financial collection editor](14/04-financial-collection-editor.md)
 
-**Row-specific removal guards (2026-11-07).** The existing EditableRows utility
+**Row-specific removal guards.** The existing EditableRows utility
 accepts optional `canRemove(row)` in addition to the editor-wide canMutate. It
 checks the actual row before a confirmation and again before removal, after
 resolving its current index. `onRemoving(row,index)` runs only for an accepted

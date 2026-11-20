@@ -78,7 +78,7 @@ dateIs/dateIsNot/dateBefore/dateAfter. Enum/bool equality uses stable typed valu
 never SQL comparisons to translated labels. Database collation retains string
 comparison ownership; do not promise JavaScript collation as SQL behavior.
 
-**Exact monetary filter opt-in (2026-11-04).** `GridFilter.Apply` accepts the
+**Exact monetary filter opt-in.** `GridFilter.Apply` accepts the
 optional named `exactMoneyFields` dictionary of server field names and maximum
 scales0–6. Only matching decimal projections adopt strict JSON string values
 through `FinancialNumberPolicy.TryParseCurrencyAmount`; the same six numeric
@@ -121,7 +121,7 @@ Unsupported display-only fields are explicit exclusions on both UI and server,
 not a successful unfiltered response. No schema/migration or write DTO change is
 implied by read filtering.
 
-**Nullable response identity (2026-10-27).** The shared membership hook accepts
+**Nullable response identity.** The shared membership hook accepts
 both `int` and `int?` response identities: current `ListBaseVm.Id` is nullable
 although the source entity key is not. Lift both sides to `int?` in the SQL
 membership expression; a null projected identity matches no entity. Do not
@@ -187,7 +187,7 @@ if (FilterHelper.GetBool(filters, "isInactive") is { } isInactive)
 `Filters[search]` are one key. Keep the documented casing anyway; a key repeated
 with different casing keeps the last value.
 
-**Preserve query-bound dictionary identity (2026-10-10).** A `Filters[key]`
+**Preserve query-bound dictionary identity.** A `Filters[key]`
 request property must retain the dictionary instance MVC binds and validates.
 Prefer the initialized auto-property already used by `SpecificationRequestDto`:
 

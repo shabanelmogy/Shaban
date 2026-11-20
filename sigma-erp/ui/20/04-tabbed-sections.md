@@ -17,7 +17,7 @@ Ledger/Outstanding and Advance Tax headings; other consumers adopt in scope.
 This makes the existing Customer Statement print-only-heading rule below
 explicit for all reviewed tabbed reports; it changes no data or print scope.
 
-**Owner clarification (2026-11-19) — no repeated active tab or inner selector title:**
+**No repeated active tab or inner selector title:**
 This rule applies to **every** tab in a tabbed report (`app-editor-tabs`) and
 also to inner master-detail navigation selectors (such as a side `p-listbox`
 branch or group list inside a report or tabbed report). When the active tab

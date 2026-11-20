@@ -12,7 +12,7 @@ posting-account picker, for example, must not return parent accounts when Save
 requires `AllowChildren == false`. Do not fix this mismatch in Angular by
 filtering labels client-side; the backend lookup is the source of selectable ids.
 
-**Classification is not posting eligibility (2026-10-23).** A grouping record can
+**Classification is not posting eligibility.** A grouping record can
 carry classification metadata without becoming selectable for operational writes.
 Keep display-only grouping roles out of posting lookups, including generic lookup
 wrappers, and mirror the predicate in consuming write validation. A deliberate
@@ -35,7 +35,7 @@ This matches the Angular `DropDownSelect { id, value, no? }` exactly, which is w
 templates bind `optionLabel="value"` and `optionValue="id"`. Do not invent a
 different lookup shape.
 
-**Persisted bilingual labels (2026-10-23).** When a consumed lookup needs both
+**Persisted bilingual labels.** When a consumed lookup needs both
 stored names for live language switching, keep the `Id`/`Value`/`No` contract
 and use a minimal typed `DropdownDto` extension with `NameLocalized`. `Value`
 is the stored base name, not a translation key or a name localized into a

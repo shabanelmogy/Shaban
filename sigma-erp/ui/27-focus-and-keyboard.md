@@ -99,7 +99,7 @@ shared stepping widget below. The application-wide service changes selection onl
 pointer/keyboard/RTL/runtime acceptance pending.
 
 ### Numeric fields: shared widget with stepping
-**PrimeNG20/21 typed input boundary (2026-10-22).** Use lowercase
+**PrimeNG20/21 typed input boundary.** Use lowercase
 `p-inputnumber`. Bind numeric limits/precision as numbers (`[min]="0"`,
 `[max]="100"`, `[minFractionDigits]="2"`), not static string attributes.
 Shared consumers read `InputNumber.min()`/`max()` signal values; never compare

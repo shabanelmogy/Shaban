@@ -211,7 +211,7 @@ Do not introduce newer declarations/polyfills for a local feature fix; compare
 the installed TypeScript declarations and supported browser contract. Source
 parsing proves syntax, not types or runtime compatibility.
 
-**Angular21 test configuration compatibility (2026-10-22).** The application
+**Angular21 test configuration compatibility.** The application
 Karma builder discovers spec entries, so the test bootstrap no longer uses
 webpack `require.context`. A custom `src/test.ts` initializes BrowserTestingModule
 with an explicit test NgModule providing `provideZoneChangeDetection()` to

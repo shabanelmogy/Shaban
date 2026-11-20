@@ -81,7 +81,7 @@ approval 2026-09-29). Every write goes through `JournalVoucherResolver`:
 | **Approval step** — receipts (incl. rental/lease/booking deposit receipts), credit and debit notes, cash deposits, card transaction bank transfers, manual JVs | `SaveJVAsync` saves a draft; the document's approval calls `PostAsync`, its un-approval `UnpostAsync` |
 | **Bill approval** | Save retains a validated Bill draft without a journal; explicit Approve revalidates the saved snapshot then builds/posts through `SaveAndPostJVAsync` in the source transaction. The latest owner decision permits guarded UnApprove to an editable draft through source-owned unposting. Independent terminal Void marks the source and existing journal voided without a reversing entry. |
 
-**Bills manual approval and settlement (2026-10-20).** The owner explicitly moves
+**Bills manual approval and settlement.** The owner explicitly moves
 posting from Save to Approve; this supersedes the earlier no-approval Bill row.
 Bill owns a nullable manual approval status and append-only audited decisions,
 separate from JV approval. New Bills start NotApproved; historical missing states

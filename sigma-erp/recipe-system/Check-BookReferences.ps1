@@ -35,7 +35,7 @@ $ErrorActionPreference = 'Stop'
 $ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
 if (-not $DocsRoot) { $DocsRoot = Split-Path -Parent $ScriptDir }
 
-# Instruction files and their size budgets in bytes (Master8, 2026-11-19).
+# Instruction files and their size budgets in bytes (Master8).
 $companion = Join-Path $WorkspaceRoot '.agents\SIGMA_WORKFLOW_RULES.md'
 $budgets = [ordered]@{}
 $budgets[(Join-Path $WorkspaceRoot 'AGENTS.md')] = 8KB
