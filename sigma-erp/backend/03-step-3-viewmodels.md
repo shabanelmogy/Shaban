@@ -13,8 +13,7 @@ Four core files per entity in `SiGma.ViewModels/ViewModels/<Entity>/`; additiona
 | `<Entity>FullListVm.cs` | `ListBaseVm…` | only for a **named** second consumer (export or picker) whose shape differs from the ListVM, recorded in the contract; otherwise not created (backlog 7) |
 | `<Entity>DeleteVm.cs` | — | retained only where an existing contract already uses it; this book does not create a new DeleteVm requirement |
 
-### Explainable bulk-action responses (2026-10-23)
-
+### Explainable bulk-action responses
 When a bulk action reports which records it handled, freeze the per-record
 outcomes as part of its response contract. An affected-row count describes this
 run's changes; it is not proof that every record is now configured. Return one
@@ -67,7 +66,7 @@ Preserve required No/display labels/owned children when removing inheritance.
 No endpoint, result envelope, entity or write-validation change follows from this
 read-shape correction; adopt during the owning feature review, not a bulk rewrite.
 
-**Shared lightweight identity (owner-approved, 2026-10-08).** Repeated detail
+**Shared lightweight identity.** Repeated detail
 identity now belongs to the existing `SiGma.Helpers.ViewModelsBases.Detail`
 namespace: abstract `LeanDetailBaseVm` exposes `int Id`; abstract
 `NumberedDetailBaseVm : LeanDetailBaseVm` adds `string? No`. Both are public
@@ -142,8 +141,7 @@ declare no server-owned fields · inherited transitional `SubscriptionId` and
 required/nullable matches the entity and the Angular model · Detail carries only
 what the editor needs · List follows block 7.
 
-### Server-owned values and enum inputs (G4, G13, 2026-10-01)
-
+### Server-owned values and enum inputs
 A value the user does not edit is not chosen by the client: category, type, status, numbering,
 tenant, audit. Either the Add/Update VM leaves it out, or the profile sets it
 (`ForMember(d => d.Type, o => o.MapFrom(_ => ContactType.Customer))`, reference `ContactProfiler`). Write an enum default by name (`ContactType.Customer`), never as a bare `0`:

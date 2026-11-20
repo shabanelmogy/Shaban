@@ -2,8 +2,7 @@
 
 > **Status: Canonical**
 
-### Page action-state query budget (source clarification, 2026-10-25)
-
+### Page action-state query budget
 Apply Master5's general performance gate to the whole consumed request path,
 not only action flags. Record a bounded query inventory: request/trigger,
 source symbols, materialization/round-trip count, rows/columns/page scope,
@@ -141,8 +140,7 @@ return new Results<BranchListVM>
 deterministic `OrderBy` · `ProjectTo` after filtering · no navigation loaded for
 a removed field.
 
-### Action-candidate gate before expensive reads (2026-10-25)
-
+### Action-candidate gate before expensive reads
 For a pure list, detail or approval-context read, derive the action-candidate
 gate from header facts already available for the record/bounded page before issuing expensive detail,
 reservation or source queries. Reuse the authoritative helper for those facts;
@@ -160,8 +158,7 @@ candidate remains non-navigable; never infer a source from a number or type alon
 EF operations on one `DbContext`. Fewer source calls are evidence of query shape
 only, not measured SQL translation, plan quality or latency.
 
-### Hidden per-row work in aggregate saves (2026-10-25)
-
+### Hidden per-row work in aggregate saves
 Master5's performance gate also follows a batch write through its actual shared
 save pipeline: number preparation, reference validation, audit and persistence.
 A single service Save call can still issue one settings/reference query per

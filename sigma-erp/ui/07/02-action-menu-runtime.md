@@ -1,7 +1,6 @@
 <!-- Part of UI block 7: see ../07-action-button-cycle.md. Same status and authority as the block. -->
 
-### Shared action menu runtime (owner migration, 2026-10-22)
-
+### Shared action menu runtime
 Keep the same shared ActionButton/exported-template contract. Each rendered
 row uses a PrimeNG popup Menu appended to body, with translated commands built
 from that row's current ActionList. Filter hidden actions, expose disabled
@@ -15,7 +14,7 @@ Keep the compact trigger and body-popup geometry under shared Sigma styles,
 logical RTL/theme, marked print hiding and UI27 conditional focus return.
 No feature switches selectors, action payloads or callback ownership.
 
-**Stable popup model (source correction, 2026-10-23).** Preserve each rendered
+**Stable popup model.** Preserve each rendered
 popup's MenuItem references and model array across unrelated template checks.
 A template method that maps to fresh MenuItems on every check makes the
 publisher's identity-tracked item views detach during focus/blur, potentially

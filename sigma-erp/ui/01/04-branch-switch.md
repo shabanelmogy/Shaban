@@ -47,7 +47,7 @@ New editor shapes must be reconciled with this shared safety boundary. Shared
 bilingual UserGuide guidance describes saved defaults, failures and deferred
 permissions.
 
-**Stable rendered-editor state (owner NG0100 evidence, 2026-10-20).** Do not
+**Stable rendered-editor state.** Do not
 evaluate the live DOM boundary predicate from navbar disabled/title/aria or
 conditional template bindings: a routed editor or dialog can mount after the
 navbar was checked and change the answer during Angular's verification pass.

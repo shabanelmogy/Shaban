@@ -22,8 +22,7 @@ An external system the owner names as a functional reference (for example the Sp
 demo for Rental workflows) is behavioural evidence only, never implementation authority. Its
 access and usage notes are kept outside the governance book: `reviews/REFERENCE_SPEED_AUTO_SYSTEMS.md`.
 
-### Speed first; Odoo fills missing or unclear concepts (owner instruction, 2026-11-02)
-
+### Speed first; Odoo fills missing or unclear concepts
 Use the collected **Speed guide, explanations and dated frontend code as the
 primary functional reference**. When a scoped concept, workflow or detail is
 missing or unclear after reviewing its relevant Speed slice, consult the pinned
@@ -48,8 +47,7 @@ conflicts and precise missing material decisions before dependent changes. Keep
 the current scope and source-only/external-access/verification boundaries; a
 reference lookup does not authorize implementation or broad collection.
 
-### Reference-product functional detail target (owner clarification, 2026-10-30)
-
+### Reference-product functional detail target
 The owner supplies the collected guide, explanations and frontend code of the
 reference product because Sigma is being built to reach its functional detail.
 For every new or reviewed screen, use the relevant reference slice as the target
@@ -79,8 +77,7 @@ Read-only reviews still report/plan gaps without editing application source;
 implementation follows the task's authorization and frozen slice. All external
 access, source-only execution and migration boundaries remain unchanged.
 
-### Mandatory analysis-guide review before screen contracts (owner instruction, 2026-10-27)
-
+### Mandatory analysis-guide review before screen contracts
 For every new screen and every review, maintenance, fix or refactor of an
 existing screen, review the relevant analysis-guide section **before freezing
 or changing the affected contracts**. Start at the documentation's
@@ -118,8 +115,7 @@ external application. At handoff, reconcile the accepted evidence and exclusions
 with the scoped result (Master7); creating/updating Sigma's in-app explanation
 after implementation is a separate completion gate.
 
-#### Sidebar and code cycle reference (owner instruction, 2026-10-28)
-
+#### Sidebar and code cycle reference
 The same mandatory gate includes the dated sidebar/JavaScript analysis reached
 from the analysis reference entry. It complements the original explanations;
 neither collection replaces the other. For a new or reviewed screen, identify

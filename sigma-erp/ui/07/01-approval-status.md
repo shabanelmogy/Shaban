@@ -1,7 +1,6 @@
 <!-- Part of UI block 7: see ../07-action-button-cycle.md. Same status and authority as the block. -->
 
-### Shared document approval status — 2026-11-15
-
+### Shared document approval status
 For an adopted business-document row, reuse `injectApprovalStatusAction<Row>`
 from `shared/authorization/approval-status-action.ts`. It accepts the catalog
 document type, the actual source read requirement, a current-row predicate and
@@ -26,7 +25,7 @@ after a native action. Do not trigger a native reload from every read completion
 The host owns display lifetime and destruction, while the central endpoints
 continue enforcing source, assignment, branch and expected-attempt versions.
 
-**Inline stage decisions (owner,2026-11-16).** Display configured/current stages
+**Inline stage decisions.** Display configured/current stages
 as shared DataTable rows with order, name, status, actor, decision date and reason.
 Use ActionList on the eligible row, checking both the response-wide capability
 and that row's `canDecide`, current row identity, access and busy state. Keep later
@@ -49,9 +48,9 @@ may refresh once when completion changes their available native action; do not
 re-read stages solely because a refreshed native DTO has a new object identity.
 Use a semantic native status/void refresh key. Context/access changes and explicit
 Retry still invalidate reads; sent-write lifetime and accounting effects remain
-with their existing owners. Source conformance does not prove runtime latency.
+with their existing owners.
 
-**Single direct action (owner-scoped choice,2026-10-31).** DataTable exposes
+**Single direct action.** DataTable exposes
 `singleActionAsIcon:boolean` (default false) and forwards it to the existing
 ActionButton input of the same name. When enabled and exactly one action is
 visible for a row, render its icon as one native Sigma secondary icon button,
@@ -80,7 +79,7 @@ visual index (Settings Fines/ESalik/EDarb runtime retirement,2026-10-22).
 
 ### Approval status in the action menu and saved editor
 
-**Source conversion actions (owner2026-10-24; BE18).** Use the existing shared
+**Source conversion actions.** Use the existing shared
 row action owner and PrimaryActionButton in saved View for Create Receipt or
 Create Invoice. Consume the server's target-specific eligibility flags in both
 surfaces and pass only the source identity through the destination's typed
@@ -94,7 +93,7 @@ the frozen downstream-creation contract; no action appears when capacity is
 exhausted or needs review. Domain/type decisions and stock/financial effects
 remain backend/model owned.
 
-**Independent document progress (owner2026-10-24; BE18).** Show approval,
+**Independent document progress.** Show approval,
 source quantity use, invoice coverage, draft reservation and payment settlement
 under their own labels. Open/Closed/Partially Used do not imply Approved or
 Paid; a pending invoice reservation is not Invoiced. Consume authoritative
@@ -106,7 +105,7 @@ guards remain authoritative; missing progress must be unavailable/Needs Review
 rather than fabricated. Exact per-model statuses stay in the feature handoff.
 
 > **Canonical presentation for models with a confirmed approval lifecycle**
-> (owner decision 2026-10-21; Master block 4, UI block 13).
+>.
 
 Expose an **Approval Status** row action that opens a dedicated modal showing
 the saved record identifier, current step, completed/incomplete/rejected state,
@@ -140,8 +139,7 @@ real released effect must be canceled and the model preserves that audit.
 Do not turn on the shared action for a model until its state, effect timing,
 backend endpoint and historical-row handling are frozen and implemented.
 
-#### Common approval vocabulary and guarded corrections (owner decision 2026-10-22)
-
+#### Common approval vocabulary and guarded corrections
 Use the same user-facing vocabulary across ERP documents, invoices and
 operational procedures: **Pending** (saved and awaiting decision), **Approved**
 (accepted and its model-owned effect released), and **Rejected** (decision
@@ -183,7 +181,7 @@ Payment lifecycle (its current contract and server remain authoritative).
 DebitNote does not acquire approval by visual imitation. See the unified
 purchasing contract for the exact stock/journal/reservation guards.
 
-**Mounted approval access (source-only,2026-11-07).** Adopt current-session
+**Mounted approval access.** Adopt current-session
 access through `DocumentApprovalCycleComponent.accessRequirement` for reading
 and `decisionRequirement` for decisions; `accessBlocked` expires the mounted
 owner when its parent data context ends. These optional inputs retain legacy

@@ -1,8 +1,7 @@
 <!-- Part of UI block 24: see ../24-colors-icons-buttons.md. Same status and authority as the block. -->
 
-### PrimeNG21 theme and component hooks (2026-10-22)
-
-**Complete vendor presentation retirement (owner2026-10-22).** The owner then
+### PrimeNG21 theme and component hooks
+**Complete vendor presentation retirement.** The owner then
 authorized deletion of all old components and migration of every dependent
 screen. This supersedes earlier staged instructions below to retain vendor
 Sass/Popper/KT. Live shell/theme/domain helpers move to their native shared
@@ -26,7 +25,7 @@ Keep independent Bootstrap Icons and Font Awesome glyphs while used; the
 change event, preserving the stored preference keys. Source conformance and
 rendered interaction/geometry evidence remain distinct from visual acceptance.
 
-**Shared vendor independence (owner2026-10-22).** Keep Sigma shared components
+**Shared vendor independence.** Keep Sigma shared components
 and replace their vendor internals in place. Dynamic ButtonsComponent composes
 PrimaryActionButton for solid primary intent, and PrimeNG native buttons for
 secondary/danger/link intents; it retains ButtonModel IDs, labels/tooltips,
@@ -54,7 +53,7 @@ Remove the old DropdownPortalDirective/portal CSS only after both shared
 consumers migrate. Global vendor CSS/JS/Ngb remain until their other direct
 consumers are proven retired; this slice does not authorize package removal.
 
-**Interactive runtime retirement (owner2026-10-22, later authorized stage).**
+**Interactive runtime retirement.**
 After live Settings dropdowns move to the shared command owner and remaining
 Ngb imports/selectors, test providers and isolated dead modal roots are retired,
 remove the global Bootstrap JS entry and bootstrap/ng-bootstrap/types packages
@@ -137,8 +136,7 @@ does not prove it still reaches the rendered DOM. Both themes/directions,
 keyboard, overlays and responsive behavior need owner visual acceptance.
 
 
-### Appbar presentation across framework migrations (owner2026-10-22)
-
+### Appbar presentation across framework migrations
 Replacing a template's interaction engine does not approve replacing its
 established visual hierarchy with plain publisher defaults. The owner preferred
 the former Sigma Appbar after the PrimeNG shell migration. Current shared owner
@@ -167,8 +165,7 @@ arrows use the shared marked overlay boundary. Source comparison and rendered
 geometry/interaction tests do not establish subjective visual acceptance.
 Evidence: the owner visual amendment in the PrimeNG shell maintenance plan.
 
-### Sass module ownership (2026-10-22)
-
+### Sass module ownership
 The global theme uses Sass `@use` and namespaced built-ins. The former licensed
 Bootstrap5.3.2 compatibility source and its configuration bridges were retired
 after their consumers migrated under the owner's complete-removal instruction.

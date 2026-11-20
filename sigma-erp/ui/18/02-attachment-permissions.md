@@ -1,7 +1,6 @@
 <!-- Part of UI block 18: see ../18-documents-and-upload.md. Same status and authority as the block. -->
 
-### Adopted attachment permissions — 2026-11-07
-
+### Adopted attachment permissions
 Permission adoption stays in the existing editor tracker and FileField, not
 the shared FileUploadService transport. An adopted editor calls
 `DocumentUploadTracker.setAccessRequirements(uploadPermission?, cleanupPermission?)`.
@@ -60,7 +59,7 @@ existing cleanup-only Retry. A sent successful DELETE is accepted even when the
 grant is later withdrawn. Never gate that cleanup on an editor write permission
 which may have been withdrawn after a successful aggregate Save.
 
-**Cleanup teardown boundary (source reconciliation,2026-11-09).** Keep tracker
+**Cleanup teardown boundary.** Keep tracker
 destruction cancellation on the idle-upload wait upstream of `switchMap(work)`.
 Do not start cleanup when destruction itself releases that wait. Once cleanup
 has sent its DELETEs, tracker teardown must not cancel those mutations; the
@@ -78,7 +77,7 @@ not create a server file-access policy or claim that a hidden control secures a
 static URL. Regression evidence includes denied new requests, sent outcomes,
 cleanup Retry, and unchanged unadopted file layout/controls.
 
-**Replacement permission lifetime (source reconciliation,2026-11-09).** Keep
+**Replacement permission lifetime.** Keep
 FileField's `permission` as the owning editor requirement. Its optional
 `uploadPermission` adds selection/replacement requirements to `canPick` and the
 permanent sent-upload publication expiry watcher, without restricting `canRemove`.

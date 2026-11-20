@@ -64,7 +64,7 @@ drift instead of silently changing the rule.
 2. [Screenshot and visual evidence policy](02-screenshot-and-visual-evidence-policy.md)
 3. [Phase model, ownership, and dependencies](03-phase-model-ownership-and-dependencies.md)
 4. [Required decisions, artifacts, and contract invariants](04-required-decisions-artifacts-and-contract-invariants.md)
-5. [Continuous quality gates](05-continuous-quality-gates.md), including [Production notes](05/04-production-notes.md#production-notes-owner-request-2026-10-02)
+5. [Continuous quality gates](05-continuous-quality-gates.md), including [Production notes](05/04-production-notes.md#production-notes)
 6. [Human and AI review protocol](06-human-and-ai-review-protocol.md)
 7. [End-to-end reconciliation and final report](07-end-to-end-reconciliation-and-final-report.md)
 8. [Packet generation and governance](08-packet-generation-and-governance.md)

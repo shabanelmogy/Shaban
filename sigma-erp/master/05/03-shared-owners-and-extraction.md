@@ -48,8 +48,7 @@
 - Legacy copies in files the change does not touch are left for their own screen review
   (UI backlog 39).
 
-### Shared-extraction gate (owner rule, 2026-10-01)
-
+### Shared-extraction gate
 **After every phase or task, before it is reported complete,** the reviewer asks what in the code
 it touched could be shared, and does it in the same task:
 

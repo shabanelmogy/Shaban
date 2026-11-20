@@ -5,7 +5,7 @@
 Never `confirm()`, never a private `p-dialog` for a yes/no. Always
 `ConfirmationDialogService`.
 
-**Cancelled confirmation lifetime (source-only,2026-10-31).** The shared service
+**Cancelled confirmation lifetime.** The shared service
 closes its own unresolved dialog with false when its result subscription is
 cancelled by scope invalidation or consumer destruction. A resolved result keeps
 its existing close lifecycle; an old subscription never closes a newer dialog.

@@ -98,8 +98,7 @@ revalidates every transition · reference inventory has no unclassified row.
 confirm, routine ones do not · busy guard · last-page-delete handled.
 
 
-#### Failure-prevention register (moved from Master block 4, 2026-10-01)
-
+#### Failure-prevention register
 | Failure seen in review | Root cause | Mandatory prevention |
 |---|---|---|
 | Customer approve/reject or Revise is absent | Reference inspected partially or only the screenshot menu was copied | Complete the reference-action inventory across backend and Angular before implementation |

@@ -71,8 +71,7 @@ public class WorkshopSettingController
   `ITaxPolicyService` for common tax settings), never with its own
   `Query<T>().FirstOrDefault()`.
 
-### Independently saved scalar sections and write-only keys (2026-10-13)
-
+### Independently saved scalar sections and write-only keys
 When independently saved sections share one settings row, each write owns only
 its declared editable members. A helper's `Repository.Update` marks the full
 row modified; mapping `Ignore` alone does not prevent an unrelated stale scalar

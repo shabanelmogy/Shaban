@@ -2,8 +2,7 @@
 
 ### Shared summary/KPI cards
 
-#### Pending values and animated operational counts (2026-10-25)
-
+#### Pending values and animated operational counts
 The owner's Dashboard loading request explicitly scopes blank initial values
 and count-up motion to Dashboard. Extend the existing shared owner rather than
 copying its markup: `SummaryCardsComponent.valuesPending` and `animateValues`
@@ -40,16 +39,15 @@ screen readers and print retain final values. Reduced motion stops all CSS
 motion and the number animation, forced colors retain static system-color
 strokes, and print hides placeholders/sizing/decorative text. It stays in
 AnimatedCountComponent rather than per-card CSS; surrounding shared owners
-retain backgrounds/typography/themes. Source-only visual acceptance pending.
+retain backgrounds/typography/themes.
 
 Dashboard adopts it for shared KPI values, metric badges, ring total and numeric
 table cells. DashboardCards keeps label/link/ring/business ownership; table
 empty feedback requires a successful snapshot. Realtime/same-filter refreshes
 retain values and animate only changed counts. Do not animate snapshots,
 business totals, financial previews, print or export payloads themselves.
-Source-only conformance; owner build/motion/theme/RTL/runtime acceptance pending.
 
-**Stable initial card geometry and reusable waiting motion (owner2026-10-25).**
+**Stable initial card geometry and reusable waiting motion.**
 The owner requests final card dimensions from first paint and the same waiting
 animation for the branch dropdown. The three-stroke/sweep markup and styles now
 belong to standalone `PendingMotionComponent` (`app-pending-motion`, no inputs):
@@ -176,7 +174,7 @@ is distinct from the12px summary-to-grid rule above. Keep the whole region
 aligned to sibling card edges (UI3), footer outside row scrolling and the
 existing public summary sizing/print behavior. Never reproduce card internals
 or hide overflowing rows to create space. This presentation requirement is
-part of UI13's comparable-editor checklist (owner generalization, 2026-10-15).
+part of UI13's comparable-editor checklist.
 
 Selectable cards are native buttons with `aria-pressed`, visible focus, disabled
 busy guard and a stable-id selection output. Static cards have no click affordance

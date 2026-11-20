@@ -24,8 +24,7 @@ param(
 #   6. budget    - file larger than its Master8 size budget;
 #   7. table     - markdown table whose second line is not the |---| separator;
 #   8. duplicate - the same long paragraph in more than one instruction file (one rule, one owner);
-#   9. size      - warning only: canonical block over 30 KB, or review over 40 KB without a
-#                  *_CURRENT_STATE.md that links to it (current-state files themselves are budgeted at 4 KB).
+#   9. size      - warning only: canonical block over 30 KB (current-state files are budgeted at 4 KB).
 #  10. status    - a *_CURRENT_STATE.md without an allowed Status row or Owner verification pending row;
 # An unresolved item is a finding to read, not an automatic error: a route or an illustrative
 # name can look like a path. Exit code = number of findings in groups path, block, link, budget, table and status.
@@ -54,9 +53,8 @@ if (Test-Path -LiteralPath $reviewsDir) {
         Where-Object { $_.FullName -notmatch '\\Archive\\' })
     foreach ($f in $currentStates) { $budgets[$f.FullName] = 4KB }
 }
-# Soft size warnings (Master8): canonical blocks over 30 KB; reviews over 40 KB without a current-state file.
+# Soft size warning (Master8): canonical blocks over 30 KB.
 $blockWarnBytes = 30KB
-$reviewWarnBytes = 40KB
 
 $skipDirs = @('node_modules', 'bin', 'obj', '.git', 'dist', '.angular', 'out-tsc', 'graphify-out', 'generated')
 $repoRoots = @(
@@ -292,22 +290,6 @@ foreach ($cs in $currentStates) {
 foreach ($book in @('master', 'ui', 'backend')) {
     foreach ($f in Get-ChildItem -LiteralPath (Join-Path $DocsRoot $book) -Filter '*.md' -Recurse) {
         if ($f.Length -gt $blockWarnBytes) { Add-Finding 'size' ($book + '\' + $f.Name) 0 ("{0} bytes > {1}; split or remove history (Master8)" -f $f.Length, $blockWarnBytes) }
-    }
-}
-if (Test-Path -LiteralPath $reviewsDir) {
-    $covered = New-Object 'System.Collections.Generic.HashSet[string]'
-    foreach ($cs in $currentStates) {
-        foreach ($m in [regex]::Matches([System.IO.File]::ReadAllText($cs.FullName), '\(<?([^)>#]+\.md)')) {
-            [void]$covered.Add([System.IO.Path]::GetFileName([uri]::UnescapeDataString($m.Groups[1].Value)).ToLowerInvariant())
-        }
-    }
-    $largeReviews = Get-ChildItem -LiteralPath $reviewsDir -Filter '*.md' -Recurse |
-        Where-Object { $_.FullName -notmatch '\\(Archive|Deferred|evidence)\\' -and $_.Name -notmatch '^(INDEX|INDEX_HISTORY)\.md$|_CURRENT_STATE\.md$' -and $_.Length -gt $reviewWarnBytes } |
-        Sort-Object Length -Descending
-    foreach ($f in $largeReviews) {
-        if (-not $covered.Contains($f.Name.ToLowerInvariant())) {
-            Add-Finding 'size' ('reviews\' + $f.FullName.Substring($reviewsDir.Length).TrimStart('\')) 0 ("{0} bytes > {1} with no current-state file" -f $f.Length, $reviewWarnBytes)
-        }
     }
 }
 

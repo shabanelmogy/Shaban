@@ -93,7 +93,7 @@ detach entries or clear the tracker of the write unit of work. The generic
 loads its graph there, and disposes that read scope on success, missing root, cancellation or
 exception. It does not save or share the write context's local transaction or pending changes;
 its result represents persisted data. Keep tracked aggregate updates on the write context
-(block 14). Source-only implementation; owner runtime verification pending. Existing graph
+(block 14). Existing graph
 filtering and traversal findings remain in `reviews/Archive/Completed/2026-10-23/REPOS_UNIT_OF_WORK_LOGIC_FEATURE_REVIEW.md`.
 
 **Standard list = `GetManyAsync` override.** A screen's list overrides
@@ -197,7 +197,7 @@ unchanged: that is only for legacy callers. `LocalizeMessage(key)` gives the sam
 success message. The ≈90 existing private `Fail` helpers and their English literals move to keys
 when their service is next touched; do not add new ones.
 
-**Resource key conversion boundary (owner compiler evidence, 2026-10-17).**
+**Resource key conversion boundary.**
 When replacing a translated resource value passed to a localizer with its key,
 use `nameof(GeneralMessage.MessageProperty)` only for an actual generated string
 message property. Infrastructure members such as `ResourceManager` and `Culture`

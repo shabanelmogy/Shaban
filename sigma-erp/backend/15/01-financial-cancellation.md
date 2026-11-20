@@ -33,7 +33,7 @@ and `BillService.VoidBillCoreAsync` mark the retained journal voided; ledger
 readers and `WhereLedgerEffective` exclude it. This evidence establishes the
 shared convention, not completed runtime or whole-application conformance.
 
-**Decided journal rules (owner, 2026-10-01; reference behaviour Speed Auto Systems).**
+**Decided journal rules.**
 
 | Document | Entry |
 |---|---|

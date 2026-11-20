@@ -1,8 +1,7 @@
 <!-- Part of UI block 7: see ../07-action-button-cycle.md. Same status and authority as the block. -->
 
-### Document action log (owner decision 2026-10-22)
-
-**One label (owner2026-10-24).** Use **Log** in English and **السجل** in Arabic
+### Document action log
+**One label.** Use **Log** in English and **السجل** in Arabic
 for the document row action and its dialog title, through `documentLog.title`.
 Do not mix Audit Trail and Log across document screens. Decision history
 stays inside Approvals and is distinct from this captured write log. A technical

@@ -105,16 +105,8 @@ runtime acceptance separately. (Master4/5/7; UI23/29)
 
 ## 5. Maintain this router
 
-New verified rules go into their owning block. Add a row/keyword here only for
-a new concern, plus one dated revision row; keep five rows and move older ones
-to `archive/SKILL_REVISION_HISTORY.md`. Never restate a block's rule here.
-Regenerate packets after canonical changes and rerun both checks. (Master8;
-companion §9)
-
-| Date | Revision | Owning blocks and evidence |
-|---|---|---|
-| 2026-11-19 | Data capabilities inside an authorized response (`CapabilityPermissions`, controller-evaluated, server omits values) | UI26; Trips With Overtime ViewCharges |
-| 2026-11-19 | Unique links on TPT-derived rows release on soft delete (`IReleasesLinksOnRemove`); `toMonthPickerDate` for month pickers | BE8, UI17; Trips With Overtime review fixes |
-| 2026-11-19 | `§Name` may live in a block's `NN/` topic folder (UI1/13/20); generated current-state indexes cover large reviews | Master8; block split and generator fingerprint |
-| 2026-11-19 | Section-level routing (`§Name`) for large blocks; read `_CURRENT_STATE.md` before a full review | Master8; UI1/13/20/22 headings; token-reduction remediation |
-| 2026-11-19 | Add shared `.sigma-print-only` utility in `src/styles.scss` (replacing retired Bootstrap `d-none d-print-block`) and keep every active tab and inner side-list selector title print-only rather than repeating it inside panels on screen | UI20/21; owner instruction on Detailed Vehicle Utilization Report (all tabs + `Branch Wise Rented` split pane); runtime/visual pending |
+New verified rules go into their owning block. Add a row or keyword to the table
+above only for a new concern; never restate a block's rule here. Record the
+change in the documentation `CHANGELOG.md` (history before 2026-11-20:
+`archive/SKILL_REVISION_HISTORY.md`). Regenerate packets after canonical changes
+and rerun both checks. (Master8; companion section 9)

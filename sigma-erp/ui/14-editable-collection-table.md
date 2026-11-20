@@ -24,7 +24,7 @@ its data; editable/removeDisabled and projected custom actions retain their
 existing ownership. Reuse a feature's one row predicate for this input and
 EditableRows.canRemove rather than duplicating rule logic or file action markup.
 
-**Shared Add-action clearance (owner2026-10-31).** The existing collection
+**Shared Add-action clearance.** The existing collection
 toolbar-actions group supplies6px block and8px inline padding with border-box
 sizing. This leaves space around Add and its peer actions in every consumer,
 including Transportation's schedule, without changing the shared button's
@@ -32,7 +32,7 @@ geometry,10px action gap, wrapping, split-toolbar order or print suppression.
 Do not add a per-screen margin or opt-in for this shared presentation. Narrow
 widths, RTL and both themes still require owner visual acceptance.
 
-**Shared first-cell freeze (owner slice, 2026-10-23).** The shared editable
+**Shared first-cell freeze.** The shared editable
 collection table freezes its first rendered cell at the logical start of its
 existing native row frame while horizontal scrolling. The existing projected
 cell order, Actions column, form row identity and validation layout remain intact;
@@ -44,7 +44,7 @@ validation, focus, removal confirmation and payload mapping keep their contracts
 
 > **Status: Canonical**
 
-**Shared mock heading action (owner follow-up, 2026-10-13; UI13):** a table in
+**Shared mock heading action:** a table in
 the nearest MOCK_DATA_CONTEXT registers its host/heading visibility and composes
 MockDataAction in its existing toolbar. Existing supported row controls become
 section-scoped; tables without context keep their behavior. Add/Remove, columns,
@@ -131,7 +131,7 @@ Every dropdown column declares `width` so selected labels cannot resize the
 closed control or its siblings (block 16). Company Contact Designation uses
 200px and Card Type uses 180px; choose other widths according to field content.
 
-**Credit Cards consumer widths (owner request, 2026-10-13):** Individual/Company
+**Credit Cards consumer widths:** Individual/Company
 use the existing column width input for compact CVV76px/Is Default80px and wider
 Name on Card240px/Bank Name220px. Card Type remains180px; remaining tracks flex.
 Both card tables retain1280px minimum frame width so wider name inputs do not
@@ -216,11 +216,10 @@ typed Edit/Delete behavior:
 
 ### Contract
 
-### Contextual confirmation forms (2026-10-09)
+### Contextual confirmation forms
 `EditableRows` may receive `confirmationForms` when `freezeParentOnConfirmation` is enabled. The optional forms are frozen with the parent through the shared plural helper; the default remains unchanged. Use this only where row operations depend on a separate customer/category/context form. Preserve row identity re-resolution, saved-row confirmation and canMutate checks. Source-only evidence: Limousine tariff context and TripBooking documents.
 
-### Context-cancelled row decisions (2026-11-05)
-
+### Context-cancelled row decisions
 Pass the editor's context-expiry stream as `confirmationCancelled$` when a
 reviewed editor can outlive its session context. EditableRows tears down only
 its pending removal confirmation, releases `confirmationPending` through
@@ -229,4 +228,4 @@ invalid until reopened; do not restore an expired form through the finalizer.
 The optional stream defaults to no extra cancellation for existing consumers.
 It never owns HTTP writes or cancels a previously sent save. Payment rows and
 Bill line/document rows adopt this hook; UI28 owns the surrounding session and
-independent-write lifetime. Source-only; interaction acceptance is pending.
+independent-write lifetime.

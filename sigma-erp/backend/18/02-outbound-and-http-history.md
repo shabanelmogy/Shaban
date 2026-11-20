@@ -1,7 +1,6 @@
 <!-- Part of backend block 18: see ../18-edge-cases.md. Same status and authority as the block. -->
 
-### Outbound message outcomes (2026-10-14)
-
+### Outbound message outcomes
 An operational message log is an append-only event, not a mutable CRUD entity.
 Keep its read controller authenticated and its query on the existing
 `Repository.QueryReport` tenant boundary. Use a lean row contract, filter before
@@ -42,8 +41,7 @@ Source-only conformance leaves build, real SMTP, cancellation/partial outcomes,
 tenant isolation, log-failure recovery and print/Excel acceptance with the owner.
 
 
-### Automatic HTTP error history (2026-10-14)
-
+### Automatic HTTP error history
 When the owner requests automatic HTTP error history, keep its append-only
 operational entity separate from mutable CRUD and successful-save audit events.
 Capture only authenticated requests with the existing positive subscription

@@ -7,11 +7,6 @@ read **only when the task reaches them** (table below). Edit the owning rule
 where it lives; update the `AGENTS.md` summary in the same task if its meaning
 changes. Relative workspace paths resolve from `F:\My Work\Sigma`.
 
-Restructured 2026-11-19 (owner-requested speed/error remediation). The previous
-full text is preserved verbatim in the documentation archive
-`archive/2026-11-19-instruction-slimming/`; dated rule history lives in the
-documentation `CHANGELOG.md`, not here. Archives are not rule sources.
-
 | Read this section file | When |
 |---|---|
 | [workflow/guides-and-packets.md](workflow/guides-and-packets.md) | Using generated packets, selecting shapes, or maintaining books/packets |
@@ -128,18 +123,8 @@ weakened validation to keep old experimental rows working.
 
 ## 5. Evidence gates for screen/API work
 
-Apply the gate checklist in the `sigma-screen-refactor` skill; the blocks below
-own the full rules. Keep tier S limited to the affected element.
-
-| Gate | Owner |
-|---|---|
-| Speed guide + dated code first, pinned Odoo only for remaining gaps; reference functional detail is the target; map to real Sigma source/contract/guide | Master2/4/7 |
-| Loading: one visible owner per request; routed initial/filter lookups use the page loader, dialogs local, cache refresh silent | UI22, Master5 |
-| Cache: classify every consumed read and trace its lifecycle | UI2, Master5 |
-| Load speed, queries and index evidence; no speed claim from source alone | Master5, UI29, BE2/7 |
-| Shared PrimeNG-based owners first; extend or extract shared, apply general presentation requests generally | Master5 |
-| Numeric domains: quantities/fractional hours/meters → shared quantity policy; counts/identities integers; money → financial policy; no accidental precision | BE18, UI14/19 |
-| Authorization: route/action owners and real endpoint enforcement | UI26, BE9, Master4/7 |
+Apply the gate checklist in the `sigma-screen-refactor` skill (section 2); each
+gate names the block that owns it. Keep tier S limited to the affected element.
 
 ## 6. Scope
 
@@ -192,11 +177,9 @@ artifacts are not translated retroactively (Master8).
   copy. Dated "owner instruction" history goes to `CHANGELOG.md`.
 - **Learning protocol.** Verified reusable guidance goes into its owning
   canonical block. The skill receives only a routing pointer (a table row or
-  keyword) when a new concern appears, plus one dated revision row; it keeps the
-  five newest rows and moves older ones to
-  `archive/SKILL_REVISION_HISTORY.md`. If the book cannot be updated in the task,
-  add the skill row marked `pending promotion` and report it. Feature decisions
-  stay in feature contracts.
+  keyword) when a new concern appears; the change is recorded in `CHANGELOG.md`.
+  If the book cannot be updated in the task, report it as pending promotion.
+  Feature decisions stay in feature contracts.
 - After changing books, templates or the manifest: regenerate packets, review
   their meaning, and rerun both checks (the reference check also enforces the
   size budgets):

@@ -8,8 +8,7 @@
 
 > **Status: Canonical**
 
-### PrimeNG21 public controls (2026-10-22)
-
+### PrimeNG21 public controls
 Shared adapters must call the public disabled signal on Select/MultiSelect,
 InputNumber, DatePicker and Checkbox (`disabled()`). Testing the function itself
 is always truthy and wrongly excludes enabled controls. Keep the owning form's
@@ -44,7 +43,7 @@ A persisted relationship change needs the owner's legacy-data decision and a
 reported migration; current Customer Requests owner confirms empty/test data.
 This evidence does not authorize bulk changes to other legacy consumers.
 
-**Stable dropdown width (owner rule, 2026-10-01).** Every dropdown's closed field
+**Stable dropdown width.** Every dropdown's closed field
 has a layout-defined width independent of its placeholder or selected label.
 In forms and filters, fill the allocated responsive grid field (`width: 100%`);
 the grid owns available width. In editable tables, declare a fixed `width` on

@@ -91,7 +91,7 @@ years 00..99 to 1900..1999. `parseDateValue` validates the same actual local
 year/month/day; `toPickerDate` retains it, and date transport/display pads the
 year to four digits. Existing two-digit manual-year normalization stays
 compatible; year zero remains invalid. No timezone conversion or business
-date bound changes. Source-only; owner input/reload acceptance pending.
+date bound changes.
 
 Transportation continuation (2026-10-09): the same full-year invariant applies
 to month boundaries, not only saved-day hydration. `currentMonthRange(date)`
@@ -115,7 +115,7 @@ then carries only what differs — `inputId`, the control, `[minDate]`/`[maxDate
 dateFormat="mm/yy"`. Reference: the Individual editor. The rules below are what the directive
 applies; a calendar without it repeats them by hand (UI backlog 39).
 
-**Calendars are typeable by default (owner decision, 2026-09-28).** Use
+**Calendars are typeable by default.** Use
 `[readonlyInput]="false"` on filters **and** on detail/editor forms. The user
 types `dd/mm/yy` straight into the box and opens the picker only when they want
 to browse. Always pair it with `[keepInvalid]="true"`: without it, PrimeNG's
@@ -162,7 +162,7 @@ keystrokes. The shared directive opens picker-only inputs with Enter, Space or
 Arrow Down; panel keyboard navigation, clear action and date validators remain
 available. Use this only while the owner's explicit picker-only decision applies.
 
-**A calendar carries no icon (owner decision, 2026-09-28).** Never set
+**A calendar carries no icon.** Never set
 `[showIcon]`, on filters or in editors. The global sheet hides
 `.p-datepicker-dropdown` with `display: none !important` (`src/styles.scss`), so
 `[showIcon]="true"` renders nothing and only leaves reserved dead padding. The

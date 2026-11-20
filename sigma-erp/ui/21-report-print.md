@@ -46,7 +46,7 @@ stay feature-owned and are retained. Plain `print(options)` remains compatible f
 other confirmed output lifecycles; no reference screen is rewritten solely to adopt
 this helper. This is source-verified preparation behavior, not browser acceptance.
 
-**Cancel pending preparation (source-only,2026-10-30).** The same session exposes
+**Cancel pending preparation.** The same session exposes
 `cancelPending():boolean`: true cancels its pending animation frame and releases
 `printing`; false means no frame remains to cancel. It does not dismiss an opened
 browser print dialog, run a synthetic `afterPrint`, or release an active print's

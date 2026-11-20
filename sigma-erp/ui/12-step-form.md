@@ -128,7 +128,7 @@ async goToStep(index: number): Promise<void> {
 }
 ```
 
-**Group fields by business meaning (owner feedback 2026-10-01).** Inside a step, each `app-form-section` is one
+**Group fields by business meaning.** Inside a step, each `app-form-section` is one
 business group (for example credit and tax, invoicing, surcharges, cards), and a value sits next to the
 field that says how it is calculated (an amount beside its Fixed/Percentage type). Rental and lease
 variants of the same setting take one row each. Never pour a step's controls into one grid in
@@ -140,7 +140,7 @@ through `rowFields(arrayPath, rowCount, step, fields)` — and build the badges 
 `invalidStepFields(form, specs, translate)` (`shared/utils/step-form-fields.ts`). The same specs
 mark a step touched for *Next*.
 
-**Error badge → the field (owner requirement 2026-10-01).** A validation-summary item switches to
+**Error badge → the field.** A validation-summary item switches to
 its step and then moves to the control: `focusField(elementId)` from `shared/utils/focus-field.ts`
 waits for the step to render and focuses the control with `preventScroll`. An already visible
 field stays in place. A clipped field is revealed by scrolling only actual `auto`/`scroll`
@@ -149,7 +149,7 @@ including RTL tables. Do not use unrestricted `scrollIntoView`: it can move `ove
 layout containers and the page, lifting the editor's title/steps. Nested scroll regions account
 for the inner movement before revealing the field in the outer content pane. A dropdown or a
 date picker also opens once the scroll settles, so the
-missing value can be picked at once (owner requests 2026-10-01). The date picker opens through the
+missing value can be picked at once. The date picker opens through the
 shared `appDatePicker` click handler (block 17). The step change on this path must **not** scroll the body to the top — that
 runs later and undoes the jump. Every badge has its own `controlPath` (a date-order error and a
 required date on the same control are two paths). Reference: `Customers/Individual/IndividualPartner`.
@@ -222,7 +222,7 @@ control names (`'mangeDetails.' + name`), or walking the form to generate specs,
 an optional control then produces a badge whose key does not exist. Every key in the specs exists
 in `en.ts` and `ar.ts` (block 23).
 
-**Early duplicate checks (owner decision 2026-10-03).** For an existing
+**Early duplicate checks.** For an existing
 server-owned uniqueness rule, configure only that field with `updateOn:'blur'`
 and attach `uniqueFieldValidator` (`shared/utils/unique-field-validation.ts`).
 Supply the service's typed `checkUnique`, declared field name, current edit id,

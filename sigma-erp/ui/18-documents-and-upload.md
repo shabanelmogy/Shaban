@@ -61,7 +61,7 @@ inferring a file from `hasDocument` or a name. This reuses the existing FileStor
 contract; it introduces no new file access policy. Reviewed identity and supporting-file
 readers share it. Preserve historical files independently of current type upload eligibility.
 
-**Private authenticated images (source adoption,2026-11-09).** When FileLink
+**Private authenticated images.** When FileLink
 consumes a private authenticated image endpoint, use its optional
 `protectedImage`, `accessRequirement`, `preview` and `imageAlt` inputs instead
 of a direct static `img`/anchor. The existing FileLink owner fetches the typed
@@ -95,7 +95,7 @@ static folder is denied; file lifecycle/schema decisions belong to the frozen
 feature contract. Source conformance and source specifications2026-11-09;
 browser/SQL/storage acceptance pending.
 
-**Source-order private documents (source-only,2026-11-10).** The same closed
+**Source-order private documents.** The same closed
 FileLink owner accepts `purchase-order-document` with
 `Media.ReadPurchaseOrderDocument` and the source editor's requirement. Canonical
 root-relative `/tenant/PurchaseOrderDocuments/…` paths also select this resource
@@ -107,7 +107,7 @@ LeaseQuotation source-order contract; this does not certify older PO files or
 general PurchaseOrder permission adoption. Source specifications are written;
 runtime/storage/browser acceptance is pending.
 
-**Rental agreement private documents (source-only,2026-11-10).** The closed
+**Rental agreement private documents.** The closed
 `rental-agreement-document` resource uses `Media/rental-agreement-document`
 and requires RentalAgreement.View and RentalAgreement.GetDocuments. Canonical
 `/tenant/RentalAgreementDocuments/…` paths select the same resource in saved
@@ -120,7 +120,7 @@ grants remain unchanged. Protected reads in the dialog use local progress.
 Storage and agreement linkage belong to the frozen feature contract. Runtime
 and storage acceptance remain pending.
 
-**Aligned file/action row (owner clarification,2026-10-22).** When an existing
+**Aligned file/action row.** When an existing
 FileField is followed by FileLink for the same path, project that existing link
 inside FileField instead of rendering it on a second line. FileField owns an
 internal `.sigma-file-field__row`: shrinking file box, then the intrinsic-width
@@ -156,7 +156,7 @@ separate documents stylesheet: the former `sigma-documents__*` classes this bloc
 **not** exist in `src/styles.scss` (verified 2026-10-01), and screens must not add them.
 `app-documents` (Company) is the current reusable component on that table.
 
-**Document column space (owner request,2026-10-31).** The reusable
+**Document column space.** The reusable
 `app-documents` allocates explicit UI14 column widths: type280px, number240px,
 issuer240px, issue/expiry180px each, attachment320px and international140px,
 with a1680px table minimum. This keeps complete day/month/year inputs and wider

@@ -2,7 +2,7 @@
 
 ### Body padding — `[contentPadded]`
 
-**Bounded body chain (source checked 2026-10-01).** The shared PrimeNG content and
+**Bounded body chain.** The shared PrimeNG content and
 `.app-editor-dialog-content` pass a shrinking flex column (`min-height: 0`) to the
 projected editor. A long form uses `sigma-editor-form` → `sigma-editor-body` →
 `sigma-editor-scroll`; the inner region scrolls while dialog header/footer stay fixed.
@@ -32,7 +32,7 @@ and overflow ownership from the shared classes. Do not leave a zero-basis child
 in the auto-height chain. Company Driver draft uses this alternative with
 `maxHeight="90dvh"` after the owner requested removal of unused space.
 
-**Compact action forms (owner screenshot, 2026-11-15).** Choose a single-column
+**Compact action forms.** Choose a single-column
 field layout through the shared `--sigma-editor-columns` contract. Keep loading,
 error, explanation and multiline field blocks full-span (`sigma-field--full`)
 so the shared intermediate two-column breakpoint cannot place them side by

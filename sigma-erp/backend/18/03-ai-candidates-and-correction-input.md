@@ -1,7 +1,6 @@
 <!-- Part of backend block 18: see ../18-edge-cases.md. Same status and authority as the block. -->
 
-### Correction-record input policy (source-only, 2026-10-14)
-
+### Correction-record input policy
 The two Data Entry Correction services reuse the internal static
 `Services/HelperServices/CorrectionInputPolicy` for their common write-VM
 DataAnnotations, distinct positive SLA IDs, complete current eligibility checks
@@ -17,8 +16,7 @@ belongs to the correction feature contract. Owner migration/build/runtime and
 shared abandoned-upload expiry verification remain pending.
 
 
-### Metadata-only AI candidate contracts (2026-10-13)
-
+### Metadata-only AI candidate contracts
 JSON output mode ensures JSON syntax, not adherence to a form's field contract.
 For shared mock-data assistance, construct the prompt schema and example from
 the actual requested field keys and primitive types. Opaque choice tokens remain

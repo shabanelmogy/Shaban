@@ -1,6 +1,6 @@
 <!-- Part of UI block 6: see ../06-grid-and-footer.md. Same status and authority as the block. -->
 
-**Report row viewport width (owner correction, 2026-10-05).** The shared row
+**Report row viewport width.** The shared row
 wrapper reads public `--sigma-data-table-scrollbar-gutter` in both ordinary and
 scrollable modes, defaulting to `stable` for existing consumers. Canonical report
 panels set it to `auto` (UI20), so a report does not reserve an empty strip after
@@ -8,7 +8,7 @@ its final column when no vertical scrollbar is needed. Keep native scrolling,
 column minima and the complete frame width. Classic scrollbars still occupy
 their required space on actual overflow; do not hide them or compensate with
 negative margins or fixed pixel additions. Fill/flow, paginator and print
-owners remain. Source-only; desktop/narrow, RTL and overflow acceptance pending.
+owners remain.
 
 
 **Optional complete-report hierarchy (Accounts review, 2026-10-05).**
@@ -58,7 +58,6 @@ of its existing nodes; a new source array drops that bulk override, and repeated
 commands work after individual toggles. Its existing output behavior and tree body/paginator remain
 compatibility-only for this bounded action addition, not a canonical table
 reference; full report-body reviews still follow the mandatory shared-table rule.
-Source-only; owner keyboard/visual/print/runtime acceptance pending.
 
 **Optional accounting statement rows (CashFlow owner request, 2026-10-05).**
 

@@ -2,7 +2,7 @@
 
 > **Status: Canonical** — translate headers when the export action runs
 
-**Explicit complete read (source-only,2026-10-31).** A source-supported complete
+**Explicit complete read.** A source-supported complete
 result may replace repeated page reads for export/print while preserving the
 same predicates, order and authoritative count. Reuse `completeListRows` in
 `shared/utils/list-query`: require a successful Results envelope, an array and
@@ -117,7 +117,7 @@ Reference: the Individual customers card export (2026-10-01).
 failed page produces an error and no file · loading released on every outcome ·
 export disabled while running · all pages loaded with `fetchAllPages` · a list export that mirrors the grid uses `dataTableExportRows`.
 
-**No card export (owner decision 2026-10-01).** The Individual and Company lists no longer export
+**No card export.** The Individual and Company lists no longer export
 credit cards: the button, the Company endpoint and the browser-side Individual export were removed.
 If a card export is ever needed again, it comes from an export-only backend endpoint that returns
 the last four digits and never the CVV. The browser never downloads a full card list (G15;

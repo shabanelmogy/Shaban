@@ -1,7 +1,6 @@
 ## 1. Governance and review principles
 
-### Opening disclosure and reference sequence (owner clarification, 2026-11-05; tier-scaled 2026-11-19)
-
+### Opening disclosure and reference sequence
 Before investigating application source, give a short task-specific opening
 scaled to the tier. **Tier S:** one line stating scope/mode, the owning block and
 the verification boundary; name the references below only when the change
@@ -83,8 +82,7 @@ or accounting treatment the reviewer cannot confirm (tax authority, auditor), sa
 who must confirm, instead of defaulting to current behaviour. Example: VAT is rounded once per
 tax rate on the document (D4-4), although most documents rounded per line.
 
-### Experimental data and clean-start design (owner instruction, 2026-11-09; clarified 2026-11-16)
-
+### Experimental data and clean-start design
 All current Sigma application data, including local and hosted development/test
 databases, is experimental. This is a project-wide baseline, not a rule limited
 to numeric values or permission fixtures. Prefer the correct business model,
@@ -102,8 +100,7 @@ Preserve unrelated source work and data. If the owner later explicitly designate
 a production environment, freeze its data-preservation requirements separately
 before changing its data.
 
-### Standing access to Sigma experimental databases (owner instruction, 2026-11-16)
-
+### Standing access to Sigma experimental databases
 Within the requested Sigma task, agents may directly inspect/read and write the
 project's experimental local or hosted development/test databases, including
 scoped data repairs and deletion of experimental duplicates, without repeated
@@ -124,8 +121,7 @@ Master5; browser/application execution, commits, pushes and deployments retain
 their existing authorization requirements. The rule adds no recurring approval step for the scoped
 experimental-database operations it already authorizes.
 
-### Required experimental migrations (owner instruction, 2026-11-17)
-
+### Required experimental migrations
 An authorized Sigma implementation includes creating and applying its required
 EF migration on the verified Sigma experimental database. Master7 owns target,
 baseline, SQL review, scoped execution and result evidence. Keep unrelated
@@ -133,8 +129,7 @@ pending migrations outside the operation. Review-only, plan-only and
 named-phase limits still apply. Production, out-of-project targets, full resets
 and database drops retain their separate authorization boundaries.
 
-### Proportional process (owner decision D4-5, 2026-10-01)
-
+### Proportional process
 The artifacts follow the size of the change, not a fixed list:
 
 | Tier | Scope | Required |

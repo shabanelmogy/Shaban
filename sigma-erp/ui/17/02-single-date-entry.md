@@ -1,6 +1,6 @@
 <!-- Part of UI block 17: see ../17-dates.md. Same status and authority as the block. -->
 
-**Date-only editing (owner standing decision, 2026-10-01).** Every date field
+**Date-only editing.** Every date field
 allows manual date editing or picker selection, and rejects arbitrary text.
 `appDatePicker` enables `dateNumericInput` by default; no per-field opt-in is
 required. Its shared insertion/paste/key guards accept digits and the configured
@@ -21,7 +21,7 @@ keyboard guards or disable filtering to allow arbitrary text. The existing
 Companies/Driver and Individual date fields consume the shared directive;
 legacy calendars without it adopt it during their screen review (UI backlog 39).
 
-**Required structured single-date recipe (owner decision, 2026-10-02).** Character
+**Required structured single-date recipe.** Character
 filtering alone does not constrain a date's shape. Every new or reviewed date
 field uses `appDatePicker`; bind `[dateInputMask]="true"` for single
 `dd/mm/yy` and `mm/yy` calendars without time. This is the required recipe for

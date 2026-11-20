@@ -12,7 +12,7 @@ refresh. Never infer filtered membership from JavaScript collation or change
 counts locally. Existing explicit Refresh remains authoritative; no backend
 or paginator contract changes. Evidence: Languages text editor/list follow-up.
 
-**All-table vertical centering (explicit owner rule, 2026-10-15).** Every table
+**All-table vertical centering.** Every table
 cell, header/body/footer and grouped/rowspan cell is vertically centered,
 including native/legacy tables, shared DataTable, editable collections and
 report output. `src/styles.scss` owns the universal `table th, table td`
@@ -34,7 +34,7 @@ legacy vertical-align token. Verify rows with mixed content heights, multiline
 text/errors, row spans, empty states, Create/Edit/View, RTL/themes and print;
 source review does not prove runtime/visual acceptance.
 
-**Uniform row centering (owner correction,2026-10-31).** The owner's request to
+**Uniform row centering.** The owner's request to
 center every element vertically supersedes the2026-10-23 first-control-track
 exception. Editable rows with `app-field-error`, `.sigma-field-error` or
 `app-file-field` keep the same middle alignment as all other cells. Remove the

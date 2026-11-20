@@ -1,7 +1,6 @@
 <!-- Part of UI block 14: see ../14-editable-collection-table.md. Same status and authority as the block. -->
 
-### Bounded row scrolling in routed editors (owner clarification, 2026-10-15)
-
+### Bounded row scrolling in routed editors
 For every new or reviewed similar master-detail editor, verify the complete
 height chain, not just the table inputs. Use the bounded route/form/body from
 UI1 and a remaining-space FormSection host with `[fill]="true"`. Its content
@@ -54,8 +53,7 @@ scrollbar. Purchase Requests supplies the missing-wrapper evidence; existing
 out-of-scope consumers adopt this rule when implemented or reviewed.
 
 
-### Complete report print flow (2026-10-27; UI21)
-
+### Complete report print flow
 Mark a printed EditableCollectionTable host with the existing `sigma-print-flow`
 class. Its shared print rules release the host, inner fill wrapper and scroll
 frame, override max-height/table/column minimum widths, unstick cells, wrap long

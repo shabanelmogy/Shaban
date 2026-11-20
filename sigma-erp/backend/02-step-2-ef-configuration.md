@@ -57,8 +57,7 @@ builder.HasMany(x => x.PurchaseOrderDetails)
   evidence gate below; an actual filter/sort alone does not require one index
   per column or authorize schema changes.
 
-### Evidence-backed performance index proposals (owner2026-10-25)
-
+### Evidence-backed performance index proposals
 For an expensive in-scope request, trace the physical EF table/mapping and
 generated query shape before proposing an index. Inspect existing EF indexes,
 keys/FKs and available schema/migration declarations read-only; deployed indexes,

@@ -42,14 +42,13 @@ not a late cosmetic review.
   do not document it as compliant or add compensating widths. Report source
   conformance separately from pending authorized visual acceptance.
 
-### Space for task content (owner instruction, 2026-10-23)
-
+### Space for task content
 - Give the main fields, account choices and working data the useful space. Keep
   secondary explanations concise; do not repeat selected labels below a control
   that already displays them. Optional title subtitles must add useful context.
 - Preserve the full available width of search/filter strips. Shorter help text
   does not authorize narrowing the strip or placing formerly full-width strips
-  side by side (owner clarification, 2026-10-23); retain UI3's sibling-card edges.
+  side by side; retain UI3's sibling-card edges.
 - Use the existing shared components' public layout and selection-summary inputs.
   Related compact controls may share a row when their available width permits;
   stack them at the appropriate breakpoint. Do not compress shared control heights,
@@ -172,23 +171,20 @@ not a late cosmetic review.
 - Never copy Legacy patterns.
 - Report schema migration and API compatibility effects.
 
-### Code layout (G10, 2026-10-01)
-
+### Code layout
 One statement per line, one `switch` arm per line, and braces and line breaks as in the
 surrounding code and the reference. A multi-statement line, a compressed `switch` or an
 inline `if { … }` block is a review finding even when it compiles: brevity never beats the
 reference's readability.
 
-### Dead roots are removed, not rebuilt (G12, 2026-10-01)
-
+### Dead roots are removed, not rebuilt
 A feature root the backlog lists as dead (no menu entry, or a duplicate of a canonical owner)
 is removed in the review that reaches it: routes, `LayoutModule` imports and providers, its
 translations and spec files. Its live consumers move first to the canonical owner (for example,
 the Rental Agreement driver lookup moves to the shared `DriverService`). It is not refactored,
 aliased or given a new screen unless the owner asks for it.
 
-### Proportional implementation (G19, 2026-10-01)
-
+### Proportional implementation
 Build only what the frozen contract and the screen use. No speculative filter keys, guard
 chains, retries, wider loading graphs, or reference checks for relationships that cannot exist.
 Each extra mechanism names the defect it prevents, in the contract or in a source comment; one

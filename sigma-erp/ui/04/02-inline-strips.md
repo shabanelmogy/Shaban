@@ -1,6 +1,6 @@
 <!-- Part of UI block 4: see ../04-filters.md. Same status and authority as the block. -->
 
-**Compact inline actions (owner request, 2026-10-05).** A simple search strip
+**Compact inline actions.** A simple search strip
 may bind `[inlineActions]="true"` on the shared FilterPanelComponent to place
 its existing Reset/actions beside the main grid, aligned with the input line.
 This is default-off and is applied only without an advanced template; advanced
@@ -28,7 +28,7 @@ retains the original unvalidated inline layout; advanced filters retain their
 separate toolbar. No feature offset/padding or duplicated Reset. Source-only;
 owner desktop/narrow/validation/visual acceptance pending.
 
-**Intermediate inline layout (owner correction, 2026-10-11).** A dense inline
+**Intermediate inline layout.** A dense inline
 strip may opt into numeric `responsiveColumns` (default null). At viewport widths
 <=1365px, the shared panel moves actions below the full-width field grid, hides
 the now-unneeded action caption and uses this number of tracks; <=720px uses

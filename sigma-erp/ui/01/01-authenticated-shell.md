@@ -90,7 +90,7 @@ theme/background subscriptions and body-class cleanup (runtime retirement,
   clamp.
   Rows grow naturally while fixed controls remain centered. This keeps third/deeper-level actions within the existing
   viewport without clipping their focus outlines or changing pin/chevron order
-  (owner2026-10-24; source-only visual acceptance pending).
+ .
 - Selecting a sidebar page preserves the current bounded menu scroll position
  .
   Keep the existing panel-item objects, child arrays and disclosure alive on
@@ -135,7 +135,7 @@ theme/background subscriptions and body-class cleanup (runtime retirement,
   route/model rebuild or destruction cancel pending animation-frame work and
   disconnect the observer. Closing a group does not start alignment. Preserve
   publisher keyboard/focus/disclosure and native scrollbar/pin geometry
-  (owner2026-10-24; source-only visual acceptance pending).
+ .
 - Retain `sigma-app-viewport` lifecycle, `kt_app_root/page/wrapper/main` and
   content-container IDs as print/consumer compatibility boundaries, without
   data-kt interactions. `.app-content` remains fallback scroll owner, with
@@ -241,7 +241,7 @@ nonzero Drawer/row geometry through the existing ResizeObserver, and observe
 the target plus viewport/content/motion containers. Manual input, search, pin,
 navigation and destruction cancel restoration as well as explicit reveal.
 No window scrolling, forced disclosure, focus change or artificial scroll
-spacer (owner correction2026-10-24: retained selection was not brought upward).
+spacer.
 
 Keep that viewport shrinkable in inline size and vertically scrollable only,
 with `scrollbar-gutter: stable` and 1rem logical-end padding (logical-start

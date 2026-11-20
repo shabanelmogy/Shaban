@@ -11,8 +11,7 @@
 > **Status: Canonical** — reusable `app-data-table` with feature-owned data and
 > query state
 
-### Authoritative report footer rows (source-only,2026-11-11)
-
+### Authoritative report footer rows
 `DataTableComponent.footerRows: ReadonlyArray<T>` defaults to an empty array.
 A report may supply backend-owned complete-result totals using the same typed
 column shape. The shared table renders them in its own `tfoot` under the same
@@ -59,7 +58,7 @@ DataTable applies them for omitted/empty/legacy options, including the former
 explicit custom sizes/choices and user-selected sizes retain their owners.
 The minimum stays 10; presentation paging never changes report completeness,
 totals, export or full-print scope. All four Suppliers screens consume this
-shared default. Source-only; owner runtime acceptance pending.
+shared default.
 
 
 The selected paginator page is a primary action state: use

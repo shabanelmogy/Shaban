@@ -12,8 +12,7 @@ disable publisher motion or suppress console errors to make tests green.
 
 What a source change can and cannot claim.
 
-### Full-width layout acceptance (owner2026-10-26; UI1/Master5)
-
+### Full-width layout acceptance
 Before handoff, complete UI1's actual route/host/page/panel/body source chain in
 the existing feature review. Name the selectors that win, including encapsulated
 feature styles and relevant breakpoints; verify display, width constraints and
@@ -38,8 +37,7 @@ evidence; identify any intentional shared inset. Do not claim a measured pass
 from a source-only matrix. A confirmed source mismatch still requires repair
 before handoff, even when runtime acceptance remains pending.
 
-### Loading-speed verification (owner2026-10-25; Master5/BE7/BE2)
-
+### Loading-speed verification
 Every screen review records a proportional load-speed audit and reproducible
 verification plan, separately from UI22's visible-progress conformance. Trace
 the active route to actual requests, query boundaries, response size and render
@@ -78,7 +76,7 @@ suppression. A temporary diagnostic reporter must retain the original warning an
 remain outside normal bootstrap. CSS color tests wait for the declared transition
 to settle before comparing states; an initial frame is not disabled/theme evidence.
 
-**Production stylesheet size budgets (owner build evidence, 2026-10-13):**
+**Production stylesheet size budgets:**
 `anyComponentStyle` measures emitted CSS for one component, not source SCSS file
 size. The owner supplied4KB failures with a largest16.44KB stylesheet. Sigma's
 production angular.json now warns at10KB and errors at20KB for this budget;
@@ -88,7 +86,7 @@ sizes when reviewing a bounded budget adjustment; retain warning/error limits
 rather than removing the gate or disabling optimization. Parsing/configuration
 review proves only the policy change, not bundle/CSS reduction or successful compilation.
 
-**Critical-CSS warnings (source-verified, 2026-10-21):** Angular 17's
+**Critical-CSS warnings:** Angular 17's
 `browser-esbuild` runs Critters against the generated index. Critters tests
 selectors after stripping pseudo-classes; this can turn valid emitted selectors
 such as floating-label and table rules into invalid selectors and report them as
@@ -119,8 +117,7 @@ of runtime behaviour, and "it looks right in the diff" is not verification — t
 `mangeDetails.cVV` fix in this repository was placed in the wrong translation
 block on the first attempt and read correctly in the diff.
 
-### Responsive consistency gate (owner instruction, 2026-10-11)
-
+### Responsive consistency gate
 Every new or reviewed screen must preserve coherent element sizes, spacing and
 alignment across the entire supported screen-size range. Desktop and mobile
 endpoints alone do not establish responsive conformance. Review each layout

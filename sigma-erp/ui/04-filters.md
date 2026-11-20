@@ -41,7 +41,7 @@ their intrinsic size.
 
 > **Status: Canonical** — component `shared/components/filter-panel` (`FilterPanelComponent`,
 > `FilterAdvancedDirective`, `FilterActionsDirective`); reference screen
-> `Workshop/Job/components/list` (owner decisions 2026-09-30). Plan:
+> `Workshop/Job/components/list`. Plan:
 > `reviews/Archive/Completed/2026-10-23/SHARED_FILTER_PANEL_MAINTENANCE_EVOLUTION_PLAN.md`. Screens that still carry a
 > feature-owned strip move to the panel in their own review.
 
@@ -161,8 +161,7 @@ or dark rule and no undefined `var()` token · every single-line control stays a
 trimmed and empty values not sent · no extra clear button beside a dropdown with `[showClear]` ·
 a report uses the `sigma-report-filter-*` strip instead (block 20).
 
-### Inactive status check box (G6, 2026-10-01)
-
+### Inactive status check box
 Every list with an *inactive only* check box uses the same meaning:
 
 - **Unchecked** sends no filter and shows all rows.

@@ -1,7 +1,6 @@
 <!-- Part of backend block 18: see ../18-edge-cases.md. Same status and authority as the block. -->
 
-### Generic audit metadata capture (owner request, 2026-10-14)
-
+### Generic audit metadata capture
 The owner requested a reusable service for all entities and a backend interceptor
 for the Audit Trail screen. The frozen full-stack contract is
 `reviews/Archive/Completed/2026-10-23/AUDIT_TRAIL_FULL_STACK_CONTRACT_FREEZE.md`. Preserve the current
@@ -45,9 +44,8 @@ view permission and identity check. Existing metadata-only rows remain valid;
 do not fabricate their missing details. This capture still excludes direct SQL,
 bulk updates, and writes outside the tracked tenant DbContext.
 
-#### Reusing the document action log for another model (owner decision 2026-10-22)
-
-**Unified approval adoption (owner2026-10-24; Master4/UI7).** Save a new document
+#### Reusing the document action log for another model
+**Unified approval adoption.** Save a new document
 as Pending. Only Pending→Approved/Rejected and guarded Approved→Pending are
 legal; Rejected is terminal, with no direct Approved→Rejected shortcut. Keep the
 existing enum values and use one typed decision payload (status, optional reason)
@@ -66,7 +64,7 @@ journal. The concrete first rollout is PR/PO/GRN/Bill/PurchaseReturn in
 PURCHASING_UNIFIED_APPROVAL_DOMAIN_API_CONTRACT_FREEZE.md; models without a frozen
 approval lifecycle do not gain an endpoint or placeholder journal by imitation.
 
-**Document-cycle review sequence (owner2026-10-24).** For purchasing or another
+**Document-cycle review sequence.** For purchasing or another
 linked document cycle, inventory every source/converter/downstream writer before
 changing state or adding Log. Record approval, quantity use, invoicing,
 reservation and financial settlement as separate axes. Quantity Open means no
@@ -81,7 +79,7 @@ excluding the current document when updating. Delete/Reject/Void and UnApprove
 follow the model's existing guards; returning an invoice to Pending retains its
 reservation. No manual flag or read-time write substitutes for actual coverage.
 
-**Type-directed downstream creation (owner2026-10-24).** A source document's
+**Type-directed downstream creation.** A source document's
 Create Receipt/Create Invoice action is backed by a saved source-line key,
 not a browser copy of amounts/descriptions. Keep the source's downstream
 eligibility and each destination's draft/read/preview/write/approve validators

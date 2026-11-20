@@ -1,6 +1,6 @@
 <!-- Part of UI block 4: see ../04-filters.md. Same status and authority as the block. -->
 
-**Shared title/filter card paint (owner request, 2026-10-03).** The list filter,
+**Shared title/filter card paint.** The list filter,
 report filter and `app-feature-title` reuse `--sigma-filter-panel-background`:
 135deg primary5% wash fading to transparent at42%, over the themed filter surface.
 Declare this derived token at both `:root` and `[data-bs-theme='dark']` so it
@@ -30,7 +30,7 @@ with the checkbox **before** its label, aligned on the control line. A radio gro
 </fieldset>
 ```
 
-**Checkbox vertical centering (owner instruction, 2026-10-10).** In a filter row
+**Checkbox vertical centering.** In a filter row
 with text inputs, dropdowns or a date range, the checkbox square's vertical
 centre must match the centre of the neighbouring **control boxes**. Centre its
 adjacent label with the square. Do not align it to the labels above those boxes,

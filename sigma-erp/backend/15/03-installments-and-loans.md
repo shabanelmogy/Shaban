@@ -1,7 +1,6 @@
 <!-- Part of backend block 15: see ../15-pattern-3-master-detail-with-financial-effect.md. Same status and authority as the block. -->
 
-### Source-owned installment payments (2026-10-20)
-
+### Source-owned installment payments
 A saved installment schedule is not a payment. Its source action changes a row
 to Paid only after a real Payment/PV, its posted source-owned journal, the
 durable installment link and any required principal allocation commit together.
@@ -31,8 +30,7 @@ runtime acceptance remain pending. Exact first-slice limits stay in the Bills
 payment contract rather than becoming assumed workflows for other documents.
 
 
-### Source-owned loan down payments (owner2026-10-21)
-
+### Source-owned loan down payments
 A financing DownPayment is a term, not a cash movement. The owner-approved Bills
 action pays the full saved positive down payment separately from the EMI table:
 debit the original Bill supplier payable and credit its saved RecoveryBank,
@@ -56,8 +54,7 @@ move posted lines must move retained bank/interest role references consistently.
 Owner migration and source/runtime acceptance remain feature-report concerns.
 
 
-### Audited loan schedule revisions (owner2026-10-21)
-
+### Audited loan schedule revisions
 Separate installment payment, rescheduling and early settlement; a misleading
 reference label or example does not define accounting. When the owner approves
 a replacement schedule, preserve Paid rows and their source-owned PVs, archive
@@ -134,7 +131,7 @@ Rules:
    billed. Found: `InvoiceService` passed `0.05m` and `BillDetail` defaulted to
    `0.05m` into percentage formulas, charging 0.05 % VAT; bill discounts were missing
    from the journal.
-   **Tax rate source (owner decisions 2026-09-29):** `ITaxPolicyService` (scoped, per
+   **Tax rate source:** `ITaxPolicyService` (scoped, per
    request) reads `SettingsCommonModel.TaxPercentage` (default 5, validated 0–100),
    `IsTaxOptional`, and inclusion (`TaxInclusion` unless `AllPricesWithoutTax`). A
    document never takes the rate from the client: `ResolveRateAsync(requested)` accepts
@@ -146,7 +143,7 @@ Rules:
    prices; each screen enables it in its own review. Historical data import keeps the
    file rate. The frontend reads the same setting through `TaxSettingsService` for
    defaults and previews only.
-   **Sales vs purchase tax (owner decision 2026-09-29):** sales tax is ours to calculate;
+   **Sales vs purchase tax:** sales tax is ours to calculate;
    purchase tax follows the supplier's tax invoice; a document that is not a tax invoice
    only estimates. `GetSupplierRatePercentAsync` / `ResolveSupplierRateAsync` give the
    settings rate for a tax-registered supplier (TRN or VAT number, not `TaxExempted`) and 0

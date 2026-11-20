@@ -1,8 +1,7 @@
 <!-- Part of UI block 2: see ../02-service-and-response-wrappers.md. Same status and authority as the block. -->
 
-### Selective reference lookup cache (owner2026-10-23)
-
-**Explicit customer-currency display opt-in (owner2026-10-28).** Reuse
+### Selective reference lookup cache
+**Explicit customer-currency display opt-in.** Reuse
 `ReferenceLookupCacheService` for the exact positive-ID URL family
 `Partner/GetCurrency/{id}` through `PartnerCurrencyLookupService`. This narrow
 tenant/live DTO contains only `currencyCode: string|null` from the partner's
@@ -76,7 +75,7 @@ sources, settings and availability-sensitive document choices need their own rev
 Evidence: `reviews/LOOKUP_CACHING_REFERENCE_DATA_CONTRACT_FREEZE.md`; implementation
 and automated/runtime verification are reconciled in the owning feature review.
 
-**Purchasing reference expansion (owner2026-10-24).** Supplier (including the
+**Purchasing reference expansion.** Supplier (including the
 existing SupplierShared adapter), Branch, Item, AssetType, Currency and
 ContactGroup now opt in through their source services. Country/UOM retain the
 same policy. Eligibility applies to every consumer of the reviewed source URL,
@@ -147,8 +146,7 @@ Evidence: `reviews/PURCHASING_LOOKUP_CACHE_UI_CONTRACT_FREEZE.md` and its owning
 review; source-only checks, compiler/network/concurrency acceptance pending.
 
 
-### Active reference revalidation (owner2026-10-24)
-
+### Active reference revalidation
 This approved extension supersedes the preceding next-read-only limitation for
 the reviewed reference sources. Keep `getSelectList`/`read` finite for initial
 HTTP/forkJoin bootstraps. Mount a separate `watchSelectList`/`watch` stream only
@@ -202,7 +200,7 @@ uses the same cleanup. The Accounts report owner adopts this reset while
 keeping non-opted-in sources on direct reads (UI20,2026-11-05). Runtime/network
 acceptance remains separate from source evidence.
 
-**Retained editor choices (source correction2026-10-26).** The final optional
+**Retained editor choices.** The final optional
 `ReferenceLookupBindings.bind` argument `disableRetainedOptions` defaults false,
 preserving existing historical list-filter behavior. An editor whose source
 choices exclude unavailable identities passes true and binds its existing Select
@@ -217,7 +215,7 @@ default or infer availability from a label; write-time validation remains with
 the server. Reuse this existing binding metadata seam instead of duplicating
 source-membership tracking per editor. Evidence: Rentals R06/R09 corrective
 reconciliation, Agreement/Quotation editors, Agreement Deposit and shared branch
-settings. Source-only; owner selection/refresh/context acceptance pending.
+settings.
 `ReferenceLookupStatusComponent` reuses StateMessage and the shared secondary
 button for translated loading/error/retry, inherits theme/RTL, and owns no
 business calculation or form value. Initial bootstrap keeps its existing error

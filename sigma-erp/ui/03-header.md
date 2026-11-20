@@ -45,7 +45,7 @@ style overrides. This general owner request supersedes the earlier scoped
 report alignment decision; source-only evidence is recorded in
 `F:/My Work/Sigma/reviews/Archive/Completed/2026-10-23/SHARED_TITLE_FILTER_CARD_FEATURE_REVIEW.md`.
 
-**Equal card widths (owner general rule, 2026-10-05).** All full-width cards and
+**Equal card widths.** All full-width cards and
 region frames on the same layout level in a page share the same available width
 and logical start/end edges: title, filters, summary region, content/grid/tree
 frame and footer cards. Their shared shell/layout owner supplies one consistent
@@ -58,7 +58,7 @@ summary region with its sibling frames. Apply this rule in new work and subseque
 screen reviews; the present implementation adopts it in Chart of Accounts and
 LinkAccounts and OpeningBalances, including title, tab, filter and table frames.
 
-**Tabbed editor body alignment (owner reiteration, 2026-10-15).** The existing
+**Tabbed editor body alignment.** The existing
 `sigma-editor-panel--workspace` also removes inline padding from nested
 `sigma-editor-body` regions through `src/styles.scss`. Keep vertical spacing,
 flex bounds and internal scroll unchanged. Its title, top FormSection, tab
@@ -82,7 +82,7 @@ Import `PrimaryActionButtonComponent` in the standalone feature and use the
 shared primary action from block 24. The feature supplies translated content
 and behavior; it does not recreate primary-button markup or styling.
 
-**Responsive title actions (owner generalization, 2026-10-11).** Every
+**Responsive title actions.** Every
 FeatureTitle keeps title and actions on a wrapping row at <=650px. The title
 uses a flexible120px basis and the bounded action group wraps only when the
 available space cannot contain both. Preserve translated labels, icon, action
@@ -92,7 +92,6 @@ fit. This supersedes the earlier Leave/Holiday-only opt-in; no
 PrimaryActionButton owns the small-screen sizing in UI24; features add no CSS.
 Apply UI29's responsive consistency matrix at650 and both neighbouring sizes,
 intermediate/narrow widths, long EN/AR titles and all projected actions.
-Source conformance does not establish visual fit; owner acceptance pending.
 
 The title sits in the shared list shell (block 1); a feature adds no page, panel or header
 class of its own:

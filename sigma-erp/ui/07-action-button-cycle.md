@@ -9,8 +9,7 @@
 
 > **Status: Canonical** — declare `ActionList<Row>` for typed actions (2026-09-30)
 
-### Explicit current-session permissions — 2026-11-06
-
+### Explicit current-session permissions
 For an adopted action, declare its actual backend `permission` requirement in
 `ActionList<Row>`/`ButtonModel` or the existing shared button input. The shared
 owner combines this with the row's visible/disabled/busy policy and rechecks

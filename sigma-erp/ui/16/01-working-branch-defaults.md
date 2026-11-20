@@ -1,7 +1,6 @@
 <!-- Part of UI block 16: see ../16-dropdowns-lookups-enums.md. Same status and authority as the block. -->
 
-### Working-branch defaults (owner decision, 2026-10-18)
-
+### Working-branch defaults
 The topbar branch is a default for screens with a real branch selector, not an
 authorization scope. Use the root `CurrentBranchService.defaultBranchId()` for
 initial typed branch filters and `applyDefault(control)` for eligible empty,

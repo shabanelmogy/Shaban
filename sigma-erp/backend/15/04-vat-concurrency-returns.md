@@ -1,7 +1,6 @@
 <!-- Part of backend block 15: see ../15-pattern-3-master-detail-with-financial-effect.md. Same status and authority as the block. -->
 
-### Nonnegative allocation of positive VAT sources (2026-10-12)
-
+### Nonnegative allocation of positive VAT sources
 `VatPolicy.AllocateDocumentTax` retains its existing rounded proportional shares
 when their remainder is nonnegative. Many tiny positive lines can round those
 shares above the entire rate tax: 100 lines of0.10 at5% give document tax0.50,
@@ -28,8 +27,7 @@ projection per partner), periods `IAccountingPeriodService`, numbers
 injects the narrow interface it needs.
 
 
-### Collection and lifecycle concurrency across services (Sales, 2026-10-04)
-
+### Collection and lifecycle concurrency across services
 A document whose eligibility depends on rows written by other services (a sales agreement:
 its units' sale state, its quotation's state, and the receipts collected against it) is
 protected by **one** tenant lock, `UnitOfWork.ExecuteUniqueWriteAsync<TOwner>`, taken by
@@ -45,11 +43,10 @@ closed document) moves the document back to its previous open state in the same 
 un-voiding re-runs the add eligibility. Equal installments are rounded down to the money
 decimals and the last takes the remainder, so no row is negative. Reference:
 `SalesAgreementService`, `ReceiptService` (`LockSalesCollectionAsync`,
-`ReopenClosedAgreementAsync`). Owner runtime verification of races pending.
+`ReopenClosedAgreementAsync`).
 
 
-### Quantity returns and independent financial credit (2026-10-25)
-
+### Quantity returns and independent financial credit
 Keep physical source quantities and financial settlement as separate effects
 when the frozen model requires both. Preserve exact receipt/bill/source-return
 line FKs; a master source summary or label cannot prove capacity. Pending
@@ -95,7 +92,7 @@ race/rounding/period acceptance remain required.
 dependent save · rollback restores document, voucher, allocations and flags ·
 debit equals credit · one-sided lines · allocation limits and ownership checked ·
 state locks enforced · line references via `AllExistAsync` · VAT per rate rounded once ·
-posted documents voided through retained source/JV flags without a reversing entry, never deleted (owner2026-10-20) · related flags recomputed from persisted facts · list,
+posted documents voided through retained source/JV flags without a reversing entry, never deleted · related flags recomputed from persisted facts · list,
 detail, report and export use the same voided/posted/allocation rules · no
 per-row query loop.
 

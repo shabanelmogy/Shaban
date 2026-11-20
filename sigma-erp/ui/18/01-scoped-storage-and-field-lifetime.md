@@ -1,7 +1,6 @@
 <!-- Part of UI block 18: see ../18-documents-and-upload.md. Same status and authority as the block. -->
 
-### Scoped document storage and field lifetime — 2026-11-12
-
+### Scoped document storage and field lifetime
 The reusable Company DocumentsComponent accepts optional `uploadFolder`,
 `fileAccessRequirement`, `fileAllowed` and `fileCancelled$`. Its default folder
 remains CustomerDocuments for existing consumers. A parent with a reviewed

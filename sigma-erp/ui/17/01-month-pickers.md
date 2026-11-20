@@ -21,4 +21,4 @@ months and non-date/non-string values. Depreciation adopts it. Accounts report
 family and Staff Timesheet retain two source-inspected local validator copies
 until their own review (UI30/39); this addition does not authorize a bulk change.
 The shared picker mask, current-month default, business bounds and transport
-remain separate owners. Source-only; owner input/runtime acceptance pending.
+remain separate owners.

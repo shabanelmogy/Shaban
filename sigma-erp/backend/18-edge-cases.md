@@ -19,7 +19,7 @@ if an existing row's value changes. Never assign it in a service, a child loop,
 or a mapping (`item.SubscriptionId = entity.SubscriptionId` is wrong), and never
 accept it from a payload.
 
-**Missing subscription (owner-approved R2, 2026-10-03).** Ordinary EntityBase
+**Missing subscription.** Ordinary EntityBase
 Repository reads and writes require the resolved claim to be a positive integer;
 missing, nonnumeric, zero or negative values throw `SubscriptionRequiredException`
 before querying or mutating the graph. The existing exception middleware returns
@@ -35,8 +35,7 @@ claim convention itself remains the current contract (backlog 11).
 
 ### Input
 
-### Shared quantity/hour/meter policy (owner foundation decision,2026-10-30)
-
+### Shared quantity/hour/meter policy
 Current data is experimental and does not justify preserving accidental numeric
 precision. Reuse `SiGma.Helpers.Helpers.QuantityNumberPolicy` for reviewed
 fractional quantities, hours and meter readings: storage precision18, scale6,
@@ -54,7 +53,7 @@ does not authorize migration creation, data reset or database execution.
 
 ### Records and relationships
 
-**Shared calendar and clock bounds (source-only, 2026-10-12).** Monthly readers
+**Shared calendar and clock bounds.** Monthly readers
 that accept December9999 reuse `CalendarMonthBounds.FromStart` with a normalized
 first-day midnight. It returns inclusive month end without constructing year10000;
 ordinary lower maximum-year contracts remain unchanged. Clock writers reuse

@@ -30,7 +30,7 @@ if (!includeDeleted)
 Both default to `includeDeleted = false`. Ordinary tenant reads use the guarded
 `TenantSet<T>`; writes call `RequireSubscription` before changing the graph.
 A resolved subscription <= 0 throws `SubscriptionRequiredException`, returned
-as localized `FailToAuth`/HTTP401 (owner-approved R2, 2026-10-03; block 18).
+as localized `FailToAuth`/HTTP401.
 On write, `Add` stamps roots and `AssignTenantOwnershipToAddedGraph` stamps new
 children. `Update`/`Delete` use `ProtectTenantOwnershipForWriteGraph`, preserving
 ownership for existing rows and protecting their SubscriptionId concurrency
@@ -48,8 +48,7 @@ Consequences for your checks:
   the subscription claim is missing, but it is still not a validation tool: never use it
   for a duplicate, existence or ownership check.
 
-### Automatic input checks (2026-10-01)
-
+### Automatic input checks
 **Select identity and principal agreement (UI16; 2026-10-14).** Verify the select
 query's real entity/allowed subtypes against the write FK and EF principal;
 matching integer shapes and controller names alone do not prove ownership.
@@ -133,7 +132,7 @@ Rules:
 - back the rule with a unique index from step 2. When inheritance splits the business key
   and its tenant/live-row scope across tables, an ordinary filtered index cannot express that
   key: serialize participating duplicate-check writes with the shared
-  `UnitOfWork.ExecuteUniqueWriteAsync<TEntity>` (owner decision 2026-10-01). It takes an
+  `UnitOfWork.ExecuteUniqueWriteAsync<TEntity>`. It takes an
   Exclusive SQL Server application lock per entity type and authenticated subscription before
   duplicate reads, inside a ReadCommitted transaction. Base Add/Update apply it when
   `UniqueColumns` is declared; custom aggregate updates override protected `UpdateCoreAsync`.
@@ -148,8 +147,7 @@ Rules:
 - for a child collection, uniqueness is usually **within the parent**, so include
   the parent key in the predicate.
 
-### Shared transaction lock execution (currency implementation, 2026-11-04)
-
+### Shared transaction lock execution
 The SQL command and `Unique:{owner.FullName}:{subscriptionId}` resource construction
 live in `SiGma.Helpers/Helpers/TransactionWriteLock.cs`. `UnitOfWork.ExecuteUniqueWriteAsync`
 retains transaction ownership and its localized result contract. A final persistence
@@ -208,8 +206,7 @@ inbound and outbound effects, consumption at a shared source from another
 branch, and the same target under administrator access. Compare the balance or
 consumed quantity for authorized actors operating on the same data.
 
-### Advisory unique-value preflight (owner decision 2026-10-03)
-
+### Advisory unique-value preflight
 Step forms may check a declared unique field after entry through authenticated
 `POST /{controller}/CheckUnique`, inherited from SiGmaControllerBase and
 IService/Service. Request: `UniqueValueCheckRequest` (`fieldName`, `value`,
@@ -330,8 +327,7 @@ enable transaction-only filtering even while it validates a readable reference.
 An operation that registers a movement still requires its approved transaction
 scope. [Permissions and route access](../ui/26-permissions-and-route-access.md)
 
-### 3. Reference check before delete (automatic, 2026-10-01)
-
+### 3. Reference check before delete
 The base discovers inbound references from the EF model. For a tenant-shared
 definition, live references in every branch of the same tenant must block
 deletion. Check whether the actual EF query filters can hide a dependent row
@@ -356,7 +352,7 @@ reference the actor cannot view, with no document or branch details.
 3. **Delete:** soft-deletes the record and the owned rows named in `owned`. Those rows belong to
    the record, so they never block.
 
-**Soft delete writes only its fields (owner-approved R1, 2026-10-03).** The shared
+**Soft delete writes only its fields.** The shared
 `SiGmaDbContext.HandleAudit` converts each Deleted EntityBase into a write of
 `IsDeleted`, `DeletedBy` and `DeletedAt` only. Restore that entry's scalar current
 values from OriginalValues, set its state to Unchanged, then assign the three
@@ -368,7 +364,6 @@ Pending scalar edits on the deleted row are discarded; other tracked rows keep
 their changes, including legitimate parent updates. Do not force full-row Modified
 for soft delete or add a transaction/save solely for this conversion. Every
 Deleted owned row uses the same boundary; ownership and usage checks above stay.
-Source-only correction; owner concurrent-delete verification pending (block 18).
 
 ```csharp
 // Individual, Driver: the whole delete
@@ -406,8 +401,7 @@ Rules:
 
 ### Where each check belongs, by pattern
 
-### Shared stored-decimal input validation (2026-10-12)
-
+### Shared stored-decimal input validation
 For nonnegative decimal(18,2) input contracts that reject excess precision,
 reuse `SiGma.Helpers/Filters/NonnegativeStoredDecimalAttribute` and its
 `IsRepresentable` preflight in bulk/import writers before tracking mutations.

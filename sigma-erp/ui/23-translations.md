@@ -2,8 +2,7 @@
 
 > **Status: Canonical**
 
-### Database language switching (2026-10-17)
-
+### Database language switching
 The shared TranslationService separates an explicit catalog/default refresh
 from selecting an already loaded active language option in TopBar. Bootstrap,
 Retry and language-management completion refresh options; an actual switch

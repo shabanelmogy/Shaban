@@ -21,8 +21,7 @@ with the charge types `WorkshopItems`, `WorkshopLabour`, `WorkshopMisc` and
 A journal can be built only when every account it resolves is linked to a
 **posting** account (`AllowChildren = false`, active). Link Accounts > *Complete
 missing links* (`LinkAccountsAutoLinkService`, `GET LinkAccounts/auto-link/plan`,
-`POST LinkAccounts/auto-link/apply`) fills every empty slot with one rule
-(owner approval 2026-09-29):
+`POST LinkAccounts/auto-link/apply`) fills every empty slot with one rule:
 
 1. **Seed default first.** `LinkAccountsDefaultCatalog` (shared with the seed)
    names the default code. When that code exists as a posting account of the
@@ -47,7 +46,7 @@ Existing links and accounts are never changed. Accounts are created only through
 Apply rebuilds the plan on the server and runs in one explicit transaction
 (several saves). PrepaidExpense rows are user-added lists, not slots.
 
-**Every customer and supplier has its own sub-account (owner decision 2026-09-29).** Each
+**Every customer and supplier has its own sub-account.** Each
 contact type has one default group (`ContactGroup.IsDefault`, unique per type): *General
 Customer* / *General Supplier*. A customer or supplier saved without a group gets the
 default one, and removing a default group is refused. *Complete missing links* first
@@ -62,7 +61,7 @@ transaction): a posting account named after the group under *Customer Receivable
 *Accounts Payable*). Nothing posts to the main receivable/payable account, so the chart
 can later be split by group without moving history. Found: Close Job invoice failed with
 "No customer control account" for a customer without a group.
-**Splitting a posting account** (owner decision 2026-09-29): Chart of Accounts > *Convert to
+**Splitting a posting account**: Chart of Accounts > *Convert to
 group account* (`POST Account/{id}/ConvertToGroup`, `AccountService.ConvertToGroupAsync`)
 turns a posting account (level < 5) into a group and creates a named posting sub-account
 that takes over every reference — journal lines, Link Accounts, opening balances, budgets,
@@ -80,7 +79,7 @@ approval 2026-09-29). Every write goes through `JournalVoucherResolver`:
 |---|---|
 | **No approval step** — invoices (incl. Miscellaneous / Close Job and the tax-advance allocation), cheque events (PDC clear, bounce, mature), customer-deposit use/refund | `SaveAndPostJVAsync`: posted in the same save as the document |
 | **Approval step** — receipts (incl. rental/lease/booking deposit receipts), credit and debit notes, cash deposits, card transaction bank transfers, manual JVs | `SaveJVAsync` saves a draft; the document's approval calls `PostAsync`, its un-approval `UnpostAsync` |
-| **Bill approval (owner decision 2026-10-20, conditional UnApprove and terminal Void)** | Save retains a validated Bill draft without a journal; explicit Approve revalidates the saved snapshot then builds/posts through `SaveAndPostJVAsync` in the source transaction. The latest owner decision permits guarded UnApprove to an editable draft through source-owned unposting. Independent terminal Void marks the source and existing journal voided without a reversing entry. |
+| **Bill approval** | Save retains a validated Bill draft without a journal; explicit Approve revalidates the saved snapshot then builds/posts through `SaveAndPostJVAsync` in the source transaction. The latest owner decision permits guarded UnApprove to an editable draft through source-owned unposting. Independent terminal Void marks the source and existing journal voided without a reversing entry. |
 
 **Bills manual approval and settlement (2026-10-20).** The owner explicitly moves
 posting from Save to Approve; this supersedes the earlier no-approval Bill row.
@@ -147,7 +146,7 @@ BillService lifecycle/allocation partial, BillApprovalLog and existing allocatio
 query owner; contracts/evidence in reviews/BILLS_ACTIONS_CONTRACT_FREEZE.md. Source
 conformance only; owner migration and transactional/runtime acceptance pending.
 
-**Two allocation directions (owner screenshots/acceptance2026-10-20).** A
+**Two allocation directions.** A
 normal Bill payable credit consumes eligible supplier debit balances. A General
 Bill can also contain a separately identified supplier debit: its Allocation
 selects that actual posted line, then distributes its available balance across

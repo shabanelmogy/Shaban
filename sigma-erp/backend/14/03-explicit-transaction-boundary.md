@@ -24,7 +24,7 @@ shared UnitOfWork application-lock boundary; Company and Individual import chunk
 same entity/tenant resource and recheck live keys inside it (block 8). A navigation graph
 alone does not require that boundary. Reusable default-group creation precedes it and all
 aggregate mutation. Temporal-overlap checks retain their separate range-isolation rule in
-block 8. Owner runtime verification covers races, timeout/deadlock outcomes and rollback.
+block 8.
 
 Private helpers that call `SaveChangesAsync` do not start nested transactions
 when every owning method already opens the transaction and the helper receives

@@ -63,7 +63,7 @@ part of the row payload, and the backend value replaces the preview after save (
 "Backend, mapping, and calculation rules"; block 19 *Money and tax in forms*). Show it as text
 or a `readonly` input, not as an editable control.
 
-**One control height and uniform vertical centering (owner correction,2026-10-31).**
+**One control height and uniform vertical centering.**
 Inputs, dropdowns and calendars retain exactly --sigma-editor-control-height
 (34px). Every header/body/footer cell follows UI6's universal middle alignment,
 including rows with `app-field-error`, existing `.sigma-field-error` or
@@ -83,7 +83,7 @@ Evidence: owner LimousineTariff centering request and the shared source;
 source-only, mixed heights/multiline errors/flags/actions/narrow/RTL/theme/print
 visual acceptance remains pending.
 
-**Numeric cells (owner request 2026-10-04).** Numeric inputs select their value
+**Numeric cells.** Numeric inputs select their value
 on entry through the shared global selection owner (block 27); native
 `appNumericFocus` supplies appearance only. Use shared
 `app-editable-collection-table__value` for numeric read/derived text: the same
@@ -114,7 +114,7 @@ pricing or write rule is introduced. RentalAgreement adopts this in routed and
 embedded entry. Existing consumers without these classes keep their presentation.
 Owner2026-10-28; source-only, narrow/RTL/theme/input/validation acceptance pending.
 
-**Optional fit-width rows (owner2026-10-28).** When the owner explicitly requires
+**Optional fit-width rows.** When the owner explicitly requires
 no horizontal scroll for a bounded editable collection, reuse the existing table's
 `fitWidth=true`. Default false preserves other financial tables' scrolling
 contract. Fit mode ignores `tableMinWidth` and column `minWidth`, uses a fixed
@@ -150,7 +150,6 @@ style. Keep FieldError below the input group. These classes are opt-in; existing
 consumers and all parsing, precision, calculations and payloads are unchanged.
 Rental Booking adopts this for Rate and protection excess; native reactive
 checkboxes reuse the existing15px primary accent and34px `__row-check` label.
-Source-only; owner input/RTL/theme/visual acceptance pending.
 
 **Optional equal numeric widths (Rental Booking owner correction, 2026-10-07).**
 Use `__number` on a numeric input/InputNumber host inside `__input-unit` or on a shared numeric
@@ -176,7 +175,7 @@ row recalculation moves to `onInput`, which follows the widget's CVA update for
 typing and stepping. Do not replace Remaining Quantity/derived/View text with
 editable widgets or recreate the widget/rail in feature SCSS.
 
-**Shared quantity/hour/meter precision (owner foundation decision,2026-10-30).**
+**Shared quantity/hour/meter precision.**
 The product is being established and its current data is experimental: prefer
 one shared contract over preserving accidental per-screen precision. Classify
 each reviewed numeric field by its real domain. Quantities, fractional hours
@@ -208,7 +207,7 @@ other domain models require their paired API/storage reconciliation before
 accepting fractions. Source conformance is separate from compiler/runtime and
 owner migration verification.
 
-**Read-only numeric blue badge (owner generalization, 2026-10-04).** In new or
+**Read-only numeric blue badge.** In new or
 reviewed editable collection rows, every non-editable numeric value uses
 `app-editable-collection-table__value app-editable-collection-table__value--highlight`
 and its column declares `numeric:true` (shared default center; an explicit
@@ -224,9 +223,8 @@ backend authority and payload/calculation ownership. This is an editor-row
 presentation rule; DataTable/report formatting and SummaryCards keep their own
 owners. Existing unrelated consumers migrate on review. The requisition-owned
 Create Purchase Request adopts it for Remaining Quantity/Amount/Tax/Gross.
-Source-only; owner visual/RTL/theme/print acceptance pending.
 
-**Heading/value alignment (owner application-wide instruction, 2026-10-04).**
+**Heading/value alignment.**
 Numeric shared table headers and plain `td.is-number` default to center; the
 shared value class also centers by default. Existing explicit column alignment
 remains supported, but any justified deviation must keep heading and read value

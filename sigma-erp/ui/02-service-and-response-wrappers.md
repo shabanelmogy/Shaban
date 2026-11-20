@@ -11,7 +11,7 @@
 
 ### Write payloads carry client inputs only
 
-> **Status: Canonical** (owner decision 2026-10-01)
+> **Status: Canonical**
 
 An Add or Update payload contains only the fields the user edits plus `id` on Update. It never
 contains:

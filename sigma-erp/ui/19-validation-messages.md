@@ -104,8 +104,7 @@ reloads. Put the controls in a `FormGroup` and write
 `type="button"` action.
 
 
-### Signed Int32 transport validation (2026-10-07)
-
+### Signed Int32 transport validation
 Use `int32ValueValidator` from `shared/utils/scalar-validators.ts` for an actual
 nullable C# Int32 field. Empty values are accepted; non-number, fractional and
 out-of-range values return the shared `number` error. Its inclusive bounds are
@@ -114,8 +113,8 @@ with the feature contract; a native min=0 cannot invent a nonnegative invariant.
 Custody/Workshop Movement mileage and Logs threshold adopt it. String mileage
 contracts (Collection/Delivery/NRM) retain text and are never coerced through
 Number. This extends the existing scalar owner, not a private validator or
-backend validation substitute. Source-only; owner input/compiler acceptance pending.
+backend validation substitute.
 
 
-### Strict dependent validation reads (2026-10-09)
+### Strict dependent validation reads
 When a required settings read fails, retain entered values, show the translated read error and keep the dependent action unavailable until Retry succeeds. Do not normalize a failed required read into a valid default. This is a read-validation gate and does not change the backend calculation owner. Source-only evidence: Limousine quotation, TripBooking editor/list.

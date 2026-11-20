@@ -1,7 +1,6 @@
 <!-- Part of Master block 5: see ../05-continuous-quality-gates.md. Same status and authority as the block. -->
 
-### Production notes (owner request, 2026-10-02)
-
+### Production notes
 This section records deferred preparation for production. A configuration concern
 is not a demonstrated runtime defect: state the evidence, affected scope and
 remaining verification. Do not turn a recommendation into a release blocker

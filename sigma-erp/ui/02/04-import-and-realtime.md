@@ -1,12 +1,10 @@
 <!-- Part of UI block 2: see ../02-service-and-response-wrappers.md. Same status and authority as the block. -->
 
-### Shared batch-import transport (2026-10-14)
+### Shared batch-import transport
+The root `CsvImportService.post<T>(route, request)` owns repeated CSV batch POST transport: `environment.baseUrl`, the root interceptor-enabled `HttpClient`, typed `CsvImportResult<T>` and `X-Skip-Error-Interceptor` / `X-Skip-Success-Toast`. Use this owner only for a confirmed batch contract whose shared import workspace owns persistent error/partial/success feedback. Screen services remain typed and supply the existing exact route and body key; they do not invent endpoints or alter the import envelope. Ordinary mutation and unrelated CSV consumers retain their existing feedback owner. Evidence: the eleven supported Administration/DataImport services.
 
-The root `CsvImportService.post<T>(route, request)` owns repeated CSV batch POST transport: `environment.baseUrl`, the root interceptor-enabled `HttpClient`, typed `CsvImportResult<T>` and `X-Skip-Error-Interceptor` / `X-Skip-Success-Toast`. Use this owner only for a confirmed batch contract whose shared import workspace owns persistent error/partial/success feedback. Screen services remain typed and supply the existing exact route and body key; they do not invent endpoints or alter the import envelope. Ordinary mutation and unrelated CSV consumers retain their existing feedback owner. Evidence: the eleven supported Administration/DataImport services. Source-only; owner compile/authentication/API acceptance pending.
 
-
-### Shared real-time read invalidation (2026-10-19)
-
+### Shared real-time read invalidation
 Use root `RealtimeService.watch(topic)` for a confirmed server read-model topic.
 One ref-counted SignalR connection owns token/session changes, topic membership,
 initial-start retry, automatic reconnect, rejoining and final-consumer teardown.

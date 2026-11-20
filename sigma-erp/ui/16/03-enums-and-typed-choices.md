@@ -19,7 +19,7 @@ readonly labourTypeOptions = enumOptions(JobLabourType, 'job.labourTypes');
 
 For read-only display use `enumKey(Enum, keyPrefix, value) | translate`.
 
-**Type-driven choices and required fields (owner generalization, 2026-10-15).**
+**Type-driven choices and required fields.**
 When a small singular enum controls the form shape, show its actual values as
 one reactive radio group with associated translated labels; use `enumOptions`
 and the installed PrimeNG control, not one boolean per choice or reindexed IDs.

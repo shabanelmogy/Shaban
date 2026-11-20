@@ -54,7 +54,7 @@ await UnitOfWork.SaveChangesAsync();
 
 **Totals are recalculated on the server.** Never persist a total the client sent.
 
-**Detail-only conversion provenance (owner2026-10-24).** A conversion's selected
+**Detail-only conversion provenance.** A conversion's selected
 source belongs to its destination details, including a document with only one
 source. Do not duplicate that source FK on the destination master as a persisted
 summary. Store the actual source-line key; where a source parent ID is also
@@ -78,7 +78,7 @@ lifecycle or accounting behavior. Historical parent-only proof protects source
 references; it cannot invent precise source-line quantities. A preserved legacy
 quantity fallback needs its existing source-supported rule and disjoint scope.
 
-**GRN detail-only order reference (owner2026-10-24).** GoodsReceivedNote has no
+**GRN detail-only order reference.** GoodsReceivedNote has no
 persisted PurchaseOrderId/navigation, including the single-order case. Each linked
 GoodsReceivedNoteDetail stores nullable PurchaseOrderId and PurchaseOrderDetailId;
 the server derives the former from its live source line, validates saved-pair
@@ -96,7 +96,7 @@ requires owner migration review and preservation of historical provenance before
 the column is removed; do not create migrations, run data repair or reset a database
 as part of source work.
 
-**Purchasing and analogous stock adoption (owner2026-10-24).** PurchaseOrderDetail
+**Purchasing and analogous stock adoption.** PurchaseOrderDetail
 stores PurchaseRequestId/PurchaseRequestDetailId, with no PR FK on PurchaseOrder.
 PurchaseRequestDetail stores ItemRequisitionId/ItemRequisitionItemId, with no
 requisition FK on PurchaseRequest. ItemIssueItem stores either the GRN/detail pair
@@ -119,7 +119,7 @@ require review; do not attribute guessed quantities. This rule is reusable for
 similar document-line flows, including BillDetail and financial allocation rows
 that already conform. It does not remove document-wide associations.
 
-**Compatible direct orders in supplier bills (owner2026-10-24).** BillDetail keeps
+**Compatible direct orders in supplier bills.** BillDetail keeps
 PurchaseOrderDetailId as its direct source; derive order identity from that line,
 never add a master source FK. The approved purchasing contract combines several
 General orders or several Job orders for the same supplier, effective currency
@@ -138,7 +138,7 @@ discount retains its current policy: the initial suggestion sums each source's
 proportional selected amount; this creates no new discount-consumption mechanism.
 This adoption changes no physical Bill schema or financial posting lifecycle.
 
-**Per-source discount attribution (owner2026-10-24).** An order combining requests
+**Per-source discount attribution.** An order combining requests
 must retain each request's exact allocated discount independently of the order
 header total. PR-to-PO persists nullable server-owned
 `PurchaseOrderDetail.PurchaseRequestAllocatedDiscount` (decimal18,2); new source
@@ -158,12 +158,12 @@ per-request historical discount by proportionally splitting a multi-source
 header total; a persisted attribution needs an owner migration, not a client
 input or an automatic historical repair.
 
-**Source-use projection (owner 2026-10-22).** Purchase Request → Purchase Order
+**Source-use projection.** Purchase Request → Purchase Order
 is the first reusable quantity-consumption example. Count only live source lines
 with positive quantity and positive quantities on live PO lines under live POs
 linked back to the same request/line; a saved Pending PO already consumes
 source capacity, while a Rejected PO releases its quantity and allocated source
-discount without deleting its historical link (owner correction 2026-10-22).
+discount without deleting its historical link.
 Deleting an eligible pending PO also releases capacity. Derive NoQuantity/Open/
 PartiallyUsed/Closed per request on read, separate from approval and billing.
 The display percentage is the arithmetic mean of each positive line's clamped

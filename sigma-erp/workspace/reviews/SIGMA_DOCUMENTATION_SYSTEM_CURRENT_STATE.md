@@ -13,8 +13,8 @@ Read this first. Older audits are history; do not read them to execute a new tas
 
 - Entry `AGENTS.md`, then the companion core; `.agents/workflow/` sections are read only when needed.
 - One authority order (companion section 1); one owner per rule (Master8).
-- The skill is a gate checklist and pointer table with section references and five revision rows; its full history is in the documentation archive.
-- `reviews/INDEX.md` is a short English table; feature files are found by name; large reviews have a `_CURRENT_STATE.md` (hand-written or generated index).
+- The skill is a gate checklist and pointer table with section references; changes are recorded in `CHANGELOG.md`.
+- `reviews/INDEX.md` is a short English table; feature files are found by name; a feature with a large review gets a written `_CURRENT_STATE.md` when next touched.
 - Large blocks keep their numbers with `NN/` topic folders (Master5, UI1, UI2, UI4, UI6, UI7, UI13, UI14, UI16, UI17, UI18, UI19, UI20, UI22, UI24, BE14, BE15, BE18), fingerprinted with their block; the screen catalog routes to topic files.
 - Agent-facing files are English; replies to the owner are Arabic.
 - Scoped tests and changed-file lint are allowed during authorized implementation (Master5).
@@ -28,15 +28,16 @@ Read this first. Older audits are history; do not read them to execute a new tas
 - The reference checker includes public entry pages, book indexes and the active review index. It checks local heading fragments. A scoped fixture verifies diagnostics for a bad block, a missing file and two missing headings.
 - The [currency entry](CURRENCY_CURRENT_STATE.md) now records governing contracts, source-only evidence and outstanding acceptance.
 
-- Comprehensive review fixes (2026-11-20): `.gitignore` for build output, `New-CurrentStateIndexes.ps1` with a standard status table, current-state status check in `Check-BookReferences.ps1`, UI20 permission wording, Arabic README reading model.
+- Comprehensive review fixes (2026-11-20): `.gitignore` for build output, current-state status check in `Check-BookReferences.ps1`, UI20 permission wording, Arabic README reading model.
 
 - Topic-level routing and checklist templates (2026-11-20): screen files and the catalog route to topic files; packet templates name owners instead of restating rules; Master5 and BE14 topic folders.
 
+- Simplification (2026-11-20): generated current-state indexes and their tool removed; skill revision table and the core's duplicate gate table removed.
+
 ## Pending
 
-
 - Try a real tier S and tier M task with the new instructions.
-- Continue replacing generated indexes when their feature is next touched. The currency example has been converted.
+- Write a current-state summary when a feature with a large review is next touched.
 
 ## Useful sections in the full record
 

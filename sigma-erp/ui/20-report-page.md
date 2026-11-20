@@ -252,8 +252,7 @@ range spans more than one month:
 ></p-datepicker>
 ```
 
-Default the range to the **current month**, from the 1st to its last day, the same as lists
-(owner rule 2026-09-24, block 17): `dateRange: this.fb.control<Date[] | string | null>(currentMonthRange())`.
+Default the range to the **current month**, from the 1st to its last day, the same as lists: `dateRange: this.fb.control<Date[] | string | null>(currentMonthRange())`.
 
 **Explicit owner exception, 2026-10-02:** Customer Statement starts and resets with
 null date range/customer, so the user can inspect its empty table layout. The

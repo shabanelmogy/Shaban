@@ -1,7 +1,6 @@
 <!-- Part of Master block 5: see ../05-continuous-quality-gates.md. Same status and authority as the block. -->
 
-### Loading performance, query and index evidence (owner2026-10-25)
-
+### Loading performance, query and index evidence
 - Every new or reviewed screen includes a proportional performance review in
   its existing artifact: actual route/trigger, HTTP and database boundaries,
   required versus auxiliary reads, serial dependencies, duplicate requests,
@@ -37,8 +36,7 @@
   full-solution scan or mandatory artifact proliferation. Do not describe the
   screen as fast or performance-tested without actual supporting measurements.
 
-### Loading conformance evidence (UI22; clarification2026-10-25)
-
+### Loading conformance evidence
 - Apply UI22's mandatory loading conformance gate during discovery and final
   reconciliation. Trace the actual route import and component; a matching
   feature folder or separate legacy route does not prove active-path adoption.
@@ -49,7 +47,7 @@
   import or startLoading call alone cannot earn Matched.
 - Keep UI22's ownership boundaries: global page/list/detail/save/domain/delete
   and report/export data reads, plus required routed initial/filter lookup
-  bootstrap through the shared page owner (owner clarification2026-10-26),
+  bootstrap through the shared page owner,
   local dialog lookups/reads hidden by a body-appended overlay, silent retained cache refresh and explicitly scoped
   Dashboard policy. One visible progress owner means no duplicate StateMessage/
   table/button indicator for that request; it never means removing busy guards.
@@ -62,8 +60,7 @@
   runtime visibility, response duration or overlapping/cancelled-request behavior;
   record owner verification separately and preserve execution boundaries.
 
-### Screen cache adoption evidence (UI2; clarification2026-10-25)
-
+### Screen cache adoption evidence
 - Apply UI2's mandatory screen cache gate during discovery and again before
   handoff for every new or reviewed screen, including editor lookups and
   list/report filters. Reuse the existing review/contract; do not create another

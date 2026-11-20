@@ -137,7 +137,7 @@ it does not authorize unrelated screen rewrites or browser/build execution.
 #### Shared list page shell
 
 > **Status: Canonical** — classes in `src/styles.scss`; reference `Workshop/Job/components/list`
-> (owner request 2026-09-30: shared, customization kept to a minimum).
+>.
 
 A list route writes **no** page, panel, header, alert or table-fill SCSS. It uses:
 
@@ -191,7 +191,7 @@ Booking's flattened schedule/vehicle/customer groups are the motivating source
 regressions; preserve their existing composed structure rather than copy their
 old palette or fixed overlay positioning.
 
-**Dense document header row (owner generalization, 2026-10-15).** For comparable
+**Dense document header row.** For comparable
 routed document headers, arrange short inputs in one equal-track row when the
 wide-screen space supports readable controls. Include Discount with the other
 short header inputs when that field belongs to the document; Notes keeps

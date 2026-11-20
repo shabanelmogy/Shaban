@@ -22,7 +22,7 @@ Windows autocrlf does not create false byte-for-byte drift after checkout.
 The language service keeps its existing dynamic link and direction
 contract. Regenerate after theme/layout imports change; inspect retained CSS
 semantics and exercise the shell with the RTL stylesheet actually loaded.
-After complete vendor retirement (owner2026-10-22), the native logical-end utility
+After complete vendor retirement, the native logical-end utility
 uses inset-inline-end. The old physical end-0 selector and sigma-rtl-compat patch
 are removed together; do not restore competing left/right declarations. Exercise
 the actual linked RTL asset together with global styles in both load orders and

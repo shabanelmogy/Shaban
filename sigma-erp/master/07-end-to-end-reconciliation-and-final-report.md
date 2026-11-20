@@ -92,8 +92,7 @@ checks remain pending, say so in the completion sentence. A coverage count
 records operation mappings and carries the linked review status separately.
 Preserve the existing task and execution boundaries.
 
-### Screen user guide completion gate (owner instruction, 2026-10-08)
-
+### Screen user guide completion gate
 After completing an authorized implementation or refactor of a user-facing
 screen, create its in-app user guide, or update the existing guide, **before
 the final handoff**. A screen implementation is not source-complete while this
@@ -180,8 +179,7 @@ Report proportionally:
 Do not claim full feature completion while a Missing, Conflicting, or Uncertain
 contract blocks required behavior.
 
-### Schema impact check (G2, 2026-10-01)
-
+### Schema impact check
 Before the report, list every change in the diff to an entity property or its nullability, a
 `[MaxLength]`, an EF `HasMaxLength`/`IsRequired`/index/relationship configuration, and every
 removed column. Report the applied migration ID or the proposed `Add-Migration <Name>` command,
@@ -191,7 +189,7 @@ limit, nulls in a required column, and a data copy before dropping a column.
 ### Migration handoff and suggested commit messages
 
 An authorized implementation includes its required EF migration on the verified
-experimental Sigma database under Master1 (owner, 2026-11-17). A direct
+experimental Sigma database under Master1. A direct
 migration request authorizes the named scope. Review the generated designer,
 model snapshot and SQL. Verify the target, applied baseline and dependencies,
 then apply only the scoped migration ID. Do not apply unrelated pending migrations. Verify the new
@@ -199,7 +197,7 @@ history entry, constraints and affected rows. Record the target, migration ID,
 data handling and remaining runtime checks. For an authorized experimental
 data backfill, use a valid same-tenant reference and document how it was chosen.
 
-**Experimental-data operation evidence (owner,2026-11-16).** Master1 grants
+**Experimental-data operation evidence.** Master1 grants
 standing permission for task-scoped reads, writes, data repairs and deletion of
 experimental duplicates in confirmed Sigma local/hosted development/test
 databases. Do not request that permission again. Record the actual server/

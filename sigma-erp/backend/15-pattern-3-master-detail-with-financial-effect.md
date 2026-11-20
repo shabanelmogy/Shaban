@@ -74,7 +74,6 @@ the accounting service's current eligibility checks. Do not create a second
 resolver or cache this policy read in a frontend reference cache. The rental driver
 split generator is the first explicit consumer; this does not change other
 partners' account creation policy, period schedule, tax, allocations or receipts.
-Source conformance is verified separately from owner runtime/accounting acceptance.
 
 Allocation rules: every amount positive and within its target's outstanding
 amount; the total within the source's available balance; customer, currency,
@@ -82,7 +81,7 @@ branch, document type and open status all match; already-allocated amounts
 computed from persisted allocations. Never `continue` past an invalid target —
 fail the operation.
 
-**Delete, void and correction (owner correction, 2026-10-20).** An unposted
+**Delete, void and correction.** An unposted
 draft may be deleted with its lines (`RemoveWithChildrenAsync`, block 8). A
 posted document is canceled through Void while retaining its number, rows and
 audit history. **Void does not create a reversing journal.** This explicit

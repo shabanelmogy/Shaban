@@ -90,3 +90,7 @@ moved verbatim from the skill on 2026-11-19.
 | 2026-11-01 | Restore compact routing; mandatory live workflow companion, full evidence gates and conditional block map; historical detail retained outside skill discovery | Master8; owner-authorized documentation Audit8 remediation; pre-router snapshot and reconciliation in documentation archive |
 | 2026-11-19 | Slim router: gate checklist and pointer table only; rules stay in blocks; history moved to archive; scoped tests/lint added to verification | Master1/5/7/8; owner-requested speed/error remediation; previous text in `archive/2026-11-19-instruction-slimming/` |
 | 2026-11-19 | Topic folders also for UI2/6/7/14/22/24 and BE15/18; no block over 30 KB | Master8; verbatim split, packets 8/8 OK |
+| 2026-11-19 | Data capabilities inside an authorized response (`CapabilityPermissions`, controller-evaluated, server omits values) | UI26; Trips With Overtime ViewCharges |
+| 2026-11-19 | Unique links on TPT-derived rows release on soft delete (`IReleasesLinksOnRemove`); `toMonthPickerDate` for month pickers | BE8, UI17; Trips With Overtime review fixes |
+| 2026-11-19 | `§Name` may live in a block's `NN/` topic folder (UI1/13/20); generated current-state indexes cover large reviews | Master8; block split and generator fingerprint |
+| 2026-11-19 | Section-level routing (`§Name`) for large blocks; read `_CURRENT_STATE.md` before a full review | Master8; UI1/13/20/22 headings; token-reduction remediation |

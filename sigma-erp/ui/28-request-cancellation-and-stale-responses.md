@@ -2,8 +2,7 @@
 
 > **Status: Canonical**
 
-### Context revisions and deferred actions (source-only,2026-10-30)
-
+### Context revisions and deferred actions
 The existing data-free scope notification also fences reviewed operational
 sessions: clear prior-context rows/labels/counts, cancel reads (including whole
 composed export/report reads), and keep the outer query trigger alive for a
@@ -31,8 +30,7 @@ Do not attach this exception to protected reads or domain actions. Fleet RED/
 GREEN covers open-decision cancellation and a new denied local discard within
 the 151-test adoption suite; application visual acceptance remains separate.
 
-### Sent-save success belongs to the draft — 2026-11-12
-
+### Sent-save success belongs to the draft
 Keep the identity of an editor draft separate from the revision used to cancel
 its reads. Temporary grant withdrawal, option reload or same-actor reference
 scope refresh may invalidate a read revision without creating a new draft.
@@ -73,8 +71,7 @@ permission revision together through response publication and output
 preparation. Verify grant loss with the report already open and a protected
 filter or sort already applied.
 
-### Routed API read cancellation (owner2026-10-22)
-
+### Routed API read cancellation
 For adopted permission-aware reads, use the existing view-policy owner's
 `denied$(requirement)` on each finite read, including composed export/lookup
 work. It fences the subscribed actor/branch-access context even if the next

@@ -1,7 +1,6 @@
 <!-- Part of UI block 2: see ../02-service-and-response-wrappers.md. Same status and authority as the block. -->
 
-### Mandatory screen cache gate (clarification2026-10-25)
-
+### Mandatory screen cache gate
 **Apply this block's cache adoption checklist to every new or reviewed screen.**
 It is a discovery and handoff requirement, including editor lookups and
 list/report filters; it is not an optional performance improvement deferred until
@@ -118,14 +117,13 @@ getList(query: CompanyPartnerListQuery = {}): Observable<Results<CompanyPartnerD
 ```
 
 
-### Cache adoption checklist for every reviewed or new screen (owner2026-10-24)
-
+### Cache adoption checklist for every reviewed or new screen
 Apply this checklist during discovery and implementation, including lists,
 editors, settings and report filters. Existing consumers inherit source caching;
 an open screen needs the separate watch binding below for live option updates.
 Do not create another cache, storage layer, socket, inspector or visual wrapper.
 
-**Required source classification evidence (clarification2026-10-25).** In the
+**Required source classification evidence.** In the
 existing review/contract, add one row for each actual consumed URL, including
 custom encoded paths/query parameters. Use these columns; write actual symbols
 and values rather than copying the placeholder row:

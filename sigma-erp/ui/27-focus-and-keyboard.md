@@ -36,8 +36,7 @@ modal now uses `app-editor-dialog`, verified 2026-10-01.) Block 13 shows the can
 Filter forms submit on Enter because they are real `<form>` elements with
 `type="submit"` on Search. Keep that; do not intercept Enter.
 
-### Deferred field focus in protected editors (2026-11-09)
-
+### Deferred field focus in protected editors
 For an adopted protected editor, pass the existing `focusField` owner's optional
 `cancelOn`, `destroyRef` and `allowed` options. Capture the actor/document identity
 when scheduling, cancel permanently on access denial or route identity change,
@@ -64,8 +63,7 @@ focus a toolbar button or add a second feature scroll/focus implementation.
 Email Templates supplies the consumer evidence (2026-10-17); compilation and
 keyboard/visual acceptance remain owner-pending.
 
-### Numeric fields: immediate replacement (general owner rule, 2026-10-04)
-
+### Numeric fields: immediate replacement
 Every numeric field selects its current value when focus enters, so typing
 replaces zero or an existing number immediately. The owner's application-wide
 instruction (2026-10-04) supersedes the previous adoption-on-review boundary.
@@ -100,8 +98,7 @@ adapter remains for read-only displays; editable numeric fields adopt the
 shared stepping widget below. The application-wide service changes selection only. Source-only,
 pointer/keyboard/RTL/runtime acceptance pending.
 
-### Numeric fields: shared widget with stepping (owner expansion, 2026-10-23)
-
+### Numeric fields: shared widget with stepping
 **PrimeNG20/21 typed input boundary (2026-10-22).** Use lowercase
 `p-inputnumber`. Bind numeric limits/precision as numbers (`[min]="0"`,
 `[max]="100"`, `[minFractionDigits]="2"`), not static string attributes.
@@ -221,8 +218,7 @@ feature-local duplicate tab keyboard handler · no `role="dialog"` hand-rolled
 markup in new code.
 
 ---
-### Publisher overlay focus edges (PrimeNG21 shell, 2026-10-22)
-
+### Publisher overlay focus edges
 Popover does not automatically focus its first ordinary action. Reuse shared
 `focusOverlayAction` onShow to focus the first enabled action (or the empty
 panel itself), and `restoreOverlayFocus(trigger, closingContainer)` onHide.

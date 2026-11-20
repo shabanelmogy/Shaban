@@ -30,7 +30,7 @@ readonly filterForm = this.fb.group({
 `currentMonthRange()` is shared (`date-utils.ts`); the rule is the owner's (2026-09-24,
 "الشهر الحالي") and applies to lists **and** reports (block 20).
 
-**Fixed dash-range delimiter (owner request, 2026-10-03).** For enabled,
+**Fixed dash-range delimiter.** For enabled,
 typeable numeric `appDatePicker` range fields with the default dash separator,
 keep the exact ` - ` delimiter (one space on each side). The shared directive
 protects an existing marker from partial deletion/replacement; Backspace/Delete
@@ -45,9 +45,9 @@ Single/multiple/custom-separator/disabled/picker-only fields keep their existing
 behavior. Do not add local masks, synthetic input, another parser or an extra
 form write: the existing capture-input guard corrects text before PrimeNG parses
 once. Partial dates, validators/bounds/order, picker/clear and API transport
-remain with their existing owners. Source conformance is not runtime acceptance.
+remain with their existing owners.
 
-**Range caret preservation (owner defect report, 2026-10-14).** Manual edits to
+**Range caret preservation.** Manual edits to
 either range endpoint, including its year, retain their caret/selection.
 Owner rejected the first render-based workaround and clarified selecting the
 From year before typing. Shared protectRangeMarker previously blocked a year

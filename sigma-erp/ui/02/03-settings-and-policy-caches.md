@@ -1,7 +1,6 @@
 <!-- Part of UI block 2: see ../02-service-and-response-wrappers.md. Same status and authority as the block. -->
 
-### Common settings used by an inline lookup batch (2026-10-09)
-
+### Common settings used by an inline lookup batch
 `CommonSettingsService.getMySetting<T>(options?)` retains the current
 `SettingsCommonModel/GetMySetting` endpoint and typed `Result<T>`. A consumer
 that owns inline error/Retry feedback may pass `{ skipErrorInterceptor: true }`;
@@ -10,9 +9,9 @@ retain global feedback. Rental Agreement Deposit reads `CommonDTO` alongside its
 options and supplies the configured currency labels/decimals to shared
 `amountInWords` (block 19), keeping entered amounts on failure. This option
 changes feedback ownership only; it adds no settings API, currency default or
-financial calculation. Source-only; owner compiler/failure/Retry acceptance pending.
+financial calculation.
 
-**Explicit common-settings cache opt-in (owner2026-10-24).**
+**Explicit common-settings cache opt-in.**
 `CommonSettingsService.getMySetting<T>` now uses the existing scoped in-memory
 ReferenceLookupCacheService for this exact endpoint, preserving Result<T>,
 finite reads, feedback modes and optional forceRefresh. Only success with a
@@ -32,12 +31,11 @@ background refresh presentation. Evidence: COMMON_SETTINGS_CACHE_FEATURE_REVIEW.
 
 
 
-### Required settings reads (2026-10-09)
+### Required settings reads
 A settings lookup that gates a dependent workflow may expose an opt-in strict read mode. Strict mode throws or returns the declared failure so the caller can block Save/Finish and offer Retry; the legacy optional fallback remains for non-gating previews. Cache successful strict reads separately and do not cache failures. Source-only evidence: Limousine quotation and TripBooking tax settings.
 
 
-### Currency policy cache invalidation (2026-10-14)
-
+### Currency policy cache invalidation
 Successful typed currency Create/Update/Delete operations invalidate the existing
 `FinancialNumberPolicyService` cache through its `invalidate()` member. The next
 `load()` obtains the authoritative backend policy; existing `load(force)` callers
@@ -74,8 +72,7 @@ Source evidence: `Administration/Currency/services/currency.service.ts` and
 before/after policy-read acceptance remain pending.
 
 
-### Dashboard display snapshot cache (owner2026-10-26)
-
+### Dashboard display snapshot cache
 The owner explicitly opts `Dashboard/Snapshot` into the existing
 ReferenceLookupCacheService as a display-only singleton. DashboardSnapshotService
 uses the full encoded ownership/fleetType query URL for both finite `read` and

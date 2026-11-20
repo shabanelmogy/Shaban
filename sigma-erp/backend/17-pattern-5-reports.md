@@ -4,8 +4,7 @@
 > read-model contract. Its real-time subsection adds transport rules for
 > report snapshots; it does not create a CRUD or persistence pattern.
 
-### Real-time operational read models (2026-10-19)
-
+### Real-time operational read models
 Keep the report's HTTP snapshot authoritative. Reusable SignalR transport belongs
 to `SiGma.ServerAPI/Realtime`: registered `RealtimeTopicDefinition` dependencies,
 `RealtimeHub` tenant/topic groups, and `IRealtimePublisher` invalidations. New
@@ -34,8 +33,7 @@ entity of its own — it reads across several tables and returns one shaped
 response. The Angular side is blocks 20 and 21 of the UI pattern book
 (`Customers/StatementOfAccount` and friends).
 
-### Operational snapshot performance (source-reviewed2026-10-25)
-
+### Operational snapshot performance
 Reuse database-grouped populations when several sections read the same source:
 Dashboard aggregates branch/fleet/latest-status groups once for vehicle
 headline, fleet and idle summaries, without loading individual vehicles or
@@ -305,8 +303,7 @@ the filter absent returns the same rows as before it existed.
 ---
 
 
-### Explicit incremental calendar report windows (owner2026-10-31)
-
+### Explicit incremental calendar report windows
 When the owner requests append-on-scroll transport, keep the complete endpoint
 for full output and add a bounded page contract; UI20 owns its report semantics.
 Reuse the same validated filter/tenant/live/foreign-key query source. Calendar

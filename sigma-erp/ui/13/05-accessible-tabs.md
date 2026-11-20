@@ -110,7 +110,7 @@ current contract. Vertical tabs retain their bounded vertical scroll/Up/Down
 behavior and existing density. Verify long EN/AR labels, counts and short/narrow
 layouts in both themes; source checks are not visual acceptance.
 
-**Vertical section navigation (owner2026-10-31, TripBooking).** The existing
+**Vertical section navigation.** The existing
 EditorTabs owner exposes `orientation: 'horizontal' | 'vertical'`, default
 `horizontal`. Use `orientation="vertical"` for an explicitly requested side
 column; do not rotate or copy tab markup in feature CSS. The owner publishes
@@ -120,7 +120,7 @@ mode. Disabled behavior and typed activeTabChange/IDs stay unchanged. Vertical
 labels wrap, the strip scrolls inside its allocated block size, and workspace
 selection uses a logical-start marker; existing theme tokens own the paint.
 
-**Stable vertical navigation viewport (owner bug report2026-10-31).** The
+**Stable vertical navigation viewport.** The
 vertical EditorTabs host is a bounded flex column with overflow:clip, and its
 tablist fills that allocated block size with min-block-size:0. Only the tablist
 scrolls; disable its scroll anchoring and reserve its scrollbar gutter so panel

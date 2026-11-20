@@ -22,7 +22,7 @@ tabs does not create a new shell shape: it uses the same shared
 `app-editor-dialog` as a single-section editor and projects `app-editor-tabs`
 plus its feature-owned tab panels into the body.
 
-**Modal or routed page — decision rule (owner decision D4-2, 2026-10-01).** Create, View and Edit
+**Modal or routed page — decision rule.** Create, View and Edit
 of one record always use the same editor and pass an explicit `create | view | edit` mode:
 
 | The record has… | Editor |
@@ -56,8 +56,7 @@ adapter/panel's zero-basis flex chain and can collapse the approval content.
 Apply this composition to the saved tab and the row status dialog across the
 frozen purchasing rollout (PR/PO/GRN/Bill/PurchaseReturn). Verify actual imports,
 saved ID, matching tab/panel IDs, same GET context and refresh events in both
-surfaces; an existing tab definition alone does not prove working integration
-(owner clarification2026-10-24; source-only runtime acceptance pending).
+surfaces; an existing tab definition alone does not prove working integration.
 
 ```text
 shared/components/editor-dialog/editor-dialog.component.ts
@@ -184,7 +183,7 @@ because that flag is still set. Failed cleanup retains the editor for cleanup-on
 Retry; successful Save must never be repeated. Existing shared controls retain
 their appearance and interaction contract; owner runtime acceptance is pending.
 
-**Completed child close events (source-only,2026-10-30).** An embedded editor's
+**Completed child close events.** An embedded editor's
 `closed(saved)` output, emitted only after its own exit guard accepts, is a
 completion event. The parent verifies the same visible child session and hides/
 resets it directly, refreshing once when saved. Do not call the child's or

@@ -9,8 +9,7 @@
 > **Status: Canonical** — global tokens and shared buttons (shared-first rewrite 2026-10-01).
 > Remaining legacy: primary-colour and icon-library forks elsewhere (backlog 1, 15); Statement of Account now uses shared tokens and Bootstrap Icons (2026-10-02, source-only).
 
-### One project presentation owner (owner clarification, 2026-10-24)
-
+### One project presentation owner
 Use Sigma's shared PrimeNG-based components as the application presentation and
 interaction contract (Master5). Inspect their public inputs/events, installed
 imports/directives and actual reference composition; do not bypass an existing
@@ -39,8 +38,7 @@ and native actions; do not fix this theme cascade with a feature-local skin
 or `!important` (owner screenshot2026-10-24: blue Reject with red text;
 source correction, visual acceptance pending).
 
-### Permission catalogue tools (owner screenshot follow-up, 2026-11-15)
-
+### Permission catalogue tools
 `PermissionTreeComponent` owns its catalogue toolbar across consumers. The owner's
 subsequent same-day correction groups the labelled local search, Granted only,
 the existing select-all/visible control, selected/total count and Expand all/
@@ -62,8 +60,7 @@ panes; the existing print rule hides the expansion actions. Reuse the shared
 toolbar rather than copying a feature variant. Compilation and source evidence
 remain distinct from visual/keyboard/theme acceptance (UI27/29).
 
-### Shared scrollbar presentation (owner request 2026-10-23)
-
+### Shared scrollbar presentation
 The general scrollbar skin is owned by
 `SiGmaAngularFrontEnd/src/assets/sass/_sigma-scrollbars.scss`, imported once
 from `src/styles.scss`. Existing scroll regions, including body-appended

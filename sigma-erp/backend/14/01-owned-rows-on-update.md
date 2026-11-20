@@ -1,7 +1,6 @@
 <!-- Part of backend block 14: see ../14-pattern-2-master-detail-no-financial-effect.md. Same status and authority as the block. -->
 
-### Owned rows on update — which way (Canonical, 2026-10-01)
-
+### Owned rows on update — which way
 | The aggregate has | Update with | Reference |
 |---|---|---|
 | Reviewed owned collections or owned references (documents, cards, address, billing) | Override protected `UpdateCoreAsync` with tracked load and existing reconciliation helpers; public Update delegates to the base guard | `IndividualPartnerService` |

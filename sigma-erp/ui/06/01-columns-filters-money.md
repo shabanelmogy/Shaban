@@ -1,7 +1,6 @@
 <!-- Part of UI block 6: see ../06-grid-and-footer.md. Same status and authority as the block. -->
 
-### Shared percentage columns (owner request, 2026-10-24)
-
+### Shared percentage columns
 Use `DataTableColumn.type: 'percentage'` for authoritative numeric percentage
 points, e.g.50 means50%, with null/undefined indicating unavailable. Existing
 DataTable owns the presentation using the installed PrimeNG ProgressBar: a
@@ -25,7 +24,7 @@ Source formatting/filter/export contracts are shared with data-table.format;
 no backend fields, calculations or API changes. Verify owner visual/print
 acceptance separately from source conformance.
 
-**Shared first-column freeze and advanced filtering (owner, 2026-10-23).**
+**Shared first-column freeze and advanced filtering.**
 The shared read table freezes the first **rendered** column at the logical start of
 the scroll frame. The rendered order remains selection (when present), Actions
 (when present), then the declared data columns; the freeze must not reorder those

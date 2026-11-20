@@ -1,8 +1,7 @@
 <!-- Part of UI block 6: see ../06-grid-and-footer.md. Same status and authority as the block. -->
 
-### CSV import workspace extraction (2026-10-14)
-
-A reviewed standalone import route with the confirmed ImportResult envelope, no context editor, and a complete locally read or returned failed-record collection uses the shared `app-csv-import-workspace`. The shared owner composes `app-feature-title`, `app-button-import-csv`, `app-primary-action-button`, `app-summary-cards`, `app-state-message` and `app-data-table`; it owns local preview paging, explicit Import execution, busy/finalize state, declared and transport failures, partial result counters and retained diagnostics. Each consumer owns its ordered CSV columns, header aliases, typed row builder, body key and endpoint. Selecting a file never mutates the server; after a mutation attempt the same preview cannot be submitted again, because chunked imports may have partially persisted. The consumer must preserve the backend import envelope and must not invent a list filter, server pager, CRUD action or retry policy. Source-only adoption evidence: Administration/DataImport; owner compile, runtime, API and responsive acceptance remain pending.
+### CSV import workspace extraction
+A reviewed standalone import route with the confirmed ImportResult envelope, no context editor, and a complete locally read or returned failed-record collection uses the shared `app-csv-import-workspace`. The shared owner composes `app-feature-title`, `app-button-import-csv`, `app-primary-action-button`, `app-summary-cards`, `app-state-message` and `app-data-table`; it owns local preview paging, explicit Import execution, busy/finalize state, declared and transport failures, partial result counters and retained diagnostics. Each consumer owns its ordered CSV columns, header aliases, typed row builder, body key and endpoint. Selecting a file never mutates the server; after a mutation attempt the same preview cannot be submitted again, because chunked imports may have partially persisted. The consumer must preserve the backend import envelope and must not invent a list filter, server pager, CRUD action or retry policy.
 
 The owner's presentation amendment (2026-10-14) extends the existing shared
 `ImportCsvComponent` for all current consumers. Template and local-file controls
@@ -28,7 +27,7 @@ Source conformance does not certify visual or runtime behavior: owner acceptance
 remains pending for both sides of 580px, intermediate/short-height layouts,
 long filenames/Arabic, LTR/RTL, both themes and direct-dialog consumers.
 
-**Compact import options in a dense editor (owner scoped request, 2026-10-20).**
+**Compact import options in a dense editor.**
 The same ImportCsvComponent exposes optional compact=true; false retains the
 existing card presentation. Select the compact mode for an explicitly scoped
 dense editor, such as Bill Loan Payment Plan. The shared owner renders one
@@ -51,8 +50,7 @@ checks do not certify popup/focus/RTL/short-height runtime acceptance.
 
 
 
-### Incremental flat datasets (owner2026-10-31; UtilizationReport)
-
+### Incremental flat datasets
 DataTable owns append-on-scroll presentation for a source-approved bounded page
 contract. Public inputs: incremental=false, hasMore=false, loadMoreError='';
 output loadMoreRequested emits no business payload. Existing loading disables

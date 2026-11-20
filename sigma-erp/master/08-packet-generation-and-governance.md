@@ -47,8 +47,7 @@ A feature may require several phase packets and one implementation recipe. Phase
 packets establish and reconcile contracts; task recipes implement an approved
 shape.
 
-### Current-state entry and execution skill (owner clarification, 2026-10-23)
-
+### Current-state entry and execution skill
 The documentation README routes four current needs: create a new screen, review
 an existing screen, inspect deferred decisions, and select the execution skill.
 Both screen paths select the current catalog shape and read only their applicable
@@ -58,13 +57,13 @@ because that template exists.
 
 The screen skill is a short operational router into those same sources. It must
 not become a second copy of all code examples, feature-specific decisions or
-revision history. Keep its routing cited to the owning block, and retain a
-dated revision row within the limit below. Superseded skill text, completed review records and old
+revision history. Keep its routing cited to the owning block; record changes in
+`CHANGELOG.md`, not in the skill. Superseded skill text, completed review records and old
 changelog entries belong in clearly labelled archive folders. Active plans and
 unresolved decisions remain discoverable; archive by lifecycle and supersession,
 not age alone. Preserve frozen decisions and update callers when a file moves.
 
-**Loadable instruction entry (owner-authorized Audit8 remediation, 2026-11-01).**
+**Loadable instruction entry.**
 The workspace `AGENTS.md` keeps the critical authorization/prohibited-command
 summary and the mandatory read link near its beginning. Its live continuation
 is `F:\My Work\Sigma\.agents\SIGMA_WORKFLOW_RULES.md`: agents read it completely
@@ -90,24 +89,20 @@ topic file and restates no rule text or value; artifact tables they carry are
 document structure, not rules. The screen catalog's "Topic files: when to open"
 table is the single owner of topic-level routing. The skill holds a gate checklist and a pointer table
 (concern → blocks and key shared owners) only; a new lesson goes into its
-owning block and adds at most a routing keyword plus one dated revision row.
-The skill keeps its five newest revision rows; older rows move to
-`archive/SKILL_REVISION_HISTORY.md`. The review index `reviews/INDEX.md` is a
+owning block and adds at most a routing keyword; the change is recorded in
+`CHANGELOG.md` (earlier skill history: `archive/SKILL_REVISION_HISTORY.md`). The review index `reviews/INDEX.md` is a
 short table of recent work; feature artifacts are found by name
 (`reviews/**/<FEATURE>_*.md`) and its earlier narrative is `reviews/INDEX_HISTORY.md`.
 
 **Section-level reading and current-state files (2026-11-19).** Agents read a
 large block, packet or review by section: list its headings, then read only the
 needed line ranges. The skill routes to named sections (`UI20 §Filter bar`)
-where a block holds several topics. A review that grows past 40 KB gets a
-`<FEATURE>_CURRENT_STATE.md` of at most 4 KB beside it (status, latest round,
-contracts in force, pending items, useful section headings); every later round
-rewrites that file in the same task. The full review stays at its path so
-existing links and anchors keep working.
-Generated navigation indexes come from `recipe-system/New-CurrentStateIndexes.ps1`
-(`Status` `Draft`, owner verification `no`, the full file's recorded status in a
-separate row). `-Refresh -Apply` rewrites generated indexes only, never a written
-summary, and removes a generated index once a written summary covers its files.
+where a block holds several topics. When a feature whose review exceeds 40 KB is
+next touched, write a `<FEATURE>_CURRENT_STATE.md` of at most 4 KB beside it
+(status, latest round, contracts in force, pending items, useful section
+headings); every later round rewrites that file in the same task. The full review stays at its path so
+existing links and anchors keep working. Without a summary, list the review's
+headings and read only the needed section.
 
 **Block topic folders (2026-11-19).** A block that covers several independent
 topics keeps its number and main file (`ui/13-modal-with-tabs.md`) and moves each
@@ -119,7 +114,7 @@ dependent packets stale. Agents read the main file's list and then only the
 needed topic file. Blocks with topic folders: Master5, UI1, UI2, UI4, UI6, UI7, UI13, UI14,
 UI16, UI17, UI18, UI19, UI20, UI22, UI24, BE14, BE15 and BE18.
 
-**Language of agent-facing files (owner decision, 2026-11-19).** Files written
+**Language of agent-facing files.** Files written
 for agents — instructions, canonical blocks, packets, review/contract/plan
 artifacts, `*_CURRENT_STATE.md` and `reviews/INDEX.md` — are written in English.
 Replies to the owner follow the companion's Arabic communication rule, and the
@@ -138,7 +133,7 @@ exceeded: `AGENTS.md` 8 KB, the companion core 14 KB, each companion section
 file 12 KB, the skill 15 KB, `reviews/INDEX.md` 12 KB, each
 `*_CURRENT_STATE.md` 4 KB, and fails a current-state file without an allowed
 `Status` and `Owner verification pending` row. It warns (without failing) for a canonical block over
-30 KB and a review artifact over 40 KB that has no current-state file. It also
+30 KB. It also
 reports paragraphs repeated verbatim across the instruction files. Raise a budget only
 by an explicit owner decision recorded here, never to absorb restated rules.
 

@@ -9,7 +9,7 @@ member visibility, and check project references and source inclusion. Seed
 fixtures independently of the restricted actor, then assert against that actor's
 observable result. Report build and executed test results independently.
 
-**Scoped tests and lint (owner instruction, 2026-11-19).** An authorized
+**Scoped tests and lint.** An authorized
 implementation, fix or refactor includes running the specifications that cover
 the changed code and linting the changed files, without a separate request:
 

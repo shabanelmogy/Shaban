@@ -16,4 +16,4 @@
 
 The [revaluation reconciliation](CURRENCY_REVALUATION_FINAL_RECONCILIATION.md) traced preview, save, detail and void through the service and screen, including source cutoffs, duplicate prevention and allocation guards. This was a source review on 2026-11-05. It recorded the proposed migration `AddCurrencyRevaluationSessionsAndContributions` and left schema application and runtime acceptance pending.
 
-Before accepting this slice, establish the actual migration and schema on the verified experimental database, then exercise duplicate posting, concurrent source changes and guarded void using the [manual acceptance scenarios](CURRENCY_MANUAL_ACCEPTANCE_SCENARIO_AR.md). The [dated-rate record](CURRENCY_DATED_RATES_CURRENT_STATE.md) covers its own earlier slice.
+Before accepting this slice, establish the actual migration and schema on the verified experimental database, then exercise duplicate posting, concurrent source changes and guarded void using the [manual acceptance scenarios](CURRENCY_MANUAL_ACCEPTANCE_SCENARIO_AR.md). The [dated-rate record](CURRENCY_DATED_RATES_FINAL_RECONCILIATION.md) covers its own earlier slice.

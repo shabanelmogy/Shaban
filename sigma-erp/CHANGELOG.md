@@ -1,5 +1,17 @@
 # Sigma documentation changes
 
+## 2026-11-20 — Simplification
+
+Removed detail that did not change execution: the skill's revision table (changes
+go to this changelog; earlier rows remain in `archive/SKILL_REVISION_HISTORY.md`);
+the core's evidence-gate table that repeated the skill checklist; the core's
+restructure-history paragraph; the 50 generated current-state indexes and
+`New-CurrentStateIndexes.ps1` (a written summary is written when a feature with a
+large review is next touched, otherwise agents read the review's headings); the
+checker's large-review warning. Across all blocks, 24 verification-status
+sentences, 107 heading dates and 128 dated provenance parentheticals were removed;
+links to the affected headings were repointed. Mandatory reading is now about 24 KB.
+
 ## 2026-11-20 — Topic folders for UI4, UI16, UI17, UI18 and UI19
 
 The five largest unsplit blocks on screen reading paths moved independent topics

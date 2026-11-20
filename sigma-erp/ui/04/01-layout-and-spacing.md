@@ -1,6 +1,6 @@
 <!-- Part of UI block 4: see ../04-filters.md. Same status and authority as the block. -->
 
-**General narrow-screen collapse (owner instruction, 2026-10-11).** Every
+**General narrow-screen collapse.** Every
 `form[appFilterPanel]` has a shared Filters disclosure below1200px (screen media
 max-width1199.98px), with no per-screen opt-in. It starts expanded and toggles
 the main fields, any already-open advanced fields, Reset and projected actions
@@ -41,7 +41,7 @@ Label/control gap, reserved validation feedback, control height and toolbar
 section gaps retain their owning rules. Feature code selects the public input,
 not a local filter margin or grid override.
 
-**Choices beside final-row actions (owner Rental correction, 2026-10-12).**
+**Choices beside final-row actions.**
 Feature-owned radio/check groups may project through the reusable
 `appFilterToolbarStart` attribute (`FilterToolbarStartDirective` exported from
 filter-panel.directives.ts). FilterPanel renders them at the toolbar's logical

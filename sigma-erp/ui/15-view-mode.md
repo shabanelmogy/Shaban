@@ -45,7 +45,7 @@ swaps Cancel for Close and shows an Edit button:
 **Edit** button. A dialog that is strictly a read-only viewer (no edit path, or
 a state where editing is not allowed) binds `[primaryActionVisible]="false"`.
 
-**Read-only close (owner correction,2026-10-31).** A pure viewer does not run
+**Read-only close.** A pure viewer does not run
 an editable draft's upload-discard/cleanup path just to leave. Its dialog Close,
 header close, Escape and route guard share a close decision which permits
 cancelling pending detail reads; a read is not an unsaved write. Invalidate the

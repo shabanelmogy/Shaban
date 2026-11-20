@@ -37,7 +37,7 @@ Snapshot-local screen/controller/service IDs are navigation aids, not substitute
 for reading their source. A positive comparison does not authorize importing a
 financial, authorization or API rule absent from the frozen Sigma contract.
 
-Apply Master2's reference-product functional detail target (owner2026-10-30).
+Apply Master2's reference-product functional detail target.
 Use the same review/plan to account for every relevant detail, at the requested
 scope's granularity. Existing Sigma behavior is evidence of current coverage,
 not a reason to discard a missing target capability. The owner must be able to
@@ -123,7 +123,7 @@ stored baseline and how it handles a concurrent change (BE8).
 
 ### Action-state contract
 
-**Downstream consumption is a separate status axis (owner 2026-10-22).** For each
+**Downstream consumption is a separate status axis.** For each
 source document, freeze the exact eligible source lines, downstream link, live/deleted
 rules and capacity unit before showing Open, Partially Used, Closed and a percentage.
 If the document has no positive eligible quantity, show No Quantity with no
@@ -138,7 +138,7 @@ denominator for the owning model; do not infer them from a source conversion or
 rename an existing bill-status enum without that contract. Purchase Request is
 the first quantity-based example (BE14, BE9; UI4/5).
 
-**Rejected downstream documents (owner 2026-10-22).** Freeze the consuming
+**Rejected downstream documents.** Freeze the consuming
 approval states as part of each source-use contract. For Purchase Request →
 Purchase Order, non-deleted Pending and Approved orders consume source quantity;
 Rejected orders remain linked for history but release quantity and their
@@ -263,8 +263,7 @@ Use these statuses consistently:
 - Conflicting — authoritative consumers disagree.
 - Uncertain — evidence is insufficient; do not implement automatically.
 
-### Artifact status and closure (G3, 2026-10-01)
-
+### Artifact status and closure
 Every artifact starts with the status table: `Status` is one of Draft, Frozen, Blocked,
 Implemented — source-only, Closed, and `Owner verification pending` is yes or no. Free text
 such as "implemented and source-reviewed" is not a status.

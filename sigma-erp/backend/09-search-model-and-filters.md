@@ -39,8 +39,7 @@ lookup contracts. Cover padded text and nullable live-state flags where the
 schema permits them. Verify projected grid keys and sort fields independently
 before count, paging and export.
 
-### Company-wide exclusion reads and branch filters (source-reviewed, 2026-11-18)
-
+### Company-wide exclusion reads and branch filters
 EF Core's `IgnoreQueryFilters` in a composed subquery can suppress the global
 filters of its outer query and joined selectors. `QueryReport` retains explicit
 tenant and live-row predicates, while branch authorization relies on its global
@@ -66,8 +65,7 @@ invoice revenue and redacts an unavailable return date. Neither invents an end
 date from the expected return. Source/build verification remains distinct from
 SQL Server and browser acceptance. (Source 2026-11-18.)
 
-### Shared advanced column rules (owner-approved, 2026-10-23)
-
+### Shared advanced column rules
 Reserve `Filters[grid]` for the shared JSON `{ columns: [{ field, operator,
 rules: [{ matchMode, value }] }] }`. Existing feature keys and predicates remain.
 Columns combine with AND; a column combines at most five rules with `and`/`or`.
@@ -106,7 +104,7 @@ after a page read. A complete existing in-memory aggregation may filter its fina
 rows before its existing count/page; do not introduce full materialization solely
 to avoid SQL translation. No grid rules means no added membership query.
 
-**Custom filter reconstruction (source clarification, 2026-10-26).** A list
+**Custom filter reconstruction.** A list
 override that builds a whitelist/normalized dictionary from the bound filters
 must retain the reserved encoded `grid` value before calling `ListQuery` or the
 shared filter owner. Do not silently drop it while forwarding ordinary screen
@@ -222,7 +220,7 @@ setter remains historical behavior for its own scoped follow-up. This replaces t
 claim that SpecificationRequestDto used the same copying setter: it already
 uses the initialized auto-property above.
 
-**Derived consumption filters (owner 2026-10-22).** When a list exposes a
+**Derived consumption filters.** When a list exposes a
 server-derived source-use status, filter against the same live source/downstream
 capacity rules in SQL before `CountAsync`, ordering and paging. Do not filter a
 materialized page. A null/absent filter returns all statuses; a recognized
@@ -245,7 +243,7 @@ if (!string.IsNullOrEmpty(search))
 
 **Bound the page size.** `PageSize` is client-supplied and unbounded. A request for
 `pageSize=100000` will attempt it. The Sigma default is **10**, clamped to
-**1–100** (owner decision, 2026-09-28):
+**1–100**:
 
 ```csharp
 var pageSize = Math.Clamp(searchModel.PageSize ?? 10, 1, 100);

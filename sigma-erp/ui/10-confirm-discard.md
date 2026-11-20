@@ -14,8 +14,7 @@ form with `updateOn: 'blur'`. An initial edit can still be pending when
 Escape or a route guard runs. Check Escape and navigation with the first
 changed field still focused. Confirm that cancelling discard keeps the value.
 
-### Shared shell navigation policy (owner2026-10-22)
-
+### Shared shell navigation policy
 NavigationPolicyService is the common fallback for registered reactive editor
 forms. The existing appMockData form owner registers its actual FormGroup through
 a lazy getter and its DestroyRef; registration does not depend on the generated
@@ -153,5 +152,5 @@ owner-pending.
 ---
 
 
-### Limousine multi-form pending reads and decisions (2026-10-09)
+### Limousine multi-form pending reads and decisions
 A routed editor or dialog that freezes separate draft, filter, or contextual forms uses the shared `freezeFormState`/`freezeFormStates` snapshot. Capture at the deferred decision or request boundary, re-check identity, mode, disposed state and other pending work at subscription and before dependent work, and restore only the same active surface after cancellation or a failed request. A successful navigation/save may close the surface without restoring its old controls. Source-only evidence: Limousine TripBooking and LimousineInvoice continuation.

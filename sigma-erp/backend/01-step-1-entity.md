@@ -54,7 +54,7 @@ collection declared as `ICollection<TChild>` for patterns 2 and 3 · calculated
 values are real properties when a list, report or filter needs them, not
 `[NotMapped]`.
 
-**Cross-namespace member gate (owner compiler evidence, 2026-10-21).** For
+**Cross-namespace member gate.** For
 every newly referenced entity/navigation type, resolve its declared namespace
 in the project that compiles the referencing file. Add that file's explicit
 `using` at the top of the referencing file when the namespace is absent; do
@@ -95,8 +95,7 @@ A tax inside a domain formula takes its rate from `ITaxPolicyService` (block 5 *
 service*, block 15 rule 8), snapshots it on the document, and never falls back to a literal
 rate constant.
 
-### One status flag per entity (G1, 2026-10-01)
-
+### One status flag per entity
 An entity has one active/inactive flag, and it is the one its consumers read. Partners use
 `Partner.IsInactive`: agreements, bookings and select lists block an inactive customer through
 it (`RentalAgreementService`, `LeaseAgreementService`, `BookingService`). Before a screen edits

@@ -2,8 +2,7 @@
 
 > **Status: Transitional** — current-session access exists for explicitly adopted routes/actions; remaining screen adoption is tracked, and backend authorization remains authoritative
 
-### Current-session access and adoption — 2026-11-06
-
+### Current-session access and adoption
 The owner subsequently requested and authorized current-session UI permission
 consumption: a signed, linked tenant administrator sees available company
 functions; ordinary users see their active-role/direct-grant union. The frozen
@@ -137,8 +136,7 @@ their own backend DTO/query/write contracts; hiding an element does not keep
 its JSON/export/Hub payload confidential. Subscription-plan eligibility is a
 separate contract, not an implicit role grant.
 
-### Reviewed permission metadata and renewal adoption — 2026-11-11
-
+### Reviewed permission metadata and renewal adoption
 The ERP resolver carries endpoint TenantAdminOnly metadata to enforcement and
 catalogue exclusion. Keep these financial administration operations out of
 assignable role and direct grants. Fiscal-year closing/checks, month closing/
@@ -190,7 +188,7 @@ live ERP security-stamp verification remain separate pending H1 work.
 - `AuthGuard` (`modules/auth/services/auth.guard.ts`) is **authentication only**:
   it checks `authService.currentUserValue`, calls `getCurrentUser()` once if
   empty, and returns the login UrlTree with an internal returnUrl when no valid
-  stored user can be restored (source correction2026-11-05). Storage/JSON/shape
+  stored user can be restored. Storage/JSON/shape
   failure is unauthenticated state, not a router exception. Keep explicit logout
   on its existing guarded transition; login opens the internal URL with query
   and fragment preserved. This remains authentication, not permission enforcement.
