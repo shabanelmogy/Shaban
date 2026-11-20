@@ -47,6 +47,11 @@ aggregate. Never put a correlated subquery inside an aggregate on SQL Server;
 join a unique relation before counting. Keep sequential scoped-DbContext use,
 cancellation, tenant/soft-delete filters and no cross-request replay cache.
 
+**Current vehicle status.** `VehicleStatusQueries.Latest(statuses)`
+(`SiGma.Business/Services`) is the one owner of each vehicle's latest status
+(CreatedAt, then Id; null dates last). Callers pass already-filtered statuses (for
+example `CreatedAt <= now`) and join the result; never rewrite the anti-join.
+
 For UTC-day ages, replace repeated date functions only with proven equivalent
 half-open boundaries, including future and exact-midnight behavior. Prefilter
 historical rows only when each excluded row contributes zero to every returned

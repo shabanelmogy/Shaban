@@ -9,6 +9,8 @@ access requirements, output predicate and download callback. The owner retains
 session/revision cancellation, one page-loading lease, applied-filter identity
 and complete Print/Export reads through the existing ReportPrintService session.
 `createCollectionReportState` remains the collection-specific filter facade.
+A report whose filters need no server options sets `readonly options =
+noReportOptions;` from the same file instead of a local `of(...)` result.
 Customer Wise Collection supplies its own period, branch and customer-type form.
 Keep financial fields and calculations in their report owners. Source and build
 checks do not establish browser output or SQL acceptance. (Source 2026-11-18.)

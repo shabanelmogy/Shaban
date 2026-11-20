@@ -73,6 +73,12 @@ invalidFields: '{{count}} invalid fields',
 {{ 'companyForm.invalidFields' | translate: { count: invalidFields().length } }}
 ```
 
+**Interpolated numbers.** A parameter value must read correctly for every
+number, including 1, 2, 3–10 and 11 or more. Arabic noun agreement changes with
+the number and English adds a plural `s`, so write the number as a value after a
+label or unit instead of before a counted noun: `'العمر بالسنوات: {{years}}'`,
+`'Age (years): {{years}}'`, not `'{{years}} سنوات'` or `'{{years}} years'`.
+
 **`en` is the fallback language** (`setDefaultLang('en')` in
 `translation.service.ts`). Consequences:
 

@@ -85,6 +85,8 @@ Report:
 - A suggested commit message for each affected repository (Master Guide block 7, "Suggested migration name and commit messages"). Suggest only; never commit.
 - Build, scoped test and lint commands with counts and outcomes (Master5).
 - Possible compile or runtime risks.
+- Shared extraction: what was extracted or adopted, copies left in UI30 item 39,
+  or why nothing qualified (Master5 topic `05/03` §Shared-extraction gate).
 - Load-speed/query findings and scoped improvements, reproducible measured
   before/after results or pending owner measurement, and evidence-backed index
   proposals (or justified none), costs and migration/application boundaries.

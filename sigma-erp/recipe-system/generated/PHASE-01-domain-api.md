@@ -10,7 +10,7 @@ are finalized.
 
 - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:3d74ae71fa7ca4d78e3061da8b59c62bf979108fe9529ec4052336a6da002034
 - master.1: ## 1. Governance and review principles | sha256:ee76565b87a3e1818f4ae0b77f0d10041f5dcbb4141a72e5bae32d07adedb420
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:0b1dbab4b3b5c74d8f98f445aa6401c59248a410eb62069b1a0e970aae83a7c2
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:721d81476614305b2a1e7e426b54c3b64048b8efb8462f3573760af392758fda
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:fa4216c7eb26b98af29e24c266026c920dafc7d1e8031d06bbd6d803dfc960a5
 - master.5: ## 5. Continuous quality gates | sha256:f33275578ef4b77c78d894dc27e67da870281c9ba228f988c98f055597e026d2
@@ -33,7 +33,7 @@ are finalized.
 - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:9aa937b534848693453be58682e411e089a6de631363ffa72ab529b3abebe432
 - backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:99a22dc9b24695edc30eef7ed5b7ff1241576830b4f86fd3d1424af7a06e6465
 - backend.16: ## 16. Pattern 4 — Settings | sha256:66be4b0b3eab54af0f2d37c4658f255db8e9fe8e4fcaace16627754174ac2c9e
-- backend.17: ## 17. Pattern 5 — Reports | sha256:ccf8fd38580e92bc5da25e555e0b09e0e30dfcef4ab797ebb8842c5d932d84eb
+- backend.17: ## 17. Pattern 5 — Reports | sha256:36e8ff213257eef9e64543e916ed354a3aa337259fcc6339753bd88f110c1d0c
 - backend.18: ## 18. Edge cases | sha256:ca231703f8f3eecb2ba71fb505d7d6960d9c84ae8c2a9f3e3a73847bc553c3b8
 
 Approved backend references:

@@ -39,8 +39,8 @@ splitting dependent work. Run the packet drift check before using a packet.
 ## 2. Evidence gates (tier M/L; tier S only where the element is touched)
 
 - [ ] **Reference** — Speed guide/explanation, then dated Speed code cycle, then
-  pinned Odoo only for remaining gaps. Map each field/group/filter/action/state/
-  validation/link/charge/output to Sigma source, contract and guide as matched/
+  pinned Odoo only for remaining gaps. Map each field/group/filter/action/default order/
+  state/validation/link/charge/output to Sigma source, contract and guide as matched/
   partial/missing/blocked/excluded. Frontend evidence never proves server,
   accounting or permission rules. (Master2/4/7)
 - [ ] **Loading** — trace the real route import; one visible progress owner per
@@ -79,7 +79,7 @@ headings first and read only the named or needed sections by line range.
 | Dates, uploads, private files, typed validation, numeric previews | UI14/17/18/19/27; BE2/3/8/15/18 · FileField, FileLink, calendarDaysBetween, toMonthPickerDate |
 | Money, currency, VAT allocation, settlement, exact lexemes | UI19; BE3/15 · FinancialNumberPolicy, DocumentCurrencyComponent, TrimIncomingStrings |
 | Exact monetary list/journal reads and aggregates | UI5/6/19; BE9 |
-| Reports, summaries, footer rows, printing, tab/side-list titles, report context changes | UI20 §Filter bar, §Search: validate, then run, §Tabbed report sections, §Shared summary/KPI cards, §Totals footer, §Export; UI6/8/21/22/28/29; BE2/7/17 · AccountReportConfig, ReportPrintSession, DataTable.footerRows, `.sigma-print-only` |
+| Reports, summaries, footer rows, printing, tab/side-list titles, report context changes | UI20 §Filter bar, §Search: validate, then run, §Tabbed report sections, §Shared summary/KPI cards, §Totals footer, §Export; UI6/8/21/22/28/29; BE2/7/17 · AccountReportConfig, ReportPrintSession, DataTable.footerRows, `.sigma-print-only`, `.sigma-report-filter-context`, noReportOptions, VehicleStatusQueries.Latest |
 | Inline report/filter feedback | UI22 · StateMessage.compact |
 | Branch-scoped report reads and company-wide exclusions | BE9 · AgreementReturnReportQueries.LatestIdsAsync |
 | Domain actions, approval workflow, journals, linked documents | Master4; UI7/9/13/22/26/28; BE8/11/12/14/15/18 · injectApprovalStatusAction, DocumentApprovalCycle |

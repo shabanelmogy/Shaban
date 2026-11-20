@@ -16,7 +16,7 @@ explicit mode; a deliberate exception is recorded in the review.
 
 - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:3d74ae71fa7ca4d78e3061da8b59c62bf979108fe9529ec4052336a6da002034
 - master.1: ## 1. Governance and review principles | sha256:ee76565b87a3e1818f4ae0b77f0d10041f5dcbb4141a72e5bae32d07adedb420
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:0b1dbab4b3b5c74d8f98f445aa6401c59248a410eb62069b1a0e970aae83a7c2
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:721d81476614305b2a1e7e426b54c3b64048b8efb8462f3573760af392758fda
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:fa4216c7eb26b98af29e24c266026c920dafc7d1e8031d06bbd6d803dfc960a5
 - master.5: ## 5. Continuous quality gates | sha256:f33275578ef4b77c78d894dc27e67da870281c9ba228f988c98f055597e026d2
@@ -38,7 +38,7 @@ explicit mode; a deliberate exception is recorded in the review.
 - ui.18: ## 18. Documents and upload | sha256:c1423b8e0068409bc3d9f739913a9d7c6978a2d351530ee2954600ffdb2d405b
 - ui.19: ## 19. Validation messages | sha256:6479ef1233a6517ec265a9f102b313abc8f626a15e89dca5f5265ffff267c8ac
 - ui.22: ## 22. Loading, empty, error, toast | sha256:895b36e116e8ead97b444e10d6ff9fa7c127a7e6606b18ed80952387b3789974
-- ui.23: ## 23. Translations | sha256:86389e84130499283be8d15b8fce15978af3d7d5436ad256e2f6192f3ee903e5
+- ui.23: ## 23. Translations | sha256:7460a1db2589334955d4a482c50409c1d406038456aeed8a5c8a172a3e3cc771
 - ui.24: ## 24. Colors, icons, buttons | sha256:3e15f07e224a15d55e17bdb8bcb32251012adebe3aaa39b125b714d89543a20c
 - ui.25: ## 25. RTL and dark theme | sha256:e2c1cfb7fc9d0a1b164eda572651154c744b54c155a35d81b71adffad08fddae
 - ui.26: ## 26. Permissions and route access | sha256:c596611d06131eccb93219ef991100aea97a6e054678b78e350983d0c5be627f

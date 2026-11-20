@@ -108,6 +108,8 @@ Confirm, with the owner's check list:
 - screen guide created/updated and matched to final source (Master7);
 - mappings and server-owned payload fields (BE3, BE4);
 - screen cache source matrix or a supported not-applicable reason (UI2);
+- shared extraction: repeated patterns extracted or adopted, remaining copies
+  counted in UI30 item 39, or why nothing qualified (Master5 topic `05/03` §Shared-extraction gate);
 - merge markers and whitespace;
 - unrelated user changes preserved; reference modules unchanged unless scoped.
 

@@ -122,6 +122,10 @@ layout overrides are not bulk rewritten by this shared change.
 Every report filter strip uses the shared global classes in `src/styles.scss`
 (reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). A filterless
 report with a top row of actions keeps the same strip around `appReportActions`.
+Applied settings that define the report go in the title subtitle (UI3). A short
+`app-summary-cards` total that would otherwise take its own row goes in the
+strip's shared `.sigma-report-filter-context` before the actions; the strip then
+drops `no-print`, which moves to the actions and feedback, so the total prints.
 The strip separates the buttons from the following tabs or results; the toolbar
 spaces the buttons within the row. New or reviewed
 summary/KPI cards use `app-summary-cards`; the former compact accounting bar is

@@ -1,5 +1,16 @@
 # Sigma documentation changes
 
+## 2026-11-20 — Rules from the Due for Sale report review
+
+The Phase 6 source review and the final report now require the Master5 shared
+extraction statement. BE17 names `VehicleStatusQueries.Latest` as the owner of a
+vehicle's current status; UI20 names `noReportOptions` for reports without
+server options (remaining copies in UI30 item 39). UI23 adds the interpolated
+number rule. Master2's inventory and the skill's reference gate include the
+default row order. The skill's report row lists the two new owners. UI20 adds the
+shared `.sigma-report-filter-context` for a short total beside report actions;
+applied settings that define a report go in the title subtitle.
+
 ## 2026-11-20 — Review fixes
 
 The artifact-naming row for `<FEATURE>_CURRENT_STATE.md` no longer says it is

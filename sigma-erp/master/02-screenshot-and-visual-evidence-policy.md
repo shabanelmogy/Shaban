@@ -52,9 +52,10 @@ The owner supplies the collected guide, explanations and frontend code of the
 reference product because Sigma is being built to reach its functional detail.
 For every new or reviewed screen, use the relevant reference slice as the target
 for functional coverage, not merely optional inspiration or a list of names.
-Inventory its fields and logical groups, filters, actions/dialogs, state axes,
-validations, document links, charges/calculations and outputs, to the extent the
-evidence actually establishes them. Compare each relevant detail with the real
+Inventory its fields and logical groups, filters, actions/dialogs, default row
+order, state axes, validations, document links, charges/calculations and outputs,
+to the extent the evidence actually establishes them. A default order the evidence
+does not establish is recorded as a reviewer choice with its reason. Compare each relevant detail with the real
 Sigma producer/consumer and its current guide in Master4's coverage rows.
 
 A detail absent from current Sigma is a target gap to classify and plan. Its

@@ -12,7 +12,7 @@ itself; this packet restates no values.
 
 - master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:3d74ae71fa7ca4d78e3061da8b59c62bf979108fe9529ec4052336a6da002034
 - master.1: ## 1. Governance and review principles | sha256:ee76565b87a3e1818f4ae0b77f0d10041f5dcbb4141a72e5bae32d07adedb420
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:0b1dbab4b3b5c74d8f98f445aa6401c59248a410eb62069b1a0e970aae83a7c2
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:721d81476614305b2a1e7e426b54c3b64048b8efb8462f3573760af392758fda
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:fa4216c7eb26b98af29e24c266026c920dafc7d1e8031d06bbd6d803dfc960a5
 - master.5: ## 5. Continuous quality gates | sha256:f33275578ef4b77c78d894dc27e67da870281c9ba228f988c98f055597e026d2
@@ -23,12 +23,12 @@ itself; this packet restates no values.
 - ui.1: ## 1. Feature folders and wiring | sha256:46e816ee4d06385cb73a1e22814128b6a54c66bb0eafb81191fbf74640daab8c
 - ui.2: ## 2. Service and response wrappers | sha256:3b648464835e13b2c1e982dd87e8d21a51eb8e0a0bb2ddf9b0aa26f79d56de97
 - ui.13: ## 13. Modal with tabs | sha256:7c0dd035e63ae11aef46b513e3bdc67fd7d79d3bd955f974136f7e39c32c1e78
-- ui.20: ## 20. Report page | sha256:89c4bd4800ac32aa62f277d1d548916e7ecf5ca61583b64c3aa8a8fbac557c33
+- ui.20: ## 20. Report page | sha256:5f8588b86a7c8453f73cbfeb45ac47ddf1bc27f411bd5775ec2cccf1b456eae8
 - ui.21: ## 21. Report print | sha256:f9013f0d3c2398bcc4233daf759fafbeeb38c293335be13444ffeaf988698053
 - ui.22: ## 22. Loading, empty, error, toast | sha256:895b36e116e8ead97b444e10d6ff9fa7c127a7e6606b18ed80952387b3789974
 - ui.28: ## 28. Request cancellation and stale responses | sha256:74ae9fdcdf9daa83fd23f5f6d2c92c906cd9ef0ed7a78f75c01fdf9243fcfa2e
 - ui.29: ## 29. Verification expectations | sha256:52e0b1f24fb7514abf8c9b14cf83b0b6099b24db1ea46c90614f92705f8d67e0
-- ui.30: ## 30. Backlog, by priority | sha256:80fffd0b3b011e9442d41bd6f932e6538100591d0bc048892f3e2dfbbf31e9e4
+- ui.30: ## 30. Backlog, by priority | sha256:bfc641abe1c745e5d23aea44b61f83175c9b476a9c47ecabe5d41a51dcdcf6ef
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
 - backend.2: ## 2. Step 2 — EF configuration | sha256:cf4f75793ea80c2bd92d2b51a51aa3b0d57240be85e4bd11f928737190874460
 - backend.6: ## 6. Step 6 — Controller | sha256:f0f56867e3997a688067c5e5ec7f19070f1f4d621a0d5617e4e9639fdf74eba6
@@ -137,6 +137,8 @@ Confirm, with the owner's check list:
 - screen guide created/updated and matched to final source (Master7);
 - mappings and server-owned payload fields (BE3, BE4);
 - screen cache source matrix or a supported not-applicable reason (UI2);
+- shared extraction: repeated patterns extracted or adopted, remaining copies
+  counted in UI30 item 39, or why nothing qualified (Master5 topic `05/03` §Shared-extraction gate);
 - merge markers and whitespace;
 - unrelated user changes preserved; reference modules unchanged unless scoped.
 
