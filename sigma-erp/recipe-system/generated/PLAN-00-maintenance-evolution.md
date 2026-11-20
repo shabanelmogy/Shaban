@@ -21,7 +21,7 @@ it does not authorize source edits.
 - master.8: ## 8. Packet generation and governance | sha256:90dac99897883d0a9d4e973f60b38f549c45b3511dfd83bd5fe3e389da1eeb04
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
 - ui.29: ## 29. Verification expectations | sha256:52e0b1f24fb7514abf8c9b14cf83b0b6099b24db1ea46c90614f92705f8d67e0
-- ui.30: ## 30. Backlog, by priority | sha256:bfc641abe1c745e5d23aea44b61f83175c9b476a9c47ecabe5d41a51dcdcf6ef
+- ui.30: ## 30. Backlog, by priority | sha256:77a0a17bdf69c842b3408be79066d3a4df716337950a1e04179037bcb4bd2e12
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
 - backend.18: ## 18. Edge cases | sha256:ca231703f8f3eecb2ba71fb505d7d6960d9c84ae8c2a9f3e3a73847bc553c3b8
 - backend.19: ## 19. Backlog | sha256:18d15f0bff56e89133a305cda566487d6fcf90c96f67656f59976fd7ed112bac

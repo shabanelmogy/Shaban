@@ -35,7 +35,7 @@ The query reads the common settings once, then uses one projected scoped snapsho
 
 Shared extraction: the latest-status anti-join, repeated in four services, moved to `VehicleStatusQueries.Latest` (BE17), now used by Dashboard, Vehicle Status Report 2, Idle Vehicle and this report. The local empty options result moved to `noReportOptions` (UI20), adopted here and by Vehicle Ageing and Rental Service Replacement; five older copies are counted in UI30 item 39. The threshold text now places numbers after a label (UI23) so it reads correctly for every value.
 
-Owner requests: the threshold text is the title subtitle (UI3), and the count card sits in the action strip through the shared `.sigma-report-filter-context` (UI20); both print. The table uses UI6 local paging (controlled first/rows, total records, shared 10/15/20/50/100 options) and shows the pager whenever rows exist.
+Owner requests: the threshold text is the title subtitle (UI3), and the count card sits in the action strip through the shared `.sigma-report-filter-context` (UI20); both print. The table uses the shared table's local paging (UI6 topic `06/04`: shared page size and options, page 1 on a new result) and shows the pager whenever rows exist.
 
 Open decision: rows are ordered by ascending mileage, missing mileage last, then plate. The evidence does not establish the order (Master2); the owner confirms or chooses another order.
 

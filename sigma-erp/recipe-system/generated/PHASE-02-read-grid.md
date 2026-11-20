@@ -19,12 +19,12 @@ itself; this packet restates no values.
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
 - master.8: ## 8. Packet generation and governance | sha256:90dac99897883d0a9d4e973f60b38f549c45b3511dfd83bd5fe3e389da1eeb04
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
-- ui.1: ## 1. Feature folders and wiring | sha256:46e816ee4d06385cb73a1e22814128b6a54c66bb0eafb81191fbf74640daab8c
+- ui.1: ## 1. Feature folders and wiring | sha256:3a4d6de0177450689846d43c0d9181ca007645ea4ed37bce1650a4d25b68ab25
 - ui.2: ## 2. Service and response wrappers | sha256:3b648464835e13b2c1e982dd87e8d21a51eb8e0a0bb2ddf9b0aa26f79d56de97
 - ui.3: ## 3. Header | sha256:4db9c662bd1cae41fba43b7834a5fdfa264f734df1b8fae2e570666762020bde
 - ui.4: ## 4. Filters | sha256:5e342fe503bfd8f4af9ec1b812ba0adeab360ee458c9477880a10f405938aaa3
 - ui.5: ## 5. Columns | sha256:c5f934c401c1c24c3faa4ebb0cd9a43175df02a6f225ac69057589a2d3c358b5
-- ui.6: ## 6. Grid and footer | sha256:2d71077d6ca84065423923c8e4e0536a1920e47a12ca0ec77c1e0a29708a8c33
+- ui.6: ## 6. Grid and footer | sha256:cc9909b9426630d9f619db5db6dc9937e21d469e9e83252d0367998d8093ebcd
 - ui.7: ## 7. Action button cycle | sha256:7c10bdb0f997b7e95bcee31fcb61c4fa25040a81d859708d580cfc7a1921d678
 - ui.8: ## 8. Export to Excel | sha256:401fd301b29ea30aaf7b4601df409e3c62a171632ec02d5dd719215a01f9cd1d
 - ui.9: ## 9. Confirm: delete | sha256:5a86d1c89cac29713709575f30a616cf4d5cab08916d1dbc76c8808ec20dfd87
@@ -32,7 +32,7 @@ itself; this packet restates no values.
 - ui.16: ## 16. Dropdowns, lookups, enums | sha256:467408e883c55ec485dd0e6998cf8481cf5c9e660b067ff6eb24acc057a7a102
 - ui.17: ## 17. Dates | sha256:091b41901b811471ba30e616f1bde917b92b48ea65bd4c74de67e351f40a0401
 - ui.19: ## 19. Validation messages | sha256:6479ef1233a6517ec265a9f102b313abc8f626a15e89dca5f5265ffff267c8ac
-- ui.20: ## 20. Report page | sha256:5f8588b86a7c8453f73cbfeb45ac47ddf1bc27f411bd5775ec2cccf1b456eae8
+- ui.20: ## 20. Report page | sha256:5edd00f097f4f963815e74596766d834cf5bc17a917bb3c0eb3c43ffb15123fe
 - ui.21: ## 21. Report print | sha256:f9013f0d3c2398bcc4233daf759fafbeeb38c293335be13444ffeaf988698053
 - ui.22: ## 22. Loading, empty, error, toast | sha256:895b36e116e8ead97b444e10d6ff9fa7c127a7e6606b18ed80952387b3789974
 - ui.23: ## 23. Translations | sha256:7460a1db2589334955d4a482c50409c1d406038456aeed8a5c8a172a3e3cc771
@@ -49,7 +49,7 @@ itself; this packet restates no values.
 - backend.9: ## 9. Search model and filters | sha256:1064b113a9c3badecae45e5ea387980d383a30fa398be6353802ced34de04d27
 - backend.10: ## 10. Select and dropdowns | sha256:5492c310ca8d128504e1e223600fba3d8bdfaaacd7ef8907446d57a536edcc06
 - backend.13: ## 13. Pattern 1 — Normal entity | sha256:b3b6cf30cbd6bfab549f516d75cc31f5abaa64e43d53ae0f1ba906d57b80dc33
-- backend.17: ## 17. Pattern 5 — Reports | sha256:36e8ff213257eef9e64543e916ed354a3aa337259fcc6339753bd88f110c1d0c
+- backend.17: ## 17. Pattern 5 — Reports | sha256:6e520119b8b0176bf5baf978b85b9f5744cdbf7078edae0bb77b69d44c237ab0
 - backend.18: ## 18. Edge cases | sha256:ca231703f8f3eecb2ba71fb505d7d6960d9c84ae8c2a9f3e3a73847bc553c3b8
 
 Approved references by read-path shape:

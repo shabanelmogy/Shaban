@@ -258,3 +258,27 @@ rail/hover attributes. Default desktop navigation is visible, hidden navigation
 returns the full280px to content, and hover does not reopen it. Below992px the
 PrimeNG Drawer owns visibility. Do not add per-feature margins or plugin/body
 attribute toggles. Preserve query/deep-link state and responsive internal scroll.
+
+### Sidebar motion
+
+Motion is CSS owned by the shell, decorative only, and off under
+`prefers-reduced-motion: reduce`. It plays only after a user action: the desktop
+slide only after the header toggle (`LayoutComponent.navigationMotion`, reset on
+a breakpoint change), and row motion only for a group the user just opened:
+`SidebarMenuComponent` adds `sigma-menu-opening` to that group's content
+container for 1.2 s after a click on its row or Enter/Space/Right on it, when the
+publisher has expanded it. Selecting an item, load, refresh, search, language or
+access rebuilds and the mobile Drawer's menu render without motion. Every motion uses one soft ease-out curve,
+`cubic-bezier(.22, 1, .36, 1)` (`--sigma-menu-ease` in the menu). Desktop show/hide uses Angular
+`animate.enter`/`animate.leave` on the aside (`sigma-shell__navigation--enter`
+/`--leave` in `layout.component.scss`): the width opens over 460/380 ms while
+the menu keeps its 280px width and slides 48px in from the inline start. In `sidebar-menu.component.scss`: the group
+chevron rotates over 420 ms; a row's background and icon (scale 1.06) ease on
+hover over 340 ms; the
+current row's selection bar (`::before`) is static; and the rows of
+a group that opens fade and slide 12px in from the inline start over 520 ms
+with a 45 ms stagger (PanelMenu hides a
+closed group with `display: none`, so each opening restarts it). The mobile
+Drawer keeps PrimeNG's own slide. Motion uses transform and opacity only inside
+the menu, so it never changes row layout or the reveal/scroll alignment above.
+

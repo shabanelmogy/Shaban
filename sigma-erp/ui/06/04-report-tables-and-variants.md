@@ -39,12 +39,16 @@ component lacks a required hierarchy capability, add it in that report's
 scoped implementation. Do not flatten the hierarchy or introduce a feature
 owned table as a workaround.
 
-For local pagination, bind each section's complete array, its length as
-`totalRecords`, and independent controlled `first`/`rows` inputs. Use the shared
-default page size and 10/15/20/50/100 options. Reconcile `paginationChange` through
-`resolveListPaging` before updating the section's state. Switching tabs retains
-their pages/sizes; filter changes and valid Search/Refresh reset offsets to zero
-while preserving chosen sizes. This is presentation paging, not server paging.
+For local pagination, bind each section's complete array with `lazy=false` and
+`paginator` = not printing. The shared table hides the pager while a local table
+has no rows, so the pager shows exactly when rows exist. Use the shared default page size and 10/15/20/50/100 options: do not
+bind a fixed `rows` number. The shared table owns an unbound offset: a new result
+(a different first row) opens on page 1 and keeps the chosen size, while appended
+rows keep the page; tab panels stay mounted so each keeps its page. Bind
+controlled `first`/`rows`, `totalRecords` and `paginationChange` through
+`resolveListPaging` only when the feature must own the page, for example per-key
+paging state; such a consumer resets its own offset on a new result. This is
+presentation paging, not server paging.
 Print must temporarily disable all section paginators, wait for rendering and
 restore the controlled state through `ReportPrintService.afterPrint` (block 21).
 Export and totals continue to use complete response arrays.

@@ -122,7 +122,8 @@ layout overrides are not bulk rewritten by this shared change.
 Every report filter strip uses the shared global classes in `src/styles.scss`
 (reference: `Accounts/TrailBalance`, `Accounts/BalanceSheet`). A filterless
 report with a top row of actions keeps the same strip around `appReportActions`.
-Applied settings that define the report go in the title subtitle (UI3). A short
+Applied settings or a scope note that define what the report includes go in the
+title subtitle (UI3), not in a paragraph between the title and the filters. A short
 `app-summary-cards` total that would otherwise take its own row goes in the
 strip's shared `.sigma-report-filter-context` before the actions; the strip then
 drops `no-print`, which moves to the actions and feedback, so the total prints.
@@ -242,6 +243,13 @@ into shared stableLayout. Use the existing mx-0 utility to retain report card
 edges, and project report actions with appFilterActions/appReportActions plus
 one shared Reset. This is a recorded presentation exception, not a blanket
 report migration or a change to Range/business semantics.
+
+Any report whose search form uses FilterPanel follows the same placement: the
+form adds `sigma-u-mx-0`, so the title card, filter card and results share the
+report panel's edges, and its outputs (Export, Print) go in `appFilterActions`
+before Search, beside the shared Reset, not in a separate `appReportActions` row.
+`appReportActions` remains for report strips without FilterPanel and for a retry
+row. Example: Vehicle Profit and Loss.
 
 Report radio groups can opt into the shared `sigma-report-filter-choice` class
 on their labelled radiogroup. `src/styles.scss` then owns PrimeNG radio selected,

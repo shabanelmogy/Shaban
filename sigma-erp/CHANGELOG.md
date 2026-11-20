@@ -1,5 +1,41 @@
 # Sigma documentation changes
 
+## 2026-11-20 — Sidebar motion
+
+UI1 topic `01/01` §Sidebar motion records the shell's sidebar animations
+(desktop slide, chevron, hover, selection bar, staggered group rows) and the
+reduced-motion fallback.
+
+## 2026-11-20 — Per-tab report loading
+
+UI20 topic `20/04` and BE17: a tabbed report with independent data groups reads
+only the active tab's group (`section`), keeps loaded groups for the applied
+period and access context, and reads every group for Print and Export. Applied in
+Vehicle Status Report. The split applies only when the default tab needs
+fewer groups than the whole report (not Detailed Vehicle Utilization).
+
+## 2026-11-20 — Unified report table states
+
+UI20 §Rows, numbers, empty state: every report shows its table frame from the
+first render, with not-run and empty texts as the table's empty message.
+`DataTableComponent` hides the pager of an empty local table (UI6 topic `06/04`).
+Applied in Vehicle Profit and Loss, Daily Report, Tax Return, Overdue Agreements,
+Detailed Vehicle Utilization and Vehicle Rental Details.
+
+## 2026-11-20 — FilterPanel reports and scope notes
+
+UI20: a report using FilterPanel adds `sigma-u-mx-0` so the title and filter
+cards share edges, and puts Export/Print in `appFilterActions` beside Search and
+Reset; a scope note that defines the report goes in the title subtitle. Applied
+in Vehicle Profit and Loss.
+
+## 2026-11-20 — Report inventory and local paging
+
+UI30 records the report inventory (items 44–47, item 39). UI6 topic `06/04`:
+the shared table owns an unbound local offset and resets it on a new result;
+reports use the shared page size and show the pager whenever rows exist;
+controlled paging is for features that must own the page. Item 44 is resolved.
+
 ## 2026-11-20 — Rules from the Due for Sale report review
 
 The Phase 6 source review and the final report now require the Master5 shared

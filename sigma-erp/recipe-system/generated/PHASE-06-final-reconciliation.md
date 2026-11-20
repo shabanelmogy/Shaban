@@ -20,15 +20,15 @@ itself; this packet restates no values.
 - master.7: ## 7. End-to-end reconciliation and final report | sha256:b6729b22bb633b011bd9115edd1468d600b6fc95c85725b939bd93644d7f35ae
 - master.8: ## 8. Packet generation and governance | sha256:90dac99897883d0a9d4e973f60b38f549c45b3511dfd83bd5fe3e389da1eeb04
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
-- ui.1: ## 1. Feature folders and wiring | sha256:46e816ee4d06385cb73a1e22814128b6a54c66bb0eafb81191fbf74640daab8c
+- ui.1: ## 1. Feature folders and wiring | sha256:3a4d6de0177450689846d43c0d9181ca007645ea4ed37bce1650a4d25b68ab25
 - ui.2: ## 2. Service and response wrappers | sha256:3b648464835e13b2c1e982dd87e8d21a51eb8e0a0bb2ddf9b0aa26f79d56de97
 - ui.13: ## 13. Modal with tabs | sha256:7c0dd035e63ae11aef46b513e3bdc67fd7d79d3bd955f974136f7e39c32c1e78
-- ui.20: ## 20. Report page | sha256:5f8588b86a7c8453f73cbfeb45ac47ddf1bc27f411bd5775ec2cccf1b456eae8
+- ui.20: ## 20. Report page | sha256:5edd00f097f4f963815e74596766d834cf5bc17a917bb3c0eb3c43ffb15123fe
 - ui.21: ## 21. Report print | sha256:f9013f0d3c2398bcc4233daf759fafbeeb38c293335be13444ffeaf988698053
 - ui.22: ## 22. Loading, empty, error, toast | sha256:895b36e116e8ead97b444e10d6ff9fa7c127a7e6606b18ed80952387b3789974
 - ui.28: ## 28. Request cancellation and stale responses | sha256:74ae9fdcdf9daa83fd23f5f6d2c92c906cd9ef0ed7a78f75c01fdf9243fcfa2e
 - ui.29: ## 29. Verification expectations | sha256:52e0b1f24fb7514abf8c9b14cf83b0b6099b24db1ea46c90614f92705f8d67e0
-- ui.30: ## 30. Backlog, by priority | sha256:bfc641abe1c745e5d23aea44b61f83175c9b476a9c47ecabe5d41a51dcdcf6ef
+- ui.30: ## 30. Backlog, by priority | sha256:77a0a17bdf69c842b3408be79066d3a4df716337950a1e04179037bcb4bd2e12
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
 - backend.2: ## 2. Step 2 — EF configuration | sha256:cf4f75793ea80c2bd92d2b51a51aa3b0d57240be85e4bd11f928737190874460
 - backend.6: ## 6. Step 6 — Controller | sha256:f0f56867e3997a688067c5e5ec7f19070f1f4d621a0d5617e4e9639fdf74eba6

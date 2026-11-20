@@ -1,5 +1,9 @@
 # عقد تنفيذ تفاصيل تأجير المركبات
 
+## Remove the on-screen Info card — 2026-11-20
+
+At the owner's request, remove the summary card and Info dialog from the screen. Keep the applied month, category, vehicle count and grand total as print-only context using the shared UI21 visibility utility. The report tables, footer totals, Excel and email output retain their existing scope. This replaces the previous on-screen Info placement decision.
+
 ## تعديل العرض بطلب المالك — ١٦ نوفمبر ٢٠٢٦
 
 توضيح لاحق: عنوان Current fleet status يظهر في شريط التابات فقط؛ يُحذف العنوان المكرر داخل لوحة الملخص ويبقى توقيت الملخص دون تغيير.

@@ -47,6 +47,7 @@ Newest first. Details and exact status live in the linked file.
 
 | Work | Main file |
 |---|---|
+| Revenue by Vehicle Type | [Implementation and verification](REVENUE_BY_VEHICLE_TYPE_FEATURE_REVIEW.md) |
 | Due for Sale / De-fleeting Vehicles Report | [Implementation and verification](DUE_FOR_SALE_VEHICLES_REPORT_FEATURE_REVIEW.md) |
 | Rental Vehicles on Service Replacements | [Implementation and verification](RENTAL_SERVICE_REPLACEMENT_REPORT_FEATURE_REVIEW.md) |
 | Idle Vehicle Report by branch | [Implementation and verification](IDLE_VEHICLE_REPORT_FEATURE_REVIEW.md) |
@@ -76,7 +77,6 @@ Newest first. Details and exact status live in the linked file.
 | Collection Report | [Review](COLLECTION_REPORT_FEATURE_REVIEW.md) |
 | Vehicle profit/loss by chassis | [Review](VEHICLE_CHASSIS_PROFIT_LOSS_FEATURE_REVIEW.md) |
 | Rental Sales for Sixt Bahrain report removed | [Review](RENTAL_SALES_FOR_SIXT_BAHRAIN_FEATURE_REVIEW.md) |
-| Approval stage reversal | [Contract](ERP_APPROVAL_UNAPPROVE_CONTRACT_FREEZE.md) |
 
 ## Maintaining this index
 

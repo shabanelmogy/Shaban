@@ -47,6 +47,13 @@ aggregate. Never put a correlated subquery inside an aggregate on SQL Server;
 join a unique relation before counting. Keep sequential scoped-DbContext use,
 cancellation, tenant/soft-delete filters and no cross-request replay cache.
 
+**Per-tab data groups.** A tabbed report whose tabs come from independent data
+groups accepts an optional `Section` tab key on its filter. The service maps the
+key to its group, reads only that group and returns `Sections` with the group's
+tab keys; an unknown key fails with `InvalidReportFilters`; no key reads every
+group (Print, Export). Each group is its own private method so the full read is
+their composition (`VehicleStatusReportService`). UI20 topic `20/04` owns the page.
+
 **Current vehicle status.** `VehicleStatusQueries.Latest(statuses)`
 (`SiGma.Business/Services`) is the one owner of each vehicle's latest status
 (CreatedAt, then Id; null dates last). Callers pass already-filtered statuses (for

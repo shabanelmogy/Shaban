@@ -358,6 +358,16 @@ loading and empty states; bind its empty visibility to the report's
 `hasSearched`/error state so "no result", "not run yet" and "error" remain
 distinct. Do not add a feature-owned `<table>` or a second row renderer.
 
+Every report shows the same states. Its table frame with column headers is
+visible from the first render: before Search, while loading, after an empty
+result and after an error. Before Search the table's `emptyMessage` is the
+report's `notRun` text; after an empty result it is the `empty` text; during
+loading and after an error `showEmpty` is false (the error shows in its state
+message). The not-run and empty texts go in the table, not in a separate
+`app-state-message` that replaces it. When result sections are built from the
+response, render one empty table with the report's columns in their place. The
+pager follows UI6 topic `06/04`: hidden while the table is empty.
+
 ### Totals footer
 
 Keep report totals in the response and the shared report summary bar, outside the

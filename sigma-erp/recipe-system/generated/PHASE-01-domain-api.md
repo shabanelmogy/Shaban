@@ -33,7 +33,7 @@ are finalized.
 - backend.14: ## 14. Pattern 2 — Master-detail, no financial effect | sha256:9aa937b534848693453be58682e411e089a6de631363ffa72ab529b3abebe432
 - backend.15: ## 15. Pattern 3 — Master-detail with financial effect | sha256:99a22dc9b24695edc30eef7ed5b7ff1241576830b4f86fd3d1424af7a06e6465
 - backend.16: ## 16. Pattern 4 — Settings | sha256:66be4b0b3eab54af0f2d37c4658f255db8e9fe8e4fcaace16627754174ac2c9e
-- backend.17: ## 17. Pattern 5 — Reports | sha256:36e8ff213257eef9e64543e916ed354a3aa337259fcc6339753bd88f110c1d0c
+- backend.17: ## 17. Pattern 5 — Reports | sha256:6e520119b8b0176bf5baf978b85b9f5744cdbf7078edae0bb77b69d44c237ab0
 - backend.18: ## 18. Edge cases | sha256:ca231703f8f3eecb2ba71fb505d7d6960d9c84ae8c2a9f3e3a73847bc553c3b8
 
 Approved backend references:

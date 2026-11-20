@@ -118,3 +118,18 @@ inactive panels with screen-media CSS only. Do not use `@switch`, conditional
 rendering or `[hidden]` for the active-section selection: full-report printing
 requires all applicable panels, independently of the selected tab (block 21).
 Existing mode conditions still govern which sections belong to the report.
+
+**Per-tab loading.** When a tabbed report's tabs come from independent data
+groups, Read loads only the active tab's group. The request sends the tab key as
+`section`; the response's `sections` lists the tab keys it contains, so tabs from
+the same query load together. The page keeps the loaded groups for the applied
+period and access context, requests a group the first time one of its tabs
+opens, and clears all groups on a filter change, Refresh or access change. Tabs
+stay disabled while a read runs. Print and Export send no `section` and read
+every group, so outputs stay complete. The server side is BE17 §Operational
+snapshot performance. Example: Vehicle Status Report (fleet: branches, statuses,
+efficiency; activity: opened, closed, collections, movements; invoices).
+Split only when the default tab needs fewer groups than the whole report. When
+the default tab already needs every group, keep one read that returns all tabs:
+Detailed Vehicle Utilization's Overall tab classifies each vehicle-day by status,
+contract, workshop and NRM type, so every other tab is a by-product of it.
