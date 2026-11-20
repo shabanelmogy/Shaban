@@ -47,6 +47,9 @@ Newest first. Details and exact status live in the linked file.
 
 | Work | Main file |
 |---|---|
+| Rental Vehicles on Service Replacements | [Implementation and verification](RENTAL_SERVICE_REPLACEMENT_REPORT_FEATURE_REVIEW.md) |
+| Idle Vehicle Report by branch | [Implementation and verification](IDLE_VEHICLE_REPORT_FEATURE_REVIEW.md) |
+| Vehicle Ageing Report by category | [Implementation and verification](VEHICLE_AGEING_REPORT_FEATURE_REVIEW.md) |
 | Documentation audit fixes and completed version-control cutover | [Current state and handoff](SIGMA_DOCUMENTATION_SYSTEM_CURRENT_STATE.md) |
 | Trips With Overtime Report (with Driver↔Staff link & shift-based overtime) | [Review & implementation](TRIPS_WITH_OVERTIME_REPORT_FEATURE_REVIEW.md) |
 | Instruction slimming and token reduction | [Current state](SIGMA_DOCUMENTATION_SYSTEM_CURRENT_STATE.md) |
@@ -74,8 +77,6 @@ Newest first. Details and exact status live in the linked file.
 | Rental Sales for Sixt Bahrain report removed | [Review](RENTAL_SALES_FOR_SIXT_BAHRAIN_FEATURE_REVIEW.md) |
 | Approval stage reversal | [Contract](ERP_APPROVAL_UNAPPROVE_CONTRACT_FREEZE.md) |
 | Approval screen-by-screen tracker | [Tracker](ERP_APPROVAL_SCREEN_REVIEW_TRACKER.md) |
-| End-to-end approval review plan | [Plan](ERP_APPROVAL_MAINTENANCE_EVOLUTION_PLAN.md) |
-| Authorization items up to 250 | [Authorization folder](Authorization/) |
 
 ## Maintaining this index
 
