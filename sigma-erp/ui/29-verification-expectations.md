@@ -148,8 +148,8 @@ Source review must trace the complete CSS cascade, including later shared
 selectors that can override breakpoint rules. A remaining known inconsistency
 is an open finding, not a passed check. Source-only work records visual
 acceptance as pending; it must not claim all-size visual verification. Run
-browser/application acceptance only within the authorization allowed by
-AGENTS.md, otherwise hand the matrix to the owner. The Leave/Holiday1365-to720
+browser/application acceptance only within the authorization in the live
+companion's permissions (section 4), otherwise hand the matrix to the owner. The Leave/Holiday1365-to720
 failure demonstrates why checking only the desktop/mobile rules is insufficient.
 
 Owner acceptance pass for a screen built from this book:

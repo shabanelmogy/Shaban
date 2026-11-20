@@ -8,13 +8,13 @@ contracts are connected through the actual application injector and route tree.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:223e1233ba9b050b21a1052d8210300a3a7bacb57cf9c2a7c66c63b6adc1ecfe
 - master.1: ## 1. Governance and review principles | sha256:4af3c22f52464c9696ac85adb7f000d9c89d1bd76ecabfffa2662030d5fa66b2
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
-- master.5: ## 5. Continuous quality gates | sha256:db683d8cd9d81f554a0a9711335795c930c8e0846d9bc73fcf40f1da6084171f
+- master.5: ## 5. Continuous quality gates | sha256:e332beddb8ee63faeea534279ce185f91f103e03d24514943b975a169f4ee748
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
-- master.8: ## 8. Packet generation and governance | sha256:83984057ab3271c0800beed7d7db3fa2c7c3ca9f6b27a80babbf35938feb329c
+- master.8: ## 8. Packet generation and governance | sha256:23f6c66d0152b21977b8ec2695c4977ceb4855a56eb4b6c54ab68ee43ee46741
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
 - ui.1: ## 1. Feature folders and wiring | sha256:c4df20098e8e79cd73612e9fb0128bfcb8c75d4390c745a8bc636906e517aa1f
 - ui.2: ## 2. Service and response wrappers | sha256:f3a7b69c4ad6f7f09008f0dac6cb67b18d88fd938e2e64c568380e3b7d116bb7
@@ -23,7 +23,7 @@ contracts are connected through the actual application injector and route tree.
 - ui.26: ## 26. Permissions and route access | sha256:60e127ae103c07e526bcb264058fcd0f5c4060abfcfb3e63572e998edfbd9c31
 - ui.27: ## 27. Focus and keyboard | sha256:8f5713225ff4aecd70093f9ac8e6ba96c91003126335ebad80f925e573fa8586
 - ui.28: ## 28. Request cancellation and stale responses | sha256:b9ee811088e53d9771459815766c135cee973724042db691a7a4444ab5408325
-- ui.29: ## 29. Verification expectations | sha256:857fd2de21235042c2d3c3d8af841d8bed3580a97bed2ff1680f6a3c2c291f04
+- ui.29: ## 29. Verification expectations | sha256:6c21866c90433891845de658cac061fb8d3a52a778698f1e9f69686f5846e0cf
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
 - backend.3: ## 3. Step 3 — ViewModels | sha256:1b2fd3b17c42fc35e1d5878bec1bad25b15edd349871a1957c2c1af9252d3bd2
 - backend.4: ## 4. Step 4 — AutoMapper profile | sha256:f44d1e86220f2d11780e9d94370219270c183c004aef0ba39f7f9cb9e1550f11
@@ -48,14 +48,10 @@ Existing lazy feature NgModules, including
 LayoutModule, are inspected as interoperability consumers when relevant, not
 copied as root composition or feature-level `HttpClient` providers.
 
-The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop using a packet that disagrees with canonical sources. Follow
-Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
-book/template/manifest claims, regenerate affected packets through the generator,
-semantically review their source rules and approved-reference roles, then rerun
-`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+The Master Guide and canonical books are authoritative; this packet is
+derivative. Run recipe `-Check` before use and follow Master8 for drift. Preserve
 unrelated changes; source-read-only review still forbids application-source edits.
-Use canonical sources and report a precise blocker for unresolved conflicts.
+Each item names the block that owns its rule; this packet restates no values.
 
 ## Purpose
 
@@ -123,33 +119,13 @@ finite bootstrap, live binding teardown and no per-screen activity indicator.
 
 ## Required outputs
 
-Trace Master5/UI29's actual loading-speed path through route, HTTP, backend and
-rendering. Record duplicate subscriptions/requests, blocking auxiliary reads,
-serial dependencies, payload scope and cancellation; correct only authorized
-confirmed source issues. Report comparable measured results or a pending owner
-plan separately from loader visibility and cache conformance. No runtime or
-database execution is authorized by this gate.
+- Loading-speed path: duplicate or serial requests, payload scope, measured or
+  pending results (Master5 topic `05/02`, UI29).
+- Loading matrix against the single shell host, route reuse and query-only
+  navigation; single visible indicator; page-host bootstrap (UI22 topic `22/01`).
+- Cache source matrix against final wiring and teardown (UI2 topic `02/01`).
 
-Reconcile UI22's active-route loading matrix against LoadingService, the single
-shell host and effective showPageLoading. Distinguish query/fragment-only updates
-from path departure and trace route reuse/legacy destinations. Request finalizers
-release departing reads; do not reset anonymous counts at NavigationStart or
-NavigationEnd, which can erase retained/target requests (UI22). Preserve local
-busy and write-navigation safety; do not copy Dashboard's explicit silent-page
-metadata into unrelated screens or add a competing loader to mask a mismatch.
-Apply UI22's general single-visible-owner precedence to actual rendered page,
-auxiliary StateMessage and body-appended dialog/save hosts; one shared ring is
-not evidence that two indicators cannot overlap. No per-screen opt-in or early
-busy/count release is allowed as a substitute for shared visibility ownership.
-Required routed initial/filter bootstrap must use the same page host, never an
-inline filter loader. Trace ReferenceLookupStatus identity-lease lifecycle and
-EditorDialog's projected dialog scope separately from request start/end counts;
-retained-cache refresh remains silent (UI22 latest owner clarification).
-
-Reconcile UI2 / Master5's source matrix against the final cache/topic/feedback
-wiring and teardown. Record per-source exceptions and pending owner network or
-runtime checks; neither a registered topic nor an imported cache owner alone
-proves that the consuming screen is connected correctly.
+No runtime or database execution is authorized by these outputs.
 
 ### Route and mode map
 

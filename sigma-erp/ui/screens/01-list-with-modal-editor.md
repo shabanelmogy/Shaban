@@ -15,20 +15,20 @@
 
 | # | Block | Decides for this screen |
 |---|---|---|
-| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | `list/` + `details/` folders, route table, container-fill host, the grid rows as the list's scroll owner |
-| 2 | [2 Service and response wrappers](../02-service-and-response-wrappers.md) | Typed service calls and `Result` / `Results<T>` handling |
+| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | `list/` + `details/` folders, route table, container-fill host, the grid rows as the list's scroll owner — main file; topics: [`01/02-viewport-and-scroll.md`](../01/02-viewport-and-scroll.md) |
+| 2 | [2 Service and response wrappers](../02-service-and-response-wrappers.md) | Typed service calls and `Result` / `Results<T>` handling — main file; topics: [`02/01-cache-gate-and-checklist.md`](../02/01-cache-gate-and-checklist.md); with reference lookups topics: [`02/02-reference-lookup-cache.md`](../02/02-reference-lookup-cache.md) |
 | 3 | [3 Header](../03-header.md) | Title inside the list card |
 | 4 | [4 Filters](../04-filters.md) | `form[appFilterPanel]` with `sigma-filter-field` fields and the mandatory Reset |
 | 5 | [5 Columns](../05-columns.md) | Typed columns; ListVM carries only displayed and action-state fields |
-| 6 | [6 Grid and footer](../06-grid-and-footer.md) | `app-data-table`, server paging, sort, footer and paginator |
-| 7 | [7 Action button cycle](../07-action-button-cycle.md) | Row actions and state-based visibility |
+| 6 | [6 Grid and footer](../06-grid-and-footer.md) | `app-data-table`, server paging, sort, footer and paginator — main file; money, percentage, frozen-column or advanced-filter columns topics: [`06/01-columns-filters-money.md`](../06/01-columns-filters-money.md) |
+| 7 | [7 Action button cycle](../07-action-button-cycle.md) | Row actions and state-based visibility — main file and topics: [`07/02-action-menu-runtime.md`](../07/02-action-menu-runtime.md); approval only topics: [`07/01-approval-status.md`](../07/01-approval-status.md) |
 | 8 | [8 Export to Excel](../08-export-to-excel.md) | Export with translated headers |
 | 9 | [9 Confirm: delete](../09-confirm-delete.md) | Shared confirmation for delete |
-| 10 | [13 Modal with tabs](../13-modal-with-tabs.md) | One controlled `app-editor-dialog` for Create, View, and Edit with an explicit mode; tabs only for real peer sections |
+| 10 | [13 Modal with tabs](../13-modal-with-tabs.md) | One controlled `app-editor-dialog` for Create, View, and Edit with an explicit mode; tabs only for real peer sections — main file and topics: [`13/07-dirty-close.md`](../13/07-dirty-close.md), [`13/02-mock-data.md`](../13/02-mock-data.md); tabs topics: [`13/05-accessible-tabs.md`](../13/05-accessible-tabs.md); nested child drafts topics: [`13/08-body-padding-and-nested-drafts.md`](../13/08-body-padding-and-nested-drafts.md) |
 | 11 | [15 View mode](../15-view-mode.md) | Read-only controls, no Save, Close only |
 | 12 | [10 Confirm: discard](../10-confirm-discard.md) | Dirty-close behaviour |
 | 13 | [11 Small modal on top](../11-small-modal-on-top.md) | Only when the editor opens a nested dialog |
-| 14 | [14 Editable collection table](../14-editable-collection-table.md) | Only when the editor owns child rows |
+| 14 | [14 Editable collection table](../14-editable-collection-table.md) | Only when the editor owns child rows — main file and topics: [`14/02-public-inputs.md`](../14/02-public-inputs.md), [`14/03-row-mechanics.md`](../14/03-row-mechanics.md) |
 | 15 | [16](../16-dropdowns-lookups-enums.md), [17](../17-dates.md), [18](../18-documents-and-upload.md), [19](../19-validation-messages.md) | Controls actually present in the editor |
 
 Then the cross-cutting blocks listed in the [catalog](00-catalog.md).

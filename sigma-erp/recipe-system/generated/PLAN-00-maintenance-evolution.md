@@ -10,17 +10,17 @@ it does not authorize source edits.
 
 ## Canonical provenance
 
-- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:a56c86bda3deb92b3f1892bfb6e323ae991d0aa315ba1183a531303dbf88bd06
+- master.0: # Sigma Feature Review Master Guide — Canonical - preamble | sha256:223e1233ba9b050b21a1052d8210300a3a7bacb57cf9c2a7c66c63b6adc1ecfe
 - master.1: ## 1. Governance and review principles | sha256:4af3c22f52464c9696ac85adb7f000d9c89d1bd76ecabfffa2662030d5fa66b2
-- master.2: ## 2. Screenshot and visual evidence policy | sha256:8e602319017e268b923ed2bb8b7a8d21a1a3252640f23a986d99821842ea0c6f
+- master.2: ## 2. Screenshot and visual evidence policy | sha256:817eed9bcf1b6e55bd4e485e0297ade2bec072fb8360fd8fb8db49d918c10256
 - master.3: ## 3. Phase model, ownership, and dependencies | sha256:401444b8a3fa2228c28387b28d1c7dab77fe83aeaa3a63a92b385644beacce27
 - master.4: ## 4. Required decisions, artifacts, and contract invariants | sha256:416b24a6d74c22be5d7f8d37480fab2ef17fa7ddb0d3e4f1632795ed813558d0
-- master.5: ## 5. Continuous quality gates | sha256:db683d8cd9d81f554a0a9711335795c930c8e0846d9bc73fcf40f1da6084171f
+- master.5: ## 5. Continuous quality gates | sha256:e332beddb8ee63faeea534279ce185f91f103e03d24514943b975a169f4ee748
 - master.6: ## 6. Human and AI review protocol | sha256:bd28aa60196f8c328cddc50e40cf2b0be15fce7f63c84580f50c72a2ea381b97
 - master.7: ## 7. End-to-end reconciliation and final report | sha256:2b8f1fba057c9e4a3f8e7a06476c13d2f010addbd786693fda0e418a1519d760
-- master.8: ## 8. Packet generation and governance | sha256:83984057ab3271c0800beed7d7db3fa2c7c3ca9f6b27a80babbf35938feb329c
+- master.8: ## 8. Packet generation and governance | sha256:23f6c66d0152b21977b8ec2695c4977ceb4855a56eb4b6c54ab68ee43ee46741
 - ui.0: # Sigma UI Pattern Book — Draft Canonical - preamble | sha256:8ee8fccad52b59f3ee3a04025d65de169c15d3dc986631ebbda114a9f8dc1e95
-- ui.29: ## 29. Verification expectations | sha256:857fd2de21235042c2d3c3d8af841d8bed3580a97bed2ff1680f6a3c2c291f04
+- ui.29: ## 29. Verification expectations | sha256:6c21866c90433891845de658cac061fb8d3a52a778698f1e9f69686f5846e0cf
 - ui.30: ## 30. Backlog, by priority | sha256:154cf976b06e9031b4063231c1f0893ff034c7b7e3c89f1bbee564712d37cf7e
 - backend.0: # Sigma Backend Pattern Book — Draft Canonical - preamble | sha256:0983535564fda910eb148cbb4a66079548016ce287b95a9409c7cec41974ed0a
 - backend.18: ## 18. Edge cases | sha256:13d0548154a54a05fda8d1276d7d19529ee31b2b79d7945ab1363e7f18abb6f0
@@ -31,14 +31,11 @@ known:
 
 
 
-The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop using a packet that disagrees with canonical sources. Follow
-Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
-book/template/manifest claims, regenerate affected packets through the generator,
-semantically review their source rules and approved-reference roles, then rerun
-`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+The Master Guide and canonical books are authoritative; this packet is
+derivative. Run recipe `-Check` before use and follow Master8 for drift. Preserve
 unrelated changes; source-read-only review still forbids application-source edits.
-Use canonical sources and report a precise blocker for unresolved conflicts.
+Planning is owned by Master1 ("Maintenance and evolution planning before
+implementation"); each step below names the block that owns its rule.
 
 ## Purpose
 
@@ -72,37 +69,25 @@ posting, inventory valuation, permissions, and shared integration behavior.
 - Current Sigma source for the affected writers, readers, persistence, UI,
   reports, and integrations.
 - Relevant canonical documentation and existing feature review artifacts.
-- Master2 analysis-guide review: relevant chapters and original screen
-  explanations from the documentation's `references/speed-analysis/README.md`,
-  plus the applicable dated sidebar/code cycle slice, compared with actual Sigma
-  source/contracts/user-guide topics when present.
+- Master2 analysis-guide inputs: the relevant Speed chapter, original screen
+  explanation and dated sidebar/code cycle, then pinned Odoo for remaining gaps.
 - Known production/data constraints when available.
 - Existing working-tree changes in the affected scope.
 
 ## Procedure
 
-Apply Master2's reference-product functional detail target and Master4's scoped
-coverage rows: map reference fields/groups, filters, actions/dialogs, states,
-validations, document links, charges/calculations and outputs to actual Sigma
-source/guide. Plan partial/missing details rather than treating current minimal
-behavior as the target ceiling. Record exact decision blockers and explicit
-owner exclusions; preserve task authorization and unknown server/financial rules.
+Apply Master2's reference-product functional detail target and Master4's
+coverage rows (matched/partial/missing/blocked/excluded); current minimal
+behavior is not the target ceiling.
 
 1. Define the requested outcome, non-goals, affected workflows, and success
    conditions.
 2. Audit the current capability end to end: domain/entity/configuration,
    persistence, writers, readers, calculations, API, Angular, reports,
    permissions/tenancy, integrations, migrations, and documentation.
-   Before selecting/freezing the target, apply Master2's analysis-guide gate:
-   record sources actually read, applicability, accepted evidence, exclusions
-   and gaps in this plan. Keep Speed descriptions/proposals distinct from Sigma
-   contracts; a supported Not applicable outcome is valid, and tier S only
-   covers the changed element. Existing execution permissions stay unchanged.
-   Map the relevant sidebar section/screen/state to source controllers, dialogs,
-   service declarations and predecessor/successor documents; record the dated
-   file:line/hash evidence and Master4's cycle comparison. Keep documented facts,
-   frontend declarations, inferred sequence and unknown server rules distinct;
-   no collection scripts/external login/domain calls are authorized by this step.
+   Before freezing the target, apply Master2's analysis-guide gate and record
+   Master4's reference-cycle rows; frontend declarations never prove server or
+   financial rules. Execution permissions are unchanged by this step.
 3. Record every unclear rule in the Logic Ambiguity Register as Confirmed,
    Derived, Missing, Conflicting, or Uncertain. Name the evidence or owner needed
    to resolve each non-confirmed rule.
@@ -140,13 +125,8 @@ owner exclusions; preserve task authorization and unknown server/financial rules
 
 ### Logic Ambiguity Register
 
-Record the analysis-guide review beside the current-state evidence. For each
-screen/mode name the guide chapter and original source ID/link, known date or
-version, relevant behavior, Sigma comparison and decision/gap. Do not mark a
-video link as watched or import a reference calculation without confirmation.
-Include the applicable sidebar/code cycle rows from Master4, with accepted,
-excluded or unresolved differences against Sigma; a literal proxy method is
-not evidence of a server invariant or financial posting effect.
+Record the analysis-guide and reference-cycle evidence beside the current-state
+evidence (Master2, Master4).
 
 | Rule/question | Current evidence | Status | Why it matters | Required decision/source | Owner |
 |---|---|---|---|---|---|

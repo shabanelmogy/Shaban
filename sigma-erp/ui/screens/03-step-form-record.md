@@ -15,9 +15,9 @@
 
 | # | Block | Decides for this screen |
 |---|---|---|
-| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | Route shape; `detailsForm/<section>/` folders (spelled `detailsForm` in new features) |
+| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | Route shape; `detailsForm/<section>/` folders (spelled `detailsForm` in new features) — main file; topics: [`01/02-viewport-and-scroll.md`](../01/02-viewport-and-scroll.md) |
 | 2 | [12 Step form](../12-step-form.md) | One parent form, step navigation, gating, invalid-field summary and focus |
-| 3 | [14 Editable collection table](../14-editable-collection-table.md) | Child collections inside steps |
+| 3 | [14 Editable collection table](../14-editable-collection-table.md) | Child collections inside steps — main file and topics: [`14/02-public-inputs.md`](../14/02-public-inputs.md), [`14/03-row-mechanics.md`](../14/03-row-mechanics.md) |
 | 4 | [18 Documents and upload](../18-documents-and-upload.md) | Only when a step holds documents |
 | 5 | [11 Small modal on top](../11-small-modal-on-top.md) | Nested child dialogs |
 | 6 | [15 View mode](../15-view-mode.md), [10 Confirm: discard](../10-confirm-discard.md) | Read-only mode and dirty exit |

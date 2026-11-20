@@ -84,7 +84,11 @@ read (authority order, modes, permissions, gates table, minimum handoff); its
 section files under `.agents/workflow/` are read only when the task reaches
 them. Each rule has exactly one owner; other files carry a one-line pointer,
 not a restated copy. Dated owner-instruction history belongs in `CHANGELOG.md`,
-not in live rule text. The skill holds a gate checklist and a pointer table
+not in live rule text. Packet templates, screen routing files (`ui/screens/`) and the
+companion's section files are checklists: each item names its owning block or
+topic file and restates no rule text or value; artifact tables they carry are
+document structure, not rules. The screen catalog's "Topic files: when to open"
+table is the single owner of topic-level routing. The skill holds a gate checklist and a pointer table
 (concern → blocks and key shared owners) only; a new lesson goes into its
 owning block and adds at most a routing keyword plus one dated revision row.
 The skill keeps its five newest revision rows; older rows move to
@@ -112,8 +116,8 @@ the top; a topic file is part of the same block, with the same status and
 authority, so references such as "UI13" stay valid. `Generate-SigmaRecipes.ps1`
 fingerprints the main file followed by its topic files, so a topic change makes
 dependent packets stale. Agents read the main file's list and then only the
-needed topic file. Blocks with topic folders: UI1, UI2, UI6, UI7, UI13, UI14, UI20,
-UI22, UI24, BE15 and BE18.
+needed topic file. Blocks with topic folders: Master5, UI1, UI2, UI6, UI7, UI13, UI14, UI20,
+UI22, UI24, BE14, BE15 and BE18.
 
 **Language of agent-facing files (owner decision, 2026-11-19).** Files written
 for agents — instructions, canonical blocks, packets, review/contract/plan

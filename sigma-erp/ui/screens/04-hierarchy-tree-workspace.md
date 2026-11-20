@@ -15,7 +15,7 @@
 
 | # | Block | Decides for this screen |
 |---|---|---|
-| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md), tree section | Composition: title, compact toolbar, one scrolling tree region, embedded detail pane, narrow-screen stacking, selection versus nested actions, local search limits |
+| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md), tree section | Composition: title, compact toolbar, one scrolling tree region, embedded detail pane, narrow-screen stacking, selection versus nested actions, local search limits — topics: [`01/03-hierarchy-tree.md`](../01/03-hierarchy-tree.md), [`01/02-viewport-and-scroll.md`](../01/02-viewport-and-scroll.md) |
 | 2 | [3 Header](../03-header.md) | Title inside the workspace card |
 | 3 | [4 Filters](../04-filters.md) | Control height for the toolbar search |
 | 4 | [9 Confirm: delete](../09-confirm-delete.md) | Destructive node actions |

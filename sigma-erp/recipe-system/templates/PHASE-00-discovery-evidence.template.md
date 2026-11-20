@@ -12,14 +12,10 @@ Approved references, when a shape is already known:
 
 {{APPROVED_REFERENCES}}
 
-The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop using a packet that disagrees with canonical sources. Follow
-Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
-book/template/manifest claims, regenerate affected packets through the generator,
-semantically review their source rules and approved-reference roles, then rerun
-`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+The Master Guide and canonical books are authoritative; this packet is
+derivative. Run recipe `-Check` before use and follow Master8 for drift. Preserve
 unrelated changes; source-read-only review still forbids application-source edits.
-Use canonical sources and report a precise blocker for unresolved conflicts.
+Each step names the block that owns its rule; this packet restates no values.
 
 ## Purpose
 
@@ -52,9 +48,8 @@ Required inputs:
 - Requested feature and outcome.
 - Frozen Maintenance / Evolution Plan when the Master Guide requires one.
 - All supplied evidence.
-- Relevant analysis-guide chapters and original screen explanations reviewed
-  under Master2, including applicable dated sidebar/code cycle sources, with
-  existing Sigma source/contracts/user-guide topics where present.
+- Analysis-guide sources under Master2 (Speed guide/explanation, dated
+  sidebar/code cycle, then pinned Odoo for gaps).
 - Directly related source.
 - Master Guide.
 
@@ -63,31 +58,18 @@ route, file, contract, or business decision. Do not guess.
 
 ## Procedure
 
-Apply Master2's reference-product functional detail target and Master4's scoped
-coverage rows. Account for the relevant reference fields/groups, filters,
-actions/dialogs, states, validations, document links, charges/calculations and
-outputs against actual Sigma producers/consumers and guide. Partial/missing
-details feed the plan; current minimal behavior alone is no exclusion. Name
-exact decision blockers and owner exclusions without inventing server rules or
-expanding a bounded/read-only assignment.
+Apply Master2's reference-product functional detail target and Master4's
+coverage rows; current minimal behavior is not an exclusion, and no server rule
+is invented.
 
 1. If a Maintenance / Evolution Plan applies, import its Frozen scope, target
    contracts, impact map, implementation slices, and remaining non-blocking open
    decisions. Do not redesign the target silently in Phase 0.
 2. Assign each screenshot or workflow source an Evidence ID.
-   Apply Master2's mandatory analysis-guide review before freezing/changing
-   contracts for both new and existing screens: start at documentation
-   `references/speed-analysis/README.md`, read the relevant guide/source only,
-   compare Sigma evidence and record applicability, accepted items, exclusions
-   and gaps. A supported Not applicable outcome is valid; tier S needs only the
-   affected part. The Speed guide is not Sigma implementation/policy authority.
-   Select the relevant sidebar section/screen/state and cycle slice; follow its
-   literal controller/dialog/service evidence only as needed. Record snapshot
-   date, source file:line/hash and kind (documented, frontend declaration,
-   inferred sequence or unknown server rule), compare relevant document links
-   and actions with Sigma, and complete Master4's reference-cycle rows. Local
-   methods/proxies do not prove runtime/server/accounting behavior. No automatic
-   collection scripts, external login or domain API calls follow this gate.
+   Apply Master2's analysis-guide gate and Master4's reference-cycle rows before
+   freezing or changing contracts (tier S: the affected part only). Frontend
+   declarations do not prove server, accounting or permission rules; this gate
+   authorizes no collection script or external call.
 3. Record known screen, mode, role, locale, direction, viewport, date/version,
    and whether it is current or historical.
 4. Extract only functional and content requirements.
@@ -99,12 +81,9 @@ expanding a bounded/read-only assignment.
 10. Mark every row Confirmed, Derived, Missing, Conflicting, or Uncertain.
 11. Select the later phases required by the feature.
 
-For every in-scope screen, complete UI2's **Mandatory screen cache gate** during
-this discovery. Inventory the actual lookup/settings/operational URLs before
-implementation, classify each from its source contract and record its service,
-writers, topic, finite bootstrap, watcher and exception evidence. Use the table
-below in the current review/contract; do not create a separate artifact for a
-small task. No applicable sources requires an explicit reason, not an omitted row.
+For every in-scope screen, complete UI2's mandatory screen cache gate (topic
+`02/01`) and UI22's loading gate (topic `22/01`) in the current review; an
+empty matrix needs an explicit reason.
 
 ## Required outputs
 
@@ -134,10 +113,8 @@ small task. No applicable sources requires an explicit reason, not an omitted ro
 
 ### Functional Evidence Table
 
-Include the analysis-guide source ID/chapter and original explanation in the
-existing evidence rows. Separate documented behavior, declared features and
-frontend declarations from inferred cycle sequences, reviewer proposals and unknown
-server rules; source absence does not authorize inventing a material rule.
+Include analysis-guide source IDs and keep documented behavior, frontend
+declarations, inferred sequence and unknown server rules distinct (Master2).
 
 | Evidence | Classification | Required feature behavior | Owning phase | Guide-compliant implementation |
 |---|---|---|---|---|
@@ -155,10 +132,8 @@ server rules; source absence does not authorize inventing a material rule.
 |---|---|---|---|---|---|
 | | | | | | |
 
-Use the current feature artifact. Source inspection is mandatory but does not
-establish measured latency or authorize runtime/database commands. Include
-initial open, paging/search/detail and relevant action/report/export paths;
-preserve feature-specific contracts and classify uncertain evidence explicitly.
+Owner: Master5 topic `05/02`. Source inspection does not establish measured
+latency or authorize runtime/database commands.
 
 ### Unresolved Requirements Register
 
@@ -168,21 +143,14 @@ preserve feature-specific contracts and classify uncertain evidence explicitly.
 
 ### Screen cache adoption evidence (UI2 / Master5)
 
-Also record UI22's loading request/visibility matrix in the same review. Trace
-the actual route import (including reused workspaces and legacy aliases), not
-the apparent feature folder. Classify page/list/detail/save/action/export versus
-auxiliary lookup/dialog and explicit silent reads; no implicit exemption or new
-loader. UI22 owns same-path query navigation and path-departure reset semantics.
+Record UI22's loading request/visibility matrix in the same review (topic
+`22/01`), tracing the actual route import.
 
 | Exact URL and envelope | Classification, evidence and exception reason | Source service, writers/dependencies and topic | Finite read, watch and teardown | Failure/Retry, scope, selected labels and draft evidence | Final status and pending verification |
 |---|---|---|---|---|---|
 | | | | | | |
 
-Keep eligible reference cache, explicit singleton exceptions and direct live
-reads distinct. A source service name, BaseService inheritance or cache service
-injection alone does not prove adoption. Do not enable new sources or cache
-operational quantities, candidates, posting eligibility or currency precision
-because their endpoint name resembles GetSelect. UI2 owns exact eligibility.
+UI2 owns cache eligibility and the classification values (topic `02/01`).
 
 ## Continuous gates
 

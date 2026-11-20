@@ -15,10 +15,10 @@
 
 | # | Block | Decides for this screen |
 |---|---|---|
-| 1 | [13](../13-modal-with-tabs.md) | Controlled `app-editor-dialog`, title plus record subtitle, dirty close |
-| 2 | [7](../07-action-button-cycle.md) | Row action visibility from the record state; refresh after success |
+| 1 | [13](../13-modal-with-tabs.md) | Controlled `app-editor-dialog`, title plus record subtitle, dirty close — main file and topics: [`13/07-dirty-close.md`](../13/07-dirty-close.md) |
+| 2 | [7](../07-action-button-cycle.md) | Row action visibility from the record state; refresh after success — main file and topics: [`07/02-action-menu-runtime.md`](../07/02-action-menu-runtime.md) |
 | 3 | [16](../16-dropdowns-lookups-enums.md), [17](../17-dates.md), [19](../19-validation-messages.md) | The dialog's controls, `app-field-error`, money and tax rules |
-| 4 | [22](../22-loading-empty-error-toast.md), [28](../28-request-cancellation-and-stale-responses.md) | One error and success owner; a late response for another record is ignored |
+| 4 | [22](../22-loading-empty-error-toast.md), [28](../28-request-cancellation-and-stale-responses.md) | One error and success owner; a late response for another record is ignored — main file and topics: [`22/04-error-and-success-feedback.md`](../22/04-error-and-success-feedback.md) |
 | 5 | Backend [12](../../backend/12-activate-and-deactivate.md), [14](../../backend/14-pattern-2-master-detail-no-financial-effect.md) or [15](../../backend/15-pattern-3-master-detail-with-financial-effect.md) | The transition method and its state checks |
 
 Then the cross-cutting blocks listed in the [catalog](00-catalog.md).

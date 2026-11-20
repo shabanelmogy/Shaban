@@ -2,20 +2,22 @@
 
 On-demand section of the live companion (`../SIGMA_WORKFLOW_RULES.md`). Read
 before any authorized source edit. Permissions are in companion section 4.
+Each bullet is a reminder; the named block owns the rule and wins on any
+difference (Master8).
 
 ## Frontend and contract rules
 
 - Select the canonical reference for the specific UI shape from `SIGMA_UI_PATTERNS.md`; do not treat one feature as the reference for every screen type.
 - Before source edits, read the owning book blocks and actual shape-specific reference files. In the existing plan/review, record a short conformance table: concern, book block, reference file/symbol, shared owner, and target match or justified deviation (Master 5). Shared class names alone do not prove conformance.
 - Before handoff, reconcile that table with final source. Correct known unapproved differences in scope; never claim completion while they remain. A documentation update cannot retroactively justify a different implementation: record the user instruction or governing decision first, and review shared extractions against the reference values before documenting them. Keep runtime/visual verification explicitly pending when only source was inspected.
-- For Angular application compilation, follow the existing `tsconfig.app.json` pattern. If a runtime feature `.ts` file is reported as missing, add that runtime entry to the explicit `files` list and keep test files under `tsconfig.spec.json`; do not add a broad feature `include` that pulls `.spec.ts` files into the application compile.
+- For Angular application compilation, follow the existing `tsconfig.app.json` pattern. If a runtime feature `.ts` file is reported as missing, add that runtime entry to the explicit `files` list and keep test files under `tsconfig.spec.json`; do not add a broad feature `include` that pulls `.spec.ts` files into the application compile (UI1).
 - Keep frontend and backend contracts compatible.
-- A list VM must contain only properties displayed in the frontend list plus the minimum identity and action-state properties required by that list.
-- Add and update DTOs must contain client-editable inputs only.
-- Detail DTOs must contain only data required by the details UI.
+- A list VM must contain only properties displayed in the frontend list plus the minimum identity and action-state properties required by that list (UI5, BE7).
+- Add and update DTOs must contain client-editable inputs only (BE3).
+- Detail DTOs must contain only data required by the details UI (BE3).
 - Use typed forms, models, service calls, and payloads.
-- Use the project's reusable confirmation dialog for every confirmation-only scenario. A workflow that collects a reason, note or date is a typed form dialog, not a confirmation.
-- Include applicable translations, loading, empty, validation, and error states. Handle both failure channels: `isSuccess: false` and the `error` callback. `error: () => undefined` is never acceptable.
+- Use the project's reusable confirmation dialog for every confirmation-only scenario. A workflow that collects a reason, note or date is a typed form dialog, not a confirmation (UI9, UI10).
+- Include applicable translations, loading, empty, validation, and error states. Handle both failure channels: `isSuccess: false` and the `error` callback. `error: () => undefined` is never acceptable (UI22 topic `22/04`).
 - `AuthGuard` establishes authentication. Use the current-session access and
   route/action owners in UI26 and verify actual ERP endpoint enforcement.
   Record the permission or policy, prerequisites and saved record/branch scope
@@ -23,7 +25,7 @@ before any authorized source edit. Permissions are in companion section 4.
   reconcile it under Master7. Apply BE9 to protected list inputs. The endpoint
   enforces access and the UI presents available operations.
 - Preserve screenshot-demonstrated fields, labels, logical groups, actions, statuses, and workflows through the approved project pattern. The guides and approved reference own layout, component choice, controls, icons, spacing, validation presentation, accessibility, RTL, theme, and responsive behavior.
-- For action/detail dialogs that identify a record, keep the screen name in the translated `title` and render the record number or identifier in the translated `subtitle` on the next line. The subtitle must use the shared smaller muted dialog-header style; do not concatenate a long identifier into the title or create feature-specific header markup when `EditorDialogComponent` already supports this structure.
+- For action/detail dialogs that identify a record, keep the screen name in the translated `title` and render the record number or identifier in the translated `subtitle` on the next line. The subtitle must use the shared smaller muted dialog-header style; do not concatenate a long identifier into the title or create feature-specific header markup when `EditorDialogComponent` already supports this structure (UI3, UI13).
 - **The page never scrolls.** At every breakpoint the route fills the box the shell sizes (`height: 100%`, container-fill) and each region has exactly one internal scroll owner (grid rows, form pane, or dialog body); title, filters, paginator, and action footer stay fixed. `SIGMA_UI_PATTERNS.md` block 1 owns the chain and its values. Do not write a page-height `calc(100dvh - …)`.
 - Keep each feature's page title inside its primary card or panel and use `app-feature-title`. `SIGMA_UI_PATTERNS.md` block 3 owns the title placement, the inset and separation values, the icon treatment, and the dark-theme tokens. Do not render a duplicate title in the shared authenticated-shell toolbar above the card, and do not restate the block 3 values in feature code or in this file.
 
@@ -32,14 +34,14 @@ before any authorized source edit. Permissions are in companion section 4.
 - Keep every named class or record in its own file in the existing appropriate
   layer and folder. Do not declare helper DTO, projection, or query-shape
   classes inside a service class; use an anonymous type or tuple only when the
-  shape is strictly local and does not need a named contract.
+  shape is strictly local and does not need a named contract (BE3).
 - When a feature uses the canonical generic service and controller bases,
   override only methods that require feature-specific business validation,
   projection, aggregate-child reconciliation, deletion behavior, or a domain
   transition. Use the inherited implementation for the remaining generic
-  operations.
-- Do not add unnecessary AutoMapper `Ignore()` calls or `ReverseMap()` mappings.
-- Do not automatically mark calculated domain properties as `[NotMapped]`.
+  operations (BE5, BE13).
+- Do not add unnecessary AutoMapper `Ignore()` calls or `ReverseMap()` mappings (BE4).
+- Do not automatically mark calculated domain properties as `[NotMapped]` (BE1).
 - Persist calculated values when they are required for lists, reports, filtering, performance, or historical stability.
 - Keep calculation ownership in the domain or backend and do not trust client-calculated totals.
 - When a field is derived from persisted inputs or business rules (for example,
@@ -52,8 +54,8 @@ before any authorized source edit. Permissions are in companion section 4.
 - Use EF Core's implicit transaction when one scoped `DbContext` saves the
   complete tracked aggregate in one `SaveChangesAsync()` call. Use an explicit
   transaction only for the multi-save or multi-boundary cases defined by the
-  canonical backend transaction guidance.
-- Validate ownership, existence, state transitions, duplicates, and business invariants at the backend boundary.
+  canonical backend transaction guidance (BE5, BE14 topic `14/03`).
+- Validate ownership, existence, state transitions, duplicates, and business invariants at the backend boundary (BE8).
 
 ## Migration boundary
 

@@ -1,5 +1,18 @@
 # Sigma documentation changes
 
+## 2026-11-20 — Topic-level routing, checklist templates and Master5/BE14 topic folders
+
+Screen files route to topic files with read conditions, and the catalog's new
+"Topic files: when to open" table is the single owner of topic routing; the
+catalog's UI26 description and UI30 reading condition were corrected. Phase
+packet templates became checklists that name owning blocks and keep artifact
+tables (templates 104 → 72 KB, packets about 121 → 90 KB); companion
+implementation rules name their owning blocks. Master8 extends one-owner-per-rule
+to templates, screen files and companion sections. Master5 and BE14 gained topic
+folders (production-notes links repointed). Three stale pointers to the old
+companion sections were fixed (screen 02, UI29, Master2). Packets regenerated
+and checked.
+
 ## 2026-11-20 — Comprehensive review fixes
 
 `.gitignore` excludes `bin/` and `obj/`; the 69 tracked build files of the

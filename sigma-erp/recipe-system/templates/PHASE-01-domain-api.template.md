@@ -11,14 +11,10 @@ Approved backend references:
 
 {{APPROVED_REFERENCES}}
 
-The Master Guide and Backend Pattern Book are authoritative. This packet is
-derivative. Stop using a packet that disagrees with canonical sources. Follow
-Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
-book/template/manifest claims, regenerate affected packets through the generator,
-semantically review their source rules and approved-reference roles, then rerun
-`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+The Master Guide and canonical books are authoritative; this packet is
+derivative. Run recipe `-Check` before use and follow Master8 for drift. Preserve
 unrelated changes; source-read-only review still forbids application-source edits.
-Use canonical sources and report a precise blocker for unresolved conflicts.
+Each item names the block that owns its rule; this packet restates no values.
 
 ## Purpose
 

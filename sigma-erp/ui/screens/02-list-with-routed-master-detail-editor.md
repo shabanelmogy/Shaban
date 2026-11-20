@@ -15,10 +15,10 @@
 
 | # | Block | Decides for this screen |
 |---|---|---|
-| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | `create`, `edit/:id`, `view/:id` routes; the shared editor page shell; the fixed footer outside the form body; one scroll owner per pane |
+| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | `create`, `edit/:id`, `view/:id` routes; the shared editor page shell; the fixed footer outside the form body; one scroll owner per pane — topics: [`01/02-viewport-and-scroll.md`](../01/02-viewport-and-scroll.md) (shared editor page shell) |
 | 2 | List blocks [2](../02-service-and-response-wrappers.md)–[9](../09-confirm-delete.md) | As screen 01, except that Create, View, and Edit navigate to the editor routes |
-| 3 | [13 Modal with tabs](../13-modal-with-tabs.md) — routed variant | One typed parent form, section-header Add action, the child collection filling the remaining height |
-| 4 | [14 Editable collection table](../14-editable-collection-table.md) | Child rows, bounded row scrolling, row actions |
+| 3 | [13 Modal with tabs](../13-modal-with-tabs.md) — routed variant | One typed parent form, section-header Add action, the child collection filling the remaining height — main file (decision rule) and topics: [`13/06-routed-editors.md`](../13/06-routed-editors.md), [`13/07-dirty-close.md`](../13/07-dirty-close.md); tabs topics: [`13/05-accessible-tabs.md`](../13/05-accessible-tabs.md) |
+| 4 | [14 Editable collection table](../14-editable-collection-table.md) | Child rows, bounded row scrolling, row actions — main file and topics: [`14/01-bounded-scroll-and-print.md`](../14/01-bounded-scroll-and-print.md), [`14/02-public-inputs.md`](../14/02-public-inputs.md), [`14/03-row-mechanics.md`](../14/03-row-mechanics.md) |
 | 5 | [15 View mode](../15-view-mode.md) | The `view/:id` route is read-only |
 | 6 | [10 Confirm: discard](../10-confirm-discard.md) | Leaving a dirty editor |
 | 7 | [16](../16-dropdowns-lookups-enums.md), [17](../17-dates.md), [19](../19-validation-messages.md) | Controls present in the header and child rows |
@@ -26,7 +26,7 @@
 
 Then the cross-cutting blocks listed in the [catalog](00-catalog.md). Derived
 totals shown in the editor are previews; the backend owns the stored values
-(`AGENTS.md`, "Backend, mapping, and calculation rules").
+(companion `workflow/implementation-rules.md`, "Backend, mapping, and calculation rules").
 
 ## Close with
 

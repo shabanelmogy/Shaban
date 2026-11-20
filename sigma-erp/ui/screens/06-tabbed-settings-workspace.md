@@ -15,11 +15,11 @@
 
 | # | Block | Decides for this screen |
 |---|---|---|
-| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | Settings-workspace exception: header, Save, tabs, and filters outside the one content scroll viewport |
-| 2 | [13 Modal with tabs](../13-modal-with-tabs.md) | `app-editor-tabs` usage; the workspace appearance is owned by the component |
+| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | Settings-workspace exception: header, Save, tabs, and filters outside the one content scroll viewport — topics: [`01/02-viewport-and-scroll.md`](../01/02-viewport-and-scroll.md) |
+| 2 | [13 Modal with tabs](../13-modal-with-tabs.md) | `app-editor-tabs` usage; the workspace appearance is owned by the component — topics: [`13/05-accessible-tabs.md`](../13/05-accessible-tabs.md) |
 | 3 | [16 Dropdowns, lookups, enums](../16-dropdowns-lookups-enums.md) | Typed options endpoint shape (Link Accounts example) |
 | 4 | [3 Header](../03-header.md), [4 Filters](../04-filters.md) | Title and compact search |
-| 5 | [14 Editable collection table](../14-editable-collection-table.md) | Only when a tab holds editable rows; no second vertical scroll owner |
+| 5 | [14 Editable collection table](../14-editable-collection-table.md) | Only when a tab holds editable rows; no second vertical scroll owner — main file and topics: [`14/03-row-mechanics.md`](../14/03-row-mechanics.md) |
 | 6 | [19 Validation messages](../19-validation-messages.md), [10 Confirm: discard](../10-confirm-discard.md) | Validation and unsaved changes |
 
 Then the cross-cutting blocks listed in the [catalog](00-catalog.md).

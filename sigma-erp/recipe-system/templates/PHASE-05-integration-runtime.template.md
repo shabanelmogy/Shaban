@@ -22,14 +22,10 @@ Existing lazy feature NgModules, including
 LayoutModule, are inspected as interoperability consumers when relevant, not
 copied as root composition or feature-level `HttpClient` providers.
 
-The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop using a packet that disagrees with canonical sources. Follow
-Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
-book/template/manifest claims, regenerate affected packets through the generator,
-semantically review their source rules and approved-reference roles, then rerun
-`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+The Master Guide and canonical books are authoritative; this packet is
+derivative. Run recipe `-Check` before use and follow Master8 for drift. Preserve
 unrelated changes; source-read-only review still forbids application-source edits.
-Use canonical sources and report a precise blocker for unresolved conflicts.
+Each item names the block that owns its rule; this packet restates no values.
 
 ## Purpose
 
@@ -97,33 +93,13 @@ finite bootstrap, live binding teardown and no per-screen activity indicator.
 
 ## Required outputs
 
-Trace Master5/UI29's actual loading-speed path through route, HTTP, backend and
-rendering. Record duplicate subscriptions/requests, blocking auxiliary reads,
-serial dependencies, payload scope and cancellation; correct only authorized
-confirmed source issues. Report comparable measured results or a pending owner
-plan separately from loader visibility and cache conformance. No runtime or
-database execution is authorized by this gate.
+- Loading-speed path: duplicate or serial requests, payload scope, measured or
+  pending results (Master5 topic `05/02`, UI29).
+- Loading matrix against the single shell host, route reuse and query-only
+  navigation; single visible indicator; page-host bootstrap (UI22 topic `22/01`).
+- Cache source matrix against final wiring and teardown (UI2 topic `02/01`).
 
-Reconcile UI22's active-route loading matrix against LoadingService, the single
-shell host and effective showPageLoading. Distinguish query/fragment-only updates
-from path departure and trace route reuse/legacy destinations. Request finalizers
-release departing reads; do not reset anonymous counts at NavigationStart or
-NavigationEnd, which can erase retained/target requests (UI22). Preserve local
-busy and write-navigation safety; do not copy Dashboard's explicit silent-page
-metadata into unrelated screens or add a competing loader to mask a mismatch.
-Apply UI22's general single-visible-owner precedence to actual rendered page,
-auxiliary StateMessage and body-appended dialog/save hosts; one shared ring is
-not evidence that two indicators cannot overlap. No per-screen opt-in or early
-busy/count release is allowed as a substitute for shared visibility ownership.
-Required routed initial/filter bootstrap must use the same page host, never an
-inline filter loader. Trace ReferenceLookupStatus identity-lease lifecycle and
-EditorDialog's projected dialog scope separately from request start/end counts;
-retained-cache refresh remains silent (UI22 latest owner clarification).
-
-Reconcile UI2 / Master5's source matrix against the final cache/topic/feedback
-wiring and teardown. Record per-source exceptions and pending owner network or
-runtime checks; neither a registered topic nor an imported cache owner alone
-proves that the consuming screen is connected correctly.
+No runtime or database execution is authorized by these outputs.
 
 ### Route and mode map
 

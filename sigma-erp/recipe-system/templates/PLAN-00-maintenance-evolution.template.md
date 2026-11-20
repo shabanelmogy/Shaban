@@ -14,14 +14,11 @@ known:
 
 {{APPROVED_REFERENCES}}
 
-The Master Guide and canonical pattern books are authoritative. This packet is
-derivative. Stop using a packet that disagrees with canonical sources. Follow
-Master block 8: run recipe `-Check` before use; reconcile initial drift or changed
-book/template/manifest claims, regenerate affected packets through the generator,
-semantically review their source rules and approved-reference roles, then rerun
-`-Check` before use or handoff. Record packet IDs and review evidence. Preserve
+The Master Guide and canonical books are authoritative; this packet is
+derivative. Run recipe `-Check` before use and follow Master8 for drift. Preserve
 unrelated changes; source-read-only review still forbids application-source edits.
-Use canonical sources and report a precise blocker for unresolved conflicts.
+Planning is owned by Master1 ("Maintenance and evolution planning before
+implementation"); each step below names the block that owns its rule.
 
 ## Purpose
 
@@ -55,37 +52,25 @@ posting, inventory valuation, permissions, and shared integration behavior.
 - Current Sigma source for the affected writers, readers, persistence, UI,
   reports, and integrations.
 - Relevant canonical documentation and existing feature review artifacts.
-- Master2 analysis-guide review: relevant chapters and original screen
-  explanations from the documentation's `references/speed-analysis/README.md`,
-  plus the applicable dated sidebar/code cycle slice, compared with actual Sigma
-  source/contracts/user-guide topics when present.
+- Master2 analysis-guide inputs: the relevant Speed chapter, original screen
+  explanation and dated sidebar/code cycle, then pinned Odoo for remaining gaps.
 - Known production/data constraints when available.
 - Existing working-tree changes in the affected scope.
 
 ## Procedure
 
-Apply Master2's reference-product functional detail target and Master4's scoped
-coverage rows: map reference fields/groups, filters, actions/dialogs, states,
-validations, document links, charges/calculations and outputs to actual Sigma
-source/guide. Plan partial/missing details rather than treating current minimal
-behavior as the target ceiling. Record exact decision blockers and explicit
-owner exclusions; preserve task authorization and unknown server/financial rules.
+Apply Master2's reference-product functional detail target and Master4's
+coverage rows (matched/partial/missing/blocked/excluded); current minimal
+behavior is not the target ceiling.
 
 1. Define the requested outcome, non-goals, affected workflows, and success
    conditions.
 2. Audit the current capability end to end: domain/entity/configuration,
    persistence, writers, readers, calculations, API, Angular, reports,
    permissions/tenancy, integrations, migrations, and documentation.
-   Before selecting/freezing the target, apply Master2's analysis-guide gate:
-   record sources actually read, applicability, accepted evidence, exclusions
-   and gaps in this plan. Keep Speed descriptions/proposals distinct from Sigma
-   contracts; a supported Not applicable outcome is valid, and tier S only
-   covers the changed element. Existing execution permissions stay unchanged.
-   Map the relevant sidebar section/screen/state to source controllers, dialogs,
-   service declarations and predecessor/successor documents; record the dated
-   file:line/hash evidence and Master4's cycle comparison. Keep documented facts,
-   frontend declarations, inferred sequence and unknown server rules distinct;
-   no collection scripts/external login/domain calls are authorized by this step.
+   Before freezing the target, apply Master2's analysis-guide gate and record
+   Master4's reference-cycle rows; frontend declarations never prove server or
+   financial rules. Execution permissions are unchanged by this step.
 3. Record every unclear rule in the Logic Ambiguity Register as Confirmed,
    Derived, Missing, Conflicting, or Uncertain. Name the evidence or owner needed
    to resolve each non-confirmed rule.
@@ -123,13 +108,8 @@ owner exclusions; preserve task authorization and unknown server/financial rules
 
 ### Logic Ambiguity Register
 
-Record the analysis-guide review beside the current-state evidence. For each
-screen/mode name the guide chapter and original source ID/link, known date or
-version, relevant behavior, Sigma comparison and decision/gap. Do not mark a
-video link as watched or import a reference calculation without confirmation.
-Include the applicable sidebar/code cycle rows from Master4, with accepted,
-excluded or unresolved differences against Sigma; a literal proxy method is
-not evidence of a server invariant or financial posting effect.
+Record the analysis-guide and reference-cycle evidence beside the current-state
+evidence (Master2, Master4).
 
 | Rule/question | Current evidence | Status | Why it matters | Required decision/source | Owner |
 |---|---|---|---|---|---|

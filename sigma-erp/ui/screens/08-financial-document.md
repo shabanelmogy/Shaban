@@ -16,10 +16,10 @@
 | # | Block | Decides for this screen |
 |---|---|---|
 | 1 | List blocks as [02](02-list-with-routed-master-detail-editor.md) | The list, filters, grid, export and return to the list |
-| 2 | [1](../01-feature-folders-and-wiring.md), [13](../13-modal-with-tabs.md) | Routed editor on the shared shell |
-| 3 | [14](../14-editable-collection-table.md) | Lines through `EditableRows`; derived line cells read-only; totals in `sigma-editor-totals` (or `sigma-report-summary-bar` for Debit/Credit) |
+| 2 | [1](../01-feature-folders-and-wiring.md), [13](../13-modal-with-tabs.md) | Routed editor on the shared shell — topics: [`01/02-viewport-and-scroll.md`](../01/02-viewport-and-scroll.md), [`13/06-routed-editors.md`](../13/06-routed-editors.md), [`13/07-dirty-close.md`](../13/07-dirty-close.md) |
+| 3 | [14](../14-editable-collection-table.md) | Lines through `EditableRows`; derived line cells read-only; totals in `sigma-editor-totals` (or `sigma-report-summary-bar` for Debit/Credit) — main file and topics: [`14/02-public-inputs.md`](../14/02-public-inputs.md), [`14/03-row-mechanics.md`](../14/03-row-mechanics.md) |
 | 4 | [19](../19-validation-messages.md) | Tax rate read-only from settings; preview `documentTax`; no literal rate |
-| 5 | [7](../07-action-button-cycle.md), [9](../09-confirm-delete.md) | Approve/post/void as domain actions; posted cancellation marks the retained source/JV voided without a reversing entry (BE15 owner2026-10-20); no posted deletion |
+| 5 | [7](../07-action-button-cycle.md), [9](../09-confirm-delete.md) | Approve/post/void as domain actions; posted cancellation marks the retained source/JV voided without a reversing entry (BE15 owner2026-10-20); no posted deletion — topics: [`07/01-approval-status.md`](../07/01-approval-status.md), [`07/02-action-menu-runtime.md`](../07/02-action-menu-runtime.md), [`07/03-action-log.md`](../07/03-action-log.md) |
 | 6 | [18](../18-documents-and-upload.md) | Attachments through `DocumentUploadTracker` |
 | 7 | Backend [15](../../backend/15-pattern-3-master-detail-with-financial-effect.md), [8](../../backend/08-validation-duplicates-keys-delete.md) | Transaction, posting, VAT, allocations, `AllExistAsync` |
 

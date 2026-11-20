@@ -288,7 +288,7 @@ what the screenshot proves, and only for that.
 | What the item needs | Provable from the screenshot? | Status and owner |
 |---|---|---|
 | That the field, column, filter, action, section, or status exists; its business label; where it sits in the workflow | Yes, for Explicit items | **Approved requirement.** Phase 1 designs and freezes its contract (entity, EF configuration, DTOs, endpoint, mapping) through the owning backend pattern; Phases 2–4 implement it through the approved UI pattern |
-| Data type, length, precision, required, default, uniqueness, validation, lookup source | No | **Missing** unless confirmed source, the approved reference, or the user supplies it. Phase 1 proposes a value; the user confirms. `approve reviewer assumptions` may accept a proposal only within the low-risk limits of `AGENTS.md` |
+| Data type, length, precision, required, default, uniqueness, validation, lookup source | No | **Missing** unless confirmed source, the approved reference, or the user supplies it. Phase 1 proposes a value; the user confirms. `approve reviewer assumptions` may accept a proposal only within the low-risk limits of `approve reviewer assumptions` (live companion section 2) |
 | Calculation, state transition, edit/delete lock, numbering, accounting effect, access restriction, value for existing rows | No | **Missing** until the user decides. Use PLAN-00 when the decision changes existing behaviour |
 | Items classified Strong inference or Uncertain | No | Out of scope unless the user names them |
 

@@ -18,4 +18,4 @@ are in [`master/00-preamble.md`](master/00-preamble.md). History is in
 | 8 | [8. Packet generation and governance](master/08-packet-generation-and-governance.md) |
 
 Production preparation notes are maintained in
-[block 5 — Production notes](master/05-continuous-quality-gates.md#production-notes-owner-request-2026-10-02).
+[block 5 — Production notes](master/05/04-production-notes.md#production-notes-owner-request-2026-10-02).

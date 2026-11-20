@@ -15,8 +15,8 @@
 
 | # | Block | Decides for this screen |
 |---|---|---|
-| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | Routed financial-editor exception: grow-until-cap, what stays outside the row-scroll frame |
-| 2 | [14 Editable collection table](../14-editable-collection-table.md), financial section | Header and immutable context, workspace tabs, grow-then-scroll rows, totals, Save |
+| 1 | [1 Feature folders and wiring](../01-feature-folders-and-wiring.md) | Routed financial-editor exception: grow-until-cap, what stays outside the row-scroll frame — topics: [`01/02-viewport-and-scroll.md`](../01/02-viewport-and-scroll.md) |
+| 2 | [14 Editable collection table](../14-editable-collection-table.md), financial section | Header and immutable context, workspace tabs, grow-then-scroll rows, totals, Save — topics: [`14/04-financial-collection-editor.md`](../14/04-financial-collection-editor.md), [`14/03-row-mechanics.md`](../14/03-row-mechanics.md) |
 | 3 | [3 Header](../03-header.md) | One title; context in its metadata area |
 | 4 | [4 Filters](../04-filters.md) | Compact filters inside the workspace |
 | 5 | [16](../16-dropdowns-lookups-enums.md), [17](../17-dates.md), [19](../19-validation-messages.md) | Row controls and validation |
